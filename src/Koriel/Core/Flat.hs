@@ -19,9 +19,9 @@ normalize ::
   Program (Id Type) ->
   m (Program (Id Type))
 normalize Program {..} = do
-  topVars <- for topVars \(name, ty, expr) -> do
-    expr' <- runContT (flat expr) pure
-    pure (name, ty, expr')
+  topVars <- for topVars \(name, ty, stmt) -> do
+    stmt' <- flatStmt stmt
+    pure (name, ty, stmt')
   topFuns <- for topFuns \(name, params, ty, stmt) -> do
     stmt' <- flatStmt stmt
     pure (name, params, ty, stmt')

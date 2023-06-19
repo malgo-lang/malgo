@@ -91,7 +91,7 @@ dsScDef (Typed typ _, name, expr) = do
       name' <- lookupName name
       typ' <- dsType typ
       expr' <- runDef $ fmap Atom $ cast typ' =<< dsExpr expr
-      pure [VarDef name' typ' expr']
+      pure [VarDef name' typ' $ Ret expr']
     dsFunDef name (G.Fn _ cs) = do
       name' <- lookupName name
       (ps, e) <- fnToObj True name.name cs
@@ -212,7 +212,7 @@ dsExpr (G.Var (Typed typ _) name) = do
               clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
               internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
               ps <- traverse (newTemporalId "p") pts
-              let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ Ret $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
+              let clsDef = VarDef clsId (C.typeOf clsId) $ Ret $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ Ret $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
               modify $ \s -> s {_globalDefs = clsDef : s._globalDefs}
               pure $ Atom $ C.Var clsId
             _ -> pure $ Atom $ C.Var name'

@@ -152,11 +152,11 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
   liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     initTopVars [] = pass
-    initTopVars ((name, _, expr) : xs) = do
+    initTopVars ((name, _, stmt) : xs) = do
       view (globalValueMap . at name) >>= \case
         Nothing -> error $ show $ pPrint name <+> "is not found"
         Just name' -> do
-          eOpr <- genExpr expr
+          eOpr <- genStmt stmt
           store name' 0 eOpr
           initTopVars xs
     -- Generate main function.
@@ -280,8 +280,8 @@ toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
-genVar :: MonadModuleBuilder m => Id C.Type -> Expr (Id C.Type) -> m Operand
-genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
+genVar :: MonadModuleBuilder m => Id C.Type -> Stmt (Id C.Type) -> m Operand
+genVar name stmt = global (toName name) (convType $ C.typeOf stmt) (C.Undef (convType $ C.typeOf stmt))
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
 genLoadModule m = do

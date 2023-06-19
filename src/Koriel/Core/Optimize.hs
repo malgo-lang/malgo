@@ -78,9 +78,9 @@ optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT
   state <- execStateT ?? CallInlineEnv mempty $ do
     for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
     for_ topVars $ \case
-      (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
+      (name, t, Ret (Let [LocalDef f _ (Fun ps e)] (Atom (Var v)))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
       _ -> pass
-  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
+  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeStmt state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeStmt (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
 

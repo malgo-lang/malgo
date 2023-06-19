@@ -185,7 +185,7 @@ lintProgram Program {..} = do
   define "program" (vs <> fs) do
     for_ topVars \(v, _, e) -> do
       match v (typeOf e)
-      lintExpr e
+      lintStmt e
     for_ topFuns \(f, ps, _, body) -> define (pPrint f) ps do
       match f (map typeOf ps :-> typeOf body)
       lintStmt body

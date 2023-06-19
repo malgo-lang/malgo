@@ -53,7 +53,7 @@ annProgram Program {..} = do
     topFuns <- traverse annFunDecl topFuns
     pure Program {..}
 
-prepareVarDecl :: MonadReader Context m => (Text, Type, Expr Text) -> m (HashMap Text (Id Type))
+prepareVarDecl :: MonadReader Context m => (Text, Type, Stmt Text) -> m (HashMap Text (Id Type))
 prepareVarDecl (name, ty, _) = do
   id <- parseId name ty
   pure $ one (name, id)
@@ -63,10 +63,10 @@ prepareFunDecl (name, _, ty, _) = do
   id <- parseId name ty
   pure $ one (name, id)
 
-annVarDecl :: (MonadReader Context m, MonadIO m) => (Text, Type, Expr Text) -> m (Id Type, Type, Expr (Id Type))
+annVarDecl :: (MonadReader Context m, MonadIO m) => (Text, Type, Stmt Text) -> m (Id Type, Type, Stmt (Id Type))
 annVarDecl (name, ty, body) = do
   name <- lookupName name
-  (name,ty,) <$> annExpr body
+  (name,ty,) <$> annStmt body
 
 annFunDecl :: (MonadReader Context m, MonadIO m) => (Text, [Text], Type, Stmt Text) -> m (Id Type, [Id Type], Type, Stmt (Id Type))
 annFunDecl (name, params, ty@(paramTypes :-> _), body) = do

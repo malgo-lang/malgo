@@ -30,7 +30,7 @@ import Malgo.Syntax.Extension
 
 -- | トップレベル宣言
 data Def
-  = VarDef (Id C.Type) C.Type (C.Expr (Id C.Type))
+  = VarDef (Id C.Type) C.Type (C.Stmt (Id C.Type))
   | FunDef (Id C.Type) [Id C.Type] C.Type (C.Stmt (Id C.Type))
   | ExtDef Text C.Type
 

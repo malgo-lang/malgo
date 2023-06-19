@@ -36,7 +36,7 @@ import Koriel.Pretty
 
 -- | toplevel function definitions
 data Program a = Program
-  { topVars :: [(a, Type, Expr a)],
+  { topVars :: [(a, Type, Stmt a)],
     topFuns :: [(a, [a], Type, Stmt a)],
     extFuns :: [(Text, Type)]
   }
@@ -59,7 +59,7 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
 instance HasExpr Program where
   expr f Program {..} =
     Program
-      <$> traverseOf (traversed . _3) f topVars
+      <$> traverseOf (traversed . _3 . expr) f topVars
       <*> traverseOf (traversed . _4 . expr) f topFuns
       <*> pure extFuns
 
@@ -79,8 +79,7 @@ bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => 
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e ->
-    Assign x v e
+  DefBuilderT $ tell $ Endo $ \e -> Match v [Bind x (typeOf x) e]
   pure (Var x)
 
 cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Expr (Id Type) -> DefBuilderT m (Atom (Id Type))
@@ -89,7 +88,7 @@ cast ty e
   | otherwise = do
       v <- bind e
       x <- newTemporalId "cast" ty
-      DefBuilderT $ tell $ Endo $ \e -> Assign x (Cast ty v) e
+      DefBuilderT $ tell $ Endo $ \e -> Match (Cast ty v) [Bind x (typeOf x) e]
       pure (Var x)
 
 -- `destruct` is convenient when treating types that have only one constructor.

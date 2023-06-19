@@ -21,7 +21,7 @@ type Parser = Parsec Void Text
 
 -- | トップレベル宣言
 data Def
-  = VarDef Text Type (Expr Text)
+  = VarDef Text Type (Stmt Text)
   | FunDef Text [Text] Type (Stmt Text)
   | ExtDef Text Type
 
@@ -37,7 +37,7 @@ program = do
       void $ symbol "define"
       varDef <|> funDef
     varDef = do
-      VarDef <$> ident <*> type_ <*> expr
+      VarDef <$> ident <*> type_ <*> stmt
     funDef = do
       f : xs <- between (symbol "(") (symbol ")") (some ident)
       FunDef f xs <$> type_ <*> stmt
@@ -113,7 +113,7 @@ stmt :: Parser (Stmt Text)
 stmt =
   label "statement" do
     between (symbol "(") (symbol ")") do
-      void $ symbol "do"
+      void $ symbol "ret"
       Ret <$> expr
 
 -- | Parse an expression.

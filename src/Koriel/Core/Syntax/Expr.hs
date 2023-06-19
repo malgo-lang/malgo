@@ -34,7 +34,7 @@ instance HasType a => HasType (Stmt a) where
   {-# INLINE typeOf #-}
 
 instance Pretty a => Pretty (Stmt a) where
-  pPrint (Ret x) = parens $ sep ["do", pPrint x]
+  pPrint (Ret x) = parens $ sep ["ret", pPrint x]
   {-# INLINE pPrint #-}
 
 instance HasFreeVar Stmt where
