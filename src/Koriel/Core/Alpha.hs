@@ -85,9 +85,6 @@ alphaExpr (Assign x v e) = do
   local (\e -> e {subst = one (x, Var x') <> e.subst}) $ Assign x' v' <$> alphaExpr e
 alphaExpr (Error t) = pure $ Error t
 
-alphaStmt :: (MonadReader AlphaEnv f, MonadIO f) => Stmt (Id Type) -> f (Stmt (Id Type))
-alphaStmt (Do e) = Do <$> alphaExpr e
-
 alphaAtom :: MonadReader AlphaEnv f => Atom (Id Type) -> f (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x
 alphaAtom a@Unboxed {} = pure a
@@ -101,7 +98,7 @@ alphaObj :: (MonadReader AlphaEnv m, MonadIO m) => Obj (Id Type) -> m (Obj (Id T
 alphaObj (Fun ps e) = do
   -- Avoid capturing variables
   ps' <- traverse cloneId ps
-  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Fun ps' <$> alphaStmt e
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ Fun ps' <$> alphaExpr e
 -- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Fun ps <$> alphaExpr e
 alphaObj o = traverseOf atom alphaAtom o
 
@@ -189,9 +186,6 @@ equivExpr (Assign x e b) (Assign y e' b') =
 equivExpr (Error t) (Error u) = pure $ t == u
 equivExpr _ _ = pure False
 
-equivStmt :: MonadReader AlphaEnv m => Stmt (Id Type) -> Stmt (Id Type) -> m Bool
-equivStmt (Do e1) (Do e2) = equivExpr e1 e2
-
 equivCase :: MonadReader AlphaEnv m => Case (Id Type) -> Case (Id Type) -> m Bool
 equivCase (Unpack c ps e) (Unpack c' ps' e') | c == c' = do
   local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ equivExpr e e'
@@ -221,7 +215,7 @@ equivLocalDef (LocalDef x t o) (LocalDef y u p) =
 
 equivObj :: MonadReader AlphaEnv m => Obj (Id Type) -> Obj (Id Type) -> m Bool
 equivObj (Fun ps e) (Fun ps' e') = do
-  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ equivStmt e e'
+  local (\e -> e {subst = HashMap.fromList (zip ps $ map Var ps') <> e.subst}) $ equivExpr e e'
 equivObj (Pack t c xs) (Pack u d ys) =
   ((t == u && c == d) &&) <$> andM (zipWith equivAtom xs ys)
 equivObj (Record kvs) (Record kvs') =

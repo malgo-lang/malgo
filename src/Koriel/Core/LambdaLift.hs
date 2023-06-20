@@ -18,14 +18,14 @@ import Koriel.Prelude
 import Relude.Extra.Map (member)
 
 data LambdaLiftState = LambdaLiftState
-  { _funcs :: HashMap (Id Type) ([Id Type], Type, Stmt (Id Type)),
+  { _funcs :: HashMap (Id Type) ([Id Type], Type, Expr (Id Type)),
     -- | Known functions. If a function is known, that function can be called directly.
     _knowns :: HashSet (Id Type),
     -- | Variables that defined in global scope.
     defined :: HashSet (Id Type)
   }
 
-funcs :: Lens' LambdaLiftState (HashMap (Id Type) ([Id Type], Type, Stmt (Id Type)))
+funcs :: Lens' LambdaLiftState (HashMap (Id Type) ([Id Type], Type, Expr (Id Type)))
 funcs = lens (._funcs) (\l x -> l {_funcs = x})
 
 knowns :: Lens' LambdaLiftState (HashSet (Id Type))
@@ -38,7 +38,7 @@ data LambdaLiftEnv = LambdaLiftEnv
 
 data DefEnv = DefEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName}
 
-def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Id Type -> [Id Type] -> Stmt (Id Type) -> m (Id Type)
+def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Id Type -> [Id Type] -> Expr (Id Type) -> m (Id Type)
 def name xs e = do
   uniqSupply <- asks (.uniqSupply)
   f <- runReaderT (newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)) (DefEnv uniqSupply name.moduleName)
@@ -54,7 +54,7 @@ lambdalift uniqSupply moduleName Program {..} =
     $ evalStateT
       ?? LambdaLiftState {_funcs = mempty, _knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars}
     $ do
-      topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> lliftStmt e) topFuns
+      topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
       funcs <>= HashMap.fromList (map (\(f, ps, t, e) -> (f, (ps, t, e))) topFuns)
       knowns <>= HashSet.fromList (map (view _1) topFuns)
       LambdaLiftState {_funcs} <- get
@@ -63,20 +63,11 @@ lambdalift uniqSupply moduleName Program {..} =
         normalize $
           Program
             topVars
-            ( map (\(f, (ps, t, s)) -> (f, ps, t, s)) $
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
                 HashMap.toList _funcs
             )
             extFuns
       traverseOf expr toDirect prog
-
-lliftStmt ::
-  ( MonadIO f,
-    MonadState LambdaLiftState f,
-    MonadReader LambdaLiftEnv f
-  ) =>
-  Stmt (Id Type) ->
-  f (Stmt (Id Type))
-lliftStmt (Do e) = Do <$> llift e
 
 llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Expr (Id Type) -> f (Expr (Id Type))
 llift (Atom a) = pure $ Atom a
@@ -88,17 +79,17 @@ llift (CallDirect f xs) = pure $ CallDirect f xs
 llift (RawCall f t xs) = pure $ RawCall f t xs
 llift (BinOp op x y) = pure $ BinOp op x y
 llift (Cast t x) = pure $ Cast t x
-llift (Let [LocalDef n t (Fun xs (Do call@Call {}))] e) = do
+llift (Let [LocalDef n t (Fun xs call@Call {})] e) = do
   call' <- llift call
-  Let [LocalDef n t (Fun xs $ Do call')] <$> llift e
-llift (Let [LocalDef n t o@(Fun _ (Do RawCall {}))] e) = Let [LocalDef n t o] <$> llift e
-llift (Let [LocalDef n t o@(Fun _ (Do CallDirect {}))] e) = Let [LocalDef n t o] <$> llift e
+  Let [LocalDef n t (Fun xs call')] <$> llift e
+llift (Let [LocalDef n t o@(Fun _ RawCall {})] e) = Let [LocalDef n t o] <$> llift e
+llift (Let [LocalDef n t o@(Fun _ CallDirect {})] e) = Let [LocalDef n t o] <$> llift e
 llift (Let [LocalDef n t (Fun as body)] e) = do
   backup <- get
   ks <- use knowns
   -- nがknownだと仮定してlambda liftする
   knowns . at n ?= ()
-  body' <- lliftStmt body
+  body' <- llift body
   funcs . at n ?= (as, t, body')
   (e', state) <- localState $ llift e
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
@@ -111,11 +102,11 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       pure e'
     else do
       put backup
-      body' <- lliftStmt body
+      body' <- llift body
       defined <- gets (.defined)
       let fvs = HashSet.difference (freevars body') (ks <> defined <> HashSet.fromList as)
       newFun <- def n (toList fvs <> as) body'
-      Let [LocalDef n t (Fun as (Do $ CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
+      Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
 llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . expr) llift cs
 llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> llift e

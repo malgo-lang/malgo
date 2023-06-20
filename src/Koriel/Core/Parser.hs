@@ -22,7 +22,7 @@ type Parser = Parsec Void Text
 -- | トップレベル宣言
 data Def
   = VarDef Text Type (Expr Text)
-  | FunDef Text [Text] Type (Stmt Text)
+  | FunDef Text [Text] Type (Expr Text)
   | ExtDef Text Type
 
 -- | Parse a program.
@@ -40,7 +40,7 @@ program = do
       VarDef <$> ident <*> type_ <*> expr
     funDef = do
       f : xs <- between (symbol "(") (symbol ")") (some ident)
-      FunDef f xs <$> type_ <*> stmt
+      FunDef f xs <$> type_ <*> expr
     extern = do
       void $ symbol "extern"
       ExtDef <$> ident <*> type_
@@ -88,7 +88,7 @@ object = between (symbol "(") (symbol ")") do
     fun = do
       void $ symbol "fun"
       xs <- between (symbol "(") (symbol ")") (many ident)
-      Fun xs <$> stmt
+      Fun xs <$> expr
     pack = do
       void $ symbol "pack"
       ty <- type_
@@ -107,14 +107,6 @@ object = between (symbol "(") (symbol ")") do
               pure (k, v)
           )
       pure $ Record $ HashMap.fromList kvs
-
--- | Parse a statement.
-stmt :: Parser (Stmt Text)
-stmt =
-  label "statement" do
-    between (symbol "(") (symbol ")") do
-      void $ symbol "do"
-      Do <$> expr
 
 -- | Parse an expression.
 expr :: Parser (Expr Text)

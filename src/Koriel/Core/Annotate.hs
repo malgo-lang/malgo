@@ -58,7 +58,7 @@ prepareVarDecl (name, ty, _) = do
   id <- parseId name ty
   pure $ one (name, id)
 
-prepareFunDecl :: MonadReader Context m => (Text, [Text], Type, Stmt Text) -> m (HashMap Text (Id Type))
+prepareFunDecl :: MonadReader Context m => (Text, [Text], Type, Expr Text) -> m (HashMap Text (Id Type))
 prepareFunDecl (name, _, ty, _) = do
   id <- parseId name ty
   pure $ one (name, id)
@@ -68,18 +68,15 @@ annVarDecl (name, ty, body) = do
   name <- lookupName name
   (name,ty,) <$> annExpr body
 
-annFunDecl :: (MonadReader Context m, MonadIO m) => (Text, [Text], Type, Stmt Text) -> m (Id Type, [Id Type], Type, Stmt (Id Type))
+annFunDecl :: (MonadReader Context m, MonadIO m) => (Text, [Text], Type, Expr Text) -> m (Id Type, [Id Type], Type, Expr (Id Type))
 annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   name <- lookupName name
   params' <- zipWithM parseId params paramTypes
   local
     (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv})
     $ (name,params',ty,)
-      <$> annStmt body
+      <$> annExpr body
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pPrint name
-
-annStmt :: (MonadReader Context f, MonadIO f) => Stmt Text -> f (Stmt (Id Type))
-annStmt (Do expr) = Do <$> annExpr expr
 
 annExpr :: (MonadReader Context m, MonadIO m) => Expr Text -> m (Expr (Id Type))
 annExpr (Atom atom) = Atom <$> annAtom atom
@@ -170,7 +167,7 @@ annObj :: (MonadReader Context m, MonadIO m) => Type -> Obj Text -> m (Obj (Id T
 annObj (paramTypes :-> _) (Fun params body) = do
   params' <- zipWithM parseId params paramTypes
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
-    body <- annStmt body
+    body <- annExpr body
     pure $ Fun params' body
 annObj ty Fun {} = error $ "annObj Fun: " <> show ty
 annObj _ (Pack ty con args) = do

@@ -37,7 +37,7 @@ import Koriel.Pretty
 -- | toplevel function definitions
 data Program a = Program
   { topVars :: [(a, Type, Expr a)],
-    topFuns :: [(a, [a], Type, Stmt a)],
+    topFuns :: [(a, [a], Type, Expr a)],
     extFuns :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
@@ -60,7 +60,7 @@ instance HasExpr Program where
   expr f Program {..} =
     Program
       <$> traverseOf (traversed . _3) f topVars
-      <*> traverseOf (traversed . _4 . expr) f topFuns
+      <*> traverseOf (traversed . _4) f topFuns
       <*> pure extFuns
 
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Expr (Id Type))) m a}

@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Koriel.Core.Syntax.Expr (Stmt (..), Expr (..), HasExpr (..)) where
+module Koriel.Core.Syntax.Expr (Expr (..), HasExpr (..)) where
 
 import Control.Lens (Plated (..), Traversal', sans, traverseOf, traversed, _2)
 import Data.Aeson (FromJSON, ToJSON)
@@ -19,28 +19,6 @@ import Koriel.Core.Syntax.Unboxed
 import Koriel.Core.Type
 import Koriel.Prelude
 import Koriel.Pretty
-
-newtype Stmt a = Do (Expr a)
-  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Binary, ToJSON, FromJSON)
-
-instance HasAtom Stmt where
-  atom f = \case
-    Do x -> Do <$> atom f x
-  {-# INLINE atom #-}
-
-instance HasType a => HasType (Stmt a) where
-  typeOf (Do x) = typeOf x
-  {-# INLINE typeOf #-}
-
-instance Pretty a => Pretty (Stmt a) where
-  pPrint (Do x) = parens $ sep ["do", pPrint x]
-  {-# INLINE pPrint #-}
-
-instance HasFreeVar Stmt where
-  freevars = \case
-    Do x -> freevars x
-  {-# INLINE freevars #-}
 
 -- | expressions
 data Expr a
@@ -210,7 +188,7 @@ instance Plated (Expr a) where
   plate _ e@Cast {} = pure e
   plate f (Let xs e) = Let <$> traverseOf (traversed . expr) f xs <*> f e
   plate f (Match e cs) = Match <$> f e <*> traverseOf (traversed . expr) f cs
-  plate f (Switch v cs e) = Switch v <$> traverseOf (traversed . _2 . expr) f cs <*> expr f e
+  plate f (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) f cs <*> f e
   plate f (SwitchUnboxed v cs e) = SwitchUnboxed v <$> traverseOf (traversed . _2) f cs <*> f e
   plate f (Destruct v con xs e) = Destruct v con xs <$> f e
   plate f (DestructRecord v kvs e) = DestructRecord v kvs <$> f e
@@ -223,12 +201,6 @@ class HasExpr f where
 
 instance HasExpr Expr where
   expr = identity
-  {-# INLINE expr #-}
-
-instance HasExpr Stmt where
-  expr f = \case
-    Do e -> Do <$> f e
-  {-# INLINE expr #-}
 
 instance HasExpr Case where
   expr f = \case
@@ -236,14 +208,11 @@ instance HasExpr Case where
     OpenRecord kvs e -> OpenRecord kvs <$> f e
     Exact u e -> Exact u <$> f e
     Bind x t e -> Bind x t <$> f e
-  {-# INLINE expr #-}
 
 instance HasExpr LocalDef where
   expr = object . expr
-  {-# INLINE expr #-}
 
 instance HasExpr Obj where
   expr f = \case
-    Fun ps e -> Fun ps <$> expr f e
+    Fun ps e -> Fun ps <$> f e
     o -> pure o
-  {-# INLINE expr #-}
