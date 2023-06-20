@@ -142,7 +142,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode = do
           diag' = addFile diag korielPath (toString koriel)
        in printDiagnostic stdout False False 4 defaultStyle diag' >> exitFailure
     Right ast -> do
-      Koriel.lint =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
+      Koriel.lint True =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
 
 findCommand :: [String] -> IO String
 findCommand list =

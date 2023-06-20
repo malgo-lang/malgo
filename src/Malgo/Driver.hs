@@ -1,7 +1,7 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
-import Control.Exception (assert)
+import Control.Exception (IOException, assert, catch)
 import Data.Binary qualified as Binary
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (ConvertibleStrings (convertString))
@@ -50,7 +50,11 @@ withDump isDump label m = do
 
 -- | Compile the parsed AST.
 compileFromAST :: FilePath -> MalgoEnv -> Syntax.Module (Malgo 'Parse) -> IO ()
-compileFromAST srcPath env parsedAst = runMalgoM env act
+compileFromAST srcPath env parsedAst =
+  runMalgoM env act
+    `catch` \(e :: IOException) -> do
+      hPutStrLn stderr $ "IO Exception: " <> show e
+      exitFailure
   where
     moduleName = parsedAst._moduleName
     act = do
@@ -86,7 +90,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         core <- Link.link inf core
         writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
 
-        lint core
+        lint False core
         pure core
 
       when env.debugMode $
@@ -105,7 +109,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
         hPrint stderr $ pPrint coreOpt
       when env.testMode do
         writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
-      lint coreOpt
+      lint False coreOpt
 
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= Flat.normalize else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
@@ -114,7 +118,7 @@ compileFromAST srcPath env parsedAst = runMalgoM env act
           hPrint stderr $ pPrint coreLL
       when env.testMode do
         writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
-      lint coreLL
+      lint False coreLL
 
       -- Optimization after lambda lifting causes code explosion.
       -- The effect of lambda lifting is expected to be fully realized by backend's optimization.

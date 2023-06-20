@@ -65,7 +65,11 @@ data Expr a
   | -- | destruct a record
     DestructRecord (Atom a) (HashMap Text a) (Expr a)
   | -- | Assign a value to a variable
-    Assign a (Expr a) (Expr a)
+    Assign
+      a
+      -- | Value to assign. It does not include @Assign@ directly.
+      (Expr a)
+      (Expr a)
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)

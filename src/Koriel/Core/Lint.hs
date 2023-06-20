@@ -11,22 +11,37 @@ import Koriel.Pretty
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
-lint :: HasCallStack => Monad m => Program (Id Type) -> m ()
-lint = runLint . lintProgram
+lint :: Monad m => Bool -> Program (Id Type) -> m ()
+lint isIncludeMatch = runLint isIncludeMatch . lintProgram
 
-runLint :: ReaderT [Id Type] m a -> m a
-runLint m = runReaderT m []
+data LintEnv = LintEnv
+  { defs :: [Id Type],
+    isIncludeMatch :: Bool,
+    isIncludeAssign :: Bool,
+    isStatement :: Bool
+  }
 
-defined :: HasCallStack => MonadReader [Id Type] f => Id Type -> f ()
+runLint :: Bool -> ReaderT LintEnv m a -> m a
+runLint isIncludeMatch m = runReaderT m (LintEnv [] isIncludeMatch True True)
+
+asStatement :: MonadReader LintEnv m => m a -> m a
+asStatement = local (\e -> e {isStatement = True})
+
+statement :: MonadReader LintEnv m => Expr (Id Type) -> m a -> m a
+statement e m = do
+  isStatement <- asks (.isStatement)
+  if isStatement then m else errorDoc $ pPrint e <+> "must be a statement"
+
+defined :: HasCallStack => MonadReader LintEnv f => Id Type -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
-      env <- ask
+      env <- asks (.defs)
       unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
 
-define :: HasCallStack => MonadReader [Id Type] f => Doc -> [Id Type] -> f a -> f a
+define :: HasCallStack => MonadReader LintEnv f => Doc -> [Id Type] -> f a -> f a
 define pos xs m = do
-  env <- ask
+  env <- asks (.defs)
   for_ xs \x ->
     when (x `elem` env) $
       errorDoc $
@@ -35,7 +50,7 @@ define pos xs m = do
             $$ "while defining"
             <+> pos
             <+> pPrint xs
-  local (xs <>) m
+  local (\e -> e {defs = xs <> e.defs}) m
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
@@ -56,7 +71,7 @@ match x y
           $$ pPrint y
           $$ nest 2 (":" <> pPrint (typeOf y))
 
-lintExpr :: HasCallStack => MonadReader [Id Type] m => Expr (Id Type) -> m ()
+lintExpr :: HasCallStack => MonadReader LintEnv m => Expr (Id Type) -> m ()
 lintExpr (Atom x) = lintAtom x
 lintExpr (Call f xs) = do
   lintAtom f
@@ -123,46 +138,49 @@ lintExpr (BinOp o x y) = do
     And -> match x BoolT >> match y BoolT
     Or -> match x BoolT >> match y BoolT
 lintExpr (Cast _ x) = lintAtom x
-lintExpr (Let ds e) = define "let" (map (._variable) ds) $ do
-  traverse_ (lintObj . (._object)) ds
-  for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
-  lintExpr e
+lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True}) $
+  define "let" (map (._variable) ds) do
+    traverse_ (lintObj . (._object)) ds
+    for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
+    asStatement $ lintExpr e
 lintExpr (Match e cs) = do
+  LintEnv {isIncludeMatch} <- ask
+  unless isIncludeMatch $ errorDoc "match is not allowed"
   lintExpr e
-  traverse_ (lintCase e) cs
+  local (\e -> e {isIncludeAssign = True}) $ traverse_ (lintCase e) cs
   -- check if all cases have same type of pattern
   if all (\c -> has _Unpack c || has _Bind c) cs
     || all (\c -> has _OpenRecord c || has _Bind c) cs
     || all (\c -> has _Exact c || has _Bind c) cs
     then pass
     else errorDoc $ "pattern mismatch:" $$ pPrint cs
-lintExpr (Switch a cs e) = do
+lintExpr (Switch a cs e) = statement (Switch a cs e) do
   lintAtom a
   traverseOf_ (traversed . _2) lintExpr cs
   lintExpr e
-lintExpr (SwitchUnboxed a cs e) = do
+lintExpr (SwitchUnboxed a cs e) = statement (SwitchUnboxed a cs e) do
   lintAtom a
   traverseOf_ (traversed . _2) lintExpr cs
   lintExpr e
-lintExpr (Destruct a _ xs e) = do
+lintExpr x@(Destruct a _ xs e) = statement x do
   lintAtom a
   define "destruct" xs $ lintExpr e
-lintExpr (DestructRecord a xs e) = do
+lintExpr x@(DestructRecord a xs e) = statement x do
   lintAtom a
   define "destruct-record" (HashMap.elems xs) $ lintExpr e
 lintExpr (Assign x (Atom v) _) = do
   errorDoc $ "reduntant assignment:" <+> pPrint x <+> pPrint v
-lintExpr (Assign x v e) = do
-  lintExpr v
+lintExpr (Assign x v e) = statement (Assign x v e) do
+  local (\e -> e {isIncludeAssign = False, isStatement = False}) $ lintExpr v
   define "assign" [x] (lintExpr e)
 lintExpr Error {} = pass
 
-lintObj :: HasCallStack => MonadReader [Id Type] m => Obj (Id Type) -> m ()
-lintObj (Fun params body) = define "fun" params $ lintExpr body
+lintObj :: HasCallStack => MonadReader LintEnv m => Obj (Id Type) -> m ()
+lintObj (Fun params body) = define "fun" params $ asStatement $ lintExpr body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: HasCallStack => MonadReader [Id Type] m => Expr (Id Type) -> Case (Id Type) -> m ()
+lintCase :: HasCallStack => MonadReader LintEnv m => Expr (Id Type) -> Case (Id Type) -> m ()
 lintCase _ (Unpack _ vs e) = define "unpack" vs $ lintExpr e
 lintCase _ (OpenRecord kvs e) = define "open-record" (HashMap.elems kvs) $ lintExpr e
 lintCase _ (Exact _ e) = lintExpr e
@@ -171,11 +189,11 @@ lintCase scrutinee (Bind x t e) = define "bind" [x] do
   match scrutinee x
   lintExpr e
 
-lintAtom :: HasCallStack => MonadReader [Id Type] m => Atom (Id Type) -> m ()
+lintAtom :: HasCallStack => MonadReader LintEnv m => Atom (Id Type) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
-lintProgram :: HasCallStack => MonadReader [Id Type] m => Program (Id Type) -> m ()
+lintProgram :: HasCallStack => MonadReader LintEnv m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
   let vs = map (view _1) topVars
   let fs = map (view _1) topFuns
