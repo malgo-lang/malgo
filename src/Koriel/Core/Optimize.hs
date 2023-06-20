@@ -78,19 +78,16 @@ optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT
   state <- execStateT ?? CallInlineEnv mempty $ do
     for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
     for_ topVars $ \case
-      (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
+      (name, t, Ret (Let [LocalDef f _ (Fun ps e)] (Atom (Var v)))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
       _ -> pass
-  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
-  topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeStmt (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
+  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeTopStmt state e) topVars
+  topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeTopStmt (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
   pure $ Program {..}
 
-optimizeStmt :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Stmt (Id Type) -> f (Stmt (Id Type))
-optimizeStmt state (Do e) = Do <$> optimizeExpr state e
-
-optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
-optimizeExpr state expr = do
+optimizeTopStmt :: (MonadReader OptimizeEnv m, MonadIO m) => CallInlineEnv -> Stmt (Id Type) -> m (Stmt (Id Type))
+optimizeTopStmt state s = do
   option <- asks (.option)
-  5 `times` opt option $ expr
+  times 5 (opt option) s
   where
     opt option = do
       pure
@@ -102,12 +99,12 @@ optimizeExpr state expr = do
         >=> runOpt option.doFoldTrivialCall foldTrivialCall
         >=> runOpt option.doSpecializeFunction specializeFunction
         >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
-        >=> normalizeExpr
-    runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
-    runOpt flag f =
+        >=> flatStmt
+    runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Stmt (Id Type) -> m (Stmt (Id Type))
+    runOpt flag f s =
       if flag
-        then f
-        else pure
+        then expr f s
+        else pure s
 
 -- | Remove variable binding if that variable is an alias of another variable.
 foldVariable :: (Eq a, Monad f) => Expr a -> f (Expr a)
@@ -184,7 +181,7 @@ inlineFunction =
       x -> pure x
 
 checkInlinable :: (MonadReader OptimizeEnv m, MonadState CallInlineEnv m) => LocalDef (Id Type) -> m ()
-checkInlinable (LocalDef f _ (Fun ps (Do v))) = do
+checkInlinable (LocalDef f _ (Fun ps (Ret v))) = do
   threshold <- asks (.option.inlineThreshold)
   -- atomの数がthreshold以下ならインライン展開する
   -- TODO: 再帰関数かどうかコールグラフを作って判定する
@@ -228,7 +225,7 @@ foldRedundantCast =
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
 foldTrivialCall :: (MonadIO f, MonadReader OptimizeEnv f) => Expr (Id Type) -> f (Expr (Id Type))
 foldTrivialCall = transformM \case
-  Let [LocalDef f _ (Fun ps (Do body))] (Call (Var f') as) | f == f' -> do
+  Let [LocalDef f _ (Fun ps (Ret body))] (Call (Var f') as) | f == f' -> do
     uniqSupply <- asks (.uniqSupply)
     alpha body AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps as}
   x -> pure x
@@ -249,7 +246,7 @@ specializeFunction =
               -- If `f` is always a unknown function because it appears in `cast`.
               r <- bind (Call f ps)
               pure $ Cast rt' r
-            pure (Let [LocalDef f' (pts' :-> rt') $ Fun ps' (Do v')] (Atom $ Var f'))
+            pure (Let [LocalDef f' (pts' :-> rt') $ Fun ps' (Ret v')] (Atom $ Var f'))
         | otherwise -> error "specializeFunction: invalid cast"
       _ -> pure (Cast (pts' :-> rt') f)
     e -> pure e

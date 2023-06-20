@@ -176,7 +176,7 @@ lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
 lintStmt :: MonadReader [Id Type] m => Stmt (Id Type) -> m ()
-lintStmt (Do e) = lintExpr e
+lintStmt (Ret e) = lintExpr e
 
 lintProgram :: HasCallStack => MonadReader [Id Type] m => Program (Id Type) -> m ()
 lintProgram Program {..} = do
@@ -185,7 +185,7 @@ lintProgram Program {..} = do
   define "program" (vs <> fs) do
     for_ topVars \(v, _, e) -> do
       match v (typeOf e)
-      lintExpr e
+      lintStmt e
     for_ topFuns \(f, ps, _, body) -> define (pPrint f) ps do
       match f (map typeOf ps :-> typeOf body)
       lintStmt body

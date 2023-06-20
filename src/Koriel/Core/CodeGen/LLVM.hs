@@ -152,11 +152,11 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
   liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     initTopVars [] = pass
-    initTopVars ((name, _, expr) : xs) = do
+    initTopVars ((name, _, stmt) : xs) = do
       view (globalValueMap . at name) >>= \case
         Nothing -> error $ show $ pPrint name <+> "is not found"
         Just name' -> do
-          eOpr <- genExpr expr
+          eOpr <- genStmt stmt
           store name' 0 eOpr
           initTopVars xs
     -- Generate main function.
@@ -167,7 +167,7 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
         _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
         _ <- bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
         pure e
-      pure (mainFuncId, ([], Do mainFuncBody))
+      pure (mainFuncId, ([], Ret mainFuncBody))
 
 convType :: C.Type -> LT.Type
 convType (_ :-> _) = ptr
@@ -280,8 +280,8 @@ toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
 -- generate code for a toplevel variable definition
-genVar :: MonadModuleBuilder m => Id C.Type -> Expr (Id C.Type) -> m Operand
-genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
+genVar :: MonadModuleBuilder m => Id C.Type -> Stmt (Id C.Type) -> m Operand
+genVar name stmt = global (toName name) (convType $ C.typeOf stmt) (C.Undef (convType $ C.typeOf stmt))
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
 genLoadModule m = do
@@ -324,7 +324,7 @@ genStmt ::
   ) =>
   Stmt (Id C.Type) ->
   ContT () m Operand
-genStmt (Do e) = genExpr e
+genStmt (Ret e) = genExpr e
 
 genExpr ::
   ( MonadIRBuilder m,
@@ -674,7 +674,7 @@ internalFunction ::
   Name ->
   -- | Parameter types and name suggestions
   [(LT.Type, ParameterName)] ->
-  -- | Return type
+  -- | Ret urn type
   LT.Type ->
   -- | Function body builder
   ([Operand] -> IRBuilderT m ()) ->
