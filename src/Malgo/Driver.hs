@@ -90,7 +90,7 @@ compileFromAST srcPath env parsedAst =
         core <- Link.link inf core
         writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
 
-        lint False core
+        lint True core
         pure core
 
       when env.debugMode $
@@ -109,7 +109,7 @@ compileFromAST srcPath env parsedAst =
         hPrint stderr $ pPrint coreOpt
       when env.testMode do
         writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
-      lint False coreOpt
+      lint True coreOpt
 
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= Flat.normalize else pure coreOpt
       when (env.debugMode && env.lambdaLift) $
@@ -118,7 +118,7 @@ compileFromAST srcPath env parsedAst =
           hPrint stderr $ pPrint coreLL
       when env.testMode do
         writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
-      lint False coreLL
+      lint True coreLL
 
       -- Optimization after lambda lifting causes code explosion.
       -- The effect of lambda lifting is expected to be fully realized by backend's optimization.

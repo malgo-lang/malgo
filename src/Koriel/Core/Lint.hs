@@ -12,25 +12,28 @@ import Koriel.Pretty
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
 lint :: Monad m => Bool -> Program (Id Type) -> m ()
-lint isIncludeMatch = runLint isIncludeMatch . lintProgram
+lint normalized = runLint normalized . lintProgram
 
 data LintEnv = LintEnv
   { defs :: [Id Type],
-    isIncludeMatch :: Bool,
+    normalized :: Bool,
     isIncludeAssign :: Bool,
     isStatement :: Bool
   }
 
 runLint :: Bool -> ReaderT LintEnv m a -> m a
-runLint isIncludeMatch m = runReaderT m (LintEnv [] isIncludeMatch True True)
+runLint normalized m = runReaderT m (LintEnv [] normalized True True)
 
 asStatement :: MonadReader LintEnv m => m a -> m a
 asStatement = local (\e -> e {isStatement = True})
 
 statement :: MonadReader LintEnv m => Expr (Id Type) -> m a -> m a
 statement e m = do
-  isStatement <- asks (.isStatement)
-  if isStatement then m else errorDoc $ pPrint e <+> "must be a statement"
+  LintEnv {isStatement, normalized} <- ask
+  if
+    | not normalized -> m
+    | isStatement -> m
+    | otherwise -> errorDoc $ pPrint e <+> "must be a statement"
 
 defined :: HasCallStack => MonadReader LintEnv f => Id Type -> f ()
 defined x
@@ -144,8 +147,8 @@ lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True}) $
     for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
     asStatement $ lintExpr e
 lintExpr (Match e cs) = do
-  LintEnv {isIncludeMatch} <- ask
-  unless isIncludeMatch $ errorDoc "match is not allowed"
+  LintEnv {normalized} <- ask
+  when normalized $ errorDoc "match is not allowed"
   lintExpr e
   local (\e -> e {isIncludeAssign = True}) $ traverse_ (lintCase e) cs
   -- check if all cases have same type of pattern
@@ -171,8 +174,12 @@ lintExpr x@(DestructRecord a xs e) = statement x do
 lintExpr (Assign x (Atom v) _) = do
   errorDoc $ "reduntant assignment:" <+> pPrint x <+> pPrint v
 lintExpr (Assign x v e) = statement (Assign x v e) do
-  local (\e -> e {isIncludeAssign = False, isStatement = False}) $ lintExpr v
-  define "assign" [x] (lintExpr e)
+  LintEnv {isIncludeAssign, normalized} <- ask
+  if normalized && not isIncludeAssign
+    then errorDoc "assignment is not allowed"
+    else do
+      local (\e -> e {isIncludeAssign = False, isStatement = False}) $ lintExpr v
+      define "assign" [x] (lintExpr e)
 lintExpr Error {} = pass
 
 lintObj :: HasCallStack => MonadReader LintEnv m => Obj (Id Type) -> m ()

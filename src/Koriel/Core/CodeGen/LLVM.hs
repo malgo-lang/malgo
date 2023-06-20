@@ -9,7 +9,6 @@ module Koriel.Core.CodeGen.LLVM (
 where
 
 import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
-import Control.Monad.Cont (ContT, runContT)
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString.Lazy qualified as BL
@@ -141,7 +140,7 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
             pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
-    genLoadModule $ runContT (initTopVars topVars) (const retVoid)
+    genLoadModule $ initTopVars topVars >> retVoid
   let llvmModule =
         defaultModule
           { LLVM.AST.moduleName = fromString srcPath,
@@ -305,7 +304,7 @@ genFunc name params body = do
           then function
           else internalFunction
   funcBuilder funcName llvmParams retty $ \args ->
-    local (over valueMap (HashMap.fromList (zip params args) <>)) $ runContT (genExpr body) ret
+    local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExpr body >>= ret
   where
     funcName = toName name
     llvmParams =
@@ -322,7 +321,7 @@ genExpr ::
     MonadIO m
   ) =>
   Expr (Id C.Type) ->
-  ContT () m Operand
+  m Operand
 genExpr (Atom x) = genAtom x
 genExpr e@(Call f xs) = do
   fOpr <- genAtom f
@@ -383,7 +382,7 @@ genExpr (Cast ty x) = do
     else pure xOpr
 genExpr (Let xs e) = do
   env <- foldMapM prepare xs
-  env <- lift $ local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
+  env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
   local (over valueMap (env <>)) $ genExpr e
   where
     -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
@@ -401,7 +400,7 @@ genExpr (Match e (Bind x _ body : _)) = do
   local (over valueMap (at x ?~ eOpr)) (genExpr body)
 genExpr (Match e cs)
   | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
-  | otherwise = do
+  | otherwise = mdo
       eOpr <- genExpr e
       tagOpr <- case C.typeOf e of
         SumT _ -> do
@@ -410,20 +409,16 @@ genExpr (Match e cs)
         RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
         _ -> pure eOpr
       retVal <- alloca (convType $ C.typeOf (Match e cs)) Nothing 0
-      contLabel <- freshName "match_cont"
-      let cont opr = store retVal 0 opr >> br contLabel
-      lift mdo
-        switch tagOpr defaultLabel labels
-        -- 各ケースのコードとラベルを生成する
-        -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-        (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) cont) cs
-        -- defaultsの先頭を取り出し、switchのデフォルトケースとする
-        -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-        defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
-        pass
-      emitBlockStart contLabel
+      switch tagOpr defaultLabel labels
+      -- 各ケースのコードとラベルを生成する
+      -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
+      (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) (contLabel, retVal)) cs
+      -- defaultsの先頭を取り出し、switchのデフォルトケースとする
+      -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
+      defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
+      contLabel <- block `named` "match_cont"
       load (convType $ C.typeOf (Match e cs)) retVal 0
-genExpr (Switch v bs e) = do
+genExpr (Switch v bs e) = mdo
   vOpr <- genAtom v
   tagOpr <- case C.typeOf v of
     SumT _ -> do
@@ -432,14 +427,13 @@ genExpr (Switch v bs e) = do
     RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
     _ -> pure vOpr
   retVal <- alloca (convType $ C.typeOf e) Nothing 0
-  contLabel <- freshName "switch_cont"
-  lift mdo
-    switch tagOpr defaultLabel labels
-    labels <- traverse (genBranch (constructorList v) (\opr -> store retVal 0 opr >> br contLabel)) bs
-    defaultLabel <- withBlock "switch_default" do
-      runContT (genExpr e) (\opr -> store retVal 0 opr >> br contLabel)
-    pass
-  emitBlockStart contLabel
+  switch tagOpr defaultLabel labels
+  labels <- traverse (genBranch (constructorList v) (\opr -> store retVal 0 opr >> br contLabel)) bs
+  defaultLabel <- withBlock "switch_default" do
+    opr <- genExpr e
+    store retVal 0 opr
+    br contLabel
+  contLabel <- block `named` "switch_cont"
   load (convType $ C.typeOf e) retVal 0
   where
     genBranch cs k (tag, e) = do
@@ -448,26 +442,24 @@ genExpr (Switch v bs e) = do
             RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
             _ -> error "Switch is not supported for this type."
       label <- withBlock ("switch_branch_" <> encodeUtf8 (render (pPrint tag))) do
-        runContT (genExpr e) k
+        genExpr e >>= k
       pure (tag', label)
-genExpr (SwitchUnboxed v bs e) = do
+genExpr (SwitchUnboxed v bs e) = mdo
   vOpr <- genAtom v
   retVal <- alloca (convType $ C.typeOf e) Nothing 0
-  contLabel <- freshName "switch-unboxed_cont"
-  let cont opr = store retVal 0 opr >> br contLabel
-  lift mdo
-    switch vOpr defaultLabel labels
-    labels <- traverse (genBranch cont) bs
-    defaultLabel <- withBlock "switch-unboxed_default" do
-      runContT (genExpr e) cont
-    pass
-  emitBlockStart contLabel
+  switch vOpr defaultLabel labels
+  labels <- traverse (genBranch $ \opr -> store retVal 0 opr >> br contLabel) bs
+  defaultLabel <- withBlock "switch-unboxed_default" do
+    opr <- genExpr e
+    store retVal 0 opr
+    br contLabel
+  contLabel <- block `named` "switch-unboxed_cont"
   load (convType $ C.typeOf e) retVal 0
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
       label <- withBlock ("switch-unboxed_branch_" <> encodeUtf8 (render (pPrint u))) do
-        runContT (genExpr e) k
+        genExpr e >>= k
       pure (u', label)
 genExpr (Destruct v (Con _ ts) xs e) = do
   v <- genAtom v
@@ -510,18 +502,23 @@ genCase ::
   ) =>
   Operand ->
   [Con] ->
-  (Operand -> m ()) ->
+  (Name, Operand) ->
   Case (Id C.Type) ->
   m (Either LLVM.AST.Name (C.Constant, LLVM.AST.Name))
-genCase scrutinee cs k = \case
+genCase scrutinee cs (contLabel, retVal) = \case
   Bind x _ e -> do
     label <- withBlock ("bind_" <> encodeUtf8 (render (pPrint x))) do
-      local (over valueMap $ at x ?~ scrutinee) $ runContT (genExpr e) k
+      local (over valueMap $ at x ?~ scrutinee) do
+        opr <- genExpr e
+        store retVal 0 opr
+        br contLabel
     pure $ Left label
   Exact u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
     label <- withBlock ("exact_" <> encodeUtf8 (render (pPrint u))) do
-      runContT (genExpr e) k
+      opr <- genExpr e
+      store retVal 0 opr
+      br contLabel
     pure $ Right (u', label)
   Unpack con vs e -> do
     let (tag, conType) = genCon cs con
@@ -532,7 +529,10 @@ genCase scrutinee cs k = \case
           (v,) <$> do
             vAddr <- gep conType payloadAddr [int32 0, int32 $ fromIntegral i]
             load (convType $ C.typeOf v) vAddr 0
-      local (over valueMap (env <>)) $ runContT (genExpr e) k
+      local (over valueMap (env <>)) do
+        opr <- genExpr e
+        store retVal 0 opr
+        br contLabel
     pure $ Right (C.Int 8 tag, label)
   OpenRecord kvs e -> do
     label <- withBlock "open_record" do
@@ -541,7 +541,10 @@ genCase scrutinee cs k = \case
         key <- ConstantOperand <$> globalStringPtr k
         value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
         pure (v, value)
-      local (over valueMap (HashMap.fromList kvs' <>)) $ runContT (genExpr e) k
+      local (over valueMap (HashMap.fromList kvs' <>)) do
+        opr <- genExpr e
+        store retVal 0 opr
+        br contLabel
     pure $ Left label
 
 genAtom ::
@@ -584,7 +587,7 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
           (fv,) <$> do
             fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` (encodeUtf8 fv.name <> "_addr")
             load (convType $ C.typeOf fv) fvAddr 0 `named` encodeUtf8 fv.name
-      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
+      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExpr e >>= ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType `named` (encodeUtf8 funName.name <> "_capture")
   ifor_ fvs $ \i fv -> do
