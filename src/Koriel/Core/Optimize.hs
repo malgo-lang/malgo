@@ -87,8 +87,8 @@ optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT
         foldMap (\(_, _, e) -> HashSet.fromList $ toList e) topVars
           <> foldMap (\(_, ps, _, e) -> HashSet.fromList (toList e) `HashSet.difference` HashSet.fromList ps) topFuns
 
-  topVars <- pure $ filter (\(n, _, _) -> n `HashSet.member` usedTopDefs || n.sort `elem` [External, Native]) topVars
-  topFuns <- pure $ filter (\(n, _, _, _) -> n `HashSet.member` usedTopDefs || n.sort `elem` [External, Native]) topFuns
+  topVars <- pure $ filter (\(n, _, _) -> n `HashSet.member` usedTopDefs || (n.sort `elem` [External, Native] && n.moduleName == moduleName)) topVars
+  topFuns <- pure $ filter (\(n, _, _, _) -> n `HashSet.member` usedTopDefs || (n.sort `elem` [External, Native] && n.moduleName == moduleName)) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
