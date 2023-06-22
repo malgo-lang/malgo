@@ -47,7 +47,9 @@ data DsState = DsState
     -- | Kind context.
     _kindCtx :: KindCtx,
     -- | Top-level definitions.
-    _globalDefs :: [Def]
+    _globalDefs :: [Def],
+    -- | Closure Ids for global functions.
+    globalClosures :: HashMap (Id C.Type) (Id C.Type)
   }
 
 makeFieldsNoPrefix ''DsState
@@ -63,7 +65,8 @@ makeDsState tcEnv =
       _signatureMap = tcEnv ^. signatureMap,
       _typeDefMap = tcEnv ^. typeDefMap,
       _kindCtx = tcEnv ^. kindCtx,
-      _globalDefs = []
+      _globalDefs = [],
+      globalClosures = mempty
     }
 
 lookupValueConstructors ::
