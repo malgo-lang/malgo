@@ -74,6 +74,8 @@ main =
             testNoLift (testcaseDir </> testcase)
           it ("test agressive case " <> testcase <> " (agressive optimization)") $ example do
             testAggressive (testcaseDir </> testcase)
+          it ("test delim case " <> testcase <> " (agressive optimization)") $ example do
+            testDelim (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" $ parallel do
       for_ examples \examplecase -> do
@@ -250,6 +252,9 @@ testNoNo testcase = test testcase "nono" False True defaultOptimizeOption LLVM
 
 testAggressive :: FilePath -> IO ()
 testAggressive testcase = test testcase "aggressive" True False aggressiveOptimizeOption LLVM
+
+testDelim :: FilePath -> IO ()
+testDelim testcase = test testcase "delim" True False defaultOptimizeOption DelimLLVM
 
 aggressiveOptimizeOption :: OptimizeOption
 aggressiveOptimizeOption =

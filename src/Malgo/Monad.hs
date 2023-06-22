@@ -31,7 +31,7 @@ data MalgoEnv = MalgoEnv
     _modulePaths :: [FilePath]
   }
 
-data CompileMode = LLVM deriving stock (Eq, Show)
+data CompileMode = LLVM | DelimLLVM deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
 

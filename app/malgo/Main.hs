@@ -85,6 +85,7 @@ toLLOpt =
         )
       <*> ( strOption (long "compile-mode" <> short 'c' <> metavar "COMPILE_MODE" <> value "llvm") <&> \case
               ("llvm" :: String) -> LLVM
+              "delim-llvm" -> DelimLLVM
               _ -> error "Invalid compile mode"
           )
       <*> switch (long "no-opt")

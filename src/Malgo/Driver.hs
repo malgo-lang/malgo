@@ -7,7 +7,8 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
-import Koriel.Core.CodeGen.LLVM (codeGen)
+import Koriel.Core.CodeGen.DelimLLVM qualified as DelimLLVM
+import Koriel.Core.CodeGen.LLVM qualified as LLVM
 import Koriel.Core.Flat qualified as Flat
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
@@ -128,9 +129,10 @@ compileFromAST srcPath env parsedAst =
       -- TODO: Add more information to `call` instruction to improve the function inliner.
       -- Or simply skip inlining and do other optimizations.
 
-      case env.compileMode of
-        LLVM -> do
-          codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLL
+      let codegen = case env.compileMode of
+            LLVM -> LLVM.codeGen
+            DelimLLVM -> DelimLLVM.codeGen
+      codegen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id a, Id b)] -> Maybe (Id b)
     searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
