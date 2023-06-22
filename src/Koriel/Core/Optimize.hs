@@ -82,6 +82,13 @@ optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT
       _ -> pass
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
+
+  let usedTopDefs =
+        foldMap (\(_, _, e) -> HashSet.fromList $ toList e) topVars
+          <> foldMap (\(_, ps, _, e) -> HashSet.fromList (toList e) `HashSet.difference` HashSet.fromList ps) topFuns
+
+  topVars <- pure $ filter (\(n, _, _) -> n `HashSet.member` usedTopDefs || n.sort `elem` [External, Native]) topVars
+  topFuns <- pure $ filter (\(n, _, _, _) -> n `HashSet.member` usedTopDefs || n.sort `elem` [External, Native]) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
