@@ -3,6 +3,7 @@
 -- For `undefined`
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
+import Control.Exception (IOException, catch, throwIO)
 import Data.String.Conversions (convertString)
 import Data.Text qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
@@ -19,6 +20,7 @@ import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
+import System.IO.Error (isResourceVanishedError)
 import System.Process.Typed (
   ExitCode (ExitFailure, ExitSuccess),
   byteStringInput,
@@ -237,24 +239,79 @@ test testcase typ lambdaLift noOptimize option compileMode = do
 testError :: FilePath -> IO ()
 testError testcase = do
   compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
+    `catch` \(e :: IOException) ->
+      if isResourceVanishedError e
+        then do
+          hPutStrLn stderr $ "on " <> testcase <> ": error"
+          hPrint stderr e
+          testError testcase
+        else throwIO e
 
 testNormal :: FilePath -> IO ()
-testNormal testcase = test testcase "normal" True False defaultOptimizeOption LLVM
+testNormal testcase =
+  test testcase "normal" True False defaultOptimizeOption LLVM
+    `catch` \(e :: IOException) ->
+      if isResourceVanishedError e
+        then do
+          hPutStrLn stderr $ "on " <> testcase <> ": normal"
+          hPrint stderr e
+          testNormal testcase
+        else throwIO e
 
 testNoLift :: FilePath -> IO ()
-testNoLift testcase = test testcase "nolift" False False defaultOptimizeOption LLVM
+testNoLift testcase =
+  test testcase "nolift" False False defaultOptimizeOption LLVM
+    `catch` \(e :: IOException) ->
+      if isResourceVanishedError e
+        then do
+          hPutStrLn stderr $ "on " <> testcase <> ": nolift"
+          hPrint stderr e
+          testNoLift testcase
+        else throwIO e
 
 testNoOpt :: FilePath -> IO ()
-testNoOpt testcase = test testcase "noopt" True True defaultOptimizeOption LLVM
+testNoOpt testcase =
+  test testcase "noopt" True True defaultOptimizeOption LLVM
+    `catch` \(e :: IOException) ->
+      if isResourceVanishedError e
+        then do
+          hPutStrLn stderr $ "on " <> testcase <> ": noopt"
+          hPrint stderr e
+          testNoOpt testcase
+        else throwIO e
 
 testNoNo :: FilePath -> IO ()
-testNoNo testcase = test testcase "nono" False True defaultOptimizeOption LLVM
+testNoNo testcase =
+  test testcase "nono" False True defaultOptimizeOption LLVM
+    `catch` \(e :: IOException) ->
+      if isResourceVanishedError e
+        then do
+          hPutStrLn stderr $ "on " <> testcase <> ": nono"
+          hPrint stderr e
+          testNoNo testcase
+        else throwIO e
 
 testAggressive :: FilePath -> IO ()
-testAggressive testcase = test testcase "aggressive" True False aggressiveOptimizeOption LLVM
+testAggressive testcase =
+  test testcase "aggressive" True False aggressiveOptimizeOption LLVM
+    `catch` \(e :: IOException) ->
+      if isResourceVanishedError e
+        then do
+          hPutStrLn stderr $ "on " <> testcase <> ": aggressive"
+          hPrint stderr e
+          testAggressive testcase
+        else throwIO e
 
 testDelim :: FilePath -> IO ()
-testDelim testcase = test testcase "delim" True False defaultOptimizeOption DelimLLVM
+testDelim testcase =
+  test testcase "delim" True False defaultOptimizeOption DelimLLVM
+    `catch` \(e :: IOException) ->
+      if isResourceVanishedError e
+        then do
+          hPutStrLn stderr $ "on " <> testcase <> ": delim"
+          hPrint stderr e
+          testDelim testcase
+        else throwIO e
 
 aggressiveOptimizeOption :: OptimizeOption
 aggressiveOptimizeOption =

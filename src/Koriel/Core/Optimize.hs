@@ -96,17 +96,17 @@ optimizeExpr state expr = do
   option <- asks (.option)
   5 `times` opt option $ expr
   where
-    opt option = do
-      pure
-        >=> runOpt option.doFoldVariable foldVariable
-        >=> runOpt option.doInlineConstructor (usingReaderT mempty . inlineConstructor)
-        >=> runOpt option.doEliminateUnusedLet eliminateUnusedLet
-        >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
-        >=> runOpt option.doFoldRedundantCast foldRedundantCast
-        >=> runOpt option.doFoldTrivialCall foldTrivialCall
-        >=> runOpt option.doSpecializeFunction specializeFunction
-        >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
-        >=> normalizeExpr
+    opt option =
+      do
+        pure
+          >=> runOpt option.doFoldVariable foldVariable
+          >=> runOpt option.doInlineConstructor (usingReaderT mempty . inlineConstructor)
+          >=> runOpt option.doEliminateUnusedLet eliminateUnusedLet
+          >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
+          >=> runOpt option.doFoldRedundantCast foldRedundantCast
+          >=> runOpt option.doFoldTrivialCall foldTrivialCall
+          >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
+          >=> normalizeExpr
     runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag
@@ -168,6 +168,7 @@ eliminateUnusedLet =
           let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
            in fvs /= fvs' && reachable limit gamma v fvs'
 
+-- TODO: Merge with OptimizeEnv
 newtype CallInlineEnv = CallInlineEnv
   { inlinableMap :: HashMap (Id Type) ([Id Type], Expr (Id Type))
   }

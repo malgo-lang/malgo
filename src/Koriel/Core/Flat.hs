@@ -4,6 +4,7 @@ module Koriel.Core.Flat (normalize, normalizeExpr) where
 import Control.Lens (has, traverseOf, traversed, _2)
 import Control.Monad.Trans.Cont (ContT (..), evalContT, shiftT)
 import Data.Traversable (for)
+import Koriel.Core.Alpha (AlphaEnv (..), alpha)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -37,6 +38,22 @@ normalizeExpr ::
   m (Expr (Id Type))
 normalizeExpr e = runContT (flat e) pure
 
+-- | If the continuation @k@ called more than once, then the result expression must be alpha converted.
+alphaShift ::
+  ( MonadReader r m,
+    HasUniqSupply r,
+    MonadIO m
+  ) =>
+  ( (a -> m (Expr (Id Type))) ->
+    ContT (Expr (Id Type)) m (Expr (Id Type))
+  ) ->
+  ContT (Expr (Id Type)) m a
+alphaShift cont = shiftT \k -> do
+  uniqSupply <- asks (.uniqSupply)
+  cont \e -> do
+    e <- k e
+    alpha e AlphaEnv {uniqSupply, subst = mempty}
+
 -- Traverse the expression tree.
 flat ::
   ( MonadReader env m,
@@ -56,17 +73,17 @@ flat (Let ds e) = shiftT \k -> do
   ds <- traverse flatLocalDef ds
   e <- inScope k $ flat e
   pure $ Let ds e
-flat (Match scr cs) = shiftT \k -> do
+flat (Match scr cs) = alphaShift \k -> do
   scr <- flat scr
   cs <- traverse (flatCase k) cs
   scr' <- newTemporalId "scrutinee" (typeOf scr)
   pure $ assign scr' scr $ matchToSwitch scr' cs
-flat (Switch v cs e) = shiftT \k -> do
+flat (Switch v cs e) = alphaShift \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
-    inScope k (flat e)
-  e <- inScope k (flat e)
+    runContT (flat e) k
+  e <- runContT (flat e) k
   pure $ Switch v cs e
-flat (SwitchUnboxed v cs e) = shiftT \k -> lift do
+flat (SwitchUnboxed v cs e) = alphaShift \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
     runContT (flat e) k
   e <- runContT (flat e) k
@@ -139,7 +156,7 @@ flatLocalDef ::
     HasModuleName env
   ) =>
   LocalDef (Id Type) ->
-  ContT (Expr (Id Type)) m (LocalDef (Id Type))
+  m (LocalDef (Id Type))
 flatLocalDef (LocalDef var ty obj) = LocalDef var ty <$> flatObj obj
 
 flatObj ::
