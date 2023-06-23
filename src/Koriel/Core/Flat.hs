@@ -26,7 +26,8 @@ normalize Program {..} = do
   topFuns <- for topFuns \(name, params, ty, expr) -> do
     expr' <- runContT (flat expr) pure
     pure (name, params, ty, expr')
-  pure Program {..}
+  uniqSupply <- asks (.uniqSupply)
+  expr (alpha ?? AlphaEnv {uniqSupply, subst = mempty}) Program {..}
 
 normalizeExpr ::
   ( MonadReader env m,
@@ -36,23 +37,7 @@ normalizeExpr ::
   ) =>
   Expr (Id Type) ->
   m (Expr (Id Type))
-normalizeExpr e = runContT (flat e) pure
-
--- | If the continuation @k@ called more than once, then the result expression must be alpha converted.
-alphaShift ::
-  ( MonadReader r m,
-    HasUniqSupply r,
-    MonadIO m
-  ) =>
-  ( (a -> m (Expr (Id Type))) ->
-    ContT (Expr (Id Type)) m (Expr (Id Type))
-  ) ->
-  ContT (Expr (Id Type)) m a
-alphaShift cont = shiftT \k -> do
-  uniqSupply <- asks (.uniqSupply)
-  cont \e -> do
-    e <- k e
-    alpha e AlphaEnv {uniqSupply, subst = mempty}
+normalizeExpr e = join $ alpha <$> runContT (flat e) pure <*> (AlphaEnv <$> asks (.uniqSupply) <*> pure mempty)
 
 -- Traverse the expression tree.
 flat ::
@@ -73,17 +58,17 @@ flat (Let ds e) = shiftT \k -> do
   ds <- traverse flatLocalDef ds
   e <- inScope k $ flat e
   pure $ Let ds e
-flat (Match scr cs) = alphaShift \k -> do
+flat (Match scr cs) = shiftT \k -> do
   scr <- flat scr
   cs <- traverse (flatCase k) cs
   scr' <- newTemporalId "scrutinee" (typeOf scr)
   pure $ assign scr' scr $ matchToSwitch scr' cs
-flat (Switch v cs e) = alphaShift \k -> lift do
+flat (Switch v cs e) = shiftT \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
     runContT (flat e) k
   e <- runContT (flat e) k
   pure $ Switch v cs e
-flat (SwitchUnboxed v cs e) = alphaShift \k -> lift do
+flat (SwitchUnboxed v cs e) = shiftT \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
     runContT (flat e) k
   e <- runContT (flat e) k

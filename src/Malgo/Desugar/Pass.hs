@@ -302,13 +302,7 @@ curryFun isToplevel hint [] e = do
         pure $ C.Call f (map C.Var ps)
       curryFun isToplevel hint ps body
     _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
-curryFun False _ [p] e = pure ([p], e)
-curryFun True _ [p] e = pure ([p], e)
--- fun <- newInternalId (hint <> "_curry") (C.typeOf $ Fun [p] e)
--- p' <- newTemporalId "eta" (C.typeOf p)
--- uniqSupply <- asks (.uniqSupply)
--- e' <- alpha e (AlphaEnv {uniqSupply, subst = one (p, C.Var p')})
--- pure ([p], C.Let [LocalDef fun (C.typeOf fun) (Fun [p'] e')] (C.Call (C.Var fun) [C.Var p]))
+curryFun _ _ [p] e = pure ([p], e)
 curryFun isToplevel hint ps e = curryFun' ps []
   where
     curryFun' [] _ = error "length ps >= 1"

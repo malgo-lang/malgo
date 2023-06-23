@@ -129,44 +129,16 @@ instance Pretty a => Pretty (Expr a) where
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
   pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
-  pPrint (Switch v cs e) =
-    parens $
-      sep
-        [ "switch",
-          pPrint v,
-          vcat (toList $ fmap pPrintCase cs),
-          parens (sep ["default", pPrint e])
-        ]
+  pPrint (Switch v cs e) = parens $ "switch" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
     where
-      pPrintCase (t, e) = parens $ sep [pPrint t, pPrint e]
-  pPrint (SwitchUnboxed v cs e) =
-    parens $
-      sep
-        [ "switch-unboxed",
-          pPrint v,
-          vcat (toList $ fmap pPrintCase cs),
-          parens (sep ["default", pPrint e])
-        ]
+      pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
+  pPrint (SwitchUnboxed v cs e) = parens $ "switch-unboxed" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
     where
-      pPrintCase (t, e) = parens $ sep [pPrint t, pPrint e]
-  pPrint (Destruct v con xs e) =
-    parens $
-      sep
-        [ "destruct",
-          pPrint v,
-          pPrint con,
-          parens (sep (map pPrint xs)),
-          pPrint e
-        ]
+      pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
+  pPrint (Destruct v con xs e) = parens $ "destruct" <+> pPrint v <+> pPrint con <+> parens (sep (map pPrint xs)) $$ pPrint e
   pPrint (DestructRecord v kvs e) =
-    parens $
-      sep
-        [ "destruct-record",
-          pPrint v,
-          parens (sep (map (\(k, v) -> pPrint k <+> pPrint v) $ HashMap.toList kvs)),
-          pPrint e
-        ]
-  pPrint (Assign x v e) = parens $ sep ["=", pPrint x, pPrint v, pPrint e]
+    parens $ "destruct-record" <+> pPrint v <+> parens (sep (map (\(k, v) -> pPrint k <+> pPrint v) $ HashMap.toList kvs)) $$ pPrint e
+  pPrint (Assign x v e) = parens $ "=" <+> pPrint x <+> pPrint v $$ pPrint e
   pPrint (Error t) = parens $ "ERROR" <+> pPrint t
 
 instance HasFreeVar Expr where

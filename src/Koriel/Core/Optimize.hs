@@ -105,6 +105,7 @@ optimizeExpr state expr = do
           >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
           >=> runOpt option.doFoldRedundantCast foldRedundantCast
           >=> runOpt option.doFoldTrivialCall foldTrivialCall
+          >=> runOpt option.doSpecializeFunction specializeFunction
           >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
           >=> normalizeExpr
     runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
