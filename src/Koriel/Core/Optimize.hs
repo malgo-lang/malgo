@@ -82,6 +82,13 @@ optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT
       _ -> pass
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
+
+  let usedTopDefs =
+        foldMap (\(_, _, e) -> HashSet.fromList $ toList e) topVars
+          <> foldMap (\(_, ps, _, e) -> HashSet.fromList (toList e) `HashSet.difference` HashSet.fromList ps) topFuns
+
+  topVars <- pure $ filter (\(n, _, _) -> n `HashSet.member` usedTopDefs || (n.sort `elem` [External, Native] && n.moduleName == moduleName)) topVars
+  topFuns <- pure $ filter (\(n, _, _, _) -> n `HashSet.member` usedTopDefs || (n.sort `elem` [External, Native] && n.moduleName == moduleName)) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
@@ -89,17 +96,18 @@ optimizeExpr state expr = do
   option <- asks (.option)
   5 `times` opt option $ expr
   where
-    opt option = do
-      pure
-        >=> runOpt option.doFoldVariable foldVariable
-        >=> runOpt option.doInlineConstructor (usingReaderT mempty . inlineConstructor)
-        >=> runOpt option.doEliminateUnusedLet eliminateUnusedLet
-        >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
-        >=> runOpt option.doFoldRedundantCast foldRedundantCast
-        >=> runOpt option.doFoldTrivialCall foldTrivialCall
-        >=> runOpt option.doSpecializeFunction specializeFunction
-        >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
-        >=> normalizeExpr
+    opt option =
+      do
+        pure
+          >=> runOpt option.doFoldVariable foldVariable
+          >=> runOpt option.doInlineConstructor (usingReaderT mempty . inlineConstructor)
+          >=> runOpt option.doEliminateUnusedLet eliminateUnusedLet
+          >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
+          >=> runOpt option.doFoldRedundantCast foldRedundantCast
+          >=> runOpt option.doFoldTrivialCall foldTrivialCall
+          >=> runOpt option.doSpecializeFunction specializeFunction
+          >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
+          >=> normalizeExpr
     runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag
@@ -161,6 +169,7 @@ eliminateUnusedLet =
           let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
            in fvs /= fvs' && reachable limit gamma v fvs'
 
+-- TODO: Merge with OptimizeEnv
 newtype CallInlineEnv = CallInlineEnv
   { inlinableMap :: HashMap (Id Type) ([Id Type], Expr (Id Type))
   }

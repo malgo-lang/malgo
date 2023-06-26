@@ -74,7 +74,7 @@ match x y
           $$ pPrint y
           $$ nest 2 (":" <> pPrint (typeOf y))
 
-lintExpr :: HasCallStack => MonadReader LintEnv m => Expr (Id Type) -> m ()
+lintExpr :: MonadReader LintEnv m => Expr (Id Type) -> m ()
 lintExpr (Atom x) = lintAtom x
 lintExpr (Call f xs) = do
   lintAtom f

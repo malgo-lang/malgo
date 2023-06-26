@@ -54,7 +54,8 @@ import Relude.Unsafe qualified as Unsafe
 data CodeGenState = CodeGenState
   { -- | 'primMap' is a map from primitive function name to its LLVM function.
     _primMap :: Map Name Operand,
-    stringMap :: HashMap Text C.Constant
+    stringMap :: HashMap Text C.Constant,
+    closureMap :: HashMap (Id C.Type) Operand
   }
 
 makeFieldsNoPrefix ''CodeGenState
@@ -100,7 +101,7 @@ type MonadCodeGen m =
 runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
   execModuleBuilderT emptyModuleBuilder $
-    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
+    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty mempty) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
@@ -576,18 +577,24 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
   let fvs = toList $ freevars (Fun ps e) `HashSet.difference` globalValues
   -- キャプチャされる変数を詰める構造体の型
   let capType = StructureType False (map (convType . C.typeOf) fvs)
-  -- クロージャの元になる関数を生成する
-  name <- toName <$> newInternalId (funName.name <> "_closure") ()
-  func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
-    [] -> error "The length of internal function parameters must be 1 or more"
-    (capture : ps') -> do
-      -- キャプチャした変数が詰まっている構造体を展開する
-      env <-
-        HashMap.fromList <$> ifor fvs \i fv ->
-          (fv,) <$> do
-            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` (encodeUtf8 fv.name <> "_addr")
-            load (convType $ C.typeOf fv) fvAddr 0 `named` encodeUtf8 fv.name
-      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExpr e >>= ret
+  CodeGenState {closureMap} <- get
+  func <- case HashMap.lookup funName closureMap of
+    Just func -> pure func
+    Nothing -> do
+      -- クロージャの元になる関数を生成する
+      name <- toName <$> newInternalId (funName.name <> "_closure") ()
+      func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
+        [] -> error "The length of internal function parameters must be 1 or more"
+        (capture : ps') -> do
+          -- キャプチャした変数が詰まっている構造体を展開する
+          env <-
+            HashMap.fromList <$> ifor fvs \i fv ->
+              (fv,) <$> do
+                fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` (encodeUtf8 fv.name <> "_addr")
+                load (convType $ C.typeOf fv) fvAddr 0 `named` encodeUtf8 fv.name
+          local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExpr e >>= ret
+      modify $ \s -> s {closureMap = HashMap.insert funName func closureMap}
+      pure func
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType `named` (encodeUtf8 funName.name <> "_capture")
   ifor_ fvs $ \i fv -> do

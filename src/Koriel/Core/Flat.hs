@@ -4,6 +4,7 @@ module Koriel.Core.Flat (normalize, normalizeExpr) where
 import Control.Lens (has, traverseOf, traversed, _2)
 import Control.Monad.Trans.Cont (ContT (..), evalContT, shiftT)
 import Data.Traversable (for)
+import Koriel.Core.Alpha (AlphaEnv (..), alpha)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -25,7 +26,8 @@ normalize Program {..} = do
   topFuns <- for topFuns \(name, params, ty, expr) -> do
     expr' <- runContT (flat expr) pure
     pure (name, params, ty, expr')
-  pure Program {..}
+  uniqSupply <- asks (.uniqSupply)
+  expr (alpha ?? AlphaEnv {uniqSupply, subst = mempty}) Program {..}
 
 normalizeExpr ::
   ( MonadReader env m,
@@ -35,7 +37,7 @@ normalizeExpr ::
   ) =>
   Expr (Id Type) ->
   m (Expr (Id Type))
-normalizeExpr e = runContT (flat e) pure
+normalizeExpr e = join $ alpha <$> runContT (flat e) pure <*> (AlphaEnv <$> asks (.uniqSupply) <*> pure mempty)
 
 -- Traverse the expression tree.
 flat ::
@@ -61,10 +63,10 @@ flat (Match scr cs) = shiftT \k -> do
   cs <- traverse (flatCase k) cs
   scr' <- newTemporalId "scrutinee" (typeOf scr)
   pure $ assign scr' scr $ matchToSwitch scr' cs
-flat (Switch v cs e) = shiftT \k -> do
+flat (Switch v cs e) = shiftT \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
-    inScope k (flat e)
-  e <- inScope k (flat e)
+    runContT (flat e) k
+  e <- runContT (flat e) k
   pure $ Switch v cs e
 flat (SwitchUnboxed v cs e) = shiftT \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
@@ -139,7 +141,7 @@ flatLocalDef ::
     HasModuleName env
   ) =>
   LocalDef (Id Type) ->
-  ContT (Expr (Id Type)) m (LocalDef (Id Type))
+  m (LocalDef (Id Type))
 flatLocalDef (LocalDef var ty obj) = LocalDef var ty <$> flatObj obj
 
 flatObj ::

@@ -205,13 +205,16 @@ dsExpr (G.Var (Typed typ _) name) = do
           -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
           case C.typeOf name' of
             pts :-> _ -> do
-              -- TODO: merge global closure
-              clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
-              internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
-              ps <- traverse (newTemporalId "p") pts
-              let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
-              modify $ \s -> s {_globalDefs = clsDef : s._globalDefs}
-              pure $ Atom $ C.Var clsId
+              DsState {globalClosures} <- get
+              case HashMap.lookup name' globalClosures of
+                Nothing -> do
+                  clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
+                  internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
+                  ps <- traverse (newTemporalId "p") pts
+                  let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
+                  modify $ \s -> s {_globalDefs = clsDef : s._globalDefs, globalClosures = HashMap.insert name' clsId globalClosures}
+                  pure $ Atom $ C.Var clsId
+                Just clsId -> pure $ Atom $ C.Var clsId
             _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
@@ -299,6 +302,7 @@ curryFun isToplevel hint [] e = do
         pure $ C.Call f (map C.Var ps)
       curryFun isToplevel hint ps body
     _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
+curryFun _ _ [p] e = pure ([p], e)
 curryFun isToplevel hint ps e = curryFun' ps []
   where
     curryFun' [] _ = error "length ps >= 1"
@@ -307,7 +311,7 @@ curryFun isToplevel hint ps e = curryFun' ps []
         then do
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
-          fun <- newExternalId (hint <> "_curry") (C.typeOf $ Fun ps e)
+          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           globalDefs <>= [FunDef fun ps (C.typeOf fun) e]
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)

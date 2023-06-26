@@ -57,6 +57,7 @@ data IdSort
   deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
   deriving (Pretty) via PrettyShow IdSort
 
+-- TODO: Add uniq :: Int field
 data Id a = Id
   { name :: Text,
     meta :: a,
