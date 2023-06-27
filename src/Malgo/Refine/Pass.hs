@@ -18,9 +18,9 @@ import Malgo.Syntax qualified as Syn
 import Malgo.Syntax.Extension
 
 refine :: (MonadIO m, MonadReader MalgoEnv m) => TcEnv -> Module (Malgo 'Infer) -> m (Module (Malgo 'Refine))
-refine tcEnv Module {_moduleName, _moduleDefinition} = do
+refine tcEnv Module {..} = do
   malgoEnv <- ask
-  Module _moduleName <$> runReaderT (refineBindGroup _moduleDefinition) (buildRefineEnv malgoEnv tcEnv)
+  Module moduleName <$> runReaderT (refineBindGroup moduleDefinition) (buildRefineEnv malgoEnv tcEnv)
 
 refineBindGroup :: (MonadReader RefineEnv m, MonadIO m) => BindGroup (Malgo 'Infer) -> m (BindGroup (Malgo 'Refine))
 refineBindGroup BindGroup {..} = do

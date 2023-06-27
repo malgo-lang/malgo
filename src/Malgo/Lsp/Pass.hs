@@ -51,7 +51,7 @@ removeInternalInfos (Index refs defs syms) = Index (HashMap.filterWithKey (\k _ 
     isInternal _ = False
 
 indexModule :: (MonadIO m, MonadReader MalgoEnv m, MonadState IndexEnv m) => Module (Malgo 'Refine) -> m ()
-indexModule Module {..} = indexBindGroup _moduleDefinition
+indexModule Module {..} = indexBindGroup moduleDefinition
 
 indexBindGroup :: (MonadIO m, MonadReader MalgoEnv m, MonadState IndexEnv m) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do

@@ -57,7 +57,7 @@ compileFromAST srcPath env parsedAst =
       hPutStrLn stderr $ "IO Exception: " <> show e
       exitFailure
   where
-    moduleName = parsedAst._moduleName
+    moduleName = parsedAst.moduleName
     act = do
       when (convertString (takeBaseName srcPath) /= moduleName.raw) $
         error "Module name must be source file's base name."
@@ -157,4 +157,4 @@ compile srcPath env = do
   when env.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
-  compileFromAST srcPath env {Malgo.Monad.moduleName = parsedAst._moduleName} parsedAst
+  compileFromAST srcPath env {Malgo.Monad.moduleName = parsedAst.moduleName} parsedAst

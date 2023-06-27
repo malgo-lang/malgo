@@ -417,7 +417,7 @@ instance Pretty (XId x) => Pretty (Decl x) where
 
 -- * Module
 
-data Module x = Module {_moduleName :: ModuleName, _moduleDefinition :: XModule x}
+data Module x = Module {moduleName :: ModuleName, moduleDefinition :: XModule x}
 
 deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XModule x)) => Eq (Module x)
 
