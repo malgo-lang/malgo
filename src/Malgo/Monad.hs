@@ -20,7 +20,7 @@ data MalgoEnv = MalgoEnv
     -- In 'Malgo.Driver.compile' function, 'moduleName' can be 'undefined'.
     moduleName :: ~ModuleName,
     interfaces :: IORef (HashMap ModuleName Interface),
-    _indexes :: IORef (HashMap ModuleName Index),
+    indexes :: IORef (HashMap ModuleName Index),
     dstPath :: FilePath,
     compileMode :: CompileMode,
     noOptimize :: Bool,
@@ -55,7 +55,7 @@ newMalgoEnv ::
 newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
   uniqSupply <- fromMaybeM (UniqSupply <$> newIORef 0) (pure mUniqSupply)
   interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
-  _indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
+  indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
   basePath <- getXdgDirectory XdgData ("malgo" </> "base")
   workspaceDir <- getWorkspaceDir
   let dstPath = workspaceDir </> "build" </> takeBaseName srcFile <> ".ll"

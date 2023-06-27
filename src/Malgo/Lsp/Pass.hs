@@ -14,7 +14,7 @@ import Koriel.Pretty (Pretty (pPrint))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Lsp.Index
-import Malgo.Monad (MalgoEnv, MalgoM)
+import Malgo.Monad (MalgoEnv (indexes), MalgoM)
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
 import Malgo.Syntax qualified as S

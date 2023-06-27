@@ -28,7 +28,7 @@ import Data.String.Conversions (convertString)
 import GHC.Records (HasField)
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
-import Koriel.Lens (HasIndexes (..), HasModulePaths (..))
+import Koriel.Lens (HasModulePaths (..))
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude
@@ -74,7 +74,7 @@ makeFieldsNoPrefix ''Index
 
 data LspOpt = LspOpt
   { _modulePaths :: [FilePath],
-    _indexes :: IORef (HashMap ModuleName Index)
+    indexes :: IORef (HashMap ModuleName Index)
   }
 
 makeFieldsNoPrefix ''LspOpt
@@ -102,10 +102,10 @@ storeIndex index = do
   let encoded = encode index
   writeFileLBS (dstPath -<.> "idx") encoded
 
-loadIndex :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath], HasIndexes s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
+loadIndex :: (MonadReader s m, MonadIO m, HasModulePaths s [FilePath], HasField "indexes" s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
 loadIndex modName = do
   modPaths <- view modulePaths
-  indexesRef <- view indexes
+  indexesRef <- asks (.indexes)
   indexes <- readIORef indexesRef
   case HashMap.lookup modName indexes of
     Just index -> pure $ Just index
