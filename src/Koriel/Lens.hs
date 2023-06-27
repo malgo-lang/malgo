@@ -4,8 +4,6 @@ module Koriel.Lens (
   HasSignatureMap (..),
   HasTypeDefMap (..),
   HasTypeSynonymMap (..),
-  HasModulePaths (..),
-  HasIndexes (..),
   HasKindCtx (..),
 )
 where
@@ -26,12 +24,6 @@ class HasTypeDefMap s a | s -> a where
 
 class HasTypeSynonymMap s a | s -> a where
   typeSynonymMap :: Lens' s a
-
-class HasModulePaths s a | s -> a where
-  modulePaths :: Lens' s a
-
-class HasIndexes s a | s -> a where
-  indexes :: Lens' s a
 
 class HasKindCtx s a | s -> a where
   kindCtx :: Lens' s a

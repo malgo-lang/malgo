@@ -7,7 +7,6 @@ import Control.Monad.Extra (fromMaybeM)
 import Control.Monad.Fix (MonadFix)
 import Koriel.Core.Optimize (OptimizeOption, defaultOptimizeOption)
 import Koriel.Id (ModuleName)
-import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply (..))
 import Koriel.Prelude
 import Malgo.Interface (Interface)

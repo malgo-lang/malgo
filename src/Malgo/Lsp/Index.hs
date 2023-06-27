@@ -20,7 +20,6 @@ module Malgo.Lsp.Index (
 )
 where
 
-import Control.Lens (view)
 import Control.Lens.TH
 import Data.Binary (Binary, decodeFile, encode)
 import Data.HashMap.Strict qualified as HashMap
@@ -28,7 +27,6 @@ import Data.String.Conversions (convertString)
 import GHC.Records (HasField)
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
-import Koriel.Lens (HasModulePaths (..))
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (Scheme, Type)
 import Malgo.Prelude
