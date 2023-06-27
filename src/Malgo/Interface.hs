@@ -4,7 +4,7 @@
 module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
 
 import Control.Exception (IOException, catch)
-import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.))
+import Control.Lens (At (at), ifor_, (%=), (?=), (^.))
 import Control.Lens.TH
 import Control.Monad.Extra (firstJustM)
 import Data.Binary (Binary, decodeFile)
@@ -79,7 +79,7 @@ loadInterface ::
   ( MonadReader s m,
     MonadIO m,
     HasField "interfaces" s (IORef (HashMap ModuleName Interface)),
-    HasModulePaths s [FilePath]
+    HasField "modulePaths" s [FilePath]
   ) =>
   ModuleName ->
   m Interface
@@ -89,7 +89,7 @@ loadInterface (ModuleName modName) = do
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
-      modulePaths <- view modulePaths
+      modulePaths <- asks (.modulePaths)
       message <-
         firstJustM
           (liftIO . readFileIfExists (toInterfacePath $ convertString modName))

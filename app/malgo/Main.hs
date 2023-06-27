@@ -57,7 +57,7 @@ main = do
           }
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
+      opt <- pure $ opt {modulePaths = opt.modulePaths <> [".malgo-work" </> "build", basePath]}
       void $ Lsp.server opt
     Build _ -> do
       Build.run

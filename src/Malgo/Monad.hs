@@ -28,7 +28,7 @@ data MalgoEnv = MalgoEnv
     optimizeOption :: OptimizeOption,
     debugMode :: Bool,
     testMode :: Bool,
-    _modulePaths :: [FilePath]
+    modulePaths :: [FilePath]
   }
 
 data CompileMode = LLVM | DelimLLVM deriving stock (Eq, Show)
@@ -67,7 +67,7 @@ newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
   let optimizeOption = defaultOptimizeOption
   let debugMode = False
   let testMode = False
-  let _modulePaths = modulePaths <> [workspaceDir </> "build", basePath]
+  modulePaths <- pure $ modulePaths <> [workspaceDir </> "build", basePath]
   pure MalgoEnv {..}
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}

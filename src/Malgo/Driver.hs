@@ -87,7 +87,7 @@ compileFromAST srcPath env parsedAst =
         writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
 
         -- check module paths include dstName's directory
-        assert (takeDirectory env.dstPath `elem` env._modulePaths) pass
+        assert (takeDirectory env.dstPath `elem` env.modulePaths) pass
         core <- Link.link inf core
         writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
 

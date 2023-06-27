@@ -5,7 +5,6 @@ module Malgo.Desugar.DsEnv (DsEnv (..), makeDsEnv) where
 
 import Control.Lens.TH
 import Koriel.Id
-import Koriel.Lens
 import Koriel.MonadUniq
 import Malgo.Interface (Interface)
 import Malgo.Monad
@@ -15,7 +14,7 @@ import Malgo.Prelude
 data DsEnv = DsEnv
   { moduleName :: ModuleName,
     uniqSupply :: UniqSupply,
-    _modulePaths :: [FilePath],
+    modulePaths :: [FilePath],
     interfaces :: IORef (HashMap ModuleName Interface)
   }
 
