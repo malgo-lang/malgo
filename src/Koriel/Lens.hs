@@ -5,7 +5,6 @@ module Koriel.Lens (
   HasTypeDefMap (..),
   HasTypeSynonymMap (..),
   HasModulePaths (..),
-  HasInterfaces (..),
   HasIndexes (..),
   HasKindCtx (..),
 )
@@ -33,9 +32,6 @@ class HasModulePaths s a | s -> a where
 
 class HasIndexes s a | s -> a where
   indexes :: Lens' s a
-
-class HasInterfaces s a | s -> a where
-  interfaces :: Lens' s a
 
 class HasKindCtx s a | s -> a where
   kindCtx :: Lens' s a

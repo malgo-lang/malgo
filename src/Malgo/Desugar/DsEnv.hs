@@ -16,7 +16,7 @@ data DsEnv = DsEnv
   { moduleName :: ModuleName,
     uniqSupply :: UniqSupply,
     _modulePaths :: [FilePath],
-    _interfaces :: IORef (HashMap ModuleName Interface)
+    interfaces :: IORef (HashMap ModuleName Interface)
   }
 
 makeFieldsNoPrefix ''DsEnv

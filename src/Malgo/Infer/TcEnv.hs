@@ -16,7 +16,7 @@ import Koriel.Lens
 import Malgo.Infer.TypeRep
 import Malgo.Interface (Interface)
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (Resolved, RnEnv)
+import Malgo.Rename.RnEnv (Resolved, RnEnv (interfaces))
 import Malgo.Syntax.Extension
 
 type RecordTypeName = Text
@@ -27,7 +27,7 @@ data TcEnv = TcEnv
     _typeSynonymMap :: HashMap TypeVar ([TypeVar], Type),
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
     _kindCtx :: KindCtx,
-    _interfaces :: IORef (HashMap ModuleName Interface)
+    interfaces :: IORef (HashMap ModuleName Interface)
   }
 
 makeFieldsNoPrefix ''TcEnv
@@ -66,7 +66,7 @@ genTcEnv rnEnv = do
               (string_t, TYPE),
               (ptr_t, TYPE `TyArr` TYPE)
             ],
-        _interfaces = rnEnv ^. interfaces
+        interfaces = rnEnv.interfaces
       }
 
 findBuiltinType :: PsId -> RnEnv -> Maybe RnId

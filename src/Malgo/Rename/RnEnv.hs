@@ -39,7 +39,7 @@ data RnEnv = RnEnv
     uniqSupply :: UniqSupply,
     debugMode :: Bool,
     _modulePaths :: [FilePath],
-    _interfaces :: IORef (HashMap ModuleName Interface)
+    interfaces :: IORef (HashMap ModuleName Interface)
   }
 
 makeFieldsNoPrefix ''RnEnv
@@ -79,7 +79,7 @@ genBuiltinRnEnv modName = do
           uniqSupply = malgoEnv.uniqSupply,
           debugMode = malgoEnv.debugMode,
           _modulePaths = malgoEnv ^. modulePaths,
-          _interfaces = malgoEnv ^. interfaces
+          interfaces = malgoEnv.interfaces
         }
 
 -- | Resolving a new (local) name
