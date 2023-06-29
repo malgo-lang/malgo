@@ -31,15 +31,15 @@ RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.4.5 && ghcup set ghc 9.4.
 
 RUN ghcup install cabal 3.10.1.0 && ghcup set cabal 3.10.1.0
 
-RUN ghcup compile hls --git-ref b84110b508e2f30899b84ffc3928a5e20be1615f --ghc 9.4.5 -j$(nproc)
+RUN ghcup compile hls --git-ref e9c81e48847828f75ada80671660200ce89a03eb --ghc 9.4.5 -j$(nproc)
 # RUN ghcup install hls
 
 RUN ghcup gc
 
 WORKDIR $HOME
 
-RUN cabal install fourmolu-0.13.0.0 --ignore-project
-RUN cabal install ghc-prof-flamegraph hlint --ignore-project
+RUN cabal install ghc-prof-flamegraph --ignore-project
+RUN cabal install hlint --ignore-project
 
 FROM buildpack-deps:stable
 
@@ -103,7 +103,6 @@ RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 COPY --from=ghcup-install $HOME/.ghcup/ $HOME/.ghcup/
 COPY --from=ghcup-install $HOME/.cabal/ $HOME/.cabal/
 COPY --from=ghcup-install $HOME/.stack/ $HOME/.stack/
-# COPY --from=ghcup-install $HOME/.local/ $HOME/.local/
 
 ENV PATH=$HOME/.cabal/bin:$HOME/.local/bin:$HOME/.ghcup/bin:${PATH}
 

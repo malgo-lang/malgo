@@ -1,3 +1,4 @@
+-- Based on: Fengyun Liu. 2016. A generic algorithm for checking exhaustivity of pattern matching (short paper). In Proceedings of the 2016 7th ACM SIGPLAN Symposium on Scala (SCALA 2016). Association for Computing Machinery, New York, NY, USA, 61–64. https://doi.org/10.1145/2998392.2998401
 module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
 import Data.HashMap.Strict qualified as HashMap
