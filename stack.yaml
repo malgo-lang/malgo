@@ -18,5 +18,7 @@ ghc-options:
   malgo: -j8 +RTS -A128m -n2m -RTS
 
 allow-newer: true
+allow-newer-deps:
+  - diagnose
 
 system-ghc: true
