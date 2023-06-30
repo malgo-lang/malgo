@@ -14,7 +14,7 @@ import Malgo.Driver qualified as Driver
 import Malgo.Monad (getWorkspaceDir, newMalgoEnv)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
-import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..), _moduleName)
+import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..))
 import Relude.Unsafe qualified as Unsafe
 import System.Directory (getCurrentDirectory, makeAbsolute)
 import System.FilePath ((</>))
@@ -82,9 +82,9 @@ run = do
       Left _ -> []
       Right ast -> [(sourceFile, ast)]
     takeImports (sourceFile, Module {..}) =
-      let ParsedDefinitions ds = _moduleDefinition
+      let ParsedDefinitions ds = moduleDefinition
        in ( sourceFile,
-            _moduleName,
+            moduleName,
             ordNub $
               mapMaybe
                 ( \case

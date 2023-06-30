@@ -15,7 +15,7 @@ import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (loadInterface)
 import Malgo.Prelude hiding (Constraint)
-import Malgo.Rename.RnEnv (RnEnv (moduleName, uniqSupply))
+import Malgo.Rename.RnEnv (RnEnv (interfaces, moduleName, modulePaths, uniqSupply))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
@@ -263,7 +263,7 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
   where
     -- check single case
     checkSingle (pos, name, _) inferredSchemeType = do
-      declaredScheme <- lookupVar (pos.value) name
+      declaredScheme <- lookupVar pos.value name
       let inferredScheme = Forall as inferredSchemeType
       case declaredScheme of
         -- No explicit signature
@@ -285,10 +285,10 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
           let Forall _ inferredType = fmap (expandAllTypeSynonym abbrEnv) inferredScheme
           case evidenceOfEquiv declaredType inferredType of
             Just evidence
-              | anySame $ Map.elems evidence -> errorOn (pos.value) $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+              | anySame $ Map.elems evidence -> errorOn pos.value $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
               | otherwise -> signatureMap . at name ?= declaredScheme
             Nothing ->
-              errorOn (pos.value) $
+              errorOn pos.value $
                 "Signature mismatch:"
                   $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
                   $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
@@ -296,9 +296,9 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
 -- | Which combination of variables should be unification to consider two types as equal?
 -- Use in `tcScDefs`.
 evidenceOfEquiv ::
-  -- | declared type (∀ was stripped)
+  -- | declared type (∀ was stripped, type synonyms are expanded)
   Type ->
-  -- | inferred type (∀ was stripped)
+  -- | inferred type (∀ was stripped, type synonyms are expanded)
   Type ->
   -- | evidence of equivalence (or no evidence)
   Maybe (Map Type Type)
@@ -355,10 +355,10 @@ tcExpr (Fn pos (Clause x [] e :| _)) = do
 tcExpr (Fn pos cs) = do
   (c' :| cs') <- traverse tcClause cs
   -- パターンの数がすべての節で同じかを検査
-  -- tcPatternsでパターンの組み換えを行うので、このタイミングで検査する
-  let patNums :: Int = countPatNums c'
+  -- tcClauseでパターンの組み換えを行うので、このタイミングで検査する
+  let patNums = countPatNums c'
   for_ cs' \c -> do
-    when (countPatNums c /= patNums) $ do
+    when (countPatNums c /= patNums) do
       errorOn pos "The number of patterns in each clause must be the same"
     tell [(pos, typeOf c' :~ typeOf c)]
   pure $ Fn (Typed (typeOf c') pos) (c' :| cs')

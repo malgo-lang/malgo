@@ -36,7 +36,7 @@ pModule = do
   x <- pModuleName
   void $ pOperator "="
   ds <- between (symbol "{") (symbol "}") $ many pDecl
-  pure $ Module {_moduleName = ModuleName x, _moduleDefinition = ParsedDefinitions ds}
+  pure $ Module {moduleName = ModuleName x, moduleDefinition = ParsedDefinitions ds}
 
 -- module name
 pModuleName :: Parser Text

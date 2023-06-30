@@ -163,7 +163,7 @@ toBound tv = tv.metaVar
 instantiate :: (MonadBind m, MonadIO m, MonadState TcEnv m) => Range -> Scheme Type -> m Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
-    v <- TyMeta <$> freshVar (Just $ a.name)
+    v <- TyMeta <$> freshVar (Just a.name)
     ctx <- use kindCtx
     solve [(x, kindOf ctx a :~ kindOf ctx v)]
     pure (a, v)

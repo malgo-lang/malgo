@@ -14,7 +14,7 @@ import Koriel.Pretty (Pretty (pPrint))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Lsp.Index
-import Malgo.Monad (MalgoEnv, MalgoM)
+import Malgo.Monad (MalgoEnv (indexes, modulePaths), MalgoM)
 import Malgo.Prelude
 import Malgo.Syntax hiding (Type)
 import Malgo.Syntax qualified as S
@@ -51,7 +51,7 @@ removeInternalInfos (Index refs defs syms) = Index (HashMap.filterWithKey (\k _ 
     isInternal _ = False
 
 indexModule :: (MonadIO m, MonadReader MalgoEnv m, MonadState IndexEnv m) => Module (Malgo 'Refine) -> m ()
-indexModule Module {..} = indexBindGroup _moduleDefinition
+indexModule Module {..} = indexBindGroup moduleDefinition
 
 indexBindGroup :: (MonadIO m, MonadReader MalgoEnv m, MonadState IndexEnv m) => BindGroup (Malgo 'Refine) -> m ()
 indexBindGroup BindGroup {..} = do

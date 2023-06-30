@@ -15,7 +15,7 @@ module Malgo.Rename.RnEnv (
 )
 where
 
-import Control.Lens (ASetter', At (at), makeFieldsNoPrefix, over, view, (^.))
+import Control.Lens (ASetter', At (at), makeFieldsNoPrefix, over, view)
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
 import Koriel.Lens
@@ -38,8 +38,8 @@ data RnEnv = RnEnv
     moduleName :: ModuleName,
     uniqSupply :: UniqSupply,
     debugMode :: Bool,
-    _modulePaths :: [FilePath],
-    _interfaces :: IORef (HashMap ModuleName Interface)
+    modulePaths :: [FilePath],
+    interfaces :: IORef (HashMap ModuleName Interface)
   }
 
 makeFieldsNoPrefix ''RnEnv
@@ -78,8 +78,8 @@ genBuiltinRnEnv modName = do
           moduleName = modName,
           uniqSupply = malgoEnv.uniqSupply,
           debugMode = malgoEnv.debugMode,
-          _modulePaths = malgoEnv ^. modulePaths,
-          _interfaces = malgoEnv ^. interfaces
+          modulePaths = malgoEnv.modulePaths,
+          interfaces = malgoEnv.interfaces
         }
 
 -- | Resolving a new (local) name

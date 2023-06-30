@@ -18,9 +18,9 @@ import Malgo.Syntax qualified as Syn
 import Malgo.Syntax.Extension
 
 refine :: (MonadIO m, MonadReader MalgoEnv m) => TcEnv -> Module (Malgo 'Infer) -> m (Module (Malgo 'Refine))
-refine tcEnv Module {_moduleName, _moduleDefinition} = do
+refine tcEnv Module {..} = do
   malgoEnv <- ask
-  Module _moduleName <$> runReaderT (refineBindGroup _moduleDefinition) (buildRefineEnv malgoEnv tcEnv)
+  Module moduleName <$> runReaderT (refineBindGroup moduleDefinition) (buildRefineEnv malgoEnv tcEnv)
 
 refineBindGroup :: (MonadReader RefineEnv m, MonadIO m) => BindGroup (Malgo 'Infer) -> m (BindGroup (Malgo 'Refine))
 refineBindGroup BindGroup {..} = do
@@ -45,7 +45,7 @@ refineExpr (Var x v) = do
       checkValidInstantiation originalType instantiatedType
   pure $ Var x v
   where
-    checkValidInstantiation (T.TyVar v) (TyPrim p) = errorOn (x.value) $ "Invalid instantiation:" <+> "'" <> pPrint v <> "'" <+> "can't be instantiated with" <+> pPrint p
+    checkValidInstantiation (T.TyVar v) (TyPrim p) = errorOn x.value $ "Invalid instantiation:" <+> "'" <> pPrint v <> "'" <+> "can't be instantiated with" <+> pPrint p
     checkValidInstantiation (T.TyVar _) _ = pass
     checkValidInstantiation (T.TyApp t1 t2) (T.TyApp t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
     checkValidInstantiation (T.TyArr t1 t2) (T.TyArr t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
@@ -53,14 +53,14 @@ refineExpr (Var x v) = do
     checkValidInstantiation TyPtr TyPtr = pass
     checkValidInstantiation t1 t2
       | t1 == t2 = pass
-      | otherwise = errorOn (x.value) $ "Type mismatch:" <+> pPrint t1 <+> "and" <+> pPrint t2 <+> "are not the same"
+      | otherwise = errorOn x.value $ "Type mismatch:" <+> pPrint t1 <+> "and" <+> pPrint t2 <+> "are not the same"
 refineExpr (Unboxed x u) = pure $ Unboxed x u
 refineExpr (Apply x e1 e2) = Apply x <$> refineExpr e1 <*> refineExpr e2
 refineExpr (OpApp x op e1 e2) = do
   -- Rearrange OpApp to Apply. This transformation makes code generation easier.
   let applyType = TyArr (typeOf e2) (typeOf x) -- e2 -> result
   let opType = TyArr (typeOf e1) applyType -- e1 -> e2 -> result
-  let x' = Typed (typeOf x) (fst $ x.value)
+  let x' = Typed (typeOf x) (fst x.value)
   refineExpr $ Apply x' (Apply (x' {annotated = applyType}) (Var (x' {annotated = opType}) op) e1) e2
 refineExpr (Fn x cs) = do
   cs' <- traverse refineClause cs
@@ -71,7 +71,7 @@ refineExpr (Fn x cs) = do
   exhaustive <- fmap Space.normalize <$> zipWithM Space.subtract typeSpaces patSpaces
   isEmptys <- traverse Space.equalEmpty exhaustive
   when (any not isEmptys) $
-    errorOn (x.value) $
+    errorOn x.value $
       "Pattern is not exhaustive:"
         <+> pPrint exhaustive
   pure $ Fn x cs'

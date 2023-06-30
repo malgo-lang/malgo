@@ -122,7 +122,7 @@ compile src dst modPaths lambdaLift noOptimize = do
     pure
       malgoEnv
         { dstPath = dst,
-          _modulePaths = takeDirectory dst : malgoEnv._modulePaths,
+          modulePaths = takeDirectory dst : malgoEnv.modulePaths,
           lambdaLift,
           noOptimize
         }

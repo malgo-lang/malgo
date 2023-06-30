@@ -7,7 +7,6 @@ import Control.Monad.Extra (fromMaybeM)
 import Control.Monad.Fix (MonadFix)
 import Koriel.Core.Optimize (OptimizeOption, defaultOptimizeOption)
 import Koriel.Id (ModuleName)
-import Koriel.Lens
 import Koriel.MonadUniq (UniqSupply (..))
 import Koriel.Prelude
 import Malgo.Interface (Interface)
@@ -19,8 +18,8 @@ data MalgoEnv = MalgoEnv
   { uniqSupply :: UniqSupply,
     -- In 'Malgo.Driver.compile' function, 'moduleName' can be 'undefined'.
     moduleName :: ~ModuleName,
-    _interfaces :: IORef (HashMap ModuleName Interface),
-    _indexes :: IORef (HashMap ModuleName Index),
+    interfaces :: IORef (HashMap ModuleName Interface),
+    indexes :: IORef (HashMap ModuleName Index),
     dstPath :: FilePath,
     compileMode :: CompileMode,
     noOptimize :: Bool,
@@ -28,7 +27,7 @@ data MalgoEnv = MalgoEnv
     optimizeOption :: OptimizeOption,
     debugMode :: Bool,
     testMode :: Bool,
-    _modulePaths :: [FilePath]
+    modulePaths :: [FilePath]
   }
 
 data CompileMode = LLVM | DelimLLVM deriving stock (Eq, Show)
@@ -54,8 +53,8 @@ newMalgoEnv ::
   IO MalgoEnv
 newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
   uniqSupply <- fromMaybeM (UniqSupply <$> newIORef 0) (pure mUniqSupply)
-  _interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
-  _indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
+  interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
+  indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
   basePath <- getXdgDirectory XdgData ("malgo" </> "base")
   workspaceDir <- getWorkspaceDir
   let dstPath = workspaceDir </> "build" </> takeBaseName srcFile <> ".ll"
@@ -67,7 +66,7 @@ newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
   let optimizeOption = defaultOptimizeOption
   let debugMode = False
   let testMode = False
-  let _modulePaths = modulePaths <> [workspaceDir </> "build", basePath]
+  modulePaths <- pure $ modulePaths <> [workspaceDir </> "build", basePath]
   pure MalgoEnv {..}
 
 newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}

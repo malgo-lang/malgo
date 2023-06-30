@@ -4,17 +4,17 @@
 
 module Main (main) where
 
-import Control.Lens (makeFieldsNoPrefix, (.~), (<>~))
+import Control.Lens (makeFieldsNoPrefix, (.~))
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
 import Koriel.Core.Parser qualified as Koriel
 import Koriel.Id (ModuleName)
-import Koriel.Lens (HasModulePaths (..))
 import Koriel.Pretty (pPrint)
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
-import Malgo.Lsp.Index (Index, LspOpt (..))
+import Malgo.Lsp.Index (Index, LspOpt (LspOpt))
+import Malgo.Lsp.Index qualified as Lsp
 import Malgo.Lsp.Server qualified as Lsp
 import Malgo.Monad (CompileMode (..), newMalgoEnv)
 import Malgo.Monad qualified as Monad
@@ -33,7 +33,7 @@ data ToLLOpt = ToLLOpt
     lambdaLift :: Bool,
     optimizeOption :: OptimizeOption,
     debugMode :: Bool,
-    _modulePaths :: [FilePath]
+    modulePaths :: [FilePath]
   }
 
 makeFieldsNoPrefix ''ToLLOpt
@@ -43,8 +43,8 @@ main = do
   command <- parseCommand
   case command of
     ToLL opt -> do
-      opt <- pure $ opt & modulePaths <>~ [takeDirectory opt.dstPath]
-      env <- newMalgoEnv opt.srcPath opt._modulePaths Nothing undefined Nothing Nothing
+      opt <- pure $ opt {modulePaths = opt.modulePaths <> [takeDirectory opt.dstPath]}
+      env <- newMalgoEnv opt.srcPath opt.modulePaths Nothing undefined Nothing Nothing
       Driver.compile
         opt.srcPath
         env
@@ -57,7 +57,7 @@ main = do
           }
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt & modulePaths <>~ [".malgo-work" </> "build", basePath]
+      opt <- pure $ opt {Lsp.modulePaths = opt.modulePaths <> [".malgo-work" </> "build", basePath]}
       void $ Lsp.server opt
     Build _ -> do
       Build.run

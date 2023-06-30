@@ -4,12 +4,13 @@
 module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
 
 import Control.Exception (IOException, catch)
-import Control.Lens (At (at), ifor_, view, (%=), (?=), (^.))
+import Control.Lens (At (at), ifor_, (%=), (?=), (^.))
 import Control.Lens.TH
 import Control.Monad.Extra (firstJustM)
 import Data.Binary (Binary, decodeFile)
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions (convertString)
+import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
@@ -77,18 +78,18 @@ loadInterface ::
   HasCallStack =>
   ( MonadReader s m,
     MonadIO m,
-    HasInterfaces s (IORef (HashMap ModuleName Interface)),
-    HasModulePaths s [FilePath]
+    HasField "interfaces" s (IORef (HashMap ModuleName Interface)),
+    HasField "modulePaths" s [FilePath]
   ) =>
   ModuleName ->
   m Interface
 loadInterface (ModuleName modName) = do
-  interfacesRef <- view interfaces
+  interfacesRef <- asks (.interfaces)
   interfaces <- readIORef interfacesRef
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
-      modulePaths <- view modulePaths
+      modulePaths <- asks (.modulePaths)
       message <-
         firstJustM
           (liftIO . readFileIfExists (toInterfacePath $ convertString modName))

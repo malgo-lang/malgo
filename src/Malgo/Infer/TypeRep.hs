@@ -65,7 +65,6 @@ type Kind = Type
 
 type TypeVar = Id ()
 
--- TODO: Add insert function that ignores `hoge = TYPE`
 type KindCtx = HashMap TypeVar Kind
 
 insertKind :: TypeVar -> Kind -> KindCtx -> KindCtx

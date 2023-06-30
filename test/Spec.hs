@@ -128,7 +128,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode = do
     pure
       malgoEnv
         { dstPath = dst,
-          _modulePaths = [takeDirectory dst, outputDir </> "libs"],
+          modulePaths = [takeDirectory dst, outputDir </> "libs"],
           lambdaLift,
           noOptimize,
           compileMode,
