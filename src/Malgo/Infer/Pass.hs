@@ -1,10 +1,11 @@
 module Malgo.Infer.Pass (infer) where
 
-import Control.Lens (At (at), forOf, ix, mapped, over, preuse, to, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
+import Control.Lens (At (at), forOf, ix, mapped, preuse, to, traverseOf, traversed, use, view, (%=), (.=), (.~), (<>=), (?=), (^.), _1, _2, _3, _Just)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
 import Data.List.Extra (anySame)
+import Data.List.NonEmpty qualified as NonEmpty
 import Data.Map qualified as Map
 import Data.Traversable (for)
 import Koriel.Id
@@ -173,7 +174,7 @@ tcForeigns ::
 tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar $ Just $ tyVar.name
+      tv <- freshVar $ Just tyVar.name
       typeDefMap . at tyVar ?= TypeDef (TyMeta tv) [] []
     ty' <- transType ty
     scheme@(Forall _ ty') <- generalize pos ty'
@@ -191,20 +192,20 @@ tcScSigs ::
 tcScSigs ds =
   for ds \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
-      tv <- freshVar $ Just $ tyVar.name
+      tv <- freshVar $ Just tyVar.name
       typeDefMap . at tyVar ?= TypeDef (TyMeta tv) [] []
     scheme <- generalize pos =<< transType ty
     signatureMap . at name ?= scheme
     pure (pos, name, tcType ty)
 
 prepareTcScDefs :: (MonadState TcEnv m, MonadBind m) => [ScDef (Malgo 'Rename)] -> m ()
-prepareTcScDefs = traverse_ \(_, name, _) ->
-  whenNothingM_
-    (use (signatureMap . at name))
-    ( do
-        ty <- Forall [] . TyMeta <$> freshVar Nothing
-        signatureMap . at name ?= ty
-    )
+prepareTcScDefs = traverse_ \(_, name, _) -> do
+  mty <- use $ signatureMap . at name
+  case mty of
+    Nothing -> do
+      ty <- Forall [] . TyMeta <$> freshVar Nothing
+      signatureMap . at name ?= ty
+    Just _ -> pure ()
 
 tcScDefGroup ::
   ( MonadBind m,
@@ -288,10 +289,10 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
               | anySame $ Map.elems evidence -> errorOn pos.value $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
               | otherwise -> signatureMap . at name ?= declaredScheme
             Nothing ->
-              errorOn pos.value $
-                "Signature mismatch:"
-                  $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
-                  $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+              errorOn pos.value
+                $ "Signature mismatch:"
+                $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
+                $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
 
 -- | Which combination of variables should be unification to consider two types as equal?
 -- Use in `tcScDefs`.
@@ -304,10 +305,10 @@ evidenceOfEquiv ::
   Maybe (Map Type Type)
 evidenceOfEquiv (TyMeta v1) (TyMeta v2)
   | v1 == v2 = Just mempty
-  | otherwise = Just $ one (TyMeta v1, TyMeta v2)
+  | otherwise = Just $ Map.singleton (TyMeta v1) (TyMeta v2)
 evidenceOfEquiv (TyVar v1) (TyVar v2)
   | v1 == v2 = Just mempty
-  | otherwise = Just $ one (TyVar v1, TyVar v2)
+  | otherwise = Just $ Map.singleton (TyVar v1) (TyVar v2)
 evidenceOfEquiv (TyApp t11 t12) (TyApp t21 t22) = (<>) <$> evidenceOfEquiv t11 t21 <*> evidenceOfEquiv t12 t22
 evidenceOfEquiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
 evidenceOfEquiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
@@ -380,7 +381,7 @@ tcExpr (Ann pos e t) = do
   pure e'
 tcExpr (Seq pos ss) = do
   ss' <- tcStmts ss
-  pure $ Seq (Typed (typeOf $ last ss') pos) ss'
+  pure $ Seq (Typed (typeOf $ NonEmpty.last ss') pos) ss'
 
 tcClause ::
   ( MonadBind m,
@@ -419,8 +420,8 @@ tcPatterns (ConP pos con pats : ps) = do
   let (morePats, restPs) = List.splitAt (length conParams - length pats) ps
   -- 足りない分（morePats）を補充した残り（restPs）が空でなければ、
   -- 2引数以上の関数での文法エラー
-  when (not (null morePats) && not (null restPs)) $
-    errorOn pos "Invalid Pattern: You may need to put parentheses"
+  when (not (null morePats) && not (null restPs))
+    $ errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
   ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'

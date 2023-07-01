@@ -3,21 +3,24 @@
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 
 -- | LLVM Code Generator
-module Koriel.Core.CodeGen.DelimLLVM (
-  codeGen,
-)
+module Koriel.Core.CodeGen.DelimLLVM
+  ( codeGen,
+  )
 where
 
-import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, over, use, view, (<?=), (?=), (?~))
+import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, use, view, (<?=), (?=), (?~))
 import Control.Monad.Cont (ContT, runContT)
 import Control.Monad.Fix (MonadFix)
 import Control.Monad.Trans.Cont (shiftT)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
+import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
+import Data.ByteString.Short qualified as BS
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
-import Data.List.Extra (headDef, maximum, mconcatMap)
+import Data.List.Extra (headDef, mconcatMap)
+import Data.Maybe qualified as Maybe
 import Data.String.Conversions
 import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
@@ -29,29 +32,28 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import LLVM.AST (
-  Definition (..),
-  Module (..),
-  Name,
-  defaultModule,
-  mkName,
- )
+import LLVM.AST
+  ( Definition (..),
+    Module (..),
+    Name,
+    defaultModule,
+    mkName,
+  )
 import LLVM.AST.Constant qualified as C
 import LLVM.AST.FloatingPointPredicate qualified as FP
 import LLVM.AST.Global
 import LLVM.AST.IntegerPredicate qualified as IP
 import LLVM.AST.Linkage (Linkage (External, Internal))
 import LLVM.AST.Operand (Operand (..))
-import LLVM.AST.Type hiding (
-  double,
-  void,
- )
+import LLVM.AST.Type hiding
+  ( double,
+    void,
+  )
 import LLVM.AST.Type qualified as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
-import Relude.Unsafe qualified as Unsafe
 
 data CodeGenState = CodeGenState
   { -- | 'primMap' is a map from primitive function name to its LLVM function.
@@ -87,10 +89,10 @@ newCodeGenEnv uniqSupply moduleName Program {..} =
   where
     -- topVarsのOprMapを作成
     varMap = mconcatMap ?? topVars $ \(v, _, _) ->
-      one (v, ConstantOperand $ C.GlobalReference $ toName v)
+      HashMap.singleton v (ConstantOperand $ C.GlobalReference $ toName v)
     -- topFuncsのOprMapを作成
     funcMap = mconcatMap ?? topFuns $ \(f, _, _, _) ->
-      one (f, ConstantOperand $ C.GlobalReference $ toName f)
+      HashMap.singleton f (ConstantOperand $ C.GlobalReference $ toName f)
 
 type MonadCodeGen m =
   ( MonadModuleBuilder m,
@@ -99,10 +101,10 @@ type MonadCodeGen m =
   ) ::
     Constraint
 
-runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT :: (Monad m) => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
-  execModuleBuilderT emptyModuleBuilder $
-    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
+  execModuleBuilderT emptyModuleBuilder
+    $ runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
@@ -149,7 +151,7 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
             moduleSourceFileName = fromString srcPath,
             moduleDefinitions = llvmir
           }
-  liftIO $ withContext $ \ctx -> writeFileBS dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     initTopVars [] = pass
     initTopVars ((name, _, expr) : xs) = do
@@ -195,10 +197,10 @@ innerType (RecordT _) = LT.NamedTypeReference (mkName "struct.hash_table")
 innerType AnyT = i8
 innerType _ = error "invalid type"
 
-sizeofCon :: Num a => Con -> a
+sizeofCon :: (Num a) => Con -> a
 sizeofCon (Con _ ts) = sum $ map sizeofType ts
 
-sizeofType :: Num a => C.Type -> a
+sizeofType :: (Num a) => C.Type -> a
 sizeofType (_ :-> _) = 8
 sizeofType Int32T = 4
 sizeofType Int64T = 8
@@ -229,8 +231,8 @@ findVar x = findLocalVar
         Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
-      emitDefn $
-        GlobalDefinition
+      emitDefn
+        $ GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = toName x,
               LLVM.AST.Global.type' = convType $ C.typeOf x,
@@ -240,7 +242,7 @@ findVar x = findLocalVar
       primMap . at (toName x) ?= opr
       load (convType $ C.typeOf x) opr 0
 
-findFun :: MonadCodeGen m => Id C.Type -> m Operand
+findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
 findFun x =
   view (funcMap . at x) >>= \case
     Just opr -> pure opr
@@ -251,7 +253,7 @@ findFun x =
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
-findExt :: MonadCodeGen m => Name -> [LT.Type] -> LT.Type -> m Operand
+findExt :: (MonadCodeGen m) => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
   use (primMap . at x) >>= \case
     Just x -> pure x
@@ -279,8 +281,11 @@ sizeof ty = C.PtrToInt szPtr LT.i64
 toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
+toLabel :: (ConvertibleStrings s BS.ByteString) => s -> ShortByteString
+toLabel s = BS.toShort $ convertString s
+
 -- generate code for a toplevel variable definition
-genVar :: MonadModuleBuilder m => Id C.Type -> Expr (Id C.Type) -> m Operand
+genVar :: (MonadModuleBuilder m) => Id C.Type -> Expr (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
@@ -311,7 +316,7 @@ genFunc name params body = do
     funcName = toName name
     llvmParams =
       map
-        (\x -> (convType $ x.meta, ParameterName $ toShort $ encodeUtf8 $ idToText x))
+        (\x -> (convType x.meta, ParameterName $ BS.toShort $ convertString $ idToText x))
         params
     retty = convType (C.typeOf body)
 
@@ -339,10 +344,10 @@ genExpr e@(CallDirect f xs) = do
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
 genExpr e@(RawCall name _ xs) = do
   let primOpr =
-        ConstantOperand $
-          C.GlobalReference $
-            LLVM.AST.mkName $
-              convertString name
+        ConstantOperand
+          $ C.GlobalReference
+          $ LLVM.AST.mkName
+          $ convertString name
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
 genExpr (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
@@ -389,8 +394,7 @@ genExpr (Let xs e) = do
   where
     -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
     prepare (LocalDef name _ (Fun _ _)) =
-      one
-        . (name,)
+      HashMap.singleton name
         <$> mallocType (StructureType False [ptr, ptr])
     prepare _ = pure mempty
 -- These `match` cases are not necessary.
@@ -418,7 +422,7 @@ genExpr (Match e cs)
           (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
           -- defaultsの先頭を取り出し、switchのデフォルトケースとする
           -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-          defaultLabel <- headDef (withBlock "match_default" unreachable) $ map pure defaults
+          defaultLabel <- headDef (withBlock ("match_default" :: BS.ByteString) unreachable) $ map pure defaults
           pass
 genExpr (Switch v bs e) =
   shiftT \k -> do
@@ -432,16 +436,16 @@ genExpr (Switch v bs e) =
     lift mdo
       switch tagOpr defaultLabel labels
       labels <- traverse (genBranch (constructorList v) k) bs
-      defaultLabel <- withBlock "switch_default" do
+      defaultLabel <- withBlock ("switch_default" :: BS.ByteString) do
         runContT (genExpr e) k
       pass
   where
     genBranch cs k (tag, e) = do
       let tag' = case C.typeOf v of
-            SumT _ -> C.Int 8 $ fromIntegral $ Unsafe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
+            SumT _ -> C.Int 8 $ fromIntegral $ Maybe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
             RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
             _ -> error "Switch is not supported for this type."
-      label <- withBlock ("switch_branch_" <> encodeUtf8 (render (pPrint tag))) do
+      label <- withBlock ("switch_branch_" <> render (pPrint tag)) do
         runContT (genExpr e) k
       pure (tag', label)
 genExpr (SwitchUnboxed v bs e) =
@@ -450,13 +454,13 @@ genExpr (SwitchUnboxed v bs e) =
     lift mdo
       switch vOpr defaultLabel labels
       labels <- traverse (genBranch k) bs
-      defaultLabel <- withBlock "switch-unboxed_default" do
+      defaultLabel <- withBlock ("switch-unboxed_default" :: BS.ByteString) do
         runContT (genExpr e) k
       pass
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
-      label <- withBlock ("switch-unboxed_branch_" <> encodeUtf8 (render (pPrint u))) do
+      label <- withBlock ("switch-unboxed_branch_" <> render (pPrint u)) do
         runContT (genExpr e) k
       pure (u', label)
 genExpr (Destruct v (Con _ ts) xs e) = do
@@ -485,7 +489,7 @@ genExpr (Assign x v e) = do
 genExpr (Error _) = shiftT (const unreachable)
 
 -- | Get constructor list from the type of scrutinee.
-constructorList :: HasType s => s -> [Con]
+constructorList :: (HasType s) => s -> [Con]
 constructorList scrutinee =
   case C.typeOf scrutinee of
     SumT cs -> cs
@@ -505,17 +509,17 @@ genCase ::
   m (Either LLVM.AST.Name (C.Constant, LLVM.AST.Name))
 genCase scrutinee cs k = \case
   Bind x _ e -> do
-    label <- withBlock ("bind_" <> encodeUtf8 (render (pPrint x))) do
+    label <- withBlock ("bind_" <> render (pPrint x)) do
       local (over valueMap $ at x ?~ scrutinee) $ runContT (genExpr e) k
     pure $ Left label
   Exact u e -> do
     ConstantOperand u' <- genAtom $ Unboxed u
-    label <- withBlock ("exact_" <> encodeUtf8 (render (pPrint u))) do
+    label <- withBlock ("exact_" <> render (pPrint u)) do
       runContT (genExpr e) k
     pure $ Right (u', label)
   Unpack con vs e -> do
     let (tag, conType) = genCon cs con
-    label <- withBlock ("unpack_" <> encodeUtf8 (render (pPrint con))) do
+    label <- withBlock ("unpack_" <> render (pPrint con)) do
       payloadAddr <- gep (StructureType False [i8, conType]) scrutinee [int32 0, int32 1]
       env <-
         HashMap.fromList <$> ifor vs \i v ->
@@ -525,7 +529,7 @@ genCase scrutinee cs k = \case
       local (over valueMap (env <>)) $ runContT (genExpr e) k
     pure $ Right (C.Int 8 tag, label)
   OpenRecord kvs e -> do
-    label <- withBlock "open_record" do
+    label <- withBlock ("open_record" :: BS.ByteString) do
       kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
         hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
         key <- ConstantOperand <$> globalStringPtr k
@@ -572,18 +576,18 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
       env <-
         HashMap.fromList <$> ifor fvs \i fv ->
           (fv,) <$> do
-            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` (encodeUtf8 fv.name <> "_addr")
-            load (convType $ C.typeOf fv) fvAddr 0 `named` encodeUtf8 fv.name
+            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` toLabel (fv.name <> "_addr")
+            load (convType $ C.typeOf fv) fvAddr 0 `named` toLabel fv.name
       local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
   -- キャプチャされる変数を構造体に詰める
-  capture <- mallocType capType `named` (encodeUtf8 funName.name <> "_capture")
+  capture <- mallocType capType `named` toLabel (funName.name <> "_capture")
   ifor_ fvs $ \i fv -> do
     fvOpr <- findVar fv
-    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr `named` encodeUtf8 fv.name
+    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr `named` toLabel fv.name
   closAddr <- findVar funName
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` (encodeUtf8 funName.name <> "_capture")
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` (encodeUtf8 funName.name <> "_func")
-  pure $ one (funName, closAddr)
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` toLabel (funName.name <> "_capture")
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` toLabel (funName.name <> "_func")
+  pure $ HashMap.singleton funName closAddr
   where
     psTypes = ptr : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
@@ -595,7 +599,7 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) _ (Pack _ con@(Con _ ts) xs)) =
   ifor_ xs $ \i x ->
     gepAndStore (StructureType False [i8, StructureType False $ map convType ts]) addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
-  pure $ one (name, addr)
+  pure $ HashMap.singleton name addr
 genLocalDef (LocalDef (C.typeOf -> t) _ Pack {}) = error $ show t <> " must be SumT"
 genLocalDef (LocalDef name _ (Record kvs)) = do
   newHashTable <- findExt "malgo_hash_table_new" [] ptr
@@ -604,8 +608,8 @@ genLocalDef (LocalDef name _ (Record kvs)) = do
     k' <- ConstantOperand <$> globalStringPtr k
     v <- genAtom v
     insert <- findExt "malgo_hash_table_insert" [ptr, ptr, ptr] LT.void
-    call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` ("hash_insert_" <> encodeUtf8 k)
-  pure $ one (name, hashTable)
+    call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` toLabel ("hash_insert_" <> k)
+  pure $ HashMap.singleton name hashTable
 
 genCon :: [Con] -> Con -> (Integer, LT.Type)
 genCon cs con@(Con _ ts)
@@ -632,8 +636,8 @@ globalStringPtr str = do
         LLVM.AST.Typed.typeOf charArray >>= \case
           Left err -> error $ show err
           Right ty -> pure ty
-      emitDefn $
-        GlobalDefinition
+      emitDefn
+        $ GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = name,
               LLVM.AST.Global.type' = ty,
@@ -643,7 +647,7 @@ globalStringPtr str = do
               unnamedAddr = Just GlobalAddr
             }
       let opr = C.GetElementPtr True ty (C.GlobalReference name) [C.Int 32 0, C.Int 32 0]
-      modify \s -> s {stringMap = HashMap.insert str opr $ s.stringMap}
+      modify \s -> s {stringMap = HashMap.insert str opr s.stringMap}
       pure opr
 
 gepAndStore ::
@@ -658,7 +662,7 @@ gepAndStore ty opr addrs val = do
   store addr 0 val
 
 internalFunction ::
-  MonadModuleBuilder m =>
+  (MonadModuleBuilder m) =>
   -- | Function name
   Name ->
   -- | Parameter types and name suggestions
@@ -688,8 +692,8 @@ internalFunction label argtys retty body = do
   emitDefn def
   pure $ ConstantOperand $ C.GlobalReference label
 
-withBlock :: MonadIRBuilder m => ShortByteString -> m () -> m Name
+withBlock :: (MonadIRBuilder m, ConvertibleStrings s BS.ByteString) => s -> m () -> m Name
 withBlock hint m = do
-  label <- block `named` hint
+  label <- block `named` toLabel hint
   void m
   pure label

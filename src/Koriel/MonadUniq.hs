@@ -2,7 +2,6 @@ module Koriel.MonadUniq (UniqSupply (..), HasUniqSupply, getUniq) where
 
 import GHC.Records
 import Koriel.Prelude
-import Text.Show (Show (show))
 
 newtype UniqSupply = UniqSupply {uniqSupply :: IORef Int}
   deriving stock (Eq)

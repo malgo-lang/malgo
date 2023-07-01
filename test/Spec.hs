@@ -4,8 +4,11 @@
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
 import Control.Exception (IOException, catch, throwIO)
-import Data.String.Conversions (convertString)
+import Data.ByteString.Lazy qualified as BL
+import Data.List (intercalate)
+import Data.String.Conversions.Monomorphic (toString)
 import Data.Text qualified as Text
+import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (timeout)
@@ -19,32 +22,33 @@ import Malgo.Monad
 import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
+import System.Exit (exitFailure)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.IO.Error (isResourceVanishedError)
-import System.Process.Typed (
-  ExitCode (ExitFailure, ExitSuccess),
-  byteStringInput,
-  nullStream,
-  proc,
-  readProcessStderr,
-  readProcessStdout,
-  readProcessStdout_,
-  runProcess,
-  setStderr,
-  setStdin,
-  setStdout,
- )
-import Test.Hspec (
-  anyException,
-  describe,
-  example,
-  hspec,
-  it,
-  parallel,
-  runIO,
-  shouldBe,
-  shouldThrow,
- )
+import System.Process.Typed
+  ( ExitCode (ExitFailure, ExitSuccess),
+    byteStringInput,
+    nullStream,
+    proc,
+    readProcessStderr,
+    readProcessStdout,
+    readProcessStdout_,
+    runProcess,
+    setStderr,
+    setStdin,
+    setStdout,
+  )
+import Test.Hspec
+  ( anyException,
+    describe,
+    example,
+    hspec,
+    it,
+    parallel,
+    runIO,
+    shouldBe,
+    shouldThrow,
+  )
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
@@ -86,9 +90,9 @@ main =
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
     describe "Test malgo to-ll (must be error)" $ parallel do
       for_ errorcases \errorcase -> do
-        it ("test error case " <> errorcase) $
-          testError (testcaseDir </> "error" </> errorcase)
-            `shouldThrow` anyException
+        it ("test error case " <> errorcase)
+          $ testError (testcaseDir </> "error" </> errorcase)
+          `shouldThrow` anyException
 
 #ifdef TEST_ALL
     describe "Test malgo to-ll on all combinations of optimization options" do
@@ -139,7 +143,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode = do
 
   -- Check if the generated Koriel code is valid
   let korielPath = dst -<.> "kor"
-  koriel <- decodeUtf8 <$> readFileBS korielPath
+  koriel <- Text.readFile korielPath
   case Koriel.parse korielPath koriel of
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
@@ -151,7 +155,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode = do
 findCommand :: [String] -> IO String
 findCommand list =
   go list >>= \case
-    Nothing -> error $ "Command not found: " <> Text.intercalate ", " (map convertString list)
+    Nothing -> error $ "Command not found: " <> intercalate ", " list
     Just x -> pure x
   where
     go [] = pure Nothing
@@ -162,7 +166,7 @@ findCommand list =
         ExitFailure _ -> go xs
 
 test ::
-  HasCallStack =>
+  (HasCallStack) =>
   -- | File path of the test case
   FilePath ->
   -- | Type of the test case
@@ -179,8 +183,8 @@ test ::
 test testcase typ lambdaLift noOptimize option compileMode = do
   createDirectoryIfMissing True (outputDir </> typ)
   let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
-  timeoutWrapper "compile" $
-    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
+  timeoutWrapper "compile"
+    $ compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
 
   -- Format and optimize the generated LLVM assembly
   -- find opt or opt-15
@@ -196,10 +200,10 @@ test testcase typ lambdaLift noOptimize option compileMode = do
             llPath
           ]
       )
-  putText $ convertString err
+  BL.putStr err
   (opt, exitCode) `shouldBe` (opt, ExitSuccess)
 
-  pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
+  pkgConfig <- words . convertString <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
   clang <- findCommand ["clang-15", "clang"]
   (exitCode, err) <-
     readProcessStderr
@@ -210,26 +214,26 @@ test testcase typ lambdaLift noOptimize option compileMode = do
               "-g"
               -- "-O3"
             ]
-            <> pkgConfig
-            <> [ outputDir </> "libs" </> "runtime.c",
-                 outputDir </> typ </> takeBaseName testcase -<.> ".ll",
-                 "-o",
-                 outputDir </> typ </> takeBaseName testcase -<.> ".out"
-               ]
+          <> pkgConfig
+          <> [ outputDir </> "libs" </> "runtime.c",
+               outputDir </> typ </> takeBaseName testcase -<.> ".ll",
+               "-o",
+               outputDir </> typ </> takeBaseName testcase -<.> ".out"
+             ]
       )
-  putText $ convertString err
+  BL.putStr err
   (clang, exitCode) `shouldBe` (clang, ExitSuccess)
 
   (exitCode, result) <-
-    timeoutWrapper "run" $
-      second decodeUtf8
-        <$> readProcessStdout
-          ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
-              & setStdin (byteStringInput "Hello")
-          )
+    timeoutWrapper "run"
+      $ second convertString
+      <$> readProcessStdout
+        ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
+            & setStdin (byteStringInput "Hello")
+        )
   ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
-  expected <- filter ("-- Expected: " `Text.isPrefixOf`) . lines . decodeUtf8 <$> readFileBS testcase
-  map ("-- Expected: " <>) (lines $ Text.stripEnd result) `shouldBe` expected
+  expected <- filter ("-- Expected: " `Text.isPrefixOf`) . Text.lines <$> Text.readFile testcase
+  map ("-- Expected: " <>) (Text.lines $ Text.stripEnd result) `shouldBe` expected
   where
     timeoutWrapper phase m = do
       timeout (60 * 5) m >>= \case

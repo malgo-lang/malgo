@@ -6,10 +6,8 @@ module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfac
 import Control.Exception (IOException, catch)
 import Control.Lens (At (at), ifor_, (%=), (?=), (^.))
 import Control.Lens.TH
-import Control.Monad.Extra (firstJustM)
 import Data.Binary (Binary, decodeFile)
 import Data.HashMap.Strict qualified as HashMap
-import Data.String.Conversions (convertString)
 import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
@@ -75,7 +73,7 @@ toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"
 
 loadInterface ::
-  HasCallStack =>
+  (HasCallStack) =>
   ( MonadReader s m,
     MonadIO m,
     HasField "interfaces" s (IORef (HashMap ModuleName Interface)),

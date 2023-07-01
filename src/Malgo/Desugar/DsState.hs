@@ -1,20 +1,20 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Desugar.DsState (
-  Def (..),
-  _VarDef,
-  _FunDef,
-  _ExtDef,
-  DsState (..),
-  HasNameEnv (..),
-  HasGlobalDefs (..),
-  makeDsState,
-  lookupValueConstructors,
-)
+module Malgo.Desugar.DsState
+  ( Def (..),
+    _VarDef,
+    _FunDef,
+    _ExtDef,
+    DsState (..),
+    HasNameEnv (..),
+    HasGlobalDefs (..),
+    makeDsState,
+    lookupValueConstructors,
+  )
 where
 
-import Control.Lens (mapped, over, traversed, use, (^.), _2)
+import Control.Lens (mapped, traversed, use, (^.), _2)
 import Control.Lens.TH
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
@@ -70,7 +70,7 @@ makeDsState tcEnv =
     }
 
 lookupValueConstructors ::
-  MonadState DsState m =>
+  (MonadState DsState m) =>
   GT.TypeVar ->
   [GT.Type] ->
   m [(RnId, Scheme GT.Type)]

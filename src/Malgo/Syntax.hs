@@ -1,51 +1,50 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Syntax (
-  Literal (..),
-  Type (..),
-  Expr (..),
-  Stmt (..),
-  Clause (..),
-  Pat (..),
-  _VarP,
-  _ConP,
-  _TupleP,
-  _RecordP,
-  _ListP,
-  _UnboxedP,
-  _BoxedP,
-  Decl (..),
-  ParsedDefinitions (..),
-  BindGroup (..),
-  ScDef,
-  ScSig,
-  DataDef,
-  TypeSynonym,
-  Foreign,
-  Import,
-  scDefs,
-  scSigs,
-  dataDefs,
-  typeSynonyms,
-  foreigns,
-  imports,
-  Module (..),
-  toUnboxed,
-  getTyVars,
-  makeBindGroup,
-)
+module Malgo.Syntax
+  ( Literal (..),
+    Type (..),
+    Expr (..),
+    Stmt (..),
+    Clause (..),
+    Pat (..),
+    _VarP,
+    _ConP,
+    _TupleP,
+    _RecordP,
+    _ListP,
+    _UnboxedP,
+    _BoxedP,
+    Decl (..),
+    ParsedDefinitions (..),
+    BindGroup (..),
+    ScDef,
+    ScSig,
+    DataDef,
+    TypeSynonym,
+    Foreign,
+    Import,
+    scDefs,
+    scSigs,
+    dataDefs,
+    typeSynonyms,
+    foreigns,
+    imports,
+    Module (..),
+    toUnboxed,
+    getTyVars,
+    makeBindGroup,
+  )
 where
 
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
-import Data.Foldable (foldl1)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.HashSet qualified as HashSet
 import Koriel.Id
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasRange (range))
 import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
-import Malgo.Prelude
+import Malgo.Prelude hiding (All)
 import Malgo.Syntax.Extension
 
 -- | Unboxed and boxed literal
@@ -87,7 +86,7 @@ deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
 
 deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
 
-instance Pretty (XId x) => Pretty (Type x) where
+instance (Pretty (XId x)) => Pretty (Type x) where
   pPrintPrec l d (TyApp _ t ts) =
     maybeParens (d > 11) $ pPrint t <+> sep (map (pPrintPrec l 12) ts)
   pPrintPrec _ _ (TyVar _ i) = pPrint i
@@ -108,9 +107,9 @@ instance (HasRange (XTyApp x) r, HasRange (XTyVar x) r, HasRange (XTyCon x) r, H
     TyRecord x kvs -> range f x <&> \x -> TyRecord x kvs
     TyBlock x t -> range f x <&> \x -> TyBlock x t
 
-getTyVars :: Hashable (XId x) => Type x -> HashSet (XId x)
+getTyVars :: (Hashable (XId x)) => Type x -> HashSet (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = one v
+getTyVars (TyVar _ v) = HashSet.singleton v
 getTyVars TyCon {} = mempty
 getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
@@ -137,7 +136,7 @@ deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, F
 
 deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Expr x)
 
-instance Pretty (XId x) => Pretty (Expr x) where
+instance (Pretty (XId x)) => Pretty (Expr x) where
   pPrintPrec _ _ (Var _ i) = pPrint i
   pPrintPrec _ _ (Unboxed _ lit) = pPrint lit <> "#"
   pPrintPrec _ _ (Boxed _ lit) = pPrint lit
@@ -146,11 +145,11 @@ instance Pretty (XId x) => Pretty (Expr x) where
   pPrintPrec l d (OpApp _ o e1 e2) =
     maybeParens (d > 10) $ sep [pPrintPrec l 11 e1, pPrintPrec l 10 o <+> pPrintPrec l 11 e2]
   pPrintPrec l _ (Fn _ cs) =
-    braces $
-      space
-        <> foldl1
-          (\a b -> sep [a, nest (-2) $ "|" <+> b])
-          (toList $ fmap (pPrintPrec l 0) cs)
+    braces
+      $ space
+      <> foldl1
+        (\a b -> sep [a, nest (-2) $ "|" <+> b])
+        (toList $ fmap (pPrintPrec l 0) cs)
   pPrintPrec l _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
   pPrintPrec l _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) kvs
   pPrintPrec l _ (List _ xs) = brackets $ sep $ punctuate "," $ map (pPrintPrec l 0) xs
@@ -221,17 +220,17 @@ instance
     Seq x ss -> range f x <&> \x -> Seq x ss
     Parens x e -> range f x <&> \x -> Parens x e
 
-freevars :: Hashable (XId x) => Expr x -> HashSet (XId x)
-freevars (Var _ v) = one v
+freevars :: (Hashable (XId x)) => Expr x -> HashSet (XId x)
+freevars (Var _ v) = HashSet.singleton v
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = foldMap freevarsClause cs
   where
-    freevarsClause :: Hashable (XId x) => Clause x -> HashSet (XId x)
+    freevarsClause :: (Hashable (XId x)) => Clause x -> HashSet (XId x)
     freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
-    bindVars (VarP _ x) = one x
+    bindVars (VarP _ x) = HashSet.singleton x
     bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
     bindVars (TupleP _ ps) = mconcat $ map bindVars ps
     bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
@@ -263,7 +262,7 @@ deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, F
 
 deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Stmt x)
 
-instance Pretty (XId x) => Pretty (Stmt x) where
+instance (Pretty (XId x)) => Pretty (Stmt x) where
   pPrint (Let _ v e) = "let" <+> pPrint v <+> "=" <+> pPrint e
   pPrint (With _ Nothing e) = "with" <+> pPrint e
   pPrint (With _ (Just v) e) = "with" <+> pPrint v <+> "=" <+> pPrint e
@@ -293,7 +292,7 @@ deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Sho
 instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x, ForallStmtX Ord x, ForallTypeX Ord x) => Ord (Clause x) where
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
-instance Pretty (XId x) => Pretty (Clause x) where
+instance (Pretty (XId x)) => Pretty (Clause x) where
   pPrintPrec _ _ (Clause _ [] e) = pPrint e
   pPrintPrec l _ (Clause _ ps e) = sep [sep (map (pPrintPrec l 11) ps) <+> "->", pPrint e]
 
@@ -322,7 +321,7 @@ deriving stock instance (ForallPatX Show x, Show (XId x)) => Show (Pat x)
 
 deriving stock instance (ForallPatX Ord x, Ord (XId x)) => Ord (Pat x)
 
-instance Pretty (XId x) => Pretty (Pat x) where
+instance (Pretty (XId x)) => Pretty (Pat x) where
   pPrintPrec _ _ (VarP _ i) = pPrint i
   pPrintPrec _ _ (ConP _ i []) = pPrint i
   pPrintPrec l d (ConP _ i ps) =
@@ -337,7 +336,7 @@ instance Pretty (XId x) => Pretty (Pat x) where
   pPrintPrec _ _ (BoxedP _ x) = pPrint x
 
 instance
-  ForallPatX HasType x =>
+  (ForallPatX HasType x) =>
   HasType (Pat x)
   where
   typeOf (VarP x _) = typeOf x
@@ -394,7 +393,7 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (Decl x)
 
-instance Pretty (XId x) => Pretty (Decl x) where
+instance (Pretty (XId x)) => Pretty (Decl x) where
   pPrint (ScDef _ f e) = sep [pPrint f <+> "=", nest 2 $ pPrint e]
   pPrint (ScSig _ f t) = pPrint f <+> ":" <+> pPrint t
   pPrint (DataDef _ d xs cs) =
@@ -472,14 +471,14 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (BindGroup x)
 
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
 
-instance Pretty (XId x) => Pretty (BindGroup x) where
+instance (Pretty (XId x)) => Pretty (BindGroup x) where
   pPrint BindGroup {..} =
-    sep $
-      punctuate ";" $
-        map prettyDataDef _dataDefs
-          <> map prettyForeign _foreigns
-          <> map prettyScSig _scSigs
-          <> concatMap (map prettyScDef) _scDefs
+    sep
+      $ punctuate ";"
+      $ map prettyDataDef _dataDefs
+      <> map prettyForeign _foreigns
+      <> map prettyScSig _scSigs
+      <> concatMap (map prettyScDef) _scDefs
     where
       prettyDataDef (_, d, xs, cs) =
         sep
@@ -516,7 +515,7 @@ makeBindGroup ds =
     importDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
-adjacents :: Hashable (XId x) => (a, XId x, Expr x) -> (XId x, XId x, [XId x])
+adjacents :: (Hashable (XId x)) => (a, XId x, Expr x) -> (XId x, XId x, [XId x])
 adjacents (_, f, e) =
   (f, f, toList $ HashSet.delete f (freevars e))
 

@@ -1,7 +1,7 @@
 -- | パターンマッチのコンパイル
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
-import Control.Lens (At (at), Prism', has, over, (?=), _1)
+import Control.Lens (At (at), Prism', has, (?=), _1)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
 import Data.Traversable (for)
@@ -17,7 +17,7 @@ import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as Malgo
-import Malgo.Prelude hiding (group)
+import Malgo.Prelude
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 

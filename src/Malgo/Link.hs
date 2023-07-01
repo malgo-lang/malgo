@@ -3,7 +3,6 @@ module Malgo.Link (link) where
 import Data.Binary (Binary)
 import Data.Binary qualified as Binary
 import Data.HashSet qualified as HashSet
-import Data.String.Conversions (convertString)
 import GHC.Records (HasField)
 import Koriel.Core.Syntax
 import Koriel.Id
@@ -28,11 +27,11 @@ loadCore (ModuleName modName) = do
     Right x -> pure x
     Left err -> do
       hPrint stderr err
-      errorDoc $
-        "Cannot find module:"
-          <+> quotes (pPrint modName)
-          $$ "Module paths:"
-          <+> pPrint modPaths
+      errorDoc
+        $ "Cannot find module:"
+        <+> quotes (pPrint modName)
+        $$ "Module paths:"
+        <+> pPrint modPaths
   where
     findAndReadFile [] modFile = pure $ Left (pPrint modFile <+> "not found")
     findAndReadFile (path : paths) modFile = do

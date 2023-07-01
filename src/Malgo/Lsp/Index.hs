@@ -6,24 +6,24 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Malgo.Lsp.Index (
-  SymbolKind (..),
-  Symbol (..),
-  Info (..),
-  Index (..),
-  definitionMap,
-  LspOpt (..),
-  HasSymbolInfo (..),
-  findReferences,
-  loadIndex,
-  storeIndex,
-)
+module Malgo.Lsp.Index
+  ( SymbolKind (..),
+    Symbol (..),
+    Info (..),
+    Index (..),
+    definitionMap,
+    LspOpt (..),
+    HasSymbolInfo (..),
+    findReferences,
+    loadIndex,
+    storeIndex,
+  )
 where
 
 import Control.Lens.TH
 import Data.Binary (Binary, decodeFile, encode)
+import Data.ByteString.Lazy qualified as LBS
 import Data.HashMap.Strict qualified as HashMap
-import Data.String.Conversions (convertString)
 import GHC.Records (HasField)
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
@@ -81,8 +81,8 @@ makeFieldsNoPrefix ''LspOpt
 -- It ignores file names.
 findReferences :: SourcePos -> Index -> [Info]
 findReferences pos (Index refs _ _) =
-  HashMap.keys $
-    HashMap.filter (any (isInRange pos)) refs
+  HashMap.keys
+    $ HashMap.filter (any (isInRange pos)) refs
 
 isInRange :: SourcePos -> Range -> Bool
 isInRange pos Range {_start, _end}
@@ -98,7 +98,7 @@ storeIndex :: (MonadReader s m, MonadIO m, HasField "dstPath" s FilePath) => Ind
 storeIndex index = do
   dstPath <- asks (.dstPath)
   let encoded = encode index
-  writeFileLBS (dstPath -<.> "idx") encoded
+  liftIO $ LBS.writeFile (dstPath -<.> "idx") encoded
 
 loadIndex :: (MonadReader s m, MonadIO m, HasField "modulePaths" s [FilePath], HasField "indexes" s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
 loadIndex modName = do

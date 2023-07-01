@@ -5,14 +5,15 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 {-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
-module Malgo.Prelude (
-  module Koriel.Prelude,
-  module Malgo.Prelude,
-)
+module Malgo.Prelude
+  ( module Koriel.Prelude,
+    module Malgo.Prelude,
+  )
 where
 
 import Control.Lens.TH
 import Data.Binary (Binary)
+import Data.ByteString qualified as BS
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Prelude
 import Koriel.Pretty
@@ -20,6 +21,7 @@ import Koriel.Pretty qualified as P
 import Language.LSP.Types (Position (..), filePathToUri)
 import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
+import System.Exit (exitFailure)
 import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
 import Text.Megaparsec.Pos qualified as Megaparsec
 
@@ -59,13 +61,13 @@ makeFieldsNoPrefix ''Range
 instance HasRange Range Range where
   range = identity
 
-errorOn :: MonadIO m => Range -> Doc -> m a
-errorOn range x = do
+errorOn :: (MonadIO m) => Range -> Doc -> m a
+errorOn range x = liftIO do
   let srcFileName = sourceName range._start
-  src <- readFileBS srcFileName
+  src <- BS.readFile srcFileName
   let diag =
         addReport def (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
-          addFile diag (sourceName $ range._start) (decodeUtf8 src)
+          addFile diag (sourceName range._start) (convertString src)
   -- TODO: control flags by command line options
   printDiagnostic stderr False False 4 defaultStyle diag
   exitFailure
@@ -78,13 +80,13 @@ rangeToPosition (Range start end) =
       file = sourceName start
     }
 
-warningOn :: MonadIO m => Range -> Doc -> m ()
-warningOn range x = do
+warningOn :: (MonadIO m) => Range -> Doc -> m ()
+warningOn range x = liftIO do
   let srcFileName = sourceName range._start
-  src <- readFileBS srcFileName
+  src <- BS.readFile srcFileName
   let diag =
         addReport def (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
-          addFile diag (sourceName $ range._start) (decodeUtf8 src)
+          addFile diag (sourceName range._start) (convertString src)
   printDiagnostic stderr False False 4 defaultStyle diag
   exitFailure
   where

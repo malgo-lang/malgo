@@ -1,10 +1,10 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Optimize (
-  optimizeProgram,
-  OptimizeOption (..),
-  defaultOptimizeOption,
-)
+module Koriel.Core.Optimize
+  ( optimizeProgram,
+    OptimizeOption (..),
+    defaultOptimizeOption,
+  )
 where
 
 import Control.Lens (At (at), lengthOf, makeFieldsNoPrefix, transform, transformM, view)
@@ -18,7 +18,6 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Relude.Extra.Map (StaticMap (member))
 
 -- | 'OptimizeOption' is a set of options for the optimizer.
 --  If the option is 'True', the optimizer will apply the optimization.
@@ -67,7 +66,7 @@ times n f x
 
 -- | Optimize a program
 optimizeProgram ::
-  MonadIO m =>
+  (MonadIO m) =>
   UniqSupply ->
   ModuleName ->
   Bool ->
@@ -100,7 +99,7 @@ optimizeExpr state expr = do
       do
         pure
           >=> runOpt option.doFoldVariable foldVariable
-          >=> runOpt option.doInlineConstructor (usingReaderT mempty . inlineConstructor)
+          >=> runOpt option.doInlineConstructor ((runReaderT ?? mempty) . inlineConstructor)
           >=> runOpt option.doEliminateUnusedLet eliminateUnusedLet
           >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
           >=> runOpt option.doFoldRedundantCast foldRedundantCast
@@ -108,7 +107,7 @@ optimizeExpr state expr = do
           >=> runOpt option.doSpecializeFunction specializeFunction
           >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
           >=> normalizeExpr
-    runOpt :: Monad m => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
+    runOpt :: (Monad m) => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag
         then f
@@ -127,7 +126,7 @@ foldVariable = transformM
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 -- | Inline simple pattern match and pack.
-inlineConstructor :: MonadReader InlineConstructorMap m => Expr (Id Type) -> m (Expr (Id Type))
+inlineConstructor :: (MonadReader InlineConstructorMap m) => Expr (Id Type) -> m (Expr (Id Type))
 inlineConstructor =
   transformM \case
     Let ds e -> do
@@ -142,7 +141,7 @@ inlineConstructor =
         _ -> pure $ Destruct (Var v) con xs body
     e -> pure e
   where
-    toPackInlineMap (LocalDef v _ (Pack _ con as)) = one (v, (con, as))
+    toPackInlineMap (LocalDef v _ (Pack _ con as)) = HashMap.singleton v (con, as)
     toPackInlineMap _ = mempty
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
@@ -163,7 +162,7 @@ eliminateUnusedLet =
     reachable limit gamma v fvs
       | limit <= (0 :: Int) = True
       | idIsExternal v = True
-      | v `member` fvs = True
+      | HashSet.member v fvs = True
       | otherwise =
           -- Add gamma[fv] to fvs
           let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
@@ -194,7 +193,7 @@ checkInlinable (LocalDef f _ (Fun ps v)) = do
   threshold <- asks (.option.inlineThreshold)
   -- atomの数がthreshold以下ならインライン展開する
   -- TODO: 再帰関数かどうかコールグラフを作って判定する
-  let isInlinable = threshold >= lengthOf atom v && not (f `member` freevars v)
+  let isInlinable = threshold >= lengthOf atom v && not (f `HashSet.member` freevars v)
   when isInlinable $ do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
 checkInlinable _ = pass
@@ -220,7 +219,7 @@ lookupCallInline call f as = do
 
 -- | Remove a cast if it is redundant.
 -- TODO: switch and match that ends with a cast can be simplified.
-foldRedundantCast :: Monad f => Expr (Id Type) -> f (Expr (Id Type))
+foldRedundantCast :: (Monad f) => Expr (Id Type) -> f (Expr (Id Type))
 foldRedundantCast =
   transformM \case
     -- (= x (cast t a) (= y (cast t' x)) e) -> (= y (cast t' a) e)

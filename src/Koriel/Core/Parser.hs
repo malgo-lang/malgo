@@ -5,7 +5,7 @@ import GHC.Float (castWord32ToFloat, castWord64ToDouble)
 import Koriel.Core.Op
 import Koriel.Core.Syntax hiding (atom, expr, object)
 import Koriel.Core.Type
-import Koriel.Prelude hiding (many, some)
+import Koriel.Prelude
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec qualified as Megaparsec
 import Text.Megaparsec.Char qualified as Char
@@ -71,7 +71,7 @@ unboxed = try int32 <|> try int64 <|> try float <|> double <|> char <|> string <
     char = lexeme do
       Char <$> between (Char.char '\'') (Char.char '\'') Lexer.charLiteral
     string = lexeme do
-      String . toText <$> (Char.char '"' *> Lexer.charLiteral `manyTill` Char.char '"')
+      String . convertString <$> (Char.char '"' *> Lexer.charLiteral `manyTill` Char.char '"')
     bool = lexeme do
       xs <- Char.string "True#" <|> Char.string "False#"
       pure $ Bool $ xs == "True#"
@@ -328,4 +328,4 @@ ident :: Parser Text
 ident = lexeme do
   x <- identStartLetter
   xs <- many identLetter
-  pure $ toText $ x : xs
+  pure $ convertString $ x : xs

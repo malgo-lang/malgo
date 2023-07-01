@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 
@@ -93,6 +93,7 @@ library
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
+      TypeData
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
@@ -100,6 +101,7 @@ library
     , base
     , binary
     , binary-instances
+    , bytestring
     , containers
     , diagnose >=2.4
     , directory
@@ -120,7 +122,6 @@ library
     , pretty
     , raw-strings-qq
     , regex-tdfa
-    , relude >=1.0.0.0
     , string-conversions
     , syb
     , text
@@ -152,6 +153,7 @@ executable malgo
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
+      TypeData
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
@@ -159,6 +161,7 @@ executable malgo
     , base
     , binary
     , binary-instances
+    , bytestring
     , containers
     , diagnose >=2.4
     , directory
@@ -180,7 +183,6 @@ executable malgo
     , pretty
     , raw-strings-qq
     , regex-tdfa
-    , relude >=1.0.0.0
     , string-conversions
     , syb
     , text
@@ -213,6 +215,7 @@ test-suite malgo-test
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
+      TypeData
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
@@ -220,6 +223,7 @@ test-suite malgo-test
     , base
     , binary
     , binary-instances
+    , bytestring
     , containers
     , diagnose >=2.4
     , directory
@@ -243,7 +247,6 @@ test-suite malgo-test
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
-    , relude >=1.0.0.0
     , silently
     , string-conversions
     , syb
@@ -279,6 +282,7 @@ benchmark malgo-bench
       ViewPatterns
       OverloadedRecordDot
       NoFieldSelectors
+      TypeData
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
@@ -286,6 +290,7 @@ benchmark malgo-bench
     , base
     , binary
     , binary-instances
+    , bytestring
     , containers
     , criterion
     , diagnose >=2.4
@@ -308,7 +313,6 @@ benchmark malgo-bench
     , pretty
     , raw-strings-qq
     , regex-tdfa
-    , relude >=1.0.0.0
     , string-conversions
     , syb
     , text

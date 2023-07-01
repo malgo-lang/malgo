@@ -2,14 +2,13 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Koriel.Pretty (
-  module Text.PrettyPrint.HughesPJClass,
-  (<+>),
-  errorDoc,
-)
+module Koriel.Pretty
+  ( module Text.PrettyPrint.HughesPJClass,
+    (<+>),
+    errorDoc,
+  )
 where
 
-import Data.String.Conversions (convertString)
 import Koriel.Prelude
 import Text.Megaparsec.Pos qualified as Megaparsec
 import Text.PrettyPrint.HughesPJClass hiding ({- char, -} double, first, float, int, integer, (<+>), (<>))
@@ -25,7 +24,7 @@ infixl 9 <+>
 instance Pretty Doc where
   pPrint = identity
 
-errorDoc :: HasCallStack => Doc -> a
+errorDoc :: (HasCallStack) => Doc -> a
 errorDoc x = Prelude.error $ P.render x
 
 -- Pretty SourcePos

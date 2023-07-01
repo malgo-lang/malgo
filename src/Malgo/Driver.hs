@@ -3,8 +3,10 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception (IOException, assert, catch)
 import Data.Binary qualified as Binary
+import Data.ByteString.Lazy qualified as LBS
 import Data.HashMap.Strict qualified as HashMap
-import Data.String.Conversions (ConvertibleStrings (convertString))
+import Data.String.Conversions.Monomorphic (toString)
+import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.DelimLLVM qualified as DelimLLVM
@@ -30,6 +32,7 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
+import System.Exit (exitFailure)
 import System.FilePath (takeBaseName, takeDirectory, (-<.>))
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
@@ -59,8 +62,8 @@ compileFromAST srcPath env parsedAst =
   where
     moduleName = parsedAst.moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= moduleName.raw) $
-        error "Module name must be source file's base name."
+      when (convertString (takeBaseName srcPath) /= moduleName.raw)
+        $ error "Module name must be source file's base name."
 
       uniqSupply <- asks (.uniqSupply)
       when env.debugMode do
@@ -81,21 +84,21 @@ compileFromAST srcPath env parsedAst =
       core <- do
         core <- Flat.normalize core
         _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-        writeFileLBS (env.dstPath -<.> "kor.bin") $ Binary.encode core
+        liftIO $ LBS.writeFile (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
         let inf = buildInterface moduleName rnState dsEnv
-        writeFileLBS (toInterfacePath env.dstPath) $ Binary.encode inf
+        liftIO $ LBS.writeFile (toInterfacePath env.dstPath) $ Binary.encode inf
 
         -- check module paths include dstName's directory
         assert (takeDirectory env.dstPath `elem` env.modulePaths) pass
         core <- Link.link inf core
-        writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
+        liftIO $ writeFile (env.dstPath -<.> "kor") $ render $ pPrint core
 
         lint True core
         pure core
 
-      when env.debugMode $
-        liftIO do
+      when env.debugMode
+        $ liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pPrint core
 
@@ -109,16 +112,16 @@ compileFromAST srcPath env parsedAst =
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pPrint coreOpt
       when env.testMode do
-        writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
+        liftIO $ writeFile (env.dstPath -<.> "kor.opt") $ render $ pPrint coreOpt
       lint True coreOpt
 
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= Flat.normalize else pure coreOpt
-      when (env.debugMode && env.lambdaLift) $
-        liftIO do
+      when (env.debugMode && env.lambdaLift)
+        $ liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
       when env.testMode do
-        writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
+        liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pPrint coreLL
       lint True coreLL
 
       -- Optimization after lambda lifting causes code explosion.
@@ -139,7 +142,7 @@ compileFromAST srcPath env parsedAst =
       | griffId.name
           == "main"
           && griffId.moduleName
-            == moduleName =
+          == moduleName =
           Just coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
@@ -147,7 +150,7 @@ compileFromAST srcPath env parsedAst =
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
 compile srcPath env = do
-  src <- decodeUtf8 <$> readFileBS srcPath
+  src <- Text.readFile srcPath
   parsedAst <- case parseMalgo srcPath src of
     Right x -> pure x
     Left err ->
