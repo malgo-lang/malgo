@@ -4,9 +4,7 @@ module Koriel.Core.Syntax.Unboxed (Unboxed (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
-import Data.Char (showLitChar)
 import Data.Data (Data)
-import Data.String.Conversions (convertString)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Type
 import Koriel.Prelude

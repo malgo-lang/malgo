@@ -32,14 +32,14 @@ instance Pretty Constraint where
 -- * Unifiable
 
 -- | Monad that handles substitution over type variables
-class Monad m => MonadBind m where
+class (Monad m) => MonadBind m where
   lookupVar :: MetaVar -> m (Maybe Type)
   default lookupVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => MetaVar -> m (Maybe Type)
   lookupVar v = lift (lookupVar v)
   freshVar :: Maybe Text -> m MetaVar
   default freshVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Maybe Text -> m MetaVar
   freshVar = lift . freshVar
-  bindVar :: HasCallStack => Range -> MetaVar -> Type -> m ()
+  bindVar :: (HasCallStack) => Range -> MetaVar -> Type -> m ()
   default bindVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Range -> MetaVar -> Type -> m ()
   bindVar x v t = lift (bindVar x v t)
 
@@ -48,11 +48,11 @@ class Monad m => MonadBind m where
   default zonk :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Type -> m Type
   zonk t = lift (zonk t)
 
-instance MonadBind m => MonadBind (ReaderT r m)
+instance (MonadBind m) => MonadBind (ReaderT r m)
 
-instance MonadBind m => MonadBind (ExceptT e m)
+instance (MonadBind m) => MonadBind (ExceptT e m)
 
-instance MonadBind m => MonadBind (StateT s m)
+instance (MonadBind m) => MonadBind (StateT s m)
 
 instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
 
@@ -63,9 +63,9 @@ type UnifyResult = Either (Range, Doc) (HashMap MetaVar Type, [(Range, Constrain
 unify :: Range -> Type -> Type -> UnifyResult
 unify _ (TyMeta v1) (TyMeta v2)
   | v1 == v2 = pure (mempty, [])
-  | otherwise = pure (one (v1, TyMeta v2), [])
-unify _ (TyMeta v) t = pure (one (v, t), [])
-unify _ t (TyMeta v) = pure (one (v, t), [])
+  | otherwise = pure (HashMap.singleton v1 (TyMeta v2), [])
+unify _ (TyMeta v) t = pure (HashMap.singleton v t, [])
+unify _ t (TyMeta v) = pure (HashMap.singleton v t, [])
 unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [(x, t11 :~ t21), (x, t12 :~ t22)])
 unify _ (TyVar v1) (TyVar v2) | v1 == v2 = pure (mempty, [])
 unify _ (TyCon c1) (TyCon c2) | c1 == c2 = pure (mempty, [])
@@ -137,7 +137,7 @@ solve = solveLoop (5000 :: Int)
           solveLoop (n - 1) constraints
     zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
-generalize :: MonadBind m => Range -> Type -> m (Scheme Type)
+generalize :: (MonadBind m) => Range -> Type -> m (Scheme Type)
 generalize x term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ freevars zonkedTerm
@@ -145,7 +145,7 @@ generalize x term = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
-generalizeMutRecs :: MonadBind m => Range -> [Type] -> m ([TypeVar], [Type])
+generalizeMutRecs :: (MonadBind m) => Range -> [Type] -> m ([TypeVar], [Type])
 generalizeMutRecs x terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map freevars zonkedTerms
@@ -157,7 +157,7 @@ generalizeMutRecs x terms = do
 -- But it's not really generating a new variable, it's just using the free variable as a bound variable.
 -- The free variable will zonk to the bound variable as soon as the bound variable is bound (`bindVar`).
 -- So we can reuse the free variable as a bound variable.
-toBound :: HasField "metaVar" r a => r -> a
+toBound :: (HasField "metaVar" r a) => r -> a
 toBound tv = tv.metaVar
 
 instantiate :: (MonadBind m, MonadIO m, MonadState TcEnv m) => Range -> Scheme Type -> m Type

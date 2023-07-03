@@ -5,6 +5,7 @@
 module Main (main) where
 
 import Control.Lens (makeFieldsNoPrefix, (.~))
+import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
@@ -20,8 +21,8 @@ import Malgo.Monad (CompileMode (..), newMalgoEnv)
 import Malgo.Monad qualified as Monad
 import Malgo.Prelude
 import Options.Applicative
-import Relude.Unsafe (read)
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
+import System.Exit (exitFailure)
 import System.FilePath (takeDirectory, (</>))
 import System.FilePath.Lens (extension)
 
@@ -62,11 +63,11 @@ main = do
     Build _ -> do
       Build.run
     Koriel (KorielOpt srcPath) -> do
-      srcContents <- readFileBS srcPath
-      case Koriel.parse srcPath (decodeUtf8 srcContents) of
+      srcContents <- Text.readFile srcPath
+      case Koriel.parse srcPath srcContents of
         Left err ->
           let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-              diag' = addFile diag srcPath (decodeUtf8 srcContents)
+              diag' = addFile diag srcPath (convertString srcContents)
            in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
         Right prog -> do
           print $ pPrint prog
@@ -126,9 +127,9 @@ parseCommand = do
   cache <- newIORef mempty
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build <|> subparser koriel) <**> helper) $
-          fullDesc
-            <> header "malgo programming language"
+      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build <|> subparser koriel) <**> helper)
+          $ fullDesc
+          <> header "malgo programming language"
       )
   case command of
     ToLL opt -> do
@@ -141,28 +142,28 @@ parseCommand = do
     Koriel opt -> pure $ Koriel opt
   where
     toLL =
-      command "to-ll" $
-        info (ToLL <$> toLLOpt) $
-          fullDesc
-            <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
-            <> header "malgo to LLVM Textual IR Compiler"
+      command "to-ll"
+        $ info (ToLL <$> toLLOpt)
+        $ fullDesc
+        <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
+        <> header "malgo to LLVM Textual IR Compiler"
     lsp cache = do
-      command "lsp" $
-        info (Lsp <$> lspOpt cache) $
-          fullDesc
-            <> progDesc "Language Server for Malgo"
-            <> header "Malgo Language Server"
+      command "lsp"
+        $ info (Lsp <$> lspOpt cache)
+        $ fullDesc
+        <> progDesc "Language Server for Malgo"
+        <> header "Malgo Language Server"
     build =
-      command "build" $
-        info (Build <$> buildOpt) $
-          fullDesc
-            <> progDesc "Build Malgo program"
-            <> header "malgo build"
+      command "build"
+        $ info (Build <$> buildOpt)
+        $ fullDesc
+        <> progDesc "Build Malgo program"
+        <> header "malgo build"
     buildOpt = pure BuildOpt
     koriel =
-      command "koriel" $
-        info (Koriel <$> korielOpt) $
-          fullDesc
-            <> progDesc "Koriel Compiler"
-            <> header "malgo koriel"
+      command "koriel"
+        $ info (Koriel <$> korielOpt)
+        $ fullDesc
+        <> progDesc "Koriel Compiler"
+        <> header "malgo koriel"
     korielOpt = KorielOpt <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")

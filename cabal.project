@@ -1,6 +1,6 @@
 packages: *.cabal
 
-with-compiler: ghc-9.4.5
+-- with-compiler: ghc-9.4.5
 
 jobs: $ncpus
 
@@ -23,4 +23,4 @@ source-repository-package
 
 constraints: diagnose +megaparsec-compat
 
-allow-newer: base, ghc-prim, text
+allow-newer: text

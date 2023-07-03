@@ -8,6 +8,8 @@ import Data.Aeson (FromJSON, decodeFileStrict)
 import Data.List ((\\))
 import Data.List qualified as List
 import Data.List.Extra (chunksOf)
+import Data.Maybe qualified as Maybe
+import Data.Text.IO qualified as Text
 import Koriel.Id (ModuleName (..))
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
@@ -15,11 +17,11 @@ import Malgo.Monad (getWorkspaceDir, newMalgoEnv)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..))
-import Relude.Unsafe qualified as Unsafe
 import System.Directory (getCurrentDirectory, makeAbsolute)
 import System.FilePath ((</>))
 import System.FilePath.Glob (glob)
 import UnliftIO (mapConcurrently_)
+import Witherable (ordNub)
 
 data Config = Config
   { sourceDirectories :: [FilePath],
@@ -57,7 +59,7 @@ run = do
   excludePatterns <- getExcludePatterns
   excludeFiles <- concat <$> traverse glob excludePatterns
   sourceFiles' <- traverse makeAbsolute $ sourceFiles \\ excludeFiles
-  sourceContents <- map (decodeUtf8 @Text) <$> traverse readFileBS sourceFiles'
+  sourceContents <- traverse Text.readFile sourceFiles'
   let parsedAstList = mconcat $ zipWith parse sourceFiles' sourceContents
   let moduleDepends = map takeImports parsedAstList
   n <- getNumCapabilities
@@ -69,7 +71,7 @@ run = do
   traverse_
     ( mapConcurrently_
         ( \(path, moduleName, _) -> do
-            let ast = Unsafe.fromJust $ List.lookup path parsedAstList
+            let ast = Maybe.fromJust $ List.lookup path parsedAstList
             putStrLn ("Compile " <> path)
             env <- newMalgoEnv path [] (Just _uniqSupply) moduleName (Just _interfaces) (Just _indexes)
             Driver.compileFromAST path env ast
@@ -85,8 +87,8 @@ run = do
       let ParsedDefinitions ds = moduleDefinition
        in ( sourceFile,
             moduleName,
-            ordNub $
-              mapMaybe
+            ordNub
+              $ mapMaybe
                 ( \case
                     Import _ imported _ -> Just imported
                     _ -> Nothing

@@ -10,7 +10,7 @@ import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
 import Malgo.Interface
-import Malgo.Prelude
+import Malgo.Prelude hiding (All)
 import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState
 import Malgo.Syntax
@@ -18,7 +18,7 @@ import Malgo.Syntax.Extension
 
 -- | Entry point of this 'Malgo.Rename.Pass'
 rename ::
-  MonadIO m =>
+  (MonadIO m) =>
   -- | The initial environment that includes Builtin function definitions.
   RnEnv ->
   Module (Malgo 'Parse) ->
@@ -54,32 +54,32 @@ rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExpr e
 rnDecl (ScSig pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars')) $
-    ScSig pos
-      <$> lookupVarName pos name
-      <*> rnType typ
+  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars'))
+    $ ScSig pos
+    <$> lookupVarName pos name
+    <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
   params' <- traverse (resolveName . snd) params
-  local (appendRnEnv resolvedTypeIdentMap (zip (map snd params) (map (Qualified Implicit) params'))) $
-    DataDef pos
-      <$> lookupTypeName pos name
-      <*> pure (zipWith (\(range, _) p' -> (range, p')) params params')
-      <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
+  local (appendRnEnv resolvedTypeIdentMap (zip (map snd params) (map (Qualified Implicit) params')))
+    $ DataDef pos
+    <$> lookupTypeName pos name
+    <*> pure (zipWith (\(range, _) p' -> (range, p')) params params')
+    <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (TypeSynonym pos name params typ) = do
   params' <- traverse resolveName params
-  local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Qualified Implicit) params')) $
-    TypeSynonym pos
-      <$> lookupTypeName pos name
-      <*> pure params'
-      <*> rnType typ
+  local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Qualified Implicit) params'))
+    $ TypeSynonym pos
+    <$> lookupTypeName pos name
+    <*> pure params'
+    <*> rnType typ
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
 rnDecl (Foreign pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars')) $
-    Foreign (pos, name)
-      <$> lookupVarName pos name
-      <*> rnType typ
+  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars'))
+    $ Foreign (pos, name)
+    <$> lookupVarName pos name
+    <*> rnType typ
 rnDecl (Import pos modName importList) = do
   interface <- loadInterface modName
   infixInfo <>= interface.infixMap
@@ -217,14 +217,14 @@ infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
       name' <- lookupVarName pos name
-      pure $ one (name', (assoc, order))
+      pure $ HashMap.singleton name' (assoc, order)
     _ -> pure mempty
 
 -- | OpApp recombination.
 -- Every OpApp in 'Malgo 'Parsed' is treated as left associative.
 -- 'mkOpApp' transforms it to actual associativity.
 mkOpApp ::
-  MonadIO m =>
+  (MonadIO m) =>
   Range ->
   -- | Fixity of outer operator
   (Assoc, Int) ->
@@ -238,18 +238,18 @@ mkOpApp ::
 -- (e11 op1 e12) op2 e2
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
-      errorOn pos1 $
-        "Precedence parsing error:"
-          $+$ nest
-            2
-            ( "cannot mix"
-                <+> quotes (pPrint op1)
-                <+> brackets (pPrint fix1)
-                <+> "and"
-                <+> quotes (pPrint op2)
-                <+> brackets (pPrint fix2)
-                <+> "in the same infix expression"
-            )
+      errorOn pos1
+        $ "Precedence parsing error:"
+        $+$ nest
+          2
+          ( "cannot mix"
+              <+> quotes (pPrint op1)
+              <+> brackets (pPrint fix1)
+              <+> "and"
+              <+> quotes (pPrint op2)
+              <+> brackets (pPrint fix2)
+              <+> "in the same infix expression"
+          )
   | associate_right = do
       e' <- mkOpApp pos2 fix2 op2 e12 e2
       pure $ OpApp (pos1, fix1) op1 e11 e'
@@ -285,10 +285,10 @@ genToplevelEnv ds =
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
       unless (disjoint (map (view _2) cs) (HashMap.keys (env ^. resolvedVarIdentMap))) do
-        errorOn pos $
-          "Duplicate name(s):"
-            <+> sep
-              (punctuate "," $ map (quotes . pPrint) (map (view _2) cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
+        errorOn pos
+          $ "Duplicate name(s):"
+          <+> sep
+            (punctuate "," $ map (quotes . pPrint) (map (view _2) cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
       x' <- resolveGlobalName x
       xs' <- traverse (resolveGlobalName . view _2) cs
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')

@@ -15,6 +15,7 @@ dependencies:
   - base
   - binary
   - binary-instances
+  - bytestring
   - containers
   - directory
   - extra
@@ -32,7 +33,6 @@ dependencies:
   - pretty
   - raw-strings-qq
   - regex-tdfa
-  - relude >= 1.0.0.0
   - string-conversions
   - text
   - transformers
@@ -77,6 +77,7 @@ default-extensions:
   - ViewPatterns
   - OverloadedRecordDot
   - NoFieldSelectors
+  - TypeData
 
 library:
   source-dirs: src
