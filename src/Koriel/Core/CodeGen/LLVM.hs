@@ -225,6 +225,8 @@ findVar x = findLocalVar
       view (globalValueMap . at x) >>= \case
         Just opr -> load (convType $ C.typeOf x) opr 0 -- global variable is a pointer to the actual value
         Nothing -> findExtVar
+    -- TODO: findFuncVar
+    -- lookup funcMap and generate a closure for the function
     findExtVar =
       use (primMap . at (toName x)) >>= \case
         Just opr -> load (convType $ C.typeOf x) opr 0
@@ -307,13 +309,14 @@ genFunc name params body = do
           then function
           else internalFunction
   funcBuilder funcName llvmParams retty $ \args ->
-    local (over valueMap (HashMap.fromList (zip params args) <>)) $ genExpr body >>= ret
+    local (over valueMap (HashMap.fromList (zip params $ drop 1 args) <>)) $ genExpr body >>= ret
   where
     funcName = toName name
     llvmParams =
-      map
-        (\x -> (convType x.meta, ParameterName $ BS.toShort $ convertString $ idToText x))
-        params
+      (ptr, NoParameterName) -- capture pointer (not used)
+        : map
+          (\x -> (convType x.meta, ParameterName $ BS.toShort $ convertString $ idToText x))
+          params
     retty = convType (C.typeOf body)
 
 genExpr ::
@@ -337,7 +340,10 @@ genExpr e@(Call f xs) = do
 genExpr e@(CallDirect f xs) = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
-  call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
+  call
+    (FunctionType (convType $ C.typeOf e) (ptr : map (convType . C.typeOf) xs) False)
+    fOpr
+    (map (,[]) (ConstantOperand (C.Null ptr) : xsOprs))
 genExpr e@(RawCall name _ xs) = do
   let primOpr =
         ConstantOperand

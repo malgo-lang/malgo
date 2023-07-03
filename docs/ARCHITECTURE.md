@@ -31,19 +31,15 @@ https://www.stackage.org/package/rio
 コンパイラでは、ユニークな識別子が欲しくなることがある。
 `Koriel.MonadUniq.getUniq`は、呼ばれるたびにユニークな`Int`を返す。
 
-### Interface
-
 ### Driver
 
 malgoコンパイラのエントリーポイントは`Malgo.Driver.compile`である。
 
-### Pass
-### Rename
-### TypeCheck
-### UTerm
-### Refine
-### Desugar
-### Optimize
-### Flat
-### Alpha
-### CodeGen
+### Koriel
+
+#### Semantics of `call` and `call-direct`
+
+Korielの関数定義は、クロージャを生成する。
+クロージャの呼び出しには`call`を使う。
+呼び出す関数名が明らかでかつ、キャプチャが空のときに限り、`call-direct`で内部の関数を直接呼び出すことができる。
+

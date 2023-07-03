@@ -119,7 +119,7 @@ fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
 
 patToName :: Pat (Malgo 'Refine) -> Text
 patToName (G.VarP _ v) = v.name
-patToName (G.ConP _ c _) = T.toLower $ c.name
+patToName (G.ConP _ c _) = T.toLower c.name
 patToName (G.TupleP _ _) = "tuple"
 patToName (G.RecordP _ _) = "record"
 patToName (G.UnboxedP _ _) = "unboxed"
@@ -265,7 +265,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
 
 -- Desugar Monad
 
-lookupName :: MonadState DsState m => RnId -> m (Id C.Type)
+lookupName :: (MonadState DsState m) => RnId -> m (Id C.Type)
 lookupName name = do
   mname' <- use (nameEnv . at name)
   case mname' of
