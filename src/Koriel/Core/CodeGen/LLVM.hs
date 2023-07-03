@@ -224,9 +224,17 @@ findVar x = findLocalVar
     findGlobalVar =
       view (globalValueMap . at x) >>= \case
         Just opr -> load (convType $ C.typeOf x) opr 0 -- global variable is a pointer to the actual value
+        Nothing -> findFuncVar
+    findFuncVar =
+      view (funcMap . at x) >>= \case
+        Just opr -> do
+          -- Generate a closure for the function
+          let capture = ConstantOperand $ C.Null ptr
+          closAddr <- mallocType (StructureType False [ptr, ptr])
+          gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` BS.toShort (convertString x.name <> "_capture")
+          gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] opr `named` BS.toShort (convertString x.name <> "_func")
+          pure closAddr
         Nothing -> findExtVar
-    -- TODO: findFuncVar
-    -- lookup funcMap and generate a closure for the function
     findExtVar =
       use (primMap . at (toName x)) >>= \case
         Just opr -> load (convType $ C.typeOf x) opr 0

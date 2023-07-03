@@ -200,22 +200,22 @@ dsExpr (G.Var (Typed typ _) name) = do
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
     [] :-> _ | isConstructor name -> pure $ CallDirect name' []
     _
-      | idIsExternal name' -> do
-          -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
-          -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
-          case C.typeOf name' of
-            pts :-> _ -> do
-              DsState {globalClosures} <- get
-              case HashMap.lookup name' globalClosures of
-                Nothing -> do
-                  clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
-                  internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
-                  ps <- traverse (newTemporalId "p") pts
-                  let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
-                  modify $ \s -> s {_globalDefs = clsDef : s._globalDefs, globalClosures = HashMap.insert name' clsId globalClosures}
-                  pure $ Atom $ C.Var clsId
-                Just clsId -> pure $ Atom $ C.Var clsId
-            _ -> pure $ Atom $ C.Var name'
+      -- \| idIsExternal name' -> do
+      --     -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
+      --     -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
+      --     case C.typeOf name' of
+      --       pts :-> _ -> do
+      --         DsState {globalClosures} <- get
+      --         case HashMap.lookup name' globalClosures of
+      --           Nothing -> do
+      --             clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
+      --             internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
+      --             ps <- traverse (newTemporalId "p") pts
+      --             let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
+      --             modify $ \s -> s {_globalDefs = clsDef : s._globalDefs, globalClosures = HashMap.insert name' clsId globalClosures}
+      --             pure $ Atom $ C.Var clsId
+      --           Just clsId -> pure $ Atom $ C.Var clsId
+      --       _ -> pure $ Atom $ C.Var name'
       | otherwise -> pure $ Atom $ C.Var name'
   where
     isConstructor Id {name} | T.length name > 0 = Char.isUpper (T.head name)

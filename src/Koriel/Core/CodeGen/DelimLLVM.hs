@@ -225,6 +225,16 @@ findVar x = findLocalVar
     findGlobalVar =
       view (globalValueMap . at x) >>= \case
         Just opr -> load (convType $ C.typeOf x) opr 0 -- global variable is a pointer to the actual value
+        Nothing -> findFuncVar
+    findFuncVar =
+      view (funcMap . at x) >>= \case
+        Just opr -> do
+          -- Generate a closure for the function
+          let capture = ConstantOperand $ C.Null ptr
+          closAddr <- mallocType (StructureType False [ptr, ptr])
+          gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` BS.toShort (convertString x.name <> "_capture")
+          gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] opr `named` BS.toShort (convertString x.name <> "_func")
+          pure closAddr
         Nothing -> findExtVar
     findExtVar =
       use (primMap . at (toName x)) >>= \case
@@ -311,13 +321,14 @@ genFunc name params body = do
           then function
           else internalFunction
   funcBuilder funcName llvmParams retty $ \args ->
-    local (over valueMap (HashMap.fromList (zip params args) <>)) $ runContT (genExpr body) ret
+    local (over valueMap (HashMap.fromList (zip params $ drop 1 args) <>)) $ runContT (genExpr body) ret
   where
     funcName = toName name
     llvmParams =
-      map
-        (\x -> (convType x.meta, ParameterName $ BS.toShort $ convertString $ idToText x))
-        params
+      (ptr, NoParameterName) -- capture pointer (not used)
+        : map
+          (\x -> (convType x.meta, ParameterName $ BS.toShort $ convertString $ idToText x))
+          params
     retty = convType (C.typeOf body)
 
 genExpr ::
@@ -341,7 +352,10 @@ genExpr e@(Call f xs) = do
 genExpr e@(CallDirect f xs) = do
   fOpr <- findFun f
   xsOprs <- traverse genAtom xs
-  call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) fOpr (map (,[]) xsOprs)
+  call
+    (FunctionType (convType $ C.typeOf e) (ptr : map (convType . C.typeOf) xs) False)
+    fOpr
+    (map (,[]) (ConstantOperand (C.Null ptr) : xsOprs))
 genExpr e@(RawCall name _ xs) = do
   let primOpr =
         ConstantOperand
