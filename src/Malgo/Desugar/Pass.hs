@@ -312,15 +312,20 @@ curryFun isToplevel hint ps e = curryFun' ps []
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
           fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
-          globalDefs <>= [FunDef fun ps (C.typeOf fun) e]
+          ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
+          moduleName <- asks (.moduleName)
+          uniqSupply <- asks (.uniqSupply)
+          e' <- alpha e (AlphaEnv {uniqSupply, moduleName, subst = HashMap.fromList $ zip ps $ map C.Var ps'})
+          globalDefs <>= [FunDef fun ps' (C.typeOf fun) e']
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do
           fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
           ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
+          moduleName <- asks (.moduleName)
           uniqSupply <- asks (.uniqSupply)
-          e' <- alpha e (AlphaEnv {uniqSupply, subst = HashMap.fromList $ zip ps $ map C.Var ps'})
+          e' <- alpha e (AlphaEnv {uniqSupply, moduleName, subst = HashMap.fromList $ zip ps $ map C.Var ps'})
           pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
     curryFun' (x : xs) as = do
       fun <- curryFun' xs (C.Var x : as)

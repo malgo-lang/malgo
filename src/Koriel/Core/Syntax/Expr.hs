@@ -75,7 +75,7 @@ data Expr a
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Expr a) where
+instance (HasType a) => HasType (Expr a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
     ps :-> r | map typeOf xs == ps -> r
@@ -119,7 +119,7 @@ instance HasType a => HasType (Expr a) where
   typeOf (Assign _ _ e) = typeOf e
   typeOf (Error t) = t
 
-instance Pretty a => Pretty (Expr a) where
+instance (Pretty a) => Pretty (Expr a) where
   pPrint (Atom x) = pPrint x
   pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)

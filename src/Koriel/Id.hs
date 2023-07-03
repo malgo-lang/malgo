@@ -26,7 +26,6 @@ import GHC.Records
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
 import Koriel.Pretty as P
-import Numeric (showHex)
 
 newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -61,27 +60,27 @@ data Id a = Id
   { name :: Text,
     meta :: a,
     moduleName :: ModuleName,
+    uniq :: Int, -- Unique number for each Id. If sort == Native or External, uniq is always -1.
     sort :: IdSort
   }
   deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
   deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty (Id a) where
-  pPrint Id {name, moduleName, sort = External} = "@" <> pPrint moduleName <> "." <> pPrint name
-  pPrint Id {name, sort = Internal} = "#" <> pPrint name
-  pPrint Id {name, sort = Temporal} = "$" <> pPrint name
+  pPrint Id {name, moduleName, sort = External} = "@" <> brackets (pPrint moduleName <+> pPrint name)
+  pPrint Id {name, moduleName, uniq, sort = Internal} = "#" <> brackets (pPrint moduleName <+> pPrint name <+> pPrint uniq)
+  pPrint Id {name, moduleName, uniq, sort = Temporal} = "$" <> brackets (pPrint moduleName <+> pPrint name <+> pPrint uniq)
   pPrint Id {name, sort = Native} = "%" <> pPrint name
 
 idToText :: Id a -> Text
 idToText Id {name, moduleName, sort = External} = moduleName.raw <> "." <> name
-idToText Id {name, moduleName, sort = Internal} = moduleName.raw <> ".#" <> name
-idToText Id {name, moduleName, sort = Temporal} = moduleName.raw <> ".$" <> name
+idToText Id {name, moduleName, uniq, sort = Internal} = moduleName.raw <> ".#" <> name <> "_" <> convertString (show uniq)
+idToText Id {name, moduleName, uniq, sort = Temporal} = moduleName.raw <> ".$" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, sort = Native} = name
 
 newTemporalId :: (MonadReader env m, MonadIO m, HasUniqSupply env, HasModuleName env) => Text -> a -> m (Id a)
 newTemporalId name meta = do
   uniq <- getUniq
-  name <- pure $ name <> "_" <> convertString (showHex uniq "")
   moduleName <- asks (.moduleName)
   let sort = Temporal
   pure Id {..}
@@ -89,7 +88,6 @@ newTemporalId name meta = do
 newInternalId :: (MonadIO f, MonadReader env f, HasUniqSupply env, HasModuleName env) => Text -> a -> f (Id a)
 newInternalId name meta = do
   uniq <- getUniq
-  name <- pure $ name <> "_" <> convertString (showHex uniq "")
   moduleName <- asks (.moduleName)
   let sort = Internal
   pure Id {..}
@@ -97,12 +95,14 @@ newInternalId name meta = do
 newExternalId :: (MonadReader env f, HasModuleName env) => Text -> a -> f (Id a)
 newExternalId name meta = do
   moduleName <- asks (.moduleName)
+  let uniq = -1
   let sort = External
   pure Id {..}
 
 newNativeId :: (MonadReader env f, HasModuleName env) => Text -> a -> f (Id a)
 newNativeId name meta = do
   moduleName <- asks (.moduleName)
+  let uniq = -1
   let sort = Native
   pure Id {..}
 
