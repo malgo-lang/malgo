@@ -31,16 +31,16 @@ parseId :: (MonadReader Context m, MonadFail m) => Text -> Type -> m (Id Type)
 parseId name meta
   | Text.head name == '@' = do
       [moduleName, name] <- pure $ Text.words (Text.tail name)
-      pure Id {name, meta, moduleName = ModuleName moduleName, sort = External}
+      pure Id {name, meta, moduleName = ModuleName moduleName, uniq = -1, sort = External}
   | Text.head name == '#' = do
-      [moduleName, name] <- pure $ Text.words (Text.tail name)
-      pure Id {name = Text.tail name, meta, moduleName = ModuleName moduleName, sort = Internal}
+      [moduleName, name, uniq] <- pure $ Text.words (Text.tail name)
+      pure Id {name = Text.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Internal}
   | Text.head name == '$' = do
-      [moduleName, name] <- pure $ Text.words (Text.tail name)
-      pure Id {name = Text.tail name, meta, moduleName = ModuleName moduleName, sort = Temporal}
+      [moduleName, name, uniq] <- pure $ Text.words (Text.tail name)
+      pure Id {name = Text.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Temporal}
   | Text.head name == '%' = do
       moduleName <- asks (.moduleName)
-      pure Id {name = Text.tail name, meta, moduleName, sort = Native}
+      pure Id {name = Text.tail name, meta, moduleName, uniq = -1, sort = Native}
   | otherwise = do
       error $ "parseId: " <> show name
 

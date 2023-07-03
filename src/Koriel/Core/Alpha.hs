@@ -16,13 +16,13 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
-import Numeric (showHex)
 
 type Subst = HashMap (Id Type) (Atom (Id Type))
 
 -- | Environment for alpha conversion
 data AlphaEnv = AlphaEnv
   { uniqSupply :: UniqSupply,
+    moduleName :: ModuleName,
     -- | Substitution
     subst :: Subst
   }
@@ -51,8 +51,8 @@ lookupId n = do
 cloneId :: (MonadIO m, MonadReader AlphaEnv m) => Id a -> m (Id a)
 cloneId Id {..} = do
   assert (sort == Internal || sort == Temporal) pass -- only Internal or Temporal id can be cloned
+  moduleName <- asks (.moduleName)
   uniq <- getUniq
-  name <- pure $ name <> "_" <> convertString (showHex uniq "")
   pure Id {..}
 
 alphaExpr :: (MonadReader AlphaEnv f, MonadIO f) => Expr (Id Type) -> f (Expr (Id Type))
@@ -121,8 +121,8 @@ alphaCase (Bind x t e) = do
 -- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExpr e
 alphaCase (Exact u e) = Exact u <$> alphaExpr e
 
-equiv :: (MonadIO m) => UniqSupply -> Expr (Id Type) -> Expr (Id Type) -> m (Maybe Subst)
-equiv uniqSupply e1 e2 = runReaderT ?? AlphaEnv {uniqSupply, subst = mempty} $ do
+equiv :: (MonadIO m) => UniqSupply -> ModuleName -> Expr (Id Type) -> Expr (Id Type) -> m (Maybe Subst)
+equiv uniqSupply moduleName e1 e2 = runReaderT ?? AlphaEnv {uniqSupply, moduleName, subst = mempty} $ do
   isEquiv <- equivExpr e1 e2
   if isEquiv then Just <$> asks (.subst) else pure Nothing
 
