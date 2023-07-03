@@ -67,9 +67,9 @@ data Id a = Id
   deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty (Id a) where
-  pPrint Id {name, moduleName, sort = External} = "@" <> pPrint moduleName <> "." <> pPrint name
-  pPrint Id {name, sort = Internal} = "#" <> pPrint name
-  pPrint Id {name, sort = Temporal} = "$" <> pPrint name
+  pPrint Id {name, moduleName, sort = External} = "@" <> brackets (pPrint moduleName <+> pPrint name)
+  pPrint Id {name, moduleName, sort = Internal} = "#" <> brackets (pPrint moduleName <+> pPrint name)
+  pPrint Id {name, moduleName, sort = Temporal} = "$" <> brackets (pPrint moduleName <+> pPrint name)
   pPrint Id {name, sort = Native} = "%" <> pPrint name
 
 idToText :: Id a -> Text

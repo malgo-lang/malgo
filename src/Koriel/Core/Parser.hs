@@ -102,7 +102,7 @@ object = between (symbol "(") (symbol ")") do
           (symbol "(")
           (symbol ")")
           ( many do
-              k <- ident
+              k <- rawIdent
               v <- atom
               pure (k, v)
           )
@@ -123,7 +123,7 @@ expr =
             CallDirect <$> ident <*> many atom,
           do
             void $ symbol "raw"
-            RawCall <$> ident <*> type_ <*> many atom,
+            RawCall <$> rawIdent <*> type_ <*> many atom,
           do
             void $ symbol "binop"
             BinOp <$> operator <*> atom <*> atom,
@@ -168,7 +168,7 @@ expr =
             void $ try $ symbol "destruct-record"
             DestructRecord
               <$> atom
-              <*> between (symbol "(") (symbol ")") (HashMap.fromList <$> many ((,) <$> ident <*> ident))
+              <*> between (symbol "(") (symbol ")") (HashMap.fromList <$> many ((,) <$> rawIdent <*> ident))
               <*> expr,
           do
             void $ symbol "destruct"
@@ -251,7 +251,7 @@ type_ = label "type" do
           do
             void $ symbol "Record#"
             fs <- many $ between (symbol "(") (symbol ")") do
-              k <- ident
+              k <- rawIdent
               v <- type_
               pure (k, v)
             pure $ RecordT $ HashMap.fromList fs
@@ -268,7 +268,7 @@ tag :: Parser Tag
 tag = tuple <|> data_
   where
     tuple = void (symbol "Tuple#") >> pure Tuple
-    data_ = Data <$> ident
+    data_ = Data <$> rawIdent
 
 -- | Parser an operator.
 operator :: Parser Op
@@ -315,7 +315,7 @@ symbol = Lexer.symbol space
 -- - '@' for global variables.
 -- - '$' for temporary variables.
 identStartLetter :: Parser Char
-identStartLetter = Char.letterChar <|> oneOf ("_+-*/\\%=><:;|&!#.@$" :: String)
+identStartLetter = oneOf ("@#$%" :: String) -- Char.letterChar <|> oneOf ("_+-*/\\%=><:;|&!#.@$" :: String)
 
 identLetter :: Parser Char
 identLetter = Char.alphaNumChar <|> oneOf ("_+-*/\\%=><:;|&!#.@$" :: String)
@@ -327,5 +327,14 @@ identLetter = Char.alphaNumChar <|> oneOf ("_+-*/\\%=><:;|&!#.@$" :: String)
 ident :: Parser Text
 ident = lexeme do
   x <- identStartLetter
-  xs <- many identLetter
+  xs <-
+    some identLetter
+      <|> between
+        (symbol "[")
+        (symbol "]")
+        (unwords <$> many (lexeme (some identLetter)))
   pure $ convertString $ x : xs
+
+rawIdent :: Parser Text
+rawIdent = lexeme do
+  convertString <$> some identLetter

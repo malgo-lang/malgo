@@ -11,7 +11,7 @@ import Koriel.Prelude
 import Koriel.Pretty (Pretty (pPrint), errorDoc)
 
 -- | Type-check the program and annotate with type information.
-annotate :: (MonadIO m) => ModuleName -> Program Text -> m (Program (Id Type))
+annotate :: (MonadIO m, MonadFail m) => ModuleName -> Program Text -> m (Program (Id Type))
 annotate moduleName program = runReaderT (annProgram program) (Context moduleName mempty)
 
 data Context = Context
@@ -27,24 +27,24 @@ lookupName name =
     name
     <$> asks (.nameEnv)
 
-parseId :: (MonadReader Context m) => Text -> Type -> m (Id Type)
+parseId :: (MonadReader Context m, MonadFail m) => Text -> Type -> m (Id Type)
 parseId name meta
   | Text.head name == '@' = do
-      (moduleName, name) <- pure $ second Text.tail $ Text.breakOn "." (Text.tail name)
+      [moduleName, name] <- pure $ Text.words (Text.tail name)
       pure Id {name, meta, moduleName = ModuleName moduleName, sort = External}
   | Text.head name == '#' = do
-      moduleName <- asks (.moduleName)
-      pure Id {name = Text.tail name, meta, moduleName, sort = Internal}
+      [moduleName, name] <- pure $ Text.words (Text.tail name)
+      pure Id {name = Text.tail name, meta, moduleName = ModuleName moduleName, sort = Internal}
   | Text.head name == '$' = do
-      moduleName <- asks (.moduleName)
-      pure Id {name = Text.tail name, meta, moduleName, sort = Temporal}
+      [moduleName, name] <- pure $ Text.words (Text.tail name)
+      pure Id {name = Text.tail name, meta, moduleName = ModuleName moduleName, sort = Temporal}
   | Text.head name == '%' = do
       moduleName <- asks (.moduleName)
       pure Id {name = Text.tail name, meta, moduleName, sort = Native}
   | otherwise = do
       error $ "parseId: " <> show name
 
-annProgram :: (MonadReader Context m, MonadIO m) => Program Text -> m (Program (Id Type))
+annProgram :: (MonadReader Context m, MonadIO m, MonadFail m) => Program Text -> m (Program (Id Type))
 annProgram Program {..} = do
   varEnv <- foldMapM prepareVarDecl topVars
   funEnv <- foldMapM prepareFunDecl topFuns
@@ -53,22 +53,22 @@ annProgram Program {..} = do
     topFuns <- traverse annFunDecl topFuns
     pure Program {..}
 
-prepareVarDecl :: (MonadReader Context m) => (Text, Type, Expr Text) -> m (HashMap Text (Id Type))
+prepareVarDecl :: (MonadReader Context m, MonadFail m) => (Text, Type, Expr Text) -> m (HashMap Text (Id Type))
 prepareVarDecl (name, ty, _) = do
   id <- parseId name ty
   pure $ HashMap.singleton name id
 
-prepareFunDecl :: (MonadReader Context m) => (Text, [Text], Type, Expr Text) -> m (HashMap Text (Id Type))
+prepareFunDecl :: (MonadReader Context m, MonadFail m) => (Text, [Text], Type, Expr Text) -> m (HashMap Text (Id Type))
 prepareFunDecl (name, _, ty, _) = do
   id <- parseId name ty
   pure $ HashMap.singleton name id
 
-annVarDecl :: (MonadReader Context m, MonadIO m) => (Text, Type, Expr Text) -> m (Id Type, Type, Expr (Id Type))
+annVarDecl :: (MonadReader Context m, MonadIO m, MonadFail m) => (Text, Type, Expr Text) -> m (Id Type, Type, Expr (Id Type))
 annVarDecl (name, ty, body) = do
   name <- lookupName name
   (name,ty,) <$> annExpr body
 
-annFunDecl :: (MonadReader Context m, MonadIO m) => (Text, [Text], Type, Expr Text) -> m (Id Type, [Id Type], Type, Expr (Id Type))
+annFunDecl :: (MonadReader Context m, MonadIO m, MonadFail m) => (Text, [Text], Type, Expr Text) -> m (Id Type, [Id Type], Type, Expr (Id Type))
 annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   name <- lookupName name
   params' <- zipWithM parseId params paramTypes
@@ -78,7 +78,7 @@ annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
     <$> annExpr body
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pPrint name
 
-annExpr :: (MonadReader Context m, MonadIO m) => Expr Text -> m (Expr (Id Type))
+annExpr :: (MonadReader Context m, MonadIO m, MonadFail m) => Expr Text -> m (Expr (Id Type))
 annExpr (Atom atom) = Atom <$> annAtom atom
 annExpr (Call fun args) = Call <$> annAtom fun <*> traverse annAtom args
 annExpr (CallDirect fun args) = CallDirect <$> lookupName fun <*> traverse annAtom args
@@ -163,7 +163,7 @@ annAtom :: (HasCallStack) => (MonadReader Context m) => Atom Text -> m (Atom (Id
 annAtom (Var name) = Var <$> lookupName name
 annAtom (Unboxed value) = pure $ Unboxed value
 
-annObj :: (MonadReader Context m, MonadIO m) => Type -> Obj Text -> m (Obj (Id Type))
+annObj :: (MonadReader Context m, MonadIO m, MonadFail m) => Type -> Obj Text -> m (Obj (Id Type))
 annObj (paramTypes :-> _) (Fun params body) = do
   params' <- zipWithM parseId params paramTypes
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
