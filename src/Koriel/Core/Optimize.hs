@@ -104,7 +104,6 @@ optimizeExpr state expr = do
           >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
           >=> runOpt option.doFoldRedundantCast foldRedundantCast
           >=> runOpt option.doFoldTrivialCall foldTrivialCall
-          >=> runOpt option.doSpecializeFunction specializeFunction
           >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
           >=> normalizeExpr
     runOpt :: (Monad m) => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
@@ -239,27 +238,6 @@ foldTrivialCall = transformM \case
     uniqSupply <- asks (.uniqSupply)
     alpha body AlphaEnv {uniqSupply, moduleName, subst = HashMap.fromList $ zip ps as}
   x -> pure x
-
--- | Specialize a function which is casted to a specific type.
--- TODO: ベンチマーク
-specializeFunction :: (MonadIO m, MonadReader OptimizeEnv m) => Expr (Id Type) -> m (Expr (Id Type))
-specializeFunction =
-  transformM \case
-    Cast (pts' :-> rt') f -> case typeOf f of
-      pts :-> _
-        | length pts' == length pts -> do
-            f' <- newInternalId "cast_opt" (pts' :-> rt')
-            ps' <- traverse (newInternalId "p") pts'
-            v' <- runDef do
-              ps <- zipWithM cast pts $ map (Atom . Var) ps'
-
-              -- If `f` is always a unknown function because it appears in `cast`.
-              r <- bind (Call f ps)
-              pure $ Cast rt' r
-            pure (Let [LocalDef f' (pts' :-> rt') $ Fun ps' v'] (Atom $ Var f'))
-        | otherwise -> error "specializeFunction: invalid cast"
-      _ -> pure (Cast (pts' :-> rt') f)
-    e -> pure e
 
 -- | Remove `destruct` if it does not bind any variables.
 removeNoopDestruct :: Expr (Id a) -> Expr (Id a)
