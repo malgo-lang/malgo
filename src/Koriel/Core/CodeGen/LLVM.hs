@@ -9,7 +9,9 @@ module Koriel.Core.CodeGen.LLVM
 where
 
 import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, use, view, (<?=), (?=), (?~))
+import Control.Monad.Cont (ContT, runContT)
 import Control.Monad.Fix (MonadFix)
+import Control.Monad.Trans.Cont (shiftT)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
@@ -53,8 +55,7 @@ import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 data CodeGenState = CodeGenState
   { -- | 'primMap' is a map from primitive function name to its LLVM function.
     _primMap :: Map Name Operand,
-    stringMap :: HashMap Text C.Constant,
-    closureMap :: HashMap (Id C.Type) Operand
+    stringMap :: HashMap Text C.Constant
   }
 
 makeFieldsNoPrefix ''CodeGenState
@@ -100,7 +101,7 @@ type MonadCodeGen m =
 runCodeGenT :: (Monad m) => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT env m =
   execModuleBuilderT emptyModuleBuilder
-    $ runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty mempty) env
+    $ runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
@@ -140,7 +141,7 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
             pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
-    genLoadModule $ initTopVars topVars >> retVoid
+    genLoadModule $ runContT (initTopVars topVars) (const retVoid)
   let llvmModule =
         defaultModule
           { LLVM.AST.moduleName = fromString srcPath,
@@ -287,6 +288,9 @@ sizeof ty = C.PtrToInt szPtr LT.i64
 toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
+toLabel :: (ConvertibleStrings s BS.ByteString) => s -> ShortByteString
+toLabel s = BS.toShort $ convertString s
+
 -- generate code for a toplevel variable definition
 genVar :: (MonadModuleBuilder m) => Id C.Type -> Expr (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
@@ -314,7 +318,7 @@ genFunc name params body = do
           then function
           else internalFunction
   funcBuilder funcName llvmParams retty $ \args ->
-    local (over valueMap (HashMap.fromList (zip params $ drop 1 args) <>)) $ genExpr body >>= ret
+    local (over valueMap (HashMap.fromList (zip params $ drop 1 args) <>)) $ runContT (genExpr body) ret
   where
     funcName = toName name
     llvmParams =
@@ -332,7 +336,7 @@ genExpr ::
     MonadIO m
   ) =>
   Expr (Id C.Type) ->
-  m Operand
+  ContT () m Operand
 genExpr (Atom x) = genAtom x
 genExpr e@(Call f xs) = do
   fOpr <- genAtom f
@@ -365,7 +369,7 @@ genExpr (Cast ty x) = do
     else pure xOpr
 genExpr (Let xs e) = do
   env <- foldMapM prepare xs
-  env <- local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
+  env <- lift $ local (over valueMap (env <>)) $ mconcat <$> traverse genLocalDef xs
   local (over valueMap (env <>)) $ genExpr e
   where
     -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
@@ -374,48 +378,44 @@ genExpr (Let xs e) = do
         <$> mallocType (StructureType False [ptr, ptr])
     prepare _ = pure mempty
 genExpr Match {} = error "unreachable: Match must be normalized before codegen."
-genExpr (Switch v bs e) = mdo
-  vOpr <- genAtom v
-  tagOpr <- case C.typeOf v of
-    SumT _ -> do
-      tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
-      load i8 tagAddr 0
-    RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-    _ -> pure vOpr
-  retVal <- alloca (convType $ C.typeOf e) Nothing 0
-  switch tagOpr defaultLabel labels
-  labels <- traverse (genBranch (constructorList v) (\opr -> store retVal 0 opr >> br contLabel)) bs
-  defaultLabel <- withBlock "switch_default" do
-    opr <- genExpr e
-    store retVal 0 opr
-    br contLabel
-  contLabel <- block `named` "switch_cont"
-  load (convType $ C.typeOf e) retVal 0
+genExpr (Switch v bs e) =
+  shiftT \k -> do
+    vOpr <- genAtom v
+    tagOpr <- case C.typeOf v of
+      SumT _ -> do
+        tagAddr <- gep (innerType $ C.typeOf v) vOpr [int32 0, int32 0]
+        load i8 tagAddr 0
+      RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
+      _ -> pure vOpr
+    lift mdo
+      switch tagOpr defaultLabel labels
+      labels <- traverse (genBranch (constructorList v) k) bs
+      defaultLabel <- withBlock ("switch_default" :: BS.ByteString) do
+        runContT (genExpr e) k
+      pass
   where
     genBranch cs k (tag, e) = do
       let tag' = case C.typeOf v of
             SumT _ -> C.Int 8 $ fromIntegral $ Maybe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
             RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
             _ -> error "Switch is not supported for this type."
-      label <- withBlock ("switch_branch_" <> BS.toShort (convertString (render (pPrint tag)))) do
-        genExpr e >>= k
+      label <- withBlock ("switch_branch_" <> render (pPrint tag)) do
+        runContT (genExpr e) k
       pure (tag', label)
-genExpr (SwitchUnboxed v bs e) = mdo
-  vOpr <- genAtom v
-  retVal <- alloca (convType $ C.typeOf e) Nothing 0
-  switch vOpr defaultLabel labels
-  labels <- traverse (genBranch $ \opr -> store retVal 0 opr >> br contLabel) bs
-  defaultLabel <- withBlock "switch-unboxed_default" do
-    opr <- genExpr e
-    store retVal 0 opr
-    br contLabel
-  contLabel <- block `named` "switch-unboxed_cont"
-  load (convType $ C.typeOf e) retVal 0
+genExpr (SwitchUnboxed v bs e) =
+  shiftT \k -> do
+    vOpr <- genAtom v
+    lift mdo
+      switch vOpr defaultLabel labels
+      labels <- traverse (genBranch k) bs
+      defaultLabel <- withBlock ("switch-unboxed_default" :: BS.ByteString) do
+        runContT (genExpr e) k
+      pass
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
-      label <- withBlock ("switch-unboxed_branch_" <> BS.toShort (convertString (render (pPrint u)))) do
-        genExpr e >>= k
+      label <- withBlock ("switch-unboxed_branch_" <> render (pPrint u)) do
+        runContT (genExpr e) k
       pure (u', label)
 genExpr (Destruct v (Con _ ts) xs e) = do
   v <- genAtom v
@@ -440,7 +440,7 @@ genExpr (Assign _ v e) | C.typeOf v == VoidT = do
 genExpr (Assign x v e) = do
   vOpr <- genExpr v
   local (over valueMap $ at x ?~ vOpr) $ genExpr e
-genExpr (Error t) = unreachable >> pure (ConstantOperand $ C.Undef $ convType t)
+genExpr (Error _) = shiftT (const unreachable)
 
 -- | Get constructor list from the type of scrutinee.
 constructorList :: (HasType s) => s -> [Con]
@@ -478,32 +478,26 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
   let fvs = toList $ freevars (Fun ps e) `HashSet.difference` globalValues
   -- キャプチャされる変数を詰める構造体の型
   let capType = StructureType False (map (convType . C.typeOf) fvs)
-  CodeGenState {closureMap} <- get
-  func <- case HashMap.lookup funName closureMap of
-    Just func -> pure func
-    Nothing -> do
-      -- クロージャの元になる関数を生成する
-      name <- toName <$> newInternalId (funName.name <> "_closure") ()
-      func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
-        [] -> error "The length of internal function parameters must be 1 or more"
-        (capture : ps') -> do
-          -- キャプチャした変数が詰まっている構造体を展開する
-          env <-
-            HashMap.fromList <$> ifor fvs \i fv ->
-              (fv,) <$> do
-                fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` (BS.toShort (convertString fv.name) <> "_addr")
-                load (convType $ C.typeOf fv) fvAddr 0 `named` BS.toShort (convertString fv.name)
-          local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ genExpr e >>= ret
-      modify $ \s -> s {closureMap = HashMap.insert funName func closureMap}
-      pure func
+  -- クロージャの元になる関数を生成する
+  name <- toName <$> newInternalId (funName.name <> "_closure") ()
+  func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
+    [] -> error "The length of internal function parameters must be 1 or more"
+    (capture : ps') -> do
+      -- キャプチャした変数が詰まっている構造体を展開する
+      env <-
+        HashMap.fromList <$> ifor fvs \i fv ->
+          (fv,) <$> do
+            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` toLabel (fv.name <> "_addr")
+            load (convType $ C.typeOf fv) fvAddr 0 `named` toLabel fv.name
+      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
   -- キャプチャされる変数を構造体に詰める
-  capture <- mallocType capType `named` BS.toShort (convertString funName.name <> "_capture")
+  capture <- mallocType capType `named` toLabel (funName.name <> "_capture")
   ifor_ fvs $ \i fv -> do
     fvOpr <- findVar fv
-    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr `named` BS.toShort (convertString fv.name)
+    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr `named` toLabel fv.name
   closAddr <- findVar funName
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` BS.toShort (convertString funName.name <> "_capture")
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` BS.toShort (convertString funName.name <> "_func")
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` toLabel (funName.name <> "_capture")
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` toLabel (funName.name <> "_func")
   pure $ HashMap.singleton funName closAddr
   where
     psTypes = ptr : map (convType . C.typeOf) ps
@@ -525,7 +519,7 @@ genLocalDef (LocalDef name _ (Record kvs)) = do
     k' <- ConstantOperand <$> globalStringPtr k
     v <- genAtom v
     insert <- findExt "malgo_hash_table_insert" [ptr, ptr, ptr] LT.void
-    call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` BS.toShort ("hash_insert_" <> convertString k)
+    call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` toLabel ("hash_insert_" <> k)
   pure $ HashMap.singleton name hashTable
 
 findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
@@ -604,8 +598,8 @@ internalFunction label argtys retty body = do
   emitDefn def
   pure $ ConstantOperand $ C.GlobalReference label
 
-withBlock :: (MonadIRBuilder m) => ShortByteString -> m () -> m Name
+withBlock :: (MonadIRBuilder m, ConvertibleStrings s BS.ByteString) => s -> m () -> m Name
 withBlock hint m = do
-  label <- block `named` hint
+  label <- block `named` toLabel hint
   void m
   pure label

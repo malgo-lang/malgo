@@ -80,8 +80,6 @@ main =
             testNoLift (testcaseDir </> testcase)
           it ("test agressive case " <> testcase <> " (agressive optimization)") $ example do
             testAggressive (testcaseDir </> testcase)
-          it ("test delim case " <> testcase <> " (agressive optimization)") $ example do
-            testDelim (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" $ parallel do
       for_ examples \examplecase -> do
@@ -304,17 +302,6 @@ testAggressive testcase =
           hPutStrLn stderr $ "on " <> testcase <> ": aggressive"
           hPrint stderr e
           testAggressive testcase
-        else throwIO e
-
-testDelim :: FilePath -> IO ()
-testDelim testcase =
-  test testcase "delim" True False defaultOptimizeOption DelimLLVM
-    `catch` \(e :: IOException) ->
-      if isResourceVanishedError e
-        then do
-          hPutStrLn stderr $ "on " <> testcase <> ": delim"
-          hPrint stderr e
-          testDelim testcase
         else throwIO e
 
 aggressiveOptimizeOption :: OptimizeOption
