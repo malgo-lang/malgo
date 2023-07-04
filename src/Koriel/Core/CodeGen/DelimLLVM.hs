@@ -19,7 +19,7 @@ import Data.ByteString.Short qualified as BS
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
-import Data.List.Extra (headDef, mconcatMap)
+import Data.List.Extra (mconcatMap)
 import Data.Maybe qualified as Maybe
 import Data.String.Conversions
 import Data.Traversable (for)
@@ -39,9 +39,7 @@ import LLVM.AST
     mkName,
   )
 import LLVM.AST.Constant qualified as C
-import LLVM.AST.FloatingPointPredicate qualified as FP
 import LLVM.AST.Global
-import LLVM.AST.IntegerPredicate qualified as IP
 import LLVM.AST.Linkage (Linkage (External, Internal))
 import LLVM.AST.Operand (Operand (..))
 import LLVM.AST.Type hiding
@@ -379,33 +377,7 @@ genExpr (Let xs e) = do
       HashMap.singleton name
         <$> mallocType (StructureType False [ptr, ptr])
     prepare _ = pure mempty
--- These `match` cases are not necessary.
-genExpr (Match e (Bind _ _ body : _)) | C.typeOf e == VoidT = do
-  _ <- genExpr e
-  genExpr body
-genExpr (Match e (Bind x _ body : _)) = do
-  eOpr <- genExpr e
-  local (over valueMap (at x ?~ eOpr)) (genExpr body)
-genExpr (Match e cs)
-  | C.typeOf e == VoidT = error "VoidT is not able to bind to variable."
-  | otherwise =
-      shiftT \k -> do
-        eOpr <- genExpr e
-        tagOpr <- case C.typeOf e of
-          SumT _ -> do
-            tagAddr <- gep (innerType $ C.typeOf e) eOpr [int32 0, int32 0]
-            load i8 tagAddr 0
-          RecordT _ -> pure $ int32 0 -- Tag value must be integer, so we use 0 as default value.
-          _ -> pure eOpr
-        lift mdo
-          switch tagOpr defaultLabel labels
-          -- 各ケースのコードとラベルを生成する
-          -- switch用のタグがある場合は Right (タグ, ラベル) を、ない場合は Left タグ を返す
-          (defaults, labels) <- partitionEithers <$> traverse (genCase eOpr (constructorList e) k) cs
-          -- defaultsの先頭を取り出し、switchのデフォルトケースとする
-          -- defaultsが空の場合、デフォルトケースはunreachableにジャンプする
-          defaultLabel <- headDef (withBlock ("match_default" :: BS.ByteString) unreachable) $ map pure defaults
-          pass
+genExpr Match {} = error "unreachable: Match must be normalized before codegen."
 genExpr (Switch v bs e) =
   shiftT \k -> do
     vOpr <- genAtom v
@@ -476,49 +448,6 @@ constructorList scrutinee =
   case C.typeOf scrutinee of
     SumT cs -> cs
     _ -> []
-
-genCase ::
-  ( MonadCodeGen m,
-    MonadIRBuilder m,
-    MonadFail m,
-    MonadFix m,
-    MonadIO m
-  ) =>
-  Operand ->
-  [Con] ->
-  (Operand -> m ()) ->
-  Case (Id C.Type) ->
-  m (Either LLVM.AST.Name (C.Constant, LLVM.AST.Name))
-genCase scrutinee cs k = \case
-  Bind x _ e -> do
-    label <- withBlock ("bind_" <> render (pPrint x)) do
-      local (over valueMap $ at x ?~ scrutinee) $ runContT (genExpr e) k
-    pure $ Left label
-  Exact u e -> do
-    ConstantOperand u' <- genAtom $ Unboxed u
-    label <- withBlock ("exact_" <> render (pPrint u)) do
-      runContT (genExpr e) k
-    pure $ Right (u', label)
-  Unpack con vs e -> do
-    let (tag, conType) = genCon cs con
-    label <- withBlock ("unpack_" <> render (pPrint con)) do
-      payloadAddr <- gep (StructureType False [i8, conType]) scrutinee [int32 0, int32 1]
-      env <-
-        HashMap.fromList <$> ifor vs \i v ->
-          (v,) <$> do
-            vAddr <- gep conType payloadAddr [int32 0, int32 $ fromIntegral i]
-            load (convType $ C.typeOf v) vAddr 0
-      local (over valueMap (env <>)) $ runContT (genExpr e) k
-    pure $ Right (C.Int 8 tag, label)
-  OpenRecord kvs e -> do
-    label <- withBlock ("open_record" :: BS.ByteString) do
-      kvs' <- for (HashMap.toList kvs) $ \(k, v) -> do
-        hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
-        key <- ConstantOperand <$> globalStringPtr k
-        value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
-        pure (v, value)
-      local (over valueMap (HashMap.fromList kvs' <>)) $ runContT (genExpr e) k
-    pure $ Left label
 
 genAtom ::
   (MonadCodeGen m, MonadIO m, MonadIRBuilder m) =>
@@ -592,11 +521,6 @@ genLocalDef (LocalDef name _ (Record kvs)) = do
     insert <- findExt "malgo_hash_table_insert" [ptr, ptr, ptr] LT.void
     call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` toLabel ("hash_insert_" <> k)
   pure $ HashMap.singleton name hashTable
-
-genCon :: [Con] -> Con -> (Integer, LT.Type)
-genCon cs con@(Con _ ts)
-  | con `elem` cs = (findIndex con cs, StructureType False (map convType ts))
-  | otherwise = errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
 
 findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
 findIndex con cs = case List.elemIndex con cs of
