@@ -2,7 +2,6 @@ module Koriel.Core.Parser (parse) where
 
 import Data.HashMap.Strict qualified as HashMap
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
-import Koriel.Core.Op
 import Koriel.Core.Syntax hiding (atom, expr, object)
 import Koriel.Core.Type
 import Koriel.Prelude
@@ -124,9 +123,6 @@ expr =
           do
             void $ symbol "raw"
             RawCall <$> rawIdent <*> type_ <*> many atom,
-          do
-            void $ symbol "binop"
-            BinOp <$> operator <*> atom <*> atom,
           do
             void $ symbol "cast"
             Cast <$> type_ <*> atom,
@@ -269,29 +265,6 @@ tag = tuple <|> data_
   where
     tuple = void (symbol "Tuple#") >> pure Tuple
     data_ = Data <$> rawIdent
-
--- | Parser an operator.
-operator :: Parser Op
-operator =
-  asum
-    [ try (symbol "+.") >> pure FAdd,
-      try (symbol "-.") >> pure FSub,
-      try (symbol "*.") >> pure FMul,
-      try (symbol "/.") >> pure FDiv,
-      symbol "+" >> pure Add,
-      symbol "-" >> pure Sub,
-      symbol "*" >> pure Mul,
-      symbol "/" >> pure Div,
-      symbol "%" >> pure Mod,
-      symbol "==" >> pure Eq,
-      try (symbol "<>") >> pure Neq,
-      try (symbol "<=") >> pure Le,
-      try (symbol ">=") >> pure Ge,
-      symbol "<" >> pure Lt,
-      symbol ">" >> pure Gt,
-      symbol "&&" >> pure And,
-      symbol "||" >> pure Or
-    ]
 
 -- * Common combinators
 

@@ -60,7 +60,6 @@ alphaExpr (Atom x) = Atom <$> alphaAtom x
 alphaExpr (Call f xs) = Call <$> alphaAtom f <*> traverse alphaAtom xs
 alphaExpr (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
 alphaExpr (RawCall n t xs) = RawCall n t <$> traverse alphaAtom xs
-alphaExpr (BinOp op x y) = BinOp op <$> alphaAtom x <*> alphaAtom y
 alphaExpr (Cast t x) = Cast t <$> alphaAtom x
 alphaExpr (Let ds e) = do
   -- Avoid capturing variables
@@ -139,8 +138,6 @@ equivExpr (CallDirect f xs) (CallDirect g ys) = do
     <$> andM (zipWith equivAtom xs ys)
 equivExpr (RawCall n t xs) (RawCall m u ys) =
   ((n == m && t == u) &&) <$> andM (zipWith equivAtom xs ys)
-equivExpr (BinOp op x y) (BinOp op' x' y') =
-  (op == op' &&) <$> andM [equivAtom x x', equivAtom y y']
 equivExpr (Cast t x) (Cast u y) =
   (t == u &&) <$> equivAtom x y
 equivExpr (Let ds e) (Let ds' e') = do

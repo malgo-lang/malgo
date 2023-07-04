@@ -76,7 +76,6 @@ llift (Call (Var f) xs) = do
 llift (Call f xs) = pure $ Call f xs
 llift (CallDirect f xs) = pure $ CallDirect f xs
 llift (RawCall f t xs) = pure $ RawCall f t xs
-llift (BinOp op x y) = pure $ BinOp op x y
 llift (Cast t x) = pure $ Cast t x
 llift (Let [LocalDef n t (Fun xs call@Call {})] e) = do
   call' <- llift call
@@ -126,7 +125,6 @@ toDirect (Call (Var f) xs) = do
 toDirect (Call f xs) = pure $ Call f xs
 toDirect (CallDirect f xs) = pure $ CallDirect f xs
 toDirect (RawCall f t xs) = pure $ RawCall f t xs
-toDirect (BinOp op x y) = pure $ BinOp op x y
 toDirect (Cast t x) = pure $ Cast t x
 toDirect (Let ds e) = Let <$> traverseOf (traversed . expr) toDirect ds <*> toDirect e
 toDirect (Match e cs) = Match <$> toDirect e <*> traverseOf (traversed . expr) toDirect cs

@@ -53,7 +53,6 @@ flat e@Atom {} = pure e
 flat e@Call {} = pure e
 flat e@CallDirect {} = pure e
 flat e@RawCall {} = pure e
-flat e@BinOp {} = pure e
 flat e@Cast {} = pure e
 flat (Let ds e) = shiftT \k -> do
   ds <- traverse flatLocalDef ds

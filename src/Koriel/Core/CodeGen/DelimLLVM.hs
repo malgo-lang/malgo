@@ -24,7 +24,6 @@ import Data.Maybe qualified as Maybe
 import Data.String.Conversions
 import Data.Traversable (for)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
-import Koriel.Core.Op qualified as Op
 import Koriel.Core.Syntax
 import Koriel.Core.Type hiding (typeOf)
 import Koriel.Core.Type qualified as C
@@ -364,37 +363,6 @@ genExpr e@(RawCall name _ xs) = do
           $ convertString name
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
-genExpr (BinOp o x y) = join (genOp o <$> genAtom x <*> genAtom y)
-  where
-    genOp Op.Add = add
-    genOp Op.Sub = sub
-    genOp Op.Mul = mul
-    genOp Op.Div = sdiv
-    genOp Op.Mod = srem
-    genOp Op.FAdd = fadd
-    genOp Op.FSub = fsub
-    genOp Op.FMul = fmul
-    genOp Op.FDiv = fdiv
-    genOp Op.Eq = genCmpOp IP.EQ IP.EQ FP.OEQ
-    genOp Op.Neq = genCmpOp IP.NE IP.NE FP.ONE
-    genOp Op.Lt = genCmpOp IP.SLT IP.ULT FP.OLT
-    genOp Op.Le = genCmpOp IP.SLE IP.ULE FP.OLE
-    genOp Op.Gt = genCmpOp IP.SGT IP.UGT FP.OGT
-    genOp Op.Ge = genCmpOp IP.SGE IP.UGE FP.OGE
-    genOp Op.And = LLVM.IRBuilder.and
-    genOp Op.Or = LLVM.IRBuilder.or
-    i1ToBool i1opr = zext i1opr i8
-    genCmpOp signed unsigned ordered x' y' =
-      i1ToBool =<< case C.typeOf x of
-        Int32T -> icmp signed x' y'
-        Int64T -> icmp signed x' y'
-        FloatT -> fcmp ordered x' y'
-        DoubleT -> fcmp ordered x' y'
-        CharT -> icmp unsigned x' y'
-        StringT -> icmp unsigned x' y'
-        BoolT -> icmp unsigned x' y'
-        SumT _ -> icmp unsigned x' y'
-        t -> error $ show t <> " is not comparable"
 genExpr (Cast ty x) = do
   xOpr <- genAtom x
   xOprTy <- typeOf xOpr

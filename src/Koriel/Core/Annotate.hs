@@ -83,7 +83,6 @@ annExpr (Atom atom) = Atom <$> annAtom atom
 annExpr (Call fun args) = Call <$> annAtom fun <*> traverse annAtom args
 annExpr (CallDirect fun args) = CallDirect <$> lookupName fun <*> traverse annAtom args
 annExpr (RawCall fun typ args) = RawCall fun typ <$> traverse annAtom args
-annExpr (BinOp op x y) = BinOp op <$> annAtom x <*> annAtom y
 annExpr (Cast typ x) = Cast typ <$> annAtom x
 annExpr (Let defs body) = do
   (env, defs) <- foldMapM annDef defs
