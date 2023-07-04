@@ -33,6 +33,7 @@ instance (Pretty a) => Pretty (Atom a) where
 instance HasFreeVar Atom where
   freevars (Var x) = HashSet.singleton x
   freevars Unboxed {} = mempty
+  callees _ = mempty
 
 -- | 'f' may include atoms
 class HasAtom f where

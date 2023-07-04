@@ -1,11 +1,11 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Koriel.Core.Syntax.LocalDef (
-  LocalDef (..),
-  HasObject (..),
-  HasVariable (..),
-  Obj (..),
-)
+module Koriel.Core.Syntax.LocalDef
+  ( LocalDef (..),
+    HasObject (..),
+    HasVariable (..),
+    Obj (..),
+  )
 where
 
 import Control.Lens (Lens', sans, traverseOf, traversed)
@@ -41,7 +41,7 @@ instance HasVariable (LocalDef a) a where
   {-# INLINE variable #-}
   variable f (LocalDef x1 t x2) = fmap (\x1 -> LocalDef x1 t x2) (f x1)
 
-instance Pretty a => Pretty (LocalDef a) where
+instance (Pretty a) => Pretty (LocalDef a) where
   pPrint (LocalDef v t o) = parens $ pPrint v <+> pPrint t $$ pPrint o
 
 instance HasAtom LocalDef where
@@ -58,21 +58,21 @@ data Obj a
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Obj a) where
+instance (HasType a) => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
   typeOf (Pack t _ _) = t
   typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
-instance Pretty a => Pretty (Obj a) where
+instance (Pretty a) => Pretty (Obj a) where
   pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
   pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
   pPrint (Record kvs) =
-    parens $
-      sep
+    parens
+      $ sep
         [ "record"
             <+> parens
-              ( sep $
-                  map
+              ( sep
+                  $ map
                     ( \(k, v) ->
                         pPrint k
                           <+> pPrint v
@@ -85,6 +85,9 @@ instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
   freevars (Pack _ _ xs) = foldMap freevars xs
   freevars (Record kvs) = foldMap freevars kvs
+  callees (Fun as e) = foldr sans (callees e) as
+  callees Pack {} = mempty
+  callees Record {} = mempty
 
 instance HasAtom Obj where
   atom f = \case

@@ -3,6 +3,12 @@ module Koriel.Core.Syntax.Common (HasFreeVar (..)) where
 import Koriel.Prelude
 
 -- | 'f' may have free variables
+-- 'freevars' does not include callees of `call-direct`.
+-- If you want to include callees of `call-direct`, merge 'callees' and 'freevars'.
 class HasFreeVar f where
-  -- | free variables
-  freevars :: Hashable a => f a -> HashSet a
+  -- | Free variables.
+  -- It does not include callees of `call-direct`.
+  freevars :: (Hashable a) => f a -> HashSet a
+
+  -- | Callees.
+  callees :: (Hashable a) => f a -> HashSet a

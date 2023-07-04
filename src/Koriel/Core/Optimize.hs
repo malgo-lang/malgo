@@ -2,15 +2,18 @@
 
 module Koriel.Core.Optimize
   ( optimizeProgram,
+    OptimizeEnv (..),
     OptimizeOption (..),
     defaultOptimizeOption,
   )
 where
 
-import Control.Lens (At (at), lengthOf, makeFieldsNoPrefix, transform, transformM, view)
+import Control.Lens (At (at), lengthOf, makeFieldsNoPrefix, transform, transformM, view, _1)
+import Data.Graph qualified as Graph
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
+import Data.Maybe qualified as Maybe
 import Koriel.Core.Alpha
 import Koriel.Core.Flat
 import Koriel.Core.Syntax
@@ -18,6 +21,7 @@ import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
+import Witherable (ordNub)
 
 -- | 'OptimizeOption' is a set of options for the optimizer.
 --  If the option is 'True', the optimizer will apply the optimization.
@@ -67,13 +71,10 @@ times n f x
 -- | Optimize a program
 optimizeProgram ::
   (MonadIO m) =>
-  UniqSupply ->
-  ModuleName ->
-  Bool ->
-  OptimizeOption ->
+  OptimizeEnv ->
   Program (Id Type) ->
   m (Program (Id Type))
-optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT ?? OptimizeEnv {..} $ do
+optimizeProgram env Program {..} = runReaderT ?? env $ do
   state <- execStateT ?? CallInlineEnv mempty $ do
     for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
     for_ topVars $ \case
@@ -82,12 +83,17 @@ optimizeProgram uniqSupply moduleName debugMode option Program {..} = runReaderT
   topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
 
-  let usedTopDefs =
-        foldMap (\(_, _, e) -> HashSet.fromList $ toList e) topVars
-          <> foldMap (\(_, ps, _, e) -> HashSet.fromList (toList e) `HashSet.difference` HashSet.fromList ps) topFuns
+  -- Remove all unused toplevel functions and variables.
+  -- If a global definition is (external or native) and defined in the current module, it cannot be removed.
+  -- Otherwise, delete it if it is not reachable from above definitions.
+  let roots = filter (\x -> x.sort `elem` [External, Native] && x.moduleName == env.moduleName) $ map (view _1) topFuns <> map (view _1) topVars
+  let (graph, _, toVertex) = callGraph Program {..}
+  let reachableFromMain = ordNub $ concatMap (toVertex >>> Maybe.fromJust >>> Graph.reachable graph) roots
 
-  topVars <- pure $ filter (\(n, _, _) -> n `HashSet.member` usedTopDefs || (n.sort `elem` [External, Native] && n.moduleName == moduleName)) topVars
-  topFuns <- pure $ filter (\(n, _, _, _) -> n `HashSet.member` usedTopDefs || (n.sort `elem` [External, Native] && n.moduleName == moduleName)) topFuns
+  let isUsed a = toVertex a `elem` map Just reachableFromMain
+
+  topVars <- pure $ filter (\(n, _, _) -> isUsed n) topVars
+  topFuns <- pure $ filter (\(n, _, _, _) -> isUsed n) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))

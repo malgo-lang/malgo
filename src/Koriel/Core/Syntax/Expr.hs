@@ -164,6 +164,26 @@ instance HasFreeVar Expr where
         (HashSet.fromList $ HashMap.elems kvs)
   freevars (Assign x v e) = freevars v <> sans x (freevars e)
   freevars (Error _) = mempty
+  callees Atom {} = mempty
+  callees (Call f _) = freevars f
+  callees (CallDirect f _) = HashSet.singleton f
+  callees RawCall {} = mempty
+  callees BinOp {} = mempty
+  callees Cast {} = mempty
+  callees (Let xs e) = foldr (sans . (._variable)) (callees e <> foldMap (callees . (._object)) xs) xs
+  callees (Match e cs) = callees e <> foldMap callees cs
+  callees (Switch _ cs e) = foldMap (callees . snd) cs <> callees e
+  callees (SwitchUnboxed _ cs e) = foldMap (callees . snd) cs <> callees e
+  callees (Destruct _ _ xs e) =
+    HashSet.difference
+      (callees e)
+      (HashSet.fromList xs)
+  callees (DestructRecord _ kvs e) =
+    HashSet.difference
+      (callees e)
+      (HashSet.fromList $ HashMap.elems kvs)
+  callees (Assign x v e) = callees v <> sans x (callees e)
+  callees (Error _) = mempty
 
 instance HasAtom Expr where
   atom f = \case

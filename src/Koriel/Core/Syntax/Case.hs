@@ -1,13 +1,14 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Syntax.Case (
-  Case (..),
-  _Unpack,
-  _OpenRecord,
-  _Exact,
-  _Bind,
-) where
+module Koriel.Core.Syntax.Case
+  ( Case (..),
+    _Unpack,
+    _OpenRecord,
+    _Exact,
+    _Bind,
+  )
+where
 
 import Control.Lens (makePrisms, sans, traverseOf)
 import Data.Aeson (FromJSON, ToJSON)
@@ -35,13 +36,13 @@ data Case a
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Binary, ToJSON, FromJSON)
 
-instance HasType a => HasType (Case a) where
+instance (HasType a) => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
   typeOf (OpenRecord _ e) = typeOf e
   typeOf (Exact _ e) = typeOf e
   typeOf (Bind _ _ e) = typeOf e
 
-instance Pretty a => Pretty (Case a) where
+instance (Pretty a) => Pretty (Case a) where
   pPrint (Unpack c xs e) =
     parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
   pPrint (OpenRecord pat e) =
@@ -54,6 +55,10 @@ instance HasFreeVar Case where
   freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
   freevars (Exact _ e) = freevars e
   freevars (Bind x _ e) = sans x $ freevars e
+  callees (Unpack _ xs e) = foldr sans (callees e) xs
+  callees (OpenRecord pat e) = foldr sans (callees e) (HashMap.elems pat)
+  callees (Exact _ e) = callees e
+  callees (Bind x _ e) = sans x $ callees e
 
 instance HasAtom Case where
   atom f = \case
