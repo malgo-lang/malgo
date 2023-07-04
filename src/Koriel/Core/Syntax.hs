@@ -2,24 +2,27 @@
 {-# LANGUAGE DerivingVia #-}
 
 -- | AST definitions for Koriel language
-module Koriel.Core.Syntax (
-  module Koriel.Core.Syntax.Common,
-  module Koriel.Core.Syntax.Unboxed,
-  module Koriel.Core.Syntax.Atom,
-  module Koriel.Core.Syntax.Expr,
-  module Koriel.Core.Syntax.LocalDef,
-  module Koriel.Core.Syntax.Case,
-  Program (..),
-  runDef,
-  let_,
-  bind,
-  cast,
-)
+module Koriel.Core.Syntax
+  ( module Koriel.Core.Syntax.Common,
+    module Koriel.Core.Syntax.Unboxed,
+    module Koriel.Core.Syntax.Atom,
+    module Koriel.Core.Syntax.Expr,
+    module Koriel.Core.Syntax.LocalDef,
+    module Koriel.Core.Syntax.Case,
+    Program (..),
+    runDef,
+    let_,
+    bind,
+    cast,
+    callGraph,
+  )
 where
 
 import Control.Lens (traverseOf, traversed, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
+import Data.Graph
+import Data.HashSet qualified as HashSet
 import Data.String.Conversions
 import Generic.Data
 import Koriel.Core.Syntax.Atom
@@ -46,8 +49,8 @@ data Program a = Program
 
 instance (Pretty a, Ord a) => Pretty (Program a) where
   pPrint Program {..} =
-    vcat $
-      concat
+    vcat
+      $ concat
         [ ["; variables"],
           map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) topVars,
           ["; functions"],
@@ -66,8 +69,8 @@ instance HasExpr Program where
 newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Expr (Id Type))) m a}
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadState s, MonadReader r)
 
-runDef :: Functor f => DefBuilderT f (Expr (Id Type)) -> f (Expr (Id Type))
-runDef m = uncurry (flip appEndo) <$> runWriterT (m.unDefBuilderT)
+runDef :: (Functor f) => DefBuilderT f (Expr (Id Type)) -> f (Expr (Id Type))
+runDef m = uncurry (flip appEndo) <$> runWriterT m.unDefBuilderT
 
 let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
 let_ otype obj = do
@@ -104,3 +107,11 @@ cast ty e
 --   vs <- traverse (newTemporalId "p") ts
 --   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
 --   pure $ map Var vs
+
+callGraph :: (Hashable a, Ord a) => Program a -> (Graph, Vertex -> (a, a, [a]), a -> Maybe Vertex)
+callGraph Program {..} =
+  let edges = map cgTopVar topVars <> map cgTopFun topFuns
+   in graphFromEdges edges
+  where
+    cgTopVar (a, _, e) = (a, a, HashSet.toList $ callees e <> freevars e) -- Merge @callees@ and @freevars@ to avoid missing callees used as a closure.
+    cgTopFun (a, ps, _, e) = (a, a, HashSet.toList $ HashSet.difference (callees e <> freevars e) (HashSet.fromList ps))
