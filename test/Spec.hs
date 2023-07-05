@@ -46,6 +46,7 @@ import Test.Hspec
     it,
     parallel,
     runIO,
+    sequential,
     shouldBe,
     shouldThrow,
   )

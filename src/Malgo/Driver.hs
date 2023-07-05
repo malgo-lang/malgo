@@ -3,11 +3,12 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception (IOException, assert, catch)
 import Data.Binary qualified as Binary
+import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as LBS
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text.IO qualified as Text
-import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
+import Error.Diagnose (addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM qualified as LLVM
 import Koriel.Core.Flat qualified as Flat
@@ -31,8 +32,11 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
+import Prettyprinter qualified as PrettyPrinter
+import Prettyprinter.Render.Text qualified as PrettyPrinter
 import System.Exit (exitFailure)
 import System.FilePath (takeBaseName, takeDirectory, (-<.>))
+import System.IO (hFlush)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -164,7 +168,20 @@ compile srcPath env = do
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
           diag' = addFile diag srcPath (toString src)
-       in printDiagnostic stderr (not env.testMode) (not env.testMode) 4 defaultStyle diag' >> exitFailure
+       in do
+            let message =
+                  prettyDiagnostic True 4 diag'
+                    & ( \x ->
+                          if env.testMode
+                            then PrettyPrinter.unAnnotate x
+                            else x
+                      )
+                    & PrettyPrinter.layoutPretty PrettyPrinter.defaultLayoutOptions
+                    & PrettyPrinter.renderStrict
+                    & convertString
+            BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
+            hFlush stderr
+            exitFailure
   when env.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pPrint parsedAst
