@@ -40,13 +40,13 @@ defined x
   | idIsExternal x = pass
   | otherwise = do
       env <- asks (.defs)
-      unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
+      unless (HashSet.member x env) $ errorDoc $ pPrint x <> " is not defined"
 
 define :: (HasCallStack) => (MonadReader LintEnv f) => Doc -> [Id Type] -> f a -> f a
 define pos xs m = do
   env <- asks (.defs)
   for_ xs \x ->
-    when (x `elem` env)
+    when (HashSet.member x env)
       $ errorDoc
       $ pPrint x
       <> " is already defined"
