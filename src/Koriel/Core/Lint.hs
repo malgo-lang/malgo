@@ -2,6 +2,7 @@ module Koriel.Core.Lint (lint) where
 
 import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
 import Data.HashMap.Strict qualified as HashMap
+import Data.HashSet qualified as HashSet
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -14,14 +15,14 @@ lint :: (Monad m) => Bool -> Program (Id Type) -> m ()
 lint normalized = runLint normalized . lintProgram
 
 data LintEnv = LintEnv
-  { defs :: [Id Type],
+  { defs :: HashSet (Id Type),
     normalized :: Bool,
     isIncludeAssign :: Bool,
     isStatement :: Bool
   }
 
 runLint :: Bool -> ReaderT LintEnv m a -> m a
-runLint normalized m = runReaderT m (LintEnv [] normalized True True)
+runLint normalized m = runReaderT m (LintEnv mempty normalized True True)
 
 asStatement :: (MonadReader LintEnv m) => m a -> m a
 asStatement = local (\e -> e {isStatement = True})
@@ -52,7 +53,7 @@ define pos xs m = do
       $$ "while defining"
       <+> pos
       <+> pPrint xs
-  local (\e -> e {defs = xs <> e.defs}) m
+  local (\e -> e {defs = HashSet.fromList xs <> e.defs}) m
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
