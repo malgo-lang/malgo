@@ -11,12 +11,13 @@ module InlineFunction = {
   infixl 6 (-)
   def (-) = { x y -> subInt32 x y }
 
-  def 
+  def fix = { f x -> f (fix f) x }
+
   def main = {
-    let fib = { n ->
+    let fib = fix { f n ->
       if (n <= 1)
         { 1 }
-        { fib (n - 1) + fib (n - 2) }
+        { f (n - 1) + f (n - 2) }
       };
     fib 5 |> toStringInt32 |> putStrLn
   }

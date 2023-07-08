@@ -25,31 +25,31 @@ import System.Directory.Extra (createDirectoryIfMissing)
 import System.Exit (exitFailure)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
 import System.IO.Error (isResourceVanishedError)
-import System.Process.Typed
-  ( ExitCode (ExitFailure, ExitSuccess),
-    byteStringInput,
-    nullStream,
-    proc,
-    readProcessStderr,
-    readProcessStdout,
-    readProcessStdout_,
-    runProcess,
-    setStderr,
-    setStdin,
-    setStdout,
-  )
-import Test.Hspec
-  ( anyException,
-    describe,
-    example,
-    hspec,
-    it,
-    parallel,
-    runIO,
-    sequential,
-    shouldBe,
-    shouldThrow,
-  )
+import System.Process.Typed (
+  ExitCode (ExitFailure, ExitSuccess),
+  byteStringInput,
+  nullStream,
+  proc,
+  readProcessStderr,
+  readProcessStdout,
+  readProcessStdout_,
+  runProcess,
+  setStderr,
+  setStdin,
+  setStdout,
+ )
+import Test.Hspec (
+  anyException,
+  describe,
+  example,
+  hspec,
+  it,
+  parallel,
+  runIO,
+  sequential,
+  shouldBe,
+  shouldThrow,
+ )
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
@@ -89,9 +89,9 @@ main =
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
     describe "Test malgo to-ll (must be error)" $ sequential do
       for_ errorcases \errorcase -> do
-        it ("test error case " <> errorcase)
-          $ testError (testcaseDir </> "error" </> errorcase)
-          `shouldThrow` anyException
+        it ("test error case " <> errorcase) $
+          testError (testcaseDir </> "error" </> errorcase)
+            `shouldThrow` anyException
 
 #ifdef TEST_ALL
     describe "Test malgo to-ll on all combinations of optimization options" do
@@ -165,7 +165,7 @@ findCommand list =
         ExitFailure _ -> go xs
 
 test ::
-  (HasCallStack) =>
+  HasCallStack =>
   -- | File path of the test case
   FilePath ->
   -- | Type of the test case
@@ -182,8 +182,8 @@ test ::
 test testcase typ lambdaLift noOptimize option compileMode = do
   createDirectoryIfMissing True (outputDir </> typ)
   let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
-  timeoutWrapper "compile"
-    $ compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
+  timeoutWrapper "compile" $
+    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
 
   -- Format and optimize the generated LLVM assembly
   -- find opt or opt-15
@@ -193,7 +193,7 @@ test testcase typ lambdaLift noOptimize option compileMode = do
       ( proc
           opt
           [ "-S",
-            "-O3",
+            "-passes=default<O3>,attributor-cgscc",
             "-o",
             llPath -<.> "opt.ll",
             llPath
@@ -210,26 +210,28 @@ test testcase typ lambdaLift noOptimize option compileMode = do
           clang
           $ [ "-Wno-override-module",
               "-lm",
-              "-g"
-              -- "-O3"
+              "-flto=thin",
+              "-O3",
+              "-mllvm",
+              "--attributor-enable=cgscc"
             ]
-          <> pkgConfig
-          <> [ outputDir </> "libs" </> "runtime.c",
-               outputDir </> typ </> takeBaseName testcase -<.> ".ll",
-               "-o",
-               outputDir </> typ </> takeBaseName testcase -<.> ".out"
-             ]
+            <> pkgConfig
+            <> [ outputDir </> "libs" </> "runtime.c",
+                 llPath,
+                 "-o",
+                 outputDir </> typ </> takeBaseName testcase -<.> ".out"
+               ]
       )
   BL.putStr err
   (clang, exitCode) `shouldBe` (clang, ExitSuccess)
 
   (exitCode, result) <-
-    timeoutWrapper "run"
-      $ second convertString
-      <$> readProcessStdout
-        ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
-            & setStdin (byteStringInput "Hello")
-        )
+    timeoutWrapper "run" $
+      second convertString
+        <$> readProcessStdout
+          ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
+              & setStdin (byteStringInput "Hello")
+          )
   ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
   expected <- filter ("-- Expected: " `Text.isPrefixOf`) . Text.lines <$> Text.readFile testcase
   map ("-- Expected: " <>) (Text.lines $ Text.stripEnd result) `shouldBe` expected
