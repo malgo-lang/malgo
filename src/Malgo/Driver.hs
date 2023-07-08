@@ -141,13 +141,20 @@ compileFromAST srcPath env parsedAst =
 
       -- Optimization after lambda lifting causes code explosion.
       -- The effect of lambda lifting is expected to be fully realized by backend's optimization.
-      -- So do not optimization again.
       -- TODO: Can we only optimize the code that has been lambda lifted?
       -- TODO: Improve the function inliner to reduce the code explosion.
       -- TODO: Add more information to `call` instruction to improve the function inliner.
       -- Or simply skip inlining and do other optimizations.
+      coreLLOpt <- if not env.noOptimize && env.lambdaLift then optimizeProgram OptimizeEnv {uniqSupply, moduleName, debugMode = env.debugMode, option = env.optimizeOption} coreLL else pure coreLL
+      when (env.debugMode && env.lambdaLift && not env.noOptimize)
+        $ liftIO do
+          hPutStrLn stderr "=== OPTIMIZE AFTER LAMBDALIFT ==="
+          hPrint stderr $ pPrint coreLLOpt
+      when env.testMode do
+        liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pPrint coreLLOpt
+      lint True coreLLOpt
 
-      LLVM.codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLL
+      LLVM.codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLLOpt
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id a, Id b)] -> Maybe (Id b)
     searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
