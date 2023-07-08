@@ -65,8 +65,8 @@ compileFromAST srcPath env parsedAst =
   where
     moduleName = parsedAst.moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= moduleName.raw)
-        $ error "Module name must be source file's base name."
+      when (convertString (takeBaseName srcPath) /= moduleName.raw) $
+        error "Module name must be source file's base name."
 
       uniqSupply <- asks (.uniqSupply)
       when env.debugMode do
@@ -100,8 +100,8 @@ compileFromAST srcPath env parsedAst =
         lint True core
         pure core
 
-      when env.debugMode
-        $ liftIO do
+      when env.debugMode $
+        liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pPrint core
 
@@ -131,8 +131,8 @@ compileFromAST srcPath env parsedAst =
       lint True coreOpt
 
       coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= Flat.normalize else pure coreOpt
-      when (env.debugMode && env.lambdaLift)
-        $ liftIO do
+      when (env.debugMode && env.lambdaLift) $
+        liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pPrint coreLL
       when env.testMode do
@@ -145,23 +145,26 @@ compileFromAST srcPath env parsedAst =
       -- TODO: Improve the function inliner to reduce the code explosion.
       -- TODO: Add more information to `call` instruction to improve the function inliner.
       -- Or simply skip inlining and do other optimizations.
-      coreLLOpt <- if not env.noOptimize && env.lambdaLift then optimizeProgram OptimizeEnv {uniqSupply, moduleName, debugMode = env.debugMode, option = env.optimizeOption} coreLL else pure coreLL
-      when (env.debugMode && env.lambdaLift && not env.noOptimize)
-        $ liftIO do
-          hPutStrLn stderr "=== OPTIMIZE AFTER LAMBDALIFT ==="
-          hPrint stderr $ pPrint coreLLOpt
-      when env.testMode do
-        liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pPrint coreLLOpt
-      lint True coreLLOpt
 
-      LLVM.codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLLOpt
+      -- On M2 MBA, optimization after lambda lifting causes segmentation fault.
+      -- This is probably caused by lack of memory due to handling extremely large ASTs. I don't know the details.
+      -- coreLLOpt <- if not env.noOptimize && env.lambdaLift then optimizeProgram OptimizeEnv {uniqSupply, moduleName, debugMode = env.debugMode, option = env.optimizeOption} coreLL else pure coreLL
+      -- when (env.debugMode && env.lambdaLift && not env.noOptimize) $
+      --   liftIO do
+      --     hPutStrLn stderr "=== OPTIMIZE AFTER LAMBDALIFT ==="
+      --     hPrint stderr $ pPrint coreLLOpt
+      -- when env.testMode do
+      --   liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pPrint coreLLOpt
+      -- lint True coreLLOpt
+
+      LLVM.codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id a, Id b)] -> Maybe (Id b)
     searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
       | griffId.name
           == "main"
           && griffId.moduleName
-          == moduleName =
+            == moduleName =
           Just coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
