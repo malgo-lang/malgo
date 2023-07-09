@@ -3,7 +3,6 @@
 -- For `undefined`
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
-import Control.Exception (IOException, catch, throwIO)
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
 import Data.String.Conversions.Monomorphic (toString)
@@ -24,7 +23,6 @@ import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.Exit (exitFailure)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
-import System.IO.Error (isResourceVanishedError)
 import System.Process.Typed (
   ExitCode (ExitFailure, ExitSuccess),
   byteStringInput,
@@ -46,7 +44,6 @@ import Test.Hspec (
   it,
   parallel,
   runIO,
-  sequential,
   shouldBe,
   shouldThrow,
  )
@@ -59,7 +56,7 @@ outputDir = "./test/tmp/malgo_test"
 
 main :: IO ()
 main =
-  hspec do
+  hspec $ parallel do
     -- Setup directory for test
     runIO setupTestDir
     -- Setup malgo base library
@@ -68,7 +65,7 @@ main =
       setupBuiltin
       setupPrelude
     testcases <- runIO (filter (isExtensionOf "mlg") <$> listDirectory testcaseDir)
-    describe "Test malgo to-ll" $ parallel do
+    describe "Test malgo to-ll" do
       for_ testcases \testcase -> do
         describe testcase do
           it ("test normal case " <> testcase) $ example do
@@ -82,12 +79,12 @@ main =
           it ("test agressive case " <> testcase <> " (agressive optimization)") $ example do
             testAggressive (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
-    describe "Test example malgo to-ll" $ parallel do
+    describe "Test example malgo to-ll" do
       for_ examples \examplecase -> do
         it ("test " <> examplecase) $ example do
           testNormal ("./examples/malgo" </> examplecase)
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
-    describe "Test malgo to-ll (must be error)" $ parallel do
+    describe "Test malgo to-ll (must be error)" do
       for_ errorcases \errorcase -> do
         it ("test error case " <> errorcase) $
           testError (testcaseDir </> "error" </> errorcase)
