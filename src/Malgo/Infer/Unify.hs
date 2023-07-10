@@ -27,7 +27,7 @@ data Constraint = Type :~ Type
   deriving stock (Eq, Ord, Show, Generic)
 
 instance Pretty Constraint where
-  pPrint (t1 :~ t2) = pPrint t1 <+> "~" <+> pPrint t2
+  pretty (t1 :~ t2) = pretty t1 <+> "~" <+> pretty t2
 
 -- * Unifiable
 
@@ -57,10 +57,10 @@ instance (MonadBind m) => MonadBind (StateT s m)
 instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
 
 -- | 'Right' (substituation, new constraints) or 'Left' (position, error message)
-type UnifyResult = Either (Range, Doc) (HashMap MetaVar Type, [(Range, Constraint)])
+type UnifyResult ann = Either (Range, Doc ann) (HashMap MetaVar Type, [(Range, Constraint)])
 
 -- | Unify two types
-unify :: Range -> Type -> Type -> UnifyResult
+unify :: Range -> Type -> Type -> UnifyResult ann
 unify _ (TyMeta v1) (TyMeta v2)
   | v1 == v2 = pure (mempty, [])
   | otherwise = pure (HashMap.singleton v1 (TyMeta v2), [])
@@ -78,7 +78,7 @@ unify _ TyPtr TyPtr = pure (mempty, [])
 unify _ TYPE TYPE = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
-    unifyErrorMessage t1 t2 = "Couldn't match" $$ nest 7 (pPrint t1) $$ nest 2 ("with" <+> pPrint t2)
+    unifyErrorMessage t1 t2 = vsep ["Couldn't match", nest 7 (pretty t1), nest 2 ("with" <+> pretty t2)]
 
 instance (MonadReader env m, HasUniqSupply env, MonadIO m, MonadState TcEnv m, HasModuleName env) => MonadBind (TypeUnifyT m) where
   lookupVar v = view (at v) <$> TypeUnifyT get
@@ -91,7 +91,7 @@ instance (MonadReader env m, HasUniqSupply env, MonadIO m, MonadState TcEnv m, H
     pure $ MetaVar newVar
 
   bindVar x v t = do
-    when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> quotes (pPrint v) <+> "for" <+> pPrint t
+    when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
     ctx <- use kindCtx
     solve [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
     TypeUnifyT $ at v ?= t

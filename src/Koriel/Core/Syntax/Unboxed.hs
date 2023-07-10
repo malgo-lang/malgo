@@ -33,11 +33,11 @@ instance HasType Unboxed where
   typeOf Bool {} = BoolT
 
 instance Pretty Unboxed where
-  pPrint (Int32 x) = pPrint x <> "_i32"
-  pPrint (Int64 x) = pPrint x <> "_i64"
-  pPrint (Float x) = text (showHex (castFloatToWord32 x) "") <> "_f32" <+> "#|" <> pPrint x <> "|#"
-  pPrint (Double x) = text (showHex (castDoubleToWord64 x) "") <> "_f64" <+> "#|" <> pPrint x <> "|#"
-  pPrint (Char x) = quotes (text $ convertString $ showLitChar x "")
-  pPrint (String x) = doubleQuotes (text $ concatMap (`showLitChar` "") $ convertString @_ @String x)
-  pPrint (Bool True) = "True#"
-  pPrint (Bool False) = "False#"
+  pretty (Int32 x) = pretty x <> "_i32"
+  pretty (Int64 x) = pretty x <> "_i64"
+  pretty (Float x) = pretty (showHex (castFloatToWord32 x) "") <> "_f32" <+> "#|" <> pretty x <> "|#"
+  pretty (Double x) = pretty (showHex (castDoubleToWord64 x) "") <> "_f64" <+> "#|" <> pretty x <> "|#"
+  pretty (Char x) = squotes (pretty $ convertString @_ @Text $ showLitChar x "")
+  pretty (String x) = dquotes (pretty $ concatMap (`showLitChar` "") $ convertString @_ @String x)
+  pretty (Bool True) = "True#"
+  pretty (Bool False) = "False#"

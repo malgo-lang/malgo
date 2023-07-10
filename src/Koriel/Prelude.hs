@@ -139,8 +139,7 @@ import GHC.Generics (Generic)
 import GHC.Stack (HasCallStack)
 import System.IO (Handle, stderr, stdin, stdout)
 import System.IO qualified
-import Text.PrettyPrint.HughesPJClass (Pretty (pPrint))
-import Text.PrettyPrint.HughesPJClass qualified as P
+import Prettyprinter
 import Prelude hiding (id, unzip)
 
 identity :: a -> a
@@ -189,7 +188,7 @@ asumMap = coerce (foldMap :: (a -> Alt m b) -> f a -> Alt m b)
 newtype PrettyShow a = PrettyShow a
 
 instance (Show a) => Pretty (PrettyShow a) where
-  pPrint (PrettyShow a) = P.text $ show a
+  pretty (PrettyShow a) = pretty $ convertString @_ @Text $ show a
 
 -- Lift IO funcitons
 

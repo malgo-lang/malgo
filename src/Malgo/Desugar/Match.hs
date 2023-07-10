@@ -10,7 +10,7 @@ import Koriel.Core.Syntax qualified as Core
 import Koriel.Core.Type
 import Koriel.Core.Type qualified as Core
 import Koriel.Id
-import Koriel.Pretty
+import Koriel.Pretty hiding (group)
 import Malgo.Desugar.DsEnv (DsEnv (moduleName, uniqSupply))
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Type (dsType, unfoldType)
@@ -87,7 +87,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   | all (has _ConP) heads = do
       let patType = Malgo.typeOf $ List.head heads
       -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
-      --  errorDoc $ "Not valid type:" <+> pPrint patType
+      --  errorDoc $ "Not valid type:" <+> pretty patType
       -- 型からコンストラクタの集合を求める
       let (con, ts) = case Malgo.viewTyConApp patType of
             Just (Malgo.TyCon con, ts) -> (con, ts)
@@ -144,7 +144,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
 match [] (PatMatrix []) (e : _) _ = e
 match _ (PatMatrix []) [] err = pure err
 match scrutinees pat es err = do
-  errorDoc $ "match" <+> pPrint scrutinees <+> pPrint pat <+> pPrint (length es) <+> pPrint err
+  errorDoc $ "match" <+> pretty scrutinees <+> pretty pat <+> pretty (length es) <+> pretty err
 
 -- Mixture Rule以外にマッチするようにパターン列を分解
 -- [ [Cons A xs]
@@ -194,14 +194,14 @@ group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMa
     aux gcon (ConP _ gcon' ps : pss, e)
       | gcon == gcon' = Just (ps <> pss, e)
       | otherwise = Nothing
-    aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pPrint p
+    aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pretty p
     aux _ ([], _) = error "ps must be not empty"
 
 groupTuple :: PatMatrix -> [m (Core.Expr (Id Core.Type))] -> (PatMatrix, [m (Core.Expr (Id Core.Type))])
 groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
-    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
+    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
     aux [] _ = error "ps must be not empty"
 
 groupRecord :: (MonadReader DsEnv m, MonadIO m) => PatMatrix -> [m (Core.Expr (Id Core.Type))] -> m (PatMatrix, [m (Core.Expr (Id Core.Type))])
@@ -210,7 +210,7 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
     aux (RecordP x ps : pss) e = do
       ps' <- extendRecordP x ps
       pure (ps' <> pss, e)
-    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pPrint p
+    aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
     aux [] _ = error "ps must be not empty"
     extendRecordP (Typed (Malgo.TyRecord ktsMap) pos) ps = do
       let kts = HashMap.toList ktsMap

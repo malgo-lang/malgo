@@ -106,7 +106,7 @@ rnExpr (OpApp pos op e1 e2) = do
   mfixity <- HashMap.lookup op' <$> use infixInfo
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
-    Nothing -> errorOn pos $ "No infix declaration:" <+> quotes (pPrint op)
+    Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
 rnExpr (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExpr (Tuple pos es) = Tuple pos <$> traverse rnExpr es
 rnExpr (Record pos kvs) =
@@ -239,17 +239,19 @@ mkOpApp ::
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
       errorOn pos1
-        $ "Precedence parsing error:"
-        $+$ nest
-          2
-          ( "cannot mix"
-              <+> quotes (pPrint op1)
-              <+> brackets (pPrint fix1)
-              <+> "and"
-              <+> quotes (pPrint op2)
-              <+> brackets (pPrint fix2)
-              <+> "in the same infix expression"
-          )
+        $ vsep
+          [ "Precedence parsing error:",
+            nest
+              2
+              ( "cannot mix"
+                  <+> squotes (pretty op1)
+                  <+> brackets (pretty fix1)
+                  <+> "and"
+                  <+> squotes (pretty op2)
+                  <+> brackets (pretty fix2)
+                  <+> "in the same infix expression"
+              )
+          ]
   | associate_right = do
       e' <- mkOpApp pos2 fix2 op2 e12 e2
       pure $ OpApp (pos1, fix1) op1 e11 e'
@@ -276,19 +278,19 @@ genToplevelEnv ds =
     aux (ScDef pos x _) = do
       env <- use resolvedVarIdentMap
       when (x `elem` HashMap.keys env) do
-        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
-        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       unless (disjoint (map (view _2) cs) (HashMap.keys (env ^. resolvedVarIdentMap))) do
         errorOn pos
           $ "Duplicate name(s):"
           <+> sep
-            (punctuate "," $ map (quotes . pPrint) (map (view _2) cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
+            (punctuate "," $ map (squotes . pretty) (map (view _2) cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
       x' <- resolveGlobalName x
       xs' <- traverse (resolveGlobalName . view _2) cs
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
@@ -296,13 +298,13 @@ genToplevelEnv ds =
     aux (TypeSynonym pos x _ _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
-        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (Foreign pos x _) = do
       env <- get
       when (x `elem` HashMap.keys (env ^. resolvedVarIdentMap)) do
-        errorOn pos $ "Duplicate name:" <+> quotes (pPrint x)
+        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux (Import _ modName' importList) = do

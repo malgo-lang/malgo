@@ -56,7 +56,7 @@ data Info = Info
   deriving anyclass (Binary, Hashable)
 
 instance Pretty Info where
-  pPrint Info {..} = pPrint name <+> ":" <+> pPrint typeSignature <+> pPrint definitions
+  pretty Info {..} = pretty name <+> ":" <+> pretty typeSignature <+> pretty definitions
 
 data Index = Index
   { references :: HashMap Info [Range],

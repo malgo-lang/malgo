@@ -76,7 +76,7 @@ instance (HasType a) => HasType (Expr a) where
   typeOf (Atom x) = typeOf x
   typeOf (Call f xs) = case typeOf f of
     ps :-> r | map typeOf xs == ps -> r
-    _ -> errorDoc $ "Invalid type:" <+> quotes (pPrint $ typeOf f)
+    _ -> errorDoc $ "Invalid type:" <+> squotes (pretty $ typeOf f)
   typeOf (CallDirect f xs) = case typeOf f of
     ps :-> r | map typeOf xs == ps -> r
     _ -> error "typeOf f must be ps :-> r"
@@ -97,25 +97,25 @@ instance (HasType a) => HasType (Expr a) where
   typeOf (Error t) = t
 
 instance (Pretty a) => Pretty (Expr a) where
-  pPrint (Atom x) = pPrint x
-  pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
-  pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
-  pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
-  pPrint (Let xs e) =
-    parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
-  pPrint (Match v cs) = parens $ "match" <+> pPrint v $$ vcat (toList $ fmap pPrint cs)
-  pPrint (Switch v cs e) = parens $ "switch" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
+  pretty (Atom x) = pretty x
+  pretty (Call f xs) = parens $ "call" <+> pretty f <+> sep (map pretty xs)
+  pretty (CallDirect f xs) = parens $ "direct" <+> pretty f <+> sep (map pretty xs)
+  pretty (RawCall p t xs) = parens $ "raw" <+> pretty p <+> pretty t <+> sep (map pretty xs)
+  pretty (Cast ty x) = parens $ "cast" <+> pretty ty <+> pretty x
+  pretty (Let xs e) =
+    parens $ vsep ["let", parens (vcat (map pretty xs)), pretty e]
+  pretty (Match v cs) = parens $ vsep ["match" <+> pretty v, vcat (toList $ fmap pretty cs)]
+  pretty (Switch v cs e) = parens $ vsep ["switch" <+> pretty v, vcat (toList $ fmap prettyCase cs), parens ("default" <+> pretty e)]
     where
-      pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
-  pPrint (SwitchUnboxed v cs e) = parens $ "switch-unboxed" <+> pPrint v $$ vcat (toList $ fmap pPrintCase cs) $$ parens ("default" <+> pPrint e)
+      prettyCase (t, e) = parens $ pretty t <+> pretty e
+  pretty (SwitchUnboxed v cs e) = parens $ vsep ["switch-unboxed" <+> pretty v, vcat (toList $ fmap prettyCase cs), parens ("default" <+> pretty e)]
     where
-      pPrintCase (t, e) = parens $ pPrint t <+> pPrint e
-  pPrint (Destruct v con xs e) = parens $ "destruct" <+> pPrint v <+> pPrint con <+> parens (sep (map pPrint xs)) $$ pPrint e
-  pPrint (DestructRecord v kvs e) =
-    parens $ "destruct-record" <+> pPrint v <+> parens (sep (map (\(k, v) -> pPrint k <+> pPrint v) $ HashMap.toList kvs)) $$ pPrint e
-  pPrint (Assign x v e) = parens $ "=" <+> pPrint x <+> pPrint v $$ pPrint e
-  pPrint (Error t) = parens $ "ERROR" <+> pPrint t
+      prettyCase (t, e) = parens $ pretty t <+> pretty e
+  pretty (Destruct v con xs e) = parens $ vsep ["destruct" <+> pretty v <+> pretty con <+> parens (sep (map pretty xs)), pretty e]
+  pretty (DestructRecord v kvs e) =
+    parens $ vsep ["destruct-record" <+> pretty v <+> parens (sep (map (\(k, v) -> pretty k <+> pretty v) $ HashMap.toList kvs)), pretty e]
+  pretty (Assign x v e) = parens $ vsep ["=" <+> pretty x <+> pretty v, pretty e]
+  pretty (Error t) = parens $ "ERROR" <+> pretty t
 
 instance HasFreeVar Expr where
   freevars (Atom x) = freevars x

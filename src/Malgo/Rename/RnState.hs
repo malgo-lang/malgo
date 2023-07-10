@@ -15,12 +15,12 @@ data RnState = RnState
   deriving stock (Show)
 
 instance Pretty RnState where
-  pPrint RnState {_infixInfo, _dependencies} =
+  pretty RnState {_infixInfo, _dependencies} =
     "RnState"
       <+> braces
         ( sep
-            [ sep ["_infixInfo", "=", pPrint $ HashMap.toList _infixInfo],
-              sep ["_dependencies", "=", pPrint $ HashSet.toList _dependencies]
+            [ sep ["_infixInfo", "=", pretty $ HashMap.toList _infixInfo],
+              sep ["_dependencies", "=", pretty $ HashSet.toList _dependencies]
             ]
         )
 

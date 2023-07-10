@@ -19,7 +19,7 @@ dsType (GT.TyCon con) = do
   ctx <- use kindCtx
   case kindOf ctx con of
     GT.TYPE -> pure AnyT
-    kcon -> errorDoc $ "Invalid kind:" <+> pPrint con <+> ":" <+> pPrint kcon
+    kcon -> errorDoc $ "Invalid kind:" <+> pretty con <+> ":" <+> pretty kcon
 dsType (GT.TyPrim GT.Int32T) = pure C.Int32T
 dsType (GT.TyPrim GT.Int64T) = pure C.Int64T
 dsType (GT.TyPrim GT.FloatT) = pure C.FloatT
@@ -34,7 +34,7 @@ dsType (GT.TyTuple 0) = pure $ SumT [C.Con C.Tuple []]
 dsType GT.TyPtr = errorDoc "unreachable"
 dsType (GT.TyRecord kts) = RecordT <$> traverse dsType kts
 dsType GT.TyMeta {} = pure AnyT
-dsType t = errorDoc $ "invalid type on dsType:" <+> pPrint t
+dsType t = errorDoc $ "invalid type on dsType:" <+> pretty t
 
 dsTyApp :: MonadState DsState f => [GT.Type] -> GT.Type -> f C.Type
 dsTyApp ts (GT.TyTuple _) = SumT . pure . C.Con C.Tuple <$> traverse dsType ts

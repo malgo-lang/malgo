@@ -27,8 +27,8 @@ instance (HasType a) => HasType (Atom a) where
   typeOf (Unboxed x) = typeOf x
 
 instance (Pretty a) => Pretty (Atom a) where
-  pPrint (Var x) = pPrint x
-  pPrint (Unboxed x) = pPrint x
+  pretty (Var x) = pretty x
+  pretty (Unboxed x) = pretty x
 
 instance HasFreeVar Atom where
   freevars (Var x) = HashSet.singleton x

@@ -48,15 +48,15 @@ data Program a = Program
   deriving (Semigroup, Monoid) via Generically (Program a)
 
 instance (Pretty a, Ord a) => Pretty (Program a) where
-  pPrint Program {..} =
+  pretty Program {..} =
     vcat
       $ concat
         [ ["; variables"],
-          map (\(v, t, e) -> parens $ sep ["define" <+> pPrint v, pPrint t, pPrint e]) topVars,
+          map (\(v, t, e) -> parens $ sep ["define" <+> pretty v, pretty t, pretty e]) topVars,
           ["; functions"],
-          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pPrint $ f : ps), pPrint t], pPrint e]) topFuns,
+          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pretty $ f : ps), pretty t], pretty e]) topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", "%" <> pPrint f, pPrint t]) extFuns
+          map (\(f, t) -> parens $ sep ["extern", "%" <> pretty f, pretty t]) extFuns
         ]
 
 instance HasExpr Program where

@@ -194,7 +194,7 @@ dsExpr (G.Var (Typed typ _) name) = do
   case (typ, C.typeOf name') of
     (_, [] :-> _)
       | isConstructor name -> pass
-      | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
+      | otherwise -> errorDoc $ "Invalid type:" <+> squotes (pretty name)
     _ -> pass
   case C.typeOf name' of
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
@@ -270,7 +270,7 @@ lookupName name = do
   mname' <- use (nameEnv . at name)
   case mname' of
     Just name' -> pure name'
-    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
+    Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty name)
 
 toCoreId :: RnId -> C.Type -> Id C.Type
 toCoreId griffId coreType = griffId {meta = coreType}
@@ -301,7 +301,7 @@ curryFun isToplevel hint [] e = do
         f <- bind e
         pure $ C.Call f (map C.Var ps)
       curryFun isToplevel hint ps body
-    _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
+    _ -> errorDoc $ "Invalid expression:" <+> squotes (pretty e)
 curryFun _ _ [p] e = pure ([p], e)
 curryFun isToplevel hint ps e = curryFun' ps []
   where

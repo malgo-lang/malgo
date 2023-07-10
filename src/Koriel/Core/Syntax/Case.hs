@@ -43,12 +43,12 @@ instance (HasType a) => HasType (Case a) where
   typeOf (Bind _ _ e) = typeOf e
 
 instance (Pretty a) => Pretty (Case a) where
-  pPrint (Unpack c xs e) =
-    parens $ sep ["unpack" <+> parens (pPrint c <+> sep (map pPrint xs)), pPrint e]
-  pPrint (OpenRecord pat e) =
-    parens $ sep ["open", parens $ sep $ map (\(k, v) -> pPrint k <+> pPrint v) $ HashMap.toList pat, pPrint e]
-  pPrint (Exact u e) = parens $ sep ["exact" <+> pPrint u, pPrint e]
-  pPrint (Bind x t e) = parens $ sep ["bind", pPrint x, pPrint t, pPrint e]
+  pretty (Unpack c xs e) =
+    parens $ sep ["unpack" <+> parens (pretty c <+> sep (map pretty xs)), pretty e]
+  pretty (OpenRecord pat e) =
+    parens $ sep ["open", parens $ sep $ map (\(k, v) -> pretty k <+> pretty v) $ HashMap.toList pat, pretty e]
+  pretty (Exact u e) = parens $ sep ["exact" <+> pretty u, pretty e]
+  pretty (Bind x t e) = parens $ sep ["bind", pretty x, pretty t, pretty e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
