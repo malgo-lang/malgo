@@ -10,7 +10,6 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.String.Conversions
 import Generic.Data
-import Koriel.Core.Op
 import Koriel.Core.Syntax.Atom
 import Koriel.Core.Syntax.Case
 import Koriel.Core.Syntax.Common
@@ -31,8 +30,6 @@ data Expr a
   | -- | application of primitive function
     -- Primitive functions are defined in target language.
     RawCall Text Type [Atom a]
-  | -- | binary operation
-    BinOp Op (Atom a) (Atom a)
   | -- | type casting
     --
     -- 'Cast'命令は、一見'Atom'の一種にできそうに見える。しかし、
@@ -86,26 +83,6 @@ instance (HasType a) => HasType (Expr a) where
   typeOf (RawCall _ t xs) = case t of
     ps :-> r | map typeOf xs == ps -> r
     _ -> error "t must be ps :-> r"
-  typeOf (BinOp o x _) = case o of
-    Add -> typeOf x
-    Sub -> typeOf x
-    Mul -> typeOf x
-    Div -> typeOf x
-    Mod -> typeOf x
-    FAdd -> typeOf x
-    FSub -> typeOf x
-    FMul -> typeOf x
-    FDiv -> typeOf x
-    Eq -> boolT
-    Neq -> boolT
-    Lt -> boolT
-    Gt -> boolT
-    Le -> boolT
-    Ge -> boolT
-    And -> boolT
-    Or -> boolT
-    where
-      boolT = BoolT
   typeOf (Cast ty _) = ty
   typeOf (Let _ e) = typeOf e
   typeOf (Match _ (c : _)) = typeOf c
@@ -124,7 +101,6 @@ instance (Pretty a) => Pretty (Expr a) where
   pPrint (Call f xs) = parens $ "call" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (CallDirect f xs) = parens $ "direct" <+> pPrint f <+> sep (map pPrint xs)
   pPrint (RawCall p t xs) = parens $ "raw" <+> pPrint p <+> pPrint t <+> sep (map pPrint xs)
-  pPrint (BinOp o x y) = parens $ "binop" <+> pPrint o <+> pPrint x <+> pPrint y
   pPrint (Cast ty x) = parens $ "cast" <+> pPrint ty <+> pPrint x
   pPrint (Let xs e) =
     parens $ "let" $$ parens (vcat (map pPrint xs)) $$ pPrint e
@@ -146,7 +122,6 @@ instance HasFreeVar Expr where
   freevars (Call f xs) = freevars f <> foldMap freevars xs
   freevars (CallDirect _ xs) = foldMap freevars xs
   freevars (RawCall _ _ xs) = foldMap freevars xs
-  freevars (BinOp _ x y) = freevars x <> freevars y
   freevars (Cast _ x) = freevars x
   freevars (Let xs e) = foldr (sans . (._variable)) (freevars e <> foldMap (freevars . (._object)) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
@@ -168,7 +143,6 @@ instance HasFreeVar Expr where
   callees (Call f _) = freevars f
   callees (CallDirect f _) = HashSet.singleton f
   callees RawCall {} = mempty
-  callees BinOp {} = mempty
   callees Cast {} = mempty
   callees (Let xs e) = foldr (sans . (._variable)) (callees e <> foldMap (callees . (._object)) xs) xs
   callees (Match e cs) = callees e <> foldMap callees cs
@@ -191,7 +165,6 @@ instance HasAtom Expr where
     Call x xs -> Call <$> f x <*> traverse f xs
     CallDirect x xs -> CallDirect x <$> traverse f xs
     RawCall p t xs -> RawCall p t <$> traverse f xs
-    BinOp o x y -> BinOp o <$> f x <*> f y
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . atom) f xs <*> traverseOf atom f e
     Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
@@ -208,7 +181,6 @@ instance Plated (Expr a) where
   plate _ e@Call {} = pure e
   plate _ e@CallDirect {} = pure e
   plate _ e@RawCall {} = pure e
-  plate _ e@BinOp {} = pure e
   plate _ e@Cast {} = pure e
   plate f (Let xs e) = Let <$> traverseOf (traversed . expr) f xs <*> f e
   plate f (Match e cs) = Match <$> f e <*> traverseOf (traversed . expr) f cs

@@ -24,12 +24,10 @@ library
   exposed-modules:
       Koriel.Core.Alpha
       Koriel.Core.Annotate
-      Koriel.Core.CodeGen.DelimLLVM
       Koriel.Core.CodeGen.LLVM
       Koriel.Core.Flat
       Koriel.Core.LambdaLift
       Koriel.Core.Lint
-      Koriel.Core.Op
       Koriel.Core.Optimize
       Koriel.Core.Parser
       Koriel.Core.Syntax
@@ -120,6 +118,7 @@ library
     , optparse-applicative
     , parser-combinators
     , pretty
+    , prettyprinter
     , raw-strings-qq
     , regex-tdfa
     , string-conversions
@@ -181,6 +180,7 @@ executable malgo
     , optparse-applicative
     , parser-combinators
     , pretty
+    , prettyprinter
     , raw-strings-qq
     , regex-tdfa
     , string-conversions
@@ -311,6 +311,7 @@ benchmark malgo-bench
     , optparse-applicative
     , parser-combinators
     , pretty
+    , prettyprinter
     , raw-strings-qq
     , regex-tdfa
     , string-conversions

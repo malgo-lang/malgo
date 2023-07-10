@@ -30,7 +30,7 @@ data MalgoEnv = MalgoEnv
     modulePaths :: [FilePath]
   }
 
-data CompileMode = LLVM | DelimLLVM deriving stock (Eq, Show)
+data CompileMode = LLVM deriving stock (Eq, Show)
 
 makeFieldsNoPrefix ''MalgoEnv
 
@@ -73,4 +73,4 @@ newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
   deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
 
 runMalgoM :: MalgoEnv -> MalgoM a -> IO a
-runMalgoM env m = runReaderT (m.unMalgoM) env
+runMalgoM env m = runReaderT m.unMalgoM env

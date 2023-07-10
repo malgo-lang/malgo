@@ -2,7 +2,7 @@ module Koriel.Core.Lint (lint) where
 
 import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
 import Data.HashMap.Strict qualified as HashMap
-import Koriel.Core.Op
+import Data.HashSet qualified as HashSet
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -11,23 +11,23 @@ import Koriel.Pretty
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
-lint :: Monad m => Bool -> Program (Id Type) -> m ()
+lint :: (Monad m) => Bool -> Program (Id Type) -> m ()
 lint normalized = runLint normalized . lintProgram
 
 data LintEnv = LintEnv
-  { defs :: [Id Type],
+  { defs :: HashSet (Id Type),
     normalized :: Bool,
     isIncludeAssign :: Bool,
     isStatement :: Bool
   }
 
 runLint :: Bool -> ReaderT LintEnv m a -> m a
-runLint normalized m = runReaderT m (LintEnv [] normalized True True)
+runLint normalized m = runReaderT m (LintEnv mempty normalized True True)
 
-asStatement :: MonadReader LintEnv m => m a -> m a
+asStatement :: (MonadReader LintEnv m) => m a -> m a
 asStatement = local (\e -> e {isStatement = True})
 
-statement :: MonadReader LintEnv m => Expr (Id Type) -> m a -> m a
+statement :: (MonadReader LintEnv m) => Expr (Id Type) -> m a -> m a
 statement e m = do
   LintEnv {isStatement, normalized} <- ask
   if
@@ -35,25 +35,25 @@ statement e m = do
     | isStatement -> m
     | otherwise -> errorDoc $ pPrint e <+> "must be a statement"
 
-defined :: HasCallStack => MonadReader LintEnv f => Id Type -> f ()
+defined :: (HasCallStack) => (MonadReader LintEnv f) => Id Type -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
       env <- asks (.defs)
-      unless (x `elem` env) $ errorDoc $ pPrint x <> " is not defined"
+      unless (HashSet.member x env) $ errorDoc $ pPrint x <> " is not defined"
 
-define :: HasCallStack => MonadReader LintEnv f => Doc -> [Id Type] -> f a -> f a
+define :: (HasCallStack) => (MonadReader LintEnv f) => Doc -> [Id Type] -> f a -> f a
 define pos xs m = do
   env <- asks (.defs)
   for_ xs \x ->
-    when (x `elem` env) $
-      errorDoc $
-        pPrint x
-          <> " is already defined"
-            $$ "while defining"
-            <+> pos
-            <+> pPrint xs
-  local (\e -> e {defs = xs <> e.defs}) m
+    when (HashSet.member x env)
+      $ errorDoc
+      $ pPrint x
+      <> " is already defined"
+      $$ "while defining"
+      <+> pos
+      <+> pPrint xs
+  local (\e -> e {defs = HashSet.fromList xs <> e.defs}) m
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
@@ -67,14 +67,14 @@ match :: (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> 
 match x y
   | isMatch x y = pass
   | otherwise =
-      errorDoc $
-        "type mismatch:"
-          $$ pPrint x
-          $$ nest 2 (":" <> pPrint (typeOf x))
-          $$ pPrint y
-          $$ nest 2 (":" <> pPrint (typeOf y))
+      errorDoc
+        $ "type mismatch:"
+        $$ pPrint x
+        $$ nest 2 (":" <> pPrint (typeOf x))
+        $$ pPrint y
+        $$ nest 2 (":" <> pPrint (typeOf y))
 
-lintExpr :: MonadReader LintEnv m => Expr (Id Type) -> m ()
+lintExpr :: (MonadReader LintEnv m) => Expr (Id Type) -> m ()
 lintExpr (Atom x) = lintAtom x
 lintExpr (Call f xs) = do
   lintAtom f
@@ -92,57 +92,9 @@ lintExpr (RawCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
 lintExpr RawCall {} = error "primitive must be a function"
-lintExpr (BinOp o x y) = do
-  lintAtom x
-  lintAtom y
-  case o of
-    Add
-      | isMatch x Int32T -> match x y
-      | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    Sub
-      | isMatch x Int32T -> match x y
-      | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    Mul
-      | isMatch x Int32T -> match x y
-      | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    Div
-      | isMatch x Int32T -> match x y
-      | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    Mod
-      | isMatch x Int32T -> match x y
-      | isMatch x Int64T -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [Int32T, Int64T]
-    FAdd
-      | isMatch x FloatT -> match x y
-      | isMatch x DoubleT -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
-    FSub
-      | isMatch x FloatT -> match x y
-      | isMatch x DoubleT -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
-    FMul
-      | isMatch x FloatT -> match x y
-      | isMatch x DoubleT -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
-    FDiv
-      | isMatch x FloatT -> match x y
-      | isMatch x DoubleT -> match x y
-      | otherwise -> errorDoc $ "type mismatch:" $$ pPrint x <> ":" <> pPrint (typeOf x) $$ pPrint [FloatT, DoubleT]
-    Eq -> match x y
-    Neq -> match x y
-    Lt -> match x y
-    Le -> match x y
-    Gt -> match x y
-    Ge -> match x y
-    And -> match x BoolT >> match y BoolT
-    Or -> match x BoolT >> match y BoolT
 lintExpr (Cast _ x) = lintAtom x
-lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True}) $
-  define "let" (map (._variable) ds) do
+lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True})
+  $ define "let" (map (._variable) ds) do
     traverse_ (lintObj . (._object)) ds
     for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
     asStatement $ lintExpr e
@@ -182,12 +134,12 @@ lintExpr (Assign x v e) = statement (Assign x v e) do
       define "assign" [x] (lintExpr e)
 lintExpr Error {} = pass
 
-lintObj :: HasCallStack => MonadReader LintEnv m => Obj (Id Type) -> m ()
+lintObj :: (HasCallStack) => (MonadReader LintEnv m) => Obj (Id Type) -> m ()
 lintObj (Fun params body) = define "fun" params $ asStatement $ lintExpr body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: HasCallStack => MonadReader LintEnv m => Expr (Id Type) -> Case (Id Type) -> m ()
+lintCase :: (HasCallStack) => (MonadReader LintEnv m) => Expr (Id Type) -> Case (Id Type) -> m ()
 lintCase _ (Unpack _ vs e) = define "unpack" vs $ lintExpr e
 lintCase _ (OpenRecord kvs e) = define "open-record" (HashMap.elems kvs) $ lintExpr e
 lintCase _ (Exact _ e) = lintExpr e
@@ -196,11 +148,11 @@ lintCase scrutinee (Bind x t e) = define "bind" [x] do
   match scrutinee x
   lintExpr e
 
-lintAtom :: HasCallStack => MonadReader LintEnv m => Atom (Id Type) -> m ()
+lintAtom :: (HasCallStack) => (MonadReader LintEnv m) => Atom (Id Type) -> m ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
-lintProgram :: HasCallStack => MonadReader LintEnv m => Program (Id Type) -> m ()
+lintProgram :: (HasCallStack) => (MonadReader LintEnv m) => Program (Id Type) -> m ()
 lintProgram Program {..} = do
   let vs = map (view _1) topVars
   let fs = map (view _1) topFuns

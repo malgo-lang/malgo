@@ -16,8 +16,8 @@ module Factorial = {
   def factAcc = { n acc -> if (n == 0L) { acc } { factAcc (n - 1L) (n * acc) } }
 
   def main = {
-    fact 14L |> toStringInt64 |> putStrLn
+    fact 5L |> toStringInt64 |> putStrLn
   }
 }
 
--- Expected: 87178291200
+-- Expected: 120

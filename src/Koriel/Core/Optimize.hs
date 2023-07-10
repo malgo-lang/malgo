@@ -76,24 +76,25 @@ optimizeProgram ::
   m (Program (Id Type))
 optimizeProgram env Program {..} = runReaderT ?? env $ do
   state <- execStateT ?? CallInlineEnv mempty $ do
-    for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
-    for_ topVars $ \case
-      (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
-      _ -> pass
-  topVars <- traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
-  topFuns <- traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
+    {-# SCC "checkInlinable_topFuns" #-} for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+    {-# SCC "checkInlinable_topVars" #-}
+      for_ topVars $ \case
+        (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
+        _ -> pass
+  topVars <- {-# SCC "optimizeExpr_topVars" #-} traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
+  topFuns <- {-# SCC "optimizeExpr_topFuns" #-} traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
 
   -- Remove all unused toplevel functions and variables.
   -- If a global definition is (external or native) and defined in the current module, it cannot be removed.
   -- Otherwise, delete it if it is not reachable from above definitions.
-  let roots = filter (\x -> x.sort `elem` [External, Native] && x.moduleName == env.moduleName) $ map (view _1) topFuns <> map (view _1) topVars
-  let (graph, _, toVertex) = callGraph Program {..}
-  let reachableFromMain = ordNub $ concatMap (toVertex >>> Maybe.fromJust >>> Graph.reachable graph) roots
+  let roots = {-# SCC "roots" #-} filter (\x -> x.sort `elem` [External, Native] && x.moduleName == env.moduleName) $ map (view _1) topFuns <> map (view _1) topVars
+  let (graph, _, toVertex) = {-# SCC "callGraph" #-} callGraph Program {..}
+  let reachableFromMain = {-# SCC "reachable" #-} ordNub $ concatMap (toVertex >>> Maybe.fromJust >>> Graph.reachable graph) roots
 
-  let isUsed a = toVertex a `elem` map Just reachableFromMain
+  let isUsed a = {-# SCC "used" #-} toVertex a `elem` map Just reachableFromMain
 
-  topVars <- pure $ filter (\(n, _, _) -> isUsed n) topVars
-  topFuns <- pure $ filter (\(n, _, _, _) -> isUsed n) topFuns
+  topVars <- {-# SCC "filter_topVars" #-} pure $ filter (\(n, _, _) -> isUsed n) topVars
+  topFuns <- {-# SCC "filter_topFuns" #-} pure $ filter (\(n, _, _, _) -> isUsed n) topFuns
   pure $ Program {..}
 
 optimizeExpr :: (MonadReader OptimizeEnv f, MonadIO f) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))

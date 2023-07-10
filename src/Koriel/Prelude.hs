@@ -145,9 +145,11 @@ import Prelude hiding (id, unzip)
 
 identity :: a -> a
 identity x = x
+{-# INLINE identity #-}
 
 pass :: (Applicative f) => f ()
 pass = pure ()
+{-# INLINE pass #-}
 
 -- | @foldMapM@ from rio
 foldMapM :: (Foldable t, Monad m, Monoid w) => (a -> m w) -> t a -> m w
@@ -166,6 +168,7 @@ unzip xs = (fst <$> xs, snd <$> xs)
 
 replaceOf :: (Eq b) => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
+{-# INLINE replaceOf #-}
 
 localState :: (MonadState s m) => m a -> m (a, s)
 localState action = do
@@ -177,9 +180,11 @@ localState action = do
 
 chomp :: String -> String
 chomp = dropWhileEnd (`elem` ['\r', '\n'])
+{-# INLINE chomp #-}
 
 asumMap :: forall b m f a. (Foldable f, Alternative m) => (a -> m b) -> f a -> m b
 asumMap = coerce (foldMap :: (a -> Alt m b) -> f a -> Alt m b)
+{-# INLINE asumMap #-}
 
 newtype PrettyShow a = PrettyShow a
 
