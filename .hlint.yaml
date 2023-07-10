@@ -24,11 +24,18 @@
 - modules:
   - {name: Debug.Trace, within: [], message: "Debugging code left in"}
 #   - {name: [Data.Set, Data.HashSet], as: Set} # if you import Data.Set qualified, it must be as 'Set'
+  - {name: Data.ByteString, as: BS}
+  - {name: Data.ByteString.Lazy, as: BL}
+  - {name: Data.Text, as: T}
+  - {name: Data.Text.Lazy, as: TL}
 #   - {name: Control.Arrow, within: []} # Certain modules are banned entirely
 #
 # - functions:
 #   - {name: unsafePerformIO, within: []} # unsafePerformIO can only appear in no modules
-
+- functions:
+  # If the file is encoded in UTF-8, then the following are equivalent and faster:
+  - {name: Data.Text.IO.readFile, within: [], message: "Use convertString . Data.ByteString.readFile instead"}
+  - {name: Data.Text.Lazy.IO.readFile, within: [], message: "Use convertString . Data.ByteString.Lazy.readFile instead"}
 
 # Add custom hints for this project
 #

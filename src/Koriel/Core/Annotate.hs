@@ -2,7 +2,7 @@ module Koriel.Core.Annotate (annotate) where
 
 import Control.Lens (ifor)
 import Data.HashMap.Strict qualified as HashMap
-import Data.Text qualified as Text
+import Data.Text qualified as T
 import Data.Traversable (for)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -20,7 +20,7 @@ data Context = Context
     nameEnv :: HashMap Text (Id Type)
   }
 
-lookupName :: (HasCallStack) => (MonadReader Context m) => Text -> m (Id Type)
+lookupName :: HasCallStack => MonadReader Context m => Text -> m (Id Type)
 lookupName name =
   HashMap.lookupDefault
     (error $ "lookupName: " <> show name)
@@ -29,18 +29,18 @@ lookupName name =
 
 parseId :: (MonadReader Context m, MonadFail m) => Text -> Type -> m (Id Type)
 parseId name meta
-  | Text.head name == '@' = do
-      [moduleName, name] <- pure $ Text.words (Text.tail name)
+  | T.head name == '@' = do
+      [moduleName, name] <- pure $ T.words (T.tail name)
       pure Id {name, meta, moduleName = ModuleName moduleName, uniq = -1, sort = External}
-  | Text.head name == '#' = do
-      [moduleName, name, uniq] <- pure $ Text.words (Text.tail name)
-      pure Id {name = Text.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Internal}
-  | Text.head name == '$' = do
-      [moduleName, name, uniq] <- pure $ Text.words (Text.tail name)
-      pure Id {name = Text.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Temporal}
-  | Text.head name == '%' = do
+  | T.head name == '#' = do
+      [moduleName, name, uniq] <- pure $ T.words (T.tail name)
+      pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Internal}
+  | T.head name == '$' = do
+      [moduleName, name, uniq] <- pure $ T.words (T.tail name)
+      pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Temporal}
+  | T.head name == '%' = do
       moduleName <- asks (.moduleName)
-      pure Id {name = Text.tail name, meta, moduleName, uniq = -1, sort = Native}
+      pure Id {name = T.tail name, meta, moduleName, uniq = -1, sort = Native}
   | otherwise = do
       error $ "parseId: " <> show name
 
@@ -75,7 +75,7 @@ annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   local
     (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv})
     $ (name,params',ty,)
-    <$> annExpr body
+      <$> annExpr body
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pPrint name
 
 annExpr :: (MonadReader Context m, MonadIO m, MonadFail m) => Expr Text -> m (Expr (Id Type))
@@ -158,7 +158,7 @@ annExpr (Assign x v e) = do
     pure $ Assign x' v' e
 annExpr (Error ty) = pure $ Error ty
 
-annAtom :: (HasCallStack) => (MonadReader Context m) => Atom Text -> m (Atom (Id Type))
+annAtom :: HasCallStack => MonadReader Context m => Atom Text -> m (Atom (Id Type))
 annAtom (Var name) = Var <$> lookupName name
 annAtom (Unboxed value) = pure $ Unboxed value
 

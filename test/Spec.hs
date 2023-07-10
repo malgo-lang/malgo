@@ -3,11 +3,11 @@
 -- For `undefined`
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
+import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text qualified as Text
-import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (timeout)
@@ -131,8 +131,8 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
 
     -- Check if the generated Koriel code is valid
     let korielPath = dst -<.> "kor"
-    koriel <- Text.readFile korielPath
-    case Koriel.parse korielPath koriel of
+    koriel <- BL.readFile korielPath
+    case Koriel.parse korielPath (convertString koriel) of
       Left err ->
         let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
             diag' = addFile diag korielPath (toString koriel)
@@ -222,7 +222,7 @@ test testcase typ lambdaLift noOptimize option compileMode = do
               & setStdin (byteStringInput "Hello")
           )
   ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
-  expected <- filter ("-- Expected: " `Text.isPrefixOf`) . Text.lines <$> Text.readFile testcase
+  expected <- filter ("-- Expected: " `Text.isPrefixOf`) . Text.lines . convertString <$> BS.readFile testcase
   map ("-- Expected: " <>) (Text.lines $ Text.stripEnd result) `shouldBe` expected
   where
     timeoutWrapper phase m = do

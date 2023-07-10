@@ -5,11 +5,11 @@ module Malgo.Build (run) where
 import Control.Concurrent (getNumCapabilities)
 import Control.Lens (Field2 (_2), view)
 import Data.Aeson (FromJSON, decodeFileStrict)
+import Data.ByteString qualified as BS
 import Data.List ((\\))
 import Data.List qualified as List
 import Data.List.Extra (chunksOf)
 import Data.Maybe qualified as Maybe
-import Data.Text.IO qualified as Text
 import Koriel.Id (ModuleName (..))
 import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
@@ -59,7 +59,7 @@ run = do
   excludePatterns <- getExcludePatterns
   excludeFiles <- concat <$> traverse glob excludePatterns
   sourceFiles' <- traverse makeAbsolute $ sourceFiles \\ excludeFiles
-  sourceContents <- traverse Text.readFile sourceFiles'
+  sourceContents <- map convertString <$> traverse BS.readFile sourceFiles'
   let parsedAstList = mconcat $ zipWith parse sourceFiles' sourceContents
   let moduleDepends = map takeImports parsedAstList
   n <- getNumCapabilities
@@ -87,8 +87,8 @@ run = do
       let ParsedDefinitions ds = moduleDefinition
        in ( sourceFile,
             moduleName,
-            ordNub
-              $ mapMaybe
+            ordNub $
+              mapMaybe
                 ( \case
                     Import _ imported _ -> Just imported
                     _ -> Nothing

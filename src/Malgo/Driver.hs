@@ -4,10 +4,9 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 import Control.Exception (IOException, assert, catch)
 import Data.Binary qualified as Binary
 import Data.ByteString qualified as BS
-import Data.ByteString.Lazy qualified as LBS
+import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions.Monomorphic (toString)
-import Data.Text.IO qualified as Text
 import Error.Diagnose (addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM qualified as LLVM
@@ -87,10 +86,10 @@ compileFromAST srcPath env parsedAst =
       core <- do
         core <- Flat.normalize core
         _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-        liftIO $ LBS.writeFile (env.dstPath -<.> "kor.bin") $ Binary.encode core
+        liftIO $ BL.writeFile (env.dstPath -<.> "kor.bin") $ Binary.encode core
 
         let inf = buildInterface moduleName rnState dsEnv
-        liftIO $ LBS.writeFile (toInterfacePath env.dstPath) $ Binary.encode inf
+        liftIO $ BL.writeFile (toInterfacePath env.dstPath) $ Binary.encode inf
 
         -- check module paths include dstName's directory
         assert (takeDirectory env.dstPath `elem` env.modulePaths) pass
@@ -172,8 +171,8 @@ compileFromAST srcPath env parsedAst =
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
 compile srcPath env = do
-  src <- Text.readFile srcPath
-  parsedAst <- case parseMalgo srcPath src of
+  src <- BS.readFile srcPath
+  parsedAst <- case parseMalgo srcPath (convertString src) of
     Right x -> pure x
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
