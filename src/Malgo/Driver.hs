@@ -172,7 +172,7 @@ compileFromAST srcPath env parsedAst =
 -- | Read the source file and parse it, then compile.
 compile :: FilePath -> MalgoEnv -> IO ()
 compile srcPath env = do
-  src <- BS.readFile srcPath
+  src <- BL.readFile srcPath
   parsedAst <- case parseMalgo srcPath (convertString src) of
     Right x -> pure x
     Left err ->

@@ -73,6 +73,7 @@ module Koriel.Prelude
     -- ** Text
     hPutText,
     hPutTextLn,
+    putText,
 
     -- ** IORef
     newIORef,
@@ -137,9 +138,9 @@ import Error.Diagnose.Compat.Megaparsec (HasHints (hints))
 import GHC.Exts (sortWith)
 import GHC.Generics (Generic)
 import GHC.Stack (HasCallStack)
+import Prettyprinter
 import System.IO (Handle, stderr, stdin, stdout)
 import System.IO qualified
-import Prettyprinter
 import Prelude hiding (id, unzip)
 
 identity :: a -> a
@@ -211,6 +212,9 @@ hPutText handle x = liftIO $ T.hPutStr handle x
 -- | Lifted version of 'T.hPutStrLn'.
 hPutTextLn :: (MonadIO m) => Handle -> Text -> m ()
 hPutTextLn handle x = liftIO $ T.hPutStrLn handle x
+
+putText :: (MonadIO m) => Text -> m ()
+putText = hPutText stdout
 
 instance HasHints Void Text where
   hints = const []

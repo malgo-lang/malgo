@@ -11,7 +11,7 @@ import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
 import Koriel.Core.Parser qualified as Koriel
 import Koriel.Id (ModuleName)
-import Koriel.Pretty (pPrint)
+import Koriel.Pretty
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
 import Malgo.Lsp.Index (Index, LspOpt (LspOpt))
@@ -70,7 +70,7 @@ main = do
               diag' = addFile diag srcPath (convertString srcContents)
            in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
         Right prog -> do
-          print $ pPrint prog
+          putText $ render $ pretty prog
 
 toLLOpt :: Parser ToLLOpt
 toLLOpt =
