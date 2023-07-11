@@ -6,7 +6,6 @@ import Control.Monad.Combinators.Expr
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Data.Void
-import GHC.Float (double2Float)
 import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax

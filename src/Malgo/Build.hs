@@ -69,7 +69,7 @@ run = do
   _interfaces <- newIORef mempty
   _indexes <- newIORef mempty
   traverse_
-    ( {- mapConcurrently_ -} traverse_
+    ( mapConcurrently_
         ( \(path, moduleName, _) -> do
             let ast = Maybe.fromJust $ List.lookup path parsedAstList
             putStrLn ("Compile " <> path)
