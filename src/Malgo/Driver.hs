@@ -14,7 +14,7 @@ import Koriel.Core.CodeGen.LLVM qualified as LLVM
 import Koriel.Core.Flat qualified as Flat
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
-import Koriel.Core.Optimize (OptimizeEnv (..), optimizeProgram)
+import Koriel.Core.Optimize (optimizeProgram)
 import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), ModuleName (..))
 import Koriel.Pretty
 import Malgo.Desugar.DsState (_nameEnv)
@@ -113,16 +113,7 @@ compileFromAST srcPath env parsedAst =
       coreOpt <-
         if env.noOptimize
           then pure core
-          else
-            optimizeProgram
-              OptimizeEnv
-                { uniqSupply,
-                  moduleName,
-                  debugMode = env.debugMode,
-                  option = env.optimizeOption
-                }
-              core
-              >>= Flat.normalize
+          else optimizeProgram core >>= Flat.normalize
       when (env.debugMode && not env.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pretty coreOpt
