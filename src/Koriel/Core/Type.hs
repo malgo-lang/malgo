@@ -21,15 +21,15 @@ data Tag
   deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty Tag where
-  pPrint (Data name) = pPrint name
-  pPrint Tuple = "Tuple#"
+  pretty (Data name) = pretty name
+  pretty Tuple = "Tuple#"
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty Con where
-  pPrint (Con tag xs) = parens $ sep $ pPrint tag : map pPrint xs
+  pretty (Con tag xs) = parens $ sep $ pretty tag : map pretty xs
 
 -- TODO: クロージャを表す型を追加
 -- ClosureT [Type] Type
@@ -53,19 +53,19 @@ data Type
   deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
 
 instance Pretty Type where
-  pPrint (a :-> b) = parens $ sep ["->", brackets (sep $ map pPrint a), pPrint b]
-  pPrint Int32T = "Int32#"
-  pPrint Int64T = "Int64#"
-  pPrint FloatT = "Float#"
-  pPrint DoubleT = "Double#"
-  pPrint CharT = "Char#"
-  pPrint StringT = "String#"
-  pPrint BoolT = "Bool#"
-  pPrint (SumT cs) = parens $ sep ("sum" : map pPrint cs)
-  pPrint (PtrT t) = parens $ "Ptr#" <+> pPrint t
-  pPrint (RecordT fs) = parens $ "Record#" <+> sep (map (\(k, v) -> parens $ sep [pPrint k, pPrint v]) $ HashMap.toList fs)
-  pPrint AnyT = "Any#"
-  pPrint VoidT = "Void#"
+  pretty (a :-> b) = parens $ sep ["->", brackets (sep $ map pretty a), pretty b]
+  pretty Int32T = "Int32#"
+  pretty Int64T = "Int64#"
+  pretty FloatT = "Float#"
+  pretty DoubleT = "Double#"
+  pretty CharT = "Char#"
+  pretty StringT = "String#"
+  pretty BoolT = "Bool#"
+  pretty (SumT cs) = parens $ sep ("sum" : map pretty cs)
+  pretty (PtrT t) = parens $ "Ptr#" <+> pretty t
+  pretty (RecordT fs) = parens $ "Record#" <+> sep (map (\(k, v) -> parens $ sep [pretty k, pretty v]) $ HashMap.toList fs)
+  pretty AnyT = "Any#"
+  pretty VoidT = "Void#"
 
 class HasType a where
   typeOf :: a -> Type

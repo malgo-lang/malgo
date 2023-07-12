@@ -6,7 +6,7 @@ import Data.HashSet qualified as HashSet
 import GHC.Records (HasField)
 import Koriel.Core.Syntax
 import Koriel.Id
-import Koriel.Pretty (errorDoc, pPrint, quotes, ($$), (<+>))
+import Koriel.Pretty (errorDoc, pretty, squotes, vsep, (<+>))
 import Malgo.Interface
 import Malgo.Prelude
 import System.Directory (doesFileExist)
@@ -28,12 +28,14 @@ loadCore (ModuleName modName) = do
     Left err -> do
       hPrint stderr err
       errorDoc
-        $ "Cannot find module:"
-        <+> quotes (pPrint modName)
-        $$ "Module paths:"
-        <+> pPrint modPaths
+        $ vsep
+          [ "Cannot find module:"
+              <+> squotes (pretty modName),
+            "Module paths:"
+              <+> pretty modPaths
+          ]
   where
-    findAndReadFile [] modFile = pure $ Left (pPrint modFile <+> "not found")
+    findAndReadFile [] modFile = pure $ Left (pretty modFile <+> "not found")
     findAndReadFile (path : paths) modFile = do
       isExistModFile <- liftIO $ doesFileExist (path </> modFile)
       if isExistModFile

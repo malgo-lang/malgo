@@ -8,7 +8,7 @@ import Data.List qualified as List
 import Data.Maybe (fromJust)
 import Data.Text qualified as T
 import Data.Traversable (for)
-import Koriel.Core.Alpha (AlphaEnv (..), alpha)
+import Koriel.Core.Alpha (alpha)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import Koriel.Core.Type qualified as C
@@ -194,7 +194,7 @@ dsExpr (G.Var (Typed typ _) name) = do
   case (typ, C.typeOf name') of
     (_, [] :-> _)
       | isConstructor name -> pass
-      | otherwise -> errorDoc $ "Invalid type:" <+> quotes (pPrint name)
+      | otherwise -> errorDoc $ "Invalid type:" <+> squotes (pretty name)
     _ -> pass
   case C.typeOf name' of
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
@@ -270,7 +270,7 @@ lookupName name = do
   mname' <- use (nameEnv . at name)
   case mname' of
     Just name' -> pure name'
-    Nothing -> errorDoc $ "Not in scope:" <+> quotes (pPrint name)
+    Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty name)
 
 toCoreId :: RnId -> C.Type -> Id C.Type
 toCoreId griffId coreType = griffId {meta = coreType}
@@ -301,7 +301,7 @@ curryFun isToplevel hint [] e = do
         f <- bind e
         pure $ C.Call f (map C.Var ps)
       curryFun isToplevel hint ps body
-    _ -> errorDoc $ "Invalid expression:" <+> quotes (pPrint e)
+    _ -> errorDoc $ "Invalid expression:" <+> squotes (pretty e)
 curryFun _ _ [p] e = pure ([p], e)
 curryFun isToplevel hint ps e = curryFun' ps []
   where
@@ -313,9 +313,7 @@ curryFun isToplevel hint ps e = curryFun' ps []
           -- uncurry後の関数もトップレベル関数にできる。
           fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
-          moduleName <- asks (.moduleName)
-          uniqSupply <- asks (.uniqSupply)
-          e' <- alpha e (AlphaEnv {uniqSupply, moduleName, subst = HashMap.fromList $ zip ps $ map C.Var ps'})
+          e' <- alpha e (HashMap.fromList $ zip ps $ map C.Var ps')
           globalDefs <>= [FunDef fun ps' (C.typeOf fun) e']
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
@@ -323,9 +321,7 @@ curryFun isToplevel hint ps e = curryFun' ps []
           fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
           ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
-          moduleName <- asks (.moduleName)
-          uniqSupply <- asks (.uniqSupply)
-          e' <- alpha e (AlphaEnv {uniqSupply, moduleName, subst = HashMap.fromList $ zip ps $ map C.Var ps'})
+          e' <- alpha e (HashMap.fromList $ zip ps $ map C.Var ps')
           pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
     curryFun' (x : xs) as = do
       fun <- curryFun' xs (C.Var x : as)

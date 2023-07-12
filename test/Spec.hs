@@ -115,7 +115,7 @@ setupRuntime = do
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
 compile src dst modPaths lambdaLift noOptimize option compileMode =
   do
-    malgoEnv <- newMalgoEnv src modPaths Nothing undefined Nothing Nothing
+    malgoEnv <- newMalgoEnv src modPaths undefined Nothing Nothing
     malgoEnv <-
       pure
         malgoEnv

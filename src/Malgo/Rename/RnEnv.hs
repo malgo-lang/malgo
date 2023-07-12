@@ -98,11 +98,13 @@ lookupVarName pos name =
       Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos
-          $ "Not in scope:"
-          <+> quotes (pPrint name)
-          $$ "Did you mean"
-          <+> pPrint names
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+          $ vsep
+            [ "Not in scope:"
+                <+> squotes (pretty name),
+              "Did you mean"
+                <+> pretty names
+            ]
+    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
 
 -- | Resolving a type name that is already resolved
 lookupTypeName :: (MonadReader RnEnv m, MonadIO m) => Range -> Text -> m RnId
@@ -112,11 +114,13 @@ lookupTypeName pos name =
       Just (Qualified _ name) -> pure name
       Nothing ->
         errorOn pos
-          $ "Not in scope:"
-          <+> quotes (pPrint name)
-          $$ "Did you mean"
-          <+> pPrint names
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+          $ vsep
+            [ "Not in scope:"
+                <+> squotes (pretty name),
+              "Did you mean"
+                <+> pretty names
+            ]
+    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
 
 -- | Resolving a qualified variable name like Foo.x
 lookupQualifiedVarName :: (MonadReader RnEnv m, MonadIO m) => Range -> ModuleName -> Text -> m (Id ())
@@ -127,10 +131,12 @@ lookupQualifiedVarName pos modName name =
         Just (Qualified _ name) -> pure name
         Nothing ->
           errorOn pos
-            $ "Not in scope:"
-            <+> quotes (pPrint name)
-            <+> "in"
-            <+> pPrint modName
-            $$ "Did you mean"
-            <+> pPrint names
-    _ -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+            $ vsep
+              [ "Not in scope:"
+                  <+> squotes (pretty name)
+                  <+> "in"
+                  <+> pretty modName,
+                "Did you mean"
+                  <+> pretty names
+              ]
+    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)

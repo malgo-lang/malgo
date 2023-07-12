@@ -4,6 +4,7 @@ module Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
 import Data.List.NonEmpty qualified as NonEmpty
+import Data.Text.Lazy qualified as TL
 import Data.Void
 import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Prelude hiding (All)
@@ -13,12 +14,12 @@ import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
-type Parser = Parsec Void Text
+type Parser = Parsec Void TL.Text
 
 -- | パーサー
 --
 -- ファイル1つにつきモジュール1つ
-parseMalgo :: String -> Text -> Either (ParseErrorBundle Text Void) (Module (Malgo 'Parse))
+parseMalgo :: String -> TL.Text -> Either (ParseErrorBundle TL.Text Void) (Module (Malgo 'Parse))
 parseMalgo = parse do
   sc
   mod <- pModule
@@ -166,24 +167,35 @@ pExpr = do
 pBoxed :: Parser (Literal Boxed)
 pBoxed =
   label "boxed literal"
-    $ try (Float <$> lexeme (L.float <* string' "F"))
-    <|> try (Double <$> lexeme L.float)
-    <|> try (Int64 <$> lexeme (L.decimal <* string' "L"))
-    <|> Int32
-    <$> lexeme L.decimal
-    <|> lexeme (Char <$> between (char '\'') (char '\'') L.charLiteral)
-    <|> lexeme (String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"')))
+    $ lexeme
+    $ asum
+      [ try (Float <$> (L.float <* string' "F")),
+        try (Double <$> L.float),
+        try (Int64 <$> (L.decimal <* string' "L")),
+        Int32 <$> L.decimal,
+        Char <$> between (char '\'') (char '\'') L.charLiteral,
+        String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"'))
+      ]
 
 pUnboxed :: Parser (Literal Unboxed)
 pUnboxed =
-  label "unboxed literal"
-    $ try (Double <$> lexeme (L.float <* char '#'))
-    <|> try (Float <$> lexeme (L.float <* string' "F#"))
-    <|> try (Int32 <$> lexeme (L.decimal <* char '#'))
-    <|> Int64
-    <$> lexeme (L.decimal <* string' "L#")
-    <|> lexeme (Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'))
-    <|> lexeme (String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#'))
+  label
+    "unboxed literal"
+    $ lexeme
+    $ asum
+      [ try (Double <$> (L.float <* char '#')),
+        try (Float <$> (L.float <* string' "F#")),
+        try (Int32 <$> (L.decimal <* char '#')),
+        Int64 <$> (L.decimal <* string' "L#"),
+        Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'),
+        String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')
+      ]
+
+-- where
+--   real :: Parser (Literal Unboxed)
+--   real = do
+--     f <- L.float
+--     (char '#' >> pure (Double f)) <|> (string' "F#" >> pure (Float $ double2Float f))
 
 pVariable :: Parser (Expr (Malgo 'Parse))
 pVariable =
@@ -554,12 +566,14 @@ pTyArr = makeExprParser pTyTerm opTable
 
 sc :: Parser ()
 sc = L.space space1 (L.skipLineComment "--") (L.skipBlockCommentNested "{-" "-}")
+{-# INLINE sc #-}
 
 lexeme :: Parser a -> Parser a
 lexeme = L.lexeme sc
 
-symbol :: Text -> Parser Text
-symbol = L.symbol sc
+symbol :: TL.Text -> Parser ()
+symbol = void . L.symbol sc
+{-# INLINE symbol #-}
 
 identLetter :: Parser Char
 identLetter = alphaNumChar <|> oneOf ("_#" :: String)
@@ -567,13 +581,13 @@ identLetter = alphaNumChar <|> oneOf ("_#" :: String)
 opLetter :: Parser Char
 opLetter = oneOf ("+-*/\\%=><:;|&!#." :: String)
 
-pKeyword :: Text -> Parser Text
-pKeyword keyword = lexeme (string keyword <* notFollowedBy identLetter)
+pKeyword :: TL.Text -> Parser ()
+pKeyword keyword = void $ lexeme (string keyword <* notFollowedBy identLetter)
 
-pOperator :: Text -> Parser Text
-pOperator op = lexeme (string op <* notFollowedBy opLetter)
+pOperator :: TL.Text -> Parser ()
+pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
 
-reservedKeywords :: [Text]
+reservedKeywords :: [TL.Text]
 reservedKeywords =
   [ "class",
     "def",
@@ -592,13 +606,13 @@ reservedKeywords =
     "with"
   ]
 
-reserved :: Parser Text
+reserved :: Parser ()
 reserved = choice $ map (try . pKeyword) reservedKeywords -- #| and |# are for block comments in Koriel
 
-reservedOperators :: [Text]
+reservedOperators :: [TL.Text]
 reservedOperators = ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"]
 
-reservedOp :: Parser Text
+reservedOp :: Parser ()
 reservedOp = choice $ map (try . pOperator) reservedOperators
 
 lowerIdent :: Parser Text

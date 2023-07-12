@@ -17,7 +17,6 @@ import Data.ByteString qualified as BS
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Prelude
 import Koriel.Pretty
-import Koriel.Pretty qualified as P
 import Language.LSP.Types (Position (..), filePathToUri)
 import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
@@ -45,23 +44,23 @@ instance Semigroup Range where
   Range s1 e1 <> Range s2 e2 = Range (min s1 s2) (max e1 e2)
 
 instance Pretty Range where
-  pPrint (Range start end) =
-    P.text (sourceName start)
+  pretty (Range start end) =
+    pretty (convertString @_ @Text $ sourceName start)
       <> ":"
-      <> pPrint (unPos (sourceLine start))
+      <> pretty (unPos (sourceLine start))
       <> ":"
-      <> pPrint (unPos (sourceColumn start))
+      <> pretty (unPos (sourceColumn start))
       <> "-"
-      <> pPrint (unPos (sourceLine end))
+      <> pretty (unPos (sourceLine end))
       <> ":"
-      <> pPrint (unPos (sourceColumn end))
+      <> pretty (unPos (sourceColumn end))
 
 makeFieldsNoPrefix ''Range
 
 instance HasRange Range Range where
   range = identity
 
-errorOn :: (MonadIO m) => Range -> Doc -> m a
+errorOn :: (MonadIO m) => Range -> Doc x -> m a
 errorOn range x = liftIO do
   let srcFileName = sourceName range._start
   src <- BS.readFile srcFileName
@@ -80,7 +79,7 @@ rangeToPosition (Range start end) =
       file = sourceName start
     }
 
-warningOn :: (MonadIO m) => Range -> Doc -> m ()
+warningOn :: (MonadIO m) => Range -> Doc x -> m ()
 warningOn range x = liftIO do
   let srcFileName = sourceName range._start
   src <- BS.readFile srcFileName

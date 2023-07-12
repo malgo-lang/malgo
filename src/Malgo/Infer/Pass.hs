@@ -28,13 +28,13 @@ import Malgo.Syntax.Extension
 lookupVar :: (MonadState TcEnv m, MonadIO m) => Range -> RnId -> m (Scheme Type)
 lookupVar pos name =
   use (signatureMap . at name) >>= \case
-    Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+    Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just scheme -> pure scheme
 
 lookupType :: (MonadState TcEnv m, MonadIO m) => Range -> RnId -> m Type
 lookupType pos name =
   preuse (typeDefMap . ix name) >>= \case
-    Nothing -> errorOn pos $ "Not in scope:" <+> quotes (pPrint name)
+    Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
 infer :: (MonadFail m, MonadIO m) => RnEnv -> Module (Malgo 'Rename) -> m (Module (Malgo 'Infer), TcEnv)
@@ -286,13 +286,15 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
           let Forall _ inferredType = fmap (expandAllTypeSynonym abbrEnv) inferredScheme
           case evidenceOfEquiv declaredType inferredType of
             Just evidence
-              | anySame $ Map.elems evidence -> errorOn pos.value $ "Signature too general:" $$ nest 2 ("Declared:" <+> pPrint declaredScheme) $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+              | anySame $ Map.elems evidence -> errorOn pos.value $ vsep ["Signature too general:", nest 2 ("Declared:" <+> pretty declaredScheme), nest 2 ("Inferred:" <+> pretty inferredScheme)]
               | otherwise -> signatureMap . at name ?= declaredScheme
             Nothing ->
               errorOn pos.value
-                $ "Signature mismatch:"
-                $$ nest 2 ("Declared:" <+> pPrint declaredScheme)
-                $$ nest 2 ("Inferred:" <+> pPrint inferredScheme)
+                $ vsep
+                  [ "Signature mismatch:",
+                    nest 2 ("Declared:" <+> pretty declaredScheme),
+                    nest 2 ("Inferred:" <+> pretty inferredScheme)
+                  ]
 
 -- | Which combination of variables should be unification to consider two types as equal?
 -- Use in `tcScDefs`.

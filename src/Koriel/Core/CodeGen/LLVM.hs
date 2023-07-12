@@ -153,7 +153,7 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
     initTopVars [] = pass
     initTopVars ((name, _, expr) : xs) = do
       view (globalValueMap . at name) >>= \case
-        Nothing -> error $ show $ pPrint name <+> "is not found"
+        Nothing -> error $ show $ pretty name <+> "is not found"
         Just name' -> do
           eOpr <- genExpr expr
           store name' 0 eOpr
@@ -256,7 +256,7 @@ findFun x =
     Nothing ->
       case C.typeOf x of
         ps :-> r -> findExt (toName x) (map convType ps) (convType r)
-        _ -> error $ show $ pPrint x <> " is not found"
+        _ -> error $ show $ pretty x <> " is not found"
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
@@ -398,7 +398,7 @@ genExpr (Switch v bs e) =
             SumT _ -> C.Int 8 $ fromIntegral $ Maybe.fromJust $ List.findIndex (\(Con t _) -> tag == t) cs
             RecordT _ -> C.Int 8 0 -- Tag value must be integer, so we use 0 as default value.
             _ -> error "Switch is not supported for this type."
-      label <- withBlock ("switch_branch_" <> render (pPrint tag)) do
+      label <- withBlock ("switch_branch_" <> render (pretty tag)) do
         runContT (genExpr e) k
       pure (tag', label)
 genExpr (SwitchUnboxed v bs e) =
@@ -413,7 +413,7 @@ genExpr (SwitchUnboxed v bs e) =
   where
     genBranch k (u, e) = do
       ConstantOperand u' <- genAtom $ Unboxed u
-      label <- withBlock ("switch-unboxed_branch_" <> render (pPrint u)) do
+      label <- withBlock ("switch-unboxed_branch_" <> render (pretty u)) do
         runContT (genExpr e) k
       pure (u', label)
 genExpr (Destruct v (Con _ ts) xs e) = do
@@ -524,7 +524,7 @@ genLocalDef (LocalDef name _ (Record kvs)) = do
 findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
 findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
-  Nothing -> errorDoc $ pPrint con <+> "is not in" <+> pPrint cs
+  Nothing -> errorDoc $ pretty con <+> "is not in" <+> pretty cs
 
 globalStringPtr :: (MonadModuleBuilder m, MonadReader CodeGenEnv m, MonadState CodeGenState m, MonadIO m) => Text -> m C.Constant
 globalStringPtr str = do

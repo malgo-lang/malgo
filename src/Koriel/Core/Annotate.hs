@@ -8,7 +8,7 @@ import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.Prelude
-import Koriel.Pretty (Pretty (pPrint), errorDoc)
+import Koriel.Pretty (Pretty (pretty), errorDoc)
 
 -- | Type-check the program and annotate with type information.
 annotate :: (MonadIO m, MonadFail m) => ModuleName -> Program Text -> m (Program (Id Type))
@@ -76,7 +76,7 @@ annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
     (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv})
     $ (name,params',ty,)
       <$> annExpr body
-annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pPrint name
+annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pretty name
 
 annExpr :: (MonadReader Context m, MonadIO m, MonadFail m) => Expr Text -> m (Expr (Id Type))
 annExpr (Atom atom) = Atom <$> annAtom atom

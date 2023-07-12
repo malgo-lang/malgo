@@ -6,7 +6,7 @@ import Control.Lens (view, (^.))
 import Data.HashMap.Strict qualified as HashMap
 import Data.Maybe qualified as Maybe
 import Koriel.Id
-import Koriel.Pretty (Pretty (pPrint), render, (<+>))
+import Koriel.Pretty (Pretty (pretty), render, (<+>))
 import Language.LSP.Server
 import Language.LSP.Types
 import Language.LSP.Types.Lens (HasUri (uri))
@@ -77,8 +77,8 @@ toHoverDocument infos =
   mconcat $ map aux infos
   where
     aux Info {..} =
-      markedUpContent "malgo" (convertString $ render $ pPrint name <+> ":" <+> pPrint typeSignature)
-        <> unmarkedUpContent (convertString $ render $ pPrint definitions)
+      markedUpContent "malgo" (convertString $ render $ pretty name <+> ":" <+> pretty typeSignature)
+        <> unmarkedUpContent (convertString $ render $ pretty definitions)
 
 infoToLocation :: Info -> [Location]
 infoToLocation Info {..} =

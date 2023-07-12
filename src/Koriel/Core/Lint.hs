@@ -33,26 +33,28 @@ statement e m = do
   if
     | not normalized -> m
     | isStatement -> m
-    | otherwise -> errorDoc $ pPrint e <+> "must be a statement"
+    | otherwise -> errorDoc $ pretty e <+> "must be a statement"
 
 defined :: (HasCallStack) => (MonadReader LintEnv f) => Id Type -> f ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
       env <- asks (.defs)
-      unless (HashSet.member x env) $ errorDoc $ pPrint x <> " is not defined"
+      unless (HashSet.member x env) $ errorDoc $ pretty x <> " is not defined"
 
-define :: (HasCallStack) => (MonadReader LintEnv f) => Doc -> [Id Type] -> f a -> f a
+define :: (HasCallStack) => (MonadReader LintEnv f) => Doc ann -> [Id Type] -> f a -> f a
 define pos xs m = do
   env <- asks (.defs)
   for_ xs \x ->
     when (HashSet.member x env)
       $ errorDoc
-      $ pPrint x
-      <> " is already defined"
-      $$ "while defining"
-      <+> pos
-      <+> pPrint xs
+      $ vsep
+        [ pretty x
+            <> " is already defined",
+          "while defining"
+            <+> pos
+            <+> pretty xs
+        ]
   local (\e -> e {defs = HashSet.fromList xs <> e.defs}) m
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
@@ -68,11 +70,13 @@ match x y
   | isMatch x y = pass
   | otherwise =
       errorDoc
-        $ "type mismatch:"
-        $$ pPrint x
-        $$ nest 2 (":" <> pPrint (typeOf x))
-        $$ pPrint y
-        $$ nest 2 (":" <> pPrint (typeOf y))
+        $ vsep
+          [ "type mismatch:",
+            pretty x,
+            nest 2 (":" <> pretty (typeOf x)),
+            pretty y,
+            nest 2 (":" <> pretty (typeOf y))
+          ]
 
 lintExpr :: (MonadReader LintEnv m) => Expr (Id Type) -> m ()
 lintExpr (Atom x) = lintAtom x
@@ -81,13 +85,13 @@ lintExpr (Call f xs) = do
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
-    _ -> errorDoc $ pPrint f <+> "is not callable"
+    _ -> errorDoc $ pretty f <+> "is not callable"
 lintExpr (CallDirect f xs) = do
   defined f
   traverse_ lintAtom xs
   case typeOf f of
     ps :-> r -> match f (map typeOf xs :-> r) >> zipWithM_ match ps xs
-    _ -> errorDoc $ pPrint f <+> "is not callable"
+    _ -> errorDoc $ pretty f <+> "is not callable"
 lintExpr (RawCall _ (ps :-> _) xs) = do
   traverse_ lintAtom xs
   zipWithM_ match ps xs
@@ -108,7 +112,7 @@ lintExpr (Match e cs) = do
     || all (\c -> has _OpenRecord c || has _Bind c) cs
     || all (\c -> has _Exact c || has _Bind c) cs
     then pass
-    else errorDoc $ "pattern mismatch:" $$ pPrint cs
+    else errorDoc $ vsep ["pattern mismatch:", pretty cs]
 lintExpr (Switch a cs e) = statement (Switch a cs e) do
   lintAtom a
   traverseOf_ (traversed . _2) lintExpr cs
@@ -124,7 +128,7 @@ lintExpr x@(DestructRecord a xs e) = statement x do
   lintAtom a
   define "destruct-record" (HashMap.elems xs) $ lintExpr e
 lintExpr (Assign x (Atom v) _) = do
-  errorDoc $ "reduntant assignment:" <+> pPrint x <+> pPrint v
+  errorDoc $ "reduntant assignment:" <+> pretty x <+> pretty v
 lintExpr (Assign x v e) = statement (Assign x v e) do
   LintEnv {isIncludeAssign, normalized} <- ask
   if normalized && not isIncludeAssign
@@ -160,6 +164,6 @@ lintProgram Program {..} = do
     for_ topVars \(v, _, e) -> do
       match v (typeOf e)
       lintExpr e
-    for_ topFuns \(f, ps, _, body) -> define (pPrint f) ps do
+    for_ topFuns \(f, ps, _, body) -> define (pretty f) ps do
       match f (map typeOf ps :-> typeOf body)
       lintExpr body

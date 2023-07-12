@@ -51,12 +51,12 @@ data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving anyclass (Hashable, Binary)
 
 instance Pretty PrimT where
-  pPrint Int32T = "Int32#"
-  pPrint Int64T = "Int64#"
-  pPrint FloatT = "Float#"
-  pPrint DoubleT = "Double#"
-  pPrint CharT = "Char#"
-  pPrint StringT = "String#"
+  pretty Int32T = "Int32#"
+  pretty Int64T = "Int64#"
+  pretty FloatT = "Float#"
+  pretty DoubleT = "Double#"
+  pretty CharT = "Char#"
+  pretty StringT = "String#"
 
 --------------------------
 -- Type representations --
@@ -110,21 +110,24 @@ data Type
   deriving anyclass (Hashable, Binary)
 
 instance Pretty Type where
-  pPrintPrec l _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pPrintPrec l 0 c) (map (pPrintPrec l 11) ts)
-  pPrintPrec l _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (pPrintPrec l 0) ts
-  pPrintPrec l _ (TyConApp TyPtr [t]) = "Ptr#" <+> pPrintPrec l 0 t
-  pPrintPrec l d (TyApp t1 t2) =
-    maybeParens (d > 10) $ hsep [pPrintPrec l 10 t1, pPrintPrec l 11 t2]
-  pPrintPrec _ _ (TyVar v) = pPrint v
-  pPrintPrec l _ (TyCon c) = pPrintPrec l 0 c
-  pPrintPrec l _ (TyPrim p) = pPrintPrec l 0 p
-  pPrintPrec l d (TyArr t1 t2) =
-    maybeParens (d > 10) $ pPrintPrec l 11 t1 <+> "->" <+> pPrintPrec l 10 t2
-  pPrintPrec _ _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
-  pPrintPrec l _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pPrintPrec l 0 k <> ":" <+> pPrintPrec l 0 v) $ HashMap.toList kvs
-  pPrintPrec _ _ TyPtr = "Ptr#"
-  pPrintPrec _ _ TYPE = "TYPE"
-  pPrintPrec l _ (TyMeta tv) = pPrintPrec l 0 tv
+  pretty = prettyPrec 0
+    where
+      prettyPrec :: Int -> Type -> Doc ann
+      prettyPrec _ (TyConApp (TyCon c) ts) = foldl' (<+>) (pretty c) (map (prettyPrec 11) ts)
+      prettyPrec _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (prettyPrec 0) ts
+      prettyPrec _ (TyConApp TyPtr [t]) = "Ptr#" <+> prettyPrec 0 t
+      prettyPrec d (TyApp t1 t2) =
+        maybeParens (d > 10) $ hsep [prettyPrec 10 t1, prettyPrec 11 t2]
+      prettyPrec _ (TyVar v) = pretty v
+      prettyPrec _ (TyCon c) = pretty c
+      prettyPrec _ (TyPrim p) = pretty p
+      prettyPrec d (TyArr t1 t2) =
+        maybeParens (d > 10) $ prettyPrec 11 t1 <+> "->" <+> prettyPrec 10 t2
+      prettyPrec _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
+      prettyPrec _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) $ HashMap.toList kvs
+      prettyPrec _ TyPtr = "Ptr#"
+      prettyPrec _ TYPE = "TYPE"
+      prettyPrec _ (TyMeta tv) = pretty tv
 
 pattern TyConApp :: Type -> [Type] -> Type
 pattern TyConApp x xs <-
@@ -160,7 +163,7 @@ newtype MetaVar = MetaVar {metaVar :: Id ()}
   deriving anyclass (Binary)
 
 instance Pretty MetaVar where
-  pPrint (MetaVar v) = "'" <> pPrint v
+  pretty (MetaVar v) = "'" <> pretty v
 
 instance HasType MetaVar where
   typeOf = TyMeta
@@ -217,8 +220,8 @@ data Scheme ty = Forall [TypeVar] ty
   deriving anyclass (Hashable, Binary)
 
 instance (Pretty ty) => Pretty (Scheme ty) where
-  pPrint (Forall [] t) = pPrint t
-  pPrint (Forall vs t) = "forall" <+> hsep (map pPrint vs) <> "." <+> pPrint t
+  pretty (Forall [] t) = pretty t
+  pretty (Forall vs t) = "forall" <+> hsep (map pretty vs) <> "." <+> pretty t
 
 -- | Definition of Type constructor
 -- valueConstructorsのSchemeは、typeParametersで全称化されている
@@ -231,7 +234,7 @@ data TypeDef ty = TypeDef
   deriving anyclass (Binary)
 
 instance (Pretty ty) => Pretty (TypeDef ty) where
-  pPrint (TypeDef c q u) = pPrint (c, q, u)
+  pretty (TypeDef c q u) = pretty (c, q, u)
 
 instance (HasKind ty) => HasKind (TypeDef ty) where
   kindOf ctx TypeDef {_typeConstructor} = kindOf ctx _typeConstructor

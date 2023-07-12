@@ -4,7 +4,6 @@ module Koriel.Core.Flat (normalize, normalizeExpr) where
 import Control.Lens (has, traverseOf, traversed, _2)
 import Control.Monad.Trans.Cont (ContT (..), evalContT, shiftT)
 import Data.Traversable (for)
-import Koriel.Core.Alpha (AlphaEnv (..), alpha)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -26,9 +25,7 @@ normalize Program {..} = do
   topFuns <- for topFuns \(name, params, ty, expr) -> do
     expr' <- runContT (flat expr) pure
     pure (name, params, ty, expr')
-  moduleName <- asks (.moduleName)
-  uniqSupply <- asks (.uniqSupply)
-  expr (alpha ?? AlphaEnv {uniqSupply, moduleName, subst = mempty}) Program {..}
+  pure Program {..}
 
 normalizeExpr ::
   ( MonadReader env m,
@@ -38,7 +35,7 @@ normalizeExpr ::
   ) =>
   Expr (Id Type) ->
   m (Expr (Id Type))
-normalizeExpr e = join $ alpha <$> runContT (flat e) pure <*> (AlphaEnv <$> asks (.uniqSupply) <*> asks (.moduleName) <*> pure mempty)
+normalizeExpr e = runContT (flat e) pure
 
 -- Traverse the expression tree.
 flat ::

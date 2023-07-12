@@ -10,7 +10,7 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as T
 import Koriel.Id (Id (..), IdSort (Temporal), name)
 import Koriel.Lens
-import Koriel.Pretty (Pretty (pPrint))
+import Koriel.Pretty (Pretty (pretty))
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Lsp.Index
@@ -158,7 +158,7 @@ indexExpr (Var Typed {value = range} ident) = do
       addReferences info [range]
     Just info -> addReferences info [range]
 indexExpr (Unboxed Typed {value = range} u) = do
-  let info = Info {name = convertString $ show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
+  let info = Info {name = convertString $ show $ pretty u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 indexExpr (Apply _ e1 e2) = do
   indexExpr e1
@@ -208,7 +208,7 @@ indexPat (TupleP _ ps) =
 indexPat (RecordP _ kps) =
   traverse_ (indexPat . snd) kps
 indexPat (UnboxedP Typed {value = range} u) = do
-  let info = Info {name = convertString $ show $ pPrint u, typeSignature = Forall [] (typeOf u), definitions = [range]}
+  let info = Info {name = convertString $ show $ pretty u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 
 lookupSignature :: MonadState IndexEnv m => XId (Malgo 'Refine) -> m (Scheme Type)

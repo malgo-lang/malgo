@@ -42,7 +42,7 @@ instance HasVariable (LocalDef a) a where
   variable f (LocalDef x1 t x2) = fmap (\x1 -> LocalDef x1 t x2) (f x1)
 
 instance (Pretty a) => Pretty (LocalDef a) where
-  pPrint (LocalDef v t o) = parens $ pPrint v <+> pPrint t $$ pPrint o
+  pretty (LocalDef v t o) = parens $ vsep [pretty v <+> pretty t, pretty o]
 
 instance HasAtom LocalDef where
   atom = object . atom
@@ -64,9 +64,9 @@ instance (HasType a) => HasType (Obj a) where
   typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
 instance (Pretty a) => Pretty (Obj a) where
-  pPrint (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pPrint xs), pPrint e]
-  pPrint (Pack ty c xs) = parens $ sep (["pack", pPrint ty, pPrint c] <> map pPrint xs)
-  pPrint (Record kvs) =
+  pretty (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pretty xs), pretty e]
+  pretty (Pack ty c xs) = parens $ sep (["pack", pretty ty, pretty c] <> map pretty xs)
+  pretty (Record kvs) =
     parens
       $ sep
         [ "record"
@@ -74,8 +74,8 @@ instance (Pretty a) => Pretty (Obj a) where
               ( sep
                   $ map
                     ( \(k, v) ->
-                        pPrint k
-                          <+> pPrint v
+                        pretty k
+                          <+> pretty v
                     )
                     (HashMap.toList kvs)
               )

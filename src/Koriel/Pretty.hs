@@ -3,33 +3,30 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Koriel.Pretty
-  ( module Text.PrettyPrint.HughesPJClass,
-    (<+>),
+  ( module Prettyprinter,
     errorDoc,
+    render,
+    maybeParens
   )
 where
 
 import Koriel.Prelude
 import Text.Megaparsec.Pos qualified as Megaparsec
-import Text.PrettyPrint.HughesPJClass hiding ({- char, -} double, first, float, int, integer, (<+>), (<>))
-import Text.PrettyPrint.HughesPJClass qualified as P
+import Prettyprinter
 import Prelude qualified
+import Prettyprinter.Render.String (renderString)
+import Prettyprinter.Render.Text (renderStrict)
 
--- change operator precedence
-infixl 9 <+>
-
-(<+>) :: Doc -> Doc -> Doc
-(<+>) = (P.<+>)
-
-instance Pretty Doc where
-  pPrint = identity
-
-errorDoc :: (HasCallStack) => Doc -> a
-errorDoc x = Prelude.error $ P.render x
+errorDoc :: (HasCallStack) => Doc x -> a
+errorDoc x = Prelude.error $ renderString $ layoutSmart defaultLayoutOptions x
 
 -- Pretty SourcePos
 instance Pretty Megaparsec.SourcePos where
-  pPrint = text . Megaparsec.sourcePosPretty
+  pretty = pretty . convertString @_ @Text . Megaparsec.sourcePosPretty
 
-instance Pretty Text where
-  pPrint = text . convertString
+render :: Doc ann -> Text
+render = renderStrict . layoutSmart defaultLayoutOptions
+
+maybeParens :: Bool -> Doc ann -> Doc ann
+maybeParens True = parens
+maybeParens False = identity

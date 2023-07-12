@@ -22,6 +22,7 @@ import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
 import System.Directory qualified as Directory
 import System.FilePath (replaceExtension, (</>))
+import UnliftIO (atomicWriteIORef)
 
 data Interface = Interface
   { -- | Used in Infer
@@ -49,14 +50,14 @@ instance Binary Interface
 makeFieldsNoPrefix ''Interface
 
 instance Pretty Interface where
-  pPrint = Koriel.Pretty.text . show
+  pretty = viaShow
 
 buildInterface :: ModuleName -> RnState -> DsState -> Interface
 -- TODO: write abbrMap to interface
 buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
   ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
-      resolvedVarIdentMap . at (tcId.name) ?= tcId
+      resolvedVarIdentMap . at tcId.name ?= tcId
       coreIdentMap . at tcId ?= coreId
   ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
@@ -94,10 +95,10 @@ loadInterface (ModuleName modName) = do
           modulePaths
       case message of
         Just x -> do
-          writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
+          atomicWriteIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
           pure x
         Nothing -> do
-          errorDoc $ "Cannot find module:" <+> quotes (pPrint modName)
+          errorDoc $ "Cannot find module:" <+> squotes (pretty modName)
   where
     readFileIfExists file directory =
       ifM
@@ -105,8 +106,8 @@ loadInterface (ModuleName modName) = do
         (Just <$> liftIO (decodeFile (directory </> file)))
         (pure Nothing)
         `catch` \(_ :: IOException) -> do
-          _ <- warningDoc $ "Cannot read interface file:" <+> quotes (pPrint file)
+          _ <- warningDoc $ "Cannot read interface file:" <+> squotes (pretty file)
           readFileIfExists file directory
 
-warningDoc :: Doc -> IO ()
-warningDoc doc = hPutStrLn stderr $ render $ "Warning:" <+> doc
+warningDoc :: Doc x -> IO ()
+warningDoc doc = hPutTextLn stderr $ render $ "Warning:" <+> doc

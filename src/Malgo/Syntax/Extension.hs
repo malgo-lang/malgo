@@ -93,29 +93,29 @@ data Visibility
   | Implicit
   deriving stock (Show, Eq, Ord)
 
-instance Pretty Visibility where pPrint = Koriel.Pretty.text . show
+instance Pretty Visibility where pretty = pretty . convertString @_ @Text . show
 
 -- | Qualified name
 data Qualified x = Qualified {visibility :: Visibility, value :: x}
   deriving stock (Eq, Ord, Show)
 
 instance Pretty x => Pretty (Qualified x) where
-  pPrint (Qualified Implicit v) = pPrint v
-  pPrint (Qualified (Explicit x) v) = pPrint x <> "." <> pPrint v
+  pretty (Qualified Implicit v) = pretty v
+  pretty (Qualified (Explicit x) v) = pretty x <> "." <> pretty v
 
 -- | Type-annotated field
 data Field x = Field {typeAnn :: Maybe Text, field :: x}
   deriving stock (Eq, Ord, Show)
 
 instance Pretty x => Pretty (Field x) where
-  pPrint (Field Nothing v) = pPrint v
-  pPrint (Field (Just x) v) = pPrint x <> "." <> pPrint v
+  pretty (Field Nothing v) = pretty v
+  pretty (Field (Just x) v) = pretty x <> "." <> pretty v
 
 data Typed x = Typed {annotated :: Type, value :: x}
   deriving stock (Eq, Ord, Show)
 
 instance Pretty x => Pretty (Typed x) where
-  pPrint (Typed t v) = pPrint v <+> ":" <+> pPrint t
+  pretty (Typed t v) = pretty v <+> ":" <+> pretty t
 
 instance HasType (Typed x) where
   typeOf (Typed t _) = t
@@ -138,9 +138,9 @@ data Assoc = LeftA | RightA | NeutralA
 instance Binary Assoc
 
 instance Pretty Assoc where
-  pPrint LeftA = "l"
-  pPrint RightA = "r"
-  pPrint NeutralA = ""
+  pretty LeftA = "l"
+  pretty RightA = "r"
+  pretty NeutralA = ""
 
 type family XId x where
   XId (Malgo p) = MalgoId p

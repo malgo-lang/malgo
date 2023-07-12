@@ -5,13 +5,12 @@ module Malgo.Build (run) where
 import Control.Concurrent (getNumCapabilities)
 import Control.Lens (Field2 (_2), view)
 import Data.Aeson (FromJSON, decodeFileStrict)
-import Data.ByteString qualified as BS
+import Data.ByteString.Lazy qualified as BL
 import Data.List ((\\))
 import Data.List qualified as List
 import Data.List.Extra (chunksOf)
 import Data.Maybe qualified as Maybe
 import Koriel.Id (ModuleName (..))
-import Koriel.MonadUniq (UniqSupply (UniqSupply))
 import Malgo.Driver qualified as Driver
 import Malgo.Monad (getWorkspaceDir, newMalgoEnv)
 import Malgo.Parser (parseMalgo)
@@ -59,13 +58,12 @@ run = do
   excludePatterns <- getExcludePatterns
   excludeFiles <- concat <$> traverse glob excludePatterns
   sourceFiles' <- traverse makeAbsolute $ sourceFiles \\ excludeFiles
-  sourceContents <- map convertString <$> traverse BS.readFile sourceFiles'
+  sourceContents <- map convertString <$> traverse BL.readFile sourceFiles'
   let parsedAstList = mconcat $ zipWith parse sourceFiles' sourceContents
   let moduleDepends = map takeImports parsedAstList
   n <- getNumCapabilities
   let splited = split n $ map (\(_, i, o) -> (i, o)) moduleDepends
 
-  _uniqSupply <- UniqSupply <$> newIORef 0
   _interfaces <- newIORef mempty
   _indexes <- newIORef mempty
   traverse_
@@ -73,7 +71,7 @@ run = do
         ( \(path, moduleName, _) -> do
             let ast = Maybe.fromJust $ List.lookup path parsedAstList
             putStrLn ("Compile " <> path)
-            env <- newMalgoEnv path [] (Just _uniqSupply) moduleName (Just _interfaces) (Just _indexes)
+            env <- newMalgoEnv path [] moduleName (Just _interfaces) (Just _indexes)
             Driver.compileFromAST path env ast
         )
         . mapMaybe (\mod -> List.find (view _2 >>> (== mod)) moduleDepends)
@@ -87,8 +85,8 @@ run = do
       let ParsedDefinitions ds = moduleDefinition
        in ( sourceFile,
             moduleName,
-            ordNub $
-              mapMaybe
+            ordNub
+              $ mapMaybe
                 ( \case
                     Import _ imported _ -> Just imported
                     _ -> Nothing

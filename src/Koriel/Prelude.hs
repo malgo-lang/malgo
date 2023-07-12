@@ -73,6 +73,7 @@ module Koriel.Prelude
     -- ** Text
     hPutText,
     hPutTextLn,
+    putText,
 
     -- ** IORef
     newIORef,
@@ -137,10 +138,9 @@ import Error.Diagnose.Compat.Megaparsec (HasHints (hints))
 import GHC.Exts (sortWith)
 import GHC.Generics (Generic)
 import GHC.Stack (HasCallStack)
+import Prettyprinter
 import System.IO (Handle, stderr, stdin, stdout)
 import System.IO qualified
-import Text.PrettyPrint.HughesPJClass (Pretty (pPrint))
-import Text.PrettyPrint.HughesPJClass qualified as P
 import Prelude hiding (id, unzip)
 
 identity :: a -> a
@@ -189,7 +189,7 @@ asumMap = coerce (foldMap :: (a -> Alt m b) -> f a -> Alt m b)
 newtype PrettyShow a = PrettyShow a
 
 instance (Show a) => Pretty (PrettyShow a) where
-  pPrint (PrettyShow a) = P.text $ show a
+  pretty (PrettyShow a) = pretty $ convertString @_ @Text $ show a
 
 -- Lift IO funcitons
 
@@ -212,6 +212,9 @@ hPutText handle x = liftIO $ T.hPutStr handle x
 -- | Lifted version of 'T.hPutStrLn'.
 hPutTextLn :: (MonadIO m) => Handle -> Text -> m ()
 hPutTextLn handle x = liftIO $ T.hPutStrLn handle x
+
+putText :: (MonadIO m) => Text -> m ()
+putText = hPutText stdout
 
 instance HasHints Void Text where
   hints = const []
