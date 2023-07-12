@@ -117,7 +117,6 @@ alphaObj (Fun ps e) = do
   -- Avoid capturing variables
   ps' <- traverse cloneId ps
   local (HashMap.fromList (zip ps $ map Var ps') <>) $ Fun ps' <$> alphaExpr e
--- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Fun ps <$> alphaExpr e
 alphaObj o = traverseOf atom alphaAtom o
 
 alphaCase ::
@@ -135,19 +134,16 @@ alphaCase (Unpack c ps e) = do
   -- Avoid capturing variables
   ps' <- traverse cloneId ps
   local (HashMap.fromList (zip ps $ map Var ps') <>) $ Unpack c ps' <$> alphaExpr e
--- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ Unpack c ps <$> alphaExpr e
 alphaCase (OpenRecord kps e) = do
   -- Avoid capturing variables
   let ps = HashMap.elems kps
   kps' <- traverse cloneId kps
   let ps' = HashMap.elems kps'
   local (HashMap.fromList (zip ps $ map Var ps') <>) $ OpenRecord kps' <$> alphaExpr e
--- local (\e -> e {subst = HashMap.filterWithKey (\k _ -> k `notElem` ps) e.subst}) $ OpenRecord kps <$> alphaExpr e
 alphaCase (Bind x t e) = do
   -- Avoid capturing variables
   x' <- cloneId x
   local (HashMap.insert x (Var x')) $ Bind x' t <$> alphaExpr e
--- local (\e -> e {subst = HashMap.delete x e.subst}) $ Bind x <$> alphaExpr e
 alphaCase (Exact u e) = Exact u <$> alphaExpr e
 
 equiv :: (MonadIO m) => Expr (Id Type) -> Expr (Id Type) -> m (Maybe Subst)
