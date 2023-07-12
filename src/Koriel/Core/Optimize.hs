@@ -209,10 +209,8 @@ lookupCallInline call f as = do
       -- v[as/ps]
       -- Test failed in Lint : pure $ foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
       -- use Alpha.alpha
-      moduleName <- asks (.moduleName)
-      uniqSupply <- asks (.uniqSupply)
       let subst = HashMap.fromList $ zip ps as
-      alpha v (AlphaEnv {uniqSupply, moduleName, subst})
+      alpha v subst
     Nothing -> pure $ call f as
 
 -- | Remove a cast if it is redundant.
@@ -232,9 +230,7 @@ foldRedundantCast =
 foldTrivialCall :: (MonadIO f, MonadReader r f, HasField "moduleName" r ModuleName, HasField "uniqSupply" r UniqSupply) => Expr (Id Type) -> f (Expr (Id Type))
 foldTrivialCall = transformM \case
   Let [LocalDef f _ (Fun ps body)] (Call (Var f') as) | f == f' -> do
-    moduleName <- asks (.moduleName)
-    uniqSupply <- asks (.uniqSupply)
-    alpha body AlphaEnv {uniqSupply, moduleName, subst = HashMap.fromList $ zip ps as}
+    alpha body (HashMap.fromList $ zip ps as)
   x -> pure x
 
 -- | Remove `destruct` if it does not bind any variables.
