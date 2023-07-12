@@ -2,13 +2,16 @@
 module Koriel.Core.Alpha
   ( alpha,
     equiv,
+    Subst,
   )
 where
 
 import Control.Exception (assert)
 import Control.Lens (traverseOf)
 import Data.HashMap.Strict qualified as HashMap
-import GHC.Records (HasField)
+import Effectful (Eff, runPureEff, (:>))
+import Effectful.Reader.Static (Reader, ask, local, runReader)
+import Effectful.State.Static.Shared (State)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -19,60 +22,37 @@ type Subst = HashMap (Id Type) (Atom (Id Type))
 
 -- | Alpha conversion
 alpha ::
-  ( MonadIO m,
-    HasField "moduleName" r ModuleName,
-    HasField "uniqSupply" r UniqSupply,
-    MonadReader r m
-  ) =>
-  Expr (Id Type) ->
+  (Reader ModuleName :> es, State Uniq :> es) =>
   Subst ->
-  m (Expr (Id Type))
-alpha x = runAlpha $ alphaExpr x
+  Expr (Id Type) ->
+  Eff es (Expr (Id Type))
+alpha s x = runAlpha s $ alphaExpr x
 
-runAlpha :: ReaderT Subst m a -> Subst -> m a
-runAlpha = runReaderT
+runAlpha :: Subst -> Eff (Reader Subst : es) a -> Eff es a
+runAlpha = runReader
 
-lookupVar :: (MonadReader Subst m) => Id Type -> m (Atom (Id Type))
+lookupVar :: (Reader Subst :> es) => Id Type -> Eff es (Atom (Id Type))
 lookupVar n = HashMap.lookupDefault (Var n) n <$> ask
 
-lookupId :: (MonadReader Subst m) => Id Type -> m (Id Type)
+lookupId :: (Reader Subst :> es) => Id Type -> Eff es (Id Type)
 lookupId n = do
   n' <- lookupVar n
   case n' of
     Var i -> pure i
     _ -> error $ show n <> " must be bound to Var"
 
-type AlphaM r t m =
-  ( MonadIO m,
-    MonadIO (t m),
-    MonadTrans t,
-    HasField "moduleName" r ModuleName,
-    HasField "uniqSupply" r UniqSupply,
-    MonadReader r m,
-    MonadReader (HashMap (Id Type) (Atom (Id Type))) (t m)
-  )
-
-cloneId ::
-  ( MonadIO m,
-    MonadTrans t,
-    MonadReader r m,
-    HasField "moduleName" r ModuleName,
-    HasField "uniqSupply" r UniqSupply
-  ) =>
-  Id a ->
-  t m (Id a)
-cloneId Id {..} = lift $ do
+cloneId :: (Reader ModuleName :> es, State Uniq :> es) => Id a -> Eff es (Id a)
+cloneId Id {..} = do
   assert (sort == Internal || sort == Temporal) pass -- only Internal or Temporal id can be cloned
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   uniq <- getUniq
   pure Id {..}
 {-# INLINE cloneId #-}
 
--- alphaExpr :: (MonadReader Subst f, MonadIO f) => Expr (Id Type) -> f (Expr (Id Type))
 alphaExpr ::
-  (AlphaM r t m) =>
+  (Reader Subst :> es, Reader ModuleName :> es, State Uniq :> es) =>
   Expr (Id Type) ->
-  t m (Expr (Id Type))
+  Eff es (Expr (Id Type))
 alphaExpr (Atom x) = Atom <$> alphaAtom x
 alphaExpr (Call f xs) = Call <$> alphaAtom f <*> traverse alphaAtom xs
 alphaExpr (CallDirect f xs) = CallDirect <$> lookupId f <*> traverse alphaAtom xs
@@ -100,19 +80,22 @@ alphaExpr (Assign x v e) = do
   local (HashMap.insert x (Var x')) $ Assign x' v' <$> alphaExpr e
 alphaExpr (Error t) = pure $ Error t
 
-alphaAtom :: (MonadReader Subst f) => Atom (Id Type) -> f (Atom (Id Type))
+alphaAtom :: (Reader Subst :> es) => Atom (Id Type) -> Eff es (Atom (Id Type))
 alphaAtom (Var x) = lookupVar x
 alphaAtom a@Unboxed {} = pure a
 
-alphaLocalDef :: (AlphaM r t m) => LocalDef (Id Type) -> t m (LocalDef (Id Type))
+alphaLocalDef ::
+  (Reader Subst :> es, Reader ModuleName :> es, State Uniq :> es) =>
+  LocalDef (Id Type) ->
+  Eff es (LocalDef (Id Type))
 alphaLocalDef (LocalDef x t o) =
   -- Since `alphaExpr Let{}` avoids capturing variables, only `lookupId` should be applied here.
   LocalDef <$> lookupId x <*> pure t <*> alphaObj o
 
 alphaObj ::
-  (AlphaM r t m) =>
+  (Reader Subst :> es, Reader ModuleName :> es, State Uniq :> es) =>
   Obj (Id Type) ->
-  t m (Obj (Id Type))
+  Eff es (Obj (Id Type))
 alphaObj (Fun ps e) = do
   -- Avoid capturing variables
   ps' <- traverse cloneId ps
@@ -120,16 +103,9 @@ alphaObj (Fun ps e) = do
 alphaObj o = traverseOf atom alphaAtom o
 
 alphaCase ::
-  ( MonadTrans t,
-    MonadIO m,
-    MonadIO (t m),
-    HasField "moduleName" r ModuleName,
-    HasField "uniqSupply" r UniqSupply,
-    MonadReader r m,
-    MonadReader (HashMap (Id Type) (Atom (Id Type))) (t m)
-  ) =>
+  (Reader Subst :> es, Reader ModuleName :> es, State Uniq :> es) =>
   Case (Id Type) ->
-  t m (Case (Id Type))
+  Eff es (Case (Id Type))
 alphaCase (Unpack c ps e) = do
   -- Avoid capturing variables
   ps' <- traverse cloneId ps
@@ -146,12 +122,12 @@ alphaCase (Bind x t e) = do
   local (HashMap.insert x (Var x')) $ Bind x' t <$> alphaExpr e
 alphaCase (Exact u e) = Exact u <$> alphaExpr e
 
-equiv :: (MonadIO m) => Expr (Id Type) -> Expr (Id Type) -> m (Maybe Subst)
-equiv e1 e2 = runReaderT ?? mempty $ do
-  isEquiv <- equivExpr e1 e2
-  if isEquiv then Just <$> ask else pure Nothing
+equiv :: Expr (Id Type) -> Expr (Id Type) -> Maybe Subst
+equiv e1 e2 = runPureEff $ runReader ?? mempty $ do
+  isEquiv <- equivExpr @'[Reader Subst] e1 e2
+  if isEquiv then Just <$> ask @Subst else pure Nothing
 
-equivExpr :: (MonadReader Subst m) => Expr (Id Type) -> Expr (Id Type) -> m Bool
+equivExpr :: (Reader Subst :> es) => Expr (Id Type) -> Expr (Id Type) -> Eff es Bool
 equivExpr (Atom x) (Atom y) = equivAtom x y
 equivExpr (Call f xs) (Call g ys) =
   (&&) <$> equivAtom f g <*> andM (zipWith equivAtom xs ys)
@@ -203,7 +179,7 @@ equivExpr (Assign x e b) (Assign y e' b') =
 equivExpr (Error t) (Error u) = pure $ t == u
 equivExpr _ _ = pure False
 
-equivCase :: (MonadReader Subst m) => Case (Id Type) -> Case (Id Type) -> m Bool
+equivCase :: (Reader Subst :> es) => Case (Id Type) -> Case (Id Type) -> Eff es Bool
 equivCase (Unpack c ps e) (Unpack c' ps' e') | c == c' = do
   local (HashMap.fromList (zip ps $ map Var ps') <>) $ equivExpr e e'
 equivCase (OpenRecord kps e) (OpenRecord kps' e') = do
@@ -217,7 +193,11 @@ equivCase (Bind x t e) (Bind y u f) | t == u = do
   local (HashMap.insert x (Var y)) $ equivExpr e f
 equivCase _ _ = pure False
 
-equivLocalDef :: (MonadReader Subst m) => LocalDef (Id Type) -> LocalDef (Id Type) -> m Subst
+equivLocalDef ::
+  (Reader Subst :> es) =>
+  LocalDef (Id Type) ->
+  LocalDef (Id Type) ->
+  Eff es (HashMap (Id Type) (Atom (Id Type)))
 equivLocalDef (LocalDef x t o) (LocalDef y u p) =
   local (HashMap.insert x (Var y))
     $ ifM
@@ -225,7 +205,7 @@ equivLocalDef (LocalDef x t o) (LocalDef y u p) =
       (pure $ HashMap.singleton x (Var y))
       (pure mempty)
 
-equivObj :: (MonadReader Subst m) => Obj (Id Type) -> Obj (Id Type) -> m Bool
+equivObj :: (Reader Subst :> es) => Obj (Id Type) -> Obj (Id Type) -> Eff es Bool
 equivObj (Fun ps e) (Fun ps' e') = do
   local (HashMap.fromList (zip ps $ map Var ps') <>) $ equivExpr e e'
 equivObj (Pack t c xs) (Pack u d ys) =
@@ -234,7 +214,7 @@ equivObj (Record kvs) (Record kvs') =
   andM $ HashMap.intersectionWith equivAtom kvs kvs'
 equivObj _ _ = pure False
 
-equivAtom :: (MonadReader Subst m) => Atom (Id Type) -> Atom (Id Type) -> m Bool
+equivAtom :: (Reader Subst :> es) => Atom (Id Type) -> Atom (Id Type) -> Eff es Bool
 equivAtom (Var x) (Var y) = do
   subst <- ask
   pure

@@ -24,6 +24,10 @@ import Data.Binary (Binary)
 import Data.Graph
 import Data.HashSet qualified as HashSet
 import Data.String.Conversions
+import Effectful (Eff, (:>))
+import Effectful.Reader.Static (Reader)
+import Effectful.State.Static.Shared (State)
+import Effectful.Writer.Static.Local (Writer, runWriter, tell)
 import Generic.Data
 import Koriel.Core.Syntax.Atom
 import Koriel.Core.Syntax.Case
@@ -66,33 +70,30 @@ instance HasExpr Program where
       <*> traverseOf (traversed . _4) f topFuns
       <*> pure extFuns
 
-newtype DefBuilderT m a = DefBuilderT {unDefBuilderT :: WriterT (Endo (Expr (Id Type))) m a}
-  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadIO, MonadState s, MonadReader r)
+runDef :: Eff (Writer (Endo (Expr (Id Type))) : es) (Expr (Id Type)) -> Eff es (Expr (Id Type))
+runDef m = uncurry (flip appEndo) <$> runWriter m
 
-runDef :: (Functor f) => DefBuilderT f (Expr (Id Type)) -> f (Expr (Id Type))
-runDef m = uncurry (flip appEndo) <$> runWriterT m.unDefBuilderT
-
-let_ :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Obj (Id Type) -> DefBuilderT m (Atom (Id Type))
+let_ :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Id Type))) :> es) => Type -> Obj (Id Type) -> Eff es (Atom (Id Type))
 let_ otype obj = do
   x <- newTemporalId "let" otype
-  DefBuilderT $ tell $ Endo $ \e -> Let [LocalDef x otype obj] e
+  tell $ Endo $ \e -> Let [LocalDef x otype obj] e
   pure (Var x)
 
-bind :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Expr (Id Type) -> DefBuilderT m (Atom (Id Type))
+bind :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Id Type))) :> es) => Expr (Id Type) -> Eff es (Atom (Id Type))
 bind (Atom a) = pure a
 bind v = do
   x <- newTemporalId "d" (typeOf v)
-  DefBuilderT $ tell $ Endo $ \e ->
+  tell $ Endo $ \e ->
     Assign x v e
   pure (Var x)
 
-cast :: (MonadIO m, MonadReader env m, HasUniqSupply env, HasModuleName env) => Type -> Expr (Id Type) -> DefBuilderT m (Atom (Id Type))
+cast :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Id Type))) :> es) => Type -> Expr (Id Type) -> Eff es (Atom (Id Type))
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
       v <- bind e
       x <- newTemporalId "cast" ty
-      DefBuilderT $ tell $ Endo $ \e -> Assign x (Cast ty v) e
+      tell $ Endo $ \e -> Assign x (Cast ty v) e
       pure (Var x)
 
 -- `destruct` is convenient when treating types that have only one constructor.

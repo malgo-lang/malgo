@@ -1,13 +1,18 @@
 -- | Name resolution and simple desugar transformation
 module Malgo.Rename.Pass (rename) where
 
-import Control.Lens (use, view, (<>=), (^.), _2)
+import Control.Lens (view, (^.), _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List (intersect)
 import Data.List.Extra (anySame, disjoint)
+import Effectful (Eff, IOE, (:>))
+import Effectful.Reader.Static (Reader, ask, local, runReader)
+import Effectful.State.Static.Local (State, execState, get, gets, modify, put, runState)
+import Effectful.State.Static.Shared qualified as S
 import Koriel.Id
 import Koriel.Lens
+import Koriel.MonadUniq (Uniq)
 import Koriel.Pretty
 import Malgo.Interface
 import Malgo.Prelude hiding (All)
@@ -17,23 +22,25 @@ import Malgo.Syntax
 import Malgo.Syntax.Extension
 
 -- | Entry point of this 'Malgo.Rename.Pass'
-rename ::
-  (MonadIO m) =>
-  -- | The initial environment that includes Builtin function definitions.
-  RnEnv ->
-  Module (Malgo 'Parse) ->
-  m (Module (Malgo 'Rename), RnState)
+rename :: (Reader ModuleName :> es, Reader ModulePathList :> es, S.State (HashMap ModuleName Interface) :> es, S.State Uniq :> es, IOE :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
-  (ds', rnState) <- runStateT ?? RnState mempty HashSet.empty $ runReaderT ?? builtinEnv $ rnDecls ds
+  (ds', rnState) <- runState (RnState mempty HashSet.empty) $ runReader builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
 -- renamer
 
 -- | Rename toplevel declarations
 rnDecls ::
-  (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
-  [Decl (Malgo 'Parse)] ->
-  m [Decl (Malgo 'Rename)]
+  ( Reader ModuleName :> es,
+    Reader ModulePathList :> es,
+    Reader RnEnv :> es,
+    State RnState :> es,
+    S.State (HashMap ModuleName Interface) :> es,
+    S.State Uniq :> es,
+    IOE :> es
+  ) =>
+  [Decl (Malgo Parse)] ->
+  Eff es [Decl (Malgo Rename)]
 rnDecls ds = do
   -- RnEnvの生成
   rnEnv <- genToplevelEnv ds =<< ask
@@ -47,9 +54,16 @@ rnDecls ds = do
 -- It is assumed that the top-level identifier defined in Decl has already been correctly registered in RnEnv.
 -- The infix declaration is assumed to have already been interpreted and registered in RnState.
 rnDecl ::
-  (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
-  Decl (Malgo 'Parse) ->
-  m (Decl (Malgo 'Rename))
+  ( State RnState :> es,
+    S.State (HashMap ModuleName Interface) :> es,
+    S.State Uniq :> es,
+    Reader RnEnv :> es,
+    Reader ModuleName :> es,
+    Reader ModulePathList :> es,
+    IOE :> es
+  ) =>
+  Decl (Malgo Parse) ->
+  Eff es (Decl (Malgo Rename))
 rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExpr expr
 rnDecl (ScSig pos name typ) = do
   let tyVars = HashSet.toList $ getTyVars typ
@@ -82,16 +96,24 @@ rnDecl (Foreign pos name typ) = do
     <*> rnType typ
 rnDecl (Import pos modName importList) = do
   interface <- loadInterface modName
-  infixInfo <>= interface.infixMap
-  dependencies <>= HashSet.insert modName interface.dependencies
+  modify \s@RnState {..} ->
+    s
+      { _infixInfo = s._infixInfo <> interface.infixMap,
+        _dependencies = HashSet.insert modName _dependencies <> interface.dependencies
+      }
   pure $ Import pos modName importList
 
 -- | Rename a expression.
 -- In addition to name resolution, OpApp recombination based on infix declarations is also performed.
 rnExpr ::
-  (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
-  Expr (Malgo 'Parse) ->
-  m (Expr (Malgo 'Rename))
+  ( State RnState :> es,
+    S.State Uniq :> es,
+    Reader RnEnv :> es,
+    Reader ModuleName :> es,
+    IOE :> es
+  ) =>
+  Expr (Malgo Parse) ->
+  Eff es (Expr (Malgo Rename))
 rnExpr (Var ((Qualified Implicit pos)) name) = Var pos <$> lookupVarName pos name
 rnExpr (Var ((Qualified (Explicit modName) pos)) name) = Var pos <$> lookupQualifiedVarName pos modName name
 rnExpr (Unboxed pos val) = pure $ Unboxed pos val
@@ -103,7 +125,7 @@ rnExpr (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
   e1' <- rnExpr e1
   e2' <- rnExpr e2
-  mfixity <- HashMap.lookup op' <$> use infixInfo
+  mfixity <- HashMap.lookup op' <$> gets @RnState (._infixInfo)
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
@@ -129,7 +151,7 @@ rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExpr (Parens _ e) = rnExpr e
 
 -- | Renamed identifier corresponding Boxed literals.
-lookupBox :: (MonadReader RnEnv f, MonadIO f) => Range -> Literal x -> f (XId (Malgo 'Rename))
+lookupBox :: (Reader RnEnv :> es, IOE :> es) => Range -> Literal x -> Eff es (Id ())
 lookupBox pos Int32 {} = lookupVarName pos "Int32#"
 lookupBox pos Int64 {} = lookupVarName pos "Int64#"
 lookupBox pos Float {} = lookupVarName pos "Float#"
@@ -138,7 +160,7 @@ lookupBox pos Char {} = lookupVarName pos "Char#"
 lookupBox pos String {} = lookupVarName pos "String#"
 
 -- | Rename a type.
-rnType :: (MonadReader RnEnv m, MonadIO m) => Type (Malgo 'Parse) -> m (Type (Malgo 'Rename))
+rnType :: (Reader RnEnv :> es, IOE :> es) => Type (Malgo Parse) -> Eff es (Type (Malgo Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
 rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
 rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
@@ -149,9 +171,14 @@ rnType (TyBlock pos t) = TyArr pos (TyTuple pos []) <$> rnType t
 
 -- | Rename a clause.
 rnClause ::
-  (MonadReader RnEnv m, MonadState RnState m, MonadIO m) =>
-  Clause (Malgo 'Parse) ->
-  m (Clause (Malgo 'Rename))
+  ( State RnState :> es,
+    S.State Uniq :> es,
+    Reader RnEnv :> es,
+    Reader ModuleName :> es,
+    IOE :> es
+  ) =>
+  Clause (Malgo Parse) ->
+  Eff es (Clause (Malgo Rename))
 rnClause (Clause pos ps e) = do
   let vars = concatMap patVars ps
   -- varsに重複がないことを確認
@@ -168,7 +195,7 @@ rnClause (Clause pos ps e) = do
     patVars BoxedP {} = []
 
 -- | Rename a pattern.
-rnPat :: (MonadReader RnEnv m, MonadIO m) => Pat (Malgo 'Parse) -> m (Pat (Malgo 'Rename))
+rnPat :: (Reader RnEnv :> es, IOE :> es) => Pat (Malgo Parse) -> Eff es (Pat (Malgo Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
@@ -183,7 +210,15 @@ rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 rnPat (BoxedP pos x) = ConP pos <$> lookupBox pos x <*> pure [UnboxedP pos (coerce x)]
 
 -- | Rename statements in {}.
-rnStmts :: (MonadReader RnEnv m, MonadState RnState m, MonadIO m) => NonEmpty (Stmt (Malgo 'Parse)) -> m (NonEmpty (Stmt (Malgo 'Rename)))
+rnStmts ::
+  ( State RnState :> es,
+    S.State Uniq :> es,
+    Reader RnEnv :> es,
+    Reader ModuleName :> es,
+    IOE :> es
+  ) =>
+  NonEmpty (Stmt (Malgo Parse)) ->
+  Eff es (NonEmpty (Stmt (Malgo Rename)))
 rnStmts (NoBind x e :| []) = do
   e' <- rnExpr e
   pure $ NoBind x e' :| []
@@ -212,7 +247,7 @@ rnStmts (With x Nothing e :| s : ss) = do
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
 -- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
-infixDecls :: (MonadReader RnEnv m, MonadIO m) => [Decl (Malgo 'Parse)] -> m (HashMap RnId (Assoc, Int))
+infixDecls :: (Reader RnEnv :> es, IOE :> es) => [Decl (Malgo 'Parse)] -> Eff es (HashMap RnId (Assoc, Int))
 infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
@@ -271,19 +306,19 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (MonadReader RnEnv f, MonadIO f) => [Decl (Malgo 'Parse)] -> RnEnv -> f RnEnv
-genToplevelEnv ds =
-  execStateT (traverse aux ds)
+genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, S.State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
+genToplevelEnv (ds :: [Decl (Malgo 'Parse)]) env = do
+  execState env (traverse aux ds)
   where
     aux (ScDef pos x _) = do
-      env <- use resolvedVarIdentMap
+      env <- gets @RnEnv (._resolvedVarIdentMap)
       when (x `elem` HashMap.keys env) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
-      env <- get
+      env <- get @RnEnv
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       unless (disjoint (map (view _2) cs) (HashMap.keys (env ^. resolvedVarIdentMap))) do
@@ -296,13 +331,13 @@ genToplevelEnv ds =
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (TypeSynonym pos x _ _) = do
-      env <- get
+      env <- get @RnEnv
       when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (Foreign pos x _) = do
-      env <- get
+      env <- get @RnEnv
       when (x `elem` HashMap.keys (env ^. resolvedVarIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x

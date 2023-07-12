@@ -3,6 +3,8 @@ module Koriel.Core.Lint (lint) where
 import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
+import Effectful (Eff, (:>))
+import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -11,7 +13,7 @@ import Koriel.Pretty
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
-lint :: (Monad m) => Bool -> Program (Id Type) -> m ()
+lint :: Bool -> Program (Id Type) -> Eff es ()
 lint normalized = runLint normalized . lintProgram
 
 data LintEnv = LintEnv
@@ -21,13 +23,13 @@ data LintEnv = LintEnv
     isStatement :: Bool
   }
 
-runLint :: Bool -> ReaderT LintEnv m a -> m a
-runLint normalized m = runReaderT m (LintEnv mempty normalized True True)
+runLint :: Bool -> Eff (Reader LintEnv : es) a -> Eff es a
+runLint normalized = runReader (LintEnv mempty normalized True True)
 
-asStatement :: (MonadReader LintEnv m) => m a -> m a
+asStatement :: (Reader LintEnv :> es) => Eff es a -> Eff es a
 asStatement = local (\e -> e {isStatement = True})
 
-statement :: (MonadReader LintEnv m) => Expr (Id Type) -> m a -> m a
+statement :: (Reader LintEnv :> es, Pretty a) => a -> Eff es b -> Eff es b
 statement e m = do
   LintEnv {isStatement, normalized} <- ask
   if
@@ -35,16 +37,16 @@ statement e m = do
     | isStatement -> m
     | otherwise -> errorDoc $ pretty e <+> "must be a statement"
 
-defined :: (HasCallStack) => (MonadReader LintEnv f) => Id Type -> f ()
+defined :: (Reader LintEnv :> es) => Id Type -> Eff es ()
 defined x
   | idIsExternal x = pass
   | otherwise = do
-      env <- asks (.defs)
+      env <- asks @LintEnv (.defs)
       unless (HashSet.member x env) $ errorDoc $ pretty x <> " is not defined"
 
-define :: (HasCallStack) => (MonadReader LintEnv f) => Doc ann -> [Id Type] -> f a -> f a
+define :: (Reader LintEnv :> es) => Doc x -> [Id Type] -> Eff es a -> Eff es a
 define pos xs m = do
-  env <- asks (.defs)
+  env <- asks @LintEnv (.defs)
   for_ xs \x ->
     when (HashSet.member x env)
       $ errorDoc
@@ -78,7 +80,7 @@ match x y
             nest 2 (":" <> pretty (typeOf y))
           ]
 
-lintExpr :: (MonadReader LintEnv m) => Expr (Id Type) -> m ()
+lintExpr :: (Reader LintEnv :> es) => Expr (Id Type) -> Eff es ()
 lintExpr (Atom x) = lintAtom x
 lintExpr (Call f xs) = do
   lintAtom f
@@ -138,12 +140,12 @@ lintExpr (Assign x v e) = statement (Assign x v e) do
       define "assign" [x] (lintExpr e)
 lintExpr Error {} = pass
 
-lintObj :: (HasCallStack) => (MonadReader LintEnv m) => Obj (Id Type) -> m ()
+lintObj :: (Reader LintEnv :> es) => Obj (Id Type) -> Eff es ()
 lintObj (Fun params body) = define "fun" params $ asStatement $ lintExpr body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: (HasCallStack) => (MonadReader LintEnv m) => Expr (Id Type) -> Case (Id Type) -> m ()
+lintCase :: (Reader LintEnv :> es, HasType a, Pretty a) => a -> Case (Id Type) -> Eff es ()
 lintCase _ (Unpack _ vs e) = define "unpack" vs $ lintExpr e
 lintCase _ (OpenRecord kvs e) = define "open-record" (HashMap.elems kvs) $ lintExpr e
 lintCase _ (Exact _ e) = lintExpr e
@@ -152,11 +154,11 @@ lintCase scrutinee (Bind x t e) = define "bind" [x] do
   match scrutinee x
   lintExpr e
 
-lintAtom :: (HasCallStack) => (MonadReader LintEnv m) => Atom (Id Type) -> m ()
+lintAtom :: (Reader LintEnv :> es) => Atom (Id Type) -> Eff es ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
-lintProgram :: (HasCallStack) => (MonadReader LintEnv m) => Program (Id Type) -> m ()
+lintProgram :: (Reader LintEnv :> es) => Program (Id Type) -> Eff es ()
 lintProgram Program {..} = do
   let vs = map (view _1) topVars
   let fs = map (view _1) topFuns

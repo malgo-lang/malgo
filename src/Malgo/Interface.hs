@@ -1,14 +1,17 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Interface (Interface (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
+module Malgo.Interface (Interface (..), ModulePathList (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
 
 import Control.Exception (IOException, catch)
-import Control.Lens (At (at), ifor_, (%=), (?=), (^.))
+import Control.Lens (ifor_, (^.))
 import Control.Lens.TH
 import Data.Binary (Binary, decodeFile)
 import Data.HashMap.Strict qualified as HashMap
-import GHC.Records (HasField)
+import Effectful (Eff, IOE, runPureEff, (:>))
+import Effectful.Reader.Static (Reader, ask)
+import Effectful.State.Static.Local (execState, modify)
+import Effectful.State.Static.Shared qualified as S
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
@@ -22,7 +25,8 @@ import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
 import System.Directory qualified as Directory
 import System.FilePath (replaceExtension, (</>))
-import UnliftIO (atomicWriteIORef)
+
+newtype ModulePathList = ModulePathList [FilePath]
 
 data Interface = Interface
   { -- | Used in Infer
@@ -54,48 +58,50 @@ instance Pretty Interface where
 
 buildInterface :: ModuleName -> RnState -> DsState -> Interface
 -- TODO: write abbrMap to interface
-buildInterface moduleName rnState dsState = execState ?? Interface mempty mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies) $ do
+buildInterface moduleName rnState dsState = runPureEff $ execState (Interface mempty mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies)) $ do
   ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
-      resolvedVarIdentMap . at tcId.name ?= tcId
-      coreIdentMap . at tcId ?= coreId
+      modify \inf@Interface {..} ->
+        inf
+          { _resolvedVarIdentMap = HashMap.insert tcId.name tcId _resolvedVarIdentMap,
+            _coreIdentMap = HashMap.insert tcId coreId _coreIdentMap
+          }
   ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
-      signatureMap . at tcId ?= scheme
+      modify \inf@Interface {..} ->
+        inf {_signatureMap = HashMap.insert tcId scheme _signatureMap}
   ifor_ (dsState ^. typeDefMap) $ \rnId typeDef -> do
     when (rnId.sort == External && rnId.moduleName == moduleName) do
-      resolvedTypeIdentMap . at (rnId.name) ?= rnId
-      typeDefMap . at rnId ?= typeDef
+      modify \inf@Interface {..} ->
+        inf
+          { _resolvedTypeIdentMap = HashMap.insert rnId.name rnId _resolvedTypeIdentMap,
+            _typeDefMap = HashMap.insert rnId typeDef _typeDefMap
+          }
   ifor_ (dsState ^. kindCtx) $ \tv kind -> do
     when (tv.sort == External && tv.moduleName == moduleName) do
-      kindCtx %= insertKind tv kind
+      modify \inf@Interface {..} ->
+        inf {_kindCtx = insertKind tv kind _kindCtx}
 
 toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"
 
 loadInterface ::
-  (HasCallStack) =>
-  ( MonadReader s m,
-    MonadIO m,
-    HasField "interfaces" s (IORef (HashMap ModuleName Interface)),
-    HasField "modulePaths" s [FilePath]
-  ) =>
+  (HasCallStack, IOE :> es, S.State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) =>
   ModuleName ->
-  m Interface
+  Eff es Interface
 loadInterface (ModuleName modName) = do
-  interfacesRef <- asks (.interfaces)
-  interfaces <- readIORef interfacesRef
+  ModulePathList modulePaths <- ask
+  interfaces <- S.get
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
-      modulePaths <- asks (.modulePaths)
       message <-
         firstJustM
           (liftIO . readFileIfExists (toInterfacePath $ convertString modName))
           modulePaths
       case message of
         Just x -> do
-          atomicWriteIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
+          S.modify (HashMap.insert (ModuleName modName) x)
           pure x
         Nothing -> do
           errorDoc $ "Cannot find module:" <+> squotes (pretty modName)

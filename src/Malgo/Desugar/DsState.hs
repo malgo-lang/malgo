@@ -14,10 +14,12 @@ module Malgo.Desugar.DsState
   )
 where
 
-import Control.Lens (mapped, traversed, use, (^.), _2)
+import Control.Lens (mapped, traversed, (^.), _2)
 import Control.Lens.TH
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
+import Effectful (Eff, (:>))
+import Effectful.State.Static.Local (State, gets)
 import Koriel.Core.Syntax qualified as C
 import Koriel.Core.Type qualified as C
 import Koriel.Id
@@ -70,12 +72,12 @@ makeDsState tcEnv =
     }
 
 lookupValueConstructors ::
-  (MonadState DsState m) =>
+  (State DsState :> es) =>
   GT.TypeVar ->
   [GT.Type] ->
-  m [(RnId, Scheme GT.Type)]
+  Eff es [(RnId, Scheme GT.Type)]
 lookupValueConstructors con ts = do
-  typeEnv <- use typeDefMap
+  typeEnv <- gets @DsState (._typeDefMap)
   -- _valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
   case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (HashMap.elems typeEnv) of
     Just TypeDef {..} ->

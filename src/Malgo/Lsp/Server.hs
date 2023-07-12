@@ -70,7 +70,7 @@ toDocumentSymbol Index.Symbol {..} =
     toKind Index.Variable = SkVariable
 
 loadIndex :: (MonadIO f) => TextDocumentIdentifier -> LspOpt -> f Index
-loadIndex doc opt = maybe mempty identity <$> runReaderT (Index.loadIndex (textDocumentIdentifierToModuleName doc)) opt
+loadIndex doc opt = maybe mempty identity <$> Index.loadIndex opt.modulePaths opt.indexes (textDocumentIdentifierToModuleName doc)
 
 toHoverDocument :: [Info] -> MarkupContent
 toHoverDocument infos =

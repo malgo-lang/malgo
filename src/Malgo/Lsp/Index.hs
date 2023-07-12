@@ -24,7 +24,6 @@ import Control.Lens.TH
 import Data.Binary (Binary, decodeFile, encode)
 import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
-import GHC.Records (HasField)
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
 import Koriel.Pretty
@@ -95,16 +94,18 @@ isInRange pos Range {_start, _end}
 
 -- | 'storeIndex' stores the given 'Index' to @dstPath -<.> "idx"@.
 -- It only be used in 'MalgoM' monad, but importing 'Malgo.Monad' causes cyclic dependency.
-storeIndex :: (MonadReader s m, MonadIO m, HasField "dstPath" s FilePath) => Index -> m ()
-storeIndex index = do
-  dstPath <- asks (.dstPath)
+storeIndex :: (Binary a, MonadIO m) => FilePath -> a -> m ()
+storeIndex dstPath index = do
   let encoded = encode index
   liftIO $ BL.writeFile (dstPath -<.> "idx") encoded
 
-loadIndex :: (MonadReader s m, MonadIO m, HasField "modulePaths" s [FilePath], HasField "indexes" s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
-loadIndex modName = do
-  modPaths <- asks (.modulePaths)
-  indexesRef <- asks (.indexes)
+loadIndex ::
+  (MonadIO m) =>
+  [FilePath] ->
+  IORef (HashMap ModuleName Index) ->
+  ModuleName ->
+  m (Maybe Index)
+loadIndex modPaths indexesRef modName = do
   indexes <- readIORef indexesRef
   case HashMap.lookup modName indexes of
     Just index -> pure $ Just index

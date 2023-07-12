@@ -15,7 +15,6 @@ import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
 import Koriel.Pretty
-import Malgo.Desugar.DsEnv
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Match
 import Malgo.Desugar.Type

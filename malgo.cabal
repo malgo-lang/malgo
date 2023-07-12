@@ -44,7 +44,6 @@ library
       Koriel.Prelude
       Koriel.Pretty
       Malgo.Build
-      Malgo.Desugar.DsEnv
       Malgo.Desugar.DsState
       Malgo.Desugar.Match
       Malgo.Desugar.Pass
@@ -103,6 +102,7 @@ library
     , containers
     , diagnose >=2.4
     , directory
+    , effectful
     , extra
     , filepath
     , generic-data
@@ -163,6 +163,7 @@ executable malgo
     , containers
     , diagnose >=2.4
     , directory
+    , effectful
     , extra
     , filepath
     , generic-data
@@ -225,6 +226,7 @@ test-suite malgo-test
     , containers
     , diagnose >=2.4
     , directory
+    , effectful
     , extra
     , filepath
     , generic-data
@@ -292,6 +294,7 @@ benchmark malgo-bench
     , criterion
     , diagnose >=2.4
     , directory
+    , effectful
     , extra
     , filepath
     , generic-data

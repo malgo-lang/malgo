@@ -3,7 +3,8 @@ module Malgo.Link (link) where
 import Data.Binary (Binary)
 import Data.Binary qualified as Binary
 import Data.HashSet qualified as HashSet
-import GHC.Records (HasField)
+import Effectful (Eff, IOE, (:>))
+import Effectful.Reader.Static (Reader, ask)
 import Koriel.Core.Syntax
 import Koriel.Id
 import Koriel.Pretty (errorDoc, pretty, squotes, vsep, (<+>))
@@ -13,15 +14,15 @@ import System.Directory (doesFileExist)
 import System.FilePath ((</>))
 
 -- | Linking a program with its dependencies.
-link :: (MonadIO m, MonadReader env m, HasField "modulePaths" env [FilePath], Binary a) => Interface -> Program a -> m (Program a)
-link interface mainCoreIR = do
+link :: (Reader ModulePathList :> es, IOE :> es, Binary a) => Interface -> Program a -> Eff es (Program a)
+link (interface :: Interface) mainCoreIR = do
   -- FIXME: Sort dependencies by topological order
   depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)
   pure $ mconcat (depCoreIRs <> [mainCoreIR])
 
-loadCore :: (MonadReader s m, MonadIO m, HasField "modulePaths" s [FilePath], Binary a) => ModuleName -> m (Program a)
+loadCore :: (Reader ModulePathList :> es, IOE :> es, Binary b) => ModuleName -> Eff es b
 loadCore (ModuleName modName) = do
-  modPaths <- asks (.modulePaths)
+  ModulePathList modPaths <- ask
   message <- findAndReadFile modPaths (convertString modName <> ".kor.bin")
   case message of
     Right x -> pure x

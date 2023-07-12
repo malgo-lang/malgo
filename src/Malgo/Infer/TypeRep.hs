@@ -18,8 +18,7 @@ module Malgo.Infer.TypeRep
     typeConstructor,
     typeParameters,
     valueConstructors,
-    TypeUnifyT (..),
-    runTypeUnifyT,
+    runTypeUnify,
     pattern TyConApp,
     viewTyConApp,
     buildTyArr,
@@ -37,6 +36,8 @@ import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
+import Effectful (Eff)
+import Effectful.State.Static.Local (State, evalState)
 import Koriel.Id
 import Koriel.Pretty
 import Malgo.Prelude
@@ -247,22 +248,8 @@ makeLenses ''TypeDef
 
 type TypeMap = HashMap MetaVar Type
 
--- | Note for The Instance of 'MonadState' for 'TypeUnifyT':
---
--- @MonadState TypeUnifyT@ does not use 'TypeMap'.
--- Instead, it uses inner monad's 'MonadState' instance.
-newtype TypeUnifyT m a = TypeUnifyT {unTypeUnifyT :: StateT TypeMap m a}
-  deriving newtype (Functor, Applicative, Monad, MonadReader r, MonadIO, MonadFail)
-
-instance (MonadState s m) => MonadState s (TypeUnifyT m) where
-  get = TypeUnifyT $ lift get
-  put x = TypeUnifyT $ lift $ put x
-
-instance MonadTrans TypeUnifyT where
-  lift m = TypeUnifyT $ lift m
-
-runTypeUnifyT :: (Monad m) => TypeUnifyT m a -> m a
-runTypeUnifyT (TypeUnifyT m) = evalStateT m mempty
+runTypeUnify :: Eff (State TypeMap : es) a -> Eff es a
+runTypeUnify = evalState mempty
 
 ---------------
 -- Utilities --

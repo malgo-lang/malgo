@@ -22,6 +22,9 @@ where
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Binary (Binary)
 import Data.Data (Data)
+import Effectful (Eff, (:>))
+import Effectful.Reader.Static (Reader, ask)
+import Effectful.State.Static.Shared (State)
 import GHC.Records
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
@@ -78,30 +81,30 @@ idToText Id {name, moduleName, uniq, sort = Internal} = moduleName.raw <> ".#" <
 idToText Id {name, moduleName, uniq, sort = Temporal} = moduleName.raw <> ".$" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, sort = Native} = name
 
-newTemporalId :: (MonadReader env m, MonadIO m, HasUniqSupply env, HasModuleName env) => Text -> a -> m (Id a)
+newTemporalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
 newTemporalId name meta = do
   uniq <- getUniq
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   let sort = Temporal
   pure Id {..}
 
-newInternalId :: (MonadIO f, MonadReader env f, HasUniqSupply env, HasModuleName env) => Text -> a -> f (Id a)
+newInternalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
 newInternalId name meta = do
   uniq <- getUniq
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   let sort = Internal
   pure Id {..}
 
-newExternalId :: (MonadReader env f, HasModuleName env) => Text -> a -> f (Id a)
+newExternalId :: (Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
 newExternalId name meta = do
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   let uniq = -1
   let sort = External
   pure Id {..}
 
-newNativeId :: (MonadReader env f, HasModuleName env) => Text -> a -> f (Id a)
+newNativeId :: (Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
 newNativeId name meta = do
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   let uniq = -1
   let sort = Native
   pure Id {..}

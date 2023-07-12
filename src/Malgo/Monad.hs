@@ -1,38 +1,25 @@
-{-# LANGUAGE TemplateHaskell #-}
+module Malgo.Monad (DstPath (..), Flag (..), CompileMode (..), getWorkspaceDir, runMalgoM) where
 
-module Malgo.Monad (MalgoEnv (..), CompileMode (..), getWorkspaceDir, newMalgoEnv, MalgoM, runMalgoM) where
-
-import Control.Lens.TH
-import Control.Monad.Extra (fromMaybeM)
-import Control.Monad.Fix (MonadFix)
-import Koriel.Core.Optimize (OptimizeOption, defaultOptimizeOption)
+import Effectful ((:>))
+import Effectful.Reader.Static (Reader, runReader)
+import Effectful.State.Static.Shared (State)
 import Koriel.Id (ModuleName)
-import Koriel.MonadUniq (UniqSupply (..))
 import Koriel.Prelude
-import Malgo.Interface (Interface)
+import Malgo.Interface (Interface, ModulePathList (..))
 import Malgo.Lsp.Index (Index)
 import System.Directory (XdgDirectory (XdgData), createDirectoryIfMissing, getCurrentDirectory, getXdgDirectory)
 import System.FilePath (takeBaseName, takeExtension, (</>))
 
-data MalgoEnv = MalgoEnv
-  { uniqSupply :: UniqSupply,
-    -- In 'Malgo.Driver.compile' function, 'moduleName' can be 'undefined'.
-    moduleName :: ~ModuleName,
-    interfaces :: IORef (HashMap ModuleName Interface),
-    indexes :: IORef (HashMap ModuleName Index),
-    dstPath :: FilePath,
-    compileMode :: CompileMode,
-    noOptimize :: Bool,
+newtype DstPath = DstPath FilePath
+
+data Flag = Flag
+  { noOptimize :: Bool,
     lambdaLift :: Bool,
-    optimizeOption :: OptimizeOption,
     debugMode :: Bool,
-    testMode :: Bool,
-    modulePaths :: [FilePath]
+    testMode :: Bool
   }
 
 data CompileMode = LLVM deriving stock (Eq, Show)
-
-makeFieldsNoPrefix ''MalgoEnv
 
 -- | Get workspace directory.
 -- If directory does not exist, create it.
@@ -43,34 +30,30 @@ getWorkspaceDir = do
   createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "build"
   return $ pwd </> ".malgo-work"
 
--- | Environment for a module.
-newMalgoEnv ::
-  FilePath ->
-  [FilePath] ->
-  ModuleName ->
-  Maybe (IORef (HashMap ModuleName Interface)) ->
-  Maybe (IORef (HashMap ModuleName Index)) ->
-  IO MalgoEnv
-newMalgoEnv srcFile modulePaths moduleName mInterfaces mIndexes = do
-  uniqSupply <- UniqSupply <$> newIORef 0
-  interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
-  indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
-  basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-  workspaceDir <- getWorkspaceDir
-  let dstPath = workspaceDir </> "build" </> takeBaseName srcFile <> ".ll"
-  let compileMode = case takeExtension dstPath of
-        ".ll" -> LLVM
-        _ -> error "unknown extension"
-  let noOptimize = False
-  let lambdaLift = True
-  let optimizeOption = defaultOptimizeOption
-  let debugMode = False
-  let testMode = False
-  modulePaths <- pure $ modulePaths <> [workspaceDir </> "build", basePath]
-  pure MalgoEnv {..}
+type MalgoE es =
+  ( Reader ModuleName :> es,
+    Reader DstPath :> es,
+    Reader CompileMode :> es,
+    Reader Flag :> es,
+    Reader ModulePathList :> es,
+    State (HashMap ModuleName Interface) :> es,
+    State (HashMap ModuleName Index) :> es
+  )
 
-newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
-
-runMalgoM :: MalgoEnv -> MalgoM a -> IO a
-runMalgoM env m = runReaderT m.unMalgoM env
+runMalgoM srcFile dstPath modulePaths e = do
+  workspaceDir <- liftIO getWorkspaceDir
+  basePath <- liftIO $ getXdgDirectory XdgData ("malgo" </> "base")
+  runReader (DstPath $ workspaceDir </> "build" </> takeBaseName srcFile <> ".ll")
+    $ runReader
+      ( case takeExtension dstPath of
+          ".ll" -> LLVM
+          _ -> error "unknown extension"
+      )
+    $ runReader
+      Flag
+        { noOptimize = False,
+          lambdaLift = True,
+          debugMode = False,
+          testMode = False
+        }
+    $ runReader (ModulePathList $ modulePaths <> [workspaceDir </> "build", basePath]) e
