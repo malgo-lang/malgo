@@ -43,16 +43,16 @@ getWorkspaceDir = do
   createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "build"
   return $ pwd </> ".malgo-work"
 
+-- | Environment for a module.
 newMalgoEnv ::
   FilePath ->
   [FilePath] ->
-  Maybe UniqSupply ->
   ModuleName ->
   Maybe (IORef (HashMap ModuleName Interface)) ->
   Maybe (IORef (HashMap ModuleName Index)) ->
   IO MalgoEnv
-newMalgoEnv srcFile modulePaths mUniqSupply moduleName mInterfaces mIndexes = do
-  uniqSupply <- fromMaybeM (UniqSupply <$> newIORef 0) (pure mUniqSupply)
+newMalgoEnv srcFile modulePaths moduleName mInterfaces mIndexes = do
+  uniqSupply <- UniqSupply <$> newIORef 0
   interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
   indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
   basePath <- getXdgDirectory XdgData ("malgo" </> "base")

@@ -45,7 +45,7 @@ main = do
   case command of
     ToLL opt -> do
       opt <- pure $ opt {modulePaths = opt.modulePaths <> [takeDirectory opt.dstPath]}
-      env <- newMalgoEnv opt.srcPath opt.modulePaths Nothing undefined Nothing Nothing
+      env <- newMalgoEnv opt.srcPath opt.modulePaths undefined Nothing Nothing
       Driver.compile
         opt.srcPath
         env
