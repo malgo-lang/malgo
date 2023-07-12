@@ -51,11 +51,12 @@ defaultOptimizeOption =
     }
 
 -- | Apply a monadic function n times.
-times :: (Monad m, Eq t) => Int -> (t -> m t) -> t -> m t
+times :: (Monad m) => Int -> (t -> m t) -> t -> m t
 times 0 _ x = pure x
 times n f x
   | n > 0 = times (n - 1) f =<< f x
   | otherwise = error $ show n <> " must be a natural number"
+{-# SCC times #-}
 
 -- | Optimize a program
 optimizeProgram ::
@@ -72,7 +73,7 @@ optimizeProgram Program {..} = do
             (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
             _ -> pass
   topVars <- {-# SCC "optimizeExpr_topVars" #-} traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
-  topFuns <- {-# SCC "optimizeExpr_topFuns" #-} traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr (CallInlineEnv $ HashMap.delete n state.inlinableMap) e) topFuns
+  topFuns <- {-# SCC "optimizeExpr_topFuns" #-} traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr state e) topFuns
 
   -- Remove all unused toplevel functions and variables.
   -- If a global definition is (external or native) and defined in the current module, it cannot be removed.
@@ -93,17 +94,15 @@ optimizeExpr state expr = do
   option <- asks (.optimizeOption)
   5 `times` opt option $ expr
   where
-    opt option =
-      do
-        pure
-          >=> runOpt option.doFoldVariable foldVariable
-          >=> runOpt option.doInlineConstructor ((runReaderT ?? mempty) . inlineConstructor)
-          >=> runOpt option.doEliminateUnusedLet eliminateUnusedLet
-          >=> runOpt option.doInlineFunction (flip evalStateT state . inlineFunction)
-          >=> runOpt option.doFoldRedundantCast foldRedundantCast
-          >=> runOpt option.doFoldTrivialCall foldTrivialCall
-          >=> runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct)
-          >=> normalizeExpr
+    opt option e = do
+      e <- {-# SCC "foldVariable" #-} runOpt option.doFoldVariable foldVariable e
+      e <- {-# SCC "inlineConstructor" #-} runOpt option.doInlineConstructor ((runReaderT ?? mempty) . inlineConstructor) e
+      e <- {-# SCC "eliminateUnusedLet" #-} runOpt option.doEliminateUnusedLet eliminateUnusedLet e
+      e <- {-# SCC "inlineFunction" #-} runOpt option.doInlineFunction (flip evalStateT state . inlineFunction) e
+      e <- {-# SCC "foldRedundantCast" #-} runOpt option.doFoldRedundantCast foldRedundantCast e
+      e <- {-# SCC "foldTrivialCall" #-} runOpt option.doFoldTrivialCall foldTrivialCall e
+      e <- {-# SCC "removeNoopDestruct" #-} runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct) e
+      {-# SCC "normalizeExpr" #-} normalizeExpr e
     runOpt :: (Monad m) => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag
@@ -190,7 +189,11 @@ checkInlinable (LocalDef f _ (Fun ps v)) = do
   threshold <- asks (.optimizeOption.inlineThreshold)
   -- atomの数がthreshold以下ならインライン展開する
   -- TODO: 再帰関数かどうかコールグラフを作って判定する
-  let isInlinable = threshold >= lengthOf atom v && not (f `HashSet.member` freevars v)
+  let isInlinable =
+        threshold
+          >= lengthOf atom v
+          && not (f `HashSet.member` freevars v)
+          && not (f `HashSet.member` callees v)
   when isInlinable $ do
     modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
 checkInlinable _ = pass

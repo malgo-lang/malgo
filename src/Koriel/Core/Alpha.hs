@@ -33,8 +33,7 @@ runAlpha :: ReaderT Subst m a -> Subst -> m a
 runAlpha = runReaderT
 
 lookupVar :: (MonadReader Subst m) => Id Type -> m (Atom (Id Type))
-lookupVar n = do
-  HashMap.lookupDefault (Var n) n <$> ask
+lookupVar n = HashMap.lookupDefault (Var n) n <$> ask
 
 lookupId :: (MonadReader Subst m) => Id Type -> m (Id Type)
 lookupId n = do
