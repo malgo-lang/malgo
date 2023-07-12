@@ -22,6 +22,7 @@ import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
 import System.Directory qualified as Directory
 import System.FilePath (replaceExtension, (</>))
+import UnliftIO (atomicWriteIORef)
 
 data Interface = Interface
   { -- | Used in Infer
@@ -94,7 +95,7 @@ loadInterface (ModuleName modName) = do
           modulePaths
       case message of
         Just x -> do
-          writeIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
+          atomicWriteIORef interfacesRef $ HashMap.insert (ModuleName modName) x interfaces
           pure x
         Nothing -> do
           errorDoc $ "Cannot find module:" <+> squotes (pretty modName)

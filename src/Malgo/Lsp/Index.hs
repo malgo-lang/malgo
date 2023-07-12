@@ -6,18 +6,18 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Malgo.Lsp.Index (
-  SymbolKind (..),
-  Symbol (..),
-  Info (..),
-  Index (..),
-  definitionMap,
-  LspOpt (..),
-  HasSymbolInfo (..),
-  findReferences,
-  loadIndex,
-  storeIndex,
-)
+module Malgo.Lsp.Index
+  ( SymbolKind (..),
+    Symbol (..),
+    Info (..),
+    Index (..),
+    definitionMap,
+    LspOpt (..),
+    HasSymbolInfo (..),
+    findReferences,
+    loadIndex,
+    storeIndex,
+  )
 where
 
 import Control.Lens.TH
@@ -34,6 +34,7 @@ import Malgo.Syntax.Extension (RnId)
 import System.Directory qualified as Directory
 import System.FilePath (takeFileName, (-<.>), (</>))
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
+import UnliftIO (atomicWriteIORef)
 
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
@@ -81,8 +82,8 @@ makeFieldsNoPrefix ''LspOpt
 -- It ignores file names.
 findReferences :: SourcePos -> Index -> [Info]
 findReferences pos (Index refs _ _) =
-  HashMap.keys $
-    HashMap.filter (any (isInRange pos)) refs
+  HashMap.keys
+    $ HashMap.filter (any (isInRange pos)) refs
 
 isInRange :: SourcePos -> Range -> Bool
 isInRange pos Range {_start, _end}
@@ -111,7 +112,7 @@ loadIndex modName = do
       message <- findAndReadFile modPaths (convertString modName.raw <> ".idx")
       case message of
         Right x -> do
-          writeIORef indexesRef $ HashMap.insert modName x indexes
+          atomicWriteIORef indexesRef $ HashMap.insert modName x indexes
           pure $ Just x
         Left err -> do
           hPrint stderr err
