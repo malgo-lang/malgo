@@ -76,6 +76,7 @@ run = do
     $ runFailIO
     $ evalState @(HashMap ModuleName Interface) mempty
     $ evalState @(HashMap ModuleName Index) mempty
+    $ withUnliftStrategy (ConcUnlift Persistent (Limited n))
     $ traverse_
       ( mapConcurrently_
           ( \(path, moduleName, _) -> do
