@@ -22,7 +22,7 @@ import Malgo.Syntax
 import Malgo.Syntax.Extension
 
 -- | Entry point of this 'Malgo.Rename.Pass'
-rename :: (Reader ModuleName :> es, Reader ModulePathList :> es, S.State (HashMap ModuleName Interface) :> es, S.State Uniq :> es, IOE :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
+rename :: (Reader ModuleName :> es, Reader ModulePathList :> es, S.State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   (ds', rnState) <- runState (RnState mempty HashSet.empty) $ runReader builtinEnv $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
@@ -36,7 +36,7 @@ rnDecls ::
     Reader RnEnv :> es,
     State RnState :> es,
     S.State (HashMap ModuleName Interface) :> es,
-    S.State Uniq :> es,
+    State Uniq :> es,
     IOE :> es
   ) =>
   [Decl (Malgo Parse)] ->
@@ -56,7 +56,7 @@ rnDecls ds = do
 rnDecl ::
   ( State RnState :> es,
     S.State (HashMap ModuleName Interface) :> es,
-    S.State Uniq :> es,
+    State Uniq :> es,
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     Reader ModulePathList :> es,
@@ -107,7 +107,7 @@ rnDecl (Import pos modName importList) = do
 -- In addition to name resolution, OpApp recombination based on infix declarations is also performed.
 rnExpr ::
   ( State RnState :> es,
-    S.State Uniq :> es,
+    State Uniq :> es,
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     IOE :> es
@@ -172,7 +172,7 @@ rnType (TyBlock pos t) = TyArr pos (TyTuple pos []) <$> rnType t
 -- | Rename a clause.
 rnClause ::
   ( State RnState :> es,
-    S.State Uniq :> es,
+    State Uniq :> es,
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     IOE :> es
@@ -212,7 +212,7 @@ rnPat (BoxedP pos x) = ConP pos <$> lookupBox pos x <*> pure [UnboxedP pos (coer
 -- | Rename statements in {}.
 rnStmts ::
   ( State RnState :> es,
-    S.State Uniq :> es,
+    State Uniq :> es,
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     IOE :> es

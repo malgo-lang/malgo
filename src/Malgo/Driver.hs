@@ -9,8 +9,8 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text.IO qualified as T
 import Effectful
-import Effectful.Fail
 import Effectful.Reader.Static
+import Effectful.State.Static.Local
 import Effectful.State.Static.Shared qualified as S
 import Error.Diagnose (addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
@@ -68,9 +68,8 @@ compileFromAST ::
     Reader Flag :> es,
     IOE :> es,
     S.State (HashMap ModuleName Interface) :> es,
-    S.State Uniq :> es,
+    State Uniq :> es,
     Reader ModuleName :> es,
-    Fail :> es,
     S.State (HashMap ModuleName Index) :> es
   ) =>
   FilePath ->
@@ -81,8 +80,8 @@ compileFromAST srcPath parsedAst = do
   where
     moduleName = parsedAst.moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= moduleName.raw) $
-        error "Module name must be source file's base name."
+      when (convertString (takeBaseName srcPath) /= moduleName.raw)
+        $ error "Module name must be source file's base name."
 
       DstPath dstPath <- ask @DstPath
       ModulePathList modulePaths <- ask @ModulePathList
@@ -119,8 +118,8 @@ compileFromAST srcPath parsedAst = do
         lint True core
         pure core
 
-      when flags.debugMode $
-        liftIO do
+      when flags.debugMode
+        $ liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pretty core
 
@@ -141,8 +140,8 @@ compileFromAST srcPath parsedAst = do
       lint True coreOpt
 
       coreLL <- if flags.lambdaLift then lambdalift coreOpt >>= Flat.normalize else pure coreOpt
-      when (flags.debugMode && flags.lambdaLift) $
-        liftIO do
+      when (flags.debugMode && flags.lambdaLift)
+        $ liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pretty coreLL
       when flags.testMode do
@@ -166,7 +165,7 @@ compileFromAST srcPath parsedAst = do
       -- when env.testMode do
       --   liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pretty coreLLOpt
       -- lint True coreLLOpt
-      Uniq i <- S.get @Uniq
+      Uniq i <- get @Uniq
       LLVM.codeGen srcPath dstPath moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) i coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id a, Id b)] -> Maybe (Id b)
@@ -174,7 +173,7 @@ compileFromAST srcPath parsedAst = do
       | griffId.name
           == "main"
           && griffId.moduleName
-            == moduleName =
+          == moduleName =
           Just coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
@@ -187,8 +186,7 @@ compile ::
     Reader Flag :> es,
     IOE :> es,
     S.State (HashMap ModuleName Interface) :> es,
-    S.State Uniq :> es,
-    Fail :> es,
+    State Uniq :> es,
     S.State (HashMap ModuleName Index) :> es
   ) =>
   FilePath ->
@@ -218,5 +216,5 @@ compile srcPath = do
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst
-  runReader parsedAst.moduleName $
-    compileFromAST srcPath parsedAst
+  runReader parsedAst.moduleName
+    $ compileFromAST srcPath parsedAst

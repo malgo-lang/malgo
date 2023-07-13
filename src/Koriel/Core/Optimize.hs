@@ -13,9 +13,8 @@ import Data.List qualified as List
 import Data.Maybe qualified as Maybe
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
-import Effectful.State.Static.Local (evalState, execState, get, modify)
+import Effectful.State.Static.Local (State, evalState, execState, get, modify)
 import Effectful.State.Static.Local qualified as L
-import Effectful.State.Static.Shared qualified as S
 import Koriel.Core.Alpha
 import Koriel.Core.Flat
 import Koriel.Core.Syntax
@@ -66,7 +65,7 @@ times n f x
 optimizeProgram ::
   ( Reader OptimizeOption :> es,
     Reader ModuleName :> es,
-    S.State Uniq :> es
+    State Uniq :> es
   ) =>
   Program (Id Type) ->
   Eff es (Program (Id Type))
@@ -96,7 +95,7 @@ optimizeProgram Program {..} = do
   topFuns <- {-# SCC "filter_topFuns" #-} pure $ filter (\(n, _, _, _) -> isUsed n) topFuns
   pure $ {-# SCC "buildProgram" #-} Program {..}
 
-optimizeExpr :: (Reader OptimizeOption :> es, Reader ModuleName :> es, S.State Uniq :> es) => CallInlineEnv -> Expr (Id Type) -> Eff es (Expr (Id Type))
+optimizeExpr :: (Reader OptimizeOption :> es, Reader ModuleName :> es, State Uniq :> es) => CallInlineEnv -> Expr (Id Type) -> Eff es (Expr (Id Type))
 optimizeExpr state expr = do
   option <- ask @OptimizeOption
   5 `times` opt option $ expr
@@ -174,7 +173,7 @@ eliminateUnusedLet =
 type CallInlineEnv = HashMap (Id Type) ([Id Type], Expr (Id Type))
 
 -- | Inline a function call.
-inlineFunction :: (Reader OptimizeOption :> es, L.State CallInlineEnv :> es, Reader ModuleName :> es, S.State Uniq :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
+inlineFunction :: (Reader OptimizeOption :> es, L.State CallInlineEnv :> es, Reader ModuleName :> es, State Uniq :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
 inlineFunction =
   transformM
     ( \case
@@ -209,7 +208,7 @@ checkInlinable _ = pass
 lookupCallInline ::
   ( L.State CallInlineEnv :> es,
     Reader ModuleName :> es,
-    S.State Uniq :> es
+    State Uniq :> es
   ) =>
   (Id Type -> [Atom (Id Type)] -> Expr (Id Type)) ->
   Id Type ->
@@ -240,7 +239,7 @@ foldRedundantCast =
     e -> pure e
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
-foldTrivialCall :: (Reader ModuleName :> es, S.State Uniq :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
+foldTrivialCall :: (Reader ModuleName :> es, State Uniq :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
 foldTrivialCall = transformM \case
   Let [LocalDef f _ (Fun ps body)] (Call (Var f') as) | f == f' -> do
     alpha (HashMap.fromList $ zip ps as) body

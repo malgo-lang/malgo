@@ -22,7 +22,6 @@ import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Effectful.State.Static.Shared qualified as S
 import GHC.Records (HasField)
 import Koriel.Id
 import Koriel.MonadUniq
@@ -49,7 +48,7 @@ lookupVar :: (State TypeMap :> es) => MetaVar -> Eff es (Maybe Type)
 lookupVar v = HashMap.lookup v <$> get @TypeMap
 
 freshVar ::
-  (S.State Uniq :> es, Reader ModuleName :> es, State TcEnv :> es) =>
+  (State Uniq :> es, Reader ModuleName :> es, State TcEnv :> es) =>
   Maybe Text ->
   Eff es MetaVar
 freshVar hint = do
@@ -163,7 +162,7 @@ generalizeMutRecs x terms = do
 toBound :: (HasField "metaVar" r a) => r -> a
 toBound tv = tv.metaVar
 
-instantiate :: (Reader ModuleName :> es, S.State Uniq :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es) => Range -> Scheme Type -> Eff es Type
+instantiate :: (Reader ModuleName :> es, State Uniq :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es) => Range -> Scheme Type -> Eff es Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just a.name)

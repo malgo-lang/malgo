@@ -24,7 +24,7 @@ import Data.Binary (Binary)
 import Data.Data (Data)
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask)
-import Effectful.State.Static.Shared (State)
+import Effectful.State.Static.Local (State)
 import GHC.Records
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)

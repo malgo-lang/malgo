@@ -5,7 +5,6 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as T
 import Data.Traversable (for)
 import Effectful
-import Effectful.Fail
 import Effectful.Reader.Static
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -14,7 +13,7 @@ import Koriel.Prelude
 import Koriel.Pretty (Pretty (pretty), errorDoc)
 
 -- | Type-check the program and annotate with type information.
-annotate :: (IOE :> es, Fail :> es) => ModuleName -> Program Text -> Eff es (Program (Id Type))
+annotate :: (IOE :> es) => ModuleName -> Program Text -> Eff es (Program (Id Type))
 annotate moduleName program = runReader (Context moduleName mempty) (annProgram program)
 
 data Context = Context
@@ -30,24 +29,28 @@ lookupName name =
     name
     <$> asks @Context (.nameEnv)
 
-parseId :: (Reader Context :> es, Fail :> es) => Text -> Type -> Eff es (Id Type)
+parseId :: (Reader Context :> es) => Text -> Type -> Eff es (Id Type)
 parseId name meta
   | T.head name == '@' = do
-      [moduleName, name] <- pure $ T.words (T.tail name)
-      pure Id {name, meta, moduleName = ModuleName moduleName, uniq = -1, sort = External}
+      case T.words (T.tail name) of
+        [moduleName, name] ->
+          pure Id {name, meta, moduleName = ModuleName moduleName, uniq = -1, sort = External}
+        _ -> error "unreachable: parseId"
   | T.head name == '#' = do
-      [moduleName, name, uniq] <- pure $ T.words (T.tail name)
-      pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Internal}
+      case T.words (T.tail name) of
+        [moduleName, name, uniq] -> pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Internal}
+        _ -> error "unreachable: parseId"
   | T.head name == '$' = do
-      [moduleName, name, uniq] <- pure $ T.words (T.tail name)
-      pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Temporal}
+      case T.words (T.tail name) of
+        [moduleName, name, uniq] -> pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Temporal}
+        _ -> error "unreachable: parseId"
   | T.head name == '%' = do
       moduleName <- asks @Context (.moduleName)
       pure Id {name = T.tail name, meta, moduleName, uniq = -1, sort = Native}
   | otherwise = do
       error $ "parseId: " <> show name
 
-annProgram :: (Reader Context :> es, IOE :> es, Fail :> es) => Program Text -> Eff es (Program (Id Type))
+annProgram :: (Reader Context :> es, IOE :> es) => Program Text -> Eff es (Program (Id Type))
 annProgram Program {..} = do
   varEnv <- foldMapM prepareVarDecl topVars
   funEnv <- foldMapM prepareFunDecl topFuns
@@ -56,22 +59,22 @@ annProgram Program {..} = do
     topFuns <- traverse annFunDecl topFuns
     pure Program {..}
 
-prepareVarDecl :: (Reader Context :> es, Fail :> es) => (Text, Type, Expr Text) -> Eff es (HashMap Text (Id Type))
+prepareVarDecl :: (Reader Context :> es) => (Text, Type, Expr Text) -> Eff es (HashMap Text (Id Type))
 prepareVarDecl (name, ty, _) = do
   id <- parseId name ty
   pure $ HashMap.singleton name id
 
-prepareFunDecl :: (Reader Context :> es, Fail :> es) => (Text, [Text], Type, Expr Text) -> Eff es (HashMap Text (Id Type))
+prepareFunDecl :: (Reader Context :> es) => (Text, [Text], Type, Expr Text) -> Eff es (HashMap Text (Id Type))
 prepareFunDecl (name, _, ty, _) = do
   id <- parseId name ty
   pure $ HashMap.singleton name id
 
-annVarDecl :: (Reader Context :> es, IOE :> es, Fail :> es) => (Text, Type, Expr Text) -> Eff es (Id Type, Type, Expr (Id Type))
+annVarDecl :: (Reader Context :> es, IOE :> es) => (Text, Type, Expr Text) -> Eff es (Id Type, Type, Expr (Id Type))
 annVarDecl (name, ty, body) = do
   name <- lookupName name
   (name,ty,) <$> annExpr body
 
-annFunDecl :: (Reader Context :> es, IOE :> es, Fail :> es) => (Text, [Text], Type, Expr Text) -> Eff es (Id Type, [Id Type], Type, Expr (Id Type))
+annFunDecl :: (Reader Context :> es, IOE :> es) => (Text, [Text], Type, Expr Text) -> Eff es (Id Type, [Id Type], Type, Expr (Id Type))
 annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   name <- lookupName name
   params' <- zipWithM parseId params paramTypes
@@ -81,7 +84,7 @@ annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
     <$> annExpr body
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pretty name
 
-annExpr :: (Reader Context :> es, IOE :> es, Fail :> es) => Expr Text -> Eff es (Expr (Id Type))
+annExpr :: (Reader Context :> es, IOE :> es) => Expr Text -> Eff es (Expr (Id Type))
 annExpr (Atom atom) = Atom <$> annAtom atom
 annExpr (Call fun args) = Call <$> annAtom fun <*> traverse annAtom args
 annExpr (CallDirect fun args) = CallDirect <$> lookupName fun <*> traverse annAtom args
@@ -165,7 +168,7 @@ annAtom :: (HasCallStack) => (Reader Context :> es) => Atom Text -> Eff es (Atom
 annAtom (Var name) = Var <$> lookupName name
 annAtom (Unboxed value) = pure $ Unboxed value
 
-annObj :: (Reader Context :> es, IOE :> es, Fail :> es) => Type -> Obj Text -> Eff es (Obj (Id Type))
+annObj :: (Reader Context :> es, IOE :> es) => Type -> Obj Text -> Eff es (Obj (Id Type))
 annObj (paramTypes :-> _) (Fun params body) = do
   params' <- zipWithM parseId params paramTypes
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do

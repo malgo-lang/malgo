@@ -11,8 +11,8 @@ import Data.List qualified as List
 import Data.List.Extra (chunksOf)
 import Data.Maybe qualified as Maybe
 import Effectful
-import Effectful.Fail
 import Effectful.Reader.Static
+import Effectful.State.Static.Local qualified as L
 import Effectful.State.Static.Shared (evalState)
 import Koriel.Core.Optimize (defaultOptimizeOption)
 import Koriel.Id (ModuleName (..))
@@ -73,7 +73,6 @@ run = do
   let splited = split n $ map (\(_, i, o) -> (i, o)) moduleDepends
 
   runEff
-    $ runFailIO
     $ evalState @(HashMap ModuleName Interface) mempty
     $ evalState @(HashMap ModuleName Index) mempty
     $ withUnliftStrategy (ConcUnlift Persistent (Limited n))
@@ -82,7 +81,7 @@ run = do
           ( \(path, moduleName, _) -> do
               let ast = Maybe.fromJust $ List.lookup path parsedAstList
               liftIO $ putStrLn ("Compile " <> path)
-              evalState (Uniq 0)
+              L.evalState (Uniq 0)
                 $ runReader moduleName
                 $ runMalgoM
                   (workspaceDir </> "build" </> takeBaseName path <> ".ll")

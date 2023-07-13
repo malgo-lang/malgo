@@ -6,10 +6,8 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
 import Data.Traversable (for)
 import Effectful (Eff, (:>))
-import Effectful.Fail (Fail)
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State, modify)
-import Effectful.State.Static.Shared qualified as S
 import Koriel.Core.Syntax
 import Koriel.Core.Syntax qualified as Core
 import Koriel.Core.Type
@@ -60,7 +58,7 @@ splitCol mat = (headCol mat, tailCol mat)
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  (State DsState :> es, Reader ModuleName :> es, S.State Uniq :> es, Fail :> es) =>
+  (State DsState :> es, Reader ModuleName :> es, State Uniq :> es) =>
   -- | マッチ対象
   [Id Core.Type] ->
   -- | パターン（転置行列）
@@ -110,21 +108,25 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
       let patType = Malgo.typeOf $ List.head heads
-      RecordT kts <- dsType patType
-      params <- traverse (newTemporalId "p") kts
-      clause <- do
-        (pat', es') <- groupRecord pat es
-        OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
-      pure $ Match (Atom $ Core.Var scrutinee) [clause]
+      dsType patType >>= \case
+        RecordT kts -> do
+          params <- traverse (newTemporalId "p") kts
+          clause <- do
+            (pat', es') <- groupRecord pat es
+            OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
+          pure $ Match (Atom $ Core.Var scrutinee) [clause]
+        _ -> error "patType must be RecordT"
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
       let patType = Malgo.typeOf $ List.head heads
-      SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
-      params <- traverse (newTemporalId "p") ts
-      clause <- do
-        let (pat', es') = groupTuple pat es
-        Unpack con params <$> match (params <> restScrutinee) pat' es' err
-      pure $ Match (Atom $ Core.Var scrutinee) [clause]
+      dsType patType >>= \case
+        SumT [con@(Core.Con Core.Tuple ts)] -> do
+          params <- traverse (newTemporalId "p") ts
+          clause <- do
+            let (pat', es') = groupTuple pat es
+            Unpack con params <$> match (params <> restScrutinee) pat' es' err
+          pure $ Match (Atom $ Core.Var scrutinee) [clause]
+        _ -> error "patType must be SumT [Tuple]"
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
       let cs =
@@ -209,7 +211,7 @@ groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWi
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
     aux [] _ = error "ps must be not empty"
 
-groupRecord :: (S.State Uniq :> es, Reader ModuleName :> es) => PatMatrix -> [b] -> Eff es (PatMatrix, [b])
+groupRecord :: (State Uniq :> es, Reader ModuleName :> es) => PatMatrix -> [b] -> Eff es (PatMatrix, [b])
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
   where
     aux (RecordP x ps : pss) e = do

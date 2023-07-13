@@ -26,7 +26,7 @@ import Data.HashSet qualified as HashSet
 import Data.String.Conversions
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader)
-import Effectful.State.Static.Shared (State)
+import Effectful.State.Static.Local (State)
 import Effectful.Writer.Static.Local (Writer, runWriter, tell)
 import Generic.Data
 import Koriel.Core.Syntax.Atom

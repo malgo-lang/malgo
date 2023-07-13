@@ -1,9 +1,9 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE Strict #-}
 
-module Koriel.Core.LambdaLift (
-  lambdalift,
-)
+module Koriel.Core.LambdaLift
+  ( lambdalift,
+  )
 where
 
 import Control.Lens (traverseOf, traversed, view, _1, _2)
@@ -12,7 +12,6 @@ import Data.HashSet qualified as HashSet
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Effectful.State.Static.Shared qualified as S
 import Koriel.Core.Flat (normalize)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -30,20 +29,20 @@ data LambdaLiftState = LambdaLiftState
 
 -- | Add a function to the state.
 -- It does not use lens.
-addFunc :: State LambdaLiftState :> es => Id Type -> ([Id Type], Type, Expr (Id Type)) -> Eff es ()
+addFunc :: (State LambdaLiftState :> es) => Id Type -> ([Id Type], Type, Expr (Id Type)) -> Eff es ()
 addFunc f x = modify $ \state@LambdaLiftState {funcs} -> state {funcs = HashMap.insert f x funcs}
 
 -- | Add a known function to the state.
 -- It does not use lens.
-addKnown :: State LambdaLiftState :> es => Id Type -> Eff es ()
+addKnown :: (State LambdaLiftState :> es) => Id Type -> Eff es ()
 addKnown f = modify $ \state@LambdaLiftState {knowns} -> state {knowns = HashSet.insert f knowns}
 
-isKnown :: State LambdaLiftState :> es => Id Type -> Eff es Bool
+isKnown :: (State LambdaLiftState :> es) => Id Type -> Eff es Bool
 isKnown f = do
   ks <- gets @LambdaLiftState (.knowns)
   pure $ f `HashSet.member` ks
 
-def :: (State LambdaLiftState :> es, Reader ModuleName :> es, S.State Uniq :> es) => Id Type -> [Id Type] -> Expr (Id Type) -> Eff es (Id Type)
+def :: (State LambdaLiftState :> es, Reader ModuleName :> es, State Uniq :> es) => Id Type -> [Id Type] -> Expr (Id Type) -> Eff es (Id Type)
 def name xs e = do
   f <- newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)
   -- knowns . at f ?= ()
@@ -52,7 +51,7 @@ def name xs e = do
 
 -- | Lambda lifting
 lambdalift ::
-  (Reader ModuleName :> es, S.State Uniq :> es) =>
+  (Reader ModuleName :> es, State Uniq :> es) =>
   Program (Id Type) ->
   Eff es (Program (Id Type))
 lambdalift Program {..} =
@@ -66,11 +65,11 @@ lambdalift Program {..} =
       LambdaLiftState {funcs} <- get
       -- TODO: lambdalift topVars
       prog <-
-        normalize $
-          Program
+        normalize
+          $ Program
             topVars
-            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
-                HashMap.toList funcs
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e))
+                $ HashMap.toList funcs
             )
             extFuns
       traverseOf expr toDirect prog
@@ -78,7 +77,7 @@ lambdalift Program {..} =
 llift ::
   ( State LambdaLiftState :> es,
     Reader ModuleName :> es,
-    S.State Uniq :> es
+    State Uniq :> es
   ) =>
   Expr (Id Type) ->
   Eff es (Expr (Id Type))
@@ -134,7 +133,7 @@ llift (Error t) = pure $ Error t
 -- | `toDirect` converts `Call` to `CallDirect` if the callee is known.
 -- If `f` is a known function, we must call it directly.
 -- These conversions are almost done in `llift`, but not all of them.
-toDirect :: State LambdaLiftState :> es => Expr (Id Type) -> Eff es (Expr (Id Type))
+toDirect :: (State LambdaLiftState :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
 toDirect (Atom a) = pure $ Atom a
 toDirect (Call (Var f) xs) = do
   ks <- gets @LambdaLiftState (.knowns)

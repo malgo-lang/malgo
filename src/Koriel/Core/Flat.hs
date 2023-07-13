@@ -7,7 +7,7 @@ import Control.Monad.Trans.Cont (ContT (..), evalContT, shiftT)
 import Data.Traversable (for)
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader)
-import Effectful.State.Static.Shared (State)
+import Effectful.State.Static.Local (State)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id

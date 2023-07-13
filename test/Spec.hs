@@ -11,6 +11,7 @@ import Data.Text qualified as Text
 import Effectful
 import Effectful.Fail
 import Effectful.State.Static.Shared
+import Effectful.State.Static.Local qualified as L
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (timeout)
@@ -148,7 +149,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
       & runFailIO
       & evalState @(HashMap ModuleName Index) mempty
       & evalState @(HashMap ModuleName Interface) mempty
-      & evalState (Uniq 0)
+      & L.evalState (Uniq 0)
 
 findCommand :: [String] -> IO String
 findCommand list =

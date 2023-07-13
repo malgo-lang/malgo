@@ -11,7 +11,7 @@ import Control.Lens (traverseOf)
 import Data.HashMap.Strict qualified as HashMap
 import Effectful (Eff, runPureEff, (:>))
 import Effectful.Reader.Static (Reader, ask, local, runReader)
-import Effectful.State.Static.Shared (State)
+import Effectful.State.Static.Local (State)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id

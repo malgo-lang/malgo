@@ -1,7 +1,7 @@
 module Koriel.MonadUniq (getUniq, Uniq (..)) where
 
 import Effectful (Eff, (:>))
-import Effectful.State.Static.Shared (State, state)
+import Effectful.State.Static.Local (State, state)
 import Koriel.Prelude
 
 newtype Uniq = Uniq Int

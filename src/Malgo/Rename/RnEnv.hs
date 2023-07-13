@@ -19,7 +19,7 @@ import Control.Lens (ASetter', makeFieldsNoPrefix)
 import Data.HashMap.Strict qualified as HashMap
 import Effectful (Eff, IOE, (:>))
 import Effectful.Reader.Static (Reader, asks, runReader)
-import Effectful.State.Static.Shared (State)
+import Effectful.State.Static.Local (State)
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq

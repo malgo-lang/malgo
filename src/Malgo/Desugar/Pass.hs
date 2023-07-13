@@ -9,7 +9,6 @@ import Data.Maybe (fromJust)
 import Data.Text qualified as T
 import Data.Traversable (for)
 import Effectful
-import Effectful.Fail
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Effectful.State.Static.Shared qualified as S
@@ -32,7 +31,7 @@ import Malgo.Syntax.Extension as G
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (IOE :> es, Reader ModulePathList :> es, Reader ModuleName :> es, S.State (HashMap ModuleName Interface) :> es, S.State Uniq :> es, Fail :> es) =>
+  (IOE :> es, Reader ModulePathList :> es, Reader ModuleName :> es, S.State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
   TcEnv ->
   Module (Malgo 'Refine) ->
   Eff es (DsState, Program (Id C.Type))
@@ -46,7 +45,7 @@ desugar tcEnv (Module _ ds) = do
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
-dsBindGroup :: (Reader ModulePathList :> es, S.State (HashMap ModuleName Interface) :> es, State DsState :> es, IOE :> es, Fail :> es, Reader ModuleName :> es, S.State Uniq :> es) => BindGroup (Malgo Refine) -> Eff es [Def]
+dsBindGroup :: (Reader ModulePathList :> es, S.State (HashMap ModuleName Interface) :> es, State DsState :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es) => BindGroup (Malgo Refine) -> Eff es [Def]
 dsBindGroup bg = do
   traverse_ dsImport (bg ^. imports)
   dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
@@ -70,8 +69,7 @@ dsImport (_, modName, _) = do
 dsScDefGroup ::
   ( Reader ModuleName :> es,
     State DsState :> es,
-    S.State Uniq :> es,
-    Fail :> es
+    State Uniq :> es
   ) =>
   [[ScDef (Malgo Refine)]] ->
   Eff es [Def]
@@ -80,24 +78,22 @@ dsScDefGroup xs = dsScDefs $ mconcat xs
 dsScDefs ::
   ( State DsState :> es,
     Reader ModuleName :> es,
-    S.State Uniq :> es,
-    Fail :> es
+    State Uniq :> es
   ) =>
   [ScDef (Malgo Refine)] ->
   Eff es [Def]
 dsScDefs ds = do
   -- まず、宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
-    Just (Forall _ fType) <- gets @DsState ((._signatureMap) >>> HashMap.lookup f)
+    Forall _ fType <- gets @DsState ((._signatureMap) >>> HashMap.lookup f >>> fromJust)
     f' <- toCoreId f <$> dsType fType
     modify \s@DsState {..} -> s {_nameEnv = HashMap.insert f f' _nameEnv}
   foldMapM dsScDef ds
 
 dsScDef ::
   ( Reader ModuleName :> es,
-    S.State Uniq :> es,
-    State DsState :> es,
-    Fail :> es
+    State Uniq :> es,
+    State DsState :> es
   ) =>
   ScDef (Malgo Refine) ->
   Eff es [Def]
@@ -123,10 +119,9 @@ dsScDef (Typed typ _, name, expr) = do
       pure [FunDef name' ps (C.typeOf name') e]
 
 fnToObj ::
-  ( S.State Uniq :> es,
+  ( State Uniq :> es,
     Reader ModuleName :> es,
-    State DsState :> es,
-    Fail :> es
+    State DsState :> es
   ) =>
   Bool ->
   Text ->
@@ -158,7 +153,7 @@ patToName (G.UnboxedP _ _) = "unboxed"
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (Reader ModuleName :> es, S.State Uniq :> es, State DsState :> es) =>
+  (Reader ModuleName :> es, State Uniq :> es, State DsState :> es) =>
   Foreign (Malgo Refine) ->
   Eff es [Def]
 dsForeign (Typed typ (_, primName), name, _) = do
@@ -171,11 +166,11 @@ dsForeign (Typed typ (_, primName), name, _) = do
   modify \s@DsState {..} -> s {_nameEnv = HashMap.insert name name' _nameEnv}
   pure [FunDef name' ps (C.typeOf name') e, ExtDef primName (paramTypes' :-> retType)]
 
-dsDataDef :: (Fail :> es, State DsState :> es, Reader ModuleName :> es, S.State Uniq :> es) => DataDef (Malgo 'Refine) -> Eff es [Def]
+dsDataDef :: (State DsState :> es, Reader ModuleName :> es, State Uniq :> es) => DataDef (Malgo 'Refine) -> Eff es [Def]
 dsDataDef (_, name, _, cons) =
   for cons $ \(_, conName, _) -> do
     -- lookup constructor infomations
-    Just vcs <- fmap (._valueConstructors) <$> (HashMap.lookup name <$> gets @DsState (._typeDefMap))
+    vcs <- (._valueConstructors) . fromJust <$> (HashMap.lookup name <$> gets @DsState (._typeDefMap))
     let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType
@@ -209,7 +204,7 @@ dsUnboxed (G.Double x) = C.Double x
 dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
-dsExpr :: (State DsState :> es, S.State Uniq :> es, Reader ModuleName :> es, Fail :> es) => G.Expr (Malgo Refine) -> Eff es (C.Expr (Id C.Type))
+dsExpr :: (State DsState :> es, State Uniq :> es, Reader ModuleName :> es) => G.Expr (Malgo Refine) -> Eff es (C.Expr (Id C.Type))
 dsExpr (G.Var (Typed typ _) name) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
@@ -256,7 +251,7 @@ dsExpr (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
 dsExpr (G.Record _ _) = error "unreachable"
 dsExpr (G.Seq _ ss) = dsStmts ss
 
-dsStmts :: (S.State Uniq :> es, Reader ModuleName :> es, State DsState :> es, Fail :> es) => NonEmpty (Stmt (Malgo Refine)) -> Eff es (C.Expr (Id C.Type))
+dsStmts :: (State Uniq :> es, Reader ModuleName :> es, State DsState :> es) => NonEmpty (Stmt (Malgo Refine)) -> Eff es (C.Expr (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExpr e
 dsStmts (G.Let _ _ e :| []) = dsExpr e
 dsStmts (NoBind _ e :| s : ss) = runDef $ do
@@ -284,7 +279,7 @@ toCoreId griffId coreType = griffId {meta = coreType}
 -- 関数をカリー化する
 -- η展開
 curryFun ::
-  ( S.State Uniq :> es,
+  ( State Uniq :> es,
     Reader ModuleName :> es,
     State DsState :> es
   ) =>
