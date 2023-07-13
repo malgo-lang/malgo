@@ -5,6 +5,8 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.List (isSubsequenceOf)
 import Data.List qualified as List
 import Data.Traversable (for)
+import Effectful
+import Effectful.Reader.Static
 import Koriel.Id (Id)
 import Koriel.Pretty hiding (space)
 import Malgo.Infer.TypeRep
@@ -36,7 +38,7 @@ instance Pretty Space where
   pretty (Union s1 s2) = pretty s1 <+> "|" <+> pretty s2
 
 -- | whether space s1 is a subspace of space s2
-subspace :: MonadReader RefineEnv m => Space -> Space -> m Bool
+subspace :: (Reader RefineEnv :> es) => Space -> Space -> Eff es Bool
 subspace s1 s2 = subtract s1 s2 >>= \s' -> pure $ s' == Empty
 
 -- malgoにはsubtypingがないので、これでいいはず
@@ -68,9 +70,9 @@ decomposable (TyConApp (TyTuple _) _) = True
 decomposable (TyRecord _) = True
 decomposable _ = False
 
-decompose :: MonadReader RefineEnv m => Type -> m Space
+decompose :: (Reader RefineEnv :> es) => Type -> Eff es Space
 decompose t@(TyConApp (TyCon con) ts) = do
-  env <- asks (.typeDefEnv)
+  env <- asks @RefineEnv (.typeDefEnv)
   case HashMap.lookup con env of
     Nothing -> pure $ Type t
     Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
@@ -82,27 +84,32 @@ decompose (TyConApp (TyTuple _) ts) = do
   pure $ Tuple ss
 decompose (TyRecord kts) = do
   env <- ask
-  pure $
-    Record $
-      map (second $ space env) $
-        -- sort by key because the order of `toList` results is unspecified.
-        sortWith fst $
-          HashMap.toList kts
+  pure
+    $ Record
+    $ map (second $ space env)
+    $
+    -- sort by key because the order of `toList` results is unspecified.
+    sortWith fst
+    $ HashMap.toList kts
 decompose t = pure $ Type t
 
-constructorSpace :: MonadReader RefineEnv m => HashMap TypeVar Type -> (Id (), Scheme Type) -> m Space
+constructorSpace ::
+  (Reader RefineEnv :> es) =>
+  HashMap TypeVar Type ->
+  (Id (), Scheme Type) ->
+  Eff es Space
 constructorSpace subst (con, Forall _ (splitTyArr -> (ps, _))) = do
   env <- ask
   let ss = map (space env . applySubst subst) ps
   pure $ Constructor con ss
 
-isSuperOf :: Ord a => [(a, b)] -> [(a, b)] -> Bool
+isSuperOf :: (Ord a) => [(a, b)] -> [(a, b)] -> Bool
 isSuperOf kts1 kts2
   | map fst kts1 `isSubsequenceOf` map fst kts2 = True
   | otherwise = False
 
 -- | subtraction of s1 and s2
-subtract :: MonadReader RefineEnv m => Space -> Space -> m Space
+subtract :: (Reader RefineEnv :> es) => Space -> Space -> Eff es Space
 subtract Empty _ = pure Empty
 subtract s1 Empty = pure s1
 subtract (Type t1) (Type t2) | t1 `isSubTypeOf` t2 = pure Empty
@@ -120,12 +127,12 @@ subtract (Record kts1) (Record kts2)
         then pure Empty
         else pure $ Record kss
   | otherwise =
-      error $
-        "Record kts2 is invalid pattern:\n"
-          <> show kts1
-          <> "\n"
-          <> show kts2
-          <> "\n"
+      error
+        $ "Record kts2 is invalid pattern:\n"
+        <> show kts1
+        <> "\n"
+        <> show kts2
+        <> "\n"
 subtract (Union s1 s2) x = Union <$> subtract s1 x <*> subtract s2 x
 subtract x (Union s1 s2) = do
   s1' <- subtract x s1
@@ -135,7 +142,12 @@ subtract (Type t) x | decomposable t = join $ subtract <$> decompose t <*> pure 
 subtract x (Type t) | decomposable t = subtract x =<< decompose t
 subtract a _ = pure a
 
-subtract' :: MonadReader RefineEnv m => ([Space] -> Space) -> [Space] -> [Space] -> m Space
+subtract' ::
+  (Reader RefineEnv :> es) =>
+  ([Space] -> Space) ->
+  [Space] ->
+  [Space] ->
+  Eff es Space
 subtract' k ss ws = do
   isSubSpace <- and <$> zipWithM subspace ss ws
   isEmpty <- anyM equalEmpty =<< zipWithM intersection ss ws
@@ -151,7 +163,7 @@ subtract' k ss ws = do
     aux _ _ _ = error "length ss == length ws"
 
 -- | intersection of spaces
-intersection :: MonadReader RefineEnv m => Space -> Space -> m Space
+intersection :: (Reader RefineEnv :> es) => Space -> Space -> Eff es Space
 intersection Empty _ = pure Empty
 intersection _ Empty = pure Empty
 intersection (Type t1) (Type t2)
@@ -167,7 +179,7 @@ intersection x (Type t) | decomposable t = intersection x =<< decompose t
 intersection _ _ = pure Empty
 
 -- | compare with empty space
-equalEmpty :: MonadReader RefineEnv m => Space -> m Bool
+equalEmpty :: (Reader RefineEnv :> es) => Space -> Eff es Bool
 equalEmpty Empty = pure True
 equalEmpty (Type t)
   | decomposable t = equalEmpty =<< decompose t

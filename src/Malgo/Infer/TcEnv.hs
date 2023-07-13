@@ -1,11 +1,11 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Infer.TcEnv (
-  RecordTypeName,
-  TcEnv (..),
-  genTcEnv,
-)
+module Malgo.Infer.TcEnv
+  ( RecordTypeName,
+    TcEnv (..),
+    genTcEnv,
+  )
 where
 
 import Control.Lens (At (at), makeFieldsNoPrefix, view, (^.))
@@ -14,9 +14,8 @@ import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Lens
 import Malgo.Infer.TypeRep
-import Malgo.Interface (Interface)
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (Resolved, RnEnv (interfaces))
+import Malgo.Rename.RnEnv (Resolved, RnEnv)
 import Malgo.Syntax.Extension
 
 type RecordTypeName = Text
@@ -26,13 +25,12 @@ data TcEnv = TcEnv
     _typeDefMap :: HashMap RnId (TypeDef Type),
     _typeSynonymMap :: HashMap TypeVar ([TypeVar], Type),
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
-    _kindCtx :: KindCtx,
-    interfaces :: IORef (HashMap ModuleName Interface)
+    _kindCtx :: KindCtx
   }
 
 makeFieldsNoPrefix ''TcEnv
 
-genTcEnv :: Applicative f => RnEnv -> f TcEnv
+genTcEnv :: (Applicative f) => RnEnv -> f TcEnv
 genTcEnv rnEnv = do
   let int32_t = fromJust $ findBuiltinType "Int32#" rnEnv
   let int64_t = fromJust $ findBuiltinType "Int64#" rnEnv
@@ -41,8 +39,8 @@ genTcEnv rnEnv = do
   let char_t = fromJust $ findBuiltinType "Char#" rnEnv
   let string_t = fromJust $ findBuiltinType "String#" rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
-  pure $
-    TcEnv
+  pure
+    $ TcEnv
       { _signatureMap = mempty,
         _typeDefMap =
           HashMap.fromList
@@ -65,8 +63,7 @@ genTcEnv rnEnv = do
               (char_t, TYPE),
               (string_t, TYPE),
               (ptr_t, TYPE `TyArr` TYPE)
-            ],
-        interfaces = rnEnv.interfaces
+            ]
       }
 
 findBuiltinType :: PsId -> RnEnv -> Maybe RnId

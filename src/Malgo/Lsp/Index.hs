@@ -20,20 +20,24 @@ module Malgo.Lsp.Index
   )
 where
 
+import Control.Concurrent.MVar (MVar)
 import Control.Lens.TH
 import Data.Binary (Binary, decodeFile, encode)
 import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
+import Effectful
+import Effectful.Reader.Static
+import Effectful.State.Static.Shared
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (Scheme, Type)
+import Malgo.Interface (ModulePathList (..))
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
 import System.Directory qualified as Directory
 import System.FilePath (takeFileName, (-<.>), (</>))
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
-import UnliftIO (atomicWriteIORef)
 
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
@@ -71,8 +75,8 @@ data Index = Index
 makeFieldsNoPrefix ''Index
 
 data LspOpt = LspOpt
-  { modulePaths :: [FilePath],
-    indexes :: IORef (HashMap ModuleName Index)
+  { modulePaths :: ModulePathList,
+    indexes :: MVar (HashMap ModuleName Index)
   }
 
 makeFieldsNoPrefix ''LspOpt
@@ -99,21 +103,17 @@ storeIndex dstPath index = do
   let encoded = encode index
   liftIO $ BL.writeFile (dstPath -<.> "idx") encoded
 
-loadIndex ::
-  (MonadIO m) =>
-  [FilePath] ->
-  IORef (HashMap ModuleName Index) ->
-  ModuleName ->
-  m (Maybe Index)
-loadIndex modPaths indexesRef modName = do
-  indexes <- readIORef indexesRef
+loadIndex :: (State (HashMap ModuleName Index) :> es, IOE :> es, Reader ModulePathList :> es) => ModuleName -> Eff es (Maybe Index)
+loadIndex modName = do
+  ModulePathList modulePaths <- ask
+  indexes <- get @(HashMap ModuleName Index)
   case HashMap.lookup modName indexes of
     Just index -> pure $ Just index
     Nothing -> do
-      message <- findAndReadFile modPaths (convertString modName.raw <> ".idx")
+      message <- findAndReadFile modulePaths (convertString modName.raw <> ".idx")
       case message of
         Right x -> do
-          atomicWriteIORef indexesRef $ HashMap.insert modName x indexes
+          modify @(HashMap ModuleName Index) $ HashMap.insert modName x
           pure $ Just x
         Left err -> do
           hPrint stderr err

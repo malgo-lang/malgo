@@ -18,6 +18,7 @@ module Malgo.Infer.TypeRep
     typeConstructor,
     typeParameters,
     valueConstructors,
+    TypeMap,
     runTypeUnify,
     pattern TyConApp,
     viewTyConApp,

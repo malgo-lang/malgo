@@ -25,7 +25,7 @@ import Data.List.Extra (mconcatMap)
 import Data.Maybe qualified as Maybe
 import Data.String.Conversions
 import Data.Traversable (for)
-import Effectful (Eff, (:>))
+import Effectful (Eff, runPureEff)
 import Effectful.Reader.Static qualified as Eff
 import Effectful.State.Static.Shared qualified as Eff
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
@@ -172,7 +172,13 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
       pure (mainFuncId, ([], mainFuncBody))
 
 runEffOnCodeGen :: (MonadState CodeGenState m, MonadReader CodeGenEnv m) => Eff '[Eff.Reader ModuleName, Eff.State Uniq] a -> m a
-runEffOnCodeGen = _
+runEffOnCodeGen e = do
+  moduleName <- asks (.moduleName)
+  n <- gets (.uniqSupply)
+  let (e', Uniq n) = runPureEff do
+        Eff.runState (Uniq n) (Eff.runReader moduleName e)
+  modify \s -> s {uniqSupply = n}
+  pure e'
 
 convType :: C.Type -> LT.Type
 convType (_ :-> _) = ptr

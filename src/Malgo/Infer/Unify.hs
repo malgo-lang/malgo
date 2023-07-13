@@ -2,18 +2,32 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | Unification
-module Malgo.Infer.Unify (Constraint (..), MonadBind (..), solve, generalize, generalizeMutRecs, instantiate) where
+module Malgo.Infer.Unify
+  ( Constraint (..),
+    lookupVar,
+    freshVar,
+    bindVar,
+    zonk,
+    solve,
+    generalize,
+    generalizeMutRecs,
+    instantiate,
+  )
+where
 
-import Control.Lens (At (at), itraverse_, use, view, (%=), (?=))
+import Control.Lens (itraverse_)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.Traversable (for)
+import Effectful
+import Effectful.Reader.Static
+import Effectful.State.Static.Local
+import Effectful.State.Static.Shared qualified as S
 import GHC.Records (HasField)
 import Koriel.Id
-import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Infer.TcEnv (TcEnv)
+import Malgo.Infer.TcEnv (TcEnv (..))
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (Constraint)
 
@@ -31,30 +45,49 @@ instance Pretty Constraint where
 
 -- * Unifiable
 
--- | Monad that handles substitution over type variables
-class (Monad m) => MonadBind m where
-  lookupVar :: MetaVar -> m (Maybe Type)
-  default lookupVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => MetaVar -> m (Maybe Type)
-  lookupVar v = lift (lookupVar v)
-  freshVar :: Maybe Text -> m MetaVar
-  default freshVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Maybe Text -> m MetaVar
-  freshVar = lift . freshVar
-  bindVar :: (HasCallStack) => Range -> MetaVar -> Type -> m ()
-  default bindVar :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Range -> MetaVar -> Type -> m ()
-  bindVar x v t = lift (bindVar x v t)
+lookupVar :: (State TypeMap :> es) => MetaVar -> Eff es (Maybe Type)
+lookupVar v = HashMap.lookup v <$> get @TypeMap
 
-  -- | Apply all substituation
-  zonk :: Type -> m Type
-  default zonk :: (MonadTrans tr, MonadBind m1, m ~ tr m1) => Type -> m Type
-  zonk t = lift (zonk t)
+freshVar ::
+  (S.State Uniq :> es, Reader ModuleName :> es, State TcEnv :> es) =>
+  Maybe Text ->
+  Eff es MetaVar
+freshVar hint = do
+  hint <- pure $ fromMaybe "t" hint
+  kind <- newTemporalId ("k" <> hint) ()
+  newVar <- newInternalId hint ()
+  modify \s@TcEnv {..} -> s {_kindCtx = insertKind newVar (TyMeta $ MetaVar kind) _kindCtx}
+  pure $ MetaVar newVar
 
-instance (MonadBind m) => MonadBind (ReaderT r m)
+bindVar :: (IOE :> es, State TcEnv :> es, State TypeMap :> es) => Range -> MetaVar -> Type -> Eff es ()
+bindVar x v t = do
+  when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
+  ctx <- gets @TcEnv (._kindCtx)
+  solve [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
+  modify @TypeMap (HashMap.insert v t)
+  where
+    occursCheck :: MetaVar -> Type -> Bool
+    occursCheck v t = HashSet.member v (freevars t)
 
-instance (MonadBind m) => MonadBind (ExceptT e m)
-
-instance (MonadBind m) => MonadBind (StateT s m)
-
-instance (Monoid w, MonadBind m) => MonadBind (WriterT w m)
+zonk :: (State TypeMap :> es, State TcEnv :> es) => Type -> Eff es Type
+zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
+zonk (TyVar v) = do
+  ctx <- gets @TcEnv (._kindCtx)
+  k <- zonk $ kindOf ctx v
+  modify \s@TcEnv {..} -> s {_kindCtx = insertKind v k _kindCtx}
+  pure $ TyVar v
+zonk (TyCon c) = do
+  ctx <- gets @TcEnv (._kindCtx)
+  k <- zonk $ kindOf ctx c
+  modify \s@TcEnv {..} -> s {_kindCtx = insertKind c k _kindCtx}
+  pure $ TyCon c
+zonk t@TyPrim {} = pure t
+zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2
+zonk t@TyTuple {} = pure t
+zonk (TyRecord kts) = TyRecord <$> traverse zonk kts
+zonk TyPtr = pure TyPtr
+zonk TYPE = pure TYPE
+zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
 
 -- | 'Right' (substituation, new constraints) or 'Left' (position, error message)
 type UnifyResult ann = Either (Range, Doc ann) (HashMap MetaVar Type, [(Range, Constraint)])
@@ -80,53 +113,15 @@ unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
     unifyErrorMessage t1 t2 = vsep ["Couldn't match", nest 7 (pretty t1), nest 2 ("with" <+> pretty t2)]
 
-instance (MonadReader env m, HasUniqSupply env, MonadIO m, MonadState TcEnv m, HasModuleName env) => MonadBind (TypeUnifyT m) where
-  lookupVar v = view (at v) <$> TypeUnifyT get
-
-  freshVar hint = do
-    hint <- pure $ fromMaybe "t" hint
-    kind <- newTemporalId ("k" <> hint) ()
-    newVar <- newInternalId hint ()
-    kindCtx %= insertKind newVar (TyMeta $ MetaVar kind)
-    pure $ MetaVar newVar
-
-  bindVar x v t = do
-    when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
-    ctx <- use kindCtx
-    solve [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
-    TypeUnifyT $ at v ?= t
-    where
-      occursCheck :: MetaVar -> Type -> Bool
-      occursCheck v t = HashSet.member v (freevars t)
-
-  zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
-  zonk (TyVar v) = do
-    ctx <- use kindCtx
-    k <- zonk $ kindOf ctx v
-    kindCtx %= insertKind v k
-    pure $ TyVar v
-  zonk (TyCon c) = do
-    ctx <- use kindCtx
-    k <- zonk $ kindOf ctx c
-    kindCtx %= insertKind c k
-    pure $ TyCon c
-  zonk t@TyPrim {} = pure t
-  zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2
-  zonk t@TyTuple {} = pure t
-  zonk (TyRecord kts) = TyRecord <$> traverse zonk kts
-  zonk TyPtr = pure TyPtr
-  zonk TYPE = pure TYPE
-  zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
-
 -- * Constraint solver
 
-solve :: (MonadIO f, MonadBind f, MonadState TcEnv f) => [(Range, Constraint)] -> f ()
+solve :: (State TypeMap :> es, State TcEnv :> es, IOE :> es) => [(Range, Constraint)] -> Eff es ()
 solve = solveLoop (5000 :: Int)
   where
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
     solveLoop _ [] = pass
     solveLoop n ((x, t1 :~ t2) : cs) = do
-      abbrEnv <- use typeSynonymMap
+      abbrEnv <- gets @TcEnv (._typeSynonymMap)
       let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
       let t2' = fromMaybe t2 (expandTypeSynonym abbrEnv t2)
       case unify x t1' t2' of
@@ -137,7 +132,11 @@ solve = solveLoop (5000 :: Int)
           solveLoop (n - 1) constraints
     zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
-generalize :: (MonadBind m) => Range -> Type -> m (Scheme Type)
+generalize ::
+  (State TypeMap :> es, State TcEnv :> es, IOE :> es) =>
+  Range ->
+  Type ->
+  Eff es (Scheme Type)
 generalize x term = do
   zonkedTerm <- zonk term
   let fvs = HashSet.toList $ freevars zonkedTerm
@@ -145,7 +144,11 @@ generalize x term = do
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
 
-generalizeMutRecs :: (MonadBind m) => Range -> [Type] -> m ([TypeVar], [Type])
+generalizeMutRecs ::
+  (State TypeMap :> es, State TcEnv :> es, IOE :> es) =>
+  Range ->
+  [Type] ->
+  Eff es ([TypeVar], [Type])
 generalizeMutRecs x terms = do
   zonkedTerms <- traverse zonk terms
   let fvs = HashSet.toList $ mconcat $ map freevars zonkedTerms
@@ -160,11 +163,11 @@ generalizeMutRecs x terms = do
 toBound :: (HasField "metaVar" r a) => r -> a
 toBound tv = tv.metaVar
 
-instantiate :: (MonadBind m, MonadIO m, MonadState TcEnv m) => Range -> Scheme Type -> m Type
+instantiate :: (Reader ModuleName :> es, S.State Uniq :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es) => Range -> Scheme Type -> Eff es Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just a.name)
-    ctx <- use kindCtx
+    ctx <- gets @TcEnv (._kindCtx)
     solve [(x, kindOf ctx a :~ kindOf ctx v)]
     pure (a, v)
   pure $ applySubst (HashMap.fromList avs) t
