@@ -4,21 +4,27 @@
 
 module Main (main) where
 
+import Control.Concurrent (MVar, newMVar)
 import Control.Lens (makeFieldsNoPrefix, (.~))
 import Data.ByteString qualified as BS
+import Effectful
+import Effectful.Fail
+import Effectful.State.Static.Shared (evalState)
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
 import Koriel.Core.Parser qualified as Koriel
 import Koriel.Id (ModuleName)
+import Koriel.MonadUniq (Uniq (..))
 import Koriel.Pretty
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
+import Malgo.Interface (Interface, ModulePathList (..))
 import Malgo.Lsp.Index (Index, LspOpt (LspOpt))
 import Malgo.Lsp.Index qualified as Lsp
 import Malgo.Lsp.Server qualified as Lsp
-import Malgo.Monad (CompileMode (..), newMalgoEnv)
-import Malgo.Monad qualified as Monad
+import Malgo.Monad (CompileMode (..), Flag (..), runMalgoM)
+import Malgo.Monad qualified as Flag
 import Malgo.Prelude
 import Options.Applicative
 import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
@@ -45,20 +51,27 @@ main = do
   case command of
     ToLL opt -> do
       opt <- pure $ opt {modulePaths = opt.modulePaths <> [takeDirectory opt.dstPath]}
-      env <- newMalgoEnv opt.srcPath opt.modulePaths undefined Nothing Nothing
-      Driver.compile
-        opt.srcPath
-        env
-          { Monad.dstPath = opt.dstPath,
-            Monad.compileMode = opt.compileMode,
-            Monad.noOptimize = opt.noOptimize,
-            Monad.lambdaLift = opt.lambdaLift,
-            Monad.optimizeOption = opt.optimizeOption,
-            Monad.debugMode = opt.debugMode
-          }
+      runEff $
+        Driver.compile opt.srcPath
+          & runMalgoM
+            opt.srcPath
+            opt.modulePaths
+            opt.compileMode
+            Flag
+              { Flag.noOptimize = opt.noOptimize,
+                Flag.lambdaLift = opt.lambdaLift,
+                Flag.debugMode = opt.debugMode,
+                Flag.testMode = False
+              }
+            opt.optimizeOption
+          & runFailIO
+          & evalState @(HashMap ModuleName Index) mempty
+          & evalState @(HashMap ModuleName Interface) mempty
+          & evalState (Uniq 0)
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      opt <- pure $ opt {Lsp.modulePaths = opt.modulePaths <> [".malgo-work" </> "build", basePath]}
+      let ModulePathList modulePaths = opt.modulePaths
+      opt <- pure $ opt {Lsp.modulePaths = ModulePathList $ modulePaths <> [".malgo-work" </> "build", basePath]}
       void $ Lsp.server opt
     Build _ -> do
       Build.run
@@ -106,8 +119,12 @@ toLLOpt =
   )
     <**> helper
 
-lspOpt :: IORef (HashMap ModuleName Index) -> Parser LspOpt
-lspOpt cache = LspOpt <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")) <*> pure cache <**> helper
+lspOpt :: MVar (HashMap ModuleName Index) -> Parser LspOpt
+lspOpt cache =
+  LspOpt
+    <$> (ModulePathList <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")))
+    <*> pure cache
+    <**> helper
 
 data BuildOpt = BuildOpt
   deriving stock (Eq, Show)
@@ -123,12 +140,12 @@ data Command
 
 parseCommand :: IO Command
 parseCommand = do
-  cache <- newIORef mempty
+  cache <- newMVar mempty
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build <|> subparser koriel) <**> helper)
-          $ fullDesc
-          <> header "malgo programming language"
+      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build <|> subparser koriel) <**> helper) $
+          fullDesc
+            <> header "malgo programming language"
       )
   case command of
     ToLL opt -> do
@@ -141,28 +158,28 @@ parseCommand = do
     Koriel opt -> pure $ Koriel opt
   where
     toLL =
-      command "to-ll"
-        $ info (ToLL <$> toLLOpt)
-        $ fullDesc
-        <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
-        <> header "malgo to LLVM Textual IR Compiler"
+      command "to-ll" $
+        info (ToLL <$> toLLOpt) $
+          fullDesc
+            <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
+            <> header "malgo to LLVM Textual IR Compiler"
     lsp cache = do
-      command "lsp"
-        $ info (Lsp <$> lspOpt cache)
-        $ fullDesc
-        <> progDesc "Language Server for Malgo"
-        <> header "Malgo Language Server"
+      command "lsp" $
+        info (Lsp <$> lspOpt cache) $
+          fullDesc
+            <> progDesc "Language Server for Malgo"
+            <> header "Malgo Language Server"
     build =
-      command "build"
-        $ info (Build <$> buildOpt)
-        $ fullDesc
-        <> progDesc "Build Malgo program"
-        <> header "malgo build"
+      command "build" $
+        info (Build <$> buildOpt) $
+          fullDesc
+            <> progDesc "Build Malgo program"
+            <> header "malgo build"
     buildOpt = pure BuildOpt
     koriel =
-      command "koriel"
-        $ info (Koriel <$> korielOpt)
-        $ fullDesc
-        <> progDesc "Koriel Compiler"
-        <> header "malgo koriel"
+      command "koriel" $
+        info (Koriel <$> korielOpt) $
+          fullDesc
+            <> progDesc "Koriel Compiler"
+            <> header "malgo koriel"
     korielOpt = KorielOpt <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")

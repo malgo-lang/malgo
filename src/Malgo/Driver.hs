@@ -1,7 +1,7 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
-import Control.Exception (IOException, assert, catch)
+import Control.Exception (assert)
 import Data.Binary qualified as Binary
 import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
@@ -9,6 +9,7 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text.IO qualified as T
 import Effectful
+import Effectful.Fail
 import Effectful.Reader.Static
 import Effectful.State.Static.Shared qualified as S
 import Error.Diagnose (addFile, prettyDiagnostic)
@@ -17,16 +18,16 @@ import Koriel.Core.CodeGen.LLVM qualified as LLVM
 import Koriel.Core.Flat qualified as Flat
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
-import Koriel.Core.Optimize (optimizeProgram)
+import Koriel.Core.Optimize (OptimizeOption, optimizeProgram)
 import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), ModuleName (..))
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (ModulePathList (..), buildInterface, loadInterface, toInterfacePath)
+import Malgo.Interface (Interface, ModulePathList (..), buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
-import Malgo.Lsp.Index (storeIndex)
+import Malgo.Lsp.Index (Index, storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Monad
 import Malgo.Parser (parseMalgo)
@@ -60,20 +61,34 @@ withDump isDump label m = do
   pure result
 
 -- | Compile the parsed AST.
-compileFromAST :: FilePath -> FilePath -> Syntax.Module (Malgo 'Parse) -> Eff es ()
-compileFromAST srcPath dstPath parsedAst = do
-  runMalgoM srcPath dstPath _ act
+compileFromAST ::
+  ( Reader OptimizeOption :> es,
+    Reader DstPath :> es,
+    Reader ModulePathList :> es,
+    Reader Flag :> es,
+    IOE :> es,
+    S.State (HashMap ModuleName Interface) :> es,
+    S.State Uniq :> es,
+    Reader ModuleName :> es,
+    Fail :> es,
+    S.State (HashMap ModuleName Index) :> es
+  ) =>
+  FilePath ->
+  Syntax.Module (Malgo 'Parse) ->
+  Eff es ()
+compileFromAST srcPath parsedAst = do
+  act
   where
     moduleName = parsedAst.moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= moduleName.raw)
-        $ error "Module name must be source file's base name."
+      when (convertString (takeBaseName srcPath) /= moduleName.raw) $
+        error "Module name must be source file's base name."
 
       DstPath dstPath <- ask @DstPath
       ModulePathList modulePaths <- ask @ModulePathList
       flags <- ask @Flag
 
-      when flags.debugMode do
+      when flags.debugMode $ liftIO do
         hPutStrLn stderr "=== PARSED ==="
         hPrint stderr $ pretty parsedAst
       rnEnv <- RnEnv.genBuiltinRnEnv
@@ -104,8 +119,8 @@ compileFromAST srcPath dstPath parsedAst = do
         lint True core
         pure core
 
-      when flags.debugMode
-        $ liftIO do
+      when flags.debugMode $
+        liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pretty core
 
@@ -126,8 +141,8 @@ compileFromAST srcPath dstPath parsedAst = do
       lint True coreOpt
 
       coreLL <- if flags.lambdaLift then lambdalift coreOpt >>= Flat.normalize else pure coreOpt
-      when (flags.debugMode && flags.lambdaLift)
-        $ liftIO do
+      when (flags.debugMode && flags.lambdaLift) $
+        liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pretty coreLL
       when flags.testMode do
@@ -159,15 +174,28 @@ compileFromAST srcPath dstPath parsedAst = do
       | griffId.name
           == "main"
           && griffId.moduleName
-          == moduleName =
+            == moduleName =
           Just coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
 
 -- | Read the source file and parse it, then compile.
-compile :: FilePath -> FilePath -> Flag -> IO ()
-compile srcPath dstPath flags = do
-  src <- BL.readFile srcPath
+compile ::
+  ( Reader OptimizeOption :> es,
+    Reader DstPath :> es,
+    Reader ModulePathList :> es,
+    Reader Flag :> es,
+    IOE :> es,
+    S.State (HashMap ModuleName Interface) :> es,
+    S.State Uniq :> es,
+    Fail :> es,
+    S.State (HashMap ModuleName Index) :> es
+  ) =>
+  FilePath ->
+  Eff es ()
+compile srcPath = do
+  flags <- ask @Flag
+  src <- liftIO $ BL.readFile srcPath
   parsedAst <- case parseMalgo srcPath (convertString src) of
     Right x -> pure x
     Left err ->
@@ -184,10 +212,11 @@ compile srcPath dstPath flags = do
                     & PrettyPrinter.layoutPretty PrettyPrinter.defaultLayoutOptions
                     & PrettyPrinter.renderStrict
                     & convertString
-            BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
-            hFlush stderr
-            exitFailure
+            liftIO $ BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
+            liftIO $ hFlush stderr
+            liftIO exitFailure
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst
-  compileFromAST srcPath dstPath parsedAst
+  runReader parsedAst.moduleName $
+    compileFromAST srcPath parsedAst

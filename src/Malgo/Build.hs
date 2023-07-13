@@ -10,14 +10,22 @@ import Data.List ((\\))
 import Data.List qualified as List
 import Data.List.Extra (chunksOf)
 import Data.Maybe qualified as Maybe
+import Effectful
+import Effectful.Fail
+import Effectful.Reader.Static
+import Effectful.State.Static.Shared (evalState)
+import Koriel.Core.Optimize (defaultOptimizeOption)
 import Koriel.Id (ModuleName (..))
+import Koriel.MonadUniq
 import Malgo.Driver qualified as Driver
-import Malgo.Monad (getWorkspaceDir, newMalgoEnv)
+import Malgo.Interface (Interface)
+import Malgo.Lsp.Index (Index)
+import Malgo.Monad (CompileMode (..), Flag (..), getWorkspaceDir, runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..))
 import System.Directory (getCurrentDirectory, makeAbsolute)
-import System.FilePath ((</>))
+import System.FilePath (takeBaseName, (</>))
 import System.FilePath.Glob (glob)
 import UnliftIO (mapConcurrently_)
 import Witherable (ordNub)
@@ -64,19 +72,33 @@ run = do
   n <- getNumCapabilities
   let splited = split n $ map (\(_, i, o) -> (i, o)) moduleDepends
 
-  _interfaces <- newIORef mempty
-  _indexes <- newIORef mempty
-  traverse_
-    ( mapConcurrently_
-        ( \(path, moduleName, _) -> do
-            let ast = Maybe.fromJust $ List.lookup path parsedAstList
-            putStrLn ("Compile " <> path)
-            env <- newMalgoEnv path [] moduleName (Just _interfaces) (Just _indexes)
-            Driver.compileFromAST path env ast
-        )
-        . mapMaybe (\mod -> List.find (view _2 >>> (== mod)) moduleDepends)
-    )
-    splited
+  runEff
+    $ runFailIO
+    $ evalState @(HashMap ModuleName Interface) mempty
+    $ evalState @(HashMap ModuleName Index) mempty
+    $ traverse_
+      ( mapConcurrently_
+          ( \(path, moduleName, _) -> do
+              let ast = Maybe.fromJust $ List.lookup path parsedAstList
+              liftIO $ putStrLn ("Compile " <> path)
+              evalState (Uniq 0)
+                $ runReader moduleName
+                $ runMalgoM
+                  (workspaceDir </> "build" </> takeBaseName path <> ".ll")
+                  []
+                  LLVM
+                  Flag
+                    { noOptimize = False,
+                      lambdaLift = False,
+                      debugMode = False,
+                      testMode = False
+                    }
+                  defaultOptimizeOption
+                $ Driver.compileFromAST path ast
+          )
+          . mapMaybe (\mod -> List.find (view _2 >>> (== mod)) moduleDepends)
+      )
+      splited
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []

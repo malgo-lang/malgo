@@ -3,9 +3,9 @@
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 
 -- | LLVM Code Generator
-module Koriel.Core.CodeGen.LLVM
-  ( codeGen,
-  )
+module Koriel.Core.CodeGen.LLVM (
+  codeGen,
+)
 where
 
 import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, use, view, (<?=), (?=), (?~))
@@ -36,21 +36,21 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import LLVM.AST
-  ( Definition (..),
-    Module (..),
-    Name,
-    defaultModule,
-    mkName,
-  )
+import LLVM.AST (
+  Definition (..),
+  Module (..),
+  Name,
+  defaultModule,
+  mkName,
+ )
 import LLVM.AST.Constant qualified as C
 import LLVM.AST.Global
 import LLVM.AST.Linkage (Linkage (External, Internal))
 import LLVM.AST.Operand (Operand (..))
-import LLVM.AST.Type hiding
-  ( double,
-    void,
-  )
+import LLVM.AST.Type hiding (
+  double,
+  void,
+ )
 import LLVM.AST.Type qualified as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
@@ -102,10 +102,10 @@ type MonadCodeGen m =
   ) ::
     Constraint
 
-runCodeGenT :: (Monad m) => Int -> CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT :: Monad m => Int -> CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT n env m =
-  execModuleBuilderT emptyModuleBuilder
-    $ runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty n) env
+  execModuleBuilderT emptyModuleBuilder $
+    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty n) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
@@ -137,11 +137,12 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
     case mentry of
       Just entry -> do
         (f, (ps, body)) <-
-          runEffOnCodeGen $ mainFunc =<< runDef do
-            let unitCon = C.Con C.Tuple []
-            unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
-            _ <- bind $ CallDirect entry [unit]
-            pure (Atom $ Unboxed $ Int32 0)
+          runEffOnCodeGen $
+            mainFunc =<< runDef do
+              let unitCon = C.Con C.Tuple []
+              unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
+              _ <- bind $ CallDirect entry [unit]
+              pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
     genLoadModule $ runContT (initTopVars topVars) (const retVoid)
@@ -175,9 +176,9 @@ runEffOnCodeGen :: (MonadState CodeGenState m, MonadReader CodeGenEnv m) => Eff 
 runEffOnCodeGen e = do
   moduleName <- asks (.moduleName)
   n <- gets (.uniqSupply)
-  let (e', Uniq n) = runPureEff do
+  let (e', Uniq n') = runPureEff do
         Eff.runState (Uniq n) (Eff.runReader moduleName e)
-  modify \s -> s {uniqSupply = n}
+  modify \s -> s {uniqSupply = n'}
   pure e'
 
 convType :: C.Type -> LT.Type
@@ -206,10 +207,10 @@ innerType (RecordT _) = LT.NamedTypeReference (mkName "struct.hash_table")
 innerType AnyT = i8
 innerType _ = error "invalid type"
 
-sizeofCon :: (Num a) => Con -> a
+sizeofCon :: Num a => Con -> a
 sizeofCon (Con _ ts) = sum $ map sizeofType ts
 
-sizeofType :: (Num a) => C.Type -> a
+sizeofType :: Num a => C.Type -> a
 sizeofType (_ :-> _) = 8
 sizeofType Int32T = 4
 sizeofType Int64T = 8
@@ -250,8 +251,8 @@ findVar x = findLocalVar
         Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
-      emitDefn
-        $ GlobalDefinition
+      emitDefn $
+        GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = toName x,
               LLVM.AST.Global.type' = convType $ C.typeOf x,
@@ -261,7 +262,7 @@ findVar x = findLocalVar
       primMap . at (toName x) ?= opr
       load (convType $ C.typeOf x) opr 0
 
-findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
+findFun :: MonadCodeGen m => Id C.Type -> m Operand
 findFun x =
   view (funcMap . at x) >>= \case
     Just opr -> pure opr
@@ -272,7 +273,7 @@ findFun x =
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
-findExt :: (MonadCodeGen m) => Name -> [LT.Type] -> LT.Type -> m Operand
+findExt :: MonadCodeGen m => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
   use (primMap . at x) >>= \case
     Just x -> pure x
@@ -300,11 +301,11 @@ sizeof ty = C.PtrToInt szPtr LT.i64
 toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
-toLabel :: (ConvertibleStrings s BS.ByteString) => s -> ShortByteString
+toLabel :: ConvertibleStrings s BS.ByteString => s -> ShortByteString
 toLabel s = BS.toShort $ convertString s
 
 -- generate code for a toplevel variable definition
-genVar :: (MonadModuleBuilder m) => Id C.Type -> Expr (Id C.Type) -> m Operand
+genVar :: MonadModuleBuilder m => Id C.Type -> Expr (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
@@ -366,10 +367,10 @@ genExpr e@(CallDirect f xs) = do
     (map (,[]) (ConstantOperand (C.Null ptr) : xsOprs))
 genExpr e@(RawCall name _ xs) = do
   let primOpr =
-        ConstantOperand
-          $ C.GlobalReference
-          $ LLVM.AST.mkName
-          $ convertString name
+        ConstantOperand $
+          C.GlobalReference $
+            LLVM.AST.mkName $
+              convertString name
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
 genExpr (Cast ty x) = do
@@ -454,14 +455,14 @@ genExpr (Assign x v e) = do
 genExpr (Error _) = shiftT (const unreachable)
 
 -- | Get constructor list from the type of scrutinee.
-constructorList :: (HasType s) => s -> [Con]
+constructorList :: HasType s => s -> [Con]
 constructorList scrutinee =
   case C.typeOf scrutinee of
     SumT cs -> cs
     _ -> []
 
 genAtom ::
-  (MonadCodeGen m, MonadIO m, MonadIRBuilder m) =>
+  (MonadCodeGen m, MonadIRBuilder m) =>
   Atom (Id C.Type) ->
   m Operand
 genAtom (Var x) = findVar x
@@ -553,8 +554,8 @@ globalStringPtr str = do
         LLVM.AST.Typed.typeOf charArray >>= \case
           Left err -> error $ show err
           Right ty -> pure ty
-      emitDefn
-        $ GlobalDefinition
+      emitDefn $
+        GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = name,
               LLVM.AST.Global.type' = ty,
@@ -579,7 +580,7 @@ gepAndStore ty opr addrs val = do
   store addr 0 val
 
 internalFunction ::
-  (MonadModuleBuilder m) =>
+  MonadModuleBuilder m =>
   -- | Function name
   Name ->
   -- | Parameter types and name suggestions
