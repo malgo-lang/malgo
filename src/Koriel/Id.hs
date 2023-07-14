@@ -1,8 +1,7 @@
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Koriel.Id
   ( IdSort (..),
@@ -22,7 +21,8 @@ where
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Hashable (Hashable (..))
-import Data.Store (Store)
+import Data.Store ()
+import Data.Store.TH
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State)
@@ -33,7 +33,9 @@ import Koriel.Pretty as P
 
 newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving newtype (Hashable, Store, Pretty, ToJSON, FromJSON)
+  deriving newtype (Hashable, Pretty, ToJSON, FromJSON)
+
+makeStore ''ModuleName
 
 type HasModuleName r = HasField "moduleName" r ModuleName
 
@@ -56,8 +58,10 @@ data IdSort
     --   These are `Native`, so they are printed raw. No prefix and no postfix.
     Native
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Store, ToJSON, FromJSON)
+  deriving anyclass (Hashable, ToJSON, FromJSON)
   deriving (Pretty) via PrettyShow IdSort
+
+makeStore ''IdSort
 
 -- TODO: Add uniq :: Int field
 data Id a = Id
@@ -68,7 +72,7 @@ data Id a = Id
     sort :: IdSort
   }
   deriving stock (Show, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
-  deriving anyclass (Store, ToJSON, FromJSON)
+  deriving anyclass (ToJSON, FromJSON)
 
 instance Eq (Id a) where
   -- Don't compare meta
@@ -87,6 +91,8 @@ instance Pretty (Id a) where
   pretty Id {name, moduleName, uniq, sort = Internal} = "#" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, moduleName, uniq, sort = Temporal} = "$" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, sort = Native} = "%" <> pretty name
+
+makeStore ''Id
 
 idToText :: Id a -> Text
 idToText Id {name, moduleName, sort = External} = moduleName.raw <> "." <> name

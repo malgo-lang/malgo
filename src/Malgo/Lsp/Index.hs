@@ -25,6 +25,7 @@ import Control.Lens.TH
 import Data.ByteString qualified as BS
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store (Store, decodeEx, encode)
+import Data.Store.TH
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
@@ -41,11 +42,13 @@ import Text.Megaparsec.Pos (Pos, SourcePos (..))
 
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
-  deriving anyclass (Store)
+
+makeStore ''SymbolKind
 
 data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
   deriving stock (Show, Generic)
-  deriving anyclass (Store)
+
+makeStore ''Symbol
 
 -- | An 'Info' records
 --  * Symbol name
@@ -57,7 +60,9 @@ data Info = Info
     definitions :: [Range]
   }
   deriving stock (Eq, Ord, Show, Generic)
-  deriving anyclass (Store, Hashable)
+  deriving anyclass (Hashable)
+
+makeStore ''Info
 
 instance Pretty Info where
   pretty Info {..} = pretty name <+> ":" <+> pretty typeSignature <+> pretty definitions
@@ -68,10 +73,10 @@ data Index = Index
     _symbolInfo :: HashMap RnId Symbol
   }
   deriving stock (Show, Generic)
-  deriving anyclass (Store)
   deriving (Monoid, Semigroup) via (Generically Index)
   deriving (Pretty) via (PrettyShow Index)
 
+makeStore ''Index
 makeFieldsNoPrefix ''Index
 
 data LspOpt = LspOpt

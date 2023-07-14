@@ -1,10 +1,12 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Koriel.Core.Syntax.Unboxed (Unboxed (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
-import Data.Store (Store)
+import Data.Store ()
+import Data.Store.TH
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Type
 import Koriel.Prelude
@@ -21,7 +23,9 @@ data Unboxed
   | String Text
   | Bool Bool
   deriving stock (Eq, Ord, Show, Generic, Data, Typeable)
-  deriving anyclass (Store, ToJSON, FromJSON)
+  deriving anyclass (ToJSON, FromJSON)
+
+makeStore ''Unboxed
 
 instance HasType Unboxed where
   typeOf Int32 {} = Int32T

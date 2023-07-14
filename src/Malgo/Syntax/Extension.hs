@@ -1,4 +1,5 @@
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Syntax.Extension
@@ -68,7 +69,7 @@ where
 
 import Control.Lens (lens)
 import Data.Kind qualified as K
-import Data.Store (Store)
+import Data.Store.TH
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
@@ -134,8 +135,6 @@ data Boxed
 
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show, Generic)
-
-instance Store Assoc
 
 instance Pretty Assoc where
   pretty LeftA = "l"
@@ -346,3 +345,5 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
 -- * Module Extensions
 
 type family XModule x
+
+makeStore ''Assoc

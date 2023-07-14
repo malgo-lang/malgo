@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Koriel.Core.Syntax.Expr (Expr (..), HasExpr (..)) where
 
@@ -7,7 +8,7 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
-import Data.Store (Store)
+import Data.Store.TH
 import Data.String.Conversions
 import Generic.Data
 import Koriel.Core.Syntax.Atom
@@ -70,7 +71,9 @@ data Expr a
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Store, ToJSON, FromJSON)
+  deriving anyclass (ToJSON, FromJSON)
+
+makeStore ''Expr
 
 instance (HasType a) => HasType (Expr a) where
   typeOf (Atom x) = typeOf x

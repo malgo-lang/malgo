@@ -1,11 +1,12 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Koriel.Core.Type (Tag (..), Con (..), Type (..), HasType (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
-import Data.Store (Store)
+import Data.Store.TH
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -17,7 +18,9 @@ data Tag
   = Data Text
   | Tuple
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Store, ToJSON, FromJSON)
+  deriving anyclass (Hashable, ToJSON, FromJSON)
+
+makeStore ''Tag
 
 instance Pretty Tag where
   pretty (Data name) = pretty name
@@ -25,7 +28,7 @@ instance Pretty Tag where
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Store, ToJSON, FromJSON)
+  deriving anyclass (Hashable, ToJSON, FromJSON)
 
 instance Pretty Con where
   pretty (Con tag xs) = parens $ sep $ pretty tag : map pretty xs
@@ -49,7 +52,7 @@ data Type
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Store, ToJSON, FromJSON)
+  deriving anyclass (Hashable, ToJSON, FromJSON)
 
 instance Pretty Type where
   pretty (a :-> b) = parens $ sep ["->", brackets (sep $ map pretty a), pretty b]
@@ -65,6 +68,12 @@ instance Pretty Type where
   pretty (RecordT fs) = parens $ "Record#" <+> sep (map (\(k, v) -> parens $ sep [pretty k, pretty v]) $ HashMap.toList fs)
   pretty AnyT = "Any#"
   pretty VoidT = "Void#"
+
+$( liftA2
+     (<>)
+     (makeStore ''Con)
+     (makeStore ''Type)
+ )
 
 class HasType a where
   typeOf :: a -> Type

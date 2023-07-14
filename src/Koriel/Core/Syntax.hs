@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 -- | AST definitions for Koriel language
 module Koriel.Core.Syntax
@@ -22,7 +23,7 @@ import Control.Lens (traverseOf, traversed, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Graph
 import Data.HashSet qualified as HashSet
-import Data.Store (Store)
+import Data.Store.TH
 import Data.String.Conversions
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader)
@@ -48,8 +49,10 @@ data Program a = Program
     extFuns :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
-  deriving anyclass (Store, ToJSON, FromJSON)
+  deriving anyclass (ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
+
+makeStore ''Program
 
 instance (Pretty a, Ord a) => Pretty (Program a) where
   pretty Program {..} =
