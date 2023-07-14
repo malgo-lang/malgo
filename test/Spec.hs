@@ -9,7 +9,6 @@ import Data.List (intercalate)
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text qualified as T
 import Effectful
-import Effectful.State.Static.Local
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (timeout)
@@ -18,10 +17,7 @@ import Koriel.Core.Lint qualified as Koriel
 import Koriel.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
 import Koriel.Core.Parser qualified as Koriel
 import Koriel.Id (ModuleName (ModuleName))
-import Koriel.MonadUniq
 import Malgo.Driver qualified as Driver
-import Malgo.Interface (Interface)
-import Malgo.Lsp.Index (Index)
 import Malgo.Monad
 import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
@@ -144,9 +140,6 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
               testMode = True
             }
           option
-        & evalState @(HashMap ModuleName Index) mempty
-        & evalState @(HashMap ModuleName Interface) mempty
-        & evalState (Uniq 0)
 
 findCommand :: [String] -> IO String
 findCommand list =

@@ -9,15 +9,11 @@ import Data.List ((\\))
 import Data.List qualified as List
 import Data.Maybe qualified as Maybe
 import Effectful
-import Effectful.Concurrent.Async (pooledMapConcurrently_, runConcurrent)
+-- import Effectful.Concurrent.Async (pooledMapConcurrently_, runConcurrent)
 import Effectful.Reader.Static
-import Effectful.State.Static.Local
 import Koriel.Core.Optimize (defaultOptimizeOption)
 import Koriel.Id (ModuleName (..))
-import Koriel.MonadUniq
 import Malgo.Driver qualified as Driver
-import Malgo.Interface (Interface)
-import Malgo.Lsp.Index (Index)
 import Malgo.Monad (CompileMode (..), Flag (..), getWorkspaceDir, runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -25,6 +21,7 @@ import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..))
 import System.Directory (getCurrentDirectory, makeAbsolute)
 import System.FilePath (takeBaseName, (</>))
 import System.FilePath.Glob (glob)
+import UnliftIO.Async (pooledMapConcurrently_)
 import Witherable (ordNub)
 
 data Config = Config
@@ -68,34 +65,31 @@ run = do
   let moduleDepends = map takeImports parsedAstList
   let sources = split $ map (\(_, i, o) -> (i, o)) moduleDepends
 
-  runEff $
-    runConcurrent $
-      traverse_
-        ( pooledMapConcurrently_
-            ( \(path, moduleName, _) -> do
-                let ast = Maybe.fromJust $ List.lookup path parsedAstList
-                liftIO $ putStrLn ("Compile " <> path)
+  -- runConcurrent $
+  traverse_
+    ( pooledMapConcurrently_
+        ( \(path, moduleName, _) -> do
+            let ast = Maybe.fromJust $ List.lookup path parsedAstList
+            liftIO $ putStrLn ("Compile " <> path)
 
-                evalState @(HashMap ModuleName Interface) mempty
-                  $ evalState @(HashMap ModuleName Index) mempty
-                  $ evalState (Uniq 0)
-                  $ runReader moduleName
-                  $ runMalgoM
-                    (workspaceDir </> "build" </> takeBaseName path <> ".ll")
-                    []
-                    LLVM
-                    Flag
-                      { noOptimize = False,
-                        lambdaLift = False,
-                        debugMode = False,
-                        testMode = False
-                      }
-                    defaultOptimizeOption
-                  $ Driver.compileFromAST path ast
-            )
-            . mapMaybe (\mod -> List.find (view _2 >>> (== mod)) moduleDepends)
+            runEff
+              $ runReader moduleName
+              $ runMalgoM
+                (workspaceDir </> "build" </> takeBaseName path <> ".ll")
+                []
+                LLVM
+                Flag
+                  { noOptimize = False,
+                    lambdaLift = False,
+                    debugMode = False,
+                    testMode = False
+                  }
+                defaultOptimizeOption
+              $ Driver.compileFromAST path ast
         )
-        sources
+        . mapMaybe (\mod -> List.find (view _2 >>> (== mod)) moduleDepends)
+    )
+    sources
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []
@@ -104,8 +98,8 @@ run = do
       let ParsedDefinitions ds = moduleDefinition
        in ( sourceFile,
             moduleName,
-            ordNub $
-              mapMaybe
+            ordNub
+              $ mapMaybe
                 ( \case
                     Import _ imported _ -> Just imported
                     _ -> Nothing

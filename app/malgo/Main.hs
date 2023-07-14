@@ -8,17 +8,15 @@ import Control.Concurrent (MVar, newMVar)
 import Control.Lens (makeFieldsNoPrefix, (.~))
 import Data.ByteString qualified as BS
 import Effectful
-import Effectful.State.Static.Local
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
 import Koriel.Core.Parser qualified as Koriel
 import Koriel.Id (ModuleName)
-import Koriel.MonadUniq (Uniq (..))
 import Koriel.Pretty
 import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
-import Malgo.Interface (Interface, ModulePathList (..))
+import Malgo.Interface (ModulePathList (..))
 import Malgo.Lsp.Index (Index, LspOpt (LspOpt))
 import Malgo.Lsp.Index qualified as Lsp
 import Malgo.Lsp.Server qualified as Lsp
@@ -63,9 +61,6 @@ main = do
                 Flag.testMode = False
               }
             opt.optimizeOption
-          & evalState (Uniq 0)
-          & evalState @(HashMap ModuleName Index) mempty
-          & evalState @(HashMap ModuleName Interface) mempty
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       let ModulePathList modulePaths = opt.modulePaths
