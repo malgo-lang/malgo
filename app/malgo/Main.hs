@@ -8,7 +8,7 @@ import Control.Concurrent (MVar, newMVar)
 import Control.Lens (makeFieldsNoPrefix, (.~))
 import Data.ByteString qualified as BS
 import Effectful
-import Effectful.Fail
+import Effectful.State.Static.Local qualified as L
 import Effectful.State.Static.Shared (evalState)
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
@@ -64,10 +64,9 @@ main = do
                 Flag.testMode = False
               }
             opt.optimizeOption
-          & runFailIO
+          & L.evalState (Uniq 0)
           & evalState @(HashMap ModuleName Index) mempty
           & evalState @(HashMap ModuleName Interface) mempty
-          & evalState (Uniq 0)
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       let ModulePathList modulePaths = opt.modulePaths
