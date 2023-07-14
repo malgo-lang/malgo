@@ -4,10 +4,10 @@ module Koriel.Core.Syntax.Expr (Expr (..), HasExpr (..)) where
 
 import Control.Lens (Plated (..), Traversal', sans, traverseOf, traversed, _2)
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
+import Data.Store (Store)
 import Data.String.Conversions
 import Generic.Data
 import Koriel.Core.Syntax.Atom
@@ -70,7 +70,7 @@ data Expr a
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Binary, ToJSON, FromJSON)
+  deriving anyclass (Store, ToJSON, FromJSON)
 
 instance (HasType a) => HasType (Expr a) where
   typeOf (Atom x) = typeOf x

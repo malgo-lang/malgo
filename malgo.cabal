@@ -121,6 +121,7 @@ library
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , store
     , string-conversions
     , syb
     , text
@@ -184,6 +185,7 @@ executable malgo
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , store
     , string-conversions
     , syb
     , text
@@ -250,6 +252,7 @@ test-suite malgo-test
     , raw-strings-qq
     , regex-tdfa
     , silently
+    , store
     , string-conversions
     , syb
     , text
@@ -317,6 +320,7 @@ benchmark malgo-bench
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , store
     , string-conversions
     , syb
     , text

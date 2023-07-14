@@ -22,9 +22,9 @@ where
 
 import Control.Concurrent.MVar (MVar)
 import Control.Lens.TH
-import Data.Binary (Binary, decodeFile, encode)
-import Data.ByteString.Lazy qualified as BL
+import Data.ByteString qualified as BS
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store, decodeEx, encode)
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
@@ -41,11 +41,11 @@ import Text.Megaparsec.Pos (Pos, SourcePos (..))
 
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
-  deriving anyclass (Binary)
+  deriving anyclass (Store)
 
 data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
   deriving stock (Show, Generic)
-  deriving anyclass (Binary)
+  deriving anyclass (Store)
 
 -- | An 'Info' records
 --  * Symbol name
@@ -57,7 +57,7 @@ data Info = Info
     definitions :: [Range]
   }
   deriving stock (Eq, Ord, Show, Generic)
-  deriving anyclass (Binary, Hashable)
+  deriving anyclass (Store, Hashable)
 
 instance Pretty Info where
   pretty Info {..} = pretty name <+> ":" <+> pretty typeSignature <+> pretty definitions
@@ -68,7 +68,7 @@ data Index = Index
     _symbolInfo :: HashMap RnId Symbol
   }
   deriving stock (Show, Generic)
-  deriving anyclass (Binary)
+  deriving anyclass (Store)
   deriving (Monoid, Semigroup) via (Generically Index)
   deriving (Pretty) via (PrettyShow Index)
 
@@ -98,10 +98,10 @@ isInRange pos Range {_start, _end}
 
 -- | 'storeIndex' stores the given 'Index' to @dstPath -<.> "idx"@.
 -- It only be used in 'MalgoM' monad, but importing 'Malgo.Monad' causes cyclic dependency.
-storeIndex :: (Binary a, MonadIO m) => FilePath -> a -> m ()
+storeIndex :: (Store a, MonadIO m) => FilePath -> a -> m ()
 storeIndex dstPath index = do
   let encoded = encode index
-  liftIO $ BL.writeFile (dstPath -<.> "idx") encoded
+  liftIO $ BS.writeFile (dstPath -<.> "idx") encoded
 
 loadIndex :: (State (HashMap ModuleName Index) :> es, IOE :> es, Reader ModulePathList :> es) => ModuleName -> Eff es (Maybe Index)
 loadIndex modName = do
@@ -124,6 +124,6 @@ loadIndex modName = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
         then do
-          idx <- liftIO $ decodeFile (modPath </> modFile)
+          idx <- liftIO $ decodeEx <$> BS.readFile (modPath </> modFile)
           pure $ Right idx
         else findAndReadFile rest modFile

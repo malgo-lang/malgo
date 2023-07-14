@@ -12,9 +12,9 @@ where
 
 import Control.Lens (makePrisms, sans, traverseOf)
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store)
 import Koriel.Core.Syntax.Atom (HasAtom (..))
 import Koriel.Core.Syntax.Common
 import {-# SOURCE #-} Koriel.Core.Syntax.Expr
@@ -34,7 +34,7 @@ data Case a
   | -- | variable pattern
     Bind a Type (Expr a)
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Binary, ToJSON, FromJSON)
+  deriving anyclass (Store, ToJSON, FromJSON)
 
 instance (HasType a) => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e

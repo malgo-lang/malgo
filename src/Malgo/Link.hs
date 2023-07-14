@@ -1,8 +1,9 @@
 module Malgo.Link (link) where
 
-import Data.Binary (Binary)
-import Data.Binary qualified as Binary
+import Data.ByteString qualified as BS
 import Data.HashSet qualified as HashSet
+import Data.Store (Store)
+import Data.Store qualified as Store
 import Effectful (Eff, IOE, (:>))
 import Effectful.Reader.Static (Reader, ask)
 import Koriel.Core.Syntax
@@ -14,13 +15,13 @@ import System.Directory (doesFileExist)
 import System.FilePath ((</>))
 
 -- | Linking a program with its dependencies.
-link :: (Reader ModulePathList :> es, IOE :> es, Binary a) => Interface -> Program a -> Eff es (Program a)
+link :: (Reader ModulePathList :> es, IOE :> es, Store a) => Interface -> Program a -> Eff es (Program a)
 link (interface :: Interface) mainCoreIR = do
   -- FIXME: Sort dependencies by topological order
   depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)
   pure $ mconcat (depCoreIRs <> [mainCoreIR])
 
-loadCore :: (Reader ModulePathList :> es, IOE :> es, Binary b) => ModuleName -> Eff es b
+loadCore :: (Reader ModulePathList :> es, IOE :> es, Store b) => ModuleName -> Eff es b
 loadCore (ModuleName modName) = do
   ModulePathList modPaths <- ask
   message <- findAndReadFile modPaths (convertString modName <> ".kor.bin")
@@ -41,6 +42,6 @@ loadCore (ModuleName modName) = do
       isExistModFile <- liftIO $ doesFileExist (path </> modFile)
       if isExistModFile
         then do
-          pgm <- liftIO $ Binary.decodeFile (path </> modFile)
+          pgm <- liftIO $ Store.decodeEx <$> BS.readFile (path </> modFile)
           pure $ Right pgm
         else findAndReadFile paths modFile

@@ -3,10 +3,9 @@
 module Koriel.Core.Type (Tag (..), Con (..), Type (..), HasType (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Binary (Binary)
-import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store)
 import Koriel.Id
 import Koriel.Prelude
 import Koriel.Pretty
@@ -18,7 +17,7 @@ data Tag
   = Data Text
   | Tuple
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
+  deriving anyclass (Hashable, Store, ToJSON, FromJSON)
 
 instance Pretty Tag where
   pretty (Data name) = pretty name
@@ -26,7 +25,7 @@ instance Pretty Tag where
 
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
+  deriving anyclass (Hashable, Store, ToJSON, FromJSON)
 
 instance Pretty Con where
   pretty (Con tag xs) = parens $ sep $ pretty tag : map pretty xs
@@ -50,7 +49,7 @@ data Type
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
+  deriving anyclass (Hashable, Store, ToJSON, FromJSON)
 
 instance Pretty Type where
   pretty (a :-> b) = parens $ sep ["->", brackets (sep $ map pretty a), pretty b]
@@ -73,5 +72,5 @@ class HasType a where
 instance HasType Type where
   typeOf x = x
 
-instance HasType a => HasType (Id a) where
+instance (HasType a) => HasType (Id a) where
   typeOf x = typeOf $ x.meta

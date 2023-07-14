@@ -10,9 +10,9 @@ where
 
 import Control.Lens (Lens', sans, traverseOf, traversed)
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store)
 import Data.String.Conversions
 import Generic.Data
 import Koriel.Core.Syntax.Atom
@@ -25,7 +25,7 @@ import Koriel.Pretty
 -- | Let bindings
 data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Binary, ToJSON, FromJSON)
+  deriving anyclass (Store, ToJSON, FromJSON)
 
 class HasObject s a | s -> a where
   object :: Lens' s a
@@ -56,7 +56,7 @@ data Obj a
   | -- | record
     Record (HashMap Text (Atom a))
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Binary, ToJSON, FromJSON)
+  deriving anyclass (Store, ToJSON, FromJSON)
 
 instance (HasType a) => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e

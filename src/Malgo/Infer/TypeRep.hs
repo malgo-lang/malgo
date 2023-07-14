@@ -32,11 +32,10 @@ module Malgo.Infer.TypeRep
 where
 
 import Control.Lens (At (at), Traversal', makeLenses, mapped, (^.), _1, _2)
-import Data.Binary (Binary)
-import Data.Binary.Instances.UnorderedContainers ()
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
+import Data.Store (Store)
 import Effectful (Eff)
 import Effectful.State.Static.Local (State, evalState)
 import Koriel.Id
@@ -50,7 +49,7 @@ import Malgo.Prelude
 -- | Primitive Types
 data PrimT = Int32T | Int64T | FloatT | DoubleT | CharT | StringT
   deriving stock (Eq, Show, Ord, Generic, Data)
-  deriving anyclass (Hashable, Binary)
+  deriving anyclass (Hashable, Store)
 
 instance Pretty PrimT where
   pretty Int32T = "Int32#"
@@ -109,7 +108,7 @@ data Type
     -- | type variable (not qualified)
     TyMeta MetaVar
   deriving stock (Eq, Ord, Show, Generic, Data)
-  deriving anyclass (Hashable, Binary)
+  deriving anyclass (Hashable, Store)
 
 instance Pretty Type where
   pretty = prettyPrec 0
@@ -162,7 +161,7 @@ splitTyArr t = ([], t)
 newtype MetaVar = MetaVar {metaVar :: Id ()}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
-  deriving anyclass (Binary)
+  deriving anyclass (Store)
 
 instance Pretty MetaVar where
   pretty (MetaVar v) = "'" <> pretty v
@@ -219,7 +218,7 @@ instance HasKind Void where
 -- | Universally quantified type
 data Scheme ty = Forall [TypeVar] ty
   deriving stock (Eq, Ord, Show, Generic, Functor, Foldable, Traversable)
-  deriving anyclass (Hashable, Binary)
+  deriving anyclass (Hashable, Store)
 
 instance (Pretty ty) => Pretty (Scheme ty) where
   pretty (Forall [] t) = pretty t
@@ -233,7 +232,7 @@ data TypeDef ty = TypeDef
     _valueConstructors :: [(Id (), Scheme ty)]
   }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
-  deriving anyclass (Binary)
+  deriving anyclass (Store)
 
 instance (Pretty ty) => Pretty (TypeDef ty) where
   pretty (TypeDef c q u) = pretty (c, q, u)

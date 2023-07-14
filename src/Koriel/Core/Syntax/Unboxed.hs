@@ -3,8 +3,8 @@
 module Koriel.Core.Syntax.Unboxed (Unboxed (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Binary (Binary)
 import Data.Data (Data)
+import Data.Store (Store)
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Type
 import Koriel.Prelude
@@ -21,7 +21,7 @@ data Unboxed
   | String Text
   | Bool Bool
   deriving stock (Eq, Ord, Show, Generic, Data, Typeable)
-  deriving anyclass (Binary, ToJSON, FromJSON)
+  deriving anyclass (Store, ToJSON, FromJSON)
 
 instance HasType Unboxed where
   typeOf Int32 {} = Int32T

@@ -149,7 +149,7 @@ inlineConstructor =
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
-eliminateUnusedLet :: (Monad f, Hashable a) => Expr (Id a) -> f (Expr (Id a))
+eliminateUnusedLet :: (Monad f) => Expr (Id a) -> f (Expr (Id a))
 eliminateUnusedLet =
   transformM \case
     Let ds e -> do

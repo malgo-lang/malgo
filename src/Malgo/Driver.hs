@@ -2,10 +2,10 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Control.Exception (assert)
-import Data.Binary qualified as Binary
 import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store qualified as Store
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text.IO qualified as T
 import Effectful
@@ -103,10 +103,10 @@ compileFromAST srcPath parsedAst = do
       core <- do
         core <- runReader moduleName $ Flat.normalize core
         _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
-        liftIO $ BL.writeFile (dstPath -<.> "kor.bin") $ Binary.encode core
+        liftIO $ BS.writeFile (dstPath -<.> "kor.bin") $ Store.encode core
 
         let inf = buildInterface moduleName rnState dsEnv
-        liftIO $ BL.writeFile (toInterfacePath dstPath) $ Binary.encode inf
+        liftIO $ BS.writeFile (toInterfacePath dstPath) $ Store.encode inf
 
         -- check module paths include dstName's directory
         assert (takeDirectory dstPath `elem` modulePaths) pass

@@ -6,8 +6,9 @@ module Malgo.Interface (Interface (..), ModulePathList (..), coreIdentMap, build
 import Control.Exception (IOException, catch)
 import Control.Lens (ifor_, (^.))
 import Control.Lens.TH
-import Data.Binary (Binary, decodeFile)
+import Data.ByteString qualified as BS
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store (Store, decodeEx)
 import Effectful (Eff, IOE, runPureEff, (:>))
 import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State, execState, get, modify)
@@ -48,7 +49,7 @@ data Interface = Interface
   }
   deriving stock (Show, Generic)
 
-instance Binary Interface
+instance Store Interface
 
 makeFieldsNoPrefix ''Interface
 
@@ -108,7 +109,7 @@ loadInterface (ModuleName modName) = do
     readFileIfExists file directory =
       ifM
         (liftIO $ Directory.doesFileExist (directory </> file))
-        (Just <$> liftIO (decodeFile (directory </> file)))
+        (Just <$> liftIO (decodeEx <$> BS.readFile (directory </> file)))
         (pure Nothing)
         `catch` \(_ :: IOException) -> do
           _ <- warningDoc $ "Cannot read interface file:" <+> squotes (pretty file)

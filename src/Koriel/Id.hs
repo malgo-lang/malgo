@@ -20,9 +20,9 @@ module Koriel.Id
 where
 
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Binary (Binary)
 import Data.Data (Data)
 import Data.Hashable (Hashable (..))
+import Data.Store (Store)
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State)
@@ -33,7 +33,7 @@ import Koriel.Pretty as P
 
 newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving newtype (Hashable, Binary, Pretty, ToJSON, FromJSON)
+  deriving newtype (Hashable, Store, Pretty, ToJSON, FromJSON)
 
 type HasModuleName r = HasField "moduleName" r ModuleName
 
@@ -56,7 +56,7 @@ data IdSort
     --   These are `Native`, so they are printed raw. No prefix and no postfix.
     Native
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
+  deriving anyclass (Hashable, Store, ToJSON, FromJSON)
   deriving (Pretty) via PrettyShow IdSort
 
 -- TODO: Add uniq :: Int field
@@ -68,7 +68,7 @@ data Id a = Id
     sort :: IdSort
   }
   deriving stock (Show, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
-  deriving anyclass (Binary, ToJSON, FromJSON)
+  deriving anyclass (Store, ToJSON, FromJSON)
 
 instance Eq (Id a) where
   -- Don't compare meta

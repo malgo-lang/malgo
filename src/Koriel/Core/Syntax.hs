@@ -20,9 +20,9 @@ where
 
 import Control.Lens (traverseOf, traversed, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Binary (Binary)
 import Data.Graph
 import Data.HashSet qualified as HashSet
+import Data.Store (Store)
 import Data.String.Conversions
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader)
@@ -48,7 +48,7 @@ data Program a = Program
     extFuns :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
-  deriving anyclass (Binary, ToJSON, FromJSON)
+  deriving anyclass (Store, ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
 
 instance (Pretty a, Ord a) => Pretty (Program a) where
