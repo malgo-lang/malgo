@@ -11,7 +11,6 @@ import Data.Text.IO qualified as T
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Effectful.State.Static.Shared qualified as S
 import Error.Diagnose (addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM qualified as LLVM
@@ -67,10 +66,10 @@ compileFromAST ::
     Reader ModulePathList :> es,
     Reader Flag :> es,
     IOE :> es,
-    S.State (HashMap ModuleName Interface) :> es,
+    State (HashMap ModuleName Interface) :> es,
     State Uniq :> es,
     Reader ModuleName :> es,
-    S.State (HashMap ModuleName Index) :> es
+    State (HashMap ModuleName Index) :> es
   ) =>
   FilePath ->
   Syntax.Module (Malgo 'Parse) ->
@@ -80,8 +79,8 @@ compileFromAST srcPath parsedAst = do
   where
     moduleName = parsedAst.moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= moduleName.raw)
-        $ error "Module name must be source file's base name."
+      when (convertString (takeBaseName srcPath) /= moduleName.raw) $
+        error "Module name must be source file's base name."
 
       DstPath dstPath <- ask @DstPath
       ModulePathList modulePaths <- ask @ModulePathList
@@ -118,8 +117,8 @@ compileFromAST srcPath parsedAst = do
         lint True core
         pure core
 
-      when flags.debugMode
-        $ liftIO do
+      when flags.debugMode $
+        liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pretty core
 
@@ -140,8 +139,8 @@ compileFromAST srcPath parsedAst = do
       lint True coreOpt
 
       coreLL <- if flags.lambdaLift then lambdalift coreOpt >>= Flat.normalize else pure coreOpt
-      when (flags.debugMode && flags.lambdaLift)
-        $ liftIO do
+      when (flags.debugMode && flags.lambdaLift) $
+        liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pretty coreLL
       when flags.testMode do
@@ -173,7 +172,7 @@ compileFromAST srcPath parsedAst = do
       | griffId.name
           == "main"
           && griffId.moduleName
-          == moduleName =
+            == moduleName =
           Just coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
@@ -185,9 +184,9 @@ compile ::
     Reader ModulePathList :> es,
     Reader Flag :> es,
     IOE :> es,
-    S.State (HashMap ModuleName Interface) :> es,
+    State (HashMap ModuleName Interface) :> es,
     State Uniq :> es,
-    S.State (HashMap ModuleName Index) :> es
+    State (HashMap ModuleName Index) :> es
   ) =>
   FilePath ->
   Eff es ()
@@ -216,5 +215,5 @@ compile srcPath = do
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst
-  runReader parsedAst.moduleName
-    $ compileFromAST srcPath parsedAst
+  runReader parsedAst.moduleName $
+    compileFromAST srcPath parsedAst

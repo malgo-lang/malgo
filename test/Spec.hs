@@ -9,8 +9,7 @@ import Data.List (intercalate)
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text qualified as T
 import Effectful
-import Effectful.State.Static.Local qualified as L
-import Effectful.State.Static.Shared
+import Effectful.State.Static.Local
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (timeout)
@@ -147,7 +146,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
           option
         & evalState @(HashMap ModuleName Index) mempty
         & evalState @(HashMap ModuleName Interface) mempty
-        & L.evalState (Uniq 0)
+        & evalState (Uniq 0)
 
 findCommand :: [String] -> IO String
 findCommand list =

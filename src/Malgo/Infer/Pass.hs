@@ -11,7 +11,6 @@ import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Effectful.State.Static.Shared qualified as S
 import Effectful.Writer.Static.Local
 import Koriel.Id
 import Koriel.Lens
@@ -48,27 +47,27 @@ lookupType pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
-infer :: (Reader ModulePathList :> es, S.State (HashMap ModuleName Interface) :> es, State Uniq :> es, Reader ModuleName :> es, IOE :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
+infer :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es, Reader ModuleName :> es, IOE :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
 infer rnEnv (Module name bg) = runReader rnEnv $ do
   tcEnv <- genTcEnv rnEnv
-  evalState tcEnv
-    $ runTypeUnify
-    $ do
-      put tcEnv
-      bg' <- tcBindGroup bg
-      abbrEnv <- gets @TcEnv (._typeSynonymMap)
-      zonkedBg <-
-        traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
-          >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-      zonkedTcEnv <-
-        get
-          >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-      pure (Module name zonkedBg, zonkedTcEnv)
+  evalState tcEnv $
+    runTypeUnify $
+      do
+        put tcEnv
+        bg' <- tcBindGroup bg
+        abbrEnv <- gets @TcEnv (._typeSynonymMap)
+        zonkedBg <-
+          traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
+            >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+            >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+        zonkedTcEnv <-
+          get
+            >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+            >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+        pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
-  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, S.State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) =>
+  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) =>
   BindGroup (Malgo Rename) ->
   Eff es (BindGroup (Malgo Infer))
 tcBindGroup bindGroup = do
@@ -80,7 +79,7 @@ tcBindGroup bindGroup = do
   _scDefs <- tcScDefGroup $ bindGroup ^. scDefs
   pure BindGroup {..}
 
-tcImports :: (State TcEnv :> es, IOE :> es, S.State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) => [Import (Malgo Rename)] -> Eff es [Import (Malgo Infer)]
+tcImports :: (State TcEnv :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) => [Import (Malgo Rename)] -> Eff es [Import (Malgo Infer)]
 tcImports = traverse tcImport
   where
     tcImport (pos, modName, importList) = do
@@ -280,8 +279,8 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
               | otherwise ->
                   modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name declaredScheme _signatureMap}
             Nothing ->
-              errorOn pos.value
-                $ vsep
+              errorOn pos.value $
+                vsep
                   [ "Signature mismatch:",
                     nest 2 ("Declared:" <+> pretty declaredScheme),
                     nest 2 ("Inferred:" <+> pretty inferredScheme)
@@ -408,8 +407,8 @@ tcPatterns (ConP pos con pats : ps) = do
   let (morePats, restPs) = List.splitAt (length conParams - length pats) ps
   -- 足りない分（morePats）を補充した残り（restPs）が空でなければ、
   -- 2引数以上の関数での文法エラー
-  when (not (null morePats) && not (null restPs))
-    $ errorOn pos "Invalid Pattern: You may need to put parentheses"
+  when (not (null morePats) && not (null restPs)) $
+    errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
   ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'

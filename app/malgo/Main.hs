@@ -8,8 +8,7 @@ import Control.Concurrent (MVar, newMVar)
 import Control.Lens (makeFieldsNoPrefix, (.~))
 import Data.ByteString qualified as BS
 import Effectful
-import Effectful.State.Static.Local qualified as L
-import Effectful.State.Static.Shared (evalState)
+import Effectful.State.Static.Local
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
@@ -64,7 +63,7 @@ main = do
                 Flag.testMode = False
               }
             opt.optimizeOption
-          & L.evalState (Uniq 0)
+          & evalState (Uniq 0)
           & evalState @(HashMap ModuleName Index) mempty
           & evalState @(HashMap ModuleName Interface) mempty
     Lsp opt -> do

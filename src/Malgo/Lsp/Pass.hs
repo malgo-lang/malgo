@@ -11,7 +11,6 @@ import Data.Text qualified as T
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Effectful.State.Static.Shared qualified as S
 import Koriel.Id (Id (..), IdSort (Temporal), ModuleName, name)
 import Koriel.Lens
 import Koriel.Pretty (Pretty (pretty))
@@ -42,7 +41,7 @@ newIndexEnv tcEnv =
       _buildingIndex = mempty
     }
 
-index :: (Reader ModulePathList :> es, S.State (HashMap ModuleName Index) :> es, IOE :> es) => TcEnv -> Module (Malgo 'Refine) -> Eff es Index
+index :: (Reader ModulePathList :> es, State (HashMap ModuleName Index) :> es, IOE :> es) => TcEnv -> Module (Malgo 'Refine) -> Eff es Index
 index tcEnv mod = do
   removeInternalInfos . view buildingIndex <$> execState (newIndexEnv tcEnv) (indexModule mod)
 
@@ -54,12 +53,12 @@ removeInternalInfos (Index refs defs syms) = Index (HashMap.filterWithKey (\k _ 
     isInternal (Info {name}) | "$" `T.isPrefixOf` name = True
     isInternal _ = False
 
-indexModule :: (State IndexEnv :> es, Reader ModulePathList :> es, S.State (HashMap ModuleName Index) :> es, IOE :> es) => Module (Malgo 'Refine) -> Eff es ()
+indexModule :: (State IndexEnv :> es, Reader ModulePathList :> es, State (HashMap ModuleName Index) :> es, IOE :> es) => Module (Malgo 'Refine) -> Eff es ()
 indexModule Module {..} = indexBindGroup moduleDefinition
 
 indexBindGroup ::
   ( Reader ModulePathList :> es,
-    S.State (HashMap ModuleName Index) :> es,
+    State (HashMap ModuleName Index) :> es,
     State IndexEnv :> es,
     IOE :> es
   ) =>
@@ -73,7 +72,7 @@ indexBindGroup BindGroup {..} = do
 
 indexImport ::
   ( Reader ModulePathList :> es,
-    S.State (HashMap ModuleName Index) :> es,
+    State (HashMap ModuleName Index) :> es,
     State IndexEnv :> es,
     IOE :> es
   ) =>
@@ -90,7 +89,7 @@ indexImport (_, moduleName, _) = do
       index <- pure $ index & symbolInfo .~ mempty
       modify \s@IndexEnv {..} -> s {_buildingIndex = _buildingIndex <> index}
 
-indexDataDef :: (State IndexEnv :> es) => DataDef (Malgo 'Refine) -> Eff es ()
+indexDataDef :: State IndexEnv :> es => DataDef (Malgo 'Refine) -> Eff es ()
 indexDataDef (range, typeName, typeParameters, constructors) = do
   typeKind <- lookupTypeKind typeName
   let info = Info {name = typeName.name, typeSignature = Forall [] typeKind, definitions = [range]}
@@ -115,7 +114,7 @@ indexDataDef (range, typeName, typeParameters, constructors) = do
       addSymbolInfo constructor (symbol Constructor constructor range)
       traverse_ indexType parameters
 
-indexType :: (State IndexEnv :> es) => S.Type (Malgo 'Refine) -> Eff es ()
+indexType :: State IndexEnv :> es => S.Type (Malgo 'Refine) -> Eff es ()
 indexType (S.TyApp _ t ts) = do
   indexType t
   traverse_ indexType ts
@@ -135,7 +134,7 @@ indexType (S.TyArr _ t1 t2) = do
 indexType (S.TyTuple _ ts) = traverse_ indexType ts
 indexType (S.TyRecord _ fields) = traverse_ (indexType . snd) fields
 
-indexScSig :: (State IndexEnv :> es) => ScSig (Malgo Refine) -> Eff es ()
+indexScSig :: State IndexEnv :> es => ScSig (Malgo Refine) -> Eff es ()
 indexScSig (range, ident, _) = do
   -- lookup the infomation of this variable
   minfo <- lookupInfo ident
@@ -146,7 +145,7 @@ indexScSig (range, ident, _) = do
       addReferences info [range]
     Just info -> addReferences info [range]
 
-indexScDef :: (State IndexEnv :> es) => ScDef (Malgo Refine) -> Eff es ()
+indexScDef :: State IndexEnv :> es => ScDef (Malgo Refine) -> Eff es ()
 indexScDef (Typed {value = range}, ident, expr) = do
   minfo <- lookupInfo ident
   case minfo of
@@ -165,7 +164,7 @@ indexScDef (Typed {value = range}, ident, expr) = do
   -- traverse the expression
   indexExpr expr
 
-indexExpr :: (State IndexEnv :> es) => Expr (Malgo Refine) -> Eff es ()
+indexExpr :: State IndexEnv :> es => Expr (Malgo Refine) -> Eff es ()
 indexExpr (Var Typed {value = range} ident) = do
   -- lookup the infomation of this variable
   minfo <- lookupInfo ident
@@ -190,7 +189,7 @@ indexExpr (Record _ fields) =
 indexExpr (Seq _ stmts) =
   traverse_ indexStmt stmts
 
-indexStmt :: (State IndexEnv :> es) => Stmt (Malgo Refine) -> Eff es ()
+indexStmt :: State IndexEnv :> es => Stmt (Malgo Refine) -> Eff es ()
 indexStmt (Let _ Id {sort = Temporal} expr) = indexExpr expr
 indexStmt (Let range ident expr) = do
   identType <- lookupSignature ident
@@ -202,12 +201,12 @@ indexStmt (Let range ident expr) = do
 indexStmt (NoBind _ expr) =
   indexExpr expr
 
-indexClause :: (State IndexEnv :> es) => Clause (Malgo Refine) -> Eff es ()
+indexClause :: State IndexEnv :> es => Clause (Malgo Refine) -> Eff es ()
 indexClause (Clause _ ps e) = do
   traverse_ indexPat ps
   indexExpr e
 
-indexPat :: (State IndexEnv :> es) => Pat (Malgo 'Refine) -> Eff es ()
+indexPat :: State IndexEnv :> es => Pat (Malgo 'Refine) -> Eff es ()
 indexPat (VarP _ Id {sort = Temporal}) = pass
 indexPat (VarP (Typed ty range) v) = do
   -- index the information of this definition
@@ -229,14 +228,14 @@ indexPat (UnboxedP Typed {value = range} u) = do
   let info = Info {name = convertString $ show $ pretty u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 
-lookupSignature :: (State IndexEnv :> es) => Id () -> Eff es (Scheme Type)
+lookupSignature :: State IndexEnv :> es => Id () -> Eff es (Scheme Type)
 lookupSignature ident = do
   mIdentType <- gets @IndexEnv ((._signatureMap) >>> HashMap.lookup ident)
   case mIdentType of
     Just identType -> pure identType
     Nothing -> error $ "lookupSignature: " <> show ident <> " not found"
 
-lookupTypeKind :: (State IndexEnv :> es) => Id () -> Eff es Kind
+lookupTypeKind :: State IndexEnv :> es => Id () -> Eff es Kind
 lookupTypeKind typeName = do
   mTypeDef <- gets @IndexEnv ((._typeDefMap) >>> HashMap.lookup typeName)
   case mTypeDef of
@@ -245,11 +244,11 @@ lookupTypeKind typeName = do
       pure $ kindOf ctx (typeDef ^. typeConstructor)
     Nothing -> error $ "lookupTypeKind: " <> show typeName <> " not found"
 
-lookupInfo :: (State IndexEnv :> es) => Id () -> Eff es (Maybe Info)
+lookupInfo :: State IndexEnv :> es => Id () -> Eff es (Maybe Info)
 lookupInfo ident =
   gets @IndexEnv ((._buildingIndex) >>> (._definitionMap) >>> HashMap.lookup ident)
 
-addReferences :: (State IndexEnv :> es) => Info -> [Range] -> Eff es ()
+addReferences :: State IndexEnv :> es => Info -> [Range] -> Eff es ()
 addReferences info refs =
   modify \s@IndexEnv {..} ->
     s
@@ -259,7 +258,7 @@ addReferences info refs =
             }
       }
 
-addDefinition :: (State IndexEnv :> es) => Id () -> Info -> Eff es ()
+addDefinition :: State IndexEnv :> es => Id () -> Info -> Eff es ()
 addDefinition ident info =
   modify \s@IndexEnv {..} ->
     s
@@ -269,7 +268,7 @@ addDefinition ident info =
             }
       }
 
-addSymbolInfo :: (State IndexEnv :> es) => Id () -> Symbol -> Eff es ()
+addSymbolInfo :: State IndexEnv :> es => Id () -> Symbol -> Eff es ()
 addSymbolInfo ident symbol =
   modify \s@IndexEnv {..} ->
     s

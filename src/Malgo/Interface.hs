@@ -10,8 +10,7 @@ import Data.Binary (Binary, decodeFile)
 import Data.HashMap.Strict qualified as HashMap
 import Effectful (Eff, IOE, runPureEff, (:>))
 import Effectful.Reader.Static (Reader, ask)
-import Effectful.State.Static.Local (execState, modify)
-import Effectful.State.Static.Shared qualified as S
+import Effectful.State.Static.Local (State, execState, get, modify)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
@@ -86,12 +85,12 @@ toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"
 
 loadInterface ::
-  (HasCallStack, IOE :> es, S.State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) =>
+  (HasCallStack, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) =>
   ModuleName ->
   Eff es Interface
 loadInterface (ModuleName modName) = do
   ModulePathList modulePaths <- ask
-  interfaces <- S.get
+  interfaces <- get
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
@@ -101,7 +100,7 @@ loadInterface (ModuleName modName) = do
           modulePaths
       case message of
         Just x -> do
-          S.modify (HashMap.insert (ModuleName modName) x)
+          modify $ HashMap.insert (ModuleName modName) x
           pure x
         Nothing -> do
           errorDoc $ "Cannot find module:" <+> squotes (pretty modName)

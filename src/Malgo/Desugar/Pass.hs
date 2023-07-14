@@ -11,7 +11,6 @@ import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Effectful.State.Static.Shared qualified as S
 import Koriel.Core.Alpha (alpha)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
@@ -31,7 +30,7 @@ import Malgo.Syntax.Extension as G
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (IOE :> es, Reader ModulePathList :> es, Reader ModuleName :> es, S.State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
+  (IOE :> es, Reader ModulePathList :> es, Reader ModuleName :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
   TcEnv ->
   Module (Malgo 'Refine) ->
   Eff es (DsState, Program (Id C.Type))
@@ -45,7 +44,7 @@ desugar tcEnv (Module _ ds) = do
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
-dsBindGroup :: (Reader ModulePathList :> es, S.State (HashMap ModuleName Interface) :> es, State DsState :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es) => BindGroup (Malgo Refine) -> Eff es [Def]
+dsBindGroup :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State DsState :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es) => BindGroup (Malgo Refine) -> Eff es [Def]
 dsBindGroup bg = do
   traverse_ dsImport (bg ^. imports)
   dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
@@ -54,7 +53,7 @@ dsBindGroup bg = do
   pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
 dsImport ::
-  ( S.State (HashMap ModuleName Interface) :> es,
+  ( State (HashMap ModuleName Interface) :> es,
     Reader ModulePathList :> es,
     State DsState :> es,
     IOE :> es
@@ -266,7 +265,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
 
 -- Desugar Monad
 
-lookupName :: (State DsState :> es) => Id () -> Eff es (Id C.Type)
+lookupName :: State DsState :> es => Id () -> Eff es (Id C.Type)
 lookupName name = do
   mname' <- gets @DsState ((._nameEnv) >>> HashMap.lookup name)
   case mname' of
