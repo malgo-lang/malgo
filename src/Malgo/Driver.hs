@@ -68,7 +68,6 @@ compileFromAST ::
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,
     State Uniq :> es,
-    Reader ModuleName :> es,
     State (HashMap ModuleName Index) :> es
   ) =>
   FilePath ->
@@ -79,8 +78,8 @@ compileFromAST srcPath parsedAst = do
   where
     moduleName = parsedAst.moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= moduleName.raw) $
-        error "Module name must be source file's base name."
+      when (convertString (takeBaseName srcPath) /= moduleName.raw)
+        $ error "Module name must be source file's base name."
 
       DstPath dstPath <- ask @DstPath
       ModulePathList modulePaths <- ask @ModulePathList
@@ -102,7 +101,7 @@ compileFromAST srcPath parsedAst = do
       (dsEnv, core) <- desugar tcEnv refinedAst
 
       core <- do
-        core <- Flat.normalize core
+        core <- runReader moduleName $ Flat.normalize core
         _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
         liftIO $ BL.writeFile (dstPath -<.> "kor.bin") $ Binary.encode core
 
@@ -117,8 +116,8 @@ compileFromAST srcPath parsedAst = do
         lint True core
         pure core
 
-      when flags.debugMode $
-        liftIO do
+      when flags.debugMode
+        $ liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pretty core
 
@@ -130,7 +129,7 @@ compileFromAST srcPath parsedAst = do
       coreOpt <-
         if flags.noOptimize
           then pure core
-          else optimizeProgram core >>= Flat.normalize
+          else runReader moduleName $ optimizeProgram core >>= Flat.normalize
       when (flags.debugMode && not flags.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pretty coreOpt
@@ -138,9 +137,9 @@ compileFromAST srcPath parsedAst = do
         liftIO $ T.writeFile (dstPath -<.> "kor.opt") $ render $ pretty coreOpt
       lint True coreOpt
 
-      coreLL <- if flags.lambdaLift then lambdalift coreOpt >>= Flat.normalize else pure coreOpt
-      when (flags.debugMode && flags.lambdaLift) $
-        liftIO do
+      coreLL <- if flags.lambdaLift then runReader moduleName $ lambdalift coreOpt >>= Flat.normalize else pure coreOpt
+      when (flags.debugMode && flags.lambdaLift)
+        $ liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pretty coreLL
       when flags.testMode do
@@ -172,7 +171,7 @@ compileFromAST srcPath parsedAst = do
       | griffId.name
           == "main"
           && griffId.moduleName
-            == moduleName =
+          == moduleName =
           Just coreId
     searchMain (_ : xs) = searchMain xs
     searchMain _ = Nothing
@@ -215,5 +214,5 @@ compile srcPath = do
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst
-  runReader parsedAst.moduleName $
-    compileFromAST srcPath parsedAst
+  runReader parsedAst.moduleName
+    $ compileFromAST srcPath parsedAst

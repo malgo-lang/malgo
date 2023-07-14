@@ -47,8 +47,8 @@ lookupType pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
-infer :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es, Reader ModuleName :> es, IOE :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
-infer rnEnv (Module name bg) = runReader rnEnv $ do
+infer :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
+infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
   tcEnv <- genTcEnv rnEnv
   evalState tcEnv $
     runTypeUnify $

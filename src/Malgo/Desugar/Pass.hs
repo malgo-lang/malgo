@@ -30,11 +30,11 @@ import Malgo.Syntax.Extension as G
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (IOE :> es, Reader ModulePathList :> es, Reader ModuleName :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
+  (IOE :> es, Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
   TcEnv ->
   Module (Malgo 'Refine) ->
   Eff es (DsState, Program (Id C.Type))
-desugar tcEnv (Module _ ds) = do
+desugar tcEnv (Module name ds) = runReader name do
   (ds', dsEnv) <- runState (makeDsState tcEnv) (dsBindGroup ds)
   let ds'' = dsEnv._globalDefs <> ds' -- ds' needs variables defined in globalDefs
   let varDefs = mapMaybe (preview _VarDef) ds''
@@ -265,7 +265,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
 
 -- Desugar Monad
 
-lookupName :: State DsState :> es => Id () -> Eff es (Id C.Type)
+lookupName :: (State DsState :> es) => Id () -> Eff es (Id C.Type)
 lookupName name = do
   mname' <- gets @DsState ((._nameEnv) >>> HashMap.lookup name)
   case mname' of

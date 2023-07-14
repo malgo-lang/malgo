@@ -6,18 +6,18 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Malgo.Lsp.Index (
-  SymbolKind (..),
-  Symbol (..),
-  Info (..),
-  Index (..),
-  definitionMap,
-  LspOpt (..),
-  HasSymbolInfo (..),
-  findReferences,
-  loadIndex,
-  storeIndex,
-)
+module Malgo.Lsp.Index
+  ( SymbolKind (..),
+    Symbol (..),
+    Info (..),
+    Index (..),
+    definitionMap,
+    LspOpt (..),
+    HasSymbolInfo (..),
+    findReferences,
+    loadIndex,
+    storeIndex,
+  )
 where
 
 import Control.Concurrent.MVar (MVar)
@@ -85,8 +85,8 @@ makeFieldsNoPrefix ''LspOpt
 -- It ignores file names.
 findReferences :: SourcePos -> Index -> [Info]
 findReferences pos (Index refs _ _) =
-  HashMap.keys $
-    HashMap.filter (any (isInRange pos)) refs
+  HashMap.keys
+    $ HashMap.filter (any (isInRange pos)) refs
 
 isInRange :: SourcePos -> Range -> Bool
 isInRange pos Range {_start, _end}
