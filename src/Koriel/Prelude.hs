@@ -1,5 +1,4 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
@@ -50,7 +49,6 @@ module Koriel.Prelude
     foldMapM,
     unzip,
     replaceOf,
-    localState,
     chomp,
     asumMap,
     PrettyShow (..),
@@ -89,7 +87,6 @@ import Control.Monad.Error.Class
 import Control.Monad.Except (ExceptT, runExceptT)
 import Control.Monad.Extra (ifM)
 import Control.Monad.IO.Class
-import Control.Monad.State.Class
 import Data.Bifunctor
 import Data.Bitraversable
 import Data.ByteString.Short (ShortByteString)
@@ -157,14 +154,6 @@ unzip xs = (fst <$> xs, snd <$> xs)
 replaceOf :: (Eq b) => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
 {-# INLINE replaceOf #-}
-
-localState :: (MonadState s m) => m a -> m (a, s)
-localState action = do
-  backup <- get
-  result <- action
-  state <- get
-  put backup
-  pure (result, state)
 
 chomp :: String -> String
 chomp = dropWhileEnd (`elem` ['\r', '\n'])
