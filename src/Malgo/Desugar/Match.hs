@@ -1,17 +1,20 @@
 -- | パターンマッチのコンパイル
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
-import Control.Lens (At (at), Prism', has, (?=), _1)
+import Control.Lens (Prism', has, _1)
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
 import Data.Traversable (for)
+import Effectful (Eff, (:>))
+import Effectful.Reader.Static (Reader)
+import Effectful.State.Static.Local (State, modify)
 import Koriel.Core.Syntax
 import Koriel.Core.Syntax qualified as Core
 import Koriel.Core.Type
 import Koriel.Core.Type qualified as Core
 import Koriel.Id
+import Koriel.MonadUniq (Uniq)
 import Koriel.Pretty hiding (group)
-import Malgo.Desugar.DsEnv (DsEnv (moduleName, uniqSupply))
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
@@ -55,16 +58,16 @@ splitCol mat = (headCol mat, tailCol mat)
 
 -- パターンマッチを分解し、switch-case相当の分岐で表現できるように変換する
 match ::
-  (MonadState DsState m, MonadReader DsEnv m, MonadIO m, MonadFail m) =>
+  (State DsState :> es, Reader ModuleName :> es, State Uniq :> es) =>
   -- | マッチ対象
   [Id Core.Type] ->
   -- | パターン（転置行列）
   PatMatrix ->
   -- | righthand
-  [m (Core.Expr (Id Core.Type))] ->
+  [Eff es (Core.Expr (Id Core.Type))] ->
   -- | fail
   Core.Expr (Id Core.Type) ->
-  m (Core.Expr (Id Core.Type))
+  Eff es (Core.Expr (Id Core.Type))
 match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- Variable Rule
   -- パターンの先頭がすべて変数のとき
@@ -75,7 +78,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
         tails
         ( zipWith
             ( \case
-                (VarP _ v) -> \e -> nameEnv . at v ?= scrutinee >> e
+                (VarP _ v) -> \e -> modify (\s@DsState {..} -> s {_nameEnv = HashMap.insert v scrutinee _nameEnv}) >> e
                 _ -> error "All elements of heads must be VarP"
             )
             heads
@@ -105,21 +108,25 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
       let patType = Malgo.typeOf $ List.head heads
-      RecordT kts <- dsType patType
-      params <- traverse (newTemporalId "p") kts
-      clause <- do
-        (pat', es') <- groupRecord pat es
-        OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
-      pure $ Match (Atom $ Core.Var scrutinee) [clause]
+      dsType patType >>= \case
+        RecordT kts -> do
+          params <- traverse (newTemporalId "p") kts
+          clause <- do
+            (pat', es') <- groupRecord pat es
+            OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
+          pure $ Match (Atom $ Core.Var scrutinee) [clause]
+        _ -> error "patType must be RecordT"
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
       let patType = Malgo.typeOf $ List.head heads
-      SumT [con@(Core.Con Core.Tuple ts)] <- dsType patType
-      params <- traverse (newTemporalId "p") ts
-      clause <- do
-        let (pat', es') = groupTuple pat es
-        Unpack con params <$> match (params <> restScrutinee) pat' es' err
-      pure $ Match (Atom $ Core.Var scrutinee) [clause]
+      dsType patType >>= \case
+        SumT [con@(Core.Con Core.Tuple ts)] -> do
+          params <- traverse (newTemporalId "p") ts
+          clause <- do
+            let (pat', es') = groupTuple pat es
+            Unpack con params <$> match (params <> restScrutinee) pat' es' err
+          pure $ Match (Atom $ Core.Var scrutinee) [clause]
+        _ -> error "patType must be SumT [Tuple]"
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
       let cs =
@@ -204,7 +211,7 @@ groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWi
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
     aux [] _ = error "ps must be not empty"
 
-groupRecord :: (MonadReader DsEnv m, MonadIO m) => PatMatrix -> [m (Core.Expr (Id Core.Type))] -> m (PatMatrix, [m (Core.Expr (Id Core.Type))])
+groupRecord :: (State Uniq :> es, Reader ModuleName :> es) => PatMatrix -> [b] -> Eff es (PatMatrix, [b])
 groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss es
   where
     aux (RecordP x ps : pss) e = do

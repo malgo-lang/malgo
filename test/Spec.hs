@@ -7,7 +7,8 @@ import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
 import Data.String.Conversions.Monomorphic (toString)
-import Data.Text qualified as Text
+import Data.Text qualified as T
+import Effectful
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (timeout)
@@ -22,31 +23,31 @@ import Malgo.Prelude
 import System.Directory (copyFile, listDirectory)
 import System.Directory.Extra (createDirectoryIfMissing)
 import System.Exit (exitFailure)
-import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
-import System.Process.Typed (
-  ExitCode (ExitFailure, ExitSuccess),
-  byteStringInput,
-  nullStream,
-  proc,
-  readProcessStderr,
-  readProcessStdout,
-  readProcessStdout_,
-  runProcess,
-  setStderr,
-  setStdin,
-  setStdout,
- )
-import Test.Hspec (
-  anyException,
-  describe,
-  example,
-  hspec,
-  it,
-  parallel,
-  runIO,
-  shouldBe,
-  shouldThrow,
- )
+import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
+import System.Process.Typed
+  ( ExitCode (ExitFailure, ExitSuccess),
+    byteStringInput,
+    nullStream,
+    proc,
+    readProcessStderr,
+    readProcessStdout,
+    readProcessStdout_,
+    runProcess,
+    setStderr,
+    setStdin,
+    setStdout,
+  )
+import Test.Hspec
+  ( anyException,
+    describe,
+    example,
+    hspec,
+    it,
+    parallel,
+    runIO,
+    shouldBe,
+    shouldThrow,
+  )
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
@@ -86,9 +87,9 @@ main =
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
     describe "Test malgo to-ll (must be error)" do
       for_ errorcases \errorcase -> do
-        it ("test error case " <> errorcase) $
-          testError (testcaseDir </> "error" </> errorcase)
-            `shouldThrow` anyException
+        it ("test error case " <> errorcase)
+          $ testError (testcaseDir </> "error" </> errorcase)
+          `shouldThrow` anyException
 
 setupTestDir :: IO ()
 setupTestDir = do
@@ -115,30 +116,30 @@ setupRuntime = do
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
 compile src dst modPaths lambdaLift noOptimize option compileMode =
   do
-    malgoEnv <- newMalgoEnv src modPaths undefined Nothing Nothing
-    malgoEnv <-
-      pure
-        malgoEnv
-          { dstPath = dst,
-            modulePaths = [takeDirectory dst, outputDir </> "libs"],
+    runEff
+      $ do
+        Driver.compile src
+        -- Check if the generated Koriel code is valid
+        let korielPath = dst -<.> "kor"
+        koriel <- liftIO $ BS.readFile korielPath
+        case Koriel.parse korielPath (convertString koriel) of
+          Left err ->
+            let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
+                diag' = addFile diag korielPath (toString koriel)
+             in printDiagnostic stdout False False 4 defaultStyle diag' >> liftIO exitFailure
+          Right ast -> do
+            Koriel.lint True =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
+      & runMalgoM
+        dst
+        modPaths
+        compileMode
+        Flag
+          { noOptimize,
             lambdaLift,
-            noOptimize,
-            compileMode,
-            testMode = True,
-            optimizeOption = option
+            debugMode = False,
+            testMode = True
           }
-    Driver.compile src malgoEnv
-
-    -- Check if the generated Koriel code is valid
-    let korielPath = dst -<.> "kor"
-    koriel <- BL.readFile korielPath
-    case Koriel.parse korielPath (convertString koriel) of
-      Left err ->
-        let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-            diag' = addFile diag korielPath (toString koriel)
-         in printDiagnostic stdout False False 4 defaultStyle diag' >> exitFailure
-      Right ast -> do
-        Koriel.lint True =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
+        option
 
 findCommand :: [String] -> IO String
 findCommand list =
@@ -154,7 +155,7 @@ findCommand list =
         ExitFailure _ -> go xs
 
 test ::
-  HasCallStack =>
+  (HasCallStack) =>
   -- | File path of the test case
   FilePath ->
   -- | Type of the test case
@@ -171,8 +172,8 @@ test ::
 test testcase typ lambdaLift noOptimize option compileMode = do
   createDirectoryIfMissing True (outputDir </> typ)
   let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
-  timeoutWrapper "compile" $
-    compile testcase llPath [outputDir </> "libs"] lambdaLift noOptimize option compileMode
+  timeoutWrapper "compile"
+    $ compile testcase llPath [outputDir </> typ, outputDir </> "libs"] lambdaLift noOptimize option compileMode
 
   -- Format and optimize the generated LLVM assembly
   -- find opt or opt-15
@@ -204,26 +205,26 @@ test testcase typ lambdaLift noOptimize option compileMode = do
               "-mllvm",
               "--attributor-enable=cgscc"
             ]
-            <> pkgConfig
-            <> [ outputDir </> "libs" </> "runtime.c",
-                 llPath,
-                 "-o",
-                 outputDir </> typ </> takeBaseName testcase -<.> ".out"
-               ]
+          <> pkgConfig
+          <> [ outputDir </> "libs" </> "runtime.c",
+               llPath,
+               "-o",
+               outputDir </> typ </> takeBaseName testcase -<.> ".out"
+             ]
       )
   BL.putStr err
   (clang, exitCode) `shouldBe` (clang, ExitSuccess)
 
   (exitCode, result) <-
-    timeoutWrapper "run" $
-      second convertString
-        <$> readProcessStdout
-          ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
-              & setStdin (byteStringInput "Hello")
-          )
+    timeoutWrapper "run"
+      $ second convertString
+      <$> readProcessStdout
+        ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
+            & setStdin (byteStringInput "Hello")
+        )
   ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
-  expected <- filter ("-- Expected: " `Text.isPrefixOf`) . Text.lines . convertString <$> BS.readFile testcase
-  map ("-- Expected: " <>) (Text.lines $ Text.stripEnd result) `shouldBe` expected
+  expected <- filter ("-- Expected: " `T.isPrefixOf`) . T.lines . convertString <$> BS.readFile testcase
+  map ("-- Expected: " <>) (T.lines $ T.stripEnd result) `shouldBe` expected
   where
     timeoutWrapper phase m = do
       timeout (60 * 5) m >>= \case

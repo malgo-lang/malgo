@@ -11,13 +11,6 @@ module Koriel.Prelude
     module Control.Monad.Error.Class,
     module Control.Monad.Except,
     module Control.Monad.IO.Class,
-    module Control.Monad.Reader,
-    module Control.Monad.Reader.Class,
-    module Control.Monad.State.Class,
-    module Control.Monad.State.Strict,
-    module Control.Monad.Trans.Class,
-    module Control.Monad.Trans.Writer.CPS,
-    module Control.Monad.Writer.Class,
     module Data.Bifunctor,
     module Data.Bitraversable,
     module Data.ByteString.Short,
@@ -56,7 +49,6 @@ module Koriel.Prelude
     foldMapM,
     unzip,
     replaceOf,
-    localState,
     chomp,
     asumMap,
     PrettyShow (..),
@@ -95,13 +87,6 @@ import Control.Monad.Error.Class
 import Control.Monad.Except (ExceptT, runExceptT)
 import Control.Monad.Extra (ifM)
 import Control.Monad.IO.Class
-import Control.Monad.Reader (ReaderT, runReaderT)
-import Control.Monad.Reader.Class
-import Control.Monad.State.Class
-import Control.Monad.State.Strict (StateT, evalState, evalStateT, execState, execStateT, runState, runStateT)
-import Control.Monad.Trans.Class (MonadTrans (..))
-import Control.Monad.Trans.Writer.CPS (WriterT, runWriterT, writerT)
-import Control.Monad.Writer.Class hiding (pass)
 import Data.Bifunctor
 import Data.Bitraversable
 import Data.ByteString.Short (ShortByteString)
@@ -169,14 +154,6 @@ unzip xs = (fst <$> xs, snd <$> xs)
 replaceOf :: (Eq b) => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
 {-# INLINE replaceOf #-}
-
-localState :: (MonadState s m) => m a -> m (a, s)
-localState action = do
-  backup <- get
-  result <- action
-  state <- get
-  put backup
-  pure (result, state)
 
 chomp :: String -> String
 chomp = dropWhileEnd (`elem` ['\r', '\n'])

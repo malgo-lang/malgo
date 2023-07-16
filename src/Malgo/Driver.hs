@@ -1,28 +1,32 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
-import Control.Exception (IOException, assert, catch)
-import Data.Binary qualified as Binary
+import Control.Exception (assert)
 import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
+import Data.Store qualified as Store
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text.IO qualified as T
+import Effectful
+import Effectful.Reader.Static
+import Effectful.State.Static.Local
 import Error.Diagnose (addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM qualified as LLVM
 import Koriel.Core.Flat qualified as Flat
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
-import Koriel.Core.Optimize (optimizeProgram)
+import Koriel.Core.Optimize (OptimizeOption, optimizeProgram)
 import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), ModuleName (..))
+import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (buildInterface, loadInterface, toInterfacePath)
+import Malgo.Interface (Interface, ModulePathList (..), buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
-import Malgo.Lsp.Index (storeIndex)
+import Malgo.Lsp.Index (Index, storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Monad
 import Malgo.Parser (parseMalgo)
@@ -56,78 +60,90 @@ withDump isDump label m = do
   pure result
 
 -- | Compile the parsed AST.
-compileFromAST :: FilePath -> MalgoEnv -> Syntax.Module (Malgo 'Parse) -> IO ()
-compileFromAST srcPath env parsedAst =
-  runMalgoM env act
-    `catch` \(e :: IOException) -> do
-      hPutStrLn stderr $ "IO Exception: " <> show e
-      exitFailure
+compileFromAST ::
+  ( Reader OptimizeOption :> es,
+    Reader DstPath :> es,
+    Reader ModulePathList :> es,
+    Reader Flag :> es,
+    IOE :> es,
+    State (HashMap ModuleName Interface) :> es,
+    State Uniq :> es,
+    State (HashMap ModuleName Index) :> es
+  ) =>
+  FilePath ->
+  Syntax.Module (Malgo 'Parse) ->
+  Eff es ()
+compileFromAST srcPath parsedAst = do
+  act
   where
     moduleName = parsedAst.moduleName
     act = do
       when (convertString (takeBaseName srcPath) /= moduleName.raw)
         $ error "Module name must be source file's base name."
 
-      uniqSupply <- asks (.uniqSupply)
-      when env.debugMode do
+      DstPath dstPath <- ask @DstPath
+      ModulePathList modulePaths <- ask @ModulePathList
+      flags <- ask @Flag
+
+      when flags.debugMode $ liftIO do
         hPutStrLn stderr "=== PARSED ==="
         hPrint stderr $ pretty parsedAst
-      rnEnv <- RnEnv.genBuiltinRnEnv moduleName
-      (renamedAst, rnState) <- withDump env.debugMode "=== RENAME ===" $ rename rnEnv parsedAst
+      rnEnv <- RnEnv.genBuiltinRnEnv
+      (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" $ rename rnEnv parsedAst
       (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
-      _ <- withDump env.debugMode "=== TYPE CHECK ===" $ pure typedAst
-      refinedAst <- withDump env.debugMode "=== REFINE ===" $ refine tcEnv typedAst
+      _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
+      refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst
 
       -- index <- withDump env.debugMode "=== INDEX ===" $ Lsp.index tcEnv refinedAst
       index <- Lsp.index tcEnv refinedAst
-      storeIndex index
+      storeIndex dstPath index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
 
       core <- do
-        core <- Flat.normalize core
-        _ <- withDump env.debugMode "=== DESUGAR ===" $ pure core
-        liftIO $ BL.writeFile (env.dstPath -<.> "kor.bin") $ Binary.encode core
+        core <- runReader moduleName $ Flat.normalize core
+        _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
+        liftIO $ BS.writeFile (dstPath -<.> "kor.bin") $ Store.encode core
 
         let inf = buildInterface moduleName rnState dsEnv
-        liftIO $ BL.writeFile (toInterfacePath env.dstPath) $ Binary.encode inf
+        liftIO $ BS.writeFile (toInterfacePath dstPath) $ Store.encode inf
 
         -- check module paths include dstName's directory
-        assert (takeDirectory env.dstPath `elem` env.modulePaths) pass
+        assert (takeDirectory dstPath `elem` modulePaths) pass
         core <- Link.link inf core
-        liftIO $ T.writeFile (env.dstPath -<.> "kor") $ render $ pretty core
+        liftIO $ T.writeFile (dstPath -<.> "kor") $ render $ pretty core
 
         lint True core
         pure core
 
-      when env.debugMode
+      when flags.debugMode
         $ liftIO do
           hPutStrLn stderr "=== LINKED ==="
           hPrint stderr $ pretty core
 
-      when env.debugMode do
+      when flags.debugMode do
         inf <- loadInterface moduleName
         hPutStrLn stderr "=== INTERFACE ==="
         hPutTextLn stderr $ render $ pretty inf
 
       coreOpt <-
-        if env.noOptimize
+        if flags.noOptimize
           then pure core
-          else optimizeProgram core >>= Flat.normalize
-      when (env.debugMode && not env.noOptimize) do
+          else runReader moduleName $ optimizeProgram core >>= Flat.normalize
+      when (flags.debugMode && not flags.noOptimize) do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pretty coreOpt
-      when env.testMode do
-        liftIO $ T.writeFile (env.dstPath -<.> "kor.opt") $ render $ pretty coreOpt
+      when flags.testMode do
+        liftIO $ T.writeFile (dstPath -<.> "kor.opt") $ render $ pretty coreOpt
       lint True coreOpt
 
-      coreLL <- if env.lambdaLift then lambdalift uniqSupply moduleName coreOpt >>= Flat.normalize else pure coreOpt
-      when (env.debugMode && env.lambdaLift)
+      coreLL <- if flags.lambdaLift then runReader moduleName $ lambdalift coreOpt >>= Flat.normalize else pure coreOpt
+      when (flags.debugMode && flags.lambdaLift)
         $ liftIO do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pretty coreLL
-      when env.testMode do
-        liftIO $ T.writeFile (env.dstPath -<.> "kor.opt.lift") $ render $ pretty coreLL
+      when flags.testMode do
+        liftIO $ T.writeFile (dstPath -<.> "kor.opt.lift") $ render $ pretty coreLL
       lint True coreLL
 
       -- Optimization after lambda lifting causes code explosion.
@@ -147,8 +163,8 @@ compileFromAST srcPath env parsedAst =
       -- when env.testMode do
       --   liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pretty coreLLOpt
       -- lint True coreLLOpt
-
-      LLVM.codeGen srcPath env.dstPath uniqSupply moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) coreLL
+      Uniq i <- get @Uniq
+      LLVM.codeGen srcPath dstPath moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) i coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id a, Id b)] -> Maybe (Id b)
     searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
@@ -161,9 +177,21 @@ compileFromAST srcPath env parsedAst =
     searchMain _ = Nothing
 
 -- | Read the source file and parse it, then compile.
-compile :: FilePath -> MalgoEnv -> IO ()
-compile srcPath env = do
-  src <- BL.readFile srcPath
+compile ::
+  ( Reader OptimizeOption :> es,
+    Reader DstPath :> es,
+    Reader ModulePathList :> es,
+    Reader Flag :> es,
+    IOE :> es,
+    State (HashMap ModuleName Interface) :> es,
+    State Uniq :> es,
+    State (HashMap ModuleName Index) :> es
+  ) =>
+  FilePath ->
+  Eff es ()
+compile srcPath = do
+  flags <- ask @Flag
+  src <- liftIO $ BL.readFile srcPath
   parsedAst <- case parseMalgo srcPath (convertString src) of
     Right x -> pure x
     Left err ->
@@ -173,17 +201,18 @@ compile srcPath env = do
             let message =
                   prettyDiagnostic True 4 diag'
                     & ( \x ->
-                          if env.testMode
+                          if flags.testMode
                             then PrettyPrinter.unAnnotate x
                             else x
                       )
                     & PrettyPrinter.layoutPretty PrettyPrinter.defaultLayoutOptions
                     & PrettyPrinter.renderStrict
                     & convertString
-            BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
-            hFlush stderr
-            exitFailure
-  when env.debugMode do
+            liftIO $ BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
+            liftIO $ hFlush stderr
+            liftIO exitFailure
+  when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst
-  compileFromAST srcPath env {Malgo.Monad.moduleName = parsedAst.moduleName} parsedAst
+  runReader parsedAst.moduleName
+    $ compileFromAST srcPath parsedAst

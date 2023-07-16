@@ -1,8 +1,7 @@
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Koriel.Id
   ( IdSort (..),
@@ -20,8 +19,13 @@ module Koriel.Id
 where
 
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Binary (Binary)
 import Data.Data (Data)
+import Data.Hashable (Hashable (..))
+import Data.Store ()
+import Data.Store.TH
+import Effectful (Eff, (:>))
+import Effectful.Reader.Static (Reader, ask)
+import Effectful.State.Static.Local (State)
 import GHC.Records
 import Koriel.MonadUniq
 import Koriel.Prelude hiding (toList)
@@ -29,7 +33,9 @@ import Koriel.Pretty as P
 
 newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving newtype (Hashable, Binary, Pretty, ToJSON, FromJSON)
+  deriving newtype (Hashable, Pretty, ToJSON, FromJSON)
+
+makeStore ''ModuleName
 
 type HasModuleName r = HasField "moduleName" r ModuleName
 
@@ -52,8 +58,10 @@ data IdSort
     --   These are `Native`, so they are printed raw. No prefix and no postfix.
     Native
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
+  deriving anyclass (Hashable, ToJSON, FromJSON)
   deriving (Pretty) via PrettyShow IdSort
+
+makeStore ''IdSort
 
 -- TODO: Add uniq :: Int field
 data Id a = Id
@@ -63,8 +71,20 @@ data Id a = Id
     uniq :: Int, -- Unique number for each Id. If sort == Native or External, uniq is always -1.
     sort :: IdSort
   }
-  deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
-  deriving anyclass (Hashable, Binary, ToJSON, FromJSON)
+  deriving stock (Show, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
+  deriving anyclass (ToJSON, FromJSON)
+
+instance Eq (Id a) where
+  -- Don't compare meta
+  (==) Id {name = name1, moduleName = moduleName1, uniq = uniq1, sort = sort1} Id {name = name2, moduleName = moduleName2, uniq = uniq2, sort = sort2} =
+    name1 == name2 && moduleName1 == moduleName2 && uniq1 == uniq2 && sort1 == sort2
+  {-# INLINE (==) #-}
+
+instance Hashable (Id a) where
+  hash Id {name, moduleName, uniq, sort} = hash name `hashWithSalt` hash moduleName `hashWithSalt` hash uniq `hashWithSalt` hash sort
+  {-# INLINE hash #-}
+  hashWithSalt salt Id {name, moduleName, uniq, sort} = salt `hashWithSalt` hash name `hashWithSalt` hash moduleName `hashWithSalt` hash uniq `hashWithSalt` hash sort
+  {-# INLINE hashWithSalt #-}
 
 instance Pretty (Id a) where
   pretty Id {name, moduleName, sort = External} = "@" <> brackets (pretty moduleName <+> pretty name)
@@ -72,36 +92,38 @@ instance Pretty (Id a) where
   pretty Id {name, moduleName, uniq, sort = Temporal} = "$" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, sort = Native} = "%" <> pretty name
 
+makeStore ''Id
+
 idToText :: Id a -> Text
 idToText Id {name, moduleName, sort = External} = moduleName.raw <> "." <> name
 idToText Id {name, moduleName, uniq, sort = Internal} = moduleName.raw <> ".#" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, moduleName, uniq, sort = Temporal} = moduleName.raw <> ".$" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, sort = Native} = name
 
-newTemporalId :: (MonadReader env m, MonadIO m, HasUniqSupply env, HasModuleName env) => Text -> a -> m (Id a)
+newTemporalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
 newTemporalId name meta = do
   uniq <- getUniq
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   let sort = Temporal
   pure Id {..}
 
-newInternalId :: (MonadIO f, MonadReader env f, HasUniqSupply env, HasModuleName env) => Text -> a -> f (Id a)
+newInternalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
 newInternalId name meta = do
   uniq <- getUniq
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   let sort = Internal
   pure Id {..}
 
-newExternalId :: (MonadReader env f, HasModuleName env) => Text -> a -> f (Id a)
+newExternalId :: (Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
 newExternalId name meta = do
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   let uniq = -1
   let sort = External
   pure Id {..}
 
-newNativeId :: (MonadReader env f, HasModuleName env) => Text -> a -> f (Id a)
+newNativeId :: (Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
 newNativeId name meta = do
-  moduleName <- asks (.moduleName)
+  moduleName <- ask @ModuleName
   let uniq = -1
   let sort = Native
   pure Id {..}

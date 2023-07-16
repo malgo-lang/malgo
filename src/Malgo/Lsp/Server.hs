@@ -5,6 +5,9 @@ module Malgo.Lsp.Server (server) where
 import Control.Lens (view, (^.))
 import Data.HashMap.Strict qualified as HashMap
 import Data.Maybe qualified as Maybe
+import Effectful qualified as Eff
+import Effectful.Reader.Static qualified as Eff
+import Effectful.State.Static.Local qualified as Eff
 import Koriel.Id
 import Koriel.Pretty (Pretty (pretty), render, (<+>))
 import Language.LSP.Server
@@ -14,6 +17,7 @@ import Malgo.Lsp.Index (HasSymbolInfo (symbolInfo), Index, Info (..), LspOpt, fi
 import Malgo.Lsp.Index qualified as Index
 import Malgo.Prelude hiding (Range)
 import System.FilePath (dropExtensions, takeFileName)
+import UnliftIO.MVar (putMVar, readMVar)
 
 textDocumentIdentifierToModuleName :: TextDocumentIdentifier -> ModuleName
 textDocumentIdentifierToModuleName (uriToFilePath . view uri -> Just filePath) =
@@ -69,8 +73,14 @@ toDocumentSymbol Index.Symbol {..} =
     toKind Index.Function = SkFunction
     toKind Index.Variable = SkVariable
 
-loadIndex :: (MonadIO f) => TextDocumentIdentifier -> LspOpt -> f Index
-loadIndex doc opt = maybe mempty identity <$> runReaderT (Index.loadIndex (textDocumentIdentifierToModuleName doc)) opt
+loadIndex :: MonadIO f => TextDocumentIdentifier -> LspOpt -> f Index
+loadIndex doc opt = do
+  indexes <- readMVar opt.indexes
+  (mindex, newIndexes) <-
+    liftIO $
+      Eff.runEff (Eff.runState indexes $ Eff.runReader opt.modulePaths $ Index.loadIndex (textDocumentIdentifierToModuleName doc))
+  putMVar opt.indexes newIndexes
+  pure $ Maybe.fromMaybe mempty mindex
 
 toHoverDocument :: [Info] -> MarkupContent
 toHoverDocument infos =
@@ -86,8 +96,8 @@ infoToLocation Info {..} =
 
 server :: LspOpt -> IO Int
 server opt = do
-  runServer
-    $ ServerDefinition
+  runServer $
+    ServerDefinition
       { onConfigurationChange = \_ _ -> Right (),
         defaultConfig = (),
         doInitialize = \env _req -> pure $ Right env,

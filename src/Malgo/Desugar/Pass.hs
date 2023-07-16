@@ -1,54 +1,50 @@
 -- | MalgoをKoriel.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
-import Control.Lens (At (at), preuse, preview, traverseOf, traversed, use, (<>=), (?=), (^.), _2, _Just)
+import Control.Lens (preview, traverseOf, traversed, (^.), _2)
 import Data.Char qualified as Char
 import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
 import Data.Maybe (fromJust)
 import Data.Text qualified as T
 import Data.Traversable (for)
+import Effectful
+import Effectful.Reader.Static
+import Effectful.State.Static.Local
 import Koriel.Core.Alpha (alpha)
 import Koriel.Core.Syntax as C
 import Koriel.Core.Type hiding (Type)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
-import Koriel.Lens
+import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Desugar.DsEnv
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Match
 import Malgo.Desugar.Type
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep as GT
 import Malgo.Interface
-import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (MonadReader MalgoEnv m, MonadFail m, MonadIO m) =>
+  (IOE :> es, Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
   TcEnv ->
   Module (Malgo 'Refine) ->
-  m (DsState, Program (Id C.Type))
-desugar tcEnv (Module _ ds) = do
-  malgoEnv <- ask
-  runReaderT ?? makeDsEnv malgoEnv $ do
-    (ds', dsEnv) <- runStateT (dsBindGroup ds) (makeDsState tcEnv)
-    let ds'' = dsEnv._globalDefs <> ds' -- ds' needs variables defined in globalDefs
-    let varDefs = mapMaybe (preview _VarDef) ds''
-    let funDefs = mapMaybe (preview _FunDef) ds''
-    let extDefs = mapMaybe (preview _ExtDef) ds''
-    pure (dsEnv, Program varDefs funDefs extDefs)
+  Eff es (DsState, Program (Id C.Type))
+desugar tcEnv (Module name ds) = runReader name do
+  (ds', dsEnv) <- runState (makeDsState tcEnv) (dsBindGroup ds)
+  let ds'' = dsEnv._globalDefs <> ds' -- ds' needs variables defined in globalDefs
+  let varDefs = mapMaybe (preview _VarDef) ds''
+  let funDefs = mapMaybe (preview _FunDef) ds''
+  let extDefs = mapMaybe (preview _ExtDef) ds''
+  pure (dsEnv, Program varDefs funDefs extDefs)
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
-dsBindGroup ::
-  (MonadState DsState m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
-  BindGroup (Malgo 'Refine) ->
-  m [Def]
+dsBindGroup :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State DsState :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es) => BindGroup (Malgo Refine) -> Eff es [Def]
 dsBindGroup bg = do
   traverse_ dsImport (bg ^. imports)
   dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
@@ -56,31 +52,50 @@ dsBindGroup bg = do
   scDefs' <- dsScDefGroup (bg ^. scDefs)
   pure $ mconcat dataDefs' <> mconcat foreigns' <> scDefs'
 
-dsImport :: (MonadReader DsEnv m, MonadState DsState m, MonadIO m) => Import (Malgo 'Refine) -> m ()
+dsImport ::
+  ( State (HashMap ModuleName Interface) :> es,
+    Reader ModulePathList :> es,
+    State DsState :> es,
+    IOE :> es
+  ) =>
+  Import (Malgo Refine) ->
+  Eff es ()
 dsImport (_, modName, _) = do
   interface <- loadInterface modName
-  nameEnv <>= interface ^. coreIdentMap
+  modify \s@DsState {..} -> s {_nameEnv = interface._coreIdentMap <> _nameEnv}
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::
-  (MonadState DsState f, MonadReader DsEnv f, MonadFail f, MonadIO f) =>
-  [[ScDef (Malgo 'Refine)]] ->
-  f [Def]
-dsScDefGroup = dsScDefs . mconcat
+  ( Reader ModuleName :> es,
+    State DsState :> es,
+    State Uniq :> es
+  ) =>
+  [[ScDef (Malgo Refine)]] ->
+  Eff es [Def]
+dsScDefGroup xs = dsScDefs $ mconcat xs
 
 dsScDefs ::
-  (MonadState DsState f, MonadReader DsEnv f, MonadFail f, MonadIO f) =>
-  [ScDef (Malgo 'Refine)] ->
-  f [Def]
+  ( State DsState :> es,
+    Reader ModuleName :> es,
+    State Uniq :> es
+  ) =>
+  [ScDef (Malgo Refine)] ->
+  Eff es [Def]
 dsScDefs ds = do
   -- まず、宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
-    Just (Forall _ fType) <- use (signatureMap . at f)
+    Forall _ fType <- gets @DsState ((._signatureMap) >>> HashMap.lookup f >>> fromJust)
     f' <- toCoreId f <$> dsType fType
-    nameEnv . at f ?= f'
+    modify \s@DsState {..} -> s {_nameEnv = HashMap.insert f f' _nameEnv}
   foldMapM dsScDef ds
 
-dsScDef :: (MonadState DsState f, MonadReader DsEnv f, MonadFail f, MonadIO f) => ScDef (Malgo 'Refine) -> f [Def]
+dsScDef ::
+  ( Reader ModuleName :> es,
+    State Uniq :> es,
+    State DsState :> es
+  ) =>
+  ScDef (Malgo Refine) ->
+  Eff es [Def]
 dsScDef (Typed typ _, name, expr) = do
   -- ScDefは関数かlazy valueでなくてはならない
   case typ of
@@ -102,7 +117,15 @@ dsScDef (Typed typ _, name, expr) = do
       (ps, e) <- curryFun True name.name [] =<< runDef (fmap Atom (cast typ' =<< dsExpr expr))
       pure [FunDef name' ps (C.typeOf name') e]
 
-fnToObj :: (MonadIO f, MonadFail f, MonadReader DsEnv f, MonadState DsState f) => Bool -> Text -> NonEmpty (Clause (Malgo 'Refine)) -> f ([Id C.Type], C.Expr (Id C.Type))
+fnToObj ::
+  ( State Uniq :> es,
+    Reader ModuleName :> es,
+    State DsState :> es
+  ) =>
+  Bool ->
+  Text ->
+  NonEmpty (Clause (Malgo Refine)) ->
+  Eff es ([Id C.Type], C.Expr (Id C.Type))
 fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
   ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
   eType <- dsType (GT.typeOf e)
@@ -129,9 +152,9 @@ patToName (G.UnboxedP _ _) = "unboxed"
 -- 2. 相互変換を値に対して行うCoreコードを生成する関数を定義する
 -- 3. 2.の関数を使ってdsForeignを書き換える
 dsForeign ::
-  (MonadState DsState f, MonadIO f, MonadReader DsEnv f) =>
-  Foreign (Malgo 'Refine) ->
-  f [Def]
+  (Reader ModuleName :> es, State Uniq :> es, State DsState :> es) =>
+  Foreign (Malgo Refine) ->
+  Eff es [Def]
 dsForeign (Typed typ (_, primName), name, _) = do
   name' <- toCoreId name <$> dsType typ
   let (paramTypes, retType) = splitTyArr typ
@@ -139,17 +162,14 @@ dsForeign (Typed typ (_, primName), name, _) = do
   retType <- dsType retType
   params <- traverse (newTemporalId "p") paramTypes'
   (ps, e) <- curryFun True name.name params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
-  nameEnv . at name ?= name'
+  modify \s@DsState {..} -> s {_nameEnv = HashMap.insert name name' _nameEnv}
   pure [FunDef name' ps (C.typeOf name') e, ExtDef primName (paramTypes' :-> retType)]
 
-dsDataDef ::
-  (MonadState DsState m, MonadReader DsEnv m, MonadFail m, MonadIO m) =>
-  DataDef (Malgo 'Refine) ->
-  m [Def]
+dsDataDef :: (State DsState :> es, Reader ModuleName :> es, State Uniq :> es) => DataDef (Malgo 'Refine) -> Eff es [Def]
 dsDataDef (_, name, _, cons) =
   for cons $ \(_, conName, _) -> do
     -- lookup constructor infomations
-    Just vcs <- preuse (typeDefMap . at name . _Just . valueConstructors)
+    vcs <- (._valueConstructors) . fromJust <$> (HashMap.lookup name <$> gets @DsState (._typeDefMap))
     let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType
@@ -167,7 +187,7 @@ dsDataDef (_, name, _, cons) =
     (ps, e) <- case ps of
       [] -> pure ([], expr)
       _ -> curryFun True conName.name ps expr
-    nameEnv . at conName ?= conName'
+    modify \s@DsState {..} -> s {_nameEnv = HashMap.insert conName conName' _nameEnv}
     pure (FunDef conName' ps (C.typeOf conName') e)
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
@@ -183,10 +203,7 @@ dsUnboxed (G.Double x) = C.Double x
 dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
-dsExpr ::
-  (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) =>
-  G.Expr (Malgo 'Refine) ->
-  m (C.Expr (Id C.Type))
+dsExpr :: (State DsState :> es, State Uniq :> es, Reader ModuleName :> es) => G.Expr (Malgo Refine) -> Eff es (C.Expr (Id C.Type))
 dsExpr (G.Var (Typed typ _) name) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
@@ -199,24 +216,7 @@ dsExpr (G.Var (Typed typ _) name) = do
   case C.typeOf name' of
     -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
     [] :-> _ | isConstructor name -> pure $ CallDirect name' []
-    _
-      -- \| idIsExternal name' -> do
-      --     -- name（name'）がトップレベルで定義されているとき、name'に対応する適切な値（クロージャ）は存在しない。
-      --     -- そこで、name'の値が必要になったときに、都度クロージャを生成する。
-      --     case C.typeOf name' of
-      --       pts :-> _ -> do
-      --         DsState {globalClosures} <- get
-      --         case HashMap.lookup name' globalClosures of
-      --           Nothing -> do
-      --             clsId <- newTemporalId ("gblcls_" <> name'.name) (C.typeOf name')
-      --             internalFunId <- newTemporalId ("fun_" <> name'.name) (C.typeOf name')
-      --             ps <- traverse (newTemporalId "p") pts
-      --             let clsDef = VarDef clsId (C.typeOf clsId) $ C.Let [LocalDef internalFunId (C.typeOf internalFunId) (Fun ps $ CallDirect name' $ map C.Var ps)] $ Atom $ C.Var internalFunId
-      --             modify $ \s -> s {_globalDefs = clsDef : s._globalDefs, globalClosures = HashMap.insert name' clsId globalClosures}
-      --             pure $ Atom $ C.Var clsId
-      --           Just clsId -> pure $ Atom $ C.Var clsId
-      --       _ -> pure $ Atom $ C.Var name'
-      | otherwise -> pure $ Atom $ C.Var name'
+    _ -> pure $ Atom $ C.Var name'
   where
     isConstructor Id {name} | T.length name > 0 = Char.isUpper (T.head name)
     isConstructor _ = False
@@ -250,7 +250,7 @@ dsExpr (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
 dsExpr (G.Record _ _) = error "unreachable"
 dsExpr (G.Seq _ ss) = dsStmts ss
 
-dsStmts :: (MonadState DsState m, MonadIO m, MonadFail m, MonadReader DsEnv m) => NonEmpty (Stmt (Malgo 'Refine)) -> m (C.Expr (Id C.Type))
+dsStmts :: (State Uniq :> es, Reader ModuleName :> es, State DsState :> es) => NonEmpty (Stmt (Malgo Refine)) -> Eff es (C.Expr (Id C.Type))
 dsStmts (NoBind _ e :| []) = dsExpr e
 dsStmts (G.Let _ _ e :| []) = dsExpr e
 dsStmts (NoBind _ e :| s : ss) = runDef $ do
@@ -259,15 +259,15 @@ dsStmts (NoBind _ e :| s : ss) = runDef $ do
 dsStmts (G.Let _ v e :| s : ss) = do
   e' <- dsExpr e
   v' <- newTemporalId ("let_" <> idToText v) (C.typeOf e')
-  nameEnv . at v ?= v'
+  modify $ \s@DsState {..} -> s {_nameEnv = HashMap.insert v v' _nameEnv}
   ss' <- dsStmts (s :| ss)
   pure $ Match e' [Bind v' (C.typeOf v') ss']
 
 -- Desugar Monad
 
-lookupName :: (MonadState DsState m) => RnId -> m (Id C.Type)
+lookupName :: (State DsState :> es) => Id () -> Eff es (Id C.Type)
 lookupName name = do
-  mname' <- use (nameEnv . at name)
+  mname' <- gets @DsState ((._nameEnv) >>> HashMap.lookup name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty name)
@@ -276,18 +276,17 @@ toCoreId :: RnId -> C.Type -> Id C.Type
 toCoreId griffId coreType = griffId {meta = coreType}
 
 -- 関数をカリー化する
-curryFun ::
-  (MonadIO m, MonadReader DsEnv m, MonadState DsState m) =>
-  -- | トップレベル関数か否か
-  Bool ->
-  -- | uncurryされた関数名のヒント
-  Text ->
-  -- | パラメータリスト
-  [Id C.Type] ->
-  -- | uncurryされた関数値
-  C.Expr (Id C.Type) ->
-  m ([Id C.Type], C.Expr (Id C.Type))
 -- η展開
+curryFun ::
+  ( State Uniq :> es,
+    Reader ModuleName :> es,
+    State DsState :> es
+  ) =>
+  Bool ->
+  Text ->
+  [Id C.Type] ->
+  C.Expr (Id C.Type) ->
+  Eff es ([Id C.Type], C.Expr (Id C.Type))
 curryFun isToplevel hint [] e = do
   case C.typeOf e of
     [] :-> _ -> do
@@ -313,15 +312,15 @@ curryFun isToplevel hint ps e = curryFun' ps []
           -- uncurry後の関数もトップレベル関数にできる。
           fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
-          e' <- alpha e (HashMap.fromList $ zip ps $ map C.Var ps')
-          globalDefs <>= [FunDef fun ps' (C.typeOf fun) e']
+          e' <- alpha (HashMap.fromList $ zip ps $ map C.Var ps') e
+          modify \s@DsState {..} -> s {_globalDefs = FunDef fun ps' (C.typeOf fun) e' : _globalDefs}
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do
           fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
           ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
-          e' <- alpha e (HashMap.fromList $ zip ps $ map C.Var ps')
+          e' <- alpha (HashMap.fromList $ zip ps $ map C.Var ps') e
           pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
     curryFun' (x : xs) as = do
       fun <- curryFun' xs (C.Var x : as)

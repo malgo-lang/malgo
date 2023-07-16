@@ -1,7 +1,9 @@
 module Koriel.Core.Parser (parse) where
 
+import Data.Char qualified as Char
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
+import Data.Text qualified as T
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
 import Koriel.Core.Syntax hiding (atom, expr, object)
 import Koriel.Core.Type
@@ -16,7 +18,6 @@ parse :: String -> Text -> Either (ParseErrorBundle Text Void) (Program Text)
 parse = Megaparsec.parse do
   space
   program
-{-# INLINE parse #-}
 
 type Parser = Parsec Void Text
 
@@ -80,7 +81,6 @@ unboxed = try int32 <|> try int64 <|> try float <|> double <|> char <|> string <
 -- | Parse an atom.
 atom :: Parser (Atom Text)
 atom = try (Var <$> ident) <|> Unboxed <$> unboxed
-{-# INLINE atom #-}
 
 -- | Parse an object.
 object :: Parser (Obj Text)
@@ -188,7 +188,6 @@ expr =
 localDef :: Parser (LocalDef Text)
 localDef = between (symbol "(") (symbol ")") do
   LocalDef <$> ident <*> type_ <*> object
-{-# INLINE localDef #-}
 
 case_ :: Parser (Case Text)
 case_ = between (symbol "(") (symbol ")") do
@@ -263,14 +262,12 @@ constructor = between (symbol "(") (symbol ")") do
   tag <- tag
   args <- many type_
   pure $ Con tag args
-{-# INLINE constructor #-}
 
 tag :: Parser Tag
 tag = tuple <|> data_
   where
     tuple = void (symbol "Tuple#") >> pure Tuple
     data_ = Data <$> rawIdent
-{-# INLINE tag #-}
 
 -- * Common combinators
 
@@ -280,32 +277,33 @@ space = Lexer.space Char.space1 lineComment blockComment
   where
     lineComment = Lexer.skipLineComment ";"
     blockComment = Lexer.skipBlockCommentNested "#|" "|#"
-{-# INLINE space #-}
 
 -- | Apply a parser and skip trailing whitespace.
 lexeme :: Parser a -> Parser a
 lexeme = Lexer.lexeme space
-{-# INLINE lexeme #-}
 
 -- | Parse a symbol and skip trailing whitespace.
-symbol :: Text -> Parser Text
-symbol = Lexer.symbol space
-{-# INLINE symbol #-}
+symbol :: Text -> Parser ()
+symbol = void . Lexer.symbol space
 
 -- | Character that can be used in an identifier.
 -- Basically, it is the same as 'Malgo.Parser.identLetter', but we also allow:
 -- - '@' for global variables.
 -- - '$' for temporary variables.
-identStartLetter :: Parser Char
-identStartLetter = oneOf ("@#$%" :: String) -- Char.letterChar <|> oneOf ("_+-*/\\%=><:;|&!#.@$" :: String)
-{-# INLINE identStartLetter #-}
+isIdentStartLetter :: Char -> Bool
+isIdentStartLetter =
+  \case
+    '@' -> True
+    '#' -> True
+    '$' -> True
+    '%' -> True
+    _ -> False
 
-identLetter :: Parser Char
-identLetter = Char.alphaNumChar <|> satisfy (`HashSet.member` identLetterSet)
+isIdentLetter :: Char -> Bool
+isIdentLetter c = Char.isAlphaNum c || HashSet.member c identLetterSet
   where
     identLetterSet :: HashSet Char
     identLetterSet = HashSet.fromList "_+-*/\\%=><:;|&!#.@$"
-{-# INLINE identLetter #-}
 
 -- | Parse an identifier.
 -- In Koriel, we always know where an identifier appears,
@@ -313,17 +311,15 @@ identLetter = Char.alphaNumChar <|> satisfy (`HashSet.member` identLetterSet)
 -- (And identifiers that textually look like keywords are allowed.)
 ident :: Parser Text
 ident = lexeme do
-  x <- identStartLetter
+  x <- satisfy isIdentStartLetter
   xs <-
-    some identLetter
+    takeWhile1P Nothing isIdentLetter
       <|> between
         (symbol "[")
         (symbol "]")
-        (unwords <$> many (lexeme (some identLetter)))
-  pure $ convertString $ x : xs
-{-# INLINE ident #-}
+        (T.unwords <$> many (lexeme (takeWhile1P Nothing isIdentLetter)))
+  pure $ T.cons x $ convertString xs
 
 rawIdent :: Parser Text
 rawIdent = lexeme do
-  convertString <$> some identLetter
-{-# INLINE rawIdent #-}
+  convertString <$> takeWhile1P Nothing isIdentLetter

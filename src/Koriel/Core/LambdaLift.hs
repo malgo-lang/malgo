@@ -1,14 +1,17 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE Strict #-}
 
-module Koriel.Core.LambdaLift (
-  lambdalift,
-)
+module Koriel.Core.LambdaLift
+  ( lambdalift,
+  )
 where
 
 import Control.Lens (traverseOf, traversed, view, _1, _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
+import Effectful
+import Effectful.Reader.Static
+import Effectful.State.Static.Local
 import Koriel.Core.Flat (normalize)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
@@ -26,41 +29,34 @@ data LambdaLiftState = LambdaLiftState
 
 -- | Add a function to the state.
 -- It does not use lens.
-addFunc :: MonadState LambdaLiftState m => Id Type -> ([Id Type], Type, Expr (Id Type)) -> m ()
+addFunc :: (State LambdaLiftState :> es) => Id Type -> ([Id Type], Type, Expr (Id Type)) -> Eff es ()
 addFunc f x = modify $ \state@LambdaLiftState {funcs} -> state {funcs = HashMap.insert f x funcs}
 
 -- | Add a known function to the state.
 -- It does not use lens.
-addKnown :: MonadState LambdaLiftState m => Id Type -> m ()
+addKnown :: (State LambdaLiftState :> es) => Id Type -> Eff es ()
 addKnown f = modify $ \state@LambdaLiftState {knowns} -> state {knowns = HashSet.insert f knowns}
 
-isKnown :: MonadState LambdaLiftState m => Id Type -> m Bool
+isKnown :: (State LambdaLiftState :> es) => Id Type -> Eff es Bool
 isKnown f = do
-  ks <- gets (.knowns)
+  ks <- gets @LambdaLiftState (.knowns)
   pure $ f `HashSet.member` ks
 
-data LambdaLiftEnv = LambdaLiftEnv
-  { uniqSupply :: UniqSupply,
-    moduleName :: ModuleName
-  }
-
-data DefEnv = DefEnv {uniqSupply :: UniqSupply, moduleName :: ModuleName}
-
-def :: (MonadIO m, MonadState LambdaLiftState m, MonadReader LambdaLiftEnv m) => Id Type -> [Id Type] -> Expr (Id Type) -> m (Id Type)
+def :: (State LambdaLiftState :> es, Reader ModuleName :> es, State Uniq :> es) => Id Type -> [Id Type] -> Expr (Id Type) -> Eff es (Id Type)
 def name xs e = do
-  uniqSupply <- asks (.uniqSupply)
-  f <- runReaderT (newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)) (DefEnv uniqSupply name.moduleName)
+  f <- newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)
   -- knowns . at f ?= ()
   addFunc f (xs, typeOf f, e)
   pure f
 
 -- | Lambda lifting
-lambdalift :: MonadIO m => UniqSupply -> ModuleName -> Program (Id Type) -> m (Program (Id Type))
-lambdalift uniqSupply moduleName Program {..} =
-  runReaderT
-    ?? LambdaLiftEnv {..}
-    $ evalStateT
-      ?? LambdaLiftState {funcs = mempty, knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars}
+lambdalift ::
+  (Reader ModuleName :> es, State Uniq :> es) =>
+  Program (Id Type) ->
+  Eff es (Program (Id Type))
+lambdalift Program {..} =
+  evalState
+    LambdaLiftState {funcs = mempty, knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars}
     $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
       for_ topFuns \(f, ps, t, e) -> do
@@ -69,16 +65,22 @@ lambdalift uniqSupply moduleName Program {..} =
       LambdaLiftState {funcs} <- get
       -- TODO: lambdalift topVars
       prog <-
-        normalize $
-          Program
+        normalize
+          $ Program
             topVars
-            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
-                HashMap.toList funcs
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e))
+                $ HashMap.toList funcs
             )
             extFuns
       traverseOf expr toDirect prog
 
-llift :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Expr (Id Type) -> f (Expr (Id Type))
+llift ::
+  ( State LambdaLiftState :> es,
+    Reader ModuleName :> es,
+    State Uniq :> es
+  ) =>
+  Expr (Id Type) ->
+  Eff es (Expr (Id Type))
 llift (Atom a) = pure $ Atom a
 llift (Call (Var f) xs) = do
   ifM (isKnown f) (pure $ CallDirect f xs) (pure $ Call (Var f) xs)
@@ -92,16 +94,21 @@ llift (Let [LocalDef n t (Fun xs call@Call {})] e) = do
 llift (Let [LocalDef n t o@(Fun _ RawCall {})] e) = Let [LocalDef n t o] <$> llift e
 llift (Let [LocalDef n t o@(Fun _ CallDirect {})] e) = Let [LocalDef n t o] <$> llift e
 llift (Let [LocalDef n t (Fun as body)] e) = do
-  backup <- get
-  ks <- gets (.knowns)
+  backup <- get @LambdaLiftState
+  ks <- gets @LambdaLiftState (.knowns)
   -- nがknownだと仮定してlambda liftする
   addKnown n
   body' <- llift body
   addFunc n (as, t, body')
-  (e', state) <- localState $ llift e
+  (e', state) <- do
+    s <- get @LambdaLiftState
+    e' <- llift e
+    s' <- get @LambdaLiftState
+    put s
+    pure (e', s')
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
-  defined <- gets (.defined)
+  defined <- gets @LambdaLiftState (.defined)
   let fvs = HashSet.difference (freevars body') (ks <> defined <> HashSet.fromList as)
   if null fvs && not (n `HashSet.member` freevars e')
     then do
@@ -110,7 +117,7 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
     else do
       put backup
       body' <- llift body
-      defined <- gets (.defined)
+      defined <- gets @LambdaLiftState (.defined)
       let fvs = HashSet.difference (freevars body') (ks <> defined <> HashSet.fromList as)
       newFun <- def n (toList fvs <> as) body'
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
@@ -126,10 +133,10 @@ llift (Error t) = pure $ Error t
 -- | `toDirect` converts `Call` to `CallDirect` if the callee is known.
 -- If `f` is a known function, we must call it directly.
 -- These conversions are almost done in `llift`, but not all of them.
-toDirect :: (MonadIO f, MonadState LambdaLiftState f, MonadReader LambdaLiftEnv f) => Expr (Id Type) -> f (Expr (Id Type))
+toDirect :: (State LambdaLiftState :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
 toDirect (Atom a) = pure $ Atom a
 toDirect (Call (Var f) xs) = do
-  ks <- gets (.knowns)
+  ks <- gets @LambdaLiftState (.knowns)
   if f `HashSet.member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
 toDirect (Call f xs) = pure $ Call f xs
 toDirect (CallDirect f xs) = pure $ CallDirect f xs

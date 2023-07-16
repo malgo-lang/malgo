@@ -4,6 +4,8 @@ import Control.Lens (ifor)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Text qualified as T
 import Data.Traversable (for)
+import Effectful
+import Effectful.Reader.Static
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
@@ -11,8 +13,8 @@ import Koriel.Prelude
 import Koriel.Pretty (Pretty (pretty), errorDoc)
 
 -- | Type-check the program and annotate with type information.
-annotate :: (MonadIO m, MonadFail m) => ModuleName -> Program Text -> m (Program (Id Type))
-annotate moduleName program = runReaderT (annProgram program) (Context moduleName mempty)
+annotate :: (IOE :> es) => ModuleName -> Program Text -> Eff es (Program (Id Type))
+annotate moduleName program = runReader (Context moduleName mempty) (annProgram program)
 
 data Context = Context
   { -- | The current module name.
@@ -20,31 +22,35 @@ data Context = Context
     nameEnv :: HashMap Text (Id Type)
   }
 
-lookupName :: HasCallStack => MonadReader Context m => Text -> m (Id Type)
+lookupName :: (HasCallStack) => (Reader Context :> es) => Text -> Eff es (Id Type)
 lookupName name =
   HashMap.lookupDefault
     (error $ "lookupName: " <> show name)
     name
-    <$> asks (.nameEnv)
+    <$> asks @Context (.nameEnv)
 
-parseId :: (MonadReader Context m, MonadFail m) => Text -> Type -> m (Id Type)
+parseId :: (Reader Context :> es) => Text -> Type -> Eff es (Id Type)
 parseId name meta
   | T.head name == '@' = do
-      [moduleName, name] <- pure $ T.words (T.tail name)
-      pure Id {name, meta, moduleName = ModuleName moduleName, uniq = -1, sort = External}
+      case T.words (T.tail name) of
+        [moduleName, name] ->
+          pure Id {name, meta, moduleName = ModuleName moduleName, uniq = -1, sort = External}
+        _ -> error "unreachable: parseId"
   | T.head name == '#' = do
-      [moduleName, name, uniq] <- pure $ T.words (T.tail name)
-      pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Internal}
+      case T.words (T.tail name) of
+        [moduleName, name, uniq] -> pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Internal}
+        _ -> error "unreachable: parseId"
   | T.head name == '$' = do
-      [moduleName, name, uniq] <- pure $ T.words (T.tail name)
-      pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Temporal}
+      case T.words (T.tail name) of
+        [moduleName, name, uniq] -> pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Temporal}
+        _ -> error "unreachable: parseId"
   | T.head name == '%' = do
-      moduleName <- asks (.moduleName)
+      moduleName <- asks @Context (.moduleName)
       pure Id {name = T.tail name, meta, moduleName, uniq = -1, sort = Native}
   | otherwise = do
       error $ "parseId: " <> show name
 
-annProgram :: (MonadReader Context m, MonadIO m, MonadFail m) => Program Text -> m (Program (Id Type))
+annProgram :: (Reader Context :> es, IOE :> es) => Program Text -> Eff es (Program (Id Type))
 annProgram Program {..} = do
   varEnv <- foldMapM prepareVarDecl topVars
   funEnv <- foldMapM prepareFunDecl topFuns
@@ -53,32 +59,32 @@ annProgram Program {..} = do
     topFuns <- traverse annFunDecl topFuns
     pure Program {..}
 
-prepareVarDecl :: (MonadReader Context m, MonadFail m) => (Text, Type, Expr Text) -> m (HashMap Text (Id Type))
+prepareVarDecl :: (Reader Context :> es) => (Text, Type, Expr Text) -> Eff es (HashMap Text (Id Type))
 prepareVarDecl (name, ty, _) = do
   id <- parseId name ty
   pure $ HashMap.singleton name id
 
-prepareFunDecl :: (MonadReader Context m, MonadFail m) => (Text, [Text], Type, Expr Text) -> m (HashMap Text (Id Type))
+prepareFunDecl :: (Reader Context :> es) => (Text, [Text], Type, Expr Text) -> Eff es (HashMap Text (Id Type))
 prepareFunDecl (name, _, ty, _) = do
   id <- parseId name ty
   pure $ HashMap.singleton name id
 
-annVarDecl :: (MonadReader Context m, MonadIO m, MonadFail m) => (Text, Type, Expr Text) -> m (Id Type, Type, Expr (Id Type))
+annVarDecl :: (Reader Context :> es, IOE :> es) => (Text, Type, Expr Text) -> Eff es (Id Type, Type, Expr (Id Type))
 annVarDecl (name, ty, body) = do
   name <- lookupName name
   (name,ty,) <$> annExpr body
 
-annFunDecl :: (MonadReader Context m, MonadIO m, MonadFail m) => (Text, [Text], Type, Expr Text) -> m (Id Type, [Id Type], Type, Expr (Id Type))
+annFunDecl :: (Reader Context :> es, IOE :> es) => (Text, [Text], Type, Expr Text) -> Eff es (Id Type, [Id Type], Type, Expr (Id Type))
 annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   name <- lookupName name
   params' <- zipWithM parseId params paramTypes
   local
     (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv})
     $ (name,params',ty,)
-      <$> annExpr body
+    <$> annExpr body
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pretty name
 
-annExpr :: (MonadReader Context m, MonadIO m, MonadFail m) => Expr Text -> m (Expr (Id Type))
+annExpr :: (Reader Context :> es, IOE :> es) => Expr Text -> Eff es (Expr (Id Type))
 annExpr (Atom atom) = Atom <$> annAtom atom
 annExpr (Call fun args) = Call <$> annAtom fun <*> traverse annAtom args
 annExpr (CallDirect fun args) = CallDirect <$> lookupName fun <*> traverse annAtom args
@@ -158,11 +164,11 @@ annExpr (Assign x v e) = do
     pure $ Assign x' v' e
 annExpr (Error ty) = pure $ Error ty
 
-annAtom :: HasCallStack => MonadReader Context m => Atom Text -> m (Atom (Id Type))
+annAtom :: (HasCallStack) => (Reader Context :> es) => Atom Text -> Eff es (Atom (Id Type))
 annAtom (Var name) = Var <$> lookupName name
 annAtom (Unboxed value) = pure $ Unboxed value
 
-annObj :: (MonadReader Context m, MonadIO m, MonadFail m) => Type -> Obj Text -> m (Obj (Id Type))
+annObj :: (Reader Context :> es, IOE :> es) => Type -> Obj Text -> Eff es (Obj (Id Type))
 annObj (paramTypes :-> _) (Fun params body) = do
   params' <- zipWithM parseId params paramTypes
   local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do

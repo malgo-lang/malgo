@@ -23,6 +23,7 @@
 #
 - modules:
   - {name: Debug.Trace, within: [], message: "Debugging code left in"}
+  - {name: Effectful.Fail, within: [], message: "MonadFail is not allowed"}
 #   - {name: [Data.Set, Data.HashSet], as: Set} # if you import Data.Set qualified, it must be as 'Set'
   - {name: Data.ByteString, as: BS}
   - {name: Data.ByteString.Lazy, as: BL}

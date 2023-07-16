@@ -3,7 +3,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
-{-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
 module Malgo.Prelude
   ( module Koriel.Prelude,
@@ -12,8 +11,9 @@ module Malgo.Prelude
 where
 
 import Control.Lens.TH
-import Data.Binary (Binary)
 import Data.ByteString qualified as BS
+import Data.Store ()
+import Data.Store.TH (makeStore)
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
 import Koriel.Prelude
 import Koriel.Pretty
@@ -28,9 +28,9 @@ instance Hashable Megaparsec.Pos
 
 instance Hashable SourcePos
 
-instance Binary Megaparsec.Pos
+makeStore ''Megaparsec.Pos
 
-instance Binary SourcePos
+makeStore ''SourcePos
 
 -- | Range of a token.
 data Range = Range
@@ -38,7 +38,9 @@ data Range = Range
     _end :: SourcePos
   }
   deriving stock (Eq, Ord, Show, Generic)
-  deriving anyclass (Binary, Hashable)
+  deriving anyclass (Hashable)
+
+makeStore ''Range
 
 instance Semigroup Range where
   Range s1 e1 <> Range s2 e2 = Range (min s1 s2) (max e1 e2)

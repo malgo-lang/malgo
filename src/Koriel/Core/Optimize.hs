@@ -5,13 +5,16 @@ module Koriel.Core.Optimize
   )
 where
 
-import Control.Lens (At (at), lengthOf, transform, transformM, view, _1)
+import Control.Lens (lengthOf, transform, transformM, view, _1)
 import Data.Graph qualified as Graph
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.List qualified as List
 import Data.Maybe qualified as Maybe
-import GHC.Records (HasField)
+import Effectful (Eff, (:>))
+import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
+import Effectful.State.Static.Local (State, evalState, execState, get, modify)
+import Effectful.State.Static.Local qualified as L
 import Koriel.Core.Alpha
 import Koriel.Core.Flat
 import Koriel.Core.Syntax
@@ -60,13 +63,16 @@ times n f x
 
 -- | Optimize a program
 optimizeProgram ::
-  (MonadIO m, MonadReader r m, HasField "optimizeOption" r OptimizeOption, HasField "moduleName" r ModuleName, HasField "uniqSupply" r UniqSupply) =>
+  ( Reader OptimizeOption :> es,
+    Reader ModuleName :> es,
+    State Uniq :> es
+  ) =>
   Program (Id Type) ->
-  m (Program (Id Type))
+  Eff es (Program (Id Type))
 optimizeProgram Program {..} = do
   state <-
     {-# SCC "buildState" #-}
-      execStateT ?? CallInlineEnv mempty $ do
+      execState mempty do
         {-# SCC "checkInlinable_topFuns" #-} for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
         {-# SCC "checkInlinable_topVars" #-}
           for_ topVars $ \case
@@ -78,8 +84,8 @@ optimizeProgram Program {..} = do
   -- Remove all unused toplevel functions and variables.
   -- If a global definition is (external or native) and defined in the current module, it cannot be removed.
   -- Otherwise, delete it if it is not reachable from above definitions.
-  env <- ask
-  let roots = {-# SCC "roots" #-} filter (\x -> x.sort `elem` [External, Native] && x.moduleName == env.moduleName) $ map (view _1) topFuns <> map (view _1) topVars
+  moduleName <- ask @ModuleName
+  let roots = {-# SCC "roots" #-} filter (\x -> x.sort `elem` [External, Native] && x.moduleName == moduleName) $ map (view _1) topFuns <> map (view _1) topVars
   let (graph, _, toVertex) = {-# SCC "callGraph" #-} callGraph Program {..}
   let reachableFromMain = {-# SCC "reachable" #-} ordNub $ concatMap (toVertex >>> Maybe.fromJust >>> Graph.reachable graph) roots
 
@@ -89,21 +95,20 @@ optimizeProgram Program {..} = do
   topFuns <- {-# SCC "filter_topFuns" #-} pure $ filter (\(n, _, _, _) -> isUsed n) topFuns
   pure $ {-# SCC "buildProgram" #-} Program {..}
 
-optimizeExpr :: (MonadReader r f, MonadIO f, HasField "optimizeOption" r OptimizeOption, HasField "moduleName" r ModuleName, HasField "uniqSupply" r UniqSupply) => CallInlineEnv -> Expr (Id Type) -> f (Expr (Id Type))
+optimizeExpr :: (Reader OptimizeOption :> es, Reader ModuleName :> es, State Uniq :> es) => CallInlineEnv -> Expr (Id Type) -> Eff es (Expr (Id Type))
 optimizeExpr state expr = do
-  option <- asks (.optimizeOption)
+  option <- ask @OptimizeOption
   5 `times` opt option $ expr
   where
     opt option e = do
       e <- {-# SCC "foldVariable" #-} runOpt option.doFoldVariable foldVariable e
-      e <- {-# SCC "inlineConstructor" #-} runOpt option.doInlineConstructor ((runReaderT ?? mempty) . inlineConstructor) e
+      e <- {-# SCC "inlineConstructor" #-} runOpt option.doInlineConstructor (runReader @InlineConstructorMap mempty . inlineConstructor) e
       e <- {-# SCC "eliminateUnusedLet" #-} runOpt option.doEliminateUnusedLet eliminateUnusedLet e
-      e <- {-# SCC "inlineFunction" #-} runOpt option.doInlineFunction (flip evalStateT state . inlineFunction) e
+      e <- {-# SCC "inlineFunction" #-} runOpt option.doInlineFunction (evalState state . inlineFunction) e
       e <- {-# SCC "foldRedundantCast" #-} runOpt option.doFoldRedundantCast foldRedundantCast e
       e <- {-# SCC "foldTrivialCall" #-} runOpt option.doFoldTrivialCall foldTrivialCall e
       e <- {-# SCC "removeNoopDestruct" #-} runOpt option.doRemoveNoopDestruct (pure . removeNoopDestruct) e
       {-# SCC "normalizeExpr" #-} normalizeExpr e
-    runOpt :: (Monad m) => Bool -> (Expr (Id Type) -> m (Expr (Id Type))) -> Expr (Id Type) -> m (Expr (Id Type))
     runOpt flag f =
       if flag
         then f
@@ -122,17 +127,17 @@ foldVariable = transformM
 type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
 
 -- | Inline simple pattern match and pack.
-inlineConstructor :: (MonadReader InlineConstructorMap m) => Expr (Id Type) -> m (Expr (Id Type))
+inlineConstructor :: (Reader InlineConstructorMap :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
 inlineConstructor =
   transformM \case
     Let ds e -> do
       local (mconcat (map toPackInlineMap ds) <>) $ pure $ Let ds e
     Match (Atom (Var v)) [Unpack con xs body] -> do
-      view (at v) >>= \case
+      asks (HashMap.lookup v) >>= \case
         Just (con', as) | con == con' -> pure $ build xs as body
         _ -> pure $ Destruct (Var v) con xs body
     Destruct (Var v) con xs body -> do
-      view (at v) >>= \case
+      asks (HashMap.lookup v) >>= \case
         Just (con', as) | con == con' -> pure $ build xs as body
         _ -> pure $ Destruct (Var v) con xs body
     e -> pure e
@@ -144,7 +149,7 @@ inlineConstructor =
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
-eliminateUnusedLet :: (Monad f, Hashable a) => Expr (Id a) -> f (Expr (Id a))
+eliminateUnusedLet :: (Monad f) => Expr (Id a) -> f (Expr (Id a))
 eliminateUnusedLet =
   transformM \case
     Let ds e -> do
@@ -165,12 +170,10 @@ eliminateUnusedLet =
            in fvs /= fvs' && reachable limit gamma v fvs'
 
 -- TODO: Merge with OptimizeEnv
-newtype CallInlineEnv = CallInlineEnv
-  { inlinableMap :: HashMap (Id Type) ([Id Type], Expr (Id Type))
-  }
+type CallInlineEnv = HashMap (Id Type) ([Id Type], Expr (Id Type))
 
 -- | Inline a function call.
-inlineFunction :: (MonadState CallInlineEnv f, MonadReader r f, HasField "optimizeOption" r OptimizeOption, MonadIO f, HasField "moduleName" r ModuleName, HasField "uniqSupply" r UniqSupply) => Expr (Id Type) -> f (Expr (Id Type))
+inlineFunction :: (Reader OptimizeOption :> es, L.State CallInlineEnv :> es, Reader ModuleName :> es, State Uniq :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
 inlineFunction =
   transformM
     ( \case
@@ -184,9 +187,12 @@ inlineFunction =
       CallDirect f xs -> lookupCallInline CallDirect f xs
       x -> pure x
 
-checkInlinable :: (MonadReader r m, MonadState CallInlineEnv m, HasField "optimizeOption" r r', HasField "inlineThreshold" r' Int) => LocalDef (Id Type) -> m ()
+checkInlinable ::
+  (Reader OptimizeOption :> es, L.State CallInlineEnv :> es) =>
+  LocalDef (Id Type) ->
+  Eff es ()
 checkInlinable (LocalDef f _ (Fun ps v)) = do
-  threshold <- asks (.optimizeOption.inlineThreshold)
+  threshold <- asks @OptimizeOption (.inlineThreshold)
   -- atomの数がthreshold以下ならインライン展開する
   -- TODO: 再帰関数かどうかコールグラフを作って判定する
   let isInlinable =
@@ -195,25 +201,28 @@ checkInlinable (LocalDef f _ (Fun ps v)) = do
           && not (f `HashSet.member` freevars v)
           && not (f `HashSet.member` callees v)
   when isInlinable $ do
-    modify $ \e -> e {inlinableMap = HashMap.insert f (ps, v) e.inlinableMap}
+    modify @CallInlineEnv $ HashMap.insert f (ps, v)
 checkInlinable _ = pass
 
 -- | Lookup a function in the inlinable map.
 lookupCallInline ::
-  (MonadReader r m, MonadState CallInlineEnv m, MonadIO m, HasField "moduleName" r ModuleName, HasField "uniqSupply" r UniqSupply) =>
+  ( L.State CallInlineEnv :> es,
+    Reader ModuleName :> es,
+    State Uniq :> es
+  ) =>
   (Id Type -> [Atom (Id Type)] -> Expr (Id Type)) ->
   Id Type ->
   [Atom (Id Type)] ->
-  m (Expr (Id Type))
+  Eff es (Expr (Id Type))
 lookupCallInline call f as = do
-  f' <- gets $ (.inlinableMap) >>> HashMap.lookup f
-  case f' of
+  env <- get @CallInlineEnv
+  case HashMap.lookup f env of
     Just (ps, v) -> do
       -- v[as/ps]
       -- Test failed in Lint : pure $ foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
       -- use Alpha.alpha
       let subst = HashMap.fromList $ zip ps as
-      alpha v subst
+      alpha subst v
     Nothing -> pure $ call f as
 
 -- | Remove a cast if it is redundant.
@@ -230,10 +239,10 @@ foldRedundantCast =
     e -> pure e
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
-foldTrivialCall :: (MonadIO f, MonadReader r f, HasField "moduleName" r ModuleName, HasField "uniqSupply" r UniqSupply) => Expr (Id Type) -> f (Expr (Id Type))
+foldTrivialCall :: (Reader ModuleName :> es, State Uniq :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
 foldTrivialCall = transformM \case
   Let [LocalDef f _ (Fun ps body)] (Call (Var f') as) | f == f' -> do
-    alpha body (HashMap.fromList $ zip ps as)
+    alpha (HashMap.fromList $ zip ps as) body
   x -> pure x
 
 -- | Remove `destruct` if it does not bind any variables.

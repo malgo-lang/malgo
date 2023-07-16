@@ -2,24 +2,26 @@
 
 module Malgo.Build (run) where
 
-import Control.Concurrent (getNumCapabilities)
 import Control.Lens (Field2 (_2), view)
 import Data.Aeson (FromJSON, decodeFileStrict)
 import Data.ByteString.Lazy qualified as BL
 import Data.List ((\\))
 import Data.List qualified as List
-import Data.List.Extra (chunksOf)
 import Data.Maybe qualified as Maybe
+import Effectful
+-- import Effectful.Concurrent.Async (pooledMapConcurrently_, runConcurrent)
+import Effectful.Reader.Static
+import Koriel.Core.Optimize (defaultOptimizeOption)
 import Koriel.Id (ModuleName (..))
 import Malgo.Driver qualified as Driver
-import Malgo.Monad (getWorkspaceDir, newMalgoEnv)
+import Malgo.Monad (CompileMode (..), Flag (..), getWorkspaceDir, runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..))
 import System.Directory (getCurrentDirectory, makeAbsolute)
-import System.FilePath ((</>))
+import System.FilePath (takeBaseName, (</>))
 import System.FilePath.Glob (glob)
-import UnliftIO (mapConcurrently_)
+import UnliftIO.Async (pooledMapConcurrently_)
 import Witherable (ordNub)
 
 data Config = Config
@@ -61,22 +63,33 @@ run = do
   sourceContents <- map convertString <$> traverse BL.readFile sourceFiles'
   let parsedAstList = mconcat $ zipWith parse sourceFiles' sourceContents
   let moduleDepends = map takeImports parsedAstList
-  n <- getNumCapabilities
-  let splited = split n $ map (\(_, i, o) -> (i, o)) moduleDepends
+  let sources = split $ map (\(_, i, o) -> (i, o)) moduleDepends
 
-  _interfaces <- newIORef mempty
-  _indexes <- newIORef mempty
+  -- runConcurrent $
   traverse_
-    ( mapConcurrently_
+    ( pooledMapConcurrently_
         ( \(path, moduleName, _) -> do
             let ast = Maybe.fromJust $ List.lookup path parsedAstList
-            putStrLn ("Compile " <> path)
-            env <- newMalgoEnv path [] moduleName (Just _interfaces) (Just _indexes)
-            Driver.compileFromAST path env ast
+            liftIO $ putStrLn ("Compile " <> path)
+
+            runEff
+              $ runReader moduleName
+              $ runMalgoM
+                (workspaceDir </> "build" </> takeBaseName path <> ".ll")
+                []
+                LLVM
+                Flag
+                  { noOptimize = False,
+                    lambdaLift = False,
+                    debugMode = False,
+                    testMode = False
+                  }
+                defaultOptimizeOption
+              $ Driver.compileFromAST path ast
         )
         . mapMaybe (\mod -> List.find (view _2 >>> (== mod)) moduleDepends)
     )
-    splited
+    sources
   where
     parse sourceFile sourceContent = case parseMalgo sourceFile sourceContent of
       Left _ -> []
@@ -94,8 +107,8 @@ run = do
                 ds
           )
 
-split :: Int -> [(ModuleName, [ModuleName])] -> [[ModuleName]]
-split n graph =
+split :: [(ModuleName, [ModuleName])] -> [[ModuleName]]
+split graph =
   reverse $ cut graph []
   where
     root :: (ModuleName, [ModuleName]) -> Maybe ModuleName
@@ -106,5 +119,4 @@ split n graph =
     cut xs acc =
       let roots = mapMaybe root xs
           rests = filter (\(x, _) -> x `notElem` roots) xs
-          roots' = chunksOf n roots
-       in cut (map (second (\\ roots)) rests) (roots' <> acc)
+       in cut (map (second (\\ roots)) rests) (roots : acc)

@@ -3,13 +3,13 @@ module Main (main) where
 import Criterion
 import Criterion.Main
 import Data.String.Conversions
-import Koriel.Id (ModuleName (..))
+import Effectful
+import Koriel.Core.Optimize (defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
-import Malgo.Monad (MalgoEnv (..), newMalgoEnv)
-import Relude
+import Malgo.Monad
+import Malgo.Prelude
 import System.Directory (copyFile, createDirectoryIfMissing, listDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
-import System.IO (hPutStr)
 import System.Process.Typed (ExitCode (..), nullStream, proc, readProcessStderr_, readProcessStdout_, runProcess, runProcess_, setStderr, setStdout)
 
 benchmarkDir :: FilePath
@@ -38,7 +38,7 @@ setupEnv = do
   pure benchmarks
   where
     runClang llPath = do
-      pkgConfig <- map toString . words . decodeUtf8 <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
+      pkgConfig <- words . convertString <$> readProcessStdout_ (proc "pkg-config" ["bdw-gc", "--libs", "--cflags"])
       clang <- getClangCommand
       err <-
         readProcessStderr_
@@ -116,14 +116,16 @@ setupRuntime = do
 
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
-compile src dst modPaths lambdaLift noOptimize = do
-  malgoEnv <- newMalgoEnv src modPaths Nothing (ModuleName "tmp") Nothing Nothing
-  malgoEnv <-
-    pure
-      malgoEnv
-        { dstPath = dst,
-          modulePaths = takeDirectory dst : malgoEnv.modulePaths,
-          lambdaLift,
-          noOptimize
-        }
-  Driver.compile src malgoEnv
+compile src dst modPaths lambdaLift noOptimize =
+  runEff
+    $ runMalgoM dst (takeDirectory dst : modPaths) LLVM Flag {lambdaLift, noOptimize, debugMode = False, testMode = False} defaultOptimizeOption
+    -- malgoEnv <- newMalgoEnv src modPaths Nothing (ModuleName "tmp") Nothing Nothing
+    -- malgoEnv <-
+    --   pure
+    --     malgoEnv
+    --       { dstPath = dst,
+    --         modulePaths = takeDirectory dst : malgoEnv.modulePaths,
+    --         lambdaLift,
+    --         noOptimize
+    --       }
+    $ Driver.compile src

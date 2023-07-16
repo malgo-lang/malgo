@@ -1,38 +1,27 @@
-{-# LANGUAGE TemplateHaskell #-}
+module Malgo.Monad (DstPath (..), Flag (..), CompileMode (..), getWorkspaceDir, runMalgoM) where
 
-module Malgo.Monad (MalgoEnv (..), CompileMode (..), getWorkspaceDir, newMalgoEnv, MalgoM, runMalgoM) where
-
-import Control.Lens.TH
-import Control.Monad.Extra (fromMaybeM)
-import Control.Monad.Fix (MonadFix)
-import Koriel.Core.Optimize (OptimizeOption, defaultOptimizeOption)
-import Koriel.Id (ModuleName)
-import Koriel.MonadUniq (UniqSupply (..))
+import Effectful (Eff, IOE, (:>))
+import Effectful.Reader.Static (Reader, runReader)
+import Effectful.State.Static.Local
+import Koriel.Core.Optimize (OptimizeOption)
+import Koriel.Id
+import Koriel.MonadUniq
 import Koriel.Prelude
-import Malgo.Interface (Interface)
+import Malgo.Interface (Interface, ModulePathList (..))
 import Malgo.Lsp.Index (Index)
 import System.Directory (XdgDirectory (XdgData), createDirectoryIfMissing, getCurrentDirectory, getXdgDirectory)
-import System.FilePath (takeBaseName, takeExtension, (</>))
+import System.FilePath ((</>))
 
-data MalgoEnv = MalgoEnv
-  { uniqSupply :: UniqSupply,
-    -- In 'Malgo.Driver.compile' function, 'moduleName' can be 'undefined'.
-    moduleName :: ~ModuleName,
-    interfaces :: IORef (HashMap ModuleName Interface),
-    indexes :: IORef (HashMap ModuleName Index),
-    dstPath :: FilePath,
-    compileMode :: CompileMode,
-    noOptimize :: Bool,
+newtype DstPath = DstPath FilePath
+
+data Flag = Flag
+  { noOptimize :: Bool,
     lambdaLift :: Bool,
-    optimizeOption :: OptimizeOption,
     debugMode :: Bool,
-    testMode :: Bool,
-    modulePaths :: [FilePath]
+    testMode :: Bool
   }
 
 data CompileMode = LLVM deriving stock (Eq, Show)
-
-makeFieldsNoPrefix ''MalgoEnv
 
 -- | Get workspace directory.
 -- If directory does not exist, create it.
@@ -43,34 +32,35 @@ getWorkspaceDir = do
   createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "build"
   return $ pwd </> ".malgo-work"
 
--- | Environment for a module.
-newMalgoEnv ::
+runMalgoM ::
+  (IOE :> es) =>
   FilePath ->
   [FilePath] ->
-  ModuleName ->
-  Maybe (IORef (HashMap ModuleName Interface)) ->
-  Maybe (IORef (HashMap ModuleName Index)) ->
-  IO MalgoEnv
-newMalgoEnv srcFile modulePaths moduleName mInterfaces mIndexes = do
-  uniqSupply <- UniqSupply <$> newIORef 0
-  interfaces <- fromMaybeM (newIORef mempty) (pure mInterfaces)
-  indexes <- fromMaybeM (newIORef mempty) (pure mIndexes)
-  basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-  workspaceDir <- getWorkspaceDir
-  let dstPath = workspaceDir </> "build" </> takeBaseName srcFile <> ".ll"
-  let compileMode = case takeExtension dstPath of
-        ".ll" -> LLVM
-        _ -> error "unknown extension"
-  let noOptimize = False
-  let lambdaLift = True
-  let optimizeOption = defaultOptimizeOption
-  let debugMode = False
-  let testMode = False
-  modulePaths <- pure $ modulePaths <> [workspaceDir </> "build", basePath]
-  pure MalgoEnv {..}
-
-newtype MalgoM a = MalgoM {unMalgoM :: ReaderT MalgoEnv IO a}
-  deriving newtype (Functor, Applicative, Monad, MonadIO, MonadReader MalgoEnv, MonadFix, MonadFail)
-
-runMalgoM :: MalgoEnv -> MalgoM a -> IO a
-runMalgoM env m = runReaderT m.unMalgoM env
+  CompileMode ->
+  Flag ->
+  OptimizeOption ->
+  Eff
+    ( Reader OptimizeOption
+        : Reader ModulePathList
+        : Reader Flag
+        : Reader CompileMode
+        : Reader DstPath
+        : State Uniq
+        : State (HashMap ModuleName Index)
+        : State (HashMap ModuleName Interface)
+        : es
+    )
+    b ->
+  Eff es b
+runMalgoM dstPath modulePaths compileMode flag opt e = do
+  workspaceDir <- liftIO getWorkspaceDir
+  basePath <- liftIO $ getXdgDirectory XdgData ("malgo" </> "base")
+  let !readOpt = {-# SCC "readOpt" #-} runReader opt e
+  let !readModulePaths = {-# SCC "readModulePaths" #-} runReader (ModulePathList $ modulePaths <> [workspaceDir </> "build", basePath]) readOpt
+  let !readFlag = {-# SCC "readFlag" #-} runReader flag readModulePaths
+  let !readCompileMode = {-# SCC "readCompileMode" #-} runReader compileMode readFlag
+  let !readDstPath = {-# SCC "readDstPath" #-} runReader (DstPath dstPath) readCompileMode
+  let !stateUniq = {-# SCC "stateUniq" #-} evalState (Uniq 0) readDstPath
+  let !stateIndex = {-# SCC "stateIndex" #-} evalState @(HashMap ModuleName Index) mempty stateUniq
+  let !stateInterface = {-# SCC "stateInterface" #-} evalState @(HashMap ModuleName Interface) mempty stateIndex
+  stateInterface

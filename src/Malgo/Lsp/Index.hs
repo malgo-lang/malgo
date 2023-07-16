@@ -20,29 +20,35 @@ module Malgo.Lsp.Index
   )
 where
 
+import Control.Concurrent.MVar (MVar)
 import Control.Lens.TH
-import Data.Binary (Binary, decodeFile, encode)
-import Data.ByteString.Lazy qualified as BL
+import Data.ByteString qualified as BS
 import Data.HashMap.Strict qualified as HashMap
-import GHC.Records (HasField)
+import Data.Store (Store, decodeEx, encode)
+import Data.Store.TH
+import Effectful
+import Effectful.Reader.Static
+import Effectful.State.Static.Local
 import Generic.Data (Generically (..))
 import Koriel.Id (ModuleName (..))
 import Koriel.Pretty
 import Malgo.Infer.TypeRep (Scheme, Type)
+import Malgo.Interface (ModulePathList (..))
 import Malgo.Prelude
 import Malgo.Syntax.Extension (RnId)
 import System.Directory qualified as Directory
 import System.FilePath (takeFileName, (-<.>), (</>))
 import Text.Megaparsec.Pos (Pos, SourcePos (..))
-import UnliftIO (atomicWriteIORef)
 
 data SymbolKind = Data | TypeParam | Constructor | Function | Variable
   deriving stock (Show, Generic)
-  deriving anyclass (Binary)
+
+makeStore ''SymbolKind
 
 data Symbol = Symbol {kind :: SymbolKind, name :: Text, range :: Range}
   deriving stock (Show, Generic)
-  deriving anyclass (Binary)
+
+makeStore ''Symbol
 
 -- | An 'Info' records
 --  * Symbol name
@@ -54,7 +60,9 @@ data Info = Info
     definitions :: [Range]
   }
   deriving stock (Eq, Ord, Show, Generic)
-  deriving anyclass (Binary, Hashable)
+  deriving anyclass (Hashable)
+
+makeStore ''Info
 
 instance Pretty Info where
   pretty Info {..} = pretty name <+> ":" <+> pretty typeSignature <+> pretty definitions
@@ -65,15 +73,15 @@ data Index = Index
     _symbolInfo :: HashMap RnId Symbol
   }
   deriving stock (Show, Generic)
-  deriving anyclass (Binary)
   deriving (Monoid, Semigroup) via (Generically Index)
   deriving (Pretty) via (PrettyShow Index)
 
+makeStore ''Index
 makeFieldsNoPrefix ''Index
 
 data LspOpt = LspOpt
-  { modulePaths :: [FilePath],
-    indexes :: IORef (HashMap ModuleName Index)
+  { modulePaths :: ModulePathList,
+    indexes :: MVar (HashMap ModuleName Index)
   }
 
 makeFieldsNoPrefix ''LspOpt
@@ -95,24 +103,22 @@ isInRange pos Range {_start, _end}
 
 -- | 'storeIndex' stores the given 'Index' to @dstPath -<.> "idx"@.
 -- It only be used in 'MalgoM' monad, but importing 'Malgo.Monad' causes cyclic dependency.
-storeIndex :: (MonadReader s m, MonadIO m, HasField "dstPath" s FilePath) => Index -> m ()
-storeIndex index = do
-  dstPath <- asks (.dstPath)
+storeIndex :: (Store a, MonadIO m) => FilePath -> a -> m ()
+storeIndex dstPath index = do
   let encoded = encode index
-  liftIO $ BL.writeFile (dstPath -<.> "idx") encoded
+  liftIO $ BS.writeFile (dstPath -<.> "idx") encoded
 
-loadIndex :: (MonadReader s m, MonadIO m, HasField "modulePaths" s [FilePath], HasField "indexes" s (IORef (HashMap ModuleName Index))) => ModuleName -> m (Maybe Index)
+loadIndex :: (State (HashMap ModuleName Index) :> es, IOE :> es, Reader ModulePathList :> es) => ModuleName -> Eff es (Maybe Index)
 loadIndex modName = do
-  modPaths <- asks (.modulePaths)
-  indexesRef <- asks (.indexes)
-  indexes <- readIORef indexesRef
+  ModulePathList modulePaths <- ask
+  indexes <- get @(HashMap ModuleName Index)
   case HashMap.lookup modName indexes of
     Just index -> pure $ Just index
     Nothing -> do
-      message <- findAndReadFile modPaths (convertString modName.raw <> ".idx")
+      message <- findAndReadFile modulePaths (convertString modName.raw <> ".idx")
       case message of
         Right x -> do
-          atomicWriteIORef indexesRef $ HashMap.insert modName x indexes
+          modify @(HashMap ModuleName Index) $ HashMap.insert modName x
           pure $ Just x
         Left err -> do
           hPrint stderr err
@@ -123,6 +129,6 @@ loadIndex modName = do
       isExistModFile <- liftIO $ Directory.doesFileExist (modPath </> modFile)
       if isExistModFile
         then do
-          idx <- liftIO $ decodeFile (modPath </> modFile)
+          idx <- liftIO $ decodeEx <$> BS.readFile (modPath </> modFile)
           pure $ Right idx
         else findAndReadFile rest modFile

@@ -44,7 +44,6 @@ library
       Koriel.Prelude
       Koriel.Pretty
       Malgo.Build
-      Malgo.Desugar.DsEnv
       Malgo.Desugar.DsState
       Malgo.Desugar.Match
       Malgo.Desugar.Pass
@@ -92,6 +91,7 @@ library
       OverloadedRecordDot
       NoFieldSelectors
       TypeData
+      Strict
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
@@ -103,6 +103,7 @@ library
     , containers
     , diagnose >=2.4
     , directory
+    , effectful
     , extra
     , filepath
     , generic-data
@@ -120,6 +121,7 @@ library
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , store
     , string-conversions
     , syb
     , text
@@ -152,6 +154,7 @@ executable malgo
       OverloadedRecordDot
       NoFieldSelectors
       TypeData
+      Strict
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
@@ -163,6 +166,7 @@ executable malgo
     , containers
     , diagnose >=2.4
     , directory
+    , effectful
     , extra
     , filepath
     , generic-data
@@ -181,6 +185,7 @@ executable malgo
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , store
     , string-conversions
     , syb
     , text
@@ -214,6 +219,7 @@ test-suite malgo-test
       OverloadedRecordDot
       NoFieldSelectors
       TypeData
+      Strict
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
@@ -225,6 +231,7 @@ test-suite malgo-test
     , containers
     , diagnose >=2.4
     , directory
+    , effectful
     , extra
     , filepath
     , generic-data
@@ -245,6 +252,7 @@ test-suite malgo-test
     , raw-strings-qq
     , regex-tdfa
     , silently
+    , store
     , string-conversions
     , syb
     , text
@@ -280,6 +288,7 @@ benchmark malgo-bench
       OverloadedRecordDot
       NoFieldSelectors
       TypeData
+      Strict
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
@@ -292,6 +301,7 @@ benchmark malgo-bench
     , criterion
     , diagnose >=2.4
     , directory
+    , effectful
     , extra
     , filepath
     , generic-data
@@ -310,6 +320,7 @@ benchmark malgo-bench
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , store
     , string-conversions
     , syb
     , text

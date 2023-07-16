@@ -1,18 +1,11 @@
-module Koriel.MonadUniq (UniqSupply (..), HasUniqSupply, getUniq) where
+module Koriel.MonadUniq (getUniq, Uniq (..)) where
 
-import GHC.Records
+import Effectful (Eff, (:>))
+import Effectful.State.Static.Local (State, state)
 import Koriel.Prelude
-import UnliftIO.IORef (atomicModifyIORef')
 
-newtype UniqSupply = UniqSupply {uniqSupply :: IORef Int}
-  deriving stock (Eq)
+newtype Uniq = Uniq Int
 
-instance Show UniqSupply where
-  show _ = "UniqSupply"
-
-type HasUniqSupply r = HasField "uniqSupply" r UniqSupply
-
-getUniq :: (MonadIO m, MonadReader r m, HasUniqSupply r) => m Int
+getUniq :: (State Uniq :> es) => Eff es Int
 getUniq = do
-  UniqSupply us <- asks (.uniqSupply)
-  atomicModifyIORef' us (\i -> (i + 1, i))
+  state $ \(Uniq u) -> (u, Uniq $ u + 1)

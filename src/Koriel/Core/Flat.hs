@@ -2,22 +2,22 @@
 module Koriel.Core.Flat (normalize, normalizeExpr) where
 
 import Control.Lens (has, traverseOf, traversed, _2)
+import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (ContT (..), evalContT, shiftT)
 import Data.Traversable (for)
+import Effectful (Eff, (:>))
+import Effectful.Reader.Static (Reader)
+import Effectful.State.Static.Local (State)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.MonadUniq (HasUniqSupply)
+import Koriel.MonadUniq (Uniq)
 import Koriel.Prelude
 
 normalize ::
-  ( MonadReader env m,
-    MonadIO m,
-    HasUniqSupply env,
-    HasModuleName env
-  ) =>
+  (State Uniq :> es, Reader ModuleName :> es) =>
   Program (Id Type) ->
-  m (Program (Id Type))
+  Eff es (Program (Id Type))
 normalize Program {..} = do
   topVars <- for topVars \(name, ty, expr) -> do
     expr' <- runContT (flat expr) pure
@@ -28,37 +28,29 @@ normalize Program {..} = do
   pure Program {..}
 
 normalizeExpr ::
-  ( MonadReader env m,
-    MonadIO m,
-    HasModuleName env,
-    HasUniqSupply env
-  ) =>
+  (State Uniq :> es, Reader ModuleName :> es) =>
   Expr (Id Type) ->
-  m (Expr (Id Type))
+  Eff es (Expr (Id Type))
 normalizeExpr e = runContT (flat e) pure
 
 -- Traverse the expression tree.
 flat ::
-  ( MonadReader env m,
-    MonadIO m,
-    HasUniqSupply env,
-    HasModuleName env
-  ) =>
+  (State Uniq :> es, Reader ModuleName :> es) =>
   Expr (Id Type) ->
-  ContT (Expr (Id Type)) m (Expr (Id Type))
+  ContT (Expr (Id Type)) (Eff es) (Expr (Id Type))
 flat e@Atom {} = pure e
 flat e@Call {} = pure e
 flat e@CallDirect {} = pure e
 flat e@RawCall {} = pure e
 flat e@Cast {} = pure e
 flat (Let ds e) = shiftT \k -> do
-  ds <- traverse flatLocalDef ds
+  ds <- lift $ traverse flatLocalDef ds
   e <- inScope k $ flat e
   pure $ Let ds e
 flat (Match scr cs) = shiftT \k -> do
   scr <- flat scr
   cs <- traverse (flatCase k) cs
-  scr' <- newTemporalId "scrutinee" (typeOf scr)
+  scr' <- lift $ newTemporalId "scrutinee" (typeOf scr)
   pure $ assign scr' scr $ matchToSwitch scr' cs
 flat (Switch v cs e) = shiftT \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
@@ -86,14 +78,10 @@ flat (Assign x v e) = shiftT \k -> do
 flat e@Error {} = pure e
 
 flatCase ::
-  ( MonadReader env m,
-    MonadIO m,
-    HasUniqSupply env,
-    HasModuleName env
-  ) =>
-  (Expr (Id Type) -> m (Expr (Id Type))) ->
+  (State Uniq :> es, Reader ModuleName :> es) =>
+  (Expr (Id Type) -> Eff es (Expr (Id Type))) ->
   Case (Id Type) ->
-  ContT r' m (Case (Id Type))
+  ContT r' (Eff es) (Case (Id Type))
 flatCase k (Unpack con as e) = do
   e <- inScope k $ flat e
   pure $ Unpack con as e
@@ -132,23 +120,15 @@ bindToAssign scr (Bind x _ e) = assign x (Atom $ Var scr) e
 bindToAssign _ _ = error "bindToAssign: unreachable"
 
 flatLocalDef ::
-  ( MonadReader env m,
-    MonadIO m,
-    HasUniqSupply env,
-    HasModuleName env
-  ) =>
+  (State Uniq :> es, Reader ModuleName :> es) =>
   LocalDef (Id Type) ->
-  m (LocalDef (Id Type))
+  Eff es (LocalDef (Id Type))
 flatLocalDef (LocalDef var ty obj) = LocalDef var ty <$> flatObj obj
 
 flatObj ::
-  ( MonadReader env m,
-    MonadIO m,
-    HasUniqSupply env,
-    HasModuleName env
-  ) =>
+  (State Uniq :> es, Reader ModuleName :> es) =>
   Obj (Id Type) ->
-  m (Obj (Id Type))
+  Eff es (Obj (Id Type))
 flatObj (Fun ps e) =
   -- eがFunを飛び出ないようresetする
   Fun ps <$> evalContT (flat e)

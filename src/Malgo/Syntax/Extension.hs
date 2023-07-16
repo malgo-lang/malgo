@@ -1,74 +1,75 @@
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Syntax.Extension (
-  MalgoPhase (..),
-  Malgo,
-  MalgoId,
-  Visibility (..),
-  Qualified (..),
-  Field (..),
-  Typed (..),
-  PsId,
-  RnId,
-  Unboxed,
-  Boxed,
-  Assoc (..),
-  XId,
-  SimpleX,
-  XVar,
-  XCon,
-  XUnboxed,
-  XBoxed,
-  XApply,
-  XOpApp,
-  XFn,
-  XTuple,
-  XRecord,
-  XList,
-  XRecordAccess,
-  XAnn,
-  XSeq,
-  XParens,
-  ForallExpX,
-  XClause,
-  ForallClauseX,
-  XLet,
-  XWith,
-  XNoBind,
-  ForallStmtX,
-  XVarP,
-  XConP,
-  XTupleP,
-  XRecordP,
-  XListP,
-  XUnboxedP,
-  XBoxedP,
-  ForallPatX,
-  XTyApp,
-  XTyVar,
-  XTyCon,
-  XTyArr,
-  XTyTuple,
-  XTyRecord,
-  XTyBlock,
-  ForallTypeX,
-  XScDef,
-  XScSig,
-  XDataDef,
-  XTypeSynonym,
-  XInfix,
-  XForeign,
-  XImport,
-  ImportList (..),
-  ForallDeclX,
-  XModule,
-)
+module Malgo.Syntax.Extension
+  ( MalgoPhase (..),
+    Malgo,
+    MalgoId,
+    Visibility (..),
+    Qualified (..),
+    Field (..),
+    Typed (..),
+    PsId,
+    RnId,
+    Unboxed,
+    Boxed,
+    Assoc (..),
+    XId,
+    SimpleX,
+    XVar,
+    XCon,
+    XUnboxed,
+    XBoxed,
+    XApply,
+    XOpApp,
+    XFn,
+    XTuple,
+    XRecord,
+    XList,
+    XRecordAccess,
+    XAnn,
+    XSeq,
+    XParens,
+    ForallExpX,
+    XClause,
+    ForallClauseX,
+    XLet,
+    XWith,
+    XNoBind,
+    ForallStmtX,
+    XVarP,
+    XConP,
+    XTupleP,
+    XRecordP,
+    XListP,
+    XUnboxedP,
+    XBoxedP,
+    ForallPatX,
+    XTyApp,
+    XTyVar,
+    XTyCon,
+    XTyArr,
+    XTyTuple,
+    XTyRecord,
+    XTyBlock,
+    ForallTypeX,
+    XScDef,
+    XScSig,
+    XDataDef,
+    XTypeSynonym,
+    XInfix,
+    XForeign,
+    XImport,
+    ImportList (..),
+    ForallDeclX,
+    XModule,
+  )
 where
 
 import Control.Lens (lens)
-import Data.Binary (Binary)
 import Data.Kind qualified as K
+import Data.Store.TH
 import Data.Void
 import Koriel.Id
 import Koriel.Pretty
@@ -99,7 +100,7 @@ instance Pretty Visibility where pretty = pretty . convertString @_ @Text . show
 data Qualified x = Qualified {visibility :: Visibility, value :: x}
   deriving stock (Eq, Ord, Show)
 
-instance Pretty x => Pretty (Qualified x) where
+instance (Pretty x) => Pretty (Qualified x) where
   pretty (Qualified Implicit v) = pretty v
   pretty (Qualified (Explicit x) v) = pretty x <> "." <> pretty v
 
@@ -107,21 +108,21 @@ instance Pretty x => Pretty (Qualified x) where
 data Field x = Field {typeAnn :: Maybe Text, field :: x}
   deriving stock (Eq, Ord, Show)
 
-instance Pretty x => Pretty (Field x) where
+instance (Pretty x) => Pretty (Field x) where
   pretty (Field Nothing v) = pretty v
   pretty (Field (Just x) v) = pretty x <> "." <> pretty v
 
 data Typed x = Typed {annotated :: Type, value :: x}
   deriving stock (Eq, Ord, Show)
 
-instance Pretty x => Pretty (Typed x) where
+instance (Pretty x) => Pretty (Typed x) where
   pretty (Typed t v) = pretty v <+> ":" <+> pretty t
 
 instance HasType (Typed x) where
   typeOf (Typed t _) = t
   types = lens (.annotated) (\x y -> x {annotated = y})
 
-instance HasRange x r => HasRange (Typed x) r where
+instance (HasRange x r) => HasRange (Typed x) r where
   range f (Typed t v) = range f v <&> \v -> Typed t v
 
 type PsId = XId (Malgo 'Parse)
@@ -134,8 +135,6 @@ data Boxed
 
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show, Generic)
-
-instance Binary Assoc
 
 instance Pretty Assoc where
   pretty LeftA = "l"
@@ -346,3 +345,5 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
 -- * Module Extensions
 
 type family XModule x
+
+makeStore ''Assoc

@@ -1,16 +1,19 @@
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE NoStrict #-}
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 
 -- | LLVM Code Generator
-module Koriel.Core.CodeGen.LLVM (
-  codeGen,
-)
+module Koriel.Core.CodeGen.LLVM
+  ( codeGen,
+  )
 where
 
 import Control.Lens (At (at), ifor, ifor_, makeFieldsNoPrefix, use, view, (<?=), (?=), (?~))
 import Control.Monad.Cont (ContT, runContT)
 import Control.Monad.Fix (MonadFix)
+import Control.Monad.Reader
+import Control.Monad.State.Lazy
 import Control.Monad.Trans.Cont (shiftT)
 import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString qualified as BS
@@ -23,6 +26,9 @@ import Data.List.Extra (mconcatMap)
 import Data.Maybe qualified as Maybe
 import Data.String.Conversions
 import Data.Traversable (for)
+import Effectful (Eff, runPureEff)
+import Effectful.Reader.Static qualified as Eff
+import Effectful.State.Static.Local qualified as Eff
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Syntax
 import Koriel.Core.Type hiding (typeOf)
@@ -31,21 +37,21 @@ import Koriel.Id
 import Koriel.MonadUniq
 import Koriel.Prelude
 import Koriel.Pretty
-import LLVM.AST (
-  Definition (..),
-  Module (..),
-  Name,
-  defaultModule,
-  mkName,
- )
+import LLVM.AST
+  ( Definition (..),
+    Module (..),
+    Name,
+    defaultModule,
+    mkName,
+  )
 import LLVM.AST.Constant qualified as C
 import LLVM.AST.Global
 import LLVM.AST.Linkage (Linkage (External, Internal))
 import LLVM.AST.Operand (Operand (..))
-import LLVM.AST.Type hiding (
-  double,
-  void,
- )
+import LLVM.AST.Type hiding
+  ( double,
+    void,
+  )
 import LLVM.AST.Type qualified as LT
 import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
@@ -55,7 +61,8 @@ import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
 data CodeGenState = CodeGenState
   { -- | 'primMap' is a map from primitive function name to its LLVM function.
     _primMap :: Map Name Operand,
-    stringMap :: HashMap Text C.Constant
+    stringMap :: HashMap Text C.Constant,
+    uniqSupply :: Int
   }
 
 makeFieldsNoPrefix ''CodeGenState
@@ -63,8 +70,7 @@ makeFieldsNoPrefix ''CodeGenState
 -- 変数のHashMapとknown関数のHashMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data CodeGenEnv = CodeGenEnv
-  { uniqSupply :: UniqSupply,
-    -- In optimization, some variables are defined multiple times.
+  { -- In optimization, some variables are defined multiple times.
     -- So, we need to treat them as as scoped variables.
     _valueMap :: HashMap (Id C.Type) Operand,
     _globalValueMap :: HashMap (Id C.Type) Operand,
@@ -74,14 +80,13 @@ data CodeGenEnv = CodeGenEnv
 
 makeFieldsNoPrefix ''CodeGenEnv
 
-newCodeGenEnv :: UniqSupply -> ModuleName -> Program (Id C.Type) -> CodeGenEnv
-newCodeGenEnv uniqSupply moduleName Program {..} =
+newCodeGenEnv :: ModuleName -> Program (Id C.Type) -> CodeGenEnv
+newCodeGenEnv moduleName Program {..} =
   CodeGenEnv
-    { uniqSupply = uniqSupply,
-      _valueMap = mempty,
+    { _valueMap = mempty,
       _globalValueMap = varMap,
       _funcMap = funcMap,
-      moduleName = moduleName
+      moduleName
     }
   where
     -- topVarsのOprMapを作成
@@ -98,29 +103,28 @@ type MonadCodeGen m =
   ) ::
     Constraint
 
-runCodeGenT :: Monad m => CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
-runCodeGenT env m =
-  execModuleBuilderT emptyModuleBuilder $
-    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty) env
+runCodeGenT :: (Monad m) => Int -> CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
+runCodeGenT n env m =
+  execModuleBuilderT emptyModuleBuilder
+    $ runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty n) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
-  (MonadFix m, MonadFail m, MonadIO m) =>
+  (MonadFix m, MonadIO m) =>
   -- | Source file path
   FilePath ->
   -- | Destination file path
   FilePath ->
-  -- | Unique supply
-  UniqSupply ->
   -- | Module name of the source program
   ModuleName ->
   -- | Entry point of the source program
   Maybe (Id C.Type) ->
+  Int ->
   -- | Source program
   Program (Id C.Type) ->
   m ()
-codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
-  llvmir <- runCodeGenT (newCodeGenEnv uniqSupply modName Program {..}) do
+codeGen srcPath dstPath modName mentry n Program {..} = do
+  llvmir <- runCodeGenT n (newCodeGenEnv modName Program {..}) do
     _ <- typedef (mkName "struct.bucket") Nothing -- (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") Nothing -- (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
@@ -134,11 +138,13 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
     case mentry of
       Just entry -> do
         (f, (ps, body)) <-
-          mainFunc =<< runDef do
-            let unitCon = C.Con C.Tuple []
-            unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
-            _ <- bind $ CallDirect entry [unit]
-            pure (Atom $ Unboxed $ Int32 0)
+          runEffOnCodeGen
+            $ mainFunc
+            =<< runDef do
+              let unitCon = C.Con C.Tuple []
+              unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
+              _ <- bind $ CallDirect entry [unit]
+              pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
     genLoadModule $ runContT (initTopVars topVars) (const retVoid)
@@ -168,6 +174,15 @@ codeGen srcPath dstPath uniqSupply modName mentry Program {..} = do
         pure e
       pure (mainFuncId, ([], mainFuncBody))
 
+runEffOnCodeGen :: (MonadState CodeGenState m, MonadReader CodeGenEnv m) => Eff '[Eff.Reader ModuleName, Eff.State Uniq] a -> m a
+runEffOnCodeGen e = do
+  moduleName <- asks (.moduleName)
+  n <- gets (.uniqSupply)
+  let (e', Uniq n') = runPureEff do
+        Eff.runState (Uniq n) (Eff.runReader moduleName e)
+  modify \s -> s {uniqSupply = n'}
+  pure e'
+
 convType :: C.Type -> LT.Type
 convType (_ :-> _) = ptr
 convType Int32T = i32
@@ -194,10 +209,10 @@ innerType (RecordT _) = LT.NamedTypeReference (mkName "struct.hash_table")
 innerType AnyT = i8
 innerType _ = error "invalid type"
 
-sizeofCon :: Num a => Con -> a
+sizeofCon :: (Num a) => Con -> a
 sizeofCon (Con _ ts) = sum $ map sizeofType ts
 
-sizeofType :: Num a => C.Type -> a
+sizeofType :: (Num a) => C.Type -> a
 sizeofType (_ :-> _) = 8
 sizeofType Int32T = 4
 sizeofType Int64T = 8
@@ -238,8 +253,8 @@ findVar x = findLocalVar
         Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
-      emitDefn $
-        GlobalDefinition
+      emitDefn
+        $ GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = toName x,
               LLVM.AST.Global.type' = convType $ C.typeOf x,
@@ -249,7 +264,7 @@ findVar x = findLocalVar
       primMap . at (toName x) ?= opr
       load (convType $ C.typeOf x) opr 0
 
-findFun :: MonadCodeGen m => Id C.Type -> m Operand
+findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
 findFun x =
   view (funcMap . at x) >>= \case
     Just opr -> pure opr
@@ -260,7 +275,7 @@ findFun x =
 
 -- まだ生成していない外部関数を呼び出そうとしたら、externする
 -- すでにexternしている場合は、そのOperandを返す
-findExt :: MonadCodeGen m => Name -> [LT.Type] -> LT.Type -> m Operand
+findExt :: (MonadCodeGen m) => Name -> [LT.Type] -> LT.Type -> m Operand
 findExt x ps r =
   use (primMap . at x) >>= \case
     Just x -> pure x
@@ -288,11 +303,11 @@ sizeof ty = C.PtrToInt szPtr LT.i64
 toName :: Id a -> LLVM.AST.Name
 toName id = LLVM.AST.mkName $ convertString $ idToText id
 
-toLabel :: ConvertibleStrings s BS.ByteString => s -> ShortByteString
+toLabel :: (ConvertibleStrings s BS.ByteString) => s -> ShortByteString
 toLabel s = BS.toShort $ convertString s
 
 -- generate code for a toplevel variable definition
-genVar :: MonadModuleBuilder m => Id C.Type -> Expr (Id C.Type) -> m Operand
+genVar :: (MonadModuleBuilder m) => Id C.Type -> Expr (Id C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
@@ -304,7 +319,6 @@ genLoadModule m = do
 genFunc ::
   ( MonadCodeGen m,
     MonadFix m,
-    MonadFail m,
     MonadIO m
   ) =>
   Id C.Type ->
@@ -330,7 +344,6 @@ genFunc name params body = do
 genExpr ::
   ( MonadIRBuilder m,
     MonadCodeGen m,
-    MonadFail m,
     MonadFix m,
     MonadIO m
   ) =>
@@ -354,10 +367,10 @@ genExpr e@(CallDirect f xs) = do
     (map (,[]) (ConstantOperand (C.Null ptr) : xsOprs))
 genExpr e@(RawCall name _ xs) = do
   let primOpr =
-        ConstantOperand $
-          C.GlobalReference $
-            LLVM.AST.mkName $
-              convertString name
+        ConstantOperand
+          $ C.GlobalReference
+          $ LLVM.AST.mkName
+          $ convertString name
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
 genExpr (Cast ty x) = do
@@ -412,10 +425,12 @@ genExpr (SwitchUnboxed v bs e) =
       pass
   where
     genBranch k (u, e) = do
-      ConstantOperand u' <- genAtom $ Unboxed u
-      label <- withBlock ("switch-unboxed_branch_" <> render (pretty u)) do
-        runContT (genExpr e) k
-      pure (u', label)
+      genAtom (Unboxed u) >>= \case
+        ConstantOperand u' -> do
+          label <- withBlock ("switch-unboxed_branch_" <> render (pretty u)) do
+            runContT (genExpr e) k
+          pure (u', label)
+        _ -> error "unreachable: genExpr"
 genExpr (Destruct v (Con _ ts) xs e) = do
   v <- genAtom v
   payloadAddr <- gep (StructureType False [i8, StructureType False (map convType ts)]) v [int32 0, int32 1]
@@ -442,14 +457,14 @@ genExpr (Assign x v e) = do
 genExpr (Error _) = shiftT (const unreachable)
 
 -- | Get constructor list from the type of scrutinee.
-constructorList :: HasType s => s -> [Con]
+constructorList :: (HasType s) => s -> [Con]
 constructorList scrutinee =
   case C.typeOf scrutinee of
     SumT cs -> cs
     _ -> []
 
 genAtom ::
-  (MonadCodeGen m, MonadIO m, MonadIRBuilder m) =>
+  (MonadCodeGen m, MonadIRBuilder m) =>
   Atom (Id C.Type) ->
   m Operand
 genAtom (Var x) = findVar x
@@ -466,7 +481,6 @@ genAtom (Unboxed (Bool False)) = pure $ int8 0
 genLocalDef ::
   ( MonadCodeGen m,
     MonadIRBuilder m,
-    MonadFail m,
     MonadFix m,
     MonadIO m
   ) =>
@@ -478,7 +492,7 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
   -- キャプチャされる変数を詰める構造体の型
   let capType = StructureType False (map (convType . C.typeOf) fvs)
   -- クロージャの元になる関数を生成する
-  name <- toName <$> newInternalId (funName.name <> "_closure") ()
+  name <- toName <$> runEffOnCodeGen (newInternalId (funName.name <> "_closure") ())
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> error "The length of internal function parameters must be 1 or more"
     (capture : ps') -> do
@@ -526,13 +540,13 @@ findIndex con cs = case List.elemIndex con cs of
   Just i -> fromIntegral i
   Nothing -> errorDoc $ pretty con <+> "is not in" <+> pretty cs
 
-globalStringPtr :: (MonadModuleBuilder m, MonadReader CodeGenEnv m, MonadState CodeGenState m, MonadIO m) => Text -> m C.Constant
+globalStringPtr :: (MonadModuleBuilder m, MonadReader CodeGenEnv m, MonadState CodeGenState m) => Text -> m C.Constant
 globalStringPtr str = do
   stringMap <- gets (.stringMap)
   case HashMap.lookup str stringMap of
     Just strOpr -> pure strOpr
     Nothing -> do
-      name <- mkName . ("str" <>) . show <$> getUniq
+      name <- mkName . ("str" <>) . show <$> runEffOnCodeGen getUniq
       let utf8Vals = map toInteger $ BL.unpack $ convertString str
           llvmVals = map (C.Int 8) (utf8Vals ++ [0])
           char = IntegerType 8
@@ -541,8 +555,8 @@ globalStringPtr str = do
         LLVM.AST.Typed.typeOf charArray >>= \case
           Left err -> error $ show err
           Right ty -> pure ty
-      emitDefn $
-        GlobalDefinition
+      emitDefn
+        $ GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = name,
               LLVM.AST.Global.type' = ty,
@@ -567,7 +581,7 @@ gepAndStore ty opr addrs val = do
   store addr 0 val
 
 internalFunction ::
-  MonadModuleBuilder m =>
+  (MonadModuleBuilder m) =>
   -- | Function name
   Name ->
   -- | Parameter types and name suggestions
