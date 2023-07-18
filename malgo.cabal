@@ -61,6 +61,9 @@ library
       Malgo.Lsp.Server
       Malgo.Monad
       Malgo.Parser
+      Malgo.Parser.LayoutParser
+      Malgo.Parser.Lexer
+      Malgo.Parser.Stream
       Malgo.Prelude
       Malgo.Refine.Pass
       Malgo.Refine.RefineEnv
@@ -199,6 +202,8 @@ test-suite malgo-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Malgo.DriverSpec
+      Malgo.Parser.LexerSpec
       Paths_malgo
   hs-source-dirs:
       test
@@ -221,6 +226,8 @@ test-suite malgo-test
       TypeData
       Strict
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      hspec-discover:hspec-discover
   build-depends:
       Glob
     , aeson

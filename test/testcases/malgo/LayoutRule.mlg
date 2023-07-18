@@ -37,10 +37,10 @@ module LayoutRule = {
 
   def main = {
     (null (Cons True (Cons True Nil)))
-    |> { False -> malgo_print_string "OK"# 
-       | True -> malgo_exit_failure ()
-       }
-  }  
+      |> { False -> malgo_print_string "OK"# 
+         | True -> malgo_exit_failure ()
+         }
+  }
 }
 
 -- Expected: OK

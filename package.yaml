@@ -104,6 +104,8 @@ tests:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+    build-tools:
+      - hspec-discover
     dependencies:
       - malgo
       - typed-process
