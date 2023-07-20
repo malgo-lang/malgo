@@ -33,7 +33,7 @@ pModule = do
 {-# INLINE pModule #-}
 
 pModuleName :: Parser ModuleName
-pModuleName = ModuleName . (.value) <$> ident
+pModuleName = ModuleName <$> ident
 {-# INLINE pModuleName #-}
 
 pDecls :: Parser [Decl (Malgo Parse)]
@@ -61,11 +61,11 @@ pScDef = do
   reservedOp L.Equal
   body <- pExpr
   end <- getSourcePos
-  pure $ ScDef (Range start end) name.value body
+  pure $ ScDef (Range start end) name body
 {-# INLINE pScDef #-}
 
 pExpr :: Parser (Expr (Malgo Parse))
-pExpr = _
+pExpr = undefined
 {-# INLINE pExpr #-}
 
 pScSig :: Parser (Decl (Malgo Parse))
@@ -76,11 +76,11 @@ pScSig = do
   reservedOp L.Colon
   ty <- pType
   end <- getSourcePos
-  pure $ ScSig (Range start end) name.value ty
+  pure $ ScSig (Range start end) name ty
 {-# INLINE pScSig #-}
 
 pType :: Parser (Type (Malgo Parse))
-pType = _
+pType = undefined
 {-# INLINE pType #-}
 
 pDataDef :: Parser (Decl (Malgo Parse))
@@ -92,68 +92,90 @@ pDataDef = do
     start <- getSourcePos
     arg <- lowerIdent
     end <- getSourcePos
-    pure (Range start end, arg.value)
+    pure (Range start end, arg)
   reservedOp L.Equal
   cons <- blocks pConDef
   end <- getSourcePos
-  pure $ DataDef (Range start end) name.value args cons
+  pure $ DataDef (Range start end) name args cons
   where
     pConDef = do
       start <- getSourcePos
       name <- upperIdent
       params <- many pSingleType
       end <- getSourcePos
-      pure (Range start end, name.value, params)
+      pure (Range start end, name, params)
 {-# INLINE pDataDef #-}
 
 pSingleType :: Parser (Type (Malgo Parse))
-pSingleType = _
+pSingleType = undefined
 {-# INLINE pSingleType #-}
+
+pTypeSynonym :: Parser (Decl (Malgo Parse))
+pTypeSynonym = do
+  start <- getSourcePos
+  reserved L.Type
+  name <- upperIdent
+  args <- many lowerIdent
+  reservedOp L.Equal
+  ty <- pType
+  end <- getSourcePos
+  pure $ TypeSynonym (Range start end) name args ty
+
+pInfix :: Parser (Decl (Malgo Parse))
+pInfix = do
+  start <- getSourcePos
+  assoc <- choice [reserved L.Infixl $> LeftA, reserved L.Infixr $> RightA, reserved L.Infix $> NeutralA]
+  i <- int
+  name <- between (reservedOp L.LParen) (reservedOp L.RParen) operator
+  end <- getSourcePos
+  pure $ Infix (Range start end) assoc i name
+
+pForeign :: Parser (Decl (Malgo Parse))
+pForeign = undefined
+
+pImport :: Parser (Decl (Malgo Parse))
+pImport = undefined
 
 -- * common combinators
 
-ident :: Parser (L.WithPos Text)
+ident :: Parser Text
 ident =
   lexeme
-    $ satisfy \case
-      L.WithPos {value = L.Ident _} -> True
-      _ -> False
-    <&> \case
-      p@L.WithPos {value = L.Ident x} -> p {L.value = x}
-      _ -> error "impossible"
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Ident x} -> Just x
+      _ -> Nothing
 {-# INLINE ident #-}
 
-lowerIdent :: Parser (L.WithPos Text)
+lowerIdent :: Parser Text
 lowerIdent =
   lexeme
-    $ satisfy \case
-      L.WithPos {value = L.Ident x} -> isLower (T.head x)
-      _ -> False
-    <&> \case
-      p@L.WithPos {value = L.Ident x} -> p {L.value = x}
-      _ -> error "impossible"
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Ident x} | isLower (T.head x) -> Just x
+      _ -> Nothing
 {-# INLINE lowerIdent #-}
 
-upperIdent :: Parser (L.WithPos Text)
+upperIdent :: Parser Text
 upperIdent =
   lexeme
-    $ satisfy \case
-      L.WithPos {value = L.Ident x} -> isUpper (T.head x)
-      _ -> False
-    <&> \case
-      p@L.WithPos {value = L.Ident x} -> p {L.value = x}
-      _ -> error "impossible"
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Ident x} | isUpper (T.head x) -> Just x
+      _ -> Nothing
 {-# INLINE upperIdent #-}
 
-operator :: Parser (L.WithPos Text)
+operator :: Parser Text
 operator =
   lexeme
-    $ satisfy \case
-      L.WithPos {value = L.Operator _} -> True
-      _ -> False
-    <&> \case
-      p@L.WithPos {value = L.Operator x} -> p {L.value = x}
-      _ -> error "impossible"
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Operator x} -> Just x
+      _ -> Nothing
 {-# INLINE operator #-}
 
 reserved :: L.ReservedId -> Parser ()
@@ -167,6 +189,16 @@ reservedOp r = lexeme $ void $ satisfy \case
   L.WithPos {value = L.ReservedOp r'} -> r == r'
   _ -> False
 {-# INLINE reservedOp #-}
+
+int :: (Num n) => Parser n
+int =
+  lexeme
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Int False x} -> Just $ fromInteger x
+      _ -> Nothing
+{-# INLINE int #-}
 
 lexeme :: Parser a -> Parser a
 lexeme m = do
