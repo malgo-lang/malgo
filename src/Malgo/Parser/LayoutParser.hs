@@ -204,9 +204,11 @@ lexeme :: Parser a -> Parser a
 lexeme m = do
   indentLevel <- ask
   -- skip (IndentStart n) or (IndentEnd n) if n is larger than the current indent level
-  void $ takeWhileP (Just "deep indent") \case
+  void $ takeWhileP (Just $ "deep indent (" <> show indentLevel <> ")") \case
     L.WithPos {value = L.IndentStart n} -> n > indentLevel
     L.WithPos {value = L.IndentEnd n} -> n > indentLevel
+    L.WithPos {value = L.Space _} -> True
+    L.WithPos {value = L.Newlines} -> True
     _ -> False
   m
 {-# INLINE lexeme #-}

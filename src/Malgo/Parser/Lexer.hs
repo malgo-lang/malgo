@@ -39,6 +39,7 @@ lexSymbol :: Lexer (WithPos Symbol)
 lexSymbol = withPos do
   lexReservedId
     <|> lexReservedOp
+    <|> lexParen
     <|> fmap Ident lexIdent
     <|> fmap Operator lexOperator
     <|> fmap (Int False) lexInt
@@ -57,6 +58,10 @@ lexReservedOp = label "reserved operator" $ try do
   pure r
 {-# INLINE lexReservedOp #-}
 
+lexParen :: Lexer Symbol
+lexParen = label "brackets" do
+  choice (map (\(s, t) -> ReservedOp t <$ char s) parenTable)
+
 reservedIdTable :: [(Text, ReservedId)]
 reservedIdTable =
   map (\t -> (renderStrict $ layoutCompact $ pretty t, t)) [minBound .. maxBound]
@@ -64,8 +69,12 @@ reservedIdTable =
 
 reservedOpTable :: [(Text, ReservedOp)]
 reservedOpTable =
-  map (\t -> (renderStrict $ layoutCompact $ pretty t, t)) [minBound .. maxBound]
+  map (\t -> (renderStrict $ layoutCompact $ pretty t, t)) [DArrow .. DotDot]
 {-# INLINE reservedOpTable #-}
+
+parenTable :: [(Char, ReservedOp)]
+parenTable = [('{', LBrace), ('}', RBrace), ('(', LParen), (')', RParen), ('[', LBracket), (']', RBracket)]
+{-# INLINE parenTable #-}
 
 lexIdent :: Lexer Text
 lexIdent = label "identifier" do
@@ -115,8 +124,8 @@ withPos m = do
 --
 -- - newline and m spaces -> @IndentStart m@ (current indentation level n \< m) or @IndentEnd m@ (current indentation level n \> m)
 -- - If current indentation level n == m, insert @IndentEnd m@  and @IndentStart m@
-foldIndent :: [WithPos Symbol] -> [WithPos Symbol]
-foldIndent = go [] mempty
+foldIndent :: LexStream -> LexStream
+foldIndent l@LexStream {unLexStream} = l {unLexStream = go [] mempty unLexStream}
   where
     go :: [Int] -> [WithPos Symbol] -> [WithPos Symbol] -> [WithPos Symbol]
     go _ acc [] = reverse acc

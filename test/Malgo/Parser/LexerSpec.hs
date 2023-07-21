@@ -16,7 +16,7 @@ lexTest (name, input, expected, folded) = it name do
     Left err -> expectationFailure (errorBundlePretty err)
     Right actual -> do
       map (.value) actual.unLexStream `shouldBe` expected
-      map (.value) (foldIndent actual.unLexStream) `shouldBe` folded
+      map (.value) (foldIndent actual).unLexStream `shouldBe` folded
 
 testCases :: [(String, Text, [Symbol], [Symbol])]
 testCases =
@@ -130,5 +130,10 @@ testCases =
           [IndentStart 7, ReservedOp RBrace, IndentEnd 7],
           [IndentEnd 4, IndentEnd 2, ReservedOp RBrace]
         ]
+    ),
+    ( "module import patterns",
+      "{..} {x, A, (+)}",
+      [ReservedOp LBrace, ReservedOp DotDot, ReservedOp RBrace, Space 1, ReservedOp LBrace, Ident "x", ReservedOp Comma, Space 1, Ident "A", ReservedOp Comma, Space 1, ReservedOp LParen, Operator "+", ReservedOp RParen, ReservedOp RBrace],
+      [ReservedOp LBrace, ReservedOp DotDot, ReservedOp RBrace, ReservedOp LBrace, Ident "x", ReservedOp Comma, Ident "A", ReservedOp Comma, ReservedOp LParen, Operator "+", ReservedOp RParen, ReservedOp RBrace]
     )
   ]

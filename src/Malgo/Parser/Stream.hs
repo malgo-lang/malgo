@@ -94,6 +94,8 @@ data ReservedOp
     Comma
   | -- | @!@ keyword
     Exclamation
+  | -- | @..@ keyword
+    DotDot
   | -- | @#|@ keyword
     LHash
   | -- | @|#@ keyword
@@ -137,6 +139,7 @@ instance Pretty ReservedOp where
   pretty Semicolon = pretty @Text ";"
   pretty Comma = pretty @Text ","
   pretty Exclamation = pretty @Text "!"
+  pretty DotDot = pretty @Text ".."
   pretty LHash = pretty @Text "#|"
   pretty RHash = pretty @Text "|#"
   pretty LParen = pretty @Text "("
