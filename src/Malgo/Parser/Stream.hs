@@ -30,6 +30,14 @@ data Symbol
       -- | is unboxed
       Bool
       Double
+  | Char
+      -- | is unboxed
+      Bool
+      Char
+  | String
+      -- | is unboxed
+      Bool
+      Text
   deriving stock (Eq, Ord, Show)
 
 instance Pretty Symbol where
@@ -45,6 +53,10 @@ instance Pretty Symbol where
   pretty (Int True x) = "<int# " <> pretty x <> ">"
   pretty (Float False x) = "<float " <> pretty x <> ">"
   pretty (Float True x) = "<float# " <> pretty x <> ">"
+  pretty (Char False x) = "<char " <> pretty x <> ">"
+  pretty (Char True x) = "<char# " <> pretty x <> ">"
+  pretty (String False x) = "<string " <> pretty x <> ">"
+  pretty (String True x) = "<string# " <> pretty x <> ">"
 
 data ReservedId
   = -- | @class@ keyword
@@ -57,6 +69,8 @@ data ReservedId
     Exists
   | -- | @forall@ keyword
     Forall
+  | -- | @foreign@ keyword
+    Foreign
   | -- | @impl@ keyword
     Impl
   | -- | @import@ keyword
@@ -120,6 +134,7 @@ instance Pretty ReservedId where
   pretty Data = pretty @Text "data"
   pretty Exists = pretty @Text "exists"
   pretty Forall = pretty @Text "forall"
+  pretty Foreign = pretty @Text "foreign"
   pretty Impl = pretty @Text "impl"
   pretty Import = pretty @Text "import"
   pretty Infix = pretty @Text "infix"

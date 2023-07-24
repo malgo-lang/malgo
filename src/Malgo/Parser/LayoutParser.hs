@@ -6,7 +6,7 @@ import Data.Text qualified as T
 import Koriel.Id
 import Malgo.Parser.Stream (LexStream)
 import Malgo.Parser.Stream qualified as L
-import Malgo.Prelude
+import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Text.Megaparsec hiding (parse)
@@ -30,7 +30,7 @@ pModule = do
   reservedOp L.Equal
   decls <- pDecls
   pure Module {moduleName = name, moduleDefinition = ParsedDefinitions decls}
-{-# INLINE pModule #-}
+{-# INLINEABLE pModule #-}
 
 pModuleName :: Parser ModuleName
 pModuleName = ModuleName <$> ident
@@ -62,7 +62,7 @@ pScDef = do
   body <- pExpr
   end <- getSourcePos
   pure $ ScDef (Range start end) name body
-{-# INLINE pScDef #-}
+{-# INLINEABLE pScDef #-}
 
 pExpr :: Parser (Expr (Malgo Parse))
 pExpr = undefined
@@ -77,7 +77,7 @@ pScSig = do
   ty <- pType
   end <- getSourcePos
   pure $ ScSig (Range start end) name ty
-{-# INLINE pScSig #-}
+{-# INLINEABLE pScSig #-}
 
 pType :: Parser (Type (Malgo Parse))
 pType = undefined
@@ -104,7 +104,7 @@ pDataDef = do
       params <- many pSingleType
       end <- getSourcePos
       pure (Range start end, name, params)
-{-# INLINE pDataDef #-}
+{-# INLINEABLE pDataDef #-}
 
 pSingleType :: Parser (Type (Malgo Parse))
 pSingleType = undefined
@@ -120,6 +120,7 @@ pTypeSynonym = do
   ty <- pType
   end <- getSourcePos
   pure $ TypeSynonym (Range start end) name args ty
+{-# INLINEABLE pTypeSynonym #-}
 
 pInfix :: Parser (Decl (Malgo Parse))
 pInfix = do
@@ -129,12 +130,48 @@ pInfix = do
   name <- between (reservedOp L.LParen) (reservedOp L.RParen) operator
   end <- getSourcePos
   pure $ Infix (Range start end) assoc i name
+{-# INLINEABLE pInfix #-}
 
 pForeign :: Parser (Decl (Malgo Parse))
-pForeign = undefined
+pForeign = label "foreign import" do
+  start <- getSourcePos
+  reserved L.Foreign
+  reserved L.Import
+  x <- lowerIdent
+  reservedOp L.Colon
+  ty <- pType
+  end <- getSourcePos
+  pure $ Foreign (Range start end) x ty
+{-# INLINEABLE pForeign #-}
 
 pImport :: Parser (Decl (Malgo Parse))
-pImport = undefined
+pImport = label "import" do
+  start <- getSourcePos
+  reserved L.Module
+  importList <- pImportList
+  reservedOp L.Equal
+  reserved L.Import
+  name <- pModuleName
+  end <- getSourcePos
+  pure $ Import (Range start end) name importList
+  where
+    pImportList = importPartial <|> importPrefix
+    {-# INLINE pImportList #-}
+    importPartial = do
+      between (reservedOp L.LBrace) (reservedOp L.RBrace)
+        $ importAll
+        <|> importSelected
+    {-# INLINE importPartial #-}
+    importAll = do
+      reservedOp L.DotDot
+      pure All
+    {-# INLINE importAll #-}
+    importSelected = do
+      Selected <$> choice [lowerIdent, upperIdent, between (reservedOp L.LParen) (reservedOp L.RParen) operator] `sepBy` reservedOp L.Comma
+    {-# INLINE importSelected #-}
+    importPrefix = As <$> pModuleName
+    {-# INLINE importPrefix #-}
+{-# INLINEABLE pImport #-}
 
 -- * common combinators
 

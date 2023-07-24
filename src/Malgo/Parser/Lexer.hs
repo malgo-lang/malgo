@@ -7,7 +7,7 @@ import Malgo.Prelude hiding (Space, lex)
 import Prettyprinter.Render.Text (renderStrict)
 import Text.Megaparsec
 import Text.Megaparsec.Char (char, string)
-import Text.Megaparsec.Char.Lexer (decimal)
+import Text.Megaparsec.Char.Lexer (charLiteral, decimal, float)
 
 -- * Lexer
 
@@ -43,6 +43,9 @@ lexSymbol = withPos do
     <|> fmap Ident lexIdent
     <|> fmap Operator lexOperator
     <|> fmap (Int False) lexInt
+    <|> fmap (Float False) lexFloat
+    <|> fmap (Char False) lexChar
+    <|> fmap (String False) lexString
 
 lexReservedId :: Lexer Symbol
 lexReservedId = label "reserved identifier" $ try do
@@ -99,6 +102,18 @@ isOperator c = c `elem` ("+-*/\\%=><:;|&!#." :: String)
 lexInt :: Lexer Integer
 lexInt = decimal
 
+lexFloat :: Lexer Double
+lexFloat = float
+
+lexChar :: Lexer Char
+lexChar = label "char" do
+  between (char '\'') (char '\'') charLiteral
+
+lexString :: Lexer Text
+lexString = label "string" do
+  void $ char '"'
+  T.pack <$> manyTill charLiteral (char '"')
+
 lexNewlines :: Lexer (WithPos Symbol)
 lexNewlines = withPos do
   Newlines <$ takeWhile1P (Just "newlines") isNewline
@@ -113,7 +128,7 @@ withPos m = do
   value <- m
   endOffset <- getOffset
   endPos <- getSourcePos
-  pure WithPos {startPos, endPos, length = endOffset - startOffset, value}
+  pure WithPos {startPos, endPos, length = endOffset - startOffset + 1, value}
 {-# INLINEABLE withPos #-}
 
 -- * Recognize Indentation
