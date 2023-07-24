@@ -49,16 +49,12 @@ lexSymbol = withPos do
 
 lexReservedId :: Lexer Symbol
 lexReservedId = label "reserved identifier" $ try do
-  r <- choice (map (\(s, t) -> ReservedId t <$ string s) reservedIdTable)
-  notFollowedBy $ satisfy isIdentStart
-  pure r
+  choice (map (\(s, t) -> try $ string s >> notFollowedBy (satisfy isIdentStart) >> pure (ReservedId t)) reservedIdTable)
 {-# INLINE lexReservedId #-}
 
 lexReservedOp :: Lexer Symbol
 lexReservedOp = label "reserved operator" $ try do
-  r <- choice (map (\(s, t) -> ReservedOp t <$ string s) reservedOpTable)
-  notFollowedBy $ satisfy isOperator
-  pure r
+  choice (map (\(s, t) -> try $ string s >> notFollowedBy (satisfy isOperator) >> pure (ReservedOp t)) reservedOpTable)
 {-# INLINE lexReservedOp #-}
 
 lexParen :: Lexer Symbol
@@ -140,10 +136,17 @@ withPos m = do
 -- - newline and m spaces -> @IndentStart m@ (current indentation level n \< m) or @IndentEnd m@ (current indentation level n \> m)
 -- - If current indentation level n == m, insert @IndentEnd m@  and @IndentStart m@
 foldIndent :: LexStream -> LexStream
-foldIndent l@LexStream {unLexStream} = l {unLexStream = go [] mempty unLexStream}
+foldIndent l@LexStream {unLexStream} = l {unLexStream = go [] mempty $ preprocess unLexStream}
   where
+    -- remove Space between Newlines (empty lines)
+    preprocess :: [WithPos Symbol] -> [WithPos Symbol]
+    preprocess [] = []
+    preprocess (WithPos {value = Newlines} : WithPos {value = Space _} : x@WithPos {value = Newlines} : xs) = x : preprocess xs
+    preprocess (x : xs) = x : preprocess xs
     go :: [Int] -> [WithPos Symbol] -> [WithPos Symbol] -> [WithPos Symbol]
-    go _ acc [] = reverse acc
+    go [] acc [] = reverse acc
+    go ns acc@(WithPos {endPos} : _) [] = go [] acc $ map (\l -> WithPos {startPos = endPos, endPos, length = 0, value = IndentEnd l}) ns
+    go (_ : _) [] [] = error "impossible"
     go ns acc (WithPos {startPos, endPos = endPosN, length = l1, value = Newlines} : WithPos {startPos = startPosS, endPos, length = l2, value = Space m} : xs') =
       case ns of
         []
@@ -170,8 +173,8 @@ foldIndent l@LexStream {unLexStream} = l {unLexStream = go [] mempty unLexStream
                     : acc
                 )
                 xs'
-    go ns acc (x@WithPos {startPos, endPos, value = Newlines} : xs') =
+    go ns acc (x@WithPos {endPos, value = Newlines} : xs') =
       -- insert Space 0 to xs
-      go ns acc (x : WithPos {startPos, endPos, length = 0, value = Space 0} : xs')
+      go ns acc (x : WithPos {startPos = endPos, endPos, length = 0, value = Space 0} : xs')
     go ns acc (WithPos {value = Space _} : xs) = go ns acc xs
     go ns acc (x : xs) = go ns (x : acc) xs

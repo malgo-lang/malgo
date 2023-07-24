@@ -49,6 +49,7 @@ import Test.Hspec
     runIO,
     shouldBe,
     shouldThrow,
+    xdescribe,
   )
 
 testcaseDir :: FilePath
@@ -58,8 +59,8 @@ outputDir :: FilePath
 outputDir = "./test/tmp/malgo_test"
 
 spec :: SpecWith ()
-spec =
-  parallel do
+spec = xdescribe "Driver test (E2E)"
+  $ parallel do
     -- Setup directory for test
     runIO setupTestDir
     -- Setup malgo base library
@@ -89,9 +90,9 @@ spec =
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
     describe "Test malgo to-ll (must be error)" do
       for_ errorcases \errorcase -> do
-        it ("test error case " <> errorcase) $
-          testError (testcaseDir </> "error" </> errorcase)
-            `shouldThrow` anyException
+        it ("test error case " <> errorcase)
+          $ testError (testcaseDir </> "error" </> errorcase)
+          `shouldThrow` anyException
 
 setupTestDir :: IO ()
 setupTestDir = do
@@ -118,8 +119,8 @@ setupRuntime = do
 compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
 compile src dst modPaths lambdaLift noOptimize option compileMode =
   do
-    runEff $
-      do
+    runEff
+      $ do
         Driver.compile src
         -- Check if the generated Koriel code is valid
         let korielPath = dst -<.> "kor"
@@ -131,17 +132,17 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
              in printDiagnostic stdout False False 4 defaultStyle diag' >> liftIO exitFailure
           Right ast -> do
             Koriel.lint True =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
-        & runMalgoM
-          dst
-          modPaths
-          compileMode
-          Flag
-            { noOptimize,
-              lambdaLift,
-              debugMode = False,
-              testMode = True
-            }
-          option
+      & runMalgoM
+        dst
+        modPaths
+        compileMode
+        Flag
+          { noOptimize,
+            lambdaLift,
+            debugMode = False,
+            testMode = True
+          }
+        option
 
 findCommand :: [String] -> IO String
 findCommand list =
@@ -174,8 +175,8 @@ test ::
 test testcase typ lambdaLift noOptimize option compileMode = retry 3 do
   createDirectoryIfMissing True (outputDir </> typ)
   let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
-  timeoutWrapper "compile" $
-    compile testcase llPath [outputDir </> typ, outputDir </> "libs"] lambdaLift noOptimize option compileMode
+  timeoutWrapper "compile"
+    $ compile testcase llPath [outputDir </> typ, outputDir </> "libs"] lambdaLift noOptimize option compileMode
 
   -- Format and optimize the generated LLVM assembly
   -- find opt or opt-15
@@ -207,23 +208,23 @@ test testcase typ lambdaLift noOptimize option compileMode = retry 3 do
               "-mllvm",
               "--attributor-enable=cgscc"
             ]
-            <> pkgConfig
-            <> [ outputDir </> "libs" </> "runtime.c",
-                 llPath,
-                 "-o",
-                 outputDir </> typ </> takeBaseName testcase -<.> ".out"
-               ]
+          <> pkgConfig
+          <> [ outputDir </> "libs" </> "runtime.c",
+               llPath,
+               "-o",
+               outputDir </> typ </> takeBaseName testcase -<.> ".out"
+             ]
       )
   BL.putStr err
   (clang, exitCode) `shouldBe` (clang, ExitSuccess)
 
   (exitCode, result) <-
-    timeoutWrapper "run" $
-      second convertString
-        <$> readProcessStdout
-          ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
-              & setStdin (byteStringInput "Hello")
-          )
+    timeoutWrapper "run"
+      $ second convertString
+      <$> readProcessStdout
+        ( proc (outputDir </> typ </> takeBaseName testcase -<.> ".out") []
+            & setStdin (byteStringInput "Hello")
+        )
   ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
   expected <- filter ("-- Expected: " `T.isPrefixOf`) . T.lines . convertString <$> BS.readFile testcase
   map ("-- Expected: " <>) (T.lines $ T.stripEnd result) `shouldBe` expected

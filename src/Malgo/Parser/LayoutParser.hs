@@ -84,7 +84,7 @@ pType = undefined
 {-# INLINE pType #-}
 
 pDataDef :: Parser (Decl (Malgo Parse))
-pDataDef = do
+pDataDef = label "data" do
   start <- getSourcePos
   reserved L.Data
   name <- upperIdent
@@ -94,7 +94,7 @@ pDataDef = do
     end <- getSourcePos
     pure (Range start end, arg)
   reservedOp L.Equal
-  cons <- blocks pConDef
+  cons <- blocks pConDef <|> pConDef `sepBy1` reservedOp L.Bar
   end <- getSourcePos
   pure $ DataDef (Range start end) name args cons
   where
@@ -111,7 +111,7 @@ pSingleType = undefined
 {-# INLINE pSingleType #-}
 
 pTypeSynonym :: Parser (Decl (Malgo Parse))
-pTypeSynonym = do
+pTypeSynonym = label "type" do
   start <- getSourcePos
   reserved L.Type
   name <- upperIdent
@@ -123,7 +123,7 @@ pTypeSynonym = do
 {-# INLINEABLE pTypeSynonym #-}
 
 pInfix :: Parser (Decl (Malgo Parse))
-pInfix = do
+pInfix = label "infix" do
   start <- getSourcePos
   assoc <- choice [reserved L.Infixl $> LeftA, reserved L.Infixr $> RightA, reserved L.Infix $> NeutralA]
   i <- int
@@ -241,7 +241,7 @@ lexeme :: Parser a -> Parser a
 lexeme m = do
   indentLevel <- ask
   -- skip (IndentStart n) or (IndentEnd n) if n is larger than the current indent level
-  void $ takeWhileP (Just $ "deep indent (" <> show indentLevel <> ")") \case
+  void $ takeWhileP Nothing \case
     L.WithPos {value = L.IndentStart n} -> n > indentLevel
     L.WithPos {value = L.IndentEnd n} -> n > indentLevel
     L.WithPos {value = L.Space _} -> True

@@ -135,5 +135,15 @@ testCases =
       "{..} {x, A, (+)}",
       [ReservedOp LBrace, ReservedOp DotDot, ReservedOp RBrace, Space 1, ReservedOp LBrace, Ident "x", ReservedOp Comma, Space 1, Ident "A", ReservedOp Comma, Space 1, ReservedOp LParen, Operator "+", ReservedOp RParen, ReservedOp RBrace],
       [ReservedOp LBrace, ReservedOp DotDot, ReservedOp RBrace, ReservedOp LBrace, Ident "x", ReservedOp Comma, Ident "A", ReservedOp Comma, ReservedOp LParen, Operator "+", ReservedOp RParen, ReservedOp RBrace]
+    ),
+    ( "empty line",
+      "def\n main\n \n  = 0",
+      [ReservedId Def, Newlines, Space 1, Ident "main", Newlines, Space 1, Newlines, Space 2, ReservedOp Equal, Space 1, Int False 0],
+      [ReservedId Def, IndentStart 1, Ident "main", IndentStart 2, ReservedOp Equal, Int False 0, IndentEnd 2, IndentEnd 1]
+    ),
+    ( "infix",
+      "infixr 2 (<|>)",
+      [ReservedId Infixr, Space 1, Int False 2, Space 1, ReservedOp LParen, Operator "<|>", ReservedOp RParen],
+      [ReservedId Infixr, Int False 2, ReservedOp LParen, Operator "<|>", ReservedOp RParen]
     )
   ]
