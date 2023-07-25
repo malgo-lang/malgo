@@ -1,6 +1,7 @@
 module Malgo.Parser.LayoutParser (parse) where
 
 import Control.Exception (assert)
+import Control.Monad.Combinators.Expr
 import Control.Monad.Reader
 import Data.Text qualified as T
 import Koriel.Id
@@ -65,8 +66,89 @@ pScDef = do
 {-# INLINEABLE pScDef #-}
 
 pExpr :: Parser (Expr (Malgo Parse))
-pExpr = undefined
+pExpr = do
+  start <- getSourcePos
+  expr <- pOpApp
+  try (pAnnotation start expr)
+    <|> pure expr
+  where
+    pOpApp = makeExprParser pTerm opTable
+    pTerm = do
+      start <- getSourcePos
+      f <- pSingleExpr
+      xs <- many pSingleExpr
+      end <- getSourcePos
+      case xs of
+        [] -> pure f
+        xs -> pure $ foldl (Apply (Range start end)) f xs
+    opTable =
+      [ [ InfixL do
+            start <- getSourcePos
+            op <- operator
+            end <- getSourcePos
+            pure $ OpApp (Range start end) op
+        ]
+      ]
+    pSingleExpr =
+      choice
+        [ try pUnboxedExpr,
+          try pBoxedExpr,
+          pVar,
+          pParen,
+          pBrace,
+          pList
+        ]
+    pUnboxedExpr = do
+      start <- getSourcePos
+      u <- pUnboxed
+      end <- getSourcePos
+      pure $ Unboxed (Range start end) u
+    pBoxedExpr = do
+      start <- getSourcePos
+      u <- pBoxed
+      end <- getSourcePos
+      pure $ Boxed (Range start end) u
+    pVar = pQualified <|> pUnqualified
+    pQualified :: Parser (Expr (Malgo Parse))
+    pQualified = do
+      start <- getSourcePos
+      (moduleName, name) <- qualifiedIdent
+      end <- getSourcePos
+      pure $ Var (Qualified (Explicit $ ModuleName moduleName) (Range start end)) name
+    pUnqualified = undefined
+    pParen = undefined
+    pBrace = undefined
+    pList = undefined
+    pAnnotation start expr = do
+      reservedOp L.Colon
+      ty <- pType
+      end <- getSourcePos
+      pure $ Ann (Range start end) expr ty
 {-# INLINE pExpr #-}
+
+pUnboxed :: Parser (Literal Unboxed)
+pUnboxed = label "unboxed literal"
+  $ lexeme
+  $ token
+  ?? mempty
+  $ \case
+    L.WithPos {value = L.Int True x} -> Just $ Int32 $ fromInteger x
+    L.WithPos {value = L.Float True x} -> Just $ Double x
+    L.WithPos {value = L.Char True x} -> Just $ Char x
+    L.WithPos {value = L.String True x} -> Just $ String x
+    _ -> Nothing
+
+pBoxed :: Parser (Literal Boxed)
+pBoxed = label "boxed literal"
+  $ lexeme
+  $ token
+  ?? mempty
+  $ \case
+    L.WithPos {value = L.Int False x} -> Just $ Int32 $ fromInteger x
+    L.WithPos {value = L.Float False x} -> Just $ Double x
+    L.WithPos {value = L.Char False x} -> Just $ Char x
+    L.WithPos {value = L.String False x} -> Just $ String x
+    _ -> Nothing
 
 pScSig :: Parser (Decl (Malgo Parse))
 pScSig = do
@@ -80,8 +162,74 @@ pScSig = do
 {-# INLINEABLE pScSig #-}
 
 pType :: Parser (Type (Malgo Parse))
-pType = undefined
+pType = makeExprParser pTyTerm opTable
+  where
+    opTable =
+      [ [ InfixR do
+            start <- getSourcePos
+            reservedOp L.Arrow
+            TyArr . Range start <$> getSourcePos
+        ]
+      ]
+    pTyTerm = do
+      start <- getSourcePos
+      f <- pSingleType
+      xs <- many pSingleType
+      end <- getSourcePos
+      case xs of
+        [] -> pure f
+        _ -> pure $ TyApp (Range start end) f xs
 {-# INLINE pType #-}
+
+pSingleType :: Parser (Type (Malgo Parse))
+pSingleType =
+  choice
+    [ pTyVar,
+      pTyCon,
+      pTyParen,
+      pTyBrace
+    ]
+  where
+    pTyVar = do
+      start <- getSourcePos
+      x <- lowerIdent
+      end <- getSourcePos
+      pure $ TyVar (Range start end) x
+    pTyCon = do
+      start <- getSourcePos
+      x <- upperIdent
+      end <- getSourcePos
+      pure $ TyCon (Range start end) x
+    pTyParen = do
+      start <- getSourcePos
+      xs <- between (reservedOp L.LParen) (reservedOp L.RParen) (pType `sepBy` reservedOp L.Comma)
+      end <- getSourcePos
+      case xs of
+        [x] -> pure x
+        xs -> pure $ TyTuple (Range start end) xs
+    pTyBrace = do
+      start <- getSourcePos
+      k <- between (reservedOp L.LBrace) (reservedOp L.RBrace) (try pTyRecord <|> pTyBlock)
+      k start <$> getSourcePos
+    pTyRecord = do
+      xs <- asRecordFields pTyRecordEntry
+      pure \start end -> TyRecord (Range start end) xs
+    pTyRecordEntry = do
+      label <- lowerIdent
+      reservedOp L.Colon
+      ty <- pType
+      pure (label, ty)
+    pTyBlock = do
+      x <- pType
+      pure \start end -> TyBlock (Range start end) x
+{-# INLINE pSingleType #-}
+
+asRecordFields :: Parser a -> Parser [a]
+asRecordFields entry =
+  try (entry `endBy1` reservedOp L.Semicolon)
+    <|> try (entry `sepBy1` reservedOp L.Comma)
+    <|> blocks entry
+{-# INLINE asRecordFields #-}
 
 pDataDef :: Parser (Decl (Malgo Parse))
 pDataDef = label "data" do
@@ -105,10 +253,6 @@ pDataDef = label "data" do
       end <- getSourcePos
       pure (Range start end, name, params)
 {-# INLINEABLE pDataDef #-}
-
-pSingleType :: Parser (Type (Malgo Parse))
-pSingleType = undefined
-{-# INLINE pSingleType #-}
 
 pTypeSynonym :: Parser (Decl (Malgo Parse))
 pTypeSynonym = label "type" do
@@ -204,6 +348,16 @@ upperIdent =
       L.WithPos {value = L.Ident x} | isUpper (T.head x) -> Just x
       _ -> Nothing
 {-# INLINE upperIdent #-}
+
+qualifiedIdent :: Parser (Text, Text)
+qualifiedIdent =
+  lexeme
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Qualified moduleName name} -> Just (moduleName, name)
+      _ -> Nothing
+{-# INLINE qualifiedIdent #-}
 
 operator :: Parser Text
 operator =

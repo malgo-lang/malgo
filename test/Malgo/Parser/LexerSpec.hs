@@ -145,5 +145,10 @@ testCases =
       "infixr 2 (<|>)",
       [ReservedId Infixr, Space 1, Int False 2, Space 1, ReservedOp LParen, Operator "<|>", ReservedOp RParen],
       [ReservedId Infixr, Int False 2, ReservedOp LParen, Operator "<|>", ReservedOp RParen]
+    ),
+    ( "qualified variable",
+      "M.x D . y",
+      [Qualified "M" "x", Space 1, Ident "D", Space 1, Operator ".", Space 1, Ident "y"],
+      [Qualified "M" "x", Ident "D", Operator ".", Ident "y"]
     )
   ]

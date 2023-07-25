@@ -18,6 +18,12 @@ data Symbol
   | IndentEnd Int
   | ReservedId ReservedId
   | ReservedOp ReservedOp
+  | -- | qualified identifier
+    Qualified
+      -- | module name
+      Text
+      -- | identifier
+      Text
   | -- | identifier but not operator
     Ident Text
   | -- | operator
@@ -47,6 +53,7 @@ instance Pretty Symbol where
   pretty (IndentEnd n) = "<indent end " <> pretty n <> ">"
   pretty (ReservedId k) = pretty k
   pretty (ReservedOp k) = pretty k
+  pretty (Qualified moduleName name) = "<qualified " <> pretty moduleName <> "." <> pretty name <> ">"
   pretty (Ident x) = "<ident " <> pretty x <> ">"
   pretty (Operator x) = "<operator " <> pretty x <> ">"
   pretty (Int False x) = "<int " <> pretty x <> ">"
