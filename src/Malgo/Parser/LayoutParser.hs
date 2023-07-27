@@ -3,6 +3,7 @@ module Malgo.Parser.LayoutParser (parse) where
 import Control.Exception (assert)
 import Control.Monad.Combinators.Expr
 import Control.Monad.Reader
+import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text qualified as T
 import Koriel.Id
 import Malgo.Parser.Stream (LexStream)
@@ -109,22 +110,135 @@ pExpr = do
       end <- getSourcePos
       pure $ Boxed (Range start end) u
     pVar = pQualified <|> pUnqualified
-    pQualified :: Parser (Expr (Malgo Parse))
-    pQualified = do
+      where
+        pQualified :: Parser (Expr (Malgo Parse))
+        pQualified = do
+          start <- getSourcePos
+          (moduleName, name) <- qualifiedIdent
+          end <- getSourcePos
+          pure $ Var (Qualified (Explicit $ ModuleName moduleName) (Range start end)) name
+        pUnqualified = do
+          start <- getSourcePos
+          name <- ident
+          end <- getSourcePos
+          pure $ Var (Qualified Implicit (Range start end)) name
+    pParen = do
       start <- getSourcePos
-      (moduleName, name) <- qualifiedIdent
+      xs <- between (reservedOp L.LParen) (reservedOp L.RParen) (pExpr `sepBy` reservedOp L.Comma)
       end <- getSourcePos
-      pure $ Var (Qualified (Explicit $ ModuleName moduleName) (Range start end)) name
-    pUnqualified = undefined
-    pParen = undefined
-    pBrace = undefined
-    pList = undefined
+      case xs of
+        [x] -> pure x
+        xs -> pure $ Tuple (Range start end) xs
+    pBrace = pFun <|> pRecord
+      where
+        pRecord = do
+          start <- getSourcePos
+          kvs <- between (reservedOp L.LBrace) (reservedOp L.RBrace) do
+            asList do
+              label <- lowerIdent
+              reservedOp L.Equal
+              value <- pExpr
+              pure (label, value)
+          end <- getSourcePos
+          pure $ Record (Range start end) kvs
+    pList = do
+      start <- getSourcePos
+      xs <- asList pExpr
+      end <- getSourcePos
+      pure $ List (Range start end) xs
     pAnnotation start expr = do
       reservedOp L.Colon
       ty <- pType
       end <- getSourcePos
       pure $ Ann (Range start end) expr ty
 {-# INLINE pExpr #-}
+
+pFun :: Parser (Expr (Malgo Parse))
+pFun = do
+  start <- getSourcePos
+  clauses <-
+    between (reservedOp L.LBrace) (reservedOp L.RBrace) $ NonEmpty.fromList <$> pClauses
+  end <- getSourcePos
+  pure $ Fn (Range start end) clauses
+  where
+    pClauses =
+      do
+        blocks pClause
+        <|> (optional (reservedOp L.Bar) >> pClause `sepBy1` reservedOp L.Bar)
+    pClause :: Parser (Clause (Malgo Parse))
+    pClause = do
+      start <- getSourcePos
+      pat <- try (some pSinglePat <* reservedOp L.Arrow) <|> pure []
+      stmts <- do
+        start <- getSourcePos
+        stmts <- pStmts
+        end <- getSourcePos
+        pure $ Seq (Range start end) stmts
+      end <- getSourcePos
+      pure $ Clause (Range start end) pat stmts
+    pStmts = undefined
+    pSinglePat :: Parser (Pat (Malgo Parse))
+    pSinglePat =
+      choice [pVarP, pConP, try pUnboxedP, pBoxedP, pParenP, pRecordP, pListP]
+      where
+        pVarP :: Parser (Pat (Malgo Parse))
+        pVarP = do
+          start <- getSourcePos
+          name <- lowerIdent
+          end <- getSourcePos
+          pure $ VarP (Range start end) name
+        pConP :: Parser (Pat (Malgo Parse))
+        pConP = do
+          start <- getSourcePos
+          name <- upperIdent
+          end <- getSourcePos
+          pure $ ConP (Range start end) name []
+        pUnboxedP :: Parser (Pat (Malgo Parse))
+        pUnboxedP = do
+          start <- getSourcePos
+          u <- pUnboxed
+          end <- getSourcePos
+          pure $ UnboxedP (Range start end) u
+        pBoxedP :: Parser (Pat (Malgo Parse))
+        pBoxedP = do
+          start <- getSourcePos
+          u <- pBoxed
+          end <- getSourcePos
+          pure $ BoxedP (Range start end) u
+        pParenP = do
+          start <- getSourcePos
+          xs <- between (reservedOp L.LParen) (reservedOp L.RParen) (pPat `sepBy` reservedOp L.Comma)
+          end <- getSourcePos
+          case xs of
+            [x] -> pure x
+            xs -> pure $ TupleP (Range start end) xs
+        pRecordP :: Parser (Pat (Malgo Parse))
+        pRecordP = do
+          start <- getSourcePos
+          kvs <- between (reservedOp L.LBrace) (reservedOp L.RBrace) do
+            asList pRecordPEntry
+          end <- getSourcePos
+          pure $ RecordP (Range start end) kvs
+          where
+            pRecordPEntry = do
+              label <- lowerIdent
+              reservedOp L.Equal
+              pat <- pPat
+              pure (label, pat)
+        pListP = do
+          start <- getSourcePos
+          xs <- between (reservedOp L.LBracket) (reservedOp L.RBracket) $ asList pPat
+          end <- getSourcePos
+          pure $ ListP (Range start end) xs
+    pPat = do
+      try pConP <|> pSinglePat
+      where
+        pConP = do
+          start <- getSourcePos
+          name <- upperIdent
+          args <- some pSinglePat
+          end <- getSourcePos
+          pure $ ConP (Range start end) name args
 
 pUnboxed :: Parser (Literal Unboxed)
 pUnboxed = label "unboxed literal"
@@ -212,7 +326,7 @@ pSingleType =
       k <- between (reservedOp L.LBrace) (reservedOp L.RBrace) (try pTyRecord <|> pTyBlock)
       k start <$> getSourcePos
     pTyRecord = do
-      xs <- asRecordFields pTyRecordEntry
+      xs <- asList pTyRecordEntry
       pure \start end -> TyRecord (Range start end) xs
     pTyRecordEntry = do
       label <- lowerIdent
@@ -224,12 +338,12 @@ pSingleType =
       pure \start end -> TyBlock (Range start end) x
 {-# INLINE pSingleType #-}
 
-asRecordFields :: Parser a -> Parser [a]
-asRecordFields entry =
+asList :: Parser a -> Parser [a]
+asList entry =
   try (entry `endBy1` reservedOp L.Semicolon)
     <|> try (entry `sepBy1` reservedOp L.Comma)
     <|> blocks entry
-{-# INLINE asRecordFields #-}
+{-# INLINE asList #-}
 
 pDataDef :: Parser (Decl (Malgo Parse))
 pDataDef = label "data" do
@@ -355,7 +469,7 @@ qualifiedIdent =
     $ token
     ?? mempty
     $ \case
-      L.WithPos {value = L.Qualified moduleName name} -> Just (moduleName, name)
+      L.WithPos {value = L.Qualified moduleName (L.Ident name)} -> Just (moduleName, name)
       _ -> Nothing
 {-# INLINE qualifiedIdent #-}
 

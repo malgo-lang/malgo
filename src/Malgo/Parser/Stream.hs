@@ -23,7 +23,7 @@ data Symbol
       -- | module name
       Text
       -- | identifier
-      Text
+      Symbol
   | -- | identifier but not operator
     Ident Text
   | -- | operator

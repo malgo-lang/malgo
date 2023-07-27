@@ -7,7 +7,7 @@ import Malgo.Prelude hiding (Space, lex)
 import Prettyprinter.Render.Text (renderStrict)
 import Text.Megaparsec
 import Text.Megaparsec.Char (char, string)
-import Text.Megaparsec.Char.Lexer (charLiteral, decimal, float)
+import Text.Megaparsec.Char.Lexer (charLiteral, decimal, float, skipBlockComment, skipLineComment)
 
 -- * Lexer
 
@@ -24,8 +24,16 @@ lex filename input =
     input
 
 lexer :: Lexer [WithPos Symbol]
-lexer = many (lexSpace <|> lexSymbol <|> lexNewlines)
+lexer = do
+  void $ many skipComment
+  many do
+    t <- lexSpace <|> lexSymbol <|> lexNewlines
+    void $ many skipComment
+    pure t
 {-# INLINE lexer #-}
+
+skipComment :: Lexer ()
+skipComment = skipLineComment "--" <|> skipBlockComment "{-" "-}"
 
 lexSpace :: Lexer (WithPos Symbol)
 lexSpace = withPos do
@@ -40,12 +48,13 @@ lexSymbol = withPos do
   lexReservedId
     <|> lexReservedOp
     <|> lexParen
-    <|> fmap Ident lexIdent
-    <|> fmap Operator lexOperator
-    <|> fmap (Int False) lexInt
-    <|> fmap (Float False) lexFloat
-    <|> fmap (Char False) lexChar
-    <|> fmap (String False) lexString
+    <|> try lexQualified
+    <|> lexIdent
+    <|> lexOperator
+    <|> lexInt
+    <|> lexFloat
+    <|> lexChar
+    <|> lexString
 
 lexReservedId :: Lexer Symbol
 lexReservedId = label "reserved identifier" $ try do
@@ -75,11 +84,19 @@ parenTable :: [(Char, ReservedOp)]
 parenTable = [('{', LBrace), ('}', RBrace), ('(', LParen), (')', RParen), ('[', LBracket), (']', RBracket)]
 {-# INLINE parenTable #-}
 
-lexIdent :: Lexer Text
+lexQualified :: Lexer Symbol
+lexQualified = label "qualified identifier" do
+  mc <- satisfy isIdentStart
+  mcs <- takeWhileP Nothing isIdent
+  void $ char '.'
+  c <- lexIdent <|> lexOperator
+  pure $ Qualified (T.cons mc mcs) c
+
+lexIdent :: Lexer Symbol
 lexIdent = label "identifier" do
   c <- satisfy isIdentStart
   cs <- takeWhileP Nothing isIdent
-  pure (T.cons c cs)
+  pure (Ident $ T.cons c cs)
 {-# INLINE lexIdent #-}
 
 isIdentStart :: Char -> Bool
@@ -88,27 +105,27 @@ isIdentStart c = isLetter c || c == '_'
 isIdent :: Char -> Bool
 isIdent c = isAlphaNum c || c == '_' || c == '#'
 
-lexOperator :: Lexer Text
+lexOperator :: Lexer Symbol
 lexOperator = label "operator" do
-  takeWhile1P Nothing isOperator
+  Operator <$> takeWhile1P Nothing isOperator
 
 isOperator :: Char -> Bool
 isOperator c = c `elem` ("+-*/\\%=><:;|&!#." :: String)
 
-lexInt :: Lexer Integer
-lexInt = decimal
+lexInt :: Lexer Symbol
+lexInt = fmap (Int False) decimal
 
-lexFloat :: Lexer Double
-lexFloat = float
+lexFloat :: Lexer Symbol
+lexFloat = fmap (Float False) float
 
-lexChar :: Lexer Char
+lexChar :: Lexer Symbol
 lexChar = label "char" do
-  between (char '\'') (char '\'') charLiteral
+  Char False <$> between (char '\'') (char '\'') charLiteral
 
-lexString :: Lexer Text
+lexString :: Lexer Symbol
 lexString = label "string" do
   void $ char '"'
-  T.pack <$> manyTill charLiteral (char '"')
+  String False . T.pack <$> manyTill charLiteral (char '"')
 
 lexNewlines :: Lexer (WithPos Symbol)
 lexNewlines = withPos do

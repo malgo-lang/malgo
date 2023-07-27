@@ -147,8 +147,18 @@ testCases =
       [ReservedId Infixr, Int False 2, ReservedOp LParen, Operator "<|>", ReservedOp RParen]
     ),
     ( "qualified variable",
-      "M.x D . y",
-      [Qualified "M" "x", Space 1, Ident "D", Space 1, Operator ".", Space 1, Ident "y"],
-      [Qualified "M" "x", Ident "D", Operator ".", Ident "y"]
+      "M.x D . y N..N.+",
+      [Qualified "M" (Ident "x"), Space 1, Ident "D", Space 1, Operator ".", Space 1, Ident "y", Space 1, Qualified "N" (Operator "."), Qualified "N" (Operator "+")],
+      [Qualified "M" (Ident "x"), Ident "D", Operator ".", Ident "y", Qualified "N" (Operator "."), Qualified "N" (Operator "+")]
+    ),
+    ( "line comment",
+      "-- comment",
+      [],
+      []
+    ),
+    ( "block comment",
+      "{- comment -}",
+      [],
+      []
     )
   ]
