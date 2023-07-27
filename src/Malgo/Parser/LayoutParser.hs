@@ -267,8 +267,8 @@ pFun = do
   pure $ Fn (Range start end) clauses
   where
     pClauses =
-      try (optional (reservedOp L.Bar) >> pClause `sepBy1` reservedOp L.Bar)
-        <|> blocks pClause
+      try (blocks pClause >>= \xs -> notFollowedBy (reservedOp L.Bar) >> pure xs)
+        <|> (optional (reservedOp L.Bar) >> pClause `sepBy1` reservedOp L.Bar)
     pClause :: Parser (Clause (Malgo Parse))
     pClause = do
       start <- getSourcePos

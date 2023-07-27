@@ -2,6 +2,7 @@ module Malgo.Parser.Lexer (Symbol (..), ReservedId (..), ReservedOp (..), WithPo
 
 import Control.Monad.State
 import Data.List.NonEmpty qualified as NonEmpty
+import Data.Maybe (isJust)
 import Data.Text qualified as T
 import Koriel.Pretty
 import Malgo.Parser.Stream
@@ -100,8 +101,8 @@ lexSymbol = withPos do
     <|> try lexQualified
     <|> lexIdent
     <|> lexOperator
+    <|> try lexFloat
     <|> lexInt
-    <|> lexFloat
     <|> lexChar
     <|> lexString
 
@@ -162,19 +163,29 @@ isOperator :: Char -> Bool
 isOperator c = c `elem` ("+-*/\\%=><:;|&!#." :: String)
 
 lexInt :: Lexer Symbol
-lexInt = fmap (Int False) decimal
+lexInt = do
+  x <- decimal
+  unboxed <- isJust <$> optional (char '#')
+  pure $ Int unboxed x
 
 lexFloat :: Lexer Symbol
-lexFloat = fmap (Float False) float
+lexFloat = do
+  x <- float
+  unboxed <- isJust <$> optional (char '#')
+  pure $ Float unboxed x
 
 lexChar :: Lexer Symbol
 lexChar = label "char" do
-  Char False <$> between (char '\'') (char '\'') charLiteral
+  x <- between (char '\'') (char '\'') charLiteral
+  unboxed <- isJust <$> optional (char '#')
+  pure $ Char unboxed x
 
 lexString :: Lexer Symbol
 lexString = label "string" do
   void $ char '"'
-  String False . T.pack <$> manyTill charLiteral (char '"')
+  x <- T.pack <$> manyTill charLiteral (char '"')
+  unboxed <- isJust <$> optional (char '#')
+  pure $ String unboxed x
 
 withPos :: Lexer Symbol -> Lexer (WithPos Symbol)
 withPos m = do
