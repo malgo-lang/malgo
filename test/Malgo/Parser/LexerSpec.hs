@@ -118,11 +118,11 @@ testCases =
     ),
     ( "line comment",
       "-- comment",
-      []
+      [Comment " comment"]
     ),
     ( "block comment",
       "{- comment -}",
-      []
+      [Comment " comment "]
     ),
     ( "underscore",
       "{ fst = x, snd = _ }",
@@ -131,5 +131,9 @@ testCases =
     ( "multiple defs",
       "\n  def f = 0\n  def g = 1",
       [IndentStart 2, ReservedId Def, Space 1, Ident "f", Space 1, ReservedOp Equal, Space 1, Int False 0, IndentEnd 2, IndentStart 2, ReservedId Def, Space 1, Ident "g", Space 1, ReservedOp Equal, Space 1, Int False 1, IndentEnd 2]
+    ),
+    ( "unboxed literal",
+      "1# 2.0# 'c'# \"str\"#",
+      [Int True 1, Space 1, Float True 2.0, Space 1, Char True 'c', Space 1, String True "str"]
     )
   ]

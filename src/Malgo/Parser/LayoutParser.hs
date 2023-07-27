@@ -22,7 +22,7 @@ parse =
   M.parse
     ( runReaderT ?? 0 $ do
         m <- pModule
-        eof
+        lexeme eof
         pure m
     )
 
@@ -42,13 +42,12 @@ pModuleName = ModuleName <$> ident
 -- * Declaration
 
 pDecls :: Parser [Decl (Malgo Parse)]
-pDecls = between (reservedOp L.LBrace) (reservedOp L.RBrace) $ blocks pDecl
+pDecls = between (reservedOp L.LBrace) (reservedOp L.RBrace) $ many pDecl
 
 pDecl :: Parser (Decl (Malgo Parse))
 pDecl =
   choice
-    [ try pScDef,
-      pScSig,
+    [ pDef,
       pDataDef,
       pTypeSynonym,
       pInfix,
@@ -56,25 +55,23 @@ pDecl =
       pImport
     ]
 
-pScDef :: Parser (Decl (Malgo Parse))
-pScDef = do
+pDef :: Parser (Decl (Malgo Parse))
+pDef = do
   start <- getSourcePos
   reserved L.Def
   name <- lowerIdent <|> between (reservedOp L.LParen) (reservedOp L.RParen) operator
-  reservedOp L.Equal
-  body <- pExpr
-  end <- getSourcePos
-  pure $ ScDef (Range start end) name body
-
-pScSig :: Parser (Decl (Malgo Parse))
-pScSig = do
-  start <- getSourcePos
-  reserved L.Def
-  name <- lowerIdent <|> between (reservedOp L.LParen) (reservedOp L.RParen) operator
-  reservedOp L.Colon
-  ty <- pType
-  end <- getSourcePos
-  pure $ ScSig (Range start end) name ty
+  pScDef start name <|> pScSig start name
+  where
+    pScDef start name = label "variable definition" do
+      reservedOp L.Equal
+      body <- pExpr
+      end <- getSourcePos
+      pure $ ScDef (Range start end) name body
+    pScSig start name = label "type signature" do
+      reservedOp L.Colon
+      ty <- pType
+      end <- getSourcePos
+      pure $ ScSig (Range start end) name ty
 
 pDataDef :: Parser (Decl (Malgo Parse))
 pDataDef = label "data" do
@@ -87,7 +84,7 @@ pDataDef = label "data" do
     end <- getSourcePos
     pure (Range start end, arg)
   reservedOp L.Equal
-  cons <- blocks pConDef <|> pConDef `sepBy1` reservedOp L.Bar
+  cons <- try (pConDef `sepBy1` reservedOp L.Bar) <|> blocks pConDef
   end <- getSourcePos
   pure $ DataDef (Range start end) name args cons
   where
@@ -210,28 +207,49 @@ pExpr = do
           name <- ident
           end <- getSourcePos
           pure $ Var (Qualified Implicit (Range start end)) name
-    pParen = do
+    pParen = choice [try pUnit, try pTuple, try pSeq, between (reservedOp L.LParen) (reservedOp L.RParen) pExpr]
+    pUnit = do
       start <- getSourcePos
-      xs <- between (reservedOp L.LParen) (reservedOp L.RParen) (pExpr `sepBy` reservedOp L.Comma)
+      reservedOp L.LParen
+      reservedOp L.RParen
       end <- getSourcePos
-      case xs of
-        [x] -> pure x
-        xs -> pure $ Tuple (Range start end) xs
+      pure $ Tuple (Range start end) []
+    pTuple = do
+      start <- getSourcePos
+      reservedOp L.LParen
+      x <- pExpr
+      xs <- some do
+        reservedOp L.Comma
+        pExpr
+      reservedOp L.RParen
+      end <- getSourcePos
+      pure $ Tuple (Range start end) (x : xs)
+    pSeq = do
+      start <- getSourcePos
+      reservedOp L.LParen
+      x <- pStmt
+      xs <- some do
+        reservedOp L.Semicolon
+        pStmt
+      reservedOp L.RParen
+      end <- getSourcePos
+      pure $ Seq (Range start end) (x :| xs)
     pBrace = try pFun <|> pRecord
       where
         pRecord = do
           start <- getSourcePos
           kvs <- between (reservedOp L.LBrace) (reservedOp L.RBrace) do
-            asList do
-              label <- lowerIdent
-              reservedOp L.Equal
-              value <- pExpr
-              pure (label, value)
+            let kv = do
+                  label <- lowerIdent
+                  reservedOp L.Equal
+                  value <- pExpr
+                  pure (label, value)
+            try (kv `endBy1` reservedOp L.Semicolon) <|> kv `sepBy1` reservedOp L.Comma
           end <- getSourcePos
           pure $ Record (Range start end) kvs
     pList = do
       start <- getSourcePos
-      xs <- between (reservedOp L.LBracket) (reservedOp L.RBracket) $ asList pExpr
+      xs <- between (reservedOp L.LBracket) (reservedOp L.RBracket) $ pExpr `sepBy` reservedOp L.Comma
       end <- getSourcePos
       pure $ List (Range start end) xs
     pAnnotation start expr = do
@@ -249,9 +267,8 @@ pFun = do
   pure $ Fn (Range start end) clauses
   where
     pClauses =
-      do
-        blocks pClause
-        <|> (optional (reservedOp L.Bar) >> pClause `sepBy1` reservedOp L.Bar)
+      try (optional (reservedOp L.Bar) >> pClause `sepBy1` reservedOp L.Bar)
+        <|> blocks pClause
     pClause :: Parser (Clause (Malgo Parse))
     pClause = do
       start <- getSourcePos
@@ -263,11 +280,16 @@ pFun = do
         pure $ Seq (Range start end) stmts
       end <- getSourcePos
       pure $ Clause (Range start end) pat stmts
-    pStmts = do
-      NonEmpty.fromList <$> asList pStmt
-    pStmt :: Parser (Stmt (Malgo Parse))
-    pStmt = do
-      choice [pLet, pWith, pNoBind]
+
+pStmts :: Parser (NonEmpty (Stmt (Malgo Parse)))
+pStmts = fmap NonEmpty.fromList do
+  try (pStmt `sepEndBy1` reservedOp L.Semicolon)
+    <|> blocks pStmt
+
+pStmt :: Parser (Stmt (Malgo Parse))
+pStmt = do
+  choice [pLet, pWith, pNoBind]
+  where
     pLet = do
       start <- getSourcePos
       reserved L.Let
@@ -276,6 +298,7 @@ pFun = do
       e <- pExpr
       end <- getSourcePos
       pure $ Let (Range start end) x e
+
     pWith = do
       start <- getSourcePos
       reserved L.With
@@ -291,6 +314,7 @@ pFun = do
             end <- getSourcePos
             pure $ With (Range start end) Nothing e
         ]
+
     pNoBind = do
       start <- getSourcePos
       e <- pExpr
@@ -349,7 +373,7 @@ pSinglePat = do
     pRecordP = do
       start <- getSourcePos
       kvs <- between (reservedOp L.LBrace) (reservedOp L.RBrace) do
-        asList pRecordPEntry
+        try (pRecordPEntry `endBy1` reservedOp L.Semicolon) <|> pRecordPEntry `sepBy1` reservedOp L.Comma
       end <- getSourcePos
       pure $ RecordP (Range start end) kvs
       where
@@ -360,7 +384,7 @@ pSinglePat = do
           pure (label, pat)
     pListP = do
       start <- getSourcePos
-      xs <- between (reservedOp L.LBracket) (reservedOp L.RBracket) $ asList pPat
+      xs <- between (reservedOp L.LBracket) (reservedOp L.RBracket) $ pPat `sepBy` reservedOp L.Comma
       end <- getSourcePos
       pure $ ListP (Range start end) xs
 
@@ -417,7 +441,7 @@ pSingleType =
       k <- between (reservedOp L.LBrace) (reservedOp L.RBrace) (try pTyRecord <|> pTyBlock)
       k start <$> getSourcePos
     pTyRecord = do
-      xs <- asList pTyRecordEntry
+      xs <- try (pTyRecordEntry `endBy1` reservedOp L.Semicolon) <|> pTyRecordEntry `sepBy1` reservedOp L.Comma
       pure \start end -> TyRecord (Range start end) xs
     pTyRecordEntry = do
       label <- lowerIdent
@@ -431,7 +455,7 @@ pSingleType =
 -- * common combinators
 
 ident :: Parser Text
-ident =
+ident = label "identifier" do
   lexeme
     $ token
     ?? mempty
@@ -440,7 +464,7 @@ ident =
       _ -> Nothing
 
 lowerIdent :: Parser Text
-lowerIdent =
+lowerIdent = label "lower identifier" do
   lexeme
     $ token
     ?? mempty
@@ -449,7 +473,7 @@ lowerIdent =
       _ -> Nothing
 
 upperIdent :: Parser Text
-upperIdent =
+upperIdent = label "upper identifier" do
   lexeme
     $ token
     ?? mempty
@@ -458,7 +482,7 @@ upperIdent =
       _ -> Nothing
 
 qualifiedIdent :: Parser (Text, Text)
-qualifiedIdent =
+qualifiedIdent = label "qualified identifier" do
   lexeme
     $ token
     ?? mempty
@@ -467,7 +491,7 @@ qualifiedIdent =
       _ -> Nothing
 
 operator :: Parser Text
-operator =
+operator = label "operator" do
   lexeme
     $ token
     ?? mempty
@@ -476,17 +500,17 @@ operator =
       _ -> Nothing
 
 reserved :: L.ReservedId -> Parser ()
-reserved r = lexeme $ void $ satisfy \case
+reserved r = label (show $ pretty r) $ lexeme $ void $ satisfy \case
   L.WithPos {value = L.ReservedId r'} -> r == r'
   _ -> False
 
 reservedOp :: L.ReservedOp -> Parser ()
-reservedOp r = lexeme $ void $ satisfy \case
+reservedOp r = label (show $ pretty r) $ lexeme $ void $ satisfy \case
   L.WithPos {value = L.ReservedOp r'} -> r == r'
   _ -> False
 
 int :: (Num n) => Parser n
-int =
+int = label "integer" do
   lexeme
     $ token
     ?? mempty
@@ -495,7 +519,7 @@ int =
       _ -> Nothing
 
 lexeme :: Parser a -> Parser a
-lexeme m = do
+lexeme m = try do
   indentLevel <- ask
   -- skip (IndentStart n) or (IndentEnd n) if n is larger than the current indent level
   void $ takeWhileP Nothing \case
@@ -521,14 +545,14 @@ blocks m = do
         indentEnd
         pure (indentLevel, x)
     -- Rest blocks
-    block' indentLevel m = label ("continuous block " <> show indentLevel) $ try do
-      indentLevel' <- indentStart
-      if indentLevel == indentLevel'
-        then local (const indentLevel') $ do
-          x <- m
-          indentEnd
-          pure x
-        else empty
+    block' indentLevel m = label ("continuous block " <> show indentLevel) do
+      void $ satisfy \case
+        L.WithPos {value = L.IndentStart n} -> n == indentLevel
+        _ -> False
+      local (const indentLevel) do
+        x <- m
+        indentEnd
+        pure x
 
 indentStart :: Parser Int
 indentStart = do
@@ -542,7 +566,7 @@ indentEnd = do
   indentLevel <- ask
   -- skip Indent* if n is larger than the current indent level using lexeme
   -- because we only need to parse a bracketed pair of IndentStart n and IndentEnd n
-  void $ lexeme $ satisfy \case
+  label ("indent end (level " <> show indentLevel <> ")") $ void $ lexeme $ satisfy \case
     L.WithPos {value = L.IndentEnd n} -> assert (indentLevel == n) True
     _ -> False
 
@@ -570,8 +594,11 @@ pBoxed = label "boxed literal"
     L.WithPos {value = L.String False x} -> Just $ String x
     _ -> Nothing
 
-asList :: Parser a -> Parser [a]
-asList entry =
-  try (entry `endBy1` reservedOp L.Semicolon)
-    <|> try (entry `sepBy1` reservedOp L.Comma)
-    <|> blocks entry
+-- asList :: Parser a -> Parser [a]
+-- asList entry =
+--   entry `sepEndBy` reservedOp L.Comma
+--
+-- asSequence :: Parser a -> Parser [a]
+-- asSequence entry =
+--   try (entry `sepEndBy1` reservedOp L.Semicolon)
+--     <|> blocks entry

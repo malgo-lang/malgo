@@ -14,6 +14,8 @@ data Symbol
     Newlines
   | -- | length of spaces (tab is 8 spaces)
     Space Int
+  | -- | comment
+    Comment Text
   | IndentStart Int
   | IndentEnd Int
   | ReservedId ReservedId
@@ -49,6 +51,7 @@ data Symbol
 instance Pretty Symbol where
   pretty Newlines = pretty @Text "<newlines>"
   pretty (Space n) = "<space " <> pretty n <> ">"
+  pretty (Comment _) = "<comment>"
   pretty (IndentStart n) = "<indent start " <> pretty n <> ">"
   pretty (IndentEnd n) = "<indent end " <> pretty n <> ">"
   pretty (ReservedId k) = pretty k
