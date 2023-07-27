@@ -1,5 +1,7 @@
-module Malgo.Parser.Lexer (Symbol (..), ReservedId (..), ReservedOp (..), WithPos (..), LexStream (..), lex, foldIndent) where
+module Malgo.Parser.Lexer (Symbol (..), ReservedId (..), ReservedOp (..), WithPos (..), LexStream (..), lex) where
 
+import Control.Monad.State
+import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text qualified as T
 import Koriel.Pretty
 import Malgo.Parser.Stream
@@ -11,13 +13,13 @@ import Text.Megaparsec.Char.Lexer (charLiteral, decimal, float, skipBlockComment
 
 -- * Lexer
 
-type Lexer = Parsec Void Text
+type Lexer = StateT (NonEmpty Int) (Parsec Void Text)
 
 lex :: String -> Text -> Either (ParseErrorBundle Text Void) LexStream
 lex filename input =
   parse
     ( do
-        symbols <- lexer <* eof
+        symbols <- evalStateT lexer (NonEmpty.fromList [0]) <* eof
         pure LexStream {input = input, unLexStream = symbols}
     )
     filename
@@ -26,14 +28,54 @@ lex filename input =
 lexer :: Lexer [WithPos Symbol]
 lexer = do
   void $ many skipComment
-  many do
-    t <- lexSpace <|> lexSymbol <|> lexNewlines
+  ts <- many do
+    t <- pure <$> lexSymbol <|> lexIndent <|> pure <$> lexSpace <|> pure <$> lexNewlines
     void $ many skipComment
     pure t
+  pos <- getSourcePos
+  ends <- gets (fmap (at pos pos 0 . IndentEnd))
+  pure $ join ts <> init (NonEmpty.toList ends)
 {-# INLINE lexer #-}
 
 skipComment :: Lexer ()
 skipComment = skipLineComment "--" <|> skipBlockComment "{-" "-}"
+
+indentLevel :: Lexer Int
+indentLevel = do
+  ns <- get
+  case ns of
+    n :| _ -> pure n
+
+lexIndent :: Lexer [WithPos Symbol]
+lexIndent = try do
+  n <- indentLevel
+  startPos <- getSourcePos
+  startOffset <- getOffset
+  void $ takeWhile1P (Just "newlines") isNewline
+  count <- sum <$> many (space <|> tab)
+  notFollowedBy (satisfy isNewline) -- skip empty line
+  endOffset <- getOffset
+  endPos <- getSourcePos
+  if
+    | count > n -> do
+        modify (NonEmpty.cons count)
+        pure [at startPos endPos (endOffset - startOffset) $ IndentStart count]
+    | count < n -> do
+        ns <- get
+        let (dropped, rest) = span (count <) (NonEmpty.toList ns)
+        modify (const $ NonEmpty.fromList rest)
+        case dropped of
+          [] -> error "unreachable"
+          x : xs -> pure $ at startPos endPos (endOffset - startOffset) (IndentEnd x) : map (at endPos endPos 0 . IndentEnd) xs
+    | n == 0 -> empty
+    | otherwise -> pure [at startPos endPos (endOffset - startOffset) $ IndentEnd n, at endPos endPos 0 (IndentStart n)]
+  where
+    space = 1 <$ char ' '
+    tab = tabLength <$ char '\t'
+    isNewline c = c == '\r' || c == '\n'
+
+at :: SourcePos -> SourcePos -> Int -> a -> WithPos a
+at startPos endPos length x = WithPos {startPos, endPos, length, value = x}
 
 lexSpace :: Lexer (WithPos Symbol)
 lexSpace = withPos do
@@ -42,6 +84,13 @@ lexSpace = withPos do
     space = 1 <$ char ' '
     tab = tabLength <$ char '\t'
 {-# INLINE lexSpace #-}
+
+lexNewlines :: Lexer (WithPos Symbol)
+lexNewlines = withPos do
+  Newlines <$ takeWhile1P (Just "newlines") isNewline
+  where
+    isNewline c = c == '\r' || c == '\n'
+{-# INLINE lexNewlines #-}
 
 lexSymbol :: Lexer (WithPos Symbol)
 lexSymbol = withPos do
@@ -127,13 +176,6 @@ lexString = label "string" do
   void $ char '"'
   String False . T.pack <$> manyTill charLiteral (char '"')
 
-lexNewlines :: Lexer (WithPos Symbol)
-lexNewlines = withPos do
-  Newlines <$ takeWhile1P (Just "newlines") isNewline
-  where
-    isNewline c = c == '\r' || c == '\n'
-{-# INLINE lexNewlines #-}
-
 withPos :: Lexer Symbol -> Lexer (WithPos Symbol)
 withPos m = do
   startPos <- getSourcePos
@@ -141,57 +183,5 @@ withPos m = do
   value <- m
   endOffset <- getOffset
   endPos <- getSourcePos
-  pure WithPos {startPos, endPos, length = endOffset - startOffset + 1, value}
+  pure WithPos {startPos, endPos, length = endOffset - startOffset, value}
 {-# INLINEABLE withPos #-}
-
--- * Recognize Indentation
-
--- | Convert every pair of @Newlines@ and @Space@ to @IndentStart@ and @IndentEnd@.
---
--- Rules:
---
--- - newline and m spaces -> @IndentStart m@ (current indentation level n \< m) or @IndentEnd m@ (current indentation level n \> m)
--- - If current indentation level n == m, insert @IndentEnd m@  and @IndentStart m@
-foldIndent :: LexStream -> LexStream
-foldIndent l@LexStream {unLexStream} = l {unLexStream = go [] mempty $ preprocess unLexStream}
-  where
-    -- remove Space between Newlines (empty lines)
-    preprocess :: [WithPos Symbol] -> [WithPos Symbol]
-    preprocess [] = []
-    preprocess (WithPos {value = Newlines} : WithPos {value = Space _} : x@WithPos {value = Newlines} : xs) = x : preprocess xs
-    preprocess (x : xs) = x : preprocess xs
-    go :: [Int] -> [WithPos Symbol] -> [WithPos Symbol] -> [WithPos Symbol]
-    go [] acc [] = reverse acc
-    go ns acc@(WithPos {endPos} : _) [] = go [] acc $ map (\l -> WithPos {startPos = endPos, endPos, length = 0, value = IndentEnd l}) ns
-    go (_ : _) [] [] = error "impossible"
-    go ns acc (WithPos {startPos, endPos = endPosN, length = l1, value = Newlines} : WithPos {startPos = startPosS, endPos, length = l2, value = Space m} : xs') =
-      case ns of
-        []
-          | m > 0 ->
-              -- Insert IndentStart and go to level m
-              go [m] (WithPos {startPos, endPos, length = l1 + l2, value = IndentStart m} : acc) xs'
-          | otherwise ->
-              -- If m == 0, just ignore Newlines and Space
-              go [] acc xs'
-        n : ns
-          | m > n ->
-              -- Insert IndentStart and go to level m
-              go (m : n : ns) (WithPos {startPos, endPos, length = l1 + l2, value = IndentStart m} : acc) xs'
-          | m < n ->
-              -- Insert IndentEnd and go to level m
-              let (dropped, rest) = span (m <) (n : ns)
-               in go rest (map (\l -> WithPos {startPos, endPos, length = 0, value = IndentEnd l}) (reverse dropped) <> acc) xs'
-          | otherwise ->
-              -- Continue current level
-              go
-                (n : ns)
-                ( WithPos {startPos = startPosS, endPos, length = l2, value = IndentStart n}
-                    : WithPos {startPos, endPos = endPosN, length = l1, value = IndentEnd n}
-                    : acc
-                )
-                xs'
-    go ns acc (x@WithPos {endPos, value = Newlines} : xs') =
-      -- insert Space 0 to xs
-      go ns acc (x : WithPos {startPos = endPos, endPos, length = 0, value = Space 0} : xs')
-    go ns acc (WithPos {value = Space _} : xs) = go ns acc xs
-    go ns acc (x : xs) = go ns (x : acc) xs

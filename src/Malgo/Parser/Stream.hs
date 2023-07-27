@@ -261,4 +261,3 @@ instance TraversableStream LexStream where
           Nothing -> 0
           Just nePre -> tokensLength (Proxy @LexStream) nePre
       restOfLine = T.takeWhile (/= '\n') postStr
-  {-# INLINEABLE reachOffset #-}

@@ -6,6 +6,7 @@ import Control.Monad.Reader
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text qualified as T
 import Koriel.Id
+import Koriel.Pretty
 import Malgo.Parser.Stream (LexStream)
 import Malgo.Parser.Stream qualified as L
 import Malgo.Prelude hiding (All)
@@ -13,8 +14,6 @@ import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec qualified as M
-import Debug.Trace (traceM, traceShowM)
-import Koriel.Pretty
 
 type Parser = ReaderT Int (Parsec Void LexStream)
 
@@ -158,7 +157,6 @@ pImport = label "import" do
 pExpr :: Parser (Expr (Malgo Parse))
 pExpr = do
   start <- getSourcePos
-  traceShowM $ "pExpr:" <+> pretty start
   expr <- pOpApp
   try (pAnnotation start expr)
     <|> pure expr
@@ -257,9 +255,7 @@ pFun = do
     pClause :: Parser (Clause (Malgo Parse))
     pClause = do
       start <- getSourcePos
-      traceShowM $ "pClause: " <> pretty start
       pat <- try (some pSinglePat <* reservedOp L.Arrow) <|> pure []
-      traceShowM $ "pClause: " <> pretty pat
       stmts <- do
         start <- getSourcePos
         stmts <- pStmts
@@ -271,8 +267,6 @@ pFun = do
       NonEmpty.fromList <$> asList pStmt
     pStmt :: Parser (Stmt (Malgo Parse))
     pStmt = do
-      pos <- getSourcePos
-      traceShowM $ "pStmt: " <> pretty pos
       choice [pLet, pWith, pNoBind]
     pLet = do
       start <- getSourcePos
@@ -299,7 +293,6 @@ pFun = do
         ]
     pNoBind = do
       start <- getSourcePos
-      traceShowM $ "pNoBind: " <> pretty start
       e <- pExpr
       end <- getSourcePos
       pure $ NoBind (Range start end) e
@@ -319,11 +312,7 @@ pPat = do
 
 pSinglePat :: Parser (Pat (Malgo Parse))
 pSinglePat = do
-  pos <- getSourcePos
-  traceShowM $ "pSinglePat: " <> pretty pos 
-  x <- choice [pVarP, pConP, try pUnboxedP, pBoxedP, pParenP, pRecordP, pListP]
-  traceShowM $ "pSinglePat: " <> pretty x
-  pure x
+  choice [pVarP, pConP, try pUnboxedP, pBoxedP, pParenP, pRecordP, pListP]
   where
     pVarP :: Parser (Pat (Malgo Parse))
     pVarP = do
@@ -359,16 +348,13 @@ pSinglePat = do
     pRecordP :: Parser (Pat (Malgo Parse))
     pRecordP = do
       start <- getSourcePos
-      traceShowM $ "pRecordP: " <> pretty start
       kvs <- between (reservedOp L.LBrace) (reservedOp L.RBrace) do
         asList pRecordPEntry
       end <- getSourcePos
       pure $ RecordP (Range start end) kvs
       where
         pRecordPEntry = do
-          pos <- getSourcePos
           label <- lowerIdent
-          traceShowM $ "pRecordPEntry: " <> pretty pos <+> pretty label
           reservedOp L.Equal
           pat <- pPat
           pure (label, pat)
@@ -381,7 +367,7 @@ pSinglePat = do
 -- * Type
 
 pType :: Parser (Type (Malgo Parse))
-pType = makeExprParser pTyTerm opTable
+pType = label "type" $ makeExprParser pTyTerm opTable
   where
     opTable =
       [ [ InfixR do
@@ -401,12 +387,13 @@ pType = makeExprParser pTyTerm opTable
 
 pSingleType :: Parser (Type (Malgo Parse))
 pSingleType =
-  choice
-    [ pTyVar,
-      pTyCon,
-      pTyParen,
-      pTyBrace
-    ]
+  label "single type"
+    $ choice
+      [ pTyVar,
+        pTyCon,
+        pTyParen,
+        pTyBrace
+      ]
   where
     pTyVar = do
       start <- getSourcePos

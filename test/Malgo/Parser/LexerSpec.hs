@@ -10,20 +10,18 @@ spec :: SpecWith ()
 spec = parallel do
   traverse_ lexTest testCases
 
-lexTest :: (String, Text, [Symbol], [Symbol]) -> SpecWith ()
-lexTest (name, input, expected, folded) = it name do
+lexTest :: (String, Text, [Symbol]) -> SpecWith ()
+lexTest (name, input, folded) = it name do
   case lex "" input of
     Left err -> expectationFailure (errorBundlePretty err)
     Right actual -> do
-      map (.value) actual.unLexStream `shouldBe` expected
-      map (.value) (foldIndent actual).unLexStream `shouldBe` folded
+      map (.value) actual.unLexStream `shouldBe` folded
 
-testCases :: [(String, Text, [Symbol], [Symbol])]
+testCases :: [(String, Text, [Symbol])]
 testCases =
   [ ( "identity function",
       "{x -> x}",
-      [ReservedOp LBrace, Ident "x", Space 1, ReservedOp Arrow, Space 1, Ident "x", ReservedOp RBrace],
-      [ReservedOp LBrace, Ident "x", ReservedOp Arrow, Ident "x", ReservedOp RBrace]
+      [ReservedOp LBrace, Ident "x", Space 1, ReservedOp Arrow, Space 1, Ident "x", ReservedOp RBrace]
     ),
     ( "identity function with newlines",
       T.unlines
@@ -32,13 +30,11 @@ testCases =
           "    x",
           "}"
         ],
-      [ReservedOp LBrace, Newlines, Space 2, Ident "x", Space 1, ReservedOp Arrow, Newlines, Space 4, Ident "x", Newlines, ReservedOp RBrace, Newlines],
-      [ReservedOp LBrace, IndentStart 2, Ident "x", ReservedOp Arrow, IndentStart 4, Ident "x", IndentEnd 4, IndentEnd 2, ReservedOp RBrace]
+      [ReservedOp LBrace, IndentStart 2, Ident "x", Space 1, ReservedOp Arrow, IndentStart 4, Ident "x", IndentEnd 4, IndentEnd 2, ReservedOp RBrace, Newlines]
     ),
     ( "record type",
       "{ a: Int, b : Int#}",
-      [ReservedOp LBrace, Space 1, Ident "a", ReservedOp Colon, Space 1, Ident "Int", ReservedOp Comma, Space 1, Ident "b", Space 1, ReservedOp Colon, Space 1, Ident "Int#", ReservedOp RBrace],
-      [ReservedOp LBrace, Ident "a", ReservedOp Colon, Ident "Int", ReservedOp Comma, Ident "b", ReservedOp Colon, Ident "Int#", ReservedOp RBrace]
+      [ReservedOp LBrace, Space 1, Ident "a", ReservedOp Colon, Space 1, Ident "Int", ReservedOp Comma, Space 1, Ident "b", Space 1, ReservedOp Colon, Space 1, Ident "Int#", ReservedOp RBrace]
     ),
     ( "pattern match case 1",
       T.unlines
@@ -48,16 +44,10 @@ testCases =
           "}"
         ],
       concat
-        [ [ReservedOp LBrace, Newlines],
-          [Space 2, Ident "Nil", Space 1, ReservedOp Arrow, Space 1, Int False 0, Newlines],
-          [Space 2, Ident "Cons", Space 1, Ident "x", Space 1, Ident "xs", Space 1, ReservedOp Arrow, Space 1, Ident "x", Space 1, Operator "+", Space 1, Ident "xs", Newlines],
-          [ReservedOp RBrace, Newlines]
-        ],
-      concat
         [ [ReservedOp LBrace],
-          [IndentStart 2, Ident "Nil", ReservedOp Arrow, Int False 0, IndentEnd 2],
-          [IndentStart 2, Ident "Cons", Ident "x", Ident "xs", ReservedOp Arrow, Ident "x", Operator "+", Ident "xs", IndentEnd 2],
-          [ReservedOp RBrace]
+          [IndentStart 2, Ident "Nil", Space 1, ReservedOp Arrow, Space 1, Int False 0, IndentEnd 2],
+          [IndentStart 2, Ident "Cons", Space 1, Ident "x", Space 1, Ident "xs", Space 1, ReservedOp Arrow, Space 1, Ident "x", Space 1, Operator "+", Space 1, Ident "xs", IndentEnd 2],
+          [ReservedOp RBrace, Newlines]
         ]
     ),
     ( "pattern match case 2",
@@ -69,17 +59,10 @@ testCases =
           "  }"
         ],
       concat
-        [ [ReservedOp Equal, Newlines],
-          [Space 2, ReservedOp LBrace, Newlines],
-          [Space 4, Ident "Nil", Space 1, ReservedOp Arrow, Space 1, Int False 0, Newlines],
-          [Space 4, Ident "Cons", Space 1, Ident "x", Space 1, Ident "xs", Space 1, ReservedOp Arrow, Space 1, Ident "x", Space 1, Operator "+", Space 1, Ident "xs", Newlines],
-          [Space 2, ReservedOp RBrace, Newlines]
-        ],
-      concat
         [ [ReservedOp Equal],
           [IndentStart 2, ReservedOp LBrace],
-          [IndentStart 4, Ident "Nil", ReservedOp Arrow, Int False 0, IndentEnd 4],
-          [IndentStart 4, Ident "Cons", Ident "x", Ident "xs", ReservedOp Arrow, Ident "x", Operator "+", Ident "xs", IndentEnd 4],
+          [IndentStart 4, Ident "Nil", Space 1, ReservedOp Arrow, Space 1, Int False 0, IndentEnd 4],
+          [IndentStart 4, Ident "Cons", Space 1, Ident "x", Space 1, Ident "xs", Space 1, ReservedOp Arrow, Space 1, Ident "x", Space 1, Operator "+", Space 1, Ident "xs", IndentEnd 4],
           [ReservedOp RBrace, IndentEnd 2]
         ]
     ),
@@ -92,17 +75,10 @@ testCases =
           "  }"
         ],
       concat
-        [ [ReservedOp Equal, Newlines],
-          [Space 2, ReservedOp LBrace, Newlines],
-          [Space 6, Ident "Nil", Space 1, ReservedOp Arrow, Space 1, Int False 0, Newlines],
-          [Space 4, Ident "Cons", Space 1, Ident "x", Space 1, Ident "xs", Space 1, ReservedOp Arrow, Space 1, Ident "x", Space 1, Operator "+", Space 1, Ident "xs", Newlines],
-          [Space 2, ReservedOp RBrace, Newlines]
-        ],
-      concat
         [ [ReservedOp Equal],
           [IndentStart 2, ReservedOp LBrace],
-          [IndentStart 6, Ident "Nil", ReservedOp Arrow, Int False 0, IndentEnd 6],
-          [Ident "Cons", Ident "x", Ident "xs", ReservedOp Arrow, Ident "x", Operator "+", Ident "xs"],
+          [IndentStart 6, Ident "Nil", Space 1, ReservedOp Arrow, Space 1, Int False 0, IndentEnd 6],
+          [Ident "Cons", Space 1, Ident "x", Space 1, Ident "xs", Space 1, ReservedOp Arrow, Space 1, Ident "x", Space 1, Operator "+", Space 1, Ident "xs"],
           [IndentEnd 2, IndentStart 2, ReservedOp RBrace, IndentEnd 2]
         ]
     ),
@@ -116,54 +92,44 @@ testCases =
           "}"
         ],
       concat
-        [ [ReservedId Def, Space 1, Ident "main", Space 1, ReservedOp Equal, Space 1, ReservedOp LBrace, Newlines],
-          [Space 2, ReservedOp LParen, Ident "null", Space 1, ReservedOp LParen, Ident "Cons", Space 1, Ident "True", Space 1, ReservedOp LParen, Ident "Cons", Space 1, Ident "True", Space 1, Ident "Nil", ReservedOp RParen, ReservedOp RParen, ReservedOp RParen, Newlines],
-          [Space 4, Operator "|>", Space 1, ReservedOp LBrace, Space 1, Ident "False", Space 1, ReservedOp Arrow, Space 1, Ident "malgo_print_string", Space 1, Ident "ok", Newlines],
-          [Space 7, ReservedOp Bar, Space 1, Ident "True", Space 1, ReservedOp Arrow, Space 1, Ident "malgo_exit_failure", Space 1, ReservedOp LParen, ReservedOp RParen, Newlines],
-          [Space 7, ReservedOp RBrace, Newlines, ReservedOp RBrace, Newlines]
-        ],
-      concat
-        [ [ReservedId Def, Ident "main", ReservedOp Equal, ReservedOp LBrace],
-          [IndentStart 2, ReservedOp LParen, Ident "null", ReservedOp LParen, Ident "Cons", Ident "True", ReservedOp LParen, Ident "Cons", Ident "True", Ident "Nil", ReservedOp RParen, ReservedOp RParen, ReservedOp RParen],
-          [IndentStart 4, Operator "|>", ReservedOp LBrace, Ident "False", ReservedOp Arrow, Ident "malgo_print_string", Ident "ok"],
-          [IndentStart 7, ReservedOp Bar, Ident "True", ReservedOp Arrow, Ident "malgo_exit_failure", ReservedOp LParen, ReservedOp RParen, IndentEnd 7],
+        [ [ReservedId Def, Space 1, Ident "main", Space 1, ReservedOp Equal, Space 1, ReservedOp LBrace],
+          [IndentStart 2, ReservedOp LParen, Ident "null", Space 1, ReservedOp LParen, Ident "Cons", Space 1, Ident "True", Space 1, ReservedOp LParen, Ident "Cons", Space 1, Ident "True", Space 1, Ident "Nil", ReservedOp RParen, ReservedOp RParen, ReservedOp RParen],
+          [IndentStart 4, Operator "|>", Space 1, ReservedOp LBrace, Space 1, Ident "False", Space 1, ReservedOp Arrow, Space 1, Ident "malgo_print_string", Space 1, Ident "ok"],
+          [IndentStart 7, ReservedOp Bar, Space 1, Ident "True", Space 1, ReservedOp Arrow, Space 1, Ident "malgo_exit_failure", Space 1, ReservedOp LParen, ReservedOp RParen, IndentEnd 7],
           [IndentStart 7, ReservedOp RBrace, IndentEnd 7],
-          [IndentEnd 4, IndentEnd 2, ReservedOp RBrace]
+          [IndentEnd 4, IndentEnd 2, ReservedOp RBrace, Newlines]
         ]
     ),
     ( "module import patterns",
       "{..} {x, A, (+)}",
-      [ReservedOp LBrace, ReservedOp DotDot, ReservedOp RBrace, Space 1, ReservedOp LBrace, Ident "x", ReservedOp Comma, Space 1, Ident "A", ReservedOp Comma, Space 1, ReservedOp LParen, Operator "+", ReservedOp RParen, ReservedOp RBrace],
-      [ReservedOp LBrace, ReservedOp DotDot, ReservedOp RBrace, ReservedOp LBrace, Ident "x", ReservedOp Comma, Ident "A", ReservedOp Comma, ReservedOp LParen, Operator "+", ReservedOp RParen, ReservedOp RBrace]
+      [ReservedOp LBrace, ReservedOp DotDot, ReservedOp RBrace, Space 1, ReservedOp LBrace, Ident "x", ReservedOp Comma, Space 1, Ident "A", ReservedOp Comma, Space 1, ReservedOp LParen, Operator "+", ReservedOp RParen, ReservedOp RBrace]
     ),
     ( "empty line",
       "def\n main\n \n  = 0",
-      [ReservedId Def, Newlines, Space 1, Ident "main", Newlines, Space 1, Newlines, Space 2, ReservedOp Equal, Space 1, Int False 0],
-      [ReservedId Def, IndentStart 1, Ident "main", IndentStart 2, ReservedOp Equal, Int False 0, IndentEnd 2, IndentEnd 1]
+      [ReservedId Def, IndentStart 1, Ident "main", Newlines, Space 1, IndentStart 2, ReservedOp Equal, Space 1, Int False 0, IndentEnd 2, IndentEnd 1]
     ),
     ( "infix",
       "infixr 2 (<|>)",
-      [ReservedId Infixr, Space 1, Int False 2, Space 1, ReservedOp LParen, Operator "<|>", ReservedOp RParen],
-      [ReservedId Infixr, Int False 2, ReservedOp LParen, Operator "<|>", ReservedOp RParen]
+      [ReservedId Infixr, Space 1, Int False 2, Space 1, ReservedOp LParen, Operator "<|>", ReservedOp RParen]
     ),
     ( "qualified variable",
       "M.x D . y N..N.+",
-      [Qualified "M" (Ident "x"), Space 1, Ident "D", Space 1, Operator ".", Space 1, Ident "y", Space 1, Qualified "N" (Operator "."), Qualified "N" (Operator "+")],
-      [Qualified "M" (Ident "x"), Ident "D", Operator ".", Ident "y", Qualified "N" (Operator "."), Qualified "N" (Operator "+")]
+      [Qualified "M" (Ident "x"), Space 1, Ident "D", Space 1, Operator ".", Space 1, Ident "y", Space 1, Qualified "N" (Operator "."), Qualified "N" (Operator "+")]
     ),
     ( "line comment",
       "-- comment",
-      [],
       []
     ),
     ( "block comment",
       "{- comment -}",
-      [],
       []
     ),
-    ("underscore",
-    "{ fst = x, snd = _ }",
-    [ReservedOp LBrace, Space 1, Ident "fst", Space 1, ReservedOp Equal, Space 1, Ident "x", ReservedOp Comma, Space 1, Ident "snd", Space 1, ReservedOp Equal, Space 1,Ident "_", Space 1, ReservedOp RBrace],
-    [ReservedOp LBrace, Ident "fst", ReservedOp Equal, Ident "x", ReservedOp Comma, Ident "snd", ReservedOp Equal, Ident "_", ReservedOp RBrace]
+    ( "underscore",
+      "{ fst = x, snd = _ }",
+      [ReservedOp LBrace, Space 1, Ident "fst", Space 1, ReservedOp Equal, Space 1, Ident "x", ReservedOp Comma, Space 1, Ident "snd", Space 1, ReservedOp Equal, Space 1, Ident "_", Space 1, ReservedOp RBrace]
+    ),
+    ( "multiple defs",
+      "\n  def f = 0\n  def g = 1",
+      [IndentStart 2, ReservedId Def, Space 1, Ident "f", Space 1, ReservedOp Equal, Space 1, Int False 0, IndentEnd 2, IndentStart 2, ReservedId Def, Space 1, Ident "g", Space 1, ReservedOp Equal, Space 1, Int False 1, IndentEnd 2]
     )
   ]

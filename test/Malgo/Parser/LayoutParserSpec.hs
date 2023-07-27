@@ -3,7 +3,7 @@ module Malgo.Parser.LayoutParserSpec (spec) where
 import Data.ByteString qualified as BS
 import Data.Traversable (for)
 import Malgo.Parser.LayoutParser (parse)
-import Malgo.Parser.Lexer (foldIndent, lex)
+import Malgo.Parser.Lexer (lex)
 import Malgo.Prelude hiding (lex)
 import System.Directory (listDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, (</>))
@@ -11,7 +11,6 @@ import Test.Hspec
   ( SpecWith,
     expectationFailure,
     it,
-    parallel,
     runIO,
   )
 import Text.Megaparsec (errorBundlePretty)
@@ -25,7 +24,7 @@ test :: (String, Text) -> SpecWith ()
 test (name, input) = it name do
   case lex name input of
     Left err -> expectationFailure ("lex: " <> errorBundlePretty err)
-    Right tokens -> case parse name $ foldIndent tokens of
+    Right tokens -> case parse name tokens of
       Left err -> expectationFailure ("parse: " <> errorBundlePretty err)
       Right _ -> pass
 
