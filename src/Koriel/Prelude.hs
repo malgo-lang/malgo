@@ -52,6 +52,7 @@ module Koriel.Prelude
     chomp,
     asumMap,
     PrettyShow (..),
+    undefined,
 
     -- * Lift IO functions
 
@@ -120,13 +121,15 @@ import Data.Text (Text)
 import Data.Text.IO qualified as T
 import Data.Void
 import Error.Diagnose.Compat.Megaparsec (HasHints (hints))
+import GHC.Base (RuntimeRep, TYPE)
 import GHC.Exts (sortWith)
 import GHC.Generics (Generic)
 import GHC.Stack (HasCallStack)
 import Prettyprinter
 import System.IO (Handle, stderr, stdin, stdout)
 import System.IO qualified
-import Prelude hiding (id, unzip)
+import Prelude hiding (id, undefined, unzip)
+import Prelude qualified
 
 identity :: a -> a
 identity x = x
@@ -167,6 +170,10 @@ newtype PrettyShow a = PrettyShow a
 
 instance (Show a) => Pretty (PrettyShow a) where
   pretty (PrettyShow a) = pretty $ convertString @_ @Text $ show a
+
+undefined :: forall (r :: RuntimeRep). forall (a :: TYPE r). (HasCallStack) => a
+undefined = Prelude.undefined
+{-# WARNING undefined "'undefined' function remains in code" #-}
 
 -- Lift IO funcitons
 

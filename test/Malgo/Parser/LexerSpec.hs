@@ -160,5 +160,10 @@ testCases =
       "{- comment -}",
       [],
       []
+    ),
+    ("underscore",
+    "{ fst = x, snd = _ }",
+    [ReservedOp LBrace, Space 1, Ident "fst", Space 1, ReservedOp Equal, Space 1, Ident "x", ReservedOp Comma, Space 1, Ident "snd", Space 1, ReservedOp Equal, Space 1,Ident "_", Space 1, ReservedOp RBrace],
+    [ReservedOp LBrace, Ident "fst", ReservedOp Equal, Ident "x", ReservedOp Comma, Ident "snd", ReservedOp Equal, Ident "_", ReservedOp RBrace]
     )
   ]

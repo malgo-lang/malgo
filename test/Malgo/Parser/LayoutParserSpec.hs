@@ -17,15 +17,15 @@ import Test.Hspec
 import Text.Megaparsec (errorBundlePretty)
 
 spec :: SpecWith ()
-spec = parallel do
+spec = do
   testCases <- runIO loadTestCases
   traverse_ test testCases
 
 test :: (String, Text) -> SpecWith ()
 test (name, input) = it name do
-  case lex "" input of
+  case lex name input of
     Left err -> expectationFailure ("lex: " <> errorBundlePretty err)
-    Right tokens -> case parse "" $ foldIndent tokens of
+    Right tokens -> case parse name $ foldIndent tokens of
       Left err -> expectationFailure ("parse: " <> errorBundlePretty err)
       Right _ -> pass
 
