@@ -15,12 +15,16 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
+      - name: add llvm repo
+        uses: myci-actions/add-deb-repo@11
+        with:
+          repo: deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main
+          repo-name: llvm
+          keys-asc: https://apt.llvm.org/llvm-snapshot.gpg.key
       - name: Install packages
         run: |
           sudo apt-get update
           sudo apt-get install -y libgc-dev
-          sudo echo 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main' >> /etc/apt/sources.list
-          sudo echo 'deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main' >> /etc/apt/sources.list
           sudo apt-get install -y llvm-15-dev clang-15
       - uses: actions/checkout@v2
       - name: Cache .cabal
