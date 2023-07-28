@@ -110,10 +110,10 @@ pInfix :: Parser (Decl (Malgo Parse))
 pInfix = label "infix" do
   start <- getSourcePos
   assoc <- choice [reserved L.Infixl $> LeftA, reserved L.Infixr $> RightA, reserved L.Infix $> NeutralA]
-  i <- int
+  Int32 i <- int32 False
   name <- between (reservedOp L.LParen) (reservedOp L.RParen) operator
   end <- getSourcePos
-  pure $ Infix (Range start end) assoc i name
+  pure $ Infix (Range start end) assoc (fromIntegral i) name
 
 pForeign :: Parser (Decl (Malgo Parse))
 pForeign = label "foreign import" do
@@ -267,8 +267,10 @@ pFun = do
   pure $ Fn (Range start end) clauses
   where
     pClauses =
-      try (blocks pClause >>= \xs -> notFollowedBy (reservedOp L.Bar) >> pure xs)
-        <|> (optional (reservedOp L.Bar) >> pClause `sepBy1` reservedOp L.Bar)
+      -- Try to parse clauses with `|` first.
+      -- If try blocks first, we cannot parse multiple statements.
+      try (optional (reservedOp L.Bar) >> pClause `sepBy1` reservedOp L.Bar)
+        <|> (blocks pClause >>= \xs -> notFollowedBy (reservedOp L.Bar) >> pure xs)
     pClause :: Parser (Clause (Malgo Parse))
     pClause = do
       start <- getSourcePos
@@ -509,13 +511,58 @@ reservedOp r = label (show $ pretty r) $ lexeme $ void $ satisfy \case
   L.WithPos {value = L.ReservedOp r'} -> r == r'
   _ -> False
 
-int :: (Num n) => Parser n
-int = label "integer" do
+int32 :: Bool -> Parser (Literal x)
+int32 unboxed = label "integer" do
   lexeme
     $ token
     ?? mempty
     $ \case
-      L.WithPos {value = L.Int False x} -> Just $ fromInteger x
+      L.WithPos {value = L.Int32 unboxed' x} | unboxed == unboxed' -> Just (Int32 x)
+      _ -> Nothing
+
+int64 :: Bool -> Parser (Literal x)
+int64 unboxed = label "integer" do
+  lexeme
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Int64 unboxed' x} | unboxed == unboxed' -> Just (Int64 x)
+      _ -> Nothing
+
+float :: Bool -> Parser (Literal x)
+float unboxed = label "float" do
+  lexeme
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Float unboxed' x} | unboxed == unboxed' -> Just (Float x)
+      _ -> Nothing
+
+double :: Bool -> Parser (Literal x)
+double unboxed = label "double" do
+  lexeme
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Double unboxed' x} | unboxed == unboxed' -> Just (Double x)
+      _ -> Nothing
+
+char :: Bool -> Parser (Literal x)
+char unboxed = label "char" do
+  lexeme
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.Char unboxed' x} | unboxed == unboxed' -> Just (Char x)
+      _ -> Nothing
+
+string :: Bool -> Parser (Literal x)
+string unboxed = label "string" do
+  lexeme
+    $ token
+    ?? mempty
+    $ \case
+      L.WithPos {value = L.String unboxed' x} | unboxed == unboxed' -> Just (String x)
       _ -> Nothing
 
 lexeme :: Parser a -> Parser a
@@ -576,8 +623,10 @@ pUnboxed = label "unboxed literal"
   $ token
   ?? mempty
   $ \case
-    L.WithPos {value = L.Int True x} -> Just $ Int32 $ fromInteger x
-    L.WithPos {value = L.Float True x} -> Just $ Double x
+    L.WithPos {value = L.Int32 True x} -> Just $ Int32 x
+    L.WithPos {value = L.Int64 True x} -> Just $ Int64 x
+    L.WithPos {value = L.Float True x} -> Just $ Float x
+    L.WithPos {value = L.Double True x} -> Just $ Double x
     L.WithPos {value = L.Char True x} -> Just $ Char x
     L.WithPos {value = L.String True x} -> Just $ String x
     _ -> Nothing
@@ -588,8 +637,10 @@ pBoxed = label "boxed literal"
   $ token
   ?? mempty
   $ \case
-    L.WithPos {value = L.Int False x} -> Just $ Int32 $ fromInteger x
-    L.WithPos {value = L.Float False x} -> Just $ Double x
+    L.WithPos {value = L.Int32 False x} -> Just $ Int32 x
+    L.WithPos {value = L.Int64 False x} -> Just $ Int64 x
+    L.WithPos {value = L.Float False x} -> Just $ Float x
+    L.WithPos {value = L.Double False x} -> Just $ Double x
     L.WithPos {value = L.Char False x} -> Just $ Char x
     L.WithPos {value = L.String False x} -> Just $ String x
     _ -> Nothing

@@ -42,6 +42,7 @@ import System.Time.Extra (timeout)
 import Test.Hspec
   ( SpecWith,
     anyException,
+    beforeAll_,
     describe,
     example,
     it,
@@ -49,7 +50,6 @@ import Test.Hspec
     runIO,
     shouldBe,
     shouldThrow,
-    xdescribe,
   )
 
 testcaseDir :: FilePath
@@ -59,40 +59,43 @@ outputDir :: FilePath
 outputDir = "./test/tmp/malgo_test"
 
 spec :: SpecWith ()
-spec = xdescribe "Driver test (E2E)"
+spec = describe "Driver test (E2E)"
   $ parallel do
     -- Setup directory for test
-    runIO setupTestDir
     -- Setup malgo base library
-    runIO do
-      setupRuntime
-      setupBuiltin
-      setupPrelude
-    testcases <- runIO (filter (isExtensionOf "mlg") <$> listDirectory testcaseDir)
-    describe "Test malgo to-ll" do
-      for_ testcases \testcase -> do
-        describe testcase do
-          it ("test normal case " <> testcase) $ example do
-            testNormal (testcaseDir </> testcase)
-          it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
-            testNoNo (testcaseDir </> testcase)
-          it ("test noopt case " <> testcase <> " (no optimization)") $ example do
-            testNoOpt (testcaseDir </> testcase)
-          it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
-            testNoLift (testcaseDir </> testcase)
-          it ("test agressive case " <> testcase <> " (agressive optimization)") $ example do
-            testAggressive (testcaseDir </> testcase)
-    examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
-    describe "Test example malgo to-ll" do
-      for_ examples \examplecase -> do
-        it ("test " <> examplecase) $ example do
-          testNormal ("./examples/malgo" </> examplecase)
-    errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
-    describe "Test malgo to-ll (must be error)" do
-      for_ errorcases \errorcase -> do
-        it ("test error case " <> errorcase)
-          $ testError (testcaseDir </> "error" </> errorcase)
-          `shouldThrow` anyException
+    beforeAll_
+      ( do
+          setupTestDir
+          setupRuntime
+          setupBuiltin
+          setupPrelude
+      )
+      do
+        testcases <- runIO (filter (isExtensionOf "mlg") <$> listDirectory testcaseDir)
+        describe "Test malgo to-ll" do
+          for_ testcases \testcase -> do
+            describe testcase do
+              it ("test normal case " <> testcase) $ example do
+                testNormal (testcaseDir </> testcase)
+              it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
+                testNoNo (testcaseDir </> testcase)
+              it ("test noopt case " <> testcase <> " (no optimization)") $ example do
+                testNoOpt (testcaseDir </> testcase)
+              it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
+                testNoLift (testcaseDir </> testcase)
+              it ("test agressive case " <> testcase <> " (agressive optimization)") $ example do
+                testAggressive (testcaseDir </> testcase)
+        examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
+        describe "Test example malgo to-ll" do
+          for_ examples \examplecase -> do
+            it ("test " <> examplecase) $ example do
+              testNormal ("./examples/malgo" </> examplecase)
+        errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
+        describe "Test malgo to-ll (must be error)" do
+          for_ errorcases \errorcase -> do
+            it ("test error case " <> errorcase)
+              $ testError (testcaseDir </> "error" </> errorcase)
+              `shouldThrow` anyException
 
 setupTestDir :: IO ()
 setupTestDir = do

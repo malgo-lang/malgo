@@ -4,6 +4,7 @@ import Control.Monad.State
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Maybe (isJust)
 import Data.Text qualified as T
+import GHC.Float (double2Float)
 import Koriel.Pretty
 import Malgo.Parser.Stream
 import Malgo.Prelude hiding (Space, lex)
@@ -165,14 +166,16 @@ isOperator c = c `elem` ("+-*/\\%=><:;|&!#." :: String)
 lexInt :: Lexer Symbol
 lexInt = do
   x <- decimal
+  isInt64 <- isJust <$> optional (char 'l' <|> char 'L')
   unboxed <- isJust <$> optional (char '#')
-  pure $ Int unboxed x
+  pure $ if isInt64 then Int64 unboxed (fromInteger x) else Int32 unboxed (fromInteger x)
 
 lexFloat :: Lexer Symbol
 lexFloat = do
   x <- float
+  isFloat <- isJust <$> optional (char 'f' <|> char 'F')
   unboxed <- isJust <$> optional (char '#')
-  pure $ Float unboxed x
+  pure $ if isFloat then Float unboxed (double2Float x) else Double unboxed x
 
 lexChar :: Lexer Symbol
 lexChar = label "char" do

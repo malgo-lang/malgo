@@ -30,11 +30,19 @@ data Symbol
     Ident Text
   | -- | operator
     Operator Text
-  | Int
+  | Int32
       -- | is unboxed
       Bool
-      Integer
+      Int32
+  | Int64
+      -- | is unboxed
+      Bool
+      Int64
   | Float
+      -- | is unboxed
+      Bool
+      Float
+  | Double
       -- | is unboxed
       Bool
       Double
@@ -59,10 +67,14 @@ instance Pretty Symbol where
   pretty (Qualified moduleName name) = "<qualified " <> pretty moduleName <> "." <> pretty name <> ">"
   pretty (Ident x) = "<ident " <> pretty x <> ">"
   pretty (Operator x) = "<operator " <> pretty x <> ">"
-  pretty (Int False x) = "<int " <> pretty x <> ">"
-  pretty (Int True x) = "<int# " <> pretty x <> ">"
+  pretty (Int32 False x) = "<int32 " <> pretty x <> ">"
+  pretty (Int32 True x) = "<int32# " <> pretty x <> ">"
+  pretty (Int64 False x) = "<int64 " <> pretty x <> ">"
+  pretty (Int64 True x) = "<int64# " <> pretty x <> ">"
   pretty (Float False x) = "<float " <> pretty x <> ">"
   pretty (Float True x) = "<float# " <> pretty x <> ">"
+  pretty (Double False x) = "<double " <> pretty x <> ">"
+  pretty (Double True x) = "<double# " <> pretty x <> ">"
   pretty (Char False x) = "<char " <> pretty x <> ">"
   pretty (Char True x) = "<char# " <> pretty x <> ">"
   pretty (String False x) = "<string " <> pretty x <> ">"
