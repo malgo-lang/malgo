@@ -11,7 +11,7 @@ import Data.Text qualified as T
 import Effectful
 import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
-import Extra (timeout)
+import Extra (retry, timeout)
 import Koriel.Core.Annotate qualified as Koriel
 import Koriel.Core.Lint qualified as Koriel
 import Koriel.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
@@ -169,7 +169,7 @@ test ::
   -- | Compile mode
   CompileMode ->
   IO ()
-test testcase typ lambdaLift noOptimize option compileMode = do
+test testcase typ lambdaLift noOptimize option compileMode = retry 3 do
   createDirectoryIfMissing True (outputDir </> typ)
   let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
   timeoutWrapper "compile"

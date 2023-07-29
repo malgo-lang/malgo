@@ -6,14 +6,14 @@ module Eventually = {
                     | NotYetDone { Eventually a }
 
   type EventuallyBuilder a b = {
-    bind : Eventually a -> (a -> Eventually b) -> Eventually b;
-    return : a -> Eventually a;
+    bind : Eventually a -> (a -> Eventually b) -> Eventually b,
+    return : a -> Eventually a,
   }
 
   def eventually : EventuallyBuilder a b
   def eventually = {
-    bind = eventuallyBind;
-    return = Done;
+    bind = eventuallyBind,
+    return = Done,
   }
 
   def eventuallyBind : Eventually a -> (a -> Eventually b) -> Eventually b

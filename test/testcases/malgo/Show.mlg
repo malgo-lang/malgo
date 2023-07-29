@@ -7,12 +7,12 @@ module Show = {
   def (<>) = { x y -> appendString x y }
 
   type Show a = {
-    show : a -> String;
+    show : a -> String,
   }
 
   def showInt32 : Show Int32
   def showInt32 = {
-    show = { x -> toStringInt32 x };
+    show = { x -> toStringInt32 x },
   }
 
   def show : Show a -> a -> String
@@ -23,7 +23,7 @@ module Show = {
     showDictA showDictB -> {
       show = { (a, b) ->
         "(" <> show showDictA a <> ", " <> show showDictB b <> ")"
-      };
+      },
     }
   }
 
