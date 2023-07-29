@@ -191,12 +191,6 @@ pUnboxed =
         String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')
       ]
 
--- where
---   real :: Parser (Literal Unboxed)
---   real = do
---     f <- L.float
---     (char '#' >> pure (Double f)) <|> (string' "F#" >> pure (Float $ double2Float f))
-
 pVariable :: Parser (Expr (Malgo 'Parse))
 pVariable =
   -- try full path identifier like `Foo.bar`
