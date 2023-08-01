@@ -8,7 +8,7 @@ import Control.Concurrent (MVar, newMVar)
 import Control.Lens (makeFieldsNoPrefix, (.~))
 import Data.ByteString qualified as BS
 import Effectful
-import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
+import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
 import Koriel.Core.Parser qualified as Koriel
@@ -48,19 +48,19 @@ main = do
   case command of
     ToLL opt -> do
       opt <- pure $ opt {modulePaths = opt.modulePaths <> [takeDirectory opt.dstPath]}
-      runEff $
-        Driver.compile opt.srcPath
-          & runMalgoM
-            opt.srcPath
-            opt.modulePaths
-            opt.compileMode
-            Flag
-              { Flag.noOptimize = opt.noOptimize,
-                Flag.lambdaLift = opt.lambdaLift,
-                Flag.debugMode = opt.debugMode,
-                Flag.testMode = False
-              }
-            opt.optimizeOption
+      runEff
+        $ Driver.compile opt.srcPath
+        & runMalgoM
+          opt.srcPath
+          opt.modulePaths
+          opt.compileMode
+          Flag
+            { Flag.noOptimize = opt.noOptimize,
+              Flag.lambdaLift = opt.lambdaLift,
+              Flag.debugMode = opt.debugMode,
+              Flag.testMode = False
+            }
+          opt.optimizeOption
     Lsp opt -> do
       basePath <- getXdgDirectory XdgData ("malgo" </> "base")
       let ModulePathList modulePaths = opt.modulePaths
@@ -74,7 +74,7 @@ main = do
         Left err ->
           let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
               diag' = addFile diag srcPath (convertString srcContents)
-           in printDiagnostic stderr True True 4 defaultStyle diag' >> exitFailure
+           in printDiagnostic stderr WithUnicode (TabSize 4) defaultStyle diag' >> exitFailure
         Right prog -> do
           putText $ render $ pretty prog
 
@@ -136,9 +136,9 @@ parseCommand = do
   cache <- newMVar mempty
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build <|> subparser koriel) <**> helper) $
-          fullDesc
-            <> header "malgo programming language"
+      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build <|> subparser koriel) <**> helper)
+          $ fullDesc
+          <> header "malgo programming language"
       )
   case command of
     ToLL opt -> do
@@ -151,28 +151,28 @@ parseCommand = do
     Koriel opt -> pure $ Koriel opt
   where
     toLL =
-      command "to-ll" $
-        info (ToLL <$> toLLOpt) $
-          fullDesc
-            <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
-            <> header "malgo to LLVM Textual IR Compiler"
+      command "to-ll"
+        $ info (ToLL <$> toLLOpt)
+        $ fullDesc
+        <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
+        <> header "malgo to LLVM Textual IR Compiler"
     lsp cache = do
-      command "lsp" $
-        info (Lsp <$> lspOpt cache) $
-          fullDesc
-            <> progDesc "Language Server for Malgo"
-            <> header "Malgo Language Server"
+      command "lsp"
+        $ info (Lsp <$> lspOpt cache)
+        $ fullDesc
+        <> progDesc "Language Server for Malgo"
+        <> header "Malgo Language Server"
     build =
-      command "build" $
-        info (Build <$> buildOpt) $
-          fullDesc
-            <> progDesc "Build Malgo program"
-            <> header "malgo build"
+      command "build"
+        $ info (Build <$> buildOpt)
+        $ fullDesc
+        <> progDesc "Build Malgo program"
+        <> header "malgo build"
     buildOpt = pure BuildOpt
     koriel =
-      command "koriel" $
-        info (Koriel <$> korielOpt) $
-          fullDesc
-            <> progDesc "Koriel Compiler"
-            <> header "malgo koriel"
+      command "koriel"
+        $ info (Koriel <$> korielOpt)
+        $ fullDesc
+        <> progDesc "Koriel Compiler"
+        <> header "malgo koriel"
     korielOpt = KorielOpt <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")

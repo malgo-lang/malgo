@@ -11,7 +11,7 @@ import Data.Text.IO qualified as T
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Error.Diagnose (addFile, prettyDiagnostic)
+import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
 import Koriel.Core.CodeGen.LLVM qualified as LLVM
 import Koriel.Core.Flat qualified as Flat
@@ -199,7 +199,7 @@ compile srcPath = do
           diag' = addFile diag srcPath (toString src)
        in do
             let message =
-                  prettyDiagnostic True 4 diag'
+                  prettyDiagnostic WithUnicode (TabSize 4) diag'
                     & ( \x ->
                           if flags.testMode
                             then PrettyPrinter.unAnnotate x

@@ -9,7 +9,7 @@ import Data.List (intercalate)
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text qualified as T
 import Effectful
-import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
+import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Extra (retry, timeout)
 import Koriel.Core.Annotate qualified as Koriel
@@ -126,7 +126,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
           Left err ->
             let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
                 diag' = addFile diag korielPath (toString koriel)
-             in printDiagnostic stdout False False 4 defaultStyle diag' >> liftIO exitFailure
+             in printDiagnostic stdout WithUnicode (TabSize 4) defaultStyle diag' >> liftIO exitFailure
           Right ast -> do
             Koriel.lint True =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
       & runMalgoM

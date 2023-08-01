@@ -14,7 +14,7 @@ import Control.Lens.TH
 import Data.ByteString qualified as BS
 import Data.Store ()
 import Data.Store.TH (makeStore)
-import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
+import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), TabSize (..), WithUnicode (..), addFile, addReport, defaultStyle, printDiagnostic)
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.LSP.Types (Position (..), filePathToUri)
@@ -67,10 +67,10 @@ errorOn range x = liftIO do
   let srcFileName = sourceName range._start
   src <- BS.readFile srcFileName
   let diag =
-        addReport def (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
+        addReport mempty (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
           addFile diag (sourceName range._start) (convertString src)
   -- TODO: control flags by command line options
-  printDiagnostic stderr False False 4 defaultStyle diag
+  printDiagnostic stderr WithUnicode (TabSize 4) defaultStyle diag
   exitFailure
 
 rangeToPosition :: Range -> Error.Diagnose.Position
@@ -86,9 +86,9 @@ warningOn range x = liftIO do
   let srcFileName = sourceName range._start
   src <- BS.readFile srcFileName
   let diag =
-        addReport def (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
+        addReport mempty (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
           addFile diag (sourceName range._start) (convertString src)
-  printDiagnostic stderr False False 4 defaultStyle diag
+  printDiagnostic stderr WithUnicode (TabSize 4) defaultStyle diag
   exitFailure
   where
     rangeToPosition (Range start end) =
