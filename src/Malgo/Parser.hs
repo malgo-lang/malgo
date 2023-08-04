@@ -215,12 +215,9 @@ pVariable =
 
 pFun :: Parser (Expr (Malgo 'Parse))
 pFun =
-  label "function literal" do
+  label "function literal" $ between (symbol "{") (symbol "}") do
     start <- getSourcePos
-    clauses <-
-      between (symbol "{") (symbol "}")
-        $ NonEmpty.fromList
-        <$> pClauses
+    clauses <- NonEmpty.fromList <$> pClauses
     end <- getSourcePos
     pure $ Fn (Range start end) clauses
 

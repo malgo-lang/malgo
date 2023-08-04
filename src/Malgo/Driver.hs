@@ -194,23 +194,18 @@ compile srcPath = do
   src <- liftIO $ BL.readFile srcPath
   parsedAst <- case parseMalgo srcPath (convertString src) of
     Right x -> pure x
-    Left err ->
+    Left err -> liftIO do
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-          diag' = addFile diag srcPath (toString src)
-       in do
-            let message =
-                  prettyDiagnostic WithUnicode (TabSize 4) diag'
-                    & ( \x ->
-                          if flags.testMode
-                            then PrettyPrinter.unAnnotate x
-                            else x
-                      )
-                    & PrettyPrinter.layoutPretty PrettyPrinter.defaultLayoutOptions
-                    & PrettyPrinter.renderStrict
-                    & convertString
-            liftIO $ BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
-            liftIO $ hFlush stderr
-            liftIO exitFailure
+      let diag' = addFile diag srcPath (toString src)
+      let message =
+            convertString
+              $ PrettyPrinter.renderStrict
+              $ PrettyPrinter.layoutPretty PrettyPrinter.defaultLayoutOptions
+              $ PrettyPrinter.unAnnotate
+              $ prettyDiagnostic WithUnicode (TabSize 4) diag'
+      BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
+      hFlush stderr
+      exitFailure
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst

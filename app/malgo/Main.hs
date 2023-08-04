@@ -20,7 +20,7 @@ import Malgo.Interface (ModulePathList (..))
 import Malgo.Lsp.Index (Index, LspOpt (LspOpt))
 import Malgo.Lsp.Index qualified as Lsp
 import Malgo.Lsp.Server qualified as Lsp
-import Malgo.Monad (CompileMode (..), Flag (..), runMalgoM)
+import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Monad qualified as Flag
 import Malgo.Prelude
 import Options.Applicative

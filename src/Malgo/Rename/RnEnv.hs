@@ -84,7 +84,7 @@ resolveGlobalName :: (Reader ModuleName :> es) => Text -> Eff es (Id ())
 resolveGlobalName name = newExternalId name ()
 
 -- | Resolving a variable name that is already resolved
-lookupVarName :: (Reader RnEnv :> es, IOE :> es) => Range -> Text -> Eff es (Id ())
+lookupVarName :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Text -> Eff es (Id ())
 lookupVarName pos name =
   asks @RnEnv ((._resolvedVarIdentMap) >>> HashMap.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
@@ -100,7 +100,7 @@ lookupVarName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
 
 -- | Resolving a type name that is already resolved
-lookupTypeName :: (Reader RnEnv :> es, IOE :> es) => Range -> Text -> Eff es (Id ())
+lookupTypeName :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Text -> Eff es (Id ())
 lookupTypeName pos name =
   asks @RnEnv ((._resolvedTypeIdentMap) >>> HashMap.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
@@ -117,7 +117,7 @@ lookupTypeName pos name =
 
 -- | Resolving a qualified variable name like Foo.x
 lookupQualifiedVarName ::
-  (Reader RnEnv :> es, IOE :> es) =>
+  (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) =>
   Range ->
   ModuleName ->
   Text ->

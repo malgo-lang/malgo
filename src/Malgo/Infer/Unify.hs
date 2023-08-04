@@ -58,7 +58,7 @@ freshVar hint = do
   modify \s@TcEnv {..} -> s {_kindCtx = insertKind newVar (TyMeta $ MetaVar kind) _kindCtx}
   pure $ MetaVar newVar
 
-bindVar :: (IOE :> es, State TcEnv :> es, State TypeMap :> es) => Range -> MetaVar -> Type -> Eff es ()
+bindVar :: (IOE :> es, State TcEnv :> es, State TypeMap :> es, Reader Flag :> es) => Range -> MetaVar -> Type -> Eff es ()
 bindVar x v t = do
   when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
   ctx <- gets @TcEnv (._kindCtx)
@@ -114,7 +114,7 @@ unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
 
 -- * Constraint solver
 
-solve :: (State TypeMap :> es, State TcEnv :> es, IOE :> es) => [(Range, Constraint)] -> Eff es ()
+solve :: (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) => [(Range, Constraint)] -> Eff es ()
 solve = solveLoop (5000 :: Int)
   where
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
@@ -132,7 +132,7 @@ solve = solveLoop (5000 :: Int)
     zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
 generalize ::
-  (State TypeMap :> es, State TcEnv :> es, IOE :> es) =>
+  (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
   Range ->
   Type ->
   Eff es (Scheme Type)
@@ -144,7 +144,7 @@ generalize x term = do
   Forall as <$> zonk zonkedTerm
 
 generalizeMutRecs ::
-  (State TypeMap :> es, State TcEnv :> es, IOE :> es) =>
+  (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
   Range ->
   [Type] ->
   Eff es ([TypeVar], [Type])
@@ -162,7 +162,7 @@ generalizeMutRecs x terms = do
 toBound :: (HasField "metaVar" r a) => r -> a
 toBound tv = tv.metaVar
 
-instantiate :: (Reader ModuleName :> es, State Uniq :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es) => Range -> Scheme Type -> Eff es Type
+instantiate :: (Reader ModuleName :> es, State Uniq :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader Flag :> es) => Range -> Scheme Type -> Eff es Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just a.name)

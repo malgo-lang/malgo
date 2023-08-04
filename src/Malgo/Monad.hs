@@ -6,20 +6,13 @@ import Effectful.State.Static.Local
 import Koriel.Core.Optimize (OptimizeOption)
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
 import Malgo.Interface (Interface, ModulePathList (..))
 import Malgo.Lsp.Index (Index)
+import Malgo.Prelude
 import System.Directory (XdgDirectory (XdgData), createDirectoryIfMissing, getCurrentDirectory, getXdgDirectory)
 import System.FilePath ((</>))
 
 newtype DstPath = DstPath FilePath
-
-data Flag = Flag
-  { noOptimize :: Bool,
-    lambdaLift :: Bool,
-    debugMode :: Bool,
-    testMode :: Bool
-  }
 
 data CompileMode = LLVM deriving stock (Eq, Show)
 
