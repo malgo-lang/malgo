@@ -16,7 +16,7 @@ import Koriel.Pretty
 import Malgo.Interface
 import Malgo.Prelude hiding (All)
 import Malgo.Rename.RnEnv
-import Malgo.Rename.RnState
+import Malgo.Rename.RnState as RnState
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 
@@ -99,8 +99,8 @@ rnDecl (Import pos modName importList) = do
   interface <- loadInterface modName
   modify \s@RnState {..} ->
     s
-      { _infixInfo = s._infixInfo <> interface.infixMap,
-        _dependencies = HashSet.insert modName _dependencies <> interface.dependencies
+      { RnState.infixInfo = s.infixInfo <> interface.infixMap,
+        RnState.dependencies = HashSet.insert modName dependencies <> interface.dependencies
       }
   pure $ Import pos modName importList
 
@@ -127,7 +127,7 @@ rnExpr (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
   e1' <- rnExpr e1
   e2' <- rnExpr e2
-  mfixity <- HashMap.lookup op' <$> gets @RnState (._infixInfo)
+  mfixity <- HashMap.lookup op' <$> gets @RnState (.infixInfo)
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)

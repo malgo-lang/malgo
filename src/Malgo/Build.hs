@@ -14,7 +14,7 @@ import Effectful.Reader.Static
 import Koriel.Core.Optimize (defaultOptimizeOption)
 import Koriel.Id (ModuleName (..))
 import Malgo.Driver qualified as Driver
-import Malgo.Monad (CompileMode (..), Flag (..), getWorkspaceDir, runMalgoM)
+import Malgo.Monad (CompileMode (..), getWorkspaceDir, runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Syntax (Decl (..), Module (..), ParsedDefinitions (..))

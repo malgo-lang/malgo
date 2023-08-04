@@ -72,6 +72,7 @@ makeFieldsNoPrefix ''Range
 instance HasRange Range Range where
   range = identity
 
+-- TODO: Support multiple ranges
 errorOn :: (Reader Flag :> es, IOE :> es) => Range -> Doc x -> Eff es a
 errorOn range x = do
   Flag {testMode} <- ask
