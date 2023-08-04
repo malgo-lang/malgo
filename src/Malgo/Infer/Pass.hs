@@ -353,7 +353,7 @@ tcExpr (Fn pos cs) = do
   -- パターンの数がすべての節で同じかを検査
   -- tcClauseでパターンの組み換えを行うので、このタイミングで検査する
   let patNums = countPatNums c'
-  for_ cs' \c@(Clause ((.value) -> pos) _ _) -> do
+  for_ cs' \c -> do
     when (countPatNums c /= patNums) do
       errorOn pos "The number of patterns in each clause must be the same"
     tell [(pos, typeOf c' :~ typeOf c)]
