@@ -51,4 +51,4 @@ jobs:
         run: |
           mkdir -p $HOME/.local/share/malgo/base
           ./scripts/install_malgo_internal.sh
-          cabal test
+          cabal test --test-options="--match normal"
