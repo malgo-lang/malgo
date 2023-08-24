@@ -1,23 +1,44 @@
 module TestArithDouble = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+  data String = String# String#
+
+  foreign import malgo_print_string : String# -> ()
+  def printString# : String# -> ()
+  def printString# = { x -> malgo_print_string x }
+  def printString : String -> ()
+  def printString = { String# x -> printString# x }
+
+  def putStrLn : String -> ()
+  def putStrLn = { str ->
+    printString str;
+    newline ()
+  }
+
+  foreign import malgo_sub_double : Double# -> Double# -> Double#
+  def subDouble# : Double# -> Double# -> Double#
+  def subDouble# = { x y -> malgo_sub_double x y }
 
   -- operators for Double#
   def neg = { x -> subDouble# 0.0# x }
 
+  foreign import malgo_mul_double : Double# -> Double# -> Double#
+  def mulDouble# : Double# -> Double# -> Double#
+  def mulDouble# = { x y -> malgo_mul_double x y }
+
   infixl 7 (*)
   def (*) = {x y -> mulDouble# x y}
 
-  def mul = {x y -> mulDouble# x y}
+  foreign import malgo_add_double : Double# -> Double# -> Double#
+  def addDouble# : Double# -> Double# -> Double#
+  def addDouble# = { x y -> malgo_add_double x y }
 
   infixl 6 (+)
   def (+) = {x y -> addDouble# x y}
 
-  def add = {x y -> addDouble# x y}
+  foreign import malgo_double_to_string : Double# -> String#
+  def toStringDouble# : Double# -> String#
+  def toStringDouble# = { x -> malgo_double_to_string x }
 
   def show = {x -> String# (toStringDouble# x)}
-
-  def traceShowId = { x -> putStrLn (show x); x }
 
   def f : Double# -> Double#
   def f = {x -> (x + 0.0#) * x}

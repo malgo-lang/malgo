@@ -31,15 +31,9 @@ RUN echo $PATH && ghcup upgrade && ghcup install ghc 9.6.2 && ghcup set ghc 9.6.
 
 RUN ghcup install cabal 3.10.1.0 && ghcup set cabal 3.10.1.0 && cabal update
 
-# RUN ghcup compile hls --git-ref 7860df3e97ec5a286697aeed3f05a9ab08e7617e --ghc 9.6.2 -j$(nproc)
-
 RUN ghcup gc
 
 WORKDIR $HOME
-
-# RUN cabal install ghc-prof-flamegraph --ignore-project
-# RUN cabal install hlint --ignore-project
-# RUN cabal install ghcid --ignore-project
 
 FROM buildpack-deps:stable
 

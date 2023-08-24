@@ -40,6 +40,7 @@ where
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.HashSet qualified as HashSet
+import Data.List.NonEmpty qualified as NonEmpty
 import Koriel.Id
 import Koriel.Pretty
 import Language.LSP.Types.Lens (HasRange (range))
@@ -88,8 +89,8 @@ deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
 
 instance (Pretty (XId x)) => Pretty (Type x) where
   pretty = prettyPrecType 0
-  
-prettyPrecType :: Pretty (XId x) => Int -> Type x -> Doc ann
+
+prettyPrecType :: (Pretty (XId x)) => Int -> Type x -> Doc ann
 prettyPrecType d (TyApp _ t ts) =
   maybeParens (d > 11) $ pretty t <+> sep (map (prettyPrecType 12) ts)
 prettyPrecType _ (TyVar _ i) = pretty i
@@ -147,15 +148,12 @@ instance (Pretty (XId x)) => Pretty (Expr x) where
       prettyPrec _ (Unboxed _ lit) = pretty lit <> "#"
       prettyPrec _ (Boxed _ lit) = pretty lit
       prettyPrec d (Apply _ e1 e2) =
-        maybeParens (d > 10) $ sep [prettyPrec 10 e1, prettyPrec 11 e2]
+        -- insert '@' for better readability while debugging
+        maybeParens (d > 10) $ sep [prettyPrec 10 e1, "@", prettyPrec 11 e2]
       prettyPrec d (OpApp _ o e1 e2) =
         maybeParens (d > 10) $ sep [prettyPrec 11 e1, pretty o <+> prettyPrec 11 e2]
       prettyPrec _ (Fn _ cs) =
-        braces
-          $ space
-          <> foldl1
-            (\a b -> sep [a, nest (-2) $ "|" <+> b])
-            (toList $ fmap pretty cs)
+        vsep ["{", vsep (NonEmpty.toList $ fmap (\c -> indent 2 $ "|" <+> pretty c) cs), "}"]
       prettyPrec _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pretty xs
       prettyPrec _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
       prettyPrec _ (List _ xs) = brackets $ sep $ punctuate "," $ map pretty xs
@@ -333,7 +331,7 @@ deriving stock instance (ForallPatX Ord x, Ord (XId x)) => Ord (Pat x)
 instance (Pretty (XId x)) => Pretty (Pat x) where
   pretty = prettyPrecPat 0
 
-prettyPrecPat :: Pretty (XId x) => Int -> Pat x -> Doc ann
+prettyPrecPat :: (Pretty (XId x)) => Int -> Pat x -> Doc ann
 prettyPrecPat _ (VarP _ i) = pretty i
 prettyPrecPat _ (ConP _ i []) = pretty i
 prettyPrecPat d (ConP _ i ps) =
@@ -436,13 +434,13 @@ deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XModule x)) => 
 
 instance (Pretty (XId x), Pretty (XModule x)) => Pretty (Module x) where
   pretty (Module name defs) =
-    vsep ["module" <+> pretty name <+> "=", braces (pretty defs)]
+    vsep [hsep ["module" <+> pretty name <+> "=", "{"], align $ pretty defs, "}"]
 
 newtype ParsedDefinitions = ParsedDefinitions [Decl (Malgo 'Parse)]
   deriving stock (Eq, Show)
 
 instance Pretty ParsedDefinitions where
-  pretty (ParsedDefinitions ds) = sep $ map (\x -> pretty x <> ";") ds
+  pretty (ParsedDefinitions ds) = sep $ map (\x -> indent 2 $ pretty x <> ";") ds
 
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
 type instance XModule (Malgo 'Parse) = ParsedDefinitions
@@ -500,7 +498,7 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
       pprConDef (_, con, ts) = pretty con <+> sep (map (prettyPrecType 12) ts)
       prettyForeign (_, x, t) = "foreign import" <+> pretty x <+> ":" <+> pretty t
       prettyScSig (_, f, t) = pretty f <+> ":" <+> pretty t
-      prettyScDef (_, f, e) = sep [pretty f <+> "=", nest 2 $ pretty e]
+      prettyScDef (_, f, e) = sep [pretty f <+> "=", indent 2 $ pretty e]
 
 makeBindGroup :: (Hashable (XId x), Ord (XId x)) => [Decl x] -> BindGroup x
 makeBindGroup ds =

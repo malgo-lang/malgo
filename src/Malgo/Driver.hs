@@ -29,7 +29,7 @@ import Malgo.Link qualified as Link
 import Malgo.Lsp.Index (Index, storeIndex)
 import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Monad
-import Malgo.Parser (parseMalgo)
+import Malgo.Parser qualified as Parser
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
@@ -192,8 +192,8 @@ compile ::
 compile srcPath = do
   flags <- ask @Flag
   src <- liftIO $ BL.readFile srcPath
-  parsedAst <- case parseMalgo srcPath (convertString src) of
-    Right x -> pure x
+  parsedAst <- case Parser.parseMalgo srcPath $ convertString src of
+    Right ast -> pure ast
     Left err ->
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
           diag' = addFile diag srcPath (toString src)
