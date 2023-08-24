@@ -10,8 +10,8 @@ module Test3 = {
 
   def main = { 
     Cons A (Cons B Nil) |> {
-        (Cons A (Cons B Nil)) -> malgo_print_string "OK"#
-      | _ -> malgo_print_string "WRONG"#
+        (Cons A (Cons B Nil)) -> malgo_print_string "OK"#,
+        _ -> malgo_print_string "WRONG"#
       }
   }
 }

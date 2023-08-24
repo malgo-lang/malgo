@@ -12,9 +12,9 @@ module Punctuate = {
 
   def show : SExpr -> String
   def show =
-    { Symbol str -> "Symbol " <> str
-    | SInt int -> "SInt " <> toStringInt32 int
-    | SList ss -> "SList [" <> concatString (punctuate ", " (mapList show ss)) <> "]"
+    { Symbol str -> "Symbol " <> str,
+      SInt int -> "SInt " <> toStringInt32 int,
+      SList ss -> "SList [" <> concatString (punctuate ", " (mapList show ss)) <> "]"
     }
 
   def main = {

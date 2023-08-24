@@ -7,14 +7,14 @@ module Null = {
 
   def isNothing : Maybe a -> Bool
   def isNothing =
-    { Nothing -> True
-    | Just _ -> False
+    { Nothing -> True,
+      Just _ -> False
     }
 
   def mHead : List a -> Maybe a
   def mHead =
-    { Nil -> Nothing
-    | Cons p _ -> Just p
+    { Nil -> Nothing,
+      Cons p _ -> Just p
     }
 
   def null : List a -> Bool
@@ -35,8 +35,8 @@ module Null = {
 
   def main = {
     (null (Cons True (Cons True Nil)))
-    |> { False -> malgo_print_string "OK"# 
-       | True -> malgo_exit_failure ()
+    |> { False -> malgo_print_string "OK"#,
+         True -> malgo_exit_failure ()
        }
   }  
 }

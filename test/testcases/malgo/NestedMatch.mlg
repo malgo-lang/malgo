@@ -13,12 +13,12 @@ module NestedMatch = {
   foreign import malgo_exit_failure : () -> a
 
   def main = {
-    { True -> malgo_print_string "OK"#
-    | False -> malgo_exit_failure () }
-      ({ True1 -> False
-       | False1 -> True} 
-      ({ True2 -> False1
-       | False2 -> True1 } True2))
+    { True -> malgo_print_string "OK"#,
+      False -> malgo_exit_failure () }
+      ({ True1 -> False,
+         False1 -> True} 
+      ({ True2 -> False1,
+         False2 -> True1 } True2))
   }
 }
 

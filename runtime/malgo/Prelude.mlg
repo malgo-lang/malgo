@@ -29,35 +29,35 @@ module Prelude = {
 
   def head : List a -> a
   def head =
-    { Cons x _ -> x 
-    | _ -> exitFailure ()
+    { Cons x _ -> x,
+      _ -> exitFailure (),
     }
 
   def tail : List a -> List a
   def tail =
-    { Cons _ xs -> xs
-    | _ -> exitFailure ()
+    { Cons _ xs -> xs,
+      _ -> exitFailure (),
     }
 
   -- fold left
   def foldl : (a -> b -> a) -> a -> List b -> a
   def foldl =
-    { _ z Nil -> z
-    | f z (Cons x xs) -> foldl f (f z x) xs
+    { _ z Nil -> z,
+      f z (Cons x xs) -> foldl f (f z x) xs,
     }
 
   -- map function over a list
   def mapList : (a -> b) -> List a -> List b
   def mapList =
-    { _ Nil -> Nil
-    | f (Cons x xs) -> Cons (f x) (mapList f xs)
+    { _ Nil -> Nil,
+      f (Cons x xs) -> Cons (f x) (mapList f xs),
     }
 
   -- convert a list of character to a string
   def listToString : List Char -> String
   def listToString =
-    { Nil -> ""
-    | Cons c cs -> consString c (listToString cs)
+    { Nil -> "",
+      Cons c cs -> consString c (listToString cs)
     }
 
   -- get the first character of string
@@ -79,8 +79,8 @@ module Prelude = {
   -- return the longest prefix of `str` of that satisfy `pred`
   def takeWhileString = { pred str ->
     case (headString str) {
-    | Nothing -> str
-    | Just c ->
+      Nothing -> str,
+      Just c ->
         if (pred c)
           { consString c (takeWhileString pred (tailString str)) }
           { "" }
@@ -90,8 +90,8 @@ module Prelude = {
   -- return the suffix remains after `takeWhileString pred str`
   def dropWhileString = { pred str ->
     case (headString str) {
-    | Nothing -> str
-    | Just c ->
+      Nothing -> str,
+      Just c ->
         if (pred c)
           { dropWhileString pred (tailString str) }
           { str }
@@ -100,25 +100,25 @@ module Prelude = {
 
   def concatString : List String -> String
   def concatString =
-    { Nil -> ""
-    | Cons x xs -> appendString x (concatString xs)
+    { Nil -> "",
+      Cons x xs -> appendString x (concatString xs)
     }
 
   def punctuate : a -> List a -> List a
   def punctuate =
-    { _ Nil -> Nil
-    | _ (Cons x Nil) -> Cons x Nil
-    | sep (Cons x xs) -> Cons x (Cons sep (punctuate sep xs))
+    { _ Nil -> Nil,
+      _ (Cons x Nil) -> Cons x Nil,
+      sep (Cons x xs) -> Cons x (Cons sep (punctuate sep xs))
     }
 
   -- check that `x` is a whitespace
   def isWhiteSpace : Char -> Bool
   def isWhiteSpace =
-    { Char# ' '# -> True
-    | Char# '\n'# -> True
-    | Char# '\r'# -> True
-    | Char# '\t'# -> True
-    | _ -> False
+    { Char# ' '# -> True,
+      Char# '\n'# -> True,
+      Char# '\r'# -> True,
+      Char# '\t'# -> True,
+      _ -> False
     }
 
   infixr 9 (.)
@@ -135,8 +135,8 @@ module Prelude = {
 
   def if : Bool -> {a} -> {a} -> a
   def if =
-    { True t _ -> t ()
-    | False _ f -> f ()
+    { True t _ -> t (),
+      False _ f -> f (),
     }
 
   def unless : Bool -> a -> {a} -> a
@@ -145,9 +145,9 @@ module Prelude = {
   -- multiway if
   def cond : List (Bool, {a}) -> a
   def cond =
-    { Nil -> panic "no branch"
-    | Cons (True, x) _ -> x ()
-    | Cons (False, _) xs -> cond xs
+    { Nil -> panic "no branch",
+      Cons (True, x) _ -> x (),
+      Cons (False, _) xs -> cond xs
     }
 
   def putStr : String -> ()

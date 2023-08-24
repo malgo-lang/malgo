@@ -14,8 +14,8 @@ module ErrorPatSynRecon = {
 
   def sum =
     { Cons Int# x xs -> -- Error: invalid pattern
-        sum xs |> {(Int# s) -> Int# (x +# s)}
-    | Nil -> Int# 0L#
+        sum xs |> {(Int# s) -> Int# (x +# s)},
+      Nil -> Int# 0L#
     }
 
   foreign import print_int : Int64# -> ()

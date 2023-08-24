@@ -18,13 +18,13 @@ module Eventually = {
 
   def eventuallyBind : Eventually a -> (a -> Eventually b) -> Eventually b
   def eventuallyBind =
-    { (Done value) k -> k value
-    | (NotYetDone work) k -> NotYetDone { eventuallyBind (work ()) k }
+    { (Done value) k -> k value,
+      (NotYetDone work) k -> NotYetDone { eventuallyBind (work ()) k }
     }
 
   def step =
-    { Done value -> Done value
-    | NotYetDone work -> (work ())
+    { Done value -> Done value,
+      NotYetDone work -> (work ())
     }
   
   def bind : EventuallyBuilder a b -> Eventually a -> (a -> Eventually b) -> Eventually b
@@ -43,8 +43,8 @@ module Eventually = {
   def main = {
     comp |> step;
     comp |> step |> step |> step
-      |> { Done x -> printString (toStringInt32 x)
-         | NotYetDone _ -> printString "not yet" }
+      |> { Done x -> printString (toStringInt32 x),
+           NotYetDone _ -> printString "not yet" }
   }
 }
 

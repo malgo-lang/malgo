@@ -7,11 +7,11 @@ module TestEither = {
   def id = {x -> x}
 
   def andThen =
-    { _ (Left x) -> Left x
-    | f (Right x) -> f x }
+    { _ (Left x) -> Left x,
+      f (Right x) -> f x }
 
   def main = {
-    Right 1 |> { Right x -> putStr (toStringInt32 x) | _ -> putStrLn "unreachable" };
+    Right 1 |> { Right x -> putStr (toStringInt32 x), _ -> putStrLn "unreachable" };
 
     let x = Right 1;
 
@@ -20,8 +20,8 @@ module TestEither = {
 
     x |> andThen { _ -> Left "error" }
       |> andThen { x -> Right (addInt32 x 1) }
-      |> { Left err -> putStrLn err
-         | Right x -> x |> toStringInt32 |> putStrLn } 
+      |> { Left err -> putStrLn err,
+           Right x -> x |> toStringInt32 |> putStrLn } 
   }
 }
 

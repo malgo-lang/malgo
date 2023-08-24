@@ -225,8 +225,7 @@ pFun =
 -- first `|` is optional
 pClauses :: Parser [Clause (Malgo 'Parse)]
 pClauses = do
-  _ <- optional (pOperator "|")
-  pClause `sepBy1` pOperator "|"
+  pClause `sepEndBy1` pOperator ","
 
 -- a clause is 'pat -> exp' or 'exp'
 pClause :: Parser (Clause (Malgo 'Parse))
