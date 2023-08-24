@@ -221,8 +221,8 @@ pFun =
     end <- getSourcePos
     pure $ Fn (Range start end) clauses
 
--- [|] pat1 -> exp1 | pat2 -> exp 2 | ...
--- first `|` is optional
+-- pat1 -> exp1 , pat2 -> exp 2 , ...
+-- last `,` is optional
 pClauses :: Parser [Clause (Malgo 'Parse)]
 pClauses = do
   pClause `sepEndBy1` pOperator ","
