@@ -3,17 +3,25 @@
 
 module Malgo.Infer.TcEnv
   ( RecordTypeName,
-    TcEnv (..),
+    TcEnv (_signatureMap, _typeDefMap, _typeSynonymMap, _resolvedTypeIdentMap, _kindCtx),
     genTcEnv,
+    insertSignature,
+    insertTypeDef,
+    updateTypeDef,
+    insertTypeSynonym,
+    insertKind,
+    mergeInterface,
   )
 where
 
-import Control.Lens (At (at), makeFieldsNoPrefix, view, (^.))
+import Control.Lens (At (at), makeFieldsNoPrefix, view, (%~), (^.))
 import Data.HashMap.Strict qualified as HashMap
 import Data.Maybe (fromJust)
 import Koriel.Id
 import Koriel.Lens
-import Malgo.Infer.TypeRep
+import Malgo.Infer.TypeRep hiding (insertKind)
+import Malgo.Infer.TypeRep qualified as TypeRep
+import Malgo.Interface (Interface)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (Resolved, RnEnv)
 import Malgo.Syntax.Extension
@@ -29,6 +37,29 @@ data TcEnv = TcEnv
   }
 
 makeFieldsNoPrefix ''TcEnv
+
+insertSignature :: RnId -> Scheme Type -> TcEnv -> TcEnv
+insertSignature name scheme = over signatureMap (HashMap.insert name scheme)
+
+insertTypeDef :: RnId -> TypeDef Type -> TcEnv -> TcEnv
+insertTypeDef name def = over typeDefMap (HashMap.insert name def)
+
+updateTypeDef :: RnId -> (TypeDef Type -> TypeDef Type) -> TcEnv -> TcEnv
+updateTypeDef name f = over typeDefMap (HashMap.adjust f name)
+
+insertTypeSynonym :: TypeVar -> ([TypeVar], Type) -> TcEnv -> TcEnv
+insertTypeSynonym name def = over typeSynonymMap (HashMap.insert name def)
+
+insertKind :: RnId -> Kind -> TcEnv -> TcEnv
+insertKind name kind = over kindCtx (TypeRep.insertKind name kind)
+
+mergeInterface :: Interface -> TcEnv -> TcEnv
+mergeInterface interface tcEnv =
+  tcEnv
+    & (signatureMap %~ HashMap.union (interface ^. signatureMap))
+    & (typeDefMap %~ HashMap.union (interface ^. typeDefMap))
+    & (typeSynonymMap %~ HashMap.union (interface ^. typeSynonymMap))
+    & (kindCtx %~ HashMap.union (interface ^. kindCtx))
 
 genTcEnv :: (Applicative f) => RnEnv -> f TcEnv
 genTcEnv rnEnv = do

@@ -24,6 +24,7 @@ import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import GHC.Records (HasField)
 import Koriel.Id
+import Koriel.Lens (kindCtx)
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Infer.TcEnv (TcEnv (..))
@@ -55,7 +56,7 @@ freshVar hint = do
   hint <- pure $ fromMaybe "t" hint
   kind <- newTemporalId ("k" <> hint) ()
   newVar <- newInternalId hint ()
-  modify \s@TcEnv {..} -> s {_kindCtx = insertKind newVar (TyMeta $ MetaVar kind) _kindCtx}
+  modify @TcEnv (over kindCtx (insertKind newVar (TyMeta $ MetaVar kind)))
   pure $ MetaVar newVar
 
 bindVar :: (IOE :> es, State TcEnv :> es, State TypeMap :> es, Reader Flag :> es) => Range -> MetaVar -> Type -> Eff es ()
@@ -73,12 +74,12 @@ zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
 zonk (TyVar v) = do
   ctx <- gets @TcEnv (._kindCtx)
   k <- zonk $ kindOf ctx v
-  modify \s@TcEnv {..} -> s {_kindCtx = insertKind v k _kindCtx}
+  modify @TcEnv (over kindCtx (insertKind v k))
   pure $ TyVar v
 zonk (TyCon c) = do
   ctx <- gets @TcEnv (._kindCtx)
   k <- zonk $ kindOf ctx c
-  modify \s@TcEnv {..} -> s {_kindCtx = insertKind c k _kindCtx}
+  modify @TcEnv (over kindCtx (insertKind c k))
   pure $ TyCon c
 zonk t@TyPrim {} = pure t
 zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2

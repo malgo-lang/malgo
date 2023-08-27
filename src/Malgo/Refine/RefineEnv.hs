@@ -1,7 +1,9 @@
 module Malgo.Refine.RefineEnv (RefineEnv (..), buildRefineEnv) where
 
+import Control.Lens ((^.))
 import Data.HashMap.Strict qualified as HashMap
 import Koriel.Id
+import Koriel.Lens (signatureMap, typeDefMap)
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Prelude
@@ -12,10 +14,10 @@ data RefineEnv = RefineEnv
   }
 
 buildRefineEnv :: TcEnv -> RefineEnv
-buildRefineEnv TcEnv {_signatureMap, _typeDefMap} =
+buildRefineEnv tcEnv =
   RefineEnv
-    { signatureMap = _signatureMap,
-      typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems _typeDefMap
+    { signatureMap = tcEnv ^. signatureMap,
+      typeDefEnv = HashMap.fromList $ mapMaybe f $ HashMap.elems (tcEnv ^. typeDefMap)
     }
   where
     f :: TypeDef Type -> Maybe (TypeVar, TypeDef Type)

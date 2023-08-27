@@ -17,8 +17,7 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Infer.TcEnv
-import Malgo.Infer.TcEnv qualified as TcEnv
-import Malgo.Infer.TypeRep
+import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), ModulePathList, loadInterface)
 import Malgo.Prelude hiding (Constraint)
@@ -84,13 +83,7 @@ tcImports = traverse tcImport
   where
     tcImport (pos, modName, importList) = do
       interface <- loadInterface modName
-      modify \s@TcEnv {..} ->
-        s
-          { TcEnv._signatureMap = _signatureMap <> interface._signatureMap,
-            TcEnv._typeDefMap = _typeDefMap <> interface._typeDefMap,
-            TcEnv._typeSynonymMap = _typeSynonymMap <> interface._typeSynonymMap,
-            TcEnv._kindCtx = _kindCtx <> interface._kindCtx
-          }
+      modify $ mergeInterface interface
       pure (pos, modName, importList)
 
 tcTypeDefinitions ::
@@ -102,18 +95,12 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(_, name, params, _) -> do
     let tyCon = name
-    modify \s@TcEnv {..} ->
-      s
-        { TcEnv._kindCtx = insertKind tyCon (buildTyConKind params) _kindCtx,
-          TcEnv._typeDefMap = HashMap.insert name (TypeDef (TyCon tyCon) [] []) _typeDefMap
-        }
+    modify $ insertKind tyCon (buildTyConKind params)
+    modify $ insertTypeDef tyCon (TypeDef (TyCon tyCon) [] [])
   for_ dataDefs \(_, name, params, _) -> do
     let tyCon = name
-    modify \s@TcEnv {..} ->
-      s
-        { TcEnv._kindCtx = insertKind tyCon (buildTyConKind params) _kindCtx,
-          TcEnv._typeDefMap = HashMap.insert name (TypeDef (TyCon tyCon) [] []) _typeDefMap
-        }
+    modify $ insertKind tyCon (buildTyConKind params)
+    modify $ insertTypeDef tyCon (TypeDef (TyCon tyCon) [] [])
   typeSynonyms' <- tcTypeSynonyms typeSynonyms
   dataDefs' <- tcDataDefs dataDefs
   pure (typeSynonyms', dataDefs')
@@ -129,16 +116,12 @@ tcTypeSynonyms ds =
         params' <- for params \p -> newInternalId (idToText p) ()
         zipWithM_
           ( \p p' ->
-              modify \s@TcEnv {..} ->
-                s
-                  { TcEnv._typeDefMap = HashMap.insert p (TypeDef (TyVar p') [] []) _typeDefMap
-                  }
+              modify $ insertTypeDef p (TypeDef (TyVar p') [] [])
           )
           params
           params'
         typ' <- transType typ
-        modify \s@TcEnv {..} -> s {TcEnv._typeSynonymMap = HashMap.insert con (params', typ') _typeSynonymMap}
-
+        modify $ insertTypeSynonym con (params', typ')
         pure (pos, name, params, tcType typ)
       _ -> error "unreachable: tcTypeSynonyms"
 
@@ -150,11 +133,7 @@ tcDataDefs ds = do
     params' <- for params \(_, p) -> newInternalId (idToText p) ()
     zipWithM_
       ( \(_, p) p' ->
-          modify
-            \s@TcEnv {..} ->
-              s
-                { TcEnv._typeDefMap = HashMap.insert p (TypeDef (TyVar p') [] []) _typeDefMap
-                }
+          modify $ insertTypeDef p (TypeDef (TyVar p') [] [])
       )
       params
       params'
@@ -164,15 +143,9 @@ tcDataDefs ds = do
         args' <- traverse transType args
         pure $ buildTyArr args' (TyConApp name' $ map TyVar params')
     let valueCons' = zip valueConsNames $ map (Forall params') valueConsTypes
-    -- signatureMap <>= HashMap.fromList valueCons'
-    modify \s@TcEnv {..} ->
-      s {TcEnv._signatureMap = _signatureMap <> HashMap.fromList valueCons'}
+    traverse_ (\(consName, consType) -> modify $ insertSignature consName consType) valueCons'
     -- 2. 環境に登録する
-    modify \s@TcEnv {..} ->
-      s
-        { TcEnv._typeDefMap =
-            HashMap.adjust (\t -> t {_typeParameters = params', _valueConstructors = valueCons'}) name _typeDefMap
-        }
+    modify $ updateTypeDef name \t -> t {_typeParameters = params', _valueConstructors = valueCons'}
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
 tcForeigns ::
@@ -189,10 +162,10 @@ tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just tyVar.name
-      modify \s@TcEnv {..} -> s {TcEnv._typeDefMap = HashMap.insert tyVar (TypeDef (TyMeta tv) [] []) _typeDefMap}
+      modify $ insertTypeDef tyVar (TypeDef (TyMeta tv) [] [])
     ty' <- transType ty
     scheme@(Forall _ ty') <- generalize pos ty'
-    modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name scheme _signatureMap}
+    modify $ insertSignature name scheme
     pure (Typed ty' (pos, raw), name, tcType ty)
 
 tcScSigs :: (State TcEnv :> es, Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, IOE :> es, Reader Flag :> es) => [ScSig (Malgo Rename)] -> Eff es [ScSig (Malgo Infer)]
@@ -200,9 +173,9 @@ tcScSigs ds =
   for ds \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just tyVar.name
-      modify \s@TcEnv {..} -> s {TcEnv._typeDefMap = HashMap.insert tyVar (TypeDef (TyMeta tv) [] []) _typeDefMap}
+      modify $ insertTypeDef tyVar (TypeDef (TyMeta tv) [] [])
     scheme <- generalize pos =<< transType ty
-    modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name scheme _signatureMap}
+    modify $ insertSignature name scheme
     pure (pos, name, tcType ty)
 
 prepareTcScDefs :: (State TcEnv :> es, State Uniq :> es, Reader ModuleName :> es) => [ScDef (Malgo Rename)] -> Eff es ()
@@ -211,7 +184,7 @@ prepareTcScDefs = traverse_ \(_, name, _) -> do
   case mty of
     Nothing -> do
       ty <- Forall [] . TyMeta <$> freshVar Nothing
-      modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name ty _signatureMap}
+      modify $ insertSignature name ty
     Just _ -> pure ()
 
 tcScDefGroup :: (State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es, Reader Flag :> es) => [[ScDef (Malgo Rename)]] -> Eff es [[ScDef (Malgo Infer)]]
@@ -257,8 +230,7 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
       case declaredScheme of
         -- No explicit signature
         Forall [] (TyMeta _) ->
-          -- signatureMap . at name ?= inferredScheme
-          modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name inferredScheme _signatureMap}
+          modify $ insertSignature name inferredScheme
         _ -> do
           -- 型同士を比較する際には型シノニムを展開する
           -- When we need to bind two or more variables to a single variable,
@@ -278,7 +250,7 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
             Just evidence
               | anySame $ Map.elems evidence -> errorOn pos.value $ vsep ["Signature too general:", nest 2 ("Declared:" <+> pretty declaredScheme), nest 2 ("Inferred:" <+> pretty inferredScheme)]
               | otherwise ->
-                  modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name declaredScheme _signatureMap}
+                  modify $ insertSignature name declaredScheme
             Nothing ->
               errorOn pos.value
                 $ vsep
@@ -346,7 +318,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
   hole <- newInternalId "$_" ()
-  modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert hole (Forall [] (TyTuple 0)) _signatureMap}
+  modify $ insertSignature hole (Forall [] (TyTuple 0))
   pure $ Fn (Typed (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Typed (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Typed (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do
   (c' :| cs') <- traverse tcClause cs
@@ -399,7 +371,7 @@ tcPatterns :: (State Uniq :> es, Reader ModuleName :> es, State TcEnv :> es, Sta
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- TyMeta <$> freshVar Nothing
-  modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert v (Forall [] ty) _signatureMap}
+  modify (insertSignature v (Forall [] ty))
   ps' <- tcPatterns ps
   pure $ VarP (Typed ty x) v : ps'
 tcPatterns (ConP pos con pats : ps) = do
@@ -442,7 +414,7 @@ tcStmt :: (Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, State
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   e' <- tcExpr e
-  modify \s@TcEnv {_signatureMap} -> s {TcEnv._signatureMap = HashMap.insert v (Forall [] (typeOf e')) _signatureMap}
+  modify (insertSignature v (Forall [] (typeOf e')))
   pure $ Let pos v e'
 
 -----------------------------------
