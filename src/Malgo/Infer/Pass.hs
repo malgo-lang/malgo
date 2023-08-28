@@ -17,8 +17,7 @@ import Koriel.Lens
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Infer.TcEnv
-import Malgo.Infer.TcEnv qualified as TcEnv
-import Malgo.Infer.TypeRep
+import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), ModulePathList, loadInterface)
 import Malgo.Prelude hiding (Constraint)
@@ -32,42 +31,42 @@ import Malgo.Syntax.Extension
 -------------------------------
 
 lookupVar ::
-  (State TcEnv :> es, IOE :> es) =>
+  (State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
   Range ->
   Id () ->
   Eff es (Scheme Type)
 lookupVar pos name =
-  gets @TcEnv ((._signatureMap) >>> HashMap.lookup name) >>= \case
+  gets @TcEnv (view signatureMap >>> HashMap.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just scheme -> pure scheme
 
-lookupType :: (State TcEnv :> es, IOE :> es) => Range -> Id () -> Eff es Type
+lookupType :: (State TcEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Id () -> Eff es Type
 lookupType pos name =
-  gets @TcEnv ((._typeDefMap) >>> HashMap.lookup name) >>= \case
+  gets @TcEnv (view typeDefMap >>> HashMap.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
-infer :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
+infer :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
 infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
   tcEnv <- genTcEnv rnEnv
-  evalState tcEnv $
-    runTypeUnify $
-      do
-        put tcEnv
-        bg' <- tcBindGroup bg
-        abbrEnv <- gets @TcEnv (._typeSynonymMap)
-        zonkedBg <-
-          traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
-            >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-            >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-        zonkedTcEnv <-
-          get
-            >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-            >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-        pure (Module name zonkedBg, zonkedTcEnv)
+  evalState tcEnv
+    $ runTypeUnify
+    $ do
+      put tcEnv
+      bg' <- tcBindGroup bg
+      abbrEnv <- gets @TcEnv (view typeSynonymMap)
+      zonkedBg <-
+        traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
+          >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+      zonkedTcEnv <-
+        get
+          >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+      pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
-  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) =>
+  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es, Reader Flag :> es) =>
   BindGroup (Malgo Rename) ->
   Eff es (BindGroup (Malgo Infer))
 tcBindGroup bindGroup = do
@@ -84,17 +83,11 @@ tcImports = traverse tcImport
   where
     tcImport (pos, modName, importList) = do
       interface <- loadInterface modName
-      modify \s@TcEnv {..} ->
-        s
-          { TcEnv._signatureMap = _signatureMap <> interface._signatureMap,
-            TcEnv._typeDefMap = _typeDefMap <> interface._typeDefMap,
-            TcEnv._typeSynonymMap = _typeSynonymMap <> interface._typeSynonymMap,
-            TcEnv._kindCtx = _kindCtx <> interface._kindCtx
-          }
+      modify $ mergeInterface interface
       pure (pos, modName, importList)
 
 tcTypeDefinitions ::
-  (State TcEnv :> es, State Uniq :> es, Reader ModuleName :> es, IOE :> es) =>
+  (State TcEnv :> es, State Uniq :> es, Reader ModuleName :> es, IOE :> es, Reader Flag :> es) =>
   [TypeSynonym (Malgo Rename)] ->
   [DataDef (Malgo Rename)] ->
   Eff es ([TypeSynonym (Malgo Infer)], [DataDef (Malgo Infer)])
@@ -102,18 +95,12 @@ tcTypeDefinitions typeSynonyms dataDefs = do
   -- 相互再帰的な型定義がありうるため、型コンストラクタに対応するTyConを先にすべて生成する
   for_ typeSynonyms \(_, name, params, _) -> do
     let tyCon = name
-    modify \s@TcEnv {..} ->
-      s
-        { TcEnv._kindCtx = insertKind tyCon (buildTyConKind params) _kindCtx,
-          TcEnv._typeDefMap = HashMap.insert name (TypeDef (TyCon tyCon) [] []) _typeDefMap
-        }
+    modify $ insertKind tyCon (buildTyConKind params)
+    modify $ insertTypeDef tyCon (TypeDef (TyCon tyCon) [] [])
   for_ dataDefs \(_, name, params, _) -> do
     let tyCon = name
-    modify \s@TcEnv {..} ->
-      s
-        { TcEnv._kindCtx = insertKind tyCon (buildTyConKind params) _kindCtx,
-          TcEnv._typeDefMap = HashMap.insert name (TypeDef (TyCon tyCon) [] []) _typeDefMap
-        }
+    modify $ insertKind tyCon (buildTyConKind params)
+    modify $ insertTypeDef tyCon (TypeDef (TyCon tyCon) [] [])
   typeSynonyms' <- tcTypeSynonyms typeSynonyms
   dataDefs' <- tcDataDefs dataDefs
   pure (typeSynonyms', dataDefs')
@@ -121,7 +108,7 @@ tcTypeDefinitions typeSynonyms dataDefs = do
     buildTyConKind [] = TYPE
     buildTyConKind (_ : xs) = TyArr TYPE (buildTyConKind xs)
 
-tcTypeSynonyms :: (State TcEnv :> es, IOE :> es, State Uniq :> es, Reader ModuleName :> es) => [TypeSynonym (Malgo Rename)] -> Eff es [TypeSynonym (Malgo Infer)]
+tcTypeSynonyms :: (State TcEnv :> es, IOE :> es, State Uniq :> es, Reader ModuleName :> es, Reader Flag :> es) => [TypeSynonym (Malgo Rename)] -> Eff es [TypeSynonym (Malgo Infer)]
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     lookupType pos name >>= \case
@@ -129,20 +116,16 @@ tcTypeSynonyms ds =
         params' <- for params \p -> newInternalId (idToText p) ()
         zipWithM_
           ( \p p' ->
-              modify \s@TcEnv {..} ->
-                s
-                  { TcEnv._typeDefMap = HashMap.insert p (TypeDef (TyVar p') [] []) _typeDefMap
-                  }
+              modify $ insertTypeDef p (TypeDef (TyVar p') [] [])
           )
           params
           params'
         typ' <- transType typ
-        modify \s@TcEnv {..} -> s {TcEnv._typeSynonymMap = HashMap.insert con (params', typ') _typeSynonymMap}
-
+        modify $ insertTypeSynonym con (params', typ')
         pure (pos, name, params, tcType typ)
       _ -> error "unreachable: tcTypeSynonyms"
 
-tcDataDefs :: (State TcEnv :> es, IOE :> es, State Uniq :> es, Reader ModuleName :> es) => [DataDef (Malgo Rename)] -> Eff es [DataDef (Malgo Infer)]
+tcDataDefs :: (State TcEnv :> es, IOE :> es, State Uniq :> es, Reader ModuleName :> es, Reader Flag :> es) => [DataDef (Malgo Rename)] -> Eff es [DataDef (Malgo Infer)]
 tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
@@ -150,11 +133,7 @@ tcDataDefs ds = do
     params' <- for params \(_, p) -> newInternalId (idToText p) ()
     zipWithM_
       ( \(_, p) p' ->
-          modify
-            \s@TcEnv {..} ->
-              s
-                { TcEnv._typeDefMap = HashMap.insert p (TypeDef (TyVar p') [] []) _typeDefMap
-                }
+          modify $ insertTypeDef p (TypeDef (TyVar p') [] [])
       )
       params
       params'
@@ -164,15 +143,9 @@ tcDataDefs ds = do
         args' <- traverse transType args
         pure $ buildTyArr args' (TyConApp name' $ map TyVar params')
     let valueCons' = zip valueConsNames $ map (Forall params') valueConsTypes
-    -- signatureMap <>= HashMap.fromList valueCons'
-    modify \s@TcEnv {..} ->
-      s {TcEnv._signatureMap = _signatureMap <> HashMap.fromList valueCons'}
+    traverse_ (\(consName, consType) -> modify $ insertSignature consName consType) valueCons'
     -- 2. 環境に登録する
-    modify \s@TcEnv {..} ->
-      s
-        { TcEnv._typeDefMap =
-            HashMap.adjust (\t -> t {_typeParameters = params', _valueConstructors = valueCons'}) name _typeDefMap
-        }
+    modify $ updateTypeDef name \t -> t {_typeParameters = params', _valueConstructors = valueCons'}
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
 tcForeigns ::
@@ -180,7 +153,8 @@ tcForeigns ::
     State Uniq :> es,
     State TypeMap :> es,
     State TcEnv :> es,
-    IOE :> es
+    IOE :> es,
+    Reader Flag :> es
   ) =>
   [Foreign (Malgo Rename)] ->
   Eff es [Foreign (Malgo Infer)]
@@ -188,35 +162,35 @@ tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just tyVar.name
-      modify \s@TcEnv {..} -> s {TcEnv._typeDefMap = HashMap.insert tyVar (TypeDef (TyMeta tv) [] []) _typeDefMap}
+      modify $ insertTypeDef tyVar (TypeDef (TyMeta tv) [] [])
     ty' <- transType ty
     scheme@(Forall _ ty') <- generalize pos ty'
-    modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name scheme _signatureMap}
+    modify $ insertSignature name scheme
     pure (Typed ty' (pos, raw), name, tcType ty)
 
-tcScSigs :: (State TcEnv :> es, Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, IOE :> es) => [ScSig (Malgo Rename)] -> Eff es [ScSig (Malgo Infer)]
+tcScSigs :: (State TcEnv :> es, Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, IOE :> es, Reader Flag :> es) => [ScSig (Malgo Rename)] -> Eff es [ScSig (Malgo Infer)]
 tcScSigs ds =
   for ds \(pos, name, ty) -> do
     for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just tyVar.name
-      modify \s@TcEnv {..} -> s {TcEnv._typeDefMap = HashMap.insert tyVar (TypeDef (TyMeta tv) [] []) _typeDefMap}
+      modify $ insertTypeDef tyVar (TypeDef (TyMeta tv) [] [])
     scheme <- generalize pos =<< transType ty
-    modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name scheme _signatureMap}
+    modify $ insertSignature name scheme
     pure (pos, name, tcType ty)
 
 prepareTcScDefs :: (State TcEnv :> es, State Uniq :> es, Reader ModuleName :> es) => [ScDef (Malgo Rename)] -> Eff es ()
 prepareTcScDefs = traverse_ \(_, name, _) -> do
-  mty <- gets @TcEnv $ (._signatureMap) >>> HashMap.lookup name
+  mty <- gets @TcEnv $ view signatureMap >>> HashMap.lookup name
   case mty of
     Nothing -> do
       ty <- Forall [] . TyMeta <$> freshVar Nothing
-      modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name ty _signatureMap}
+      modify $ insertSignature name ty
     Just _ -> pure ()
 
-tcScDefGroup :: (State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es) => [[ScDef (Malgo Rename)]] -> Eff es [[ScDef (Malgo Infer)]]
+tcScDefGroup :: (State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es, Reader Flag :> es) => [[ScDef (Malgo Rename)]] -> Eff es [[ScDef (Malgo Infer)]]
 tcScDefGroup = traverse tcScDefs
 
-tcScDefs :: (State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es) => [ScDef (Malgo Rename)] -> Eff es [ScDef (Malgo Infer)]
+tcScDefs :: (State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es, Reader Flag :> es) => [ScDef (Malgo Rename)] -> Eff es [ScDef (Malgo Infer)]
 tcScDefs [] = pure []
 tcScDefs ds@((pos, _, _) : _) = do
   ds <- traverse tcScDef ds
@@ -230,7 +204,7 @@ tcScDefs ds@((pos, _, _) : _) = do
 -- `tcScDef` does *not* to generalize inferred types.
 --
 -- We need to generalize them by `generalizeMutRecs` and validate them signatures by `validateSignatures`
-tcScDef :: (State TcEnv :> es, Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, IOE :> es) => ScDef (Malgo Rename) -> Eff es (ScDef (Malgo Infer))
+tcScDef :: (State TcEnv :> es, Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, IOE :> es, Reader Flag :> es) => ScDef (Malgo Rename) -> Eff es (ScDef (Malgo Infer))
 tcScDef (pos, name, expr) = do
   (expr', wanted) <- runWriter (tcExpr expr)
   nameType <- instantiate pos =<< lookupVar pos name
@@ -241,7 +215,7 @@ tcScDef (pos, name, expr) = do
 
 -- | Validate user-declared type signature and add type schemes to environment
 validateSignatures ::
-  (State TcEnv :> es, IOE :> es) =>
+  (State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
   -- | definitions of mutualy recursive functions
   [ScDef (Malgo 'Infer)] ->
   -- | signatures of mutualy recursive functions
@@ -256,8 +230,7 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
       case declaredScheme of
         -- No explicit signature
         Forall [] (TyMeta _) ->
-          -- signatureMap . at name ?= inferredScheme
-          modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name inferredScheme _signatureMap}
+          modify $ insertSignature name inferredScheme
         _ -> do
           -- 型同士を比較する際には型シノニムを展開する
           -- When we need to bind two or more variables to a single variable,
@@ -270,17 +243,17 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
           --    declared: forall a b. a -> b -> a
           --    inferred: forall x y. x -> y -> x
           --     evidence = [a -> x, b -> y] OK! Declared is well matched with inferred
-          abbrEnv <- gets @TcEnv (._typeSynonymMap)
+          abbrEnv <- gets @TcEnv (view typeSynonymMap)
           let Forall _ declaredType = fmap (expandAllTypeSynonym abbrEnv) declaredScheme
           let Forall _ inferredType = fmap (expandAllTypeSynonym abbrEnv) inferredScheme
           case evidenceOfEquiv declaredType inferredType of
             Just evidence
               | anySame $ Map.elems evidence -> errorOn pos.value $ vsep ["Signature too general:", nest 2 ("Declared:" <+> pretty declaredScheme), nest 2 ("Inferred:" <+> pretty inferredScheme)]
               | otherwise ->
-                  modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert name declaredScheme _signatureMap}
+                  modify $ insertSignature name declaredScheme
             Nothing ->
-              errorOn pos.value $
-                vsep
+              errorOn pos.value
+                $ vsep
                   [ "Signature mismatch:",
                     nest 2 ("Declared:" <+> pretty declaredScheme),
                     nest 2 ("Inferred:" <+> pretty inferredScheme)
@@ -317,7 +290,8 @@ tcExpr ::
     State TypeMap :> es,
     State TcEnv :> es,
     Writer [(Range, Constraint)] :> es,
-    IOE :> es
+    IOE :> es,
+    Reader Flag :> es
   ) =>
   Expr (Malgo Rename) ->
   Eff es (Expr (Malgo Infer))
@@ -344,7 +318,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
   hole <- newInternalId "$_" ()
-  modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert hole (Forall [] (TyTuple 0)) _signatureMap}
+  modify $ insertSignature hole (Forall [] (TyTuple 0))
   pure $ Fn (Typed (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Typed (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Typed (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do
   (c' :| cs') <- traverse tcClause cs
@@ -382,7 +356,8 @@ tcClause ::
     State TypeMap :> es,
     State TcEnv :> es,
     Writer [(Range, Constraint)] :> es,
-    IOE :> es
+    IOE :> es,
+    Reader Flag :> es
   ) =>
   Clause (Malgo Rename) ->
   Eff es (Clause (Malgo Infer))
@@ -392,11 +367,11 @@ tcClause (Clause pos pats e) = do
   let patTypes = map typeOf pats'
   pure $ Clause (Typed (buildTyArr patTypes (typeOf e')) pos) pats' e'
 
-tcPatterns :: (State Uniq :> es, Reader ModuleName :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es, Writer [(Range, Constraint)] :> es) => [Pat (Malgo Rename)] -> Eff es [Pat (Malgo Infer)]
+tcPatterns :: (State Uniq :> es, Reader ModuleName :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es, Writer [(Range, Constraint)] :> es, Reader Flag :> es) => [Pat (Malgo Rename)] -> Eff es [Pat (Malgo Infer)]
 tcPatterns [] = pure []
 tcPatterns (VarP x v : ps) = do
   ty <- TyMeta <$> freshVar Nothing
-  modify \s@TcEnv {..} -> s {TcEnv._signatureMap = HashMap.insert v (Forall [] ty) _signatureMap}
+  modify (insertSignature v (Forall [] ty))
   ps' <- tcPatterns ps
   pure $ VarP (Typed ty x) v : ps'
 tcPatterns (ConP pos con pats : ps) = do
@@ -407,8 +382,8 @@ tcPatterns (ConP pos con pats : ps) = do
   let (morePats, restPs) = List.splitAt (length conParams - length pats) ps
   -- 足りない分（morePats）を補充した残り（restPs）が空でなければ、
   -- 2引数以上の関数での文法エラー
-  when (not (null morePats) && not (null restPs)) $
-    errorOn pos "Invalid Pattern: You may need to put parentheses"
+  when (not (null morePats) && not (null restPs))
+    $ errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
   ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'
@@ -430,16 +405,16 @@ tcPatterns (UnboxedP pos unboxed : ps) = do
   pure $ UnboxedP (Typed (typeOf unboxed) pos) unboxed : ps'
 
 tcStmts ::
-  (Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, State TcEnv :> es, Writer [(Range, Constraint)] :> es, IOE :> es) =>
+  (Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, State TcEnv :> es, Writer [(Range, Constraint)] :> es, IOE :> es, Reader Flag :> es) =>
   NonEmpty (Stmt (Malgo Rename)) ->
   Eff es (NonEmpty (Stmt (Malgo Infer)))
 tcStmts = traverse tcStmt
 
-tcStmt :: (Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, State TcEnv :> es, Writer [(Range, Constraint)] :> es, IOE :> es) => Stmt (Malgo Rename) -> Eff es (Stmt (Malgo Infer))
+tcStmt :: (Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, State TcEnv :> es, Writer [(Range, Constraint)] :> es, IOE :> es, Reader Flag :> es) => Stmt (Malgo Rename) -> Eff es (Stmt (Malgo Infer))
 tcStmt (NoBind pos e) = NoBind pos <$> tcExpr e
 tcStmt (Let pos v e) = do
   e' <- tcExpr e
-  modify \s@TcEnv {_signatureMap} -> s {TcEnv._signatureMap = HashMap.insert v (Forall [] (typeOf e')) _signatureMap}
+  modify (insertSignature v (Forall [] (typeOf e')))
   pure $ Let pos v e'
 
 -----------------------------------
@@ -447,7 +422,7 @@ tcStmt (Let pos v e) = do
 -----------------------------------
 
 transType ::
-  (State TcEnv :> es, IOE :> es) =>
+  (State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
   S.Type (Malgo Rename) ->
   Eff es Type
 transType (S.TyApp _ t ts) = TyConApp <$> transType t <*> traverse transType ts

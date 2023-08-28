@@ -18,11 +18,11 @@ import Malgo.Syntax hiding (TyArr, Type)
 import Malgo.Syntax qualified as Syn
 import Malgo.Syntax.Extension
 
-refine :: (IOE :> es) => TcEnv -> Module (Malgo Infer) -> Eff es (Module (Malgo Refine))
+refine :: (IOE :> es, Reader Flag :> es) => TcEnv -> Module (Malgo Infer) -> Eff es (Module (Malgo Refine))
 refine tcEnv Module {..} = do
   Module moduleName <$> runReader (buildRefineEnv tcEnv) (refineBindGroup moduleDefinition)
 
-refineBindGroup :: (Reader RefineEnv :> es, IOE :> es) => BindGroup (Malgo Infer) -> Eff es (BindGroup (Malgo Refine))
+refineBindGroup :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => BindGroup (Malgo Infer) -> Eff es (BindGroup (Malgo Refine))
 refineBindGroup BindGroup {..} = do
   _scDefs <- traverse (traverse refineScDef) _scDefs
   _scSigs <- traverse refineScSig _scSigs
@@ -32,10 +32,10 @@ refineBindGroup BindGroup {..} = do
   _imports <- traverse refineImport _imports
   pure BindGroup {..}
 
-refineScDef :: (Reader RefineEnv :> es, IOE :> es) => ScDef (Malgo Infer) -> Eff es (ScDef (Malgo Refine))
+refineScDef :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => ScDef (Malgo Infer) -> Eff es (ScDef (Malgo Refine))
 refineScDef (x, name, expr) = (x,name,) <$> refineExpr expr
 
-refineExpr :: (Reader RefineEnv :> es, IOE :> es) => Expr (Malgo Infer) -> Eff es (Expr (Malgo Refine))
+refineExpr :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => Expr (Malgo Infer) -> Eff es (Expr (Malgo Refine))
 refineExpr (Var x v) = do
   vScheme <- asks @RefineEnv ((.signatureMap) >>> HashMap.lookup v)
   case vScheme of
@@ -81,10 +81,10 @@ refineExpr (Tuple x es) = Tuple x <$> traverse refineExpr es
 refineExpr (Record x kvs) = Record x <$> traverse (\(k, v) -> (k,) <$> refineExpr v) kvs
 refineExpr (Seq x ss) = Seq x <$> traverse refineStmt ss
 
-refineClause :: (Reader RefineEnv :> es, IOE :> es) => Clause (Malgo Infer) -> Eff es (Clause (Malgo Refine))
+refineClause :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => Clause (Malgo Infer) -> Eff es (Clause (Malgo Refine))
 refineClause (Clause x ps e) = Clause x <$> traverse refinePat ps <*> refineExpr e
 
-refineStmt :: (Reader RefineEnv :> es, IOE :> es) => Stmt (Malgo Infer) -> Eff es (Stmt (Malgo Refine))
+refineStmt :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => Stmt (Malgo Infer) -> Eff es (Stmt (Malgo Refine))
 refineStmt (Let x v e) = Let x v <$> refineExpr e
 refineStmt (NoBind x e) = NoBind x <$> refineExpr e
 

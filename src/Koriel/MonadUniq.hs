@@ -7,5 +7,4 @@ import Koriel.Prelude
 newtype Uniq = Uniq Int
 
 getUniq :: (State Uniq :> es) => Eff es Int
-getUniq = do
-  state $ \(Uniq u) -> (u, Uniq $ u + 1)
+getUniq = state $ \(Uniq u) -> (u, Uniq $ u + 1)

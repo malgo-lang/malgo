@@ -16,14 +16,14 @@ module List = {
 
   def map : (a -> b) -> List a -> List b
   def map =
-    { _ Nil -> Nil
-    | f (Cons x xs) -> Cons (f x) (map f xs)
+    { _ Nil -> Nil,
+      f (Cons x xs) -> Cons (f x) (map f xs)
     }
 
   def sum : List Int32 -> Int32
   def sum =
-    { Nil -> 0
-    | Cons x xs -> x + sum xs
+    { Nil -> 0,
+      Cons x xs -> x + sum xs
     }
 
   -- [0 .. n]

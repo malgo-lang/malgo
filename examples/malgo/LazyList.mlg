@@ -12,15 +12,15 @@ module LazyList = {
 
   def map = { f xs -> {
     xs () |>
-      { LNil -> LNil
-      | LCons x xs -> LCons (f x) (map f xs)
+      { LNil -> LNil,
+        LCons x xs -> LCons (f x) (map f xs)
       }
     }
   }
 
   def sum = { xs ->
-    xs () |> { LNil -> 0L
-             | LCons x xs -> addInt64 x (sum xs)
+    xs () |> { LNil -> 0L,
+               LCons x xs -> addInt64 x (sum xs)
              }
   }
 

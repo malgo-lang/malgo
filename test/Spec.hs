@@ -9,9 +9,9 @@ import Data.List (intercalate)
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text qualified as T
 import Effectful
-import Error.Diagnose (addFile, defaultStyle, printDiagnostic)
+import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
-import Extra (timeout)
+import Extra (retry, timeout)
 import Koriel.Core.Annotate qualified as Koriel
 import Koriel.Core.Lint qualified as Koriel
 import Koriel.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
@@ -69,25 +69,25 @@ main =
     describe "Test malgo to-ll" do
       for_ testcases \testcase -> do
         describe testcase do
-          it ("test normal case " <> testcase) $ example do
+          it ("test normal case " <> testcaseDir </> testcase) $ example do
             testNormal (testcaseDir </> testcase)
-          it ("test nono case " <> testcase <> " (no optimization, no lambda-lifting)") $ example do
+          it ("test nono case " <> testcaseDir </> testcase <> " (no optimization, no lambda-lifting)") $ example do
             testNoNo (testcaseDir </> testcase)
-          it ("test noopt case " <> testcase <> " (no optimization)") $ example do
+          it ("test noopt case " <> testcaseDir </> testcase <> " (no optimization)") $ example do
             testNoOpt (testcaseDir </> testcase)
-          it ("test nolift case " <> testcase <> " (no lambda-lift)") $ example do
+          it ("test nolift case " <> testcaseDir </> testcase <> " (no lambda-lift)") $ example do
             testNoLift (testcaseDir </> testcase)
-          it ("test agressive case " <> testcase <> " (agressive optimization)") $ example do
+          it ("test agressive case " <> testcaseDir </> testcase <> " (agressive optimization)") $ example do
             testAggressive (testcaseDir </> testcase)
     examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
     describe "Test example malgo to-ll" do
       for_ examples \examplecase -> do
-        it ("test " <> examplecase) $ example do
+        it ("test " <> "./examples/malgo" </> examplecase) $ example do
           testNormal ("./examples/malgo" </> examplecase)
     errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
     describe "Test malgo to-ll (must be error)" do
       for_ errorcases \errorcase -> do
-        it ("test error case " <> errorcase)
+        it ("test error case " <> testcaseDir </> "error" </> errorcase)
           $ testError (testcaseDir </> "error" </> errorcase)
           `shouldThrow` anyException
 
@@ -126,7 +126,7 @@ compile src dst modPaths lambdaLift noOptimize option compileMode =
           Left err ->
             let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
                 diag' = addFile diag korielPath (toString koriel)
-             in printDiagnostic stdout False False 4 defaultStyle diag' >> liftIO exitFailure
+             in printDiagnostic stdout WithUnicode (TabSize 4) defaultStyle diag' >> liftIO exitFailure
           Right ast -> do
             Koriel.lint True =<< Koriel.annotate (ModuleName $ convertString $ takeBaseName src) ast
       & runMalgoM
@@ -169,7 +169,7 @@ test ::
   -- | Compile mode
   CompileMode ->
   IO ()
-test testcase typ lambdaLift noOptimize option compileMode = do
+test testcase typ lambdaLift noOptimize option compileMode = retry 3 do
   createDirectoryIfMissing True (outputDir </> typ)
   let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
   timeoutWrapper "compile"

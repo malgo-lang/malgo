@@ -7,9 +7,9 @@ module TuplePattern = {
   def main : { () }
   def main = { 
     (A, B)
-      |> { (A, rest) -> printString "A"
-         | (B, rest) -> ()
-         | (C, rest) -> ()
+      |> { (A, rest) -> printString "A",
+           (B, rest) -> (),
+           (C, rest) -> ()
          }
   }
 }

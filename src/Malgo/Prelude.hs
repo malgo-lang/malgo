@@ -14,15 +14,25 @@ import Control.Lens.TH
 import Data.ByteString qualified as BS
 import Data.Store ()
 import Data.Store.TH (makeStore)
-import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), addFile, addReport, def, defaultStyle, printDiagnostic)
+import Effectful
+import Effectful.Reader.Static
+import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), TabSize (..), WithUnicode (..), addFile, addReport, defaultStyle, prettyDiagnostic)
 import Koriel.Prelude
 import Koriel.Pretty
 import Language.LSP.Types (Position (..), filePathToUri)
 import Language.LSP.Types qualified as Lsp
 import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
+import Prettyprinter.Render.Text (hPutDoc)
 import System.Exit (exitFailure)
 import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
 import Text.Megaparsec.Pos qualified as Megaparsec
+
+data Flag = Flag
+  { noOptimize :: Bool,
+    lambdaLift :: Bool,
+    debugMode :: Bool,
+    testMode :: Bool
+  }
 
 instance Hashable Megaparsec.Pos
 
@@ -62,16 +72,18 @@ makeFieldsNoPrefix ''Range
 instance HasRange Range Range where
   range = identity
 
-errorOn :: (MonadIO m) => Range -> Doc x -> m a
-errorOn range x = liftIO do
+-- TODO: Support multiple ranges
+errorOn :: (Reader Flag :> es, IOE :> es) => Range -> Doc x -> Eff es a
+errorOn range x = do
+  Flag {testMode} <- ask
   let srcFileName = sourceName range._start
-  src <- BS.readFile srcFileName
+  src <- liftIO $ BS.readFile srcFileName
   let diag =
-        addReport def (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
+        addReport mempty (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
           addFile diag (sourceName range._start) (convertString src)
-  -- TODO: control flags by command line options
-  printDiagnostic stderr False False 4 defaultStyle diag
-  exitFailure
+  let doc = (if testMode then unAnnotate else reAnnotate defaultStyle) $ prettyDiagnostic WithUnicode (TabSize 4) diag
+  liftIO $ hPutDoc stderr doc
+  liftIO exitFailure
 
 rangeToPosition :: Range -> Error.Diagnose.Position
 rangeToPosition (Range start end) =
@@ -81,15 +93,17 @@ rangeToPosition (Range start end) =
       file = sourceName start
     }
 
-warningOn :: (MonadIO m) => Range -> Doc x -> m ()
-warningOn range x = liftIO do
+warningOn :: (Reader Flag :> es, IOE :> es) => Range -> Doc x -> Eff es ()
+warningOn range x = do
+  Flag {testMode} <- ask
   let srcFileName = sourceName range._start
-  src <- BS.readFile srcFileName
+  src <- liftIO $ BS.readFile srcFileName
   let diag =
-        addReport def (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
+        addReport mempty (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
           addFile diag (sourceName range._start) (convertString src)
-  printDiagnostic stderr False False 4 defaultStyle diag
-  exitFailure
+  let doc = (if testMode then unAnnotate else reAnnotate defaultStyle) $ prettyDiagnostic WithUnicode (TabSize 4) diag
+  liftIO $ hPutDoc stderr doc
+  liftIO exitFailure
   where
     rangeToPosition (Range start end) =
       Error.Diagnose.Position

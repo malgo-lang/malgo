@@ -3,8 +3,8 @@ module Pattern = {
   module {..} = import Prelude
 
   def isNil = {
-    | [] -> True
-    | _ -> False
+    [] -> True,
+    _ -> False,
   }
 
   def main = { putStrLn "OK" }

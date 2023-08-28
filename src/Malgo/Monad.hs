@@ -6,20 +6,13 @@ import Effectful.State.Static.Local
 import Koriel.Core.Optimize (OptimizeOption)
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
 import Malgo.Interface (Interface, ModulePathList (..))
 import Malgo.Lsp.Index (Index)
+import Malgo.Prelude
 import System.Directory (XdgDirectory (XdgData), createDirectoryIfMissing, getCurrentDirectory, getXdgDirectory)
 import System.FilePath ((</>))
 
 newtype DstPath = DstPath FilePath
-
-data Flag = Flag
-  { noOptimize :: Bool,
-    lambdaLift :: Bool,
-    debugMode :: Bool,
-    testMode :: Bool
-  }
 
 data CompileMode = LLVM deriving stock (Eq, Show)
 
@@ -55,12 +48,11 @@ runMalgoM ::
 runMalgoM dstPath modulePaths compileMode flag opt e = do
   workspaceDir <- liftIO getWorkspaceDir
   basePath <- liftIO $ getXdgDirectory XdgData ("malgo" </> "base")
-  let !readOpt = {-# SCC "readOpt" #-} runReader opt e
-  let !readModulePaths = {-# SCC "readModulePaths" #-} runReader (ModulePathList $ modulePaths <> [workspaceDir </> "build", basePath]) readOpt
-  let !readFlag = {-# SCC "readFlag" #-} runReader flag readModulePaths
-  let !readCompileMode = {-# SCC "readCompileMode" #-} runReader compileMode readFlag
-  let !readDstPath = {-# SCC "readDstPath" #-} runReader (DstPath dstPath) readCompileMode
-  let !stateUniq = {-# SCC "stateUniq" #-} evalState (Uniq 0) readDstPath
-  let !stateIndex = {-# SCC "stateIndex" #-} evalState @(HashMap ModuleName Index) mempty stateUniq
-  let !stateInterface = {-# SCC "stateInterface" #-} evalState @(HashMap ModuleName Interface) mempty stateIndex
-  stateInterface
+  runReader opt e
+    & runReader (ModulePathList $ modulePaths <> [workspaceDir </> "build", basePath])
+    & runReader flag
+    & runReader compileMode
+    & runReader (DstPath dstPath)
+    & evalState (Uniq 0)
+    & evalState @(HashMap ModuleName Index) mempty
+    & evalState @(HashMap ModuleName Interface) mempty

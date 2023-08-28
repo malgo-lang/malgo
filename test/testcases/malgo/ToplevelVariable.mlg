@@ -10,13 +10,13 @@ module ToplevelVariable = {
 
   def comp : Maybe a
   def comp =
-    { Nothing -> Nothing
-    | Just x -> Nothing
+    { Nothing -> Nothing,
+      Just x -> Nothing
     } (Just ())
 
   def main = {
-    { Nothing -> printString "OK"
-    | Just _ -> ()
+    { Nothing -> printString "OK",
+      Just _ -> ()
     } comp;
     printInt32 (constId const (addOne one))
   }

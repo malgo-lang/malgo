@@ -16,12 +16,12 @@ import Koriel.Pretty
 import Malgo.Interface
 import Malgo.Prelude hiding (All)
 import Malgo.Rename.RnEnv
-import Malgo.Rename.RnState
+import Malgo.Rename.RnState as RnState
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 
 -- | Entry point of this 'Malgo.Rename.Pass'
-rename :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
+rename :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   (ds', rnState) <- runState (RnState mempty HashSet.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
@@ -36,7 +36,8 @@ rnDecls ::
     State RnState :> es,
     State (HashMap ModuleName Interface) :> es,
     State Uniq :> es,
-    IOE :> es
+    IOE :> es,
+    Reader Flag :> es
   ) =>
   [Decl (Malgo Parse)] ->
   Eff es [Decl (Malgo Rename)]
@@ -59,7 +60,8 @@ rnDecl ::
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     Reader ModulePathList :> es,
-    IOE :> es
+    IOE :> es,
+    Reader Flag :> es
   ) =>
   Decl (Malgo Parse) ->
   Eff es (Decl (Malgo Rename))
@@ -97,8 +99,8 @@ rnDecl (Import pos modName importList) = do
   interface <- loadInterface modName
   modify \s@RnState {..} ->
     s
-      { _infixInfo = s._infixInfo <> interface.infixMap,
-        _dependencies = HashSet.insert modName _dependencies <> interface.dependencies
+      { RnState.infixInfo = s.infixInfo <> interface.infixMap,
+        RnState.dependencies = HashSet.insert modName dependencies <> interface.dependencies
       }
   pure $ Import pos modName importList
 
@@ -109,7 +111,8 @@ rnExpr ::
     State Uniq :> es,
     Reader RnEnv :> es,
     Reader ModuleName :> es,
-    IOE :> es
+    IOE :> es,
+    Reader Flag :> es
   ) =>
   Expr (Malgo Parse) ->
   Eff es (Expr (Malgo Rename))
@@ -124,7 +127,7 @@ rnExpr (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
   e1' <- rnExpr e1
   e2' <- rnExpr e2
-  mfixity <- HashMap.lookup op' <$> gets @RnState (._infixInfo)
+  mfixity <- HashMap.lookup op' <$> gets @RnState (.infixInfo)
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
@@ -150,7 +153,7 @@ rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExpr (Parens _ e) = rnExpr e
 
 -- | Renamed identifier corresponding Boxed literals.
-lookupBox :: (Reader RnEnv :> es, IOE :> es) => Range -> Literal x -> Eff es (Id ())
+lookupBox :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Literal x -> Eff es (Id ())
 lookupBox pos Int32 {} = lookupVarName pos "Int32#"
 lookupBox pos Int64 {} = lookupVarName pos "Int64#"
 lookupBox pos Float {} = lookupVarName pos "Float#"
@@ -159,7 +162,7 @@ lookupBox pos Char {} = lookupVarName pos "Char#"
 lookupBox pos String {} = lookupVarName pos "String#"
 
 -- | Rename a type.
-rnType :: (Reader RnEnv :> es, IOE :> es) => Type (Malgo Parse) -> Eff es (Type (Malgo Rename))
+rnType :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Type (Malgo Parse) -> Eff es (Type (Malgo Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
 rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
 rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
@@ -174,7 +177,8 @@ rnClause ::
     State Uniq :> es,
     Reader RnEnv :> es,
     Reader ModuleName :> es,
-    IOE :> es
+    IOE :> es,
+    Reader Flag :> es
   ) =>
   Clause (Malgo Parse) ->
   Eff es (Clause (Malgo Rename))
@@ -194,7 +198,7 @@ rnClause (Clause pos ps e) = do
     patVars BoxedP {} = []
 
 -- | Rename a pattern.
-rnPat :: (Reader RnEnv :> es, IOE :> es) => Pat (Malgo Parse) -> Eff es (Pat (Malgo Rename))
+rnPat :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Pat (Malgo Parse) -> Eff es (Pat (Malgo Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
@@ -214,7 +218,8 @@ rnStmts ::
     State Uniq :> es,
     Reader RnEnv :> es,
     Reader ModuleName :> es,
-    IOE :> es
+    IOE :> es,
+    Reader Flag :> es
   ) =>
   NonEmpty (Stmt (Malgo Parse)) ->
   Eff es (NonEmpty (Stmt (Malgo Rename)))
@@ -246,7 +251,7 @@ rnStmts (With x Nothing e :| s : ss) = do
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
 -- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
-infixDecls :: (Reader RnEnv :> es, IOE :> es) => [Decl (Malgo 'Parse)] -> Eff es (HashMap RnId (Assoc, Int))
+infixDecls :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => [Decl (Malgo 'Parse)] -> Eff es (HashMap RnId (Assoc, Int))
 infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
@@ -258,7 +263,7 @@ infixDecls ds =
 -- Every OpApp in 'Malgo 'Parsed' is treated as left associative.
 -- 'mkOpApp' transforms it to actual associativity.
 mkOpApp ::
-  (MonadIO m) =>
+  (IOE :> es, Reader Flag :> es) =>
   Range ->
   -- | Fixity of outer operator
   (Assoc, Int) ->
@@ -268,7 +273,7 @@ mkOpApp ::
   Expr (Malgo 'Rename) ->
   -- | Right expression
   Expr (Malgo 'Rename) ->
-  m (Expr (Malgo 'Rename))
+  Eff es (Expr (Malgo 'Rename))
 -- (e11 op1 e12) op2 e2
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
@@ -305,7 +310,7 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
+genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es, Reader Flag :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
 genToplevelEnv (ds :: [Decl (Malgo 'Parse)]) env = do
   execState env (traverse aux ds)
   where

@@ -3,9 +3,9 @@ module InvalidPattern = {
   module {..} = import Prelude
 
   def isNil = {
-    | [] -> True
-    | _ _ -> False
---      ^ different number of patterns
+    [] -> True,
+    _ _ -> False,
+--    ^ different number of patterns
   }
 
   def main = { putStrLn "OK" }

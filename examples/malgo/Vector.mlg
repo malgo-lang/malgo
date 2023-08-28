@@ -23,8 +23,8 @@ module Vector = {
   def main = {
     let vec = newVector 10L 5;
     let val = readVector 2L vec;
-    val |> { Nothing -> putStrLn "ERROR"
-           | Just x -> putStrLn (toStringInt32 x) }
+    val |> { Nothing -> putStrLn "ERROR",
+             Just x -> putStrLn (toStringInt32 x) }
   }
 }
 

@@ -72,10 +72,6 @@ module Koriel.Prelude
     readIORef,
     modifyIORef,
     writeIORef,
-
-    -- * Container utilities
-    Container (..),
-    one,
   )
 where
 
@@ -99,9 +95,7 @@ import Data.Foldable.Extra
 import Data.Function (applyWhen, fix, on, (&))
 import Data.Functor
 import Data.HashMap.Strict (HashMap)
-import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet (HashSet)
-import Data.HashSet qualified as HashSet
 import Data.Hashable (Hashable)
 import Data.IORef (IORef)
 import Data.IORef qualified as IORef
@@ -110,7 +104,6 @@ import Data.Kind (Constraint)
 import Data.List (dropWhileEnd, foldl', sort, transpose)
 import Data.List.NonEmpty (NonEmpty (..))
 import Data.Map.Strict (Map)
-import Data.Map.Strict qualified as Map
 import Data.Maybe (fromMaybe, mapMaybe)
 import Data.Monoid (Alt (..))
 import Data.Semigroup
@@ -207,22 +200,3 @@ modifyIORef ref f = liftIO $ IORef.modifyIORef ref f
 
 writeIORef :: (MonadIO m) => IORef a -> a -> m ()
 writeIORef ref a = liftIO $ IORef.writeIORef ref a
-
-class Container c v | c -> v where
-  singleton :: v -> c
-
-instance Container [a] a where
-  singleton = pure
-
-instance (Hashable a) => Container (HashSet a) a where
-  singleton = HashSet.singleton
-
-instance (Hashable k) => Container (HashMap k v) (k, v) where
-  singleton = uncurry HashMap.singleton
-
-instance Container (Map k v) (k, v) where
-  singleton = uncurry Map.singleton
-
-{-# DEPRECATED one "use singleton" #-}
-one :: (Container c v) => v -> c
-one = singleton

@@ -191,12 +191,6 @@ pUnboxed =
         String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')
       ]
 
--- where
---   real :: Parser (Literal Unboxed)
---   real = do
---     f <- L.float
---     (char '#' >> pure (Double f)) <|> (string' "F#" >> pure (Float $ double2Float f))
-
 pVariable :: Parser (Expr (Malgo 'Parse))
 pVariable =
   -- try full path identifier like `Foo.bar`
@@ -221,21 +215,17 @@ pVariable =
 
 pFun :: Parser (Expr (Malgo 'Parse))
 pFun =
-  label "function literal" do
+  label "function literal" $ between (symbol "{") (symbol "}") do
     start <- getSourcePos
-    clauses <-
-      between (symbol "{") (symbol "}")
-        $ NonEmpty.fromList
-        <$> pClauses
+    clauses <- NonEmpty.fromList <$> pClauses
     end <- getSourcePos
     pure $ Fn (Range start end) clauses
 
--- [|] pat1 -> exp1 | pat2 -> exp 2 | ...
--- first `|` is optional
+-- pat1 -> exp1 , pat2 -> exp 2 , ...
+-- last `,` is optional
 pClauses :: Parser [Clause (Malgo 'Parse)]
 pClauses = do
-  _ <- optional (pOperator "|")
-  pClause `sepBy1` pOperator "|"
+  pClause `sepEndBy1` pOperator ","
 
 -- a clause is 'pat -> exp' or 'exp'
 pClause :: Parser (Clause (Malgo 'Parse))
@@ -636,8 +626,6 @@ operator =
       notFollowedBy reservedOp
       convertString <$> some opLetter
 
--- { _ , _ , ... , _ } or { _ ; _ ; ... ; _ ; }
--- `;` terminatorによる分割を先に検討して、その後`,` separatorによる分割を検討する
--- 逆だと１要素の`,` separatorを読んでしまい、パースが失敗する
+-- { _ , _ , ... , _ } or { _ , _ , ... , _ , }
 asRecordFields :: Parser a -> Parser [a]
-asRecordFields entry = try (entry `endBy1` pOperator ";") <|> (entry `sepBy1` pOperator ",")
+asRecordFields entry = entry `sepEndBy1` pOperator ","

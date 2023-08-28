@@ -15,7 +15,7 @@ module Malgo.Infer.Unify
   )
 where
 
-import Control.Lens (itraverse_)
+import Control.Lens (itraverse_, view)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.Traversable (for)
@@ -24,9 +24,10 @@ import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import GHC.Records (HasField)
 import Koriel.Id
+import Koriel.Lens (kindCtx, typeSynonymMap)
 import Koriel.MonadUniq
 import Koriel.Pretty
-import Malgo.Infer.TcEnv (TcEnv (..))
+import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (Constraint)
 
@@ -55,13 +56,13 @@ freshVar hint = do
   hint <- pure $ fromMaybe "t" hint
   kind <- newTemporalId ("k" <> hint) ()
   newVar <- newInternalId hint ()
-  modify \s@TcEnv {..} -> s {_kindCtx = insertKind newVar (TyMeta $ MetaVar kind) _kindCtx}
+  modify @TcEnv (over kindCtx (insertKind newVar (TyMeta $ MetaVar kind)))
   pure $ MetaVar newVar
 
-bindVar :: (IOE :> es, State TcEnv :> es, State TypeMap :> es) => Range -> MetaVar -> Type -> Eff es ()
+bindVar :: (IOE :> es, State TcEnv :> es, State TypeMap :> es, Reader Flag :> es) => Range -> MetaVar -> Type -> Eff es ()
 bindVar x v t = do
   when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
-  ctx <- gets @TcEnv (._kindCtx)
+  ctx <- gets @TcEnv (view kindCtx)
   solve [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
   modify @TypeMap (HashMap.insert v t)
   where
@@ -71,14 +72,14 @@ bindVar x v t = do
 zonk :: (State TypeMap :> es, State TcEnv :> es) => Type -> Eff es Type
 zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
 zonk (TyVar v) = do
-  ctx <- gets @TcEnv (._kindCtx)
+  ctx <- gets @TcEnv (view kindCtx)
   k <- zonk $ kindOf ctx v
-  modify \s@TcEnv {..} -> s {_kindCtx = insertKind v k _kindCtx}
+  modify @TcEnv (over kindCtx (insertKind v k))
   pure $ TyVar v
 zonk (TyCon c) = do
-  ctx <- gets @TcEnv (._kindCtx)
+  ctx <- gets @TcEnv (view kindCtx)
   k <- zonk $ kindOf ctx c
-  modify \s@TcEnv {..} -> s {_kindCtx = insertKind c k _kindCtx}
+  modify @TcEnv (over kindCtx (insertKind c k))
   pure $ TyCon c
 zonk t@TyPrim {} = pure t
 zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2
@@ -114,13 +115,13 @@ unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
 
 -- * Constraint solver
 
-solve :: (State TypeMap :> es, State TcEnv :> es, IOE :> es) => [(Range, Constraint)] -> Eff es ()
+solve :: (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) => [(Range, Constraint)] -> Eff es ()
 solve = solveLoop (5000 :: Int)
   where
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"
     solveLoop _ [] = pass
     solveLoop n ((x, t1 :~ t2) : cs) = do
-      abbrEnv <- gets @TcEnv (._typeSynonymMap)
+      abbrEnv <- gets @TcEnv (view typeSynonymMap)
       let t1' = fromMaybe t1 (expandTypeSynonym abbrEnv t1)
       let t2' = fromMaybe t2 (expandTypeSynonym abbrEnv t2)
       case unify x t1' t2' of
@@ -132,7 +133,7 @@ solve = solveLoop (5000 :: Int)
     zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
 
 generalize ::
-  (State TypeMap :> es, State TcEnv :> es, IOE :> es) =>
+  (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
   Range ->
   Type ->
   Eff es (Scheme Type)
@@ -144,7 +145,7 @@ generalize x term = do
   Forall as <$> zonk zonkedTerm
 
 generalizeMutRecs ::
-  (State TypeMap :> es, State TcEnv :> es, IOE :> es) =>
+  (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
   Range ->
   [Type] ->
   Eff es ([TypeVar], [Type])
@@ -162,11 +163,11 @@ generalizeMutRecs x terms = do
 toBound :: (HasField "metaVar" r a) => r -> a
 toBound tv = tv.metaVar
 
-instantiate :: (Reader ModuleName :> es, State Uniq :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es) => Range -> Scheme Type -> Eff es Type
+instantiate :: (Reader ModuleName :> es, State Uniq :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader Flag :> es) => Range -> Scheme Type -> Eff es Type
 instantiate x (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just a.name)
-    ctx <- gets @TcEnv (._kindCtx)
+    ctx <- gets @TcEnv (view kindCtx)
     solve [(x, kindOf ctx a :~ kindOf ctx v)]
     pure (a, v)
   pure $ applySubst (HashMap.fromList avs) t

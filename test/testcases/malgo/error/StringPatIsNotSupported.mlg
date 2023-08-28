@@ -3,8 +3,8 @@ module StringPatIsNotSupported = {
   module {..} = import Prelude
 
   def isHoge = {
-    | "hoge" -> True
-    | _ -> False
+    "hoge" -> True,
+    _ -> False
   }
 
   def main = {

@@ -3,10 +3,10 @@ module Test6 = {
 
   foreign import malgo_exit_failure : () -> a
 
-  def rtob = {R -> B | _ -> malgo_exit_failure () }
+  def rtob = {R -> B, _ -> malgo_exit_failure () }
 
   foreign import malgo_print_string : String# -> ()
 
-  def main = { {B -> malgo_print_string "OK"# | _ -> malgo_print_string "WRONG"# } (rtob R) }
+  def main = { {B -> malgo_print_string "OK"#,  _ -> malgo_print_string "WRONG"# } (rtob R) }
 }
 -- Expected: OK

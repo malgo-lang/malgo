@@ -58,7 +58,7 @@ instance Pretty Interface where
 
 buildInterface :: ModuleName -> RnState -> DsState -> Interface
 -- TODO: write abbrMap to interface
-buildInterface moduleName rnState dsState = runPureEff $ execState (Interface mempty mempty mempty mempty mempty mempty mempty (rnState ^. RnState.infixInfo) (rnState ^. RnState.dependencies)) $ do
+buildInterface moduleName rnState dsState = runPureEff $ execState (Interface mempty mempty mempty mempty mempty mempty mempty rnState.infixInfo rnState.dependencies) $ do
   ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
     when (tcId.sort == External && tcId.moduleName == moduleName) do
       modify \inf@Interface {..} ->

@@ -6,9 +6,10 @@ module Either = {
 
   def id = {x -> x}
 
-  def andThen =
-    { _ (Left x) -> Left x
-    | f (Right x) -> f x }
+  def andThen = {
+    _ (Left x) -> Left x,
+    f (Right x) -> f x,
+  }
 
   def main = {
     let x = Right 1;
@@ -18,8 +19,8 @@ module Either = {
 
     x |> andThen { _ -> Left "error" }
       |> andThen { x -> Right (addInt32 x 1) }
-      |> { Left err -> putStrLn err
-         | Right x -> x |> toStringInt32 |> putStrLn } 
+      |> { Left err -> putStrLn err,
+           Right x -> x |> toStringInt32 |> putStrLn } 
   }
 }
 

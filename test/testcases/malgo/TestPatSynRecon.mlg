@@ -7,8 +7,8 @@ module TestPatSynRecon = {
   
   def sum =
     { Cons (Int64# x) xs ->
-        sum xs |> {(Int64# s) -> Int64# (x +# s)}
-    | Nil -> Int64# 0L#
+        sum xs |> {(Int64# s) -> Int64# (x +# s)},
+      Nil -> Int64# 0L#
     }
   
   def main = {
