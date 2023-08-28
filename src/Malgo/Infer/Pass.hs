@@ -36,13 +36,13 @@ lookupVar ::
   Id () ->
   Eff es (Scheme Type)
 lookupVar pos name =
-  gets @TcEnv ((._signatureMap) >>> HashMap.lookup name) >>= \case
+  gets @TcEnv (view signatureMap >>> HashMap.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just scheme -> pure scheme
 
 lookupType :: (State TcEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Id () -> Eff es Type
 lookupType pos name =
-  gets @TcEnv ((._typeDefMap) >>> HashMap.lookup name) >>= \case
+  gets @TcEnv (view typeDefMap >>> HashMap.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
@@ -54,7 +54,7 @@ infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
     $ do
       put tcEnv
       bg' <- tcBindGroup bg
-      abbrEnv <- gets @TcEnv (._typeSynonymMap)
+      abbrEnv <- gets @TcEnv (view typeSynonymMap)
       zonkedBg <-
         traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
           >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
@@ -180,7 +180,7 @@ tcScSigs ds =
 
 prepareTcScDefs :: (State TcEnv :> es, State Uniq :> es, Reader ModuleName :> es) => [ScDef (Malgo Rename)] -> Eff es ()
 prepareTcScDefs = traverse_ \(_, name, _) -> do
-  mty <- gets @TcEnv $ (._signatureMap) >>> HashMap.lookup name
+  mty <- gets @TcEnv $ view signatureMap >>> HashMap.lookup name
   case mty of
     Nothing -> do
       ty <- Forall [] . TyMeta <$> freshVar Nothing
@@ -243,7 +243,7 @@ validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
           --    declared: forall a b. a -> b -> a
           --    inferred: forall x y. x -> y -> x
           --     evidence = [a -> x, b -> y] OK! Declared is well matched with inferred
-          abbrEnv <- gets @TcEnv (._typeSynonymMap)
+          abbrEnv <- gets @TcEnv (view typeSynonymMap)
           let Forall _ declaredType = fmap (expandAllTypeSynonym abbrEnv) declaredScheme
           let Forall _ inferredType = fmap (expandAllTypeSynonym abbrEnv) inferredScheme
           case evidenceOfEquiv declaredType inferredType of
