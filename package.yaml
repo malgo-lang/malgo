@@ -20,7 +20,14 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/malgo-lang/malgo#readme>
 
 dependencies:
-- base >= 4.7 && < 5
+- base >= 4.7
+- bytestring
+- containers
+- lens
+- mtl
+- string-conversions
+- text
+- unordered-containers
 
 ghc-options:
 - -Wall
@@ -32,6 +39,26 @@ ghc-options:
 - -Wmissing-home-modules
 - -Wpartial-fields
 - -Wredundant-constraints
+
+language: GHC2021
+
+default-extensions:
+  - BlockArguments
+  - DataKinds
+  - DefaultSignatures
+  - DerivingStrategies
+  - FunctionalDependencies
+  - LambdaCase
+  - MultiWayIf
+  - NoImplicitPrelude
+  - OverloadedStrings
+  - RecordWildCards
+  - StrictData
+  - TypeFamilies
+  - ViewPatterns
+  - OverloadedRecordDot
+  - NoFieldSelectors
+  - TypeData
 
 library:
   source-dirs: src
