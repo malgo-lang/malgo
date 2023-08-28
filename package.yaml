@@ -1,122 +1,59 @@
-name: malgo
-version: 0.2.0
-category: Compilers/Interpreters
-github: takoeight0821/malgo
-license: BSD3
-author: "Yuya Kono"
-maintainer: "takohati0821@gmail.com"
-copyright: "2017-2021 Yuya Kono"
+name:                malgo
+version:             1.0.0.0
+github:              "malgo-lang/malgo"
+license:             BSD3
+author:              "KONO Yuya"
+maintainer:          "takohati0821@gmail.com"
+copyright:           "2023 KONO Yuya"
 
-build-type: Simple
+extra-source-files:
+- README.md
+- CHANGELOG.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/malgo-lang/malgo#readme>
 
 dependencies:
-  - Glob
-  - aeson
-  - base
-  - binary
-  - binary-instances
-  - bytestring
-  - containers
-  - directory
-  - extra
-  - filepath
-  - hashable
-  - lens
-  - llvm-hs
-  - llvm-hs-pure
-  - lsp
-  - lsp-types == 1.6.0.0
-  - megaparsec
-  - mtl
-  - optparse-applicative
-  - parser-combinators
-  - prettyprinter
-  - raw-strings-qq
-  - regex-tdfa
-  - string-conversions
-  - text
-  - transformers
-  - unordered-containers
-  - witherable
-  - diagnose == 2.5.1
-  - generic-data
-  - syb
-  - unliftio
-  - knob
-  - effectful
-  - store
+- base >= 4.7 && < 5
 
 ghc-options:
-  - -Wall
-  - -Wcompat
-  - -Widentities
-  - -Wincomplete-record-updates
-  - -Wincomplete-uni-patterns
-  - -Wpartial-fields
-  - -Wredundant-constraints
-
-  - -Wno-name-shadowing
-  - -Wmissing-deriving-strategies
-  - -Wmissing-export-lists
-
-  - -optP-Wno-nonportable-include-path
-
-language: GHC2021
-
-default-extensions:
-  - BlockArguments
-  - DataKinds
-  - DefaultSignatures
-  - DerivingStrategies
-  - FunctionalDependencies
-  - LambdaCase
-  - MultiWayIf
-  - NoImplicitPrelude
-  - OverloadedStrings
-  - RecordWildCards
-  - StrictData
-  - TypeFamilies
-  - ViewPatterns
-  - OverloadedRecordDot
-  - NoFieldSelectors
-  - TypeData
-  - Strict
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
 
 library:
   source-dirs: src
 
 executables:
-  malgo:
-    main: Main.hs
-    source-dirs: app/malgo/
+  malgo-exe:
+    main:                Main.hs
+    source-dirs:         app
     ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
     dependencies:
-      - malgo
+    - malgo
 
 tests:
   malgo-test:
-    main: Spec.hs
-    source-dirs: test
+    main:                Spec.hs
+    source-dirs:         test
     ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
     dependencies:
-      - malgo
-      - typed-process
-      - hspec
-      - prettyprinter
-      - silently
-      - time
-
-benchmarks:
-  malgo-bench:
-    main: Main.hs
-    source-dirs: benchmarks
-    dependencies:
-      - malgo
-      - typed-process
-      - criterion
+    - malgo

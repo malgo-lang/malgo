@@ -15,17 +15,9 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
-      - name: add llvm repo
-        uses: myci-actions/add-deb-repo@11
-        with:
-          repo: deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main
-          repo-name: llvm
-          keys-asc: https://apt.llvm.org/llvm-snapshot.gpg.key
       - name: Install packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgc-dev
-          sudo apt-get install -y llvm-15-dev clang-15
       - uses: actions/checkout@v2
       - name: Cache .cabal
         uses: actions/cache@v3
@@ -46,9 +38,7 @@ jobs:
           cabal build --only-dependencies
       - name: GHC ${{matrix.ghc}} Build
         run: |
-          cabal build
+          stack build
       - name: Run tests
         run: |
-          mkdir -p $HOME/.local/share/malgo/base
-          ./scripts/install_malgo_internal.sh
-          cabal test --test-options="--match normal"
+          stack test

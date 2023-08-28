@@ -1,26 +1,47 @@
-resolver: nightly-2023-06-30
+resolver: nightly-2023-08-28
 
-extra-deps:
-- git: https://github.com/llvm-hs/llvm-hs.git
-  commit: 80e0de0f96eb78288c88fda0eaba0f7cf5d38a30
-  subdirs:
-  - llvm-hs
-  - llvm-hs-pure
-- diagnose-2.5.1@sha256:853fd268d7fe0191b79d73187104bf7b4bc5ce3bc3483cb088dc10b09f18abc8,5977
-- lsp-1.6.0.0@sha256:2b95e406cc85ffa95406ae8ad7d16b82283a6ca2fcb7ea5308a4ef3e6d6e68e6,4397
-- lsp-types-1.6.0.0
-- co-log-core-0.3.2.0@sha256:9b2699adecee2f072b6c713089e675b592ef23f00a2ff3740bdaf4d87de8d456,3850
+# User packages to be built.
+# Various formats can be used as shown in the example below.
+#
+# packages:
+# - some-directory
+# - https://example.com/foo/bar/baz-0.0.2.tar.gz
+#   subdirs:
+#   - auto-update
+#   - wai
+packages:
+- .
+# Dependency packages to be pulled from upstream that are not in the resolver.
+# These entries can reference officially published versions as well as
+# forks / in-progress versions pinned to a git hash. For example:
+#
+# extra-deps:
+# - acme-missiles-0.3
+# - git: https://github.com/commercialhaskell/stack.git
+#   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
+#
+# extra-deps: []
 
-flags:
-  diagnose:
-    megaparsec-compat: true
+# Override default flag values for local packages and extra-deps
+# flags: {}
 
-ghc-options:
-  malgo: -j8 +RTS -A128m -n2m -RTS
+# Extra package databases containing global packages
+# extra-package-dbs: []
 
-allow-newer: true
-allow-newer-deps:
-  - diagnose
-  - co-log-core
-
-system-ghc: true
+# Control whether we use the GHC we find on the path
+# system-ghc: true
+#
+# Require a specific version of Stack, using version ranges
+# require-stack-version: -any # Default
+# require-stack-version: ">=2.11"
+#
+# Override the architecture used by Stack, especially useful on Windows
+# arch: i386
+# arch: x86_64
+#
+# Extra directories used by Stack for building
+# extra-include-dirs: [/path/to/dir]
+# extra-lib-dirs: [/path/to/dir]
+#
+# Allow a newer minor version of GHC than the snapshot specifies
+# compiler-check: newer-minor

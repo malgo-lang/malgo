@@ -1,199 +1,51 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 
 name:           malgo
-version:        0.2.0
-category:       Compilers/Interpreters
-homepage:       https://github.com/takoeight0821/malgo#readme
-bug-reports:    https://github.com/takoeight0821/malgo/issues
-author:         Yuya Kono
+version:        1.0.0.0
+description:    Please see the README on GitHub at <https://github.com/malgo-lang/malgo#readme>
+homepage:       https://github.com/malgo-lang/malgo#readme
+bug-reports:    https://github.com/malgo-lang/malgo/issues
+author:         KONO Yuya
 maintainer:     takohati0821@gmail.com
-copyright:      2017-2021 Yuya Kono
+copyright:      2023 KONO Yuya
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
 
 source-repository head
   type: git
-  location: https://github.com/takoeight0821/malgo
+  location: https://github.com/malgo-lang/malgo
 
 library
   exposed-modules:
-      Koriel.Core.Alpha
-      Koriel.Core.Annotate
-      Koriel.Core.CodeGen.LLVM
-      Koriel.Core.Flat
-      Koriel.Core.LambdaLift
-      Koriel.Core.Lint
-      Koriel.Core.Optimize
-      Koriel.Core.Parser
-      Koriel.Core.Syntax
-      Koriel.Core.Syntax.Atom
-      Koriel.Core.Syntax.Case
-      Koriel.Core.Syntax.Common
-      Koriel.Core.Syntax.Expr
-      Koriel.Core.Syntax.LocalDef
-      Koriel.Core.Syntax.Unboxed
-      Koriel.Core.Type
-      Koriel.Id
-      Koriel.Lens
-      Koriel.MonadUniq
-      Koriel.Prelude
-      Koriel.Pretty
-      Malgo.Build
-      Malgo.Desugar.DsState
-      Malgo.Desugar.Match
-      Malgo.Desugar.Pass
-      Malgo.Desugar.Type
-      Malgo.Desugar.Unboxed
-      Malgo.Driver
-      Malgo.Infer.Pass
-      Malgo.Infer.TcEnv
-      Malgo.Infer.TypeRep
-      Malgo.Infer.Unify
-      Malgo.Interface
-      Malgo.Link
-      Malgo.Lsp.Index
-      Malgo.Lsp.Pass
-      Malgo.Lsp.Server
-      Malgo.Monad
-      Malgo.Parser
-      Malgo.Prelude
-      Malgo.Refine.Pass
-      Malgo.Refine.RefineEnv
-      Malgo.Refine.Space
-      Malgo.Rename.Pass
-      Malgo.Rename.RnEnv
-      Malgo.Rename.RnState
-      Malgo.Syntax
-      Malgo.Syntax.Extension
+      Lib
   other-modules:
       Paths_malgo
   hs-source-dirs:
       src
-  default-extensions:
-      BlockArguments
-      DataKinds
-      DefaultSignatures
-      DerivingStrategies
-      FunctionalDependencies
-      LambdaCase
-      MultiWayIf
-      NoImplicitPrelude
-      OverloadedStrings
-      RecordWildCards
-      StrictData
-      TypeFamilies
-      ViewPatterns
-      OverloadedRecordDot
-      NoFieldSelectors
-      TypeData
-      Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      Glob
-    , aeson
-    , base
-    , binary
-    , binary-instances
-    , bytestring
-    , containers
-    , diagnose ==2.5.1
-    , directory
-    , effectful
-    , extra
-    , filepath
-    , generic-data
-    , hashable
-    , knob
-    , lens
-    , llvm-hs
-    , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
-    , megaparsec
-    , mtl
-    , optparse-applicative
-    , parser-combinators
-    , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
-    , store
-    , string-conversions
-    , syb
-    , text
-    , transformers
-    , unliftio
-    , unordered-containers
-    , witherable
-  default-language: GHC2021
+      base >=4.7 && <5
+  default-language: Haskell2010
 
-executable malgo
+executable malgo-exe
   main-is: Main.hs
   other-modules:
       Paths_malgo
   hs-source-dirs:
-      app/malgo/
-  default-extensions:
-      BlockArguments
-      DataKinds
-      DefaultSignatures
-      DerivingStrategies
-      FunctionalDependencies
-      LambdaCase
-      MultiWayIf
-      NoImplicitPrelude
-      OverloadedStrings
-      RecordWildCards
-      StrictData
-      TypeFamilies
-      ViewPatterns
-      OverloadedRecordDot
-      NoFieldSelectors
-      TypeData
-      Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      Glob
-    , aeson
-    , base
-    , binary
-    , binary-instances
-    , bytestring
-    , containers
-    , diagnose ==2.5.1
-    , directory
-    , effectful
-    , extra
-    , filepath
-    , generic-data
-    , hashable
-    , knob
-    , lens
-    , llvm-hs
-    , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
+      base >=4.7 && <5
     , malgo
-    , megaparsec
-    , mtl
-    , optparse-applicative
-    , parser-combinators
-    , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
-    , store
-    , string-conversions
-    , syb
-    , text
-    , transformers
-    , unliftio
-    , unordered-containers
-    , witherable
-  default-language: GHC2021
+  default-language: Haskell2010
 
 test-suite malgo-test
   type: exitcode-stdio-1.0
@@ -202,131 +54,8 @@ test-suite malgo-test
       Paths_malgo
   hs-source-dirs:
       test
-  default-extensions:
-      BlockArguments
-      DataKinds
-      DefaultSignatures
-      DerivingStrategies
-      FunctionalDependencies
-      LambdaCase
-      MultiWayIf
-      NoImplicitPrelude
-      OverloadedStrings
-      RecordWildCards
-      StrictData
-      TypeFamilies
-      ViewPatterns
-      OverloadedRecordDot
-      NoFieldSelectors
-      TypeData
-      Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      Glob
-    , aeson
-    , base
-    , binary
-    , binary-instances
-    , bytestring
-    , containers
-    , diagnose ==2.5.1
-    , directory
-    , effectful
-    , extra
-    , filepath
-    , generic-data
-    , hashable
-    , hspec
-    , knob
-    , lens
-    , llvm-hs
-    , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
+      base >=4.7 && <5
     , malgo
-    , megaparsec
-    , mtl
-    , optparse-applicative
-    , parser-combinators
-    , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
-    , silently
-    , store
-    , string-conversions
-    , syb
-    , text
-    , time
-    , transformers
-    , typed-process
-    , unliftio
-    , unordered-containers
-    , witherable
-  default-language: GHC2021
-
-benchmark malgo-bench
-  type: exitcode-stdio-1.0
-  main-is: Main.hs
-  other-modules:
-      Paths_malgo
-  hs-source-dirs:
-      benchmarks
-  default-extensions:
-      BlockArguments
-      DataKinds
-      DefaultSignatures
-      DerivingStrategies
-      FunctionalDependencies
-      LambdaCase
-      MultiWayIf
-      NoImplicitPrelude
-      OverloadedStrings
-      RecordWildCards
-      StrictData
-      TypeFamilies
-      ViewPatterns
-      OverloadedRecordDot
-      NoFieldSelectors
-      TypeData
-      Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
-  build-depends:
-      Glob
-    , aeson
-    , base
-    , binary
-    , binary-instances
-    , bytestring
-    , containers
-    , criterion
-    , diagnose ==2.5.1
-    , directory
-    , effectful
-    , extra
-    , filepath
-    , generic-data
-    , hashable
-    , knob
-    , lens
-    , llvm-hs
-    , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
-    , malgo
-    , megaparsec
-    , mtl
-    , optparse-applicative
-    , parser-combinators
-    , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
-    , store
-    , string-conversions
-    , syb
-    , text
-    , transformers
-    , typed-process
-    , unliftio
-    , unordered-containers
-    , witherable
-  default-language: GHC2021
+  default-language: Haskell2010
