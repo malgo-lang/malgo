@@ -32,6 +32,7 @@ dependencies:
 - diagnose
 - prettyprinter
 - flow
+- text-icu
 
 ghc-options:
 - -Wall
@@ -88,3 +89,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - malgo
+    - tasty
+    - tasty-hunit
+    build-tool-depends:
+    - tasty-discover:tasty-discover

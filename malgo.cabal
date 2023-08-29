@@ -63,6 +63,7 @@ library
     , prettyprinter
     , string-conversions
     , text
+    , text-icu
     , unordered-containers
   default-language: GHC2021
 
@@ -103,6 +104,7 @@ executable malgo-exe
     , prettyprinter
     , string-conversions
     , text
+    , text-icu
     , unordered-containers
   default-language: GHC2021
 
@@ -110,6 +112,7 @@ test-suite malgo-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Malgo.ParserTest
       Paths_malgo
   hs-source-dirs:
       test
@@ -131,6 +134,8 @@ test-suite malgo-test
       NoFieldSelectors
       TypeData
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      tasty-discover:tasty-discover
   build-depends:
       base >=4.7
     , bytestring
@@ -143,6 +148,9 @@ test-suite malgo-test
     , parsec
     , prettyprinter
     , string-conversions
+    , tasty
+    , tasty-hunit
     , text
+    , text-icu
     , unordered-containers
   default-language: GHC2021

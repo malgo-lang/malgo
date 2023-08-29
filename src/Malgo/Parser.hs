@@ -2,8 +2,11 @@
 
 module Malgo.Parser (parse) where
 
+import Data.Functor.Identity (Identity)
+import Data.List.NonEmpty (NonEmpty (..))
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Data.Text (Text)
+import Data.Text.ICU.Char (Bool_ (XidContinue, XidStart), property)
 import Data.Void (Void)
 import Error.Diagnose (TabSize (TabSize), WithUnicode (WithUnicode), addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Parsec (HasHints (hints), errorDiagnosticFromParseError)
@@ -14,6 +17,8 @@ import Prettyprinter (defaultLayoutOptions, layoutSmart)
 import Prettyprinter.Render.Text (renderStrict)
 import Text.Parsec hiding (parse)
 import Text.Parsec qualified as Parsec
+import Text.Parsec.Token (GenLanguageDef (..), GenTokenParser, makeTokenParser)
+import Text.Parsec.Token qualified as Token
 
 parse :: FilePath -> Text -> Either Text (Expr Text)
 parse filePath input =
@@ -24,7 +29,7 @@ parse filePath input =
           pretty = prettyDiagnostic WithUnicode (TabSize 4) withFile
           msg = renderStrict $ layoutSmart defaultLayoutOptions pretty
        in Left msg
-    Right expr -> Right expr
+    Right result -> Right result
 
 instance HasHints Void Text where
   hints _ = mempty
@@ -32,4 +37,55 @@ instance HasHints Void Text where
 type Parser a = Parsec Text () a
 
 program :: Parser (Expr Text)
-program = pure $ Var "_"
+program = expr
+
+expr :: Parser (Expr Text)
+expr = apply
+
+apply :: Parser (Expr Text)
+apply = do
+  f <- atom
+  args <- many atom
+  case args of
+    [] -> pure f
+    a : as -> pure $ App f (a :| as)
+
+atom :: Parser (Expr Text)
+atom = choice [var, lit, parens expr, codata]
+
+var :: Parser (Expr Text)
+var = Var <$> identifier
+
+lit :: Parser (Expr Text)
+lit = Lit . Int <$> integer
+
+codata :: Parser (Expr Text)
+codata = unexpected "codata is not implemented"
+
+identifier :: Parser Text
+identifier = convertString <$> Token.identifier lexer
+
+integer :: Parser Integer
+integer = Token.integer lexer
+
+parens :: Parser a -> Parser a
+parens = Token.parens lexer
+
+lexer :: GenTokenParser Text () Identity
+lexer = makeTokenParser language
+
+language :: GenLanguageDef Text () Identity
+language =
+  LanguageDef
+    { commentStart = "{-",
+      commentEnd = "-}",
+      commentLine = "--",
+      nestedComments = True,
+      identStart = satisfy $ \c -> property XidStart c || c == '_' || c == '#',
+      identLetter = satisfy $ \c -> property XidContinue c || c == '_' || c == '#',
+      opStart = language.opLetter,
+      opLetter = satisfy $ \c -> elem @[] c ":!$%&*+./<=>?@\\^|-~",
+      reservedNames = [],
+      reservedOpNames = [],
+      caseSensitive = True
+    }

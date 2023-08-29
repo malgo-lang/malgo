@@ -80,7 +80,8 @@ ENV LC_ALL en_US.UTF-8
 
 RUN sudo usermod --shell /bin/bash vscode
 
-# RUN sudo apt-get install -y --no-install-recommends \
+RUN sudo apt-get install -y --no-install-recommends \
+  libicu-dev
 #  lsb-release wget software-properties-common gnupg cmake
 
 RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
