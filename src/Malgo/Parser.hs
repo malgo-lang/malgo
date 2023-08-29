@@ -2,8 +2,10 @@
 
 module Malgo.Parser (parse) where
 
+import Data.Functor (void)
 import Data.Functor.Identity (Identity)
 import Data.List.NonEmpty (NonEmpty (..))
+import Data.List.NonEmpty qualified as NonEmpty
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Data.Text (Text)
 import Data.Text.ICU.Char (Bool_ (XidContinue, XidStart), property)
@@ -57,11 +59,22 @@ var :: Parser (Expr Text)
 var = Var <$> identifier
 
 lit :: Parser (Expr Text)
-lit = Lit . Int <$> integer
+lit = Lit . Int <$> try integer
 
 codata :: Parser (Expr Text)
-codata = unexpected "codata is not implemented"
+codata = braces $ Codata . NonEmpty.fromList <$> clause `sepEndBy1` colon
 
+clause :: Parser (Clause Text)
+clause = Clause <$> pat <*> (reservedOp "->" *> expr)
+
+pat :: Parser (Pat Text)
+pat = do
+  mpat <- exprToPat <$> expr
+  case mpat of
+    Just result -> pure result
+    Nothing -> fail "not a pattern"
+
+-- | @identifier = (XID_Start | _ | #) (XID_Continue | _ | #)*@
 identifier :: Parser Text
 identifier = convertString <$> Token.identifier lexer
 
@@ -70,6 +83,15 @@ integer = Token.integer lexer
 
 parens :: Parser a -> Parser a
 parens = Token.parens lexer
+
+braces :: Parser a -> Parser a
+braces = Token.braces lexer
+
+colon :: Parser ()
+colon = void $ Token.colon lexer
+
+reservedOp :: String -> Parser ()
+reservedOp = Token.reservedOp lexer
 
 lexer :: GenTokenParser Text () Identity
 lexer = makeTokenParser language
@@ -86,6 +108,6 @@ language =
       opStart = language.opLetter,
       opLetter = satisfy $ \c -> elem @[] c ":!$%&*+./<=>?@\\^|-~",
       reservedNames = [],
-      reservedOpNames = [],
+      reservedOpNames = ["->"],
       caseSensitive = True
     }

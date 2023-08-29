@@ -23,16 +23,18 @@ dependencies:
 - base >= 4.7
 - bytestring
 - containers
+- diagnose
+- flow
 - lens
 - mtl
+- transformers
 - parsec
+- prettyprinter
 - string-conversions
 - text
-- unordered-containers
-- diagnose
-- prettyprinter
-- flow
 - text-icu
+- unordered-containers
+- hashable
 
 ghc-options:
 - -Wall
@@ -91,5 +93,6 @@ tests:
     - malgo
     - tasty
     - tasty-hunit
+    - tasty-golden
     build-tool-depends:
     - tasty-discover:tasty-discover

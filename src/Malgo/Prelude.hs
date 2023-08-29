@@ -1,11 +1,15 @@
-module Malgo.Prelude (module Prelude, hPutStr, hPutStrLn, putStr, putStrLn, print) where
+module Malgo.Prelude (module Prelude, identity, hPutStr, hPutStrLn, putStr, putStrLn, print) where
 
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Data.ByteString (ByteString)
 import Data.ByteString qualified as BS
 import Data.String.Conversions (ConvertibleStrings, cs)
 import System.IO (Handle, stdout)
-import Prelude hiding (print, putStr, putStrLn)
+import Prelude hiding (id, print, putStr, putStrLn)
+
+identity :: a -> a
+identity x = x
+{-# INLINE identity #-}
 
 -- | Lifted version of @Data.ByteString.hPut@.
 -- Blocks until the whole string is written.
