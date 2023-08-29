@@ -46,20 +46,20 @@ withNewNames names k = do
   local (\env -> env {nameMap = Map.union (Map.fromList $ zip names ids) env.nameMap}) (k ids)
 
 rnExpr :: Expr Text -> RenameM (Expr Id)
-rnExpr (Var name) = Var <$> lookupName name
-rnExpr (Lit a) = pure $ Lit a
+rnExpr (Var p name) = Var p <$> lookupName name
+rnExpr (Lit p a) = pure $ Lit p a
 rnExpr (App f args) = App <$> rnExpr f <*> traverse rnExpr args
-rnExpr (Codata clauses) = Codata <$> traverse rnClause clauses
+rnExpr (Codata p clauses) = Codata p <$> traverse rnClause clauses
 
 rnClause :: Clause Text -> RenameM (Clause Id)
 rnClause (Clause pat body) = runContT (rnPat pat) \pat' -> do
   Clause pat' <$> rnExpr body
 
 rnPat :: Pat Text -> ContT a RenameM (Pat Id)
-rnPat PThis = pure PThis
-rnPat (PVar name) = shiftT \k ->
+rnPat (PThis p) = pure $ PThis p
+rnPat (PVar p name) = shiftT \k ->
   lift $ withNewNames [name] \case
-    [name'] -> k (PVar name')
+    [name'] -> k (PVar p name')
     _ -> error "impossible"
-rnPat (PLit a) = pure $ PLit a
+rnPat (PLit p a) = pure $ PLit p a
 rnPat (PApp f args) = PApp <$> rnPat f <*> traverse rnPat args

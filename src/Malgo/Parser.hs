@@ -56,13 +56,13 @@ atom :: Parser (Expr Text)
 atom = choice [var, lit, parens expr, codata]
 
 var :: Parser (Expr Text)
-var = Var <$> identifier
+var = Var <$> getPosition <*> identifier
 
 lit :: Parser (Expr Text)
-lit = Lit . Int <$> try integer
+lit = Lit <$> getPosition <*> (Int <$> try integer)
 
 codata :: Parser (Expr Text)
-codata = braces $ Codata . NonEmpty.fromList <$> clause `sepEndBy1` colon
+codata = braces $ Codata <$> getPosition <*> (NonEmpty.fromList <$> clause `sepEndBy1` colon)
 
 clause :: Parser (Clause Text)
 clause = Clause <$> pat <*> (reservedOp "->" *> expr)
