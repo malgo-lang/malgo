@@ -1,0 +1,19 @@
+packages: *.cabal
+
+jobs: $ncpus
+
+optimization: 2
+
+package *
+  ghc-options:
+    +RTS -A128m -n2m -RTS
+
+package malgo
+  -- '-j' option and RTS options are from: Keeping Compilation Fast https://www.parsonsmatt.org/2019/11/27/keeping_compilation_fast.html
+  ghc-options:
+    -fno-ignore-asserts
+    -j +RTS -A128m -n2m -RTS
+
+constraints: diagnose +parsec-compat
+
+allow-newer: text

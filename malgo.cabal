@@ -26,7 +26,9 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Malgo.Parser
       Malgo.Prelude
+      Malgo.Syntax
   other-modules:
       Paths_malgo
   hs-source-dirs:
@@ -53,8 +55,12 @@ library
       base >=4.7
     , bytestring
     , containers
+    , diagnose
+    , flow
     , lens
     , mtl
+    , parsec
+    , prettyprinter
     , string-conversions
     , text
     , unordered-containers
@@ -88,9 +94,13 @@ executable malgo-exe
       base >=4.7
     , bytestring
     , containers
+    , diagnose
+    , flow
     , lens
     , malgo
     , mtl
+    , parsec
+    , prettyprinter
     , string-conversions
     , text
     , unordered-containers
@@ -125,9 +135,13 @@ test-suite malgo-test
       base >=4.7
     , bytestring
     , containers
+    , diagnose
+    , flow
     , lens
     , malgo
     , mtl
+    , parsec
+    , prettyprinter
     , string-conversions
     , text
     , unordered-containers
