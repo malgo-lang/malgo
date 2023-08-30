@@ -19,6 +19,7 @@ import Data.IORef
 import Data.Text (Text)
 import GHC.Generics (Generic)
 import Malgo.Prelude
+import Prettyprinter (Pretty (pretty))
 
 newtype Ctx = Ctx
   { uniqSupply :: IORef Int
@@ -53,8 +54,11 @@ instance (MonadMalgo m) => MonadMalgo (ContT r m) where
 instance (MonadMalgo m) => MonadMalgo (Lazy.StateT s m) where
   newUniq = lift newUniq
 
-data Id = Id {name :: Text, uniq :: Int}
+data Id = Id {scope :: FilePath, name :: Text, uniq :: Int}
   deriving stock (Eq, Ord, Show, Generic)
 
-newId :: (MonadMalgo m) => Text -> m Id
-newId name = Id name <$> newUniq
+instance Pretty Id where
+  pretty (Id scope name uniq) = pretty scope <> "/" <> pretty name <> "_" <> pretty uniq
+
+newId :: (MonadMalgo m) => FilePath -> Text -> m Id
+newId scope name = Id scope name <$> newUniq

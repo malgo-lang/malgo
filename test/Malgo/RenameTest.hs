@@ -24,5 +24,5 @@ test_rename =
         Left err -> pure $ convertString err
         Right result -> do
           ctx <- newCtx
-          result' <- runMalgoM ctx (rename result)
+          result' <- runMalgoM ctx (rename "test.mlg" result)
           pure $ convertString $ show result'

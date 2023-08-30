@@ -1,7 +1,7 @@
 -- | Resolve name conflicts and desugar some syntax.
 module Malgo.Rename (rename) where
 
-import Control.Monad.Reader (MonadReader (ask, local), ReaderT, runReaderT)
+import Control.Monad.Reader (MonadReader (ask, local), ReaderT, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import Control.Monad.Trans.Cont (ContT (..), shiftT)
 import Data.Map qualified as Map
@@ -11,16 +11,18 @@ import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Syntax
 
-rename :: Expr Text -> MalgoM (Expr Id)
-rename e = do
-  env <- newRnEnv
+rename :: FilePath -> Expr Text -> MalgoM (Expr Id)
+rename sourceFilePath e = do
+  env <- newRnEnv sourceFilePath
   runReaderT (rnExpr e) env
 
-newtype RnEnv = RnEnv
-  {nameMap :: Map Text Id}
+data RnEnv = RnEnv
+  { nameMap :: Map Text Id,
+    sourceFilePath :: FilePath
+  }
 
-newRnEnv :: MalgoM RnEnv
-newRnEnv = pure (RnEnv mempty)
+newRnEnv :: FilePath -> MalgoM RnEnv
+newRnEnv sourceFilePath = pure (RnEnv mempty sourceFilePath)
 
 type RenameM = ReaderT RnEnv MalgoM
 
@@ -33,7 +35,8 @@ lookupName name = do
 
 withNewNames :: (MonadMalgo m, MonadReader RnEnv m) => [Text] -> m a -> m a
 withNewNames names k = do
-  ids <- traverse newId names
+  sourceFilePath <- asks (.sourceFilePath)
+  ids <- traverse (newId sourceFilePath) names
   local (\env -> env {nameMap = Map.union (Map.fromList $ zip names ids) env.nameMap}) k
 
 rnExpr :: Expr Text -> RenameM (Expr Id)
