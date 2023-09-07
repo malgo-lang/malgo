@@ -34,11 +34,14 @@ jobs:
             ${{ matrix.ghc }}
           cabal-version: "3.10.1.0"
       - name: Install dependencies
+        working-directory: haskell
         run: |
           cabal build --only-dependencies
       - name: GHC ${{matrix.ghc}} Build
+        working-directory: haskell
         run: |
           stack build
       - name: Run tests
+        working-directory: haskell
         run: |
           stack test
