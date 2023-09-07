@@ -1,10 +1,16 @@
+{-# OPTIONS_GHC -Wno-orphans #-}
+
 module Malgo.Prelude (module Prelude, identity, hPutStr, hPutStrLn, putStr, putStrLn, print) where
 
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Data.ByteString (ByteString)
 import Data.ByteString qualified as BS
+import Data.Map.Strict (Map)
+import Data.Map.Strict qualified as Map
 import Data.String.Conversions (ConvertibleStrings, cs)
+import Prettyprinter
 import System.IO (Handle, stdout)
+import Text.Parsec (SourcePos)
 import Prelude hiding (id, print, putStr, putStrLn)
 
 identity :: a -> a
@@ -29,3 +35,9 @@ putStrLn = hPutStrLn stdout
 
 print :: (Show a, MonadIO m) => a -> m ()
 print = putStr . show
+
+instance Pretty SourcePos where
+  pretty = pretty . show
+
+instance (Pretty k, Pretty v) => Pretty (Map k v) where
+  pretty = pretty . Map.toList

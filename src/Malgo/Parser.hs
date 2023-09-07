@@ -4,8 +4,6 @@ module Malgo.Parser (parse) where
 
 import Data.Functor (void)
 import Data.Functor.Identity (Identity)
-import Data.List.NonEmpty (NonEmpty (..))
-import Data.List.NonEmpty qualified as NonEmpty
 import Data.String.Conversions (ConvertibleStrings (convertString))
 import Data.Text (Text)
 import Data.Text.ICU.Char (Bool_ (XidContinue, XidStart), property)
@@ -50,7 +48,7 @@ apply = do
   args <- many atom
   case args of
     [] -> pure f
-    a : as -> pure $ App f (a :| as)
+    a : as -> pure $ App f (a : as)
 
 atom :: Parser (Expr Text)
 atom = choice [var, lit, parens expr, codata]
@@ -62,7 +60,7 @@ lit :: Parser (Expr Text)
 lit = Lit <$> getPosition <*> (Int <$> try integer)
 
 codata :: Parser (Expr Text)
-codata = braces $ Codata <$> getPosition <*> (NonEmpty.fromList <$> clause `sepEndBy1` colon)
+codata = braces $ Codata <$> getPosition <*> (clause `sepEndBy1` colon)
 
 clause :: Parser (Clause Text)
 clause = Clause <$> pat <*> (reservedOp "->" *> expr)

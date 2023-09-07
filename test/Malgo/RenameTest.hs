@@ -23,6 +23,6 @@ test_rename =
       case parse "test.mlg" input of
         Left err -> pure $ convertString err
         Right result -> do
-          ctx <- newCtx
-          result' <- runMalgoM ctx (rename "test.mlg" result)
+          ctx <- newCtx "test.mlg"
+          result' <- runMalgoM ctx (rename result)
           pure $ convertString $ show result'

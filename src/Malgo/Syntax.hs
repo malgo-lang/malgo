@@ -4,11 +4,11 @@ module Malgo.Syntax
     Clause (..),
     Pat (..),
     exprToPat,
+    HasPosition (..),
+    arityOf,
   )
 where
 
-import Data.List.NonEmpty (NonEmpty)
-import Data.List.NonEmpty qualified as NonEmpty
 import Data.String (IsString)
 import Malgo.Prelude
 import Prettyprinter (Pretty (pretty), braces, sep)
@@ -17,15 +17,15 @@ import Text.Parsec.Pos (SourcePos)
 data Expr a
   = Var SourcePos a
   | Lit SourcePos Literal
-  | App (Expr a) (NonEmpty (Expr a))
-  | Codata SourcePos (NonEmpty (Clause a))
+  | App (Expr a) [Expr a]
+  | Codata SourcePos [Clause a]
   deriving stock (Eq, Show, Functor, Foldable, Traversable)
 
 instance (Pretty a) => Pretty (Expr a) where
   pretty (Var _ a) = pretty a
   pretty (Lit _ a) = pretty a
-  pretty (App f args) = sep $ pretty f : (pretty <$> NonEmpty.toList args)
-  pretty (Codata _ clauses) = braces $ sep (pretty <$> NonEmpty.toList clauses)
+  pretty (App f args) = sep $ pretty f : map pretty args
+  pretty (Codata _ clauses) = braces $ sep (map pretty clauses)
 
 newtype Literal = Int Integer
   deriving stock (Eq, Show)
@@ -39,14 +39,21 @@ data Clause a = Clause {pattern :: Pat a, body :: Expr a}
 instance (Pretty a) => Pretty (Clause a) where
   pretty (Clause pat body) = sep [pretty pat, "->", pretty body]
 
-data Pat a = PThis SourcePos | PVar SourcePos a | PLit SourcePos Literal | PApp (Pat a) (NonEmpty (Pat a))
+data Pat a = PThis SourcePos | PVar SourcePos a | PLit SourcePos Literal | PApp (Pat a) [Pat a]
   deriving stock (Eq, Show, Functor, Foldable, Traversable)
 
 instance (Pretty a) => Pretty (Pat a) where
   pretty (PThis _) = "#"
   pretty (PVar _ a) = pretty a
   pretty (PLit _ a) = pretty a
-  pretty (PApp f args) = sep $ pretty f : (pretty <$> NonEmpty.toList args)
+  pretty (PApp f args) = sep $ pretty f : map pretty args
+
+arityOf :: Pat a -> Int
+arityOf (PApp (PThis _) args) = length args
+arityOf (PThis _) = 0
+arityOf (PVar _ _) = 0
+arityOf (PLit _ _) = 0
+arityOf (PApp f as) = maximum $ arityOf f : map arityOf as
 
 exprToPat :: (IsString a, Eq a) => Expr a -> Maybe (Pat a)
 exprToPat (Var p a)

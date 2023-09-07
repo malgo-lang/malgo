@@ -1,7 +1,7 @@
 -- | Resolve name conflicts and desugar some syntax.
 module Malgo.Rename (rename) where
 
-import Control.Monad.Reader (MonadReader (ask, local), ReaderT, asks, runReaderT)
+import Control.Monad.Reader (MonadReader (ask, local), runReaderT)
 import Control.Monad.Trans (lift)
 import Control.Monad.Trans.Cont (ContT (..), shiftT)
 import Data.Map qualified as Map
@@ -11,20 +11,17 @@ import Malgo.Monad
 import Malgo.Prelude
 import Malgo.Syntax
 
-rename :: FilePath -> Expr Text -> MalgoM (Expr Id)
-rename sourceFilePath e = do
-  env <- newRnEnv sourceFilePath
+rename :: (MonadMalgo m) => Expr Text -> m (Expr Id)
+rename e = do
+  env <- newRnEnv
   runReaderT (rnExpr e) env
 
-data RnEnv = RnEnv
-  { nameMap :: Map Text Id,
-    sourceFilePath :: FilePath
+newtype RnEnv = RnEnv
+  { nameMap :: Map Text Id
   }
 
-newRnEnv :: FilePath -> MalgoM RnEnv
-newRnEnv sourceFilePath = pure (RnEnv mempty sourceFilePath)
-
-type RenameM = ReaderT RnEnv MalgoM
+newRnEnv :: (Applicative m) => m RnEnv
+newRnEnv = pure (RnEnv mempty)
 
 lookupName :: (MonadMalgo m, MonadReader RnEnv m) => Text -> m Id
 lookupName name = do
@@ -35,21 +32,20 @@ lookupName name = do
 
 withNewNames :: (MonadMalgo m, MonadReader RnEnv m) => [Text] -> m a -> m a
 withNewNames names k = do
-  sourceFilePath <- asks (.sourceFilePath)
-  ids <- traverse (newId sourceFilePath) names
+  ids <- traverse newId names
   local (\env -> env {nameMap = Map.union (Map.fromList $ zip names ids) env.nameMap}) k
 
-rnExpr :: Expr Text -> RenameM (Expr Id)
+rnExpr :: (MonadMalgo m, MonadReader RnEnv m) => Expr Text -> m (Expr Id)
 rnExpr (Var p name) = Var p <$> lookupName name
 rnExpr (Lit p a) = pure $ Lit p a
 rnExpr (App f args) = App <$> rnExpr f <*> traverse rnExpr args
 rnExpr (Codata p clauses) = Codata p <$> traverse rnClause clauses
 
-rnClause :: Clause Text -> RenameM (Clause Id)
+rnClause :: (MonadMalgo m, MonadReader RnEnv m) => Clause Text -> m (Clause Id)
 rnClause (Clause pat body) = runContT (rnPat pat) \pat' -> do
   Clause pat' <$> rnExpr body
 
-rnPat :: Pat Text -> ContT a RenameM (Pat Id)
+rnPat :: (MonadMalgo m, MonadReader RnEnv m) => Pat Text -> ContT r m (Pat Id)
 rnPat (PThis p) = pure $ PThis p
 rnPat (PVar p name) = shiftT \k ->
   withNewNames [name] do
