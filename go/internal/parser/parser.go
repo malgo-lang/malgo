@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/takoeight0821/malgo/internal/ast"
@@ -34,6 +35,37 @@ const (
 	COMMA    // ,
 	SHARP    // #
 )
+
+func (k TokenKind) String() string {
+	switch k {
+	case EOF:
+		return "EOF"
+	case IDENT:
+		return "IDENT"
+	case NUMBER:
+		return "NUMBER"
+	case LPAREN:
+		return "("
+	case RPAREN:
+		return ")"
+	case LBRACE:
+		return "{"
+	case RBRACE:
+		return "}"
+	case LBRACKET:
+		return "["
+	case RBRACKET:
+		return "]"
+	case ARROW:
+		return "->"
+	case COMMA:
+		return ","
+	case SHARP:
+		return "#"
+	default:
+		panic("unknown token kind")
+	}
+}
 
 type Token struct {
 	kind  TokenKind
@@ -139,33 +171,137 @@ func (p *Parser) nextToken() {
 	p.token = p.lexer.NewToken()
 }
 
+func (p Parser) expect(kind TokenKind) error {
+	// TODO: show line number and column number
+	return fmt.Errorf("at %d: expected %v, but got %v", p.token.pos, kind, p.token.kind)
+}
+
+func (p Parser) expectAtom() error {
+	return fmt.Errorf("at %d: expected atom, but got %v", p.token.pos, p.token.kind)
+}
+
+func (p Parser) expectPattern(expr ast.Node) error {
+	return fmt.Errorf("at %d: expected pattern, but got %s", expr.Pos(), expr)
+}
+
+func (p Parser) invalidLiteral() error {
+	return fmt.Errorf("at %d: invalid literal %s", p.token.pos, p.token.value)
+}
+
+// program -> expr
 func (p *Parser) Parse() ast.Node {
 	return p.parseExpr()
 }
 
+// expr -> apply
 func (p *Parser) parseExpr() ast.Expr {
-	switch p.token.kind {
-	case IDENT:
-		return p.parseVariable()
-	case NUMBER:
-		return p.parseLiteral()
-	default:
-		panic("unexpected token " + p.token.value)
-	}
+	return p.parseApply()
 }
 
-func (p *Parser) parseVariable() ast.Variable {
-	variable := ast.NewVariable(p.token.value, p.token.pos)
-	p.nextToken()
-	return variable
-}
-
-func (p *Parser) parseLiteral() ast.Literal {
-	value, err := strconv.Atoi(p.token.value)
+// apply -> atom atom*
+func (p *Parser) parseApply() ast.Expr {
+	f, err := p.parseAtom()
 	if err != nil {
 		panic(err)
 	}
-	literal := ast.NewLiteral(value, p.token.pos)
+
+	// Save the cursor for backtracking
+	cursor := p.lexer.cursor
+
+	args := []ast.Node{}
+	for {
+		arg, err := p.parseAtom()
+		if err != nil {
+			p.lexer.cursor = cursor
+			break
+		}
+		// Update the cursor for backtracking
+		cursor = p.lexer.cursor
+		args = append(args, arg)
+	}
+
+	if len(args) == 0 {
+		return f
+	}
+	return ast.NewApply(f, args)
+}
+
+// atom -> ident | number | "(" expr ")" | "{" codata "}"
+func (p *Parser) parseAtom() (ast.Expr, error) {
+	switch p.token.kind {
+	case IDENT:
+		expr := ast.NewVariable(p.token.value, p.token.pos)
+		p.nextToken()
+		return expr, nil
+	case NUMBER:
+		value, err := strconv.Atoi(p.token.value)
+		if err != nil {
+			return nil, p.invalidLiteral()
+		}
+		expr := ast.NewLiteral(value, p.token.pos)
+		p.nextToken()
+		return expr, nil
+	case SHARP:
+		expr := ast.NewThis(p.token.pos)
+		p.nextToken()
+		return expr, nil
+	case LPAREN:
+		p.nextToken()
+		expr := p.parseExpr()
+		if p.token.kind != RPAREN {
+			return nil, p.expect(RPAREN)
+		}
+		p.nextToken()
+		return expr, nil
+	case LBRACE:
+		p.nextToken()
+		expr := p.parseCodata()
+		if p.token.kind != RBRACE {
+			return nil, p.expect(RBRACE)
+		}
+		p.nextToken()
+		return expr, nil
+	default:
+		return nil, p.expectAtom()
+	}
+}
+
+// codata -> clause ("," clause)* ","?
+func (p *Parser) parseCodata() ast.Expr {
+	pos := p.token.pos
+	clauses := []ast.Clause{}
+	for {
+		clause := p.parseClause()
+		clauses = append(clauses, clause)
+		if p.token.kind != COMMA {
+			break
+		}
+		p.nextToken()
+	}
+	// skip optional comma
+	if p.token.kind == COMMA {
+		p.nextToken()
+	}
+	return ast.NewCodata(clauses, pos)
+}
+
+// clause -> pattern "->" expr
+func (p *Parser) parseClause() ast.Clause {
+	pattern := p.parsePattern()
+	if p.token.kind != ARROW {
+		panic(p.expect(ARROW))
+	}
 	p.nextToken()
-	return literal
+	body := p.parseExpr()
+	return ast.NewClause(pattern, body)
+}
+
+// pattern -> expr
+func (p *Parser) parsePattern() ast.Pattern {
+	expr := p.parseExpr()
+	pattern, ok := expr.(ast.Pattern)
+	if ok {
+		return pattern
+	}
+	panic(p.expectPattern(expr))
 }

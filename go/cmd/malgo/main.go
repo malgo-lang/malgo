@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	parser := parser.NewParser("foo")
+	parser := parser.NewParser("{# x y -> x}")
 	expr := parser.Parse()
 	fmt.Printf("%#v\n", expr)
 }
