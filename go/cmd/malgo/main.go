@@ -13,7 +13,12 @@ func main() {
 	expr := parser.Parse()
 	fmt.Printf("%v\n", expr)
 	fvs := ast.FreeVariable(expr)
-	fmt.Printf("%v\n", fvs)
+	for _, fv := range fvs.ToSlice() {
+		fmt.Printf("free variable: %v\n", fv)
+	}
+	if len(fvs.ToSlice()) != 0 {
+		panic("free variables exist")
+	}
 	renamed := rename.Rename(expr)
 	fmt.Printf("%v\n", renamed)
 }

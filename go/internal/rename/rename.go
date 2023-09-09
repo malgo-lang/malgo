@@ -7,6 +7,12 @@ import (
 	"github.com/takoeight0821/malgo/internal/ast"
 )
 
+// Check all variables are bound and replace them with RnID.
+func Rename(expr ast.Expr) ast.Expr {
+	return newRenamer().renameExpr(rnEnv{}, expr)
+}
+
+// Unique identifier.
 type RnID struct {
 	RawName string
 	Unique  int
@@ -36,20 +42,6 @@ func (r *renamer) newName(name ast.Ident) RnID {
 
 	r.names[name.Name()]++
 	return RnID{RawName: name.Name(), Unique: r.names[name.Name()]}
-}
-
-func appendEnv(env rnEnv, name ast.Ident, rn RnID) rnEnv {
-	newEnv := rnEnv{}
-	for k, v := range env {
-		newEnv[k] = v
-	}
-	newEnv[name] = rn
-	return newEnv
-}
-
-func Rename(expr ast.Expr) ast.Expr {
-	renamer := newRenamer()
-	return renamer.renameExpr(rnEnv{}, expr)
 }
 
 func (r *renamer) renameExpr(env rnEnv, expr ast.Expr) ast.Expr {
@@ -84,12 +76,18 @@ func (r *renamer) renameExpr(env rnEnv, expr ast.Expr) ast.Expr {
 }
 
 func (r *renamer) renameClause(env rnEnv, clause ast.Clause) ast.Clause {
-	newEnv, pattern := r.renamePattern(env, clause.Pattern)
+	newEnv, pattern := r.renamePattern(clause.Pattern)
+	for k, v := range env {
+		newEnv[k] = v
+	}
 	body := r.renameExpr(newEnv, clause.Body)
 	return ast.NewClause(pattern, body)
 }
 
-func (r *renamer) renamePattern(env rnEnv, pattern ast.Pattern) (rnEnv, ast.Pattern) {
+// Return new environment and renamed pattern.
+// Resulting environment does not contain any bindings for variables in the given environment,
+// so caller has to merge it.
+func (r *renamer) renamePattern(pattern ast.Pattern) (rnEnv, ast.Pattern) {
 	if !pattern.IsPattern() {
 		log.Panicf("[error] rename.renamePattern: %T is not a pattern", pattern)
 	}
@@ -97,19 +95,27 @@ func (r *renamer) renamePattern(env rnEnv, pattern ast.Pattern) (rnEnv, ast.Patt
 	switch pattern := pattern.(type) {
 	case ast.Variable:
 		newName := r.newName(pattern.Ident)
-		newEnv := appendEnv(env, pattern.Ident, newName)
+		newEnv := rnEnv{pattern.Ident: newName}
 		return newEnv, ast.NewVariable(newEnv[pattern.Ident], pattern.Pos())
 	case ast.Apply:
+		newEnv := rnEnv{}
 		newArgs := []ast.Node{}
-		newEnv := env
 		for _, arg := range pattern.Args {
-			var newArg ast.Node
-			newEnv, newArg = r.renamePattern(newEnv, arg.(ast.Pattern))
+			argEnv, newArg := r.renamePattern(arg.(ast.Pattern))
 			newArgs = append(newArgs, newArg)
+			for k, v := range argEnv {
+				if _, ok := newEnv[k]; ok {
+					panic(fmt.Sprintf("at %d: %s is already bound", pattern.Pos(), k.Name()))
+				}
+				newEnv[k] = v
+			}
 		}
-		newEnv, fun := r.renamePattern(newEnv, pattern.Func.(ast.Pattern))
+		funEnv, fun := r.renamePattern(pattern.Func.(ast.Pattern))
+		for k, v := range funEnv {
+			newEnv[k] = v
+		}
 		return newEnv, ast.NewApply(fun, newArgs)
 	default:
-		return env, pattern
+		return rnEnv{}, pattern
 	}
 }
