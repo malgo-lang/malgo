@@ -11,14 +11,24 @@ type Expr interface {
 	Node
 }
 
+type Ident interface {
+	Name() string
+}
+
+type String string
+
+func (s String) Name() string {
+	return string(s)
+}
+
 type Variable struct {
-	Name        string
+	Ident       Ident
 	variablePos int
 }
 
-func NewVariable(name string, pos int) Variable {
+func NewVariable(name Ident, pos int) Variable {
 	return Variable{
-		Name:        name,
+		Ident:       name,
 		variablePos: pos,
 	}
 }
@@ -32,7 +42,7 @@ func (v Variable) Arity() int {
 }
 
 func (v Variable) String() string {
-	return v.Name
+	return v.Ident.Name()
 }
 
 var _ Expr = Variable{}

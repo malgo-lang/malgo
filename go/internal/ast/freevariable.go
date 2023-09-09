@@ -4,10 +4,10 @@ import (
 	mapset "github.com/deckarep/golang-set/v2"
 )
 
-func FreeVariable(expr Expr) mapset.Set[string] {
+func FreeVariable(expr Expr) mapset.Set[Ident] {
 	switch e := expr.(type) {
 	case Variable:
-		return mapset.NewSetFromMapKeys[string](map[string]interface{}{e.Name: nil})
+		return mapset.NewSetFromMapKeys[Ident](map[Ident]interface{}{e.Ident: nil})
 	case Apply:
 		fvs := FreeVariable(e.Func)
 		for _, arg := range e.Args {
@@ -15,13 +15,13 @@ func FreeVariable(expr Expr) mapset.Set[string] {
 		}
 		return fvs
 	case Codata:
-		fvs := mapset.NewSet[string]()
+		fvs := mapset.NewSet[Ident]()
 		for _, clause := range e.Clauses {
 			fvs = fvs.Union(FreeVariable(clause.Body))
 			fvs = fvs.Difference(FreeVariable(clause.Pattern))
 		}
 		return fvs
 	default:
-		return mapset.NewSet[string]()
+		return mapset.NewSet[Ident]()
 	}
 }

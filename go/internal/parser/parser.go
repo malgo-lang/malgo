@@ -230,7 +230,7 @@ func (p *Parser) parseApply() ast.Expr {
 func (p *Parser) parseAtom() (ast.Expr, error) {
 	switch p.token.kind {
 	case IDENT:
-		expr := ast.NewVariable(p.token.value, p.token.pos)
+		expr := ast.NewVariable(ast.String(p.token.value), p.token.pos)
 		p.nextToken()
 		return expr, nil
 	case NUMBER:
