@@ -45,8 +45,10 @@ func (v Variable) String() string {
 	return v.Ident.Name()
 }
 
-var _ Expr = Variable{}
-var _ Pattern = Variable{}
+var (
+	_ Expr    = Variable{}
+	_ Pattern = Variable{}
+)
 
 type Literal struct {
 	Value      int
@@ -72,8 +74,10 @@ func (l Literal) String() string {
 	return fmt.Sprintf("%d", l.Value)
 }
 
-var _ Expr = Literal{}
-var _ Pattern = Literal{}
+var (
+	_ Expr    = Literal{}
+	_ Pattern = Literal{}
+)
 
 type Apply struct {
 	Func Node
@@ -117,8 +121,10 @@ func (a Apply) String() string {
 	return str
 }
 
-var _ Expr = Apply{}
-var _ Pattern = Apply{}
+var (
+	_ Expr    = Apply{}
+	_ Pattern = Apply{}
+)
 
 type Codata struct {
 	Clauses   []Clause

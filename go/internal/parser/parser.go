@@ -37,34 +37,22 @@ const (
 )
 
 func (k TokenKind) String() string {
-	switch k {
-	case EOF:
-		return "EOF"
-	case IDENT:
-		return "IDENT"
-	case NUMBER:
-		return "NUMBER"
-	case LPAREN:
-		return "("
-	case RPAREN:
-		return ")"
-	case LBRACE:
-		return "{"
-	case RBRACE:
-		return "}"
-	case LBRACKET:
-		return "["
-	case RBRACKET:
-		return "]"
-	case ARROW:
-		return "->"
-	case COMMA:
-		return ","
-	case SHARP:
-		return "#"
-	default:
-		panic("unknown token kind")
+	symbolMap := map[TokenKind]string{
+		EOF:      "EOF",
+		IDENT:    "IDENT",
+		NUMBER:   "NUMBER",
+		LPAREN:   "(",
+		RPAREN:   ")",
+		LBRACE:   "{",
+		RBRACE:   "}",
+		LBRACKET: "[",
+		RBRACKET: "]",
+		ARROW:    "->",
+		COMMA:    ",",
+		SHARP:    "#",
 	}
+
+	return symbolMap[k]
 }
 
 type Token struct {
@@ -74,7 +62,6 @@ type Token struct {
 }
 
 func (l *Lexer) NewToken() Token {
-
 	if l.cursor >= len(l.input) {
 		token := Token{kind: EOF, value: "", pos: l.cursor}
 		return token
@@ -139,9 +126,8 @@ func (l *Lexer) NewToken() Token {
 				l.cursor++
 			}
 			return token
-		} else {
-			panic("unknown character %c" + string(l.input[l.cursor]))
 		}
+		panic("unknown character %c" + string(l.input[l.cursor]))
 	}
 }
 
@@ -171,21 +157,58 @@ func (p *Parser) nextToken() {
 	p.token = p.lexer.NewToken()
 }
 
+type ExpectTokenError struct {
+	Expected TokenKind
+	Actual   TokenKind
+	Pos      int
+}
+
+func (e ExpectTokenError) Error() string {
+	return fmt.Sprintf("at %d: expected %v, but got %v", e.Pos, e.Expected, e.Actual)
+}
+
 func (p Parser) expect(kind TokenKind) error {
 	// TODO: show line number and column number
-	return fmt.Errorf("at %d: expected %v, but got %v", p.token.pos, kind, p.token.kind)
+	return ExpectTokenError{Expected: kind, Actual: p.token.kind, Pos: p.token.pos}
+}
+
+type ExpectAtomError struct {
+	Actual TokenKind
+	Pos    int
+}
+
+func (e ExpectAtomError) Error() string {
+	return fmt.Sprintf("at %d: expected atom, but got %v", e.Pos, e.Actual)
 }
 
 func (p Parser) expectAtom() error {
-	return fmt.Errorf("at %d: expected atom, but got %v", p.token.pos, p.token.kind)
+	return ExpectAtomError{Actual: p.token.kind, Pos: p.token.pos}
+}
+
+type ExpectPatternError struct {
+	Expr ast.Node
+	Pos  int
+}
+
+func (e ExpectPatternError) Error() string {
+	return fmt.Sprintf("at %d: expected pattern, but got %s", e.Pos, e.Expr)
 }
 
 func (p Parser) expectPattern(expr ast.Node) error {
-	return fmt.Errorf("at %d: expected pattern, but got %s", expr.Pos(), expr)
+	return ExpectPatternError{Expr: expr, Pos: p.token.pos}
+}
+
+type InvalidLiteralError struct {
+	Value string
+	Pos   int
+}
+
+func (e InvalidLiteralError) Error() string {
+	return fmt.Sprintf("at %d: invalid literal %s", e.Pos, e.Value)
 }
 
 func (p Parser) invalidLiteral() error {
-	return fmt.Errorf("at %d: invalid literal %s", p.token.pos, p.token.value)
+	return InvalidLiteralError{Value: p.token.value, Pos: p.token.pos}
 }
 
 // program -> expr
@@ -200,7 +223,7 @@ func (p *Parser) parseExpr() ast.Expr {
 
 // apply -> atom atom*
 func (p *Parser) parseApply() ast.Expr {
-	f, err := p.parseAtom()
+	fun, err := p.parseAtom()
 	if err != nil {
 		panic(err)
 	}
@@ -221,9 +244,9 @@ func (p *Parser) parseApply() ast.Expr {
 	}
 
 	if len(args) == 0 {
-		return f
+		return fun
 	}
-	return ast.NewApply(f, args)
+	return ast.NewApply(fun, args)
 }
 
 // atom -> ident | number | "(" expr ")" | "{" codata "}"
@@ -261,6 +284,8 @@ func (p *Parser) parseAtom() (ast.Expr, error) {
 		}
 		p.nextToken()
 		return expr, nil
+	case EOF, RPAREN, RBRACE, LBRACKET, RBRACKET, ARROW, COMMA:
+		fallthrough
 	default:
 		return nil, p.expectAtom()
 	}

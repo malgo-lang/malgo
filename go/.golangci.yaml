@@ -1,0 +1,30 @@
+linters-settings:
+  forbidigo:
+    forbid:
+      - ^print.*$
+  exhaustruct:
+    include:
+      - '.*\.<anonymous>'
+
+linters:
+  enable-all: true
+  disable:
+    # deprecated
+    - deadcode
+    - exhaustivestruct
+    - golint
+    - ifshort
+    - interfacer
+    - maligned
+    - nosnakecase
+    - scopelint
+    - structcheck
+    - varcheck
+
+    # disabled
+    - depguard
+    - dupword
+    - godot
+    - ireturn
+    - nlreturn
+    - wsl

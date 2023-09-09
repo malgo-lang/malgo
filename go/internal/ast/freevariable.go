@@ -5,21 +5,23 @@ import (
 )
 
 func FreeVariable(expr Expr) mapset.Set[Ident] {
-	switch e := expr.(type) {
+	switch expr := expr.(type) {
 	case Variable:
-		return mapset.NewSetFromMapKeys[Ident](map[Ident]interface{}{e.Ident: nil})
+		return mapset.NewSetFromMapKeys[Ident](map[Ident]interface{}{expr.Ident: nil})
 	case Apply:
-		fvs := FreeVariable(e.Func)
-		for _, arg := range e.Args {
+		fvs := FreeVariable(expr.Func)
+		for _, arg := range expr.Args {
 			fvs = fvs.Union(FreeVariable(arg))
 		}
+
 		return fvs
 	case Codata:
 		fvs := mapset.NewSet[Ident]()
-		for _, clause := range e.Clauses {
+		for _, clause := range expr.Clauses {
 			fvs = fvs.Union(FreeVariable(clause.Body))
 			fvs = fvs.Difference(FreeVariable(clause.Pattern))
 		}
+
 		return fvs
 	default:
 		return mapset.NewSet[Ident]()
