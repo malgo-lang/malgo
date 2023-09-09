@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	parser := parser.NewParser("{# x y -> {# x -> x} x}")
+	parser := parser.NewParser("{head (# x xs) -> x, tail (# x xs) -> xs}")
 	expr := parser.Parse()
 	fmt.Printf("%v\n", expr)
 	fvs := ast.FreeVariable(expr)

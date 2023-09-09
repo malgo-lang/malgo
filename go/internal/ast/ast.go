@@ -2,11 +2,18 @@ package ast
 
 import "fmt"
 
+// Node is an interface for all nodes in the AST.
 type Node interface {
 	fmt.Stringer
-	Pos() int // byte position of start of node
+	Pos() int        // byte position of start of node
+	IsExpr() bool    // check whether the node is a syntactical-valid expression
+	IsPattern() bool // check whether the node is a syntactical-valid pattern
 }
 
+// Expr is an interface for all expressions in the AST.
+// Expr is defined as same interface as Node, but it is semantically different.
+//
+// For example, This (#) is a pattern but it is not an expression. Codata is a expression but it is not a pattern.
 type Expr interface {
 	Node
 }
@@ -45,6 +52,14 @@ func (v Variable) String() string {
 	return v.Ident.Name()
 }
 
+func (v Variable) IsExpr() bool {
+	return true
+}
+
+func (v Variable) IsPattern() bool {
+	return true
+}
+
 var (
 	_ Expr    = Variable{}
 	_ Pattern = Variable{}
@@ -72,6 +87,14 @@ func (l Literal) Arity() int {
 
 func (l Literal) String() string {
 	return fmt.Sprintf("%d", l.Value)
+}
+
+func (l Literal) IsExpr() bool {
+	return true
+}
+
+func (l Literal) IsPattern() bool {
+	return true
 }
 
 var (
@@ -121,6 +144,22 @@ func (a Apply) String() string {
 	return str
 }
 
+func (a Apply) IsExpr() bool {
+	isExpr := a.Func.IsExpr()
+	for _, arg := range a.Args {
+		isExpr = isExpr && arg.IsExpr()
+	}
+	return isExpr
+}
+
+func (a Apply) IsPattern() bool {
+	isPattern := a.Func.IsPattern()
+	for _, arg := range a.Args {
+		isPattern = isPattern && arg.IsPattern()
+	}
+	return isPattern
+}
+
 var (
 	_ Expr    = Apply{}
 	_ Pattern = Apply{}
@@ -128,18 +167,18 @@ var (
 
 type Codata struct {
 	Clauses   []Clause
-	clausePos int
+	codataPos int
 }
 
 func NewCodata(clauses []Clause, pos int) Codata {
 	return Codata{
 		Clauses:   clauses,
-		clausePos: pos,
+		codataPos: pos,
 	}
 }
 
 func (c Codata) Pos() int {
-	return c.clausePos
+	return c.codataPos
 }
 
 func (c Codata) String() string {
@@ -152,6 +191,14 @@ func (c Codata) String() string {
 	}
 	str += "}"
 	return str
+}
+
+func (c Codata) IsExpr() bool {
+	return true
+}
+
+func (c Codata) IsPattern() bool {
+	return false
 }
 
 var _ Expr = Codata{}
@@ -174,6 +221,14 @@ func (c Clause) Pos() int {
 
 func (c Clause) String() string {
 	return c.Pattern.String() + " -> " + c.Body.String()
+}
+
+func (c Clause) IsExpr() bool {
+	return false
+}
+
+func (c Clause) IsPattern() bool {
+	return false
 }
 
 var _ Node = Clause{}
@@ -203,6 +258,14 @@ func (p This) Arity() int {
 
 func (p This) String() string {
 	return "#"
+}
+
+func (p This) IsExpr() bool {
+	return false
+}
+
+func (p This) IsPattern() bool {
+	return true
 }
 
 var _ Pattern = This{}
