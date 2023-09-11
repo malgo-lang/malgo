@@ -2,7 +2,9 @@ package parser
 
 import (
 	"fmt"
+	"os"
 	"strconv"
+	"strings"
 
 	"github.com/takoeight0821/malgo/internal/ast"
 )
@@ -17,6 +19,48 @@ func NewLexer(input string) *Lexer {
 		input:  input,
 		cursor: 0,
 	}
+}
+
+func (l Lexer) PrintLine(pos int) {
+	line := 1
+	column := 1
+	start := 0
+
+	for i := 0; i < pos; i++ {
+		if l.input[i] == '\n' {
+			start = i + 1
+			line++
+			column = 1
+		} else {
+			column++
+		}
+	}
+
+	_, err := fmt.Fprintf(os.Stderr, "error at %d:%d\n\n", line, column)
+	if err != nil {
+		panic(err)
+	}
+
+	// Print the line starting with the position start
+	startFrom := l.input[start:]
+	cutNewline := strings.Split(startFrom, "\n")[0]
+	fmt.Fprintf(os.Stderr, "%s\n", cutNewline)
+
+	// Indent until the position
+	for i := 0; i < column-1; i++ {
+		if startFrom[i] == '\t' {
+			fmt.Fprintf(os.Stderr, "\t")
+		} else {
+			fmt.Fprintf(os.Stderr, " ")
+		}
+	}
+
+	fmt.Fprintf(os.Stderr, "^\n")
+}
+
+func (l Lexer) Error(pos int, err error) {
+	l.PrintLine(pos)
+	panic(err)
 }
 
 type TokenKind int
@@ -59,6 +103,14 @@ type Token struct {
 	kind  TokenKind
 	value string
 	pos   int
+}
+
+type UnknownCharError struct {
+	character byte
+}
+
+func (e UnknownCharError) Error() string {
+	return fmt.Sprintf("unknown character %c", e.character)
 }
 
 func (l *Lexer) NewToken() Token {
@@ -127,8 +179,9 @@ func (l *Lexer) NewToken() Token {
 			}
 			return token
 		}
-		panic("unknown character %c" + string(l.input[l.cursor]))
+		l.Error(l.cursor, UnknownCharError{character: l.input[l.cursor]})
 	}
+	return Token{}
 }
 
 func isIdentStart(c byte) bool {
@@ -160,55 +213,51 @@ func (p *Parser) nextToken() {
 type ExpectTokenError struct {
 	Expected TokenKind
 	Actual   TokenKind
-	Pos      int
 }
 
 func (e ExpectTokenError) Error() string {
-	return fmt.Sprintf("at %d: expected %v, but got %v", e.Pos, e.Expected, e.Actual)
+	return fmt.Sprintf("expected %v, but got %v", e.Expected, e.Actual)
 }
 
 func (p Parser) expect(kind TokenKind) error {
 	// TODO: show line number and column number
-	return ExpectTokenError{Expected: kind, Actual: p.token.kind, Pos: p.token.pos}
+	return ExpectTokenError{Expected: kind, Actual: p.token.kind}
 }
 
 type ExpectAtomError struct {
 	Actual TokenKind
-	Pos    int
 }
 
 func (e ExpectAtomError) Error() string {
-	return fmt.Sprintf("at %d: expected atom, but got %v", e.Pos, e.Actual)
+	return fmt.Sprintf("expected atom, but got %v", e.Actual)
 }
 
 func (p Parser) expectAtom() error {
-	return ExpectAtomError{Actual: p.token.kind, Pos: p.token.pos}
+	return ExpectAtomError{Actual: p.token.kind}
 }
 
 type ExpectPatternError struct {
 	Expr ast.Node
-	Pos  int
 }
 
 func (e ExpectPatternError) Error() string {
-	return fmt.Sprintf("at %d: expected pattern, but got %s", e.Pos, e.Expr)
+	return fmt.Sprintf("expected pattern, but got %s", e.Expr)
 }
 
 func (p Parser) expectPattern(expr ast.Node) error {
-	return ExpectPatternError{Expr: expr, Pos: p.token.pos}
+	return ExpectPatternError{Expr: expr}
 }
 
 type InvalidLiteralError struct {
 	Value string
-	Pos   int
 }
 
 func (e InvalidLiteralError) Error() string {
-	return fmt.Sprintf("at %d: invalid literal %s", e.Pos, e.Value)
+	return fmt.Sprintf("invalid literal %s", e.Value)
 }
 
 func (p Parser) invalidLiteral() error {
-	return InvalidLiteralError{Value: p.token.value, Pos: p.token.pos}
+	return InvalidLiteralError{Value: p.token.value}
 }
 
 // program -> expr
@@ -225,7 +274,7 @@ func (p *Parser) parseExpr() ast.Expr {
 func (p *Parser) parseApply() ast.Expr {
 	fun, err := p.parseAtom()
 	if err != nil {
-		panic(err)
+		p.lexer.Error(p.token.pos, err)
 	}
 
 	// Save the cursor for backtracking
@@ -314,7 +363,7 @@ func (p *Parser) parseCodata() ast.Expr {
 func (p *Parser) parseClause() ast.Clause {
 	pattern := p.parsePattern()
 	if p.token.kind != ARROW {
-		panic(p.expect(ARROW))
+		p.lexer.Error(p.token.pos, p.expect(ARROW))
 	}
 	p.nextToken()
 	body := p.parseExpr()
@@ -328,5 +377,6 @@ func (p *Parser) parsePattern() ast.Pattern {
 	if ok {
 		return pattern
 	}
-	panic(p.expectPattern(expr))
+	p.lexer.Error(p.token.pos, p.expectPattern(expr))
+	return nil
 }
