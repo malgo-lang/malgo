@@ -21,13 +21,13 @@ func NewLexer(input string) *Lexer {
 	}
 }
 
-func (l Lexer) PrintLine(pos int) {
+func PrintLine(input string, pos int) {
 	line := 1
 	column := 1
 	start := 0
 
 	for i := 0; i < pos; i++ {
-		if l.input[i] == '\n' {
+		if input[i] == '\n' {
 			start = i + 1
 			line++
 			column = 1
@@ -42,7 +42,7 @@ func (l Lexer) PrintLine(pos int) {
 	}
 
 	// Print the line starting with the position start
-	startFrom := l.input[start:]
+	startFrom := input[start:]
 	cutNewline := strings.Split(startFrom, "\n")[0]
 	fmt.Fprintf(os.Stderr, "%s\n", cutNewline)
 
@@ -58,8 +58,8 @@ func (l Lexer) PrintLine(pos int) {
 	fmt.Fprintf(os.Stderr, "^\n")
 }
 
-func (l Lexer) Error(pos int, err error) {
-	l.PrintLine(pos)
+func Error(input string, pos int, err error) {
+	PrintLine(input, pos)
 	panic(err)
 }
 
@@ -179,7 +179,7 @@ func (l *Lexer) NewToken() Token {
 			}
 			return token
 		}
-		l.Error(l.cursor, UnknownCharError{character: l.input[l.cursor]})
+		Error(l.input, l.cursor, UnknownCharError{character: l.input[l.cursor]})
 	}
 	return Token{}
 }
@@ -220,7 +220,6 @@ func (e ExpectTokenError) Error() string {
 }
 
 func (p Parser) expect(kind TokenKind) error {
-	// TODO: show line number and column number
 	return ExpectTokenError{Expected: kind, Actual: p.token.kind}
 }
 
@@ -274,7 +273,7 @@ func (p *Parser) parseExpr() ast.Expr {
 func (p *Parser) parseApply() ast.Expr {
 	fun, err := p.parseAtom()
 	if err != nil {
-		p.lexer.Error(p.token.pos, err)
+		Error(p.lexer.input, p.token.pos, err)
 	}
 
 	// Save the cursor for backtracking
@@ -333,11 +332,9 @@ func (p *Parser) parseAtom() (ast.Expr, error) {
 		}
 		p.nextToken()
 		return expr, nil
-	case EOF, RPAREN, RBRACE, LBRACKET, RBRACKET, ARROW, COMMA:
-		fallthrough
-	default:
-		return nil, p.expectAtom()
+	case EOF, RPAREN, RBRACE, LBRACKET, RBRACKET, ARROW, COMMA: // fallthrough
 	}
+	return nil, p.expectAtom()
 }
 
 // codata -> clause ("," clause)* ","?
@@ -363,7 +360,7 @@ func (p *Parser) parseCodata() ast.Expr {
 func (p *Parser) parseClause() ast.Clause {
 	pattern := p.parsePattern()
 	if p.token.kind != ARROW {
-		p.lexer.Error(p.token.pos, p.expect(ARROW))
+		Error(p.lexer.input, p.token.pos, p.expect(ARROW))
 	}
 	p.nextToken()
 	body := p.parseExpr()
@@ -377,6 +374,6 @@ func (p *Parser) parsePattern() ast.Pattern {
 	if ok {
 		return pattern
 	}
-	p.lexer.Error(p.token.pos, p.expectPattern(expr))
+	Error(p.lexer.input, p.token.pos, p.expectPattern(expr))
 	return nil
 }

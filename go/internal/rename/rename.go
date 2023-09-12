@@ -5,11 +5,12 @@ import (
 	"log"
 
 	"github.com/takoeight0821/malgo/internal/ast"
+	"github.com/takoeight0821/malgo/internal/parser"
 )
 
 // Check all variables are bound and replace them with RnID.
 func Rename(expr ast.Expr) ast.Expr {
-	return newRenamer().renameExpr(rnEnv{}, expr)
+	return newRenamer().renameExpr(expr)
 }
 
 // Unique identifier.
@@ -23,14 +24,73 @@ func (id RnID) Name() string {
 }
 
 type renamer struct {
+	input string
 	names map[string]int
+	env   rnEnv
 }
 
-type rnEnv map[ast.Ident]RnID
+// type rnEnv map[ast.Ident]RnID
+
+type rnEnv struct {
+	current map[ast.Ident]RnID
+	parent  *rnEnv
+}
+
+func newRnEnv() rnEnv {
+	return rnEnv{
+		current: map[ast.Ident]RnID{},
+		parent:  nil,
+	}
+}
+
+type AlreadyBoundError struct {
+	ident ast.Ident
+}
+
+func (e AlreadyBoundError) Error() string {
+	return fmt.Sprintf("%s is already bound", e.ident.Name())
+}
+
+type NotPatternError struct {
+	pattern ast.Node
+}
+
+func (e NotPatternError) Error() string {
+	return fmt.Sprintf("%v is not a pattern", e.pattern)
+}
+
+func (r *renamer) bind(pos int, ident ast.Ident, renamedIdent RnID) {
+	if _, ok := r.env.current[ident]; ok {
+		parser.PrintLine(r.input, pos)
+		panic(AlreadyBoundError{ident})
+	}
+
+	r.env.current[ident] = renamedIdent
+}
+
+func (r *renamer) push() {
+	r.env = rnEnv{
+		current: map[ast.Ident]RnID{},
+		parent:  &r.env,
+	}
+}
+
+func (r *renamer) pop() {
+	r.env = *r.env.parent
+}
+
+// Iterates over the environment chain.
+func (env rnEnv) lookup(ident ast.Ident) (RnID, bool) {
+	if id, ok := env.current[ident]; ok {
+		return id, true
+	}
+	return env.parent.lookup(ident)
+}
 
 func newRenamer() *renamer {
 	return &renamer{
 		names: map[string]int{},
+		env:   newRnEnv(),
 	}
 }
 
@@ -44,29 +104,31 @@ func (r *renamer) newName(name ast.Ident) RnID {
 	return RnID{RawName: name.Name(), Unique: r.names[name.Name()]}
 }
 
-func (r *renamer) renameExpr(env rnEnv, expr ast.Expr) ast.Expr {
+func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
 	if !expr.IsExpr() {
+		parser.PrintLine(r.input, expr.Pos())
 		log.Panicf("[error] rename.renameExpr: %T is not an expression", expr)
 	}
 
 	switch expr := expr.(type) {
 	case ast.Variable:
-		if _, ok := env[expr.Ident]; !ok {
-			panic("unbound variable: " + expr.Ident.Name())
+		if v, ok := r.env.lookup(expr.Ident); ok {
+			return ast.NewVariable(v, expr.Pos())
 		}
 
-		return ast.NewVariable(env[expr.Ident], expr.Pos())
+		parser.PrintLine(r.input, expr.Pos())
+		panic("unbound variable: " + expr.Ident.Name())
 	case ast.Apply:
 		newArgs := []ast.Node{}
 		for _, arg := range expr.Args {
-			newArgs = append(newArgs, r.renameExpr(env, arg))
+			newArgs = append(newArgs, r.renameExpr(arg))
 		}
 
-		return ast.NewApply(r.renameExpr(env, expr.Func), newArgs)
+		return ast.NewApply(r.renameExpr(expr.Func), newArgs)
 	case ast.Codata:
 		newClauses := []ast.Clause{}
 		for _, clause := range expr.Clauses {
-			newClauses = append(newClauses, r.renameClause(env, clause))
+			newClauses = append(newClauses, r.renameClause(clause))
 		}
 
 		return ast.NewCodata(newClauses, expr.Pos())
@@ -75,47 +137,47 @@ func (r *renamer) renameExpr(env rnEnv, expr ast.Expr) ast.Expr {
 	}
 }
 
-func (r *renamer) renameClause(env rnEnv, clause ast.Clause) ast.Clause {
-	newEnv, pattern := r.renamePattern(clause.Pattern)
-	for k, v := range env {
-		newEnv[k] = v
-	}
-	body := r.renameExpr(newEnv, clause.Body)
+func (r *renamer) renameClause(clause ast.Clause) ast.Clause {
+	r.push()
+	pattern := r.renamePattern(clause.Pattern)
+	body := r.renameExpr(clause.Body)
+	r.pop()
 	return ast.NewClause(pattern, body)
 }
 
 // Return new environment and renamed pattern.
 // Resulting environment does not contain any bindings for variables in the given environment,
 // so caller has to merge it.
-func (r *renamer) renamePattern(pattern ast.Pattern) (rnEnv, ast.Pattern) {
+func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 	if !pattern.IsPattern() {
+		parser.PrintLine(r.input, pattern.Pos())
 		log.Panicf("[error] rename.renamePattern: %T is not a pattern", pattern)
 	}
 
 	switch pattern := pattern.(type) {
 	case ast.Variable:
 		newName := r.newName(pattern.Ident)
-		newEnv := rnEnv{pattern.Ident: newName}
-		return newEnv, ast.NewVariable(newEnv[pattern.Ident], pattern.Pos())
+		r.bind(pattern.Pos(), pattern.Ident, newName)
+		return ast.NewVariable(newName, pattern.Pos())
 	case ast.Apply:
-		newEnv := rnEnv{}
 		newArgs := []ast.Node{}
 		for _, arg := range pattern.Args {
-			argEnv, newArg := r.renamePattern(arg.(ast.Pattern))
-			newArgs = append(newArgs, newArg)
-			for k, v := range argEnv {
-				if _, ok := newEnv[k]; ok {
-					panic(fmt.Sprintf("at %d: %s is already bound", pattern.Pos(), k.Name()))
-				}
-				newEnv[k] = v
+			arg, ok := arg.(ast.Pattern)
+			if !ok {
+				parser.PrintLine(r.input, arg.Pos())
+				panic(NotPatternError{pattern: arg})
 			}
+			newArg := r.renamePattern(arg)
+			newArgs = append(newArgs, newArg)
 		}
-		funEnv, fun := r.renamePattern(pattern.Func.(ast.Pattern))
-		for k, v := range funEnv {
-			newEnv[k] = v
+		fun, ok := pattern.Func.(ast.Pattern)
+		if !ok {
+			parser.PrintLine(r.input, pattern.Func.Pos())
+			panic(NotPatternError{pattern: pattern.Func})
 		}
-		return newEnv, ast.NewApply(fun, newArgs)
+		fun = r.renamePattern(fun)
+		return ast.NewApply(fun, newArgs)
 	default:
-		return rnEnv{}, pattern
+		return pattern
 	}
 }
