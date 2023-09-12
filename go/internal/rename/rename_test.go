@@ -12,7 +12,7 @@ func TestRename(t *testing.T) {
 
 	source := "{head (# x xs) -> x, tail (# x xs) -> {# a -> 1} xs}"
 	ast := parser.NewParser(source).Parse()
-	renamed := rename.Rename(ast)
+	renamed := rename.Rename(source, ast)
 	expect := "{(head_0 (# x_0 xs_0)) -> x_0, (tail_0 (# x_1 xs_1)) -> ({(# a_0) -> 1} xs_1)}"
 	if !(renamed.String() == expect) {
 		t.Errorf(

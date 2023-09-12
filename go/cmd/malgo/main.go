@@ -9,7 +9,8 @@ import (
 )
 
 func main() {
-	parser := parser.NewParser("{head (# x xs) -> x, tail (# x xs) -> xs}")
+	input := "{head (# x xs) -> x, tail (# x xs) -> xs}"
+	parser := parser.NewParser(input)
 	expr := parser.Parse()
 	fmt.Printf("%v\n", expr)
 	fvs := ast.FreeVariable(expr)
@@ -19,6 +20,6 @@ func main() {
 	if len(fvs.ToSlice()) != 0 {
 		panic("free variables exist")
 	}
-	renamed := rename.Rename(expr)
+	renamed := rename.Rename(input, expr)
 	fmt.Printf("%v\n", renamed)
 }
