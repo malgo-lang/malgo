@@ -13,6 +13,7 @@ func main() {
 	parser := parser.NewParser(input)
 	expr := parser.Parse()
 	fmt.Printf("%v\n", expr)
+	// TODO: more user-friendly error message
 	fvs := ast.FreeVariable(expr)
 	for _, fv := range fvs.ToSlice() {
 		fmt.Printf("free variable: %v\n", fv)
