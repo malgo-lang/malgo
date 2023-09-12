@@ -4,81 +4,11 @@ import (
 	"fmt"
 
 	"github.com/takoeight0821/malgo/internal/ast"
-	"github.com/takoeight0821/malgo/internal/parser"
 )
 
 // Check all variables are bound and replace them with RnID.
 func Rename(input string, expr ast.Expr) ast.Expr {
 	return newRenamer(input).renameExpr(expr)
-}
-
-type AlreadyBoundError struct {
-	input string
-	pos   int
-	ident ast.Ident
-}
-
-func (e AlreadyBoundError) Input() string {
-	return e.input
-}
-
-func (e AlreadyBoundError) Pos() int {
-	return e.pos
-}
-
-func (e AlreadyBoundError) Error() string {
-	return fmt.Sprintf("%s is already bound", e.ident.Name())
-}
-
-type NotExprError struct {
-	input string
-	expr  ast.Node
-}
-
-func (e NotExprError) Input() string {
-	return e.input
-}
-
-func (e NotExprError) Pos() int {
-	return e.expr.Pos()
-}
-
-func (e NotExprError) Error() string {
-	return fmt.Sprintf("%v is not an expression", e.expr)
-}
-
-type NotPatternError struct {
-	input   string
-	pattern ast.Node
-}
-
-func (e NotPatternError) Input() string {
-	return e.input
-}
-
-func (e NotPatternError) Pos() int {
-	return e.pattern.Pos()
-}
-
-func (e NotPatternError) Error() string {
-	return fmt.Sprintf("%v is not a pattern", e.pattern)
-}
-
-type UnbondVariableError struct {
-	input    string
-	variable ast.Variable
-}
-
-func (e UnbondVariableError) Input() string {
-	return e.input
-}
-
-func (e UnbondVariableError) Pos() int {
-	return e.variable.Pos()
-}
-
-func (e UnbondVariableError) Error() string {
-	return fmt.Sprintf("unbound variable: %v", e.variable.Ident.Name())
 }
 
 // Unique identifier.
@@ -94,7 +24,7 @@ func (id RnID) Name() string {
 type renamer struct {
 	input string
 	names map[string]int
-	env   rnEnv
+	env   *rnEnv
 }
 
 // type rnEnv map[ast.Ident]RnID
@@ -104,8 +34,20 @@ type rnEnv struct {
 	parent  *rnEnv
 }
 
-func newRnEnv() rnEnv {
-	return rnEnv{
+func (env rnEnv) String() string {
+	str := "{"
+	for k, v := range env.current {
+		str += fmt.Sprintf("%s -> %s\n", k.Name(), v.Name())
+	}
+	if env.parent != nil {
+		str += env.parent.String()
+	}
+	str += "}"
+	return str
+}
+
+func newRnEnv() *rnEnv {
+	return &rnEnv{
 		current: map[ast.Ident]RnID{},
 		parent:  nil,
 	}
@@ -114,7 +56,6 @@ func newRnEnv() rnEnv {
 func (r *renamer) bind(pos int, ident ast.Ident, renamedIdent RnID) {
 	if _, ok := r.env.current[ident]; ok {
 		err := AlreadyBoundError{input: r.input, pos: pos, ident: ident}
-		parser.PrintLine(err)
 		panic(err)
 	}
 
@@ -122,14 +63,14 @@ func (r *renamer) bind(pos int, ident ast.Ident, renamedIdent RnID) {
 }
 
 func (r *renamer) push() {
-	r.env = rnEnv{
+	r.env = &rnEnv{
 		current: map[ast.Ident]RnID{},
-		parent:  &r.env,
+		parent:  r.env,
 	}
 }
 
 func (r *renamer) pop() {
-	r.env = *r.env.parent
+	r.env = r.env.parent
 }
 
 // Iterates over the environment chain.
@@ -161,7 +102,6 @@ func (r *renamer) newName(name ast.Ident) RnID {
 func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
 	if !expr.IsExpr() {
 		err := NotExprError{input: r.input, expr: expr}
-		parser.PrintLine(err)
 		panic(err)
 	}
 
@@ -172,7 +112,6 @@ func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
 		}
 
 		err := UnbondVariableError{input: r.input, variable: expr}
-		parser.PrintLine(err)
 		panic(err)
 	case ast.Apply:
 		newArgs := []ast.Node{}
@@ -208,7 +147,6 @@ func (r *renamer) renameClause(clause ast.Clause) ast.Clause {
 func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 	if !pattern.IsPattern() {
 		err := NotPatternError{input: r.input, pattern: pattern}
-		parser.PrintLine(err)
 		panic(err)
 	}
 
@@ -224,7 +162,6 @@ func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 			arg, ok := arg.(ast.Pattern)
 			if !ok {
 				err := NotPatternError{input: r.input, pattern: arg}
-				parser.PrintLine(err)
 				panic(err)
 			}
 			newArg := r.renamePattern(arg)
@@ -233,7 +170,6 @@ func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 		fun, ok := pattern.Func.(ast.Pattern)
 		if !ok {
 			err := NotPatternError{input: r.input, pattern: pattern.Func}
-			parser.PrintLine(err)
 			panic(err)
 		}
 

@@ -66,11 +66,6 @@ func PrintLine(err CompileError) {
 	fmt.Fprint(os.Stderr, Line(err))
 }
 
-func Error(err CompileError) {
-	PrintLine(err)
-	panic(err)
-}
-
 type TokenKind int
 
 const (
@@ -111,24 +106,6 @@ type Token struct {
 	kind  TokenKind
 	value string
 	pos   int
-}
-
-type UnknownCharError struct {
-	input     string
-	cursor    int
-	character byte
-}
-
-func (e UnknownCharError) Input() string {
-	return e.input
-}
-
-func (e UnknownCharError) Pos() int {
-	return e.cursor
-}
-
-func (e UnknownCharError) Error() string {
-	return fmt.Sprintf("unknown character %c", e.character)
 }
 
 func (l *Lexer) NewToken() Token {
@@ -197,9 +174,8 @@ func (l *Lexer) NewToken() Token {
 			}
 			return token
 		}
-		Error(UnknownCharError{input: l.input, cursor: l.cursor, character: l.input[l.cursor]})
+		panic(UnknownCharError{input: l.input, cursor: l.cursor, character: l.input[l.cursor]})
 	}
-	return Token{}
 }
 
 func isIdentStart(c byte) bool {
@@ -228,89 +204,16 @@ func (p *Parser) nextToken() {
 	p.token = p.lexer.NewToken()
 }
 
-type ExpectTokenError struct {
-	input    string
-	cursor   int
-	Expected TokenKind
-	Actual   TokenKind
-}
-
-func (e ExpectTokenError) Input() string {
-	return e.input
-}
-
-func (e ExpectTokenError) Pos() int {
-	return e.cursor
-}
-
-func (e ExpectTokenError) Error() string {
-	return fmt.Sprintf("expected %v, but got %v", e.Expected, e.Actual)
-}
-
 func (p Parser) expect(kind TokenKind) CompileError {
 	return ExpectTokenError{input: p.lexer.input, cursor: p.token.pos, Expected: kind, Actual: p.token.kind}
-}
-
-type ExpectAtomError struct {
-	input  string
-	cursor int
-	Actual TokenKind
-}
-
-func (e ExpectAtomError) Input() string {
-	return e.input
-}
-
-func (e ExpectAtomError) Pos() int {
-	return e.cursor
-}
-
-func (e ExpectAtomError) Error() string {
-	return fmt.Sprintf("expected atom, but got %v", e.Actual)
 }
 
 func (p Parser) expectAtom() CompileError {
 	return ExpectAtomError{input: p.lexer.input, cursor: p.token.pos, Actual: p.token.kind}
 }
 
-type ExpectPatternError struct {
-	input  string
-	cursor int
-	Expr   ast.Node
-}
-
-func (e ExpectPatternError) Input() string {
-	return e.input
-}
-
-func (e ExpectPatternError) Pos() int {
-	return e.cursor
-}
-
-func (e ExpectPatternError) Error() string {
-	return fmt.Sprintf("expected pattern, but got %s", e.Expr)
-}
-
 func (p Parser) expectPattern(expr ast.Node) CompileError {
 	return ExpectPatternError{input: p.lexer.input, cursor: p.token.pos, Expr: expr}
-}
-
-type InvalidLiteralError struct {
-	input  string
-	cursor int
-	Value  string
-}
-
-func (e InvalidLiteralError) Input() string {
-	return e.input
-}
-
-func (e InvalidLiteralError) Pos() int {
-	return e.cursor
-}
-
-func (e InvalidLiteralError) Error() string {
-	return fmt.Sprintf("invalid literal %s", e.Value)
 }
 
 func (p Parser) invalidLiteral() CompileError {
@@ -331,7 +234,7 @@ func (p *Parser) parseExpr() ast.Expr {
 func (p *Parser) parseApply() ast.Expr {
 	fun, err := p.parseAtom()
 	if err != nil {
-		Error(err)
+		panic(err)
 	}
 
 	// Save the cursor for backtracking
@@ -418,7 +321,7 @@ func (p *Parser) parseCodata() ast.Expr {
 func (p *Parser) parseClause() ast.Clause {
 	pattern := p.parsePattern()
 	if p.token.kind != ARROW {
-		Error(p.expect(ARROW))
+		panic(p.expect(ARROW))
 	}
 	p.nextToken()
 	body := p.parseExpr()
@@ -432,6 +335,5 @@ func (p *Parser) parsePattern() ast.Pattern {
 	if ok {
 		return pattern
 	}
-	Error(p.expectPattern(expr))
-	return nil
+	panic(p.expectPattern(expr))
 }
