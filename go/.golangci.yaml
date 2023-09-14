@@ -6,6 +6,12 @@ linters-settings:
     include:
       - '.*\.<anonymous>'
 
+issues:
+  exclude-rules:
+    - source: "^func (l \*Lexer) NewToken() Token"
+      linter:
+        - funlen
+
 linters:
   enable-all: true
   disable:
