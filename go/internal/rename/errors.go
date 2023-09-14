@@ -30,6 +30,13 @@ type NotExprError struct {
 	expr  ast.Node
 }
 
+func NewNotExprError(input string, expr ast.Node) NotExprError {
+	return NotExprError{
+		input: input,
+		expr:  expr,
+	}
+}
+
 func (e NotExprError) Input() string {
 	return e.input
 }
@@ -45,6 +52,13 @@ func (e NotExprError) Error() string {
 type NotPatternError struct {
 	input   string
 	pattern ast.Node
+}
+
+func NewNotPatternError(input string, pattern ast.Node) NotPatternError {
+	return NotPatternError{
+		input:   input,
+		pattern: pattern,
+	}
 }
 
 func (e NotPatternError) Input() string {
