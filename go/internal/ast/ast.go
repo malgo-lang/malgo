@@ -5,9 +5,7 @@ import "fmt"
 // Node is an interface for all nodes in the AST.
 type Node interface {
 	fmt.Stringer
-	Pos() int        // byte position of start of node
-	IsExpr() bool    // check whether the node is a syntactical-valid expression
-	IsPattern() bool // check whether the node is a syntactical-valid pattern
+	Pos() int // byte position of start of node
 }
 
 // Expr is an interface for all expressions in the AST.
@@ -52,14 +50,6 @@ func (v Variable) String() string {
 	return v.Ident.Name()
 }
 
-func (v Variable) IsExpr() bool {
-	return true
-}
-
-func (v Variable) IsPattern() bool {
-	return true
-}
-
 var (
 	_ Expr    = Variable{}
 	_ Pattern = Variable{}
@@ -89,14 +79,6 @@ func (l Label) String() string {
 	return "." + l.Ident.Name()
 }
 
-func (l Label) IsExpr() bool {
-	return true
-}
-
-func (l Label) IsPattern() bool {
-	return true
-}
-
 var (
 	_ Expr    = Label{}
 	_ Pattern = Label{}
@@ -124,14 +106,6 @@ func (l Literal) Arity() int {
 
 func (l Literal) String() string {
 	return fmt.Sprintf("%d", l.Value)
-}
-
-func (l Literal) IsExpr() bool {
-	return true
-}
-
-func (l Literal) IsPattern() bool {
-	return true
 }
 
 var (
@@ -181,22 +155,6 @@ func (a Apply) String() string {
 	return str
 }
 
-func (a Apply) IsExpr() bool {
-	isExpr := a.Func.IsExpr()
-	for _, arg := range a.Args {
-		isExpr = isExpr && arg.IsExpr()
-	}
-	return isExpr
-}
-
-func (a Apply) IsPattern() bool {
-	isPattern := a.Func.IsPattern()
-	for _, arg := range a.Args {
-		isPattern = isPattern && arg.IsPattern()
-	}
-	return isPattern
-}
-
 var (
 	_ Expr    = Apply{}
 	_ Pattern = Apply{}
@@ -230,14 +188,6 @@ func (c Codata) String() string {
 	return str
 }
 
-func (c Codata) IsExpr() bool {
-	return true
-}
-
-func (c Codata) IsPattern() bool {
-	return false
-}
-
 var _ Expr = Codata{}
 
 type Clause struct {
@@ -258,14 +208,6 @@ func (c Clause) Pos() int {
 
 func (c Clause) String() string {
 	return c.Pattern.String() + " -> " + c.Body.String()
-}
-
-func (c Clause) IsExpr() bool {
-	return false
-}
-
-func (c Clause) IsPattern() bool {
-	return false
 }
 
 var _ Node = Clause{}
@@ -295,14 +237,6 @@ func (p This) Arity() int {
 
 func (p This) String() string {
 	return "#"
-}
-
-func (p This) IsExpr() bool {
-	return false
-}
-
-func (p This) IsPattern() bool {
-	return true
 }
 
 var _ Pattern = This{}

@@ -100,11 +100,6 @@ func (r *renamer) newName(name ast.Ident) RnID {
 }
 
 func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
-	if !expr.IsExpr() {
-		err := NotExprError{input: r.input, expr: expr}
-		panic(err)
-	}
-
 	switch expr := expr.(type) {
 	case ast.Variable:
 		if v, ok := r.env.lookup(expr.Ident); ok {
@@ -145,11 +140,6 @@ func (r *renamer) renameClause(clause ast.Clause) ast.Clause {
 // Resulting environment does not contain any bindings for variables in the given environment,
 // so caller has to merge it.
 func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
-	if !pattern.IsPattern() {
-		err := NotPatternError{input: r.input, pattern: pattern}
-		panic(err)
-	}
-
 	switch pattern := pattern.(type) {
 	case ast.Variable:
 		newName := r.newName(pattern.Ident)
