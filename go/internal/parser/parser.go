@@ -71,6 +71,7 @@ type TokenKind int
 const (
 	EOF TokenKind = iota
 	IDENT
+	LABEL
 	NUMBER
 	LPAREN   // (
 	RPAREN   // )
@@ -87,6 +88,7 @@ func (k TokenKind) String() string {
 	symbolMap := map[TokenKind]string{
 		EOF:      "EOF",
 		IDENT:    "IDENT",
+		LABEL:    "LABEL",
 		NUMBER:   "NUMBER",
 		LPAREN:   "(",
 		RPAREN:   ")",
@@ -161,6 +163,14 @@ func (l *Lexer) NewToken() Token {
 	case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
 		token := Token{kind: NUMBER, value: "", pos: l.cursor}
 		for l.cursor < len(l.input) && l.input[l.cursor] >= '0' && l.input[l.cursor] <= '9' {
+			token.value += string(l.input[l.cursor])
+			l.cursor++
+		}
+		return token
+	case '.':
+		l.cursor++
+		token := Token{kind: LABEL, value: "", pos: l.cursor}
+		for l.cursor < len(l.input) && isIdentPart(l.input[l.cursor]) {
 			token.value += string(l.input[l.cursor])
 			l.cursor++
 		}
@@ -258,11 +268,15 @@ func (p *Parser) parseApply() ast.Expr {
 	return ast.NewApply(fun, args)
 }
 
-// atom -> ident | number | "(" expr ")" | "{" codata "}"
+// atom -> ident | label | number | "(" expr ")" | "{" codata "}"
 func (p *Parser) parseAtom() (ast.Expr, CompileError) {
 	switch p.token.kind {
 	case IDENT:
 		expr := ast.NewVariable(ast.String(p.token.value), p.token.pos)
+		p.nextToken()
+		return expr, nil
+	case LABEL:
+		expr := ast.NewLabel(ast.String(p.token.value), p.token.pos)
 		p.nextToken()
 		return expr, nil
 	case NUMBER:

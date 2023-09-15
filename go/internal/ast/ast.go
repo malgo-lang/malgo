@@ -65,6 +65,43 @@ var (
 	_ Pattern = Variable{}
 )
 
+type Label struct {
+	Ident    Ident
+	labelPos int
+}
+
+func NewLabel(name Ident, pos int) Label {
+	return Label{
+		Ident:    name,
+		labelPos: pos,
+	}
+}
+
+func (l Label) Pos() int {
+	return l.labelPos
+}
+
+func (l Label) Arity() int {
+	return 0
+}
+
+func (l Label) String() string {
+	return "." + l.Ident.Name()
+}
+
+func (l Label) IsExpr() bool {
+	return true
+}
+
+func (l Label) IsPattern() bool {
+	return true
+}
+
+var (
+	_ Expr    = Label{}
+	_ Pattern = Label{}
+)
+
 type Literal struct {
 	Value      int
 	literalPos int
