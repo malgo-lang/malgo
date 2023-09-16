@@ -3,6 +3,7 @@ package flatten
 import (
 	"fmt"
 
+	"github.com/takoeight0821/malgo/internal/alpha"
 	"github.com/takoeight0821/malgo/internal/ast"
 )
 
@@ -26,6 +27,36 @@ func (o Object) String() string {
 }
 
 var _ ast.Expr = Object{}
+
+// Special case of Codata.
+type LambdaCase struct {
+	Parameters []ast.Ident
+	Cases      []Case
+}
+
+func (l LambdaCase) Pos() int {
+	return l.Cases[0].Pattern.Pos()
+}
+
+func (l LambdaCase) String() string {
+	str := "(\\"
+	for _, param := range l.Parameters {
+		str += param.Name() + " "
+	}
+	str += "-> "
+	for _, c := range l.Cases {
+		str += c.Pattern.String() + " -> " + c.Body.String() + ", "
+	}
+	str += ")"
+	return str
+}
+
+var _ ast.Expr = LambdaCase{}
+
+type Case struct {
+	Pattern ast.Pattern
+	Body    ast.Expr
+}
 
 // Special case of Codata.
 type Lambda struct {
@@ -79,14 +110,6 @@ type Select struct {
 	Body   ast.Expr
 }
 
-func (Select) IsExpr() bool {
-	return true
-}
-
-func (Select) IsPattern() bool {
-	return false
-}
-
 func (s Select) Pos() int {
 	return s.Target.Pos()
 }
@@ -96,3 +119,23 @@ func (s Select) String() string {
 }
 
 var _ ast.Expr = Select{}
+
+// {coalt^n} p^m
+// p is a pattern, not a copattern.
+func staticApply(lambda LambdaCase, args []ast.Node) []Case {
+	subst := make(map[ast.Ident]ast.Node)
+	for i, param := range lambda.Parameters {
+		subst[param] = args[i]
+	}
+
+	cases := make([]Case, 0, len(lambda.Cases))
+	for _, c := range lambda.Cases {
+		cases = append(cases, Case{Pattern: alpha.Convert(c.Pattern, subst).(ast.Pattern), Body: alpha.Convert(c.Body, subst)})
+	}
+	return cases
+}
+
+// H_i {coalt^n}
+func staticAccess(label ast.Ident, object Object) ast.Expr {
+	return object.Fields[label]
+}
