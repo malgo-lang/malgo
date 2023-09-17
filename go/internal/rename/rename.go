@@ -7,30 +7,17 @@ import (
 )
 
 // Check all variables are bound and replace them with RnID.
-func Rename(input string, expr ast.Expr) ast.Expr {
-	return newRenamer(input).renameExpr(expr)
-}
-
-// Unique identifier.
-type RnID struct {
-	RawName string
-	Unique  int
-}
-
-func (id RnID) Name() string {
-	return id.RawName + "_" + fmt.Sprint(id.Unique)
+func Rename(info *ast.Info, expr ast.Expr) ast.Expr {
+	return newRenamer(info).renameExpr(expr)
 }
 
 type renamer struct {
-	input string
-	names map[string]int
-	env   *rnEnv
+	*ast.Info
+	env *rnEnv
 }
 
-// type rnEnv map[ast.Ident]RnID
-
 type rnEnv struct {
-	current map[ast.Ident]RnID
+	current map[ast.Ident]ast.ID
 	parent  *rnEnv
 }
 
@@ -48,14 +35,14 @@ func (env rnEnv) String() string {
 
 func newRnEnv() *rnEnv {
 	return &rnEnv{
-		current: map[ast.Ident]RnID{},
+		current: map[ast.Ident]ast.ID{},
 		parent:  nil,
 	}
 }
 
-func (r *renamer) bind(pos int, ident ast.Ident, renamedIdent RnID) {
+func (r *renamer) bind(pos int, ident ast.Ident, renamedIdent ast.ID) {
 	if _, ok := r.env.current[ident]; ok {
-		err := AlreadyBoundError{input: r.input, pos: pos, ident: ident}
+		err := AlreadyBoundError{input: r.Input, pos: pos, ident: ident}
 		panic(err)
 	}
 
@@ -64,7 +51,7 @@ func (r *renamer) bind(pos int, ident ast.Ident, renamedIdent RnID) {
 
 func (r *renamer) push() {
 	r.env = &rnEnv{
-		current: map[ast.Ident]RnID{},
+		current: map[ast.Ident]ast.ID{},
 		parent:  r.env,
 	}
 }
@@ -74,29 +61,18 @@ func (r *renamer) pop() {
 }
 
 // Iterates over the environment chain.
-func (env rnEnv) lookup(ident ast.Ident) (RnID, bool) {
+func (env rnEnv) lookup(ident ast.Ident) (ast.ID, bool) {
 	if id, ok := env.current[ident]; ok {
 		return id, true
 	}
 	return env.parent.lookup(ident)
 }
 
-func newRenamer(input string) *renamer {
+func newRenamer(info *ast.Info) *renamer {
 	return &renamer{
-		input: input,
-		names: map[string]int{},
-		env:   newRnEnv(),
+		Info: info,
+		env:  newRnEnv(),
 	}
-}
-
-func (r *renamer) newName(name ast.Ident) RnID {
-	if _, ok := r.names[name.Name()]; !ok {
-		r.names[name.Name()] = 0
-		return RnID{RawName: name.Name(), Unique: 0}
-	}
-
-	r.names[name.Name()]++
-	return RnID{RawName: name.Name(), Unique: r.names[name.Name()]}
 }
 
 func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
@@ -106,7 +82,7 @@ func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
 			return ast.NewVariable(v, expr.Pos())
 		}
 
-		err := UnbondVariableError{input: r.input, variable: expr}
+		err := UnbondVariableError{input: r.Input, variable: expr}
 		panic(err)
 	case ast.Apply:
 		newArgs := []ast.Node{}
@@ -142,7 +118,7 @@ func (r *renamer) renameClause(clause ast.Clause) ast.Clause {
 func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 	switch pattern := pattern.(type) {
 	case ast.Variable:
-		newName := r.newName(pattern.Ident)
+		newName := r.NewName(pattern.Ident)
 		r.bind(pattern.Pos(), pattern.Ident, newName)
 
 		return ast.NewVariable(newName, pattern.Pos())
@@ -151,7 +127,7 @@ func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 		for _, arg := range pattern.Args {
 			arg, ok := arg.(ast.Pattern)
 			if !ok {
-				err := NotPatternError{input: r.input, pattern: arg}
+				err := NotPatternError{input: r.Input, pattern: arg}
 				panic(err)
 			}
 			newArg := r.renamePattern(arg)
@@ -159,7 +135,7 @@ func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 		}
 		fun, ok := pattern.Func.(ast.Pattern)
 		if !ok {
-			err := NotPatternError{input: r.input, pattern: pattern.Func}
+			err := NotPatternError{input: r.Input, pattern: pattern.Func}
 			panic(err)
 		}
 

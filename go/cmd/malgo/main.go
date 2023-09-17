@@ -22,7 +22,8 @@ func main() {
 	if len(fvs.ToSlice()) != 0 {
 		panic("free variables exist")
 	}
-	renamed := rename.Rename(input, expr)
+	info := ast.NewInfo(input)
+	renamed := rename.Rename(info, expr)
 	fmt.Printf("%v\n", renamed)
 	copatternFlattened := flatten.FlatCopattern(input, renamed)
 	fmt.Printf("%v\n", copatternFlattened)
