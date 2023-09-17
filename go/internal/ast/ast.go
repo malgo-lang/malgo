@@ -160,6 +160,7 @@ var (
 	_ Pattern = Apply{}
 )
 
+// Used until flattening.
 type Codata struct {
 	Clauses   []Clause
 	codataPos int
@@ -190,6 +191,7 @@ func (c Codata) String() string {
 
 var _ Expr = Codata{}
 
+// Used until flattening.
 type Clause struct {
 	Pattern Pattern
 	Body    Expr
@@ -217,6 +219,7 @@ type Pattern interface {
 	Arity() int
 }
 
+// Used until flattening.
 type This struct {
 	thisPos int
 }
@@ -240,3 +243,150 @@ func (p This) String() string {
 }
 
 var _ Pattern = This{}
+
+// Used after flattening.
+
+// Special case of Codata.
+type Object struct {
+	pos    int
+	Fields map[Ident]Expr
+}
+
+func NewObject(fields map[Ident]Expr, pos int) Object {
+	return Object{
+		pos:    pos,
+		Fields: fields,
+	}
+}
+
+func (o Object) Pos() int {
+	return o.pos
+}
+
+func (o Object) String() string {
+	str := "{ "
+	for label, value := range o.Fields {
+		str += label.Name() + ": " + value.String() + ", "
+	}
+	str += "}"
+	return str
+}
+
+var _ Expr = Object{}
+
+// Special case of Codata.
+type LambdaCase struct {
+	Parameters []Ident
+	Cases      []Clause
+}
+
+func NewLambdaCase(parameters []Ident, cases []Clause) LambdaCase {
+	return LambdaCase{
+		Parameters: parameters,
+		Cases:      cases,
+	}
+}
+
+func (l LambdaCase) Pos() int {
+	return l.Cases[0].Pattern.Pos()
+}
+
+func (l LambdaCase) String() string {
+	str := "(\\"
+	for _, param := range l.Parameters {
+		str += param.Name() + " "
+	}
+	str += "-> "
+	for _, c := range l.Cases {
+		str += c.Pattern.String() + " -> " + c.Body.String() + ", "
+	}
+	str += ")"
+	return str
+}
+
+var _ Expr = LambdaCase{}
+
+// Special case of Codata.
+type Lambda struct {
+	// Free variables in the Body.
+	Parameters []Ident
+	Body       Expr
+}
+
+func NewLambda(parameters []Ident, body Expr) Lambda {
+	return Lambda{
+		Parameters: parameters,
+		Body:       body,
+	}
+}
+
+func (l Lambda) Pos() int {
+	return l.Body.Pos()
+}
+
+func (l Lambda) String() string {
+	str := "{"
+	for i, param := range l.Parameters {
+		if i != 0 {
+			str += " "
+		}
+		str += param.Name()
+	}
+	str += " -> " + l.Body.String() + "}"
+	return str
+}
+
+var _ Expr = Lambda{}
+
+type Switch struct {
+	Target Expr
+	Cases  map[Ident]Expr
+}
+
+func NewSwitch(target Expr, cases map[Ident]Expr) Switch {
+	return Switch{
+		Target: target,
+		Cases:  cases,
+	}
+}
+
+func (s Switch) Pos() int {
+	return s.Target.Pos()
+}
+
+func (s Switch) String() string {
+	str := "switch " + s.Target.String() + " {"
+	for label, value := range s.Cases {
+		str += label.Name() + ": " + value.String() + ", "
+	}
+	str += "}"
+	return str
+}
+
+var _ Expr = Switch{}
+
+type Select struct {
+	Target Expr
+	Index  int
+	Bind   Ident
+	Body   Expr
+}
+
+func NewSelect(target Expr, index int, bind Ident, body Expr) Select {
+	return Select{
+		Target: target,
+		Index:  index,
+		Bind:   bind,
+		Body:   body,
+	}
+}
+
+func (s Select) Pos() int {
+	return s.Target.Pos()
+}
+
+func (s Select) String() string {
+	return "select " + s.Bind.Name() + " = " + s.Target.String() + "[" + fmt.Sprint(s.Index) + "] in " + s.Body.String()
+}
+
+var _ Expr = Select{}
