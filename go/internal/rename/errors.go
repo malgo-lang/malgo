@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/takoeight0821/malgo/internal/ast"
-	"github.com/takoeight0821/malgo/internal/parser"
 )
 
 type AlreadyBoundError struct {
@@ -22,7 +21,7 @@ func (e AlreadyBoundError) Pos() int {
 }
 
 func (e AlreadyBoundError) Error() string {
-	return parser.Line(e) + fmt.Sprintf("%s is already bound", e.ident.Name())
+	return ast.Line(e) + fmt.Sprintf("%s is already bound", e.ident.Name())
 }
 
 type NotExprError struct {
@@ -46,7 +45,7 @@ func (e NotExprError) Pos() int {
 }
 
 func (e NotExprError) Error() string {
-	return parser.Line(e) + fmt.Sprintf("%v is not an expression", e.expr)
+	return ast.Line(e) + fmt.Sprintf("%v is not an expression", e.expr)
 }
 
 type NotPatternError struct {
@@ -70,7 +69,7 @@ func (e NotPatternError) Pos() int {
 }
 
 func (e NotPatternError) Error() string {
-	return parser.Line(e) + fmt.Sprintf("%v is not a pattern", e.pattern)
+	return ast.Line(e) + fmt.Sprintf("%v is not a pattern", e.pattern)
 }
 
 type UnbondVariableError struct {
@@ -87,5 +86,5 @@ func (e UnbondVariableError) Pos() int {
 }
 
 func (e UnbondVariableError) Error() string {
-	return parser.Line(e) + fmt.Sprintf("unbound variable: %v", e.variable.Ident.Name())
+	return ast.Line(e) + fmt.Sprintf("unbound variable: %v", e.variable.Ident.Name())
 }

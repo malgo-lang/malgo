@@ -21,7 +21,7 @@ func (e UnknownCharError) Pos() int {
 }
 
 func (e UnknownCharError) Error() string {
-	return Line(e) + fmt.Sprintf("unknown character %c", e.character)
+	return ast.Line(e) + fmt.Sprintf("unknown character %c", e.character)
 }
 
 type ExpectTokenError struct {
@@ -40,7 +40,7 @@ func (e ExpectTokenError) Pos() int {
 }
 
 func (e ExpectTokenError) Error() string {
-	return Line(e) + fmt.Sprintf("expected %v, but got %v", e.Expected, e.Actual)
+	return ast.Line(e) + fmt.Sprintf("expected %v, but got %v", e.Expected, e.Actual)
 }
 
 type ExpectAtomError struct {
@@ -58,7 +58,7 @@ func (e ExpectAtomError) Pos() int {
 }
 
 func (e ExpectAtomError) Error() string {
-	return Line(e) + fmt.Sprintf("expected atom, but got %v", e.Actual)
+	return ast.Line(e) + fmt.Sprintf("expected atom, but got %v", e.Actual)
 }
 
 type ExpectPatternError struct {
@@ -76,7 +76,7 @@ func (e ExpectPatternError) Pos() int {
 }
 
 func (e ExpectPatternError) Error() string {
-	return Line(e) + fmt.Sprintf("expected pattern, but got %s", e.Expr)
+	return ast.Line(e) + fmt.Sprintf("expected pattern, but got %s", e.Expr)
 }
 
 type InvalidLiteralError struct {
@@ -94,5 +94,5 @@ func (e InvalidLiteralError) Pos() int {
 }
 
 func (e InvalidLiteralError) Error() string {
-	return Line(e) + fmt.Sprintf("invalid literal %s", e.Value)
+	return ast.Line(e) + fmt.Sprintf("invalid literal %s", e.Value)
 }
