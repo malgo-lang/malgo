@@ -6,7 +6,6 @@ import (
 	"slices"
 
 	"github.com/takoeight0821/malgo/internal/ast"
-	"github.com/takoeight0821/malgo/internal/rename"
 )
 
 /*
@@ -46,7 +45,7 @@ func (f flatter) flattenExpr(expr ast.Expr) ast.Expr {
 	case ast.Codata:
 		return f.flattenCodata(expr)
 	default:
-		panic(rename.NewNotExprError(f.input, expr))
+		panic(ast.NewNotExprError(f.input, expr))
 	}
 }
 
@@ -99,7 +98,7 @@ func (f flatter) toSeq(pattern ast.Pattern) []ast.Pattern {
 	case ast.Apply:
 		return f.toSeqApply(pattern)
 	default:
-		panic(rename.NewNotPatternError(f.input, pattern))
+		panic(ast.NewNotPatternError(f.input, pattern))
 	}
 }
 
@@ -109,7 +108,7 @@ func (f flatter) toSeqApply(pattern ast.Apply) []ast.Pattern {
 		newPattern := ast.NewApply(pattern.Func, []ast.Node{ast.NewThis(pattern.Pos())})
 		if len(pattern.Args) != 1 {
 			// The arity of the label must be 1.
-			panic(rename.NewNotPatternError(f.input, pattern))
+			panic(ast.NewNotPatternError(f.input, pattern))
 		}
 		rest := f.toSeq(pattern.Args[0].(ast.Pattern))
 		return append(rest, newPattern)

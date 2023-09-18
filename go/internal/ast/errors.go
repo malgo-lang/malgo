@@ -50,3 +50,51 @@ func Line(err CompileError) string {
 func PrintLine(err CompileError) {
 	fmt.Fprint(os.Stderr, Line(err))
 }
+
+type NotExprError struct {
+	input string
+	expr  Node
+}
+
+func NewNotExprError(input string, expr Node) NotExprError {
+	return NotExprError{
+		input: input,
+		expr:  expr,
+	}
+}
+
+func (e NotExprError) Input() string {
+	return e.input
+}
+
+func (e NotExprError) Pos() int {
+	return e.expr.Pos()
+}
+
+func (e NotExprError) Error() string {
+	return Line(e) + fmt.Sprintf("%v is not an expression", e.expr)
+}
+
+type NotPatternError struct {
+	input   string
+	pattern Node
+}
+
+func NewNotPatternError(input string, pattern Node) NotPatternError {
+	return NotPatternError{
+		input:   input,
+		pattern: pattern,
+	}
+}
+
+func (e NotPatternError) Input() string {
+	return e.input
+}
+
+func (e NotPatternError) Pos() int {
+	return e.pattern.Pos()
+}
+
+func (e NotPatternError) Error() string {
+	return Line(e) + fmt.Sprintf("%v is not a pattern", e.pattern)
+}

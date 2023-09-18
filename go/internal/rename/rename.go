@@ -127,7 +127,7 @@ func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 		for _, arg := range pattern.Args {
 			arg, ok := arg.(ast.Pattern)
 			if !ok {
-				err := NotPatternError{input: r.Input, pattern: arg}
+				err := ast.NewNotPatternError(r.Input, arg)
 				panic(err)
 			}
 			newArg := r.renamePattern(arg)
@@ -135,7 +135,7 @@ func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 		}
 		fun, ok := pattern.Func.(ast.Pattern)
 		if !ok {
-			err := NotPatternError{input: r.Input, pattern: pattern.Func}
+			err := ast.NewNotPatternError(r.Input, pattern.Func)
 			panic(err)
 		}
 
