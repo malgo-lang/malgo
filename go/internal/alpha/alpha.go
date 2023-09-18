@@ -91,7 +91,7 @@ func (a *Alpha) convert(expr ast.Node) ast.Node {
 		newBody := a.convert(expr.Body).(ast.Expr)
 		return ast.NewSelect(newTarget, expr.Index, newBind, newBody)
 	}
-	panic("unreachable")
+	panic(ast.NewNotExprError(a.Input, expr))
 }
 
 // Rename all free variables in pattern and bind them.

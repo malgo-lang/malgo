@@ -14,15 +14,14 @@ func main() {
 	parser := parser.NewParser(input)
 	expr := parser.Parse()
 	fmt.Printf("%v\n", expr)
-	// TODO: more user-friendly error message
-	fvs := ast.FreeVariable(expr)
+	info := ast.NewInfo(input)
+	fvs := ast.FreeVariable(*info, expr)
 	for _, fv := range fvs.ToSlice() {
 		fmt.Printf("free variable: %v\n", fv)
 	}
 	if len(fvs.ToSlice()) != 0 {
 		panic("free variables exist")
 	}
-	info := ast.NewInfo(input)
 	renamed := rename.Rename(info, expr)
 	fmt.Printf("%v\n", renamed)
 	copatternFlattened := flatten.FlatCopattern(input, renamed)
