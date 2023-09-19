@@ -5,12 +5,10 @@ linters-settings:
   exhaustruct:
     include:
       - '.*\.<anonymous>'
-
-issues:
-  exclude-rules:
-    - source: "^func (l \*Lexer) NewToken() Token"
-      linter:
-        - funlen
+  custom:
+    interfaceexhaustive:
+      path: ./tools/interfaceexhaustive/main.so
+      original-url: github.com/malgo-lang/malgo/go/tools/interfaceexhaustive
 
 linters:
   enable-all: true

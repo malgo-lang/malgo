@@ -19,7 +19,7 @@ func Convert(info *ast.Info, expr ast.Node, subst map[ast.Ident]ast.Node) ast.No
 	return alpha.convert(expr)
 }
 
-func (a *Alpha) convert(expr ast.Node) ast.Node {
+func (a *Alpha) convert(expr ast.Expr) ast.Expr {
 	switch expr := expr.(type) {
 	case ast.Variable:
 		if newVar, ok := a.subst[expr.Ident]; ok {

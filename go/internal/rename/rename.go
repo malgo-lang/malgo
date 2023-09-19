@@ -84,6 +84,10 @@ func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
 
 		err := UnbondVariableError{input: r.Input, variable: expr}
 		panic(err)
+	case ast.Label:
+		return expr
+	case ast.Literal:
+		return expr
 	case ast.Apply:
 		newArgs := []ast.Node{}
 		for _, arg := range expr.Args {
@@ -98,8 +102,59 @@ func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
 		}
 
 		return ast.NewCodata(newClauses, expr.Pos())
+	case ast.Object:
+		newFields := map[ast.Ident]ast.Expr{}
+		for k, v := range expr.Fields {
+			newFields[k] = r.renameExpr(v)
+		}
+
+		return ast.NewObject(newFields, expr.Pos())
+	case ast.LambdaCase:
+		newParameters := make([]ast.Ident, len(expr.Parameters))
+		for i, param := range expr.Parameters {
+			newParameters[i] = r.NewName(param)
+		}
+		r.push()
+		for i, param := range expr.Parameters {
+			r.bind(expr.Pos(), param, newParameters[i].(ast.ID))
+		}
+		newCases := []ast.Clause{}
+		for _, c := range expr.Cases {
+			newCases = append(newCases, r.renameClause(c))
+		}
+		r.pop()
+		return ast.NewLambdaCase(newParameters, newCases)
+	case ast.Lambda:
+		newParameters := make([]ast.Ident, len(expr.Parameters))
+		for i, param := range expr.Parameters {
+			newParameters[i] = r.NewName(param)
+		}
+		r.push()
+		for i, param := range expr.Parameters {
+			r.bind(expr.Pos(), param, newParameters[i].(ast.ID))
+		}
+		newBody := r.renameExpr(expr.Body)
+		r.pop()
+		return ast.NewLambda(newParameters, newBody)
+	case ast.Switch:
+		newTarget := r.renameExpr(expr.Target)
+		newCases := map[ast.Ident]ast.Expr{}
+		for i, c := range expr.Cases {
+			newCases[i] = r.renameExpr(c)
+		}
+
+		return ast.NewSwitch(newTarget, newCases)
+	case ast.Select:
+		newTarget := r.renameExpr(expr.Target)
+		newBind := r.NewName(expr.Bind)
+		r.push()
+		r.bind(expr.Pos(), expr.Bind, newBind)
+		newBody := r.renameExpr(expr.Body)
+		r.pop()
+
+		return ast.NewSelect(newTarget, expr.Index, newBind, newBody)
 	default:
-		return expr
+		panic(ast.NewNotExprError(r.Input, expr))
 	}
 }
 
@@ -122,6 +177,10 @@ func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 		r.bind(pattern.Pos(), pattern.Ident, newName)
 
 		return ast.NewVariable(newName, pattern.Pos())
+	case ast.Label:
+		return pattern
+	case ast.Literal:
+		return pattern
 	case ast.Apply:
 		newArgs := []ast.Node{}
 		for _, arg := range pattern.Args {
@@ -140,7 +199,9 @@ func (r *renamer) renamePattern(pattern ast.Pattern) ast.Pattern {
 		}
 
 		return ast.NewApply(r.renamePattern(fun), newArgs)
-	default:
+	case ast.This:
 		return pattern
+	default:
+		panic(ast.NewNotPatternError(r.Input, pattern))
 	}
 }
