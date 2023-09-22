@@ -306,6 +306,8 @@ func (l LambdaCase) String() string {
 
 var _ Expr = LambdaCase{}
 
+// Use after closure conversion.
+
 // Special case of Codata.
 type Lambda struct {
 	// Free variables in the Body.

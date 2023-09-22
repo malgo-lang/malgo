@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/takoeight0821/malgo/internal/ast"
-	"github.com/takoeight0821/malgo/internal/flatten"
 	"github.com/takoeight0821/malgo/internal/parser"
 	"github.com/takoeight0821/malgo/internal/rename"
 )
@@ -24,6 +23,4 @@ func main() {
 	}
 	renamed := rename.Rename(info, expr)
 	fmt.Printf("%v\n", renamed)
-	copatternFlattened := flatten.FlatCopattern(input, renamed)
-	fmt.Printf("%v\n", copatternFlattened)
 }
