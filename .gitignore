@@ -1,43 +1,48 @@
-*~
-.#*
-
+# General
 .DS_Store
-.dir-locals.el
+.AppleDouble
+.LSOverride
 
-.stack-work/
-dist-newstyle/
-.ghc.*
-stack.yaml.lock
-cabal.project.local
+# Icon must end with two \r
+Icon
 
-.vscode/
-.vim/
+# Thumbnails
+._*
 
-a.out
-tmp/
-test/tmp/
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
 
-*.ll
-*.grfi
-*.mlgi
-*.idx
-*.kor
-*.kor.bin
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
 
-.shake/
-.malgo-work/
+# If you prefer the allow list template instead of the deny list, see community template:
+# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
+#
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
 
-*.prof
+# Test binary, built with `go test -c`
+*.test
 
-.hie/
-weeder.dhall
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
 
-*.satysfi-aux
+# Dependency directories (remove the comment below to include it)
+# vendor/
 
-compile_flags.txt
-
-sisku_config.json
-
-target/
-
-result*
+# Go workspace file
+go.work

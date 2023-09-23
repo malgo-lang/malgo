@@ -1,0 +1,34 @@
+linters-settings:
+  forbidigo:
+    forbid:
+      - ^print.*$
+  exhaustruct:
+    include:
+      - '.*\.<anonymous>'
+  custom:
+    interfaceexhaustive:
+      path: ./tools/interfaceexhaustive/main.so
+      original-url: github.com/malgo-lang/malgo/go/tools/interfaceexhaustive
+
+linters:
+  enable-all: true
+  disable:
+    # deprecated
+    - deadcode
+    - exhaustivestruct
+    - golint
+    - ifshort
+    - interfacer
+    - maligned
+    - nosnakecase
+    - scopelint
+    - structcheck
+    - varcheck
+
+    # disabled
+    - depguard
+    - dupword
+    - godot
+    - ireturn
+    - nlreturn
+    - wsl
