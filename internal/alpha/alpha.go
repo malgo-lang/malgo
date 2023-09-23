@@ -53,20 +53,6 @@ func (a *Alpha) convert(expr ast.Expr) ast.Expr {
 			newFields[k] = a.convert(v).(ast.Expr)
 		}
 		return ast.NewObject(newFields, expr.Pos())
-	case ast.LambdaCase:
-		newParameters := make([]ast.Ident, len(expr.Parameters))
-		for i, param := range expr.Parameters {
-			newParameters[i] = a.NewName(param)
-		}
-		for i, param := range expr.Parameters {
-			a.subst[param] = ast.NewVariable(newParameters[i], expr.Pos())
-		}
-		newCases := make([]ast.Clause, len(expr.Cases))
-		for i, c := range expr.Cases {
-			newPattern := a.bind(c.Pattern)
-			newCases[i] = ast.NewClause(newPattern, a.convert(c.Body).(ast.Expr))
-		}
-		return ast.NewLambdaCase(newParameters, newCases)
 	case ast.Lambda:
 		newParameters := make([]ast.Ident, len(expr.Parameters))
 		for i, param := range expr.Parameters {

@@ -274,38 +274,6 @@ func (o Object) String() string {
 
 var _ Expr = Object{}
 
-// Special case of Codata.
-type LambdaCase struct {
-	Parameters []Ident
-	Cases      []Clause
-}
-
-func NewLambdaCase(parameters []Ident, cases []Clause) LambdaCase {
-	return LambdaCase{
-		Parameters: parameters,
-		Cases:      cases,
-	}
-}
-
-func (l LambdaCase) Pos() int {
-	return l.Cases[0].Pattern.Pos()
-}
-
-func (l LambdaCase) String() string {
-	str := "(\\"
-	for _, param := range l.Parameters {
-		str += param.Name() + " "
-	}
-	str += "-> "
-	for _, c := range l.Cases {
-		str += c.Pattern.String() + " -> " + c.Body.String() + ", "
-	}
-	str += ")"
-	return str
-}
-
-var _ Expr = LambdaCase{}
-
 // Use after closure conversion.
 
 // Special case of Codata.
@@ -339,6 +307,33 @@ func (l Lambda) String() string {
 }
 
 var _ Expr = Lambda{}
+
+type Match struct {
+	Target Expr
+	Cases  []Clause
+}
+
+func NewMatch(target Expr, cases []Clause) Match {
+	return Match{
+		Target: target,
+		Cases:  cases,
+	}
+}
+
+func (c Match) Pos() int {
+	return c.Target.Pos()
+}
+
+func (c Match) String() string {
+	str := "case " + c.Target.String() + " {"
+	for _, clause := range c.Cases {
+		str += clause.String() + ", "
+	}
+	str += "}"
+	return str
+}
+
+var _ Expr = Match{}
 
 type Switch struct {
 	Target Expr

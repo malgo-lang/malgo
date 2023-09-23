@@ -109,21 +109,6 @@ func (r *renamer) renameExpr(expr ast.Expr) ast.Expr {
 		}
 
 		return ast.NewObject(newFields, expr.Pos())
-	case ast.LambdaCase:
-		newParameters := make([]ast.Ident, len(expr.Parameters))
-		for i, param := range expr.Parameters {
-			newParameters[i] = r.NewName(param)
-		}
-		r.push()
-		for i, param := range expr.Parameters {
-			r.bind(expr.Pos(), param, newParameters[i].(ast.ID))
-		}
-		newCases := []ast.Clause{}
-		for _, c := range expr.Cases {
-			newCases = append(newCases, r.renameClause(c))
-		}
-		r.pop()
-		return ast.NewLambdaCase(newParameters, newCases)
 	case ast.Lambda:
 		newParameters := make([]ast.Ident, len(expr.Parameters))
 		for i, param := range expr.Parameters {

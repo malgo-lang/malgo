@@ -33,16 +33,6 @@ func FreeVariable(i Info, expr Expr) mapset.Set[Ident] {
 			fvs = fvs.Union(FreeVariable(i, field))
 		}
 		return fvs
-	case LambdaCase:
-		fvs := mapset.NewSet[Ident]()
-		for _, clause := range expr.Cases {
-			fvs = fvs.Union(FreeVariable(i, clause.Body))
-			fvs = fvs.Difference(FreeVariable(i, clause.Pattern))
-		}
-		for _, param := range expr.Parameters {
-			fvs.Remove(param)
-		}
-		return fvs
 	case Lambda:
 		fvs := FreeVariable(i, expr.Body)
 		for _, param := range expr.Parameters {
