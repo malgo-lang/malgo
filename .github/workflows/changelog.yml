@@ -11,10 +11,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install git-cliff
         run: |
           cargo install git-cliff
       - name: Generate CHANGELOG.md
         run: |
           sh ./scripts/changelog.sh > CHANGELOG.md
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add CHANGELOG.md
+          git commit -m "Update CHANGELOG.md"
+          git push
