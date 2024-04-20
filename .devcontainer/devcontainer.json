@@ -39,5 +39,8 @@
 		// "source=${localEnv:HOME}/.cabal/packages,target=/root/.cabal/packages,type=bind,consistency=cached"
 	],
 	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode"
+	"remoteUser": "vscode",
+	"features": {
+		"ghcr.io/devcontainers-contrib/features/cz-cli:1": {}
+	}
 }
