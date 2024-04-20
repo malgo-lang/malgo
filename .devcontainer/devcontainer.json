@@ -1,46 +1,30 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.0/containers/docker-existing-dockerfile
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
 {
-	"name": "Existing Dockerfile",
-	// Sets the run context to one level up instead of the .devcontainer folder.
-	"build": {
-		"context": "..",
-		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
-		"dockerfile": "./Dockerfile",
-		"args": {
-			"VARIANT": "bullseye"
+	"name": "Debian",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/rust:1": {},
+		"ghcr.io/devcontainers-contrib/features/cz-cli:1": {},
+		"ghcr.io/devcontainers-community/features/llvm:3": {
+			"version": "15"
+		},
+		"ghcr.io/devcontainers-contrib/features/haskell:2": {
+			"ghcVersion": "9.6.4"
+		},
+		"ghcr.io/devcontainers-contrib/features/apt-packages": {
+			"packages": "libgmp-dev,pkg-config,libgc-dev"
 		}
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"haskell.haskell",
-				"colejcummins.llvm-syntax-highlighting",
-				"GitHub.vscode-pull-request-github"
-			]
-		}
-	},
+	}
+
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-	// Uncomment the next line to run commands after the container is created - for example installing curl.
-	// "postCreateCommand": "apt-get update && apt-get install -y curl",
-	"postCreateCommand": "/bin/sh .devcontainer/postCreateCommand.sh",
-	// "ghcup compile hls --git-ref 7860df3e97ec5a286697aeed3f05a9ab08e7617e --ghc 9.6.2 -j$(nproc)",
-	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust
-	"runArgs": [
-		"--cap-add=SYS_PTRACE",
-		"--security-opt",
-		"seccomp=unconfined"
-	],
-	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
-	// "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
-	"mounts": [
-		// share package.tar.gz with the host
-		// "source=${localEnv:HOME}/.cabal/packages,target=/root/.cabal/packages,type=bind,consistency=cached"
-	],
-	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode",
-	"features": {
-		"ghcr.io/devcontainers-contrib/features/cz-cli:1": {}
-	}
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
 }
