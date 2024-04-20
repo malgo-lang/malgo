@@ -43,10 +43,13 @@ lookupId n = do
 
 cloneId :: (Reader ModuleName :> es, State Uniq :> es) => Id a -> Eff es (Id a)
 cloneId Id {..} = do
-  assert (sort == Internal || sort == Temporal) pass -- only Internal or Temporal id can be cloned
+  assert (case sort of Internal _ -> True; Temporal _ -> True; _ -> False) pass
   moduleName <- ask @ModuleName
   uniq <- getUniq
-  pure Id {..}
+  pure case sort of
+    Internal _ -> Id {sort = Internal uniq, ..}
+    Temporal _ -> Id {sort = Temporal uniq, ..}
+    _ -> error "unreachable: cloneId"
 {-# INLINE cloneId #-}
 
 alphaExpr ::

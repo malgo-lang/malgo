@@ -21,7 +21,7 @@ import Koriel.Id
 import Koriel.Lens
 import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.TypeRep qualified as TypeRep
-import Malgo.Interface (Interface)
+import Malgo.Interface (Interface (..), externalFromInterface)
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (Resolved, RnEnv)
 import Malgo.Syntax.Extension
@@ -57,8 +57,17 @@ insertKind name kind = over kindCtx (TypeRep.insertKind name kind)
 mergeInterface :: Interface -> TcEnv -> TcEnv
 mergeInterface interface tcEnv =
   tcEnv
-    & (signatureMap %~ HashMap.union (interface ^. signatureMap))
-    & (typeDefMap %~ HashMap.union (interface ^. typeDefMap))
+    & ( signatureMap
+          %~ HashMap.union
+            ( HashMap.mapKeys
+                (externalFromInterface interface)
+                interface.signatureMap
+            )
+      )
+    & ( typeDefMap
+          %~ HashMap.union
+            (HashMap.mapKeys (externalFromInterface interface) interface.typeDefMap)
+      )
     & (typeSynonymMap %~ HashMap.union (interface ^. typeSynonymMap))
     & (kindCtx %~ HashMap.union (interface ^. kindCtx))
 

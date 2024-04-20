@@ -73,12 +73,12 @@ toDocumentSymbol Index.Symbol {..} =
     toKind Index.Function = SkFunction
     toKind Index.Variable = SkVariable
 
-loadIndex :: MonadIO f => TextDocumentIdentifier -> LspOpt -> f Index
+loadIndex :: (MonadIO f) => TextDocumentIdentifier -> LspOpt -> f Index
 loadIndex doc opt = do
   indexes <- readMVar opt.indexes
   (mindex, newIndexes) <-
-    liftIO $
-      Eff.runEff (Eff.runState indexes $ Eff.runReader opt.modulePaths $ Index.loadIndex (textDocumentIdentifierToModuleName doc))
+    liftIO
+      $ Eff.runEff (Eff.runState indexes $ Eff.runReader opt.modulePaths $ Index.loadIndex (textDocumentIdentifierToModuleName doc))
   putMVar opt.indexes newIndexes
   pure $ Maybe.fromMaybe mempty mindex
 
@@ -96,8 +96,8 @@ infoToLocation Info {..} =
 
 server :: LspOpt -> IO Int
 server opt = do
-  runServer $
-    ServerDefinition
+  runServer
+    $ ServerDefinition
       { onConfigurationChange = \_ _ -> Right (),
         defaultConfig = (),
         doInitialize = \env _req -> pure $ Right env,

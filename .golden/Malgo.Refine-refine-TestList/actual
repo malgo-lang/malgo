@@ -27,7 +27,6 @@ Module
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestList" }
-                        , uniq = -1
                         , sort = External
                         }
                     , Fn
@@ -90,8 +89,7 @@ Module
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestList" }
-                                    , uniq = 40
-                                    , sort = Internal
+                                    , sort = Internal 40
                                     }
                                 )
                             ]
@@ -131,8 +129,7 @@ Module
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "TestList" }
-                                        , uniq = 0
-                                        , sort = Internal
+                                        , sort = Internal 0
                                         }
                                     )
                                     ( Apply
@@ -144,7 +141,6 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Prelude" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -155,7 +151,6 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -184,7 +179,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Prelude" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -195,7 +189,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -208,7 +201,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Prelude" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -219,7 +211,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -248,7 +239,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -261,7 +251,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Prelude" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -272,7 +261,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -285,7 +273,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Prelude" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -296,7 +283,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -322,7 +308,6 @@ Module
                                                     , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Prelude" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -335,7 +320,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -362,7 +346,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -386,7 +369,6 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -421,7 +403,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Prelude" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -432,7 +413,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -461,7 +441,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Prelude" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -472,7 +451,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -485,7 +463,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Prelude" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -496,7 +473,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -525,7 +501,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -538,7 +513,6 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Prelude" }
-                                                                            , uniq = -1
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -549,7 +523,6 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Builtin" }
-                                                                            , uniq = -1
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -562,7 +535,6 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Prelude" }
-                                                                            , uniq = -1
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -573,7 +545,6 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Builtin" }
-                                                                            , uniq = -1
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -599,7 +570,6 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Prelude" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -612,7 +582,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -639,7 +608,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -663,7 +631,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -698,7 +665,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Prelude" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -709,7 +675,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -738,7 +703,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Prelude" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -749,7 +713,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -762,7 +725,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Prelude" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -773,7 +735,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -802,7 +763,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -815,7 +775,6 @@ Module
                                                                                 , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Prelude" }
-                                                                                , uniq = -1
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -826,7 +785,6 @@ Module
                                                                                 , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Builtin" }
-                                                                                , uniq = -1
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -839,7 +797,6 @@ Module
                                                                                 , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Prelude" }
-                                                                                , uniq = -1
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -850,7 +807,6 @@ Module
                                                                                 , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Builtin" }
-                                                                                , uniq = -1
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -876,7 +832,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Prelude" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -889,7 +844,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -916,7 +870,6 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Builtin" }
-                                                                            , uniq = -1
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -940,7 +893,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -975,7 +927,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Prelude" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -986,7 +937,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -1010,7 +960,6 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Prelude" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -1037,8 +986,7 @@ Module
                                             , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "TestList" }
-                                            , uniq = 1
-                                            , sort = Internal
+                                            , sort = Internal 1
                                             }
                                         )
                                         ( Var
@@ -1050,7 +998,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Prelude" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -1061,8 +1008,7 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "TestList" }
-                                                            , uniq = 31
-                                                            , sort = Internal
+                                                            , sort = Internal 31
                                                             }
                                                         )
                                                     )
@@ -1085,7 +1031,6 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -1130,7 +1075,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -1155,7 +1099,6 @@ Module
                                                     , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Prelude" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -1168,7 +1111,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -1208,7 +1150,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -1235,7 +1176,6 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Builtin" }
-                                                                            , uniq = -1
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -1246,7 +1186,6 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Builtin" }
-                                                                            , uniq = -1
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -1270,7 +1209,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -1283,7 +1221,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -1323,7 +1260,6 @@ Module
                                                                                 , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Builtin" }
-                                                                                , uniq = -1
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -1351,7 +1287,6 @@ Module
                                                                                             , meta = ()
                                                                                             , moduleName = ModuleName
                                                                                                 { raw = "Prelude" }
-                                                                                            , uniq = -1
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1362,7 +1297,6 @@ Module
                                                                                             , meta = ()
                                                                                             , moduleName = ModuleName
                                                                                                 { raw = "Builtin" }
-                                                                                            , uniq = -1
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1374,7 +1308,6 @@ Module
                                                                                         , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "Builtin" }
-                                                                                        , uniq = -1
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -1398,7 +1331,6 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Prelude" }
-                                                                            , uniq = -1
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -1412,7 +1344,6 @@ Module
                                                                                         , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "Prelude" }
-                                                                                        , uniq = -1
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -1423,7 +1354,6 @@ Module
                                                                                         , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "Builtin" }
-                                                                                        , uniq = -1
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -1447,8 +1377,7 @@ Module
                                                                             , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "TestList" }
-                                                                            , uniq = 0
-                                                                            , sort = Internal
+                                                                            , sort = Internal 0
                                                                             }
                                                                         )
                                                                     )

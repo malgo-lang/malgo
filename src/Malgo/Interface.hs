@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Interface (Interface (..), ModulePathList (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface) where
+module Malgo.Interface (Interface (..), ModulePathList (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface, externalFromInterface) where
 
 import Control.Exception (IOException, catch)
 import Control.Lens (ifor_, (^.))
@@ -29,21 +29,22 @@ import System.FilePath (replaceExtension, (</>))
 newtype ModulePathList = ModulePathList [FilePath]
 
 data Interface = Interface
-  { -- | Used in Infer
-    _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
+  { moduleName :: ModuleName,
     -- | Used in Infer
-    _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
+    signatureMap :: HashMap PsId (GT.Scheme GT.Type),
+    -- | Used in Infer
+    typeDefMap :: HashMap PsId (GT.TypeDef GT.Type),
     -- | Used in Infer
     _typeSynonymMap :: HashMap GT.TypeVar ([GT.TypeVar], GT.Type),
     _kindCtx :: KindCtx,
     -- | Used in Rename
-    _resolvedVarIdentMap :: HashMap PsId RnId,
+    exportedIdentList :: [PsId],
     -- | Used in Rename
-    _resolvedTypeIdentMap :: HashMap PsId RnId,
+    exportedTypeIdentList :: [PsId],
     -- | Used in Desugar
     _coreIdentMap :: HashMap RnId (Id C.Type),
     -- | Used in Rename
-    infixMap :: HashMap RnId (Assoc, Int),
+    infixInfo :: HashMap RnId (Assoc, Int),
     -- | Used in Rename
     dependencies :: HashSet ModuleName
   }
@@ -56,31 +57,59 @@ makeFieldsNoPrefix ''Interface
 instance Pretty Interface where
   pretty = viaShow
 
-buildInterface :: ModuleName -> RnState -> DsState -> Interface
+externalFromInterface :: Interface -> PsId -> RnId
+externalFromInterface Interface {moduleName} psId =
+  Id {name = psId, sort = External, meta = (), moduleName}
+
+buildInterface ::
+  (HasTypeSynonymMap tcEnv (HashMap GT.TypeVar ([GT.TypeVar], GT.Type))) =>
+  ModuleName ->
+  RnState ->
+  tcEnv ->
+  DsState ->
+  Interface
 -- TODO: write abbrMap to interface
-buildInterface moduleName rnState dsState = runPureEff $ execState (Interface mempty mempty mempty mempty mempty mempty mempty rnState.infixInfo rnState.dependencies) $ do
-  ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
-    when (tcId.sort == External && tcId.moduleName == moduleName) do
-      modify \inf@Interface {..} ->
-        inf
-          { _resolvedVarIdentMap = HashMap.insert tcId.name tcId _resolvedVarIdentMap,
-            _coreIdentMap = HashMap.insert tcId coreId _coreIdentMap
+buildInterface moduleName rnState tcEnv dsState =
+  let inf =
+        Interface
+          { moduleName,
+            signatureMap = mempty,
+            typeDefMap = mempty,
+            _typeSynonymMap = mempty,
+            _kindCtx = mempty,
+            exportedIdentList = mempty,
+            exportedTypeIdentList = mempty,
+            _coreIdentMap = mempty,
+            infixInfo = rnState.infixInfo,
+            dependencies = rnState.dependencies
           }
-  ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
-    when (tcId.sort == External && tcId.moduleName == moduleName) do
-      modify \inf@Interface {..} ->
-        inf {_signatureMap = HashMap.insert tcId scheme _signatureMap}
-  ifor_ (dsState ^. typeDefMap) $ \rnId typeDef -> do
-    when (rnId.sort == External && rnId.moduleName == moduleName) do
-      modify \inf@Interface {..} ->
-        inf
-          { _resolvedTypeIdentMap = HashMap.insert rnId.name rnId _resolvedTypeIdentMap,
-            _typeDefMap = HashMap.insert rnId typeDef _typeDefMap
-          }
-  ifor_ (dsState ^. kindCtx) $ \tv kind -> do
-    when (tv.sort == External && tv.moduleName == moduleName) do
-      modify \inf@Interface {..} ->
-        inf {_kindCtx = insertKind tv kind _kindCtx}
+   in runPureEff $ execState inf do
+        ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
+          when (tcId.sort == External && tcId.moduleName == moduleName) do
+            modify \inf@Interface {..} ->
+              inf
+                { exportedIdentList = tcId.name : exportedIdentList,
+                  _coreIdentMap = HashMap.insert tcId coreId _coreIdentMap
+                }
+        ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
+          when (tcId.sort == External && tcId.moduleName == moduleName) do
+            modify \inf@Interface {..} ->
+              inf {signatureMap = HashMap.insert tcId.name scheme signatureMap}
+        ifor_ (dsState ^. typeDefMap) $ \rnId typeDef -> do
+          when (rnId.sort == External && rnId.moduleName == moduleName) do
+            modify \inf@Interface {..} ->
+              inf
+                { exportedTypeIdentList = rnId.name : exportedTypeIdentList,
+                  typeDefMap = HashMap.insert rnId.name typeDef typeDefMap
+                }
+        ifor_ (tcEnv ^. typeSynonymMap) $ \tv (tvs, ty) -> do
+          when (tv.sort == External && tv.moduleName == moduleName) do
+            modify \inf@Interface {..} ->
+              inf {_typeSynonymMap = HashMap.insert tv (tvs, ty) _typeSynonymMap}
+        ifor_ (dsState ^. kindCtx) $ \tv kind -> do
+          when (tv.sort == External && tv.moduleName == moduleName) do
+            modify \inf@Interface {..} ->
+              inf {_kindCtx = insertKind tv kind _kindCtx}
 
 toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"

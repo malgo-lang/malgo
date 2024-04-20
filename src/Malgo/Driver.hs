@@ -105,7 +105,7 @@ compileFromAST srcPath parsedAst = do
         _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
         liftIO $ BS.writeFile (dstPath -<.> "kor.bin") $ Store.encode core
 
-        let inf = buildInterface moduleName rnState dsEnv
+        let inf = buildInterface moduleName rnState tcEnv dsEnv
         liftIO $ BS.writeFile (toInterfacePath dstPath) $ Store.encode inf
 
         -- check module paths include dstName's directory

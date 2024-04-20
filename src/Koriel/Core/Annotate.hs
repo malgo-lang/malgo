@@ -34,19 +34,19 @@ parseId name meta
   | T.head name == '@' = do
       case T.words (T.tail name) of
         [moduleName, name] ->
-          pure Id {name, meta, moduleName = ModuleName moduleName, uniq = -1, sort = External}
+          pure Id {name, meta, moduleName = ModuleName moduleName, sort = External}
         _ -> error "unreachable: parseId"
   | T.head name == '#' = do
       case T.words (T.tail name) of
-        [moduleName, name, uniq] -> pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Internal}
+        [moduleName, name, uniq] -> pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, sort = Internal (read $ convertString uniq)}
         _ -> error "unreachable: parseId"
   | T.head name == '$' = do
       case T.words (T.tail name) of
-        [moduleName, name, uniq] -> pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, uniq = read $ convertString uniq, sort = Temporal}
+        [moduleName, name, uniq] -> pure Id {name = T.tail name, meta, moduleName = ModuleName moduleName, sort = Temporal (read $ convertString uniq)}
         _ -> error "unreachable: parseId"
   | T.head name == '%' = do
       moduleName <- asks @Context (.moduleName)
-      pure Id {name = T.tail name, meta, moduleName, uniq = -1, sort = Native}
+      pure Id {name = T.tail name, meta, moduleName, sort = Native}
   | otherwise = do
       error $ "parseId: " <> show name
 

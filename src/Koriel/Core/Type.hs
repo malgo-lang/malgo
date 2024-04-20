@@ -82,4 +82,4 @@ instance HasType Type where
   typeOf x = x
 
 instance (HasType a) => HasType (Id a) where
-  typeOf x = typeOf $ x.meta
+  typeOf x = typeOf x.meta

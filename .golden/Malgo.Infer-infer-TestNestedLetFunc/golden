@@ -27,7 +27,6 @@ Module
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestNestedLetFunc" }
-                        , uniq = -1
                         , sort = External
                         }
                     , Fn
@@ -90,8 +89,7 @@ Module
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestNestedLetFunc" }
-                                    , uniq = 12
-                                    , sort = Internal
+                                    , sort = Internal 12
                                     }
                                 )
                             ]
@@ -131,8 +129,7 @@ Module
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "TestNestedLetFunc" }
-                                        , uniq = 2
-                                        , sort = Internal
+                                        , sort = Internal 2
                                         }
                                     )
                                     ( Fn
@@ -195,8 +192,7 @@ Module
                                                     , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestNestedLetFunc" }
-                                                    , uniq = 9
-                                                    , sort = Internal
+                                                    , sort = Internal 9
                                                     }
                                                 )
                                             ]
@@ -236,8 +232,7 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "TestNestedLetFunc" }
-                                                        , uniq = 1
-                                                        , sort = Internal
+                                                        , sort = Internal 1
                                                         }
                                                     )
                                                     ( Apply
@@ -317,8 +312,7 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "TestNestedLetFunc" }
-                                                                        , uniq = 0
-                                                                        , sort = Internal
+                                                                        , sort = Internal 0
                                                                         }
                                                                     )
                                                                 ]
@@ -452,7 +446,6 @@ Module
                                                     , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestNestedLetFunc" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -513,7 +506,6 @@ Module
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
-                    , uniq = -1
                     , sort = External
                     }
                 , TyArr
@@ -549,7 +541,6 @@ Module
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
-                            , uniq = -1
                             , sort = External
                             }
                         )
@@ -578,48 +569,11 @@ TcEnv
     { _signatureMap = fromList
         [
             ( Id
-                { name = "$_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , uniq = 12
-                , sort = Internal
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "y"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , uniq = 1
-                , sort = Internal
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "$_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , uniq = 9
-                , sort = Internal
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
                 { name = "f"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
-                , uniq = 2
-                , sort = Internal
+                , sort = Internal 2
                 }
             , Forall []
                 ( TyArr
@@ -629,11 +583,43 @@ TcEnv
             )
         ,
             ( Id
+                { name = "y"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 1
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 12
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 9
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
                 { name = "main"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -648,7 +634,6 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -662,8 +647,7 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
-                , uniq = 0
-                , sort = Internal
+                , sort = Internal 0
                 }
             , Forall []
                 ( TyTuple 0 )
@@ -672,26 +656,10 @@ TcEnv
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPtr
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
                 { name = "String#"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -702,56 +670,10 @@ TcEnv
             )
         ,
             ( Id
-                { name = "Int64#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int32T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim DoubleT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
                 { name = "Float#"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -766,11 +688,66 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
                 { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -788,7 +765,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -804,7 +780,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -820,7 +795,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -836,7 +810,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -852,7 +825,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -868,7 +840,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -884,7 +855,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -898,8 +868,7 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
-                , uniq = 8
-                , sort = Internal
+                , sort = Internal 8
                 }
             , TyMeta
                 ( Id
@@ -907,39 +876,7 @@ TcEnv
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
-                    , uniq = 7
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TyArr TYPE TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , uniq = 6
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "TestNestedLetFunc" }
-                    , uniq = 5
-                    , sort = Temporal
+                    , sort = Temporal 7
                     }
                 )
             )
@@ -949,8 +886,7 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
-                , uniq = 4
-                , sort = Internal
+                , sort = Internal 11
                 }
             , TyMeta
                 ( Id
@@ -958,8 +894,7 @@ TcEnv
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
-                    , uniq = 3
-                    , sort = Temporal
+                    , sort = Temporal 10
                     }
                 )
             )
@@ -969,40 +904,6 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Int64#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1013,8 +914,7 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
-                , uniq = 11
-                , sort = Internal
+                , sort = Internal 4
                 }
             , TyMeta
                 ( Id
@@ -1022,8 +922,25 @@ TcEnv
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
-                    , uniq = 10
-                    , sort = Temporal
+                    , sort = Temporal 3
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 6
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , sort = Temporal 5
                     }
                 )
             )
@@ -1033,7 +950,6 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1044,10 +960,49 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TyArr TYPE TYPE
             )
         ]
     }

@@ -13,7 +13,6 @@ Module
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Test2" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -24,7 +23,6 @@ Module
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Test2" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -47,7 +45,6 @@ Module
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Test2" }
-                        , uniq = -1
                         , sort = External
                         }
                     , Fn
@@ -59,7 +56,6 @@ Module
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Test2" }
-                                        , uniq = -1
                                         , sort = External
                                         }
                                     )
@@ -70,7 +66,6 @@ Module
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Test2" }
-                                        , uniq = -1
                                         , sort = External
                                         }
                                     )
@@ -98,7 +93,6 @@ Module
                                             , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Test2" }
-                                            , uniq = -1
                                             , sort = External
                                             }
                                         )
@@ -109,7 +103,6 @@ Module
                                             , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Test2" }
-                                            , uniq = -1
                                             , sort = External
                                             }
                                         )
@@ -136,7 +129,6 @@ Module
                                             , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Test2" }
-                                            , uniq = -1
                                             , sort = External
                                             }
                                         )
@@ -159,7 +151,6 @@ Module
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Test2" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 ) []
@@ -172,7 +163,6 @@ Module
                                             , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Test2" }
-                                            , uniq = -1
                                             , sort = External
                                             }
                                         )
@@ -212,7 +202,6 @@ Module
                                                     , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Test2" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -235,7 +224,6 @@ Module
                                             , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Test2" }
-                                            , uniq = -1
                                             , sort = External
                                             }
                                         )
@@ -251,7 +239,6 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Test2" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -262,7 +249,6 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Test2" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -289,7 +275,6 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Test2" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -312,8 +297,7 @@ Module
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Test2" }
-                                        , uniq = 0
-                                        , sort = Internal
+                                        , sort = Internal 0
                                         }
                                     )
                                 ]
@@ -325,7 +309,6 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Test2" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -365,7 +348,6 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Test2" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -388,8 +370,7 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Test2" }
-                                                , uniq = 0
-                                                , sort = Internal
+                                                , sort = Internal 0
                                                 }
                                             )
                                         ) :| []
@@ -423,7 +404,6 @@ Module
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Test2" }
-                        , uniq = -1
                         , sort = External
                         }
                     , Fn
@@ -486,8 +466,7 @@ Module
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Test2" }
-                                    , uniq = 22
-                                    , sort = Internal
+                                    , sort = Internal 22
                                     }
                                 )
                             ]
@@ -548,7 +527,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Test2" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -577,7 +555,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Test2" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -605,7 +582,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Test2" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -628,7 +604,6 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Test2" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     ) []
@@ -704,7 +679,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Test2" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -740,7 +714,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Test2" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -768,7 +741,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Test2" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -791,8 +763,7 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Test2" }
-                                                            , uniq = 1
-                                                            , sort = Internal
+                                                            , sort = Internal 1
                                                             }
                                                         )
                                                     ]
@@ -867,7 +838,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Test2" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -905,7 +875,6 @@ Module
                                                         , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Test2" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -945,7 +914,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Test2" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -972,7 +940,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Test2" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -983,7 +950,6 @@ Module
                                                                         , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Test2" }
-                                                                        , uniq = -1
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -1007,7 +973,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Test2" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -1020,7 +985,6 @@ Module
                                                                     , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Test2" }
-                                                                    , uniq = -1
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -1043,7 +1007,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Test2" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -1078,7 +1041,6 @@ Module
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test2" }
-                    , uniq = -1
                     , sort = External
                     }
                 , []
@@ -1101,7 +1063,6 @@ Module
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test2" }
-                            , uniq = -1
                             , sort = External
                             }
                         , []
@@ -1124,7 +1085,6 @@ Module
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test2" }
-                            , uniq = -1
                             , sort = External
                             }
                         , []
@@ -1147,7 +1107,6 @@ Module
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test2" }
-                            , uniq = -1
                             , sort = External
                             }
                         , []
@@ -1182,7 +1141,6 @@ Module
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test2" }
-                    , uniq = -1
                     , sort = External
                     }
                 , TyArr
@@ -1218,7 +1176,6 @@ Module
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
-                            , uniq = -1
                             , sort = External
                             }
                         )
@@ -1247,87 +1204,16 @@ TcEnv
     { _signatureMap = fromList
         [
             ( Id
-                { name = "B"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "Test2" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim StringT )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "$_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 22
-                , sort = Internal
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
                 { name = "main"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test2" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
                 ( TyArr
                     ( TyTuple 0 )
                     ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "a"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 0
-                , sort = Internal
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "Test2" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
                 )
             )
         ,
@@ -1336,7 +1222,6 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test2" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -1347,7 +1232,6 @@ TcEnv
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test2" }
-                            , uniq = -1
                             , sort = External
                             }
                         )
@@ -1358,7 +1242,6 @@ TcEnv
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test2" }
-                            , uniq = -1
                             , sort = External
                             }
                         )
@@ -1367,12 +1250,11 @@ TcEnv
             )
         ,
             ( Id
-                { name = "_"
+                { name = "a"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test2" }
-                , uniq = 1
-                , sort = Internal
+                , sort = Internal 0
                 }
             , Forall []
                 ( TyCon
@@ -1381,29 +1263,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Test2" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "G"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "Test2" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1415,7 +1274,6 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test2" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -1425,7 +1283,90 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Test2" }
-                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 22
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "G"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "B"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 1
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
                         , sort = External
                         }
                     )
@@ -1435,86 +1376,10 @@ TcEnv
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPtr
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim StringT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Int64#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int32T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim DoubleT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
                 { name = "RGB"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test2" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1524,7 +1389,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Test2" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1536,7 +1400,6 @@ TcEnv
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test2" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall []
@@ -1546,7 +1409,6 @@ TcEnv
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Test2" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1558,7 +1420,6 @@ TcEnv
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test2" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall []
@@ -1568,7 +1429,6 @@ TcEnv
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Test2" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1580,7 +1440,6 @@ TcEnv
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test2" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall []
@@ -1590,7 +1449,6 @@ TcEnv
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Test2" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1601,11 +1459,24 @@ TcEnv
             )
         ,
             ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim StringT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
                 { name = "Float#"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1620,11 +1491,66 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
                 { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -1642,7 +1568,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -1658,7 +1583,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -1674,7 +1598,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -1690,7 +1613,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -1706,7 +1628,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -1722,7 +1643,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -1738,7 +1658,6 @@ TcEnv
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
-                        , uniq = -1
                         , sort = External
                         }
                     }
@@ -1752,8 +1671,7 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test2" }
-                , uniq = 5
-                , sort = Internal
+                , sort = Internal 3
                 }
             , TyMeta
                 ( Id
@@ -1761,39 +1679,7 @@ TcEnv
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test2" }
-                    , uniq = 4
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TyArr TYPE TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 19
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test2" }
-                    , uniq = 18
-                    , sort = Temporal
+                    , sort = Temporal 2
                     }
                 )
             )
@@ -1803,8 +1689,7 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test2" }
-                , uniq = 17
-                , sort = Internal
+                , sort = Internal 5
                 }
             , TyMeta
                 ( Id
@@ -1812,28 +1697,7 @@ TcEnv
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test2" }
-                    , uniq = 16
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 13
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test2" }
-                    , uniq = 12
-                    , sort = Temporal
+                    , sort = Temporal 4
                     }
                 )
             )
@@ -1843,7 +1707,170 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 7
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , sort = Temporal 6
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 9
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , sort = Temporal 8
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 11
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , sort = Temporal 10
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 13
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , sort = Temporal 12
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 15
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , sort = Temporal 14
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 17
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , sort = Temporal 16
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 19
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , sort = Temporal 18
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , sort = Internal 21
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , sort = Temporal 20
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
                 , sort = External
                 }
             , TYPE
@@ -1854,7 +1881,6 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1865,7 +1891,6 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1876,152 +1901,19 @@ TcEnv
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
             )
         ,
             ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 7
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test2" }
-                    , uniq = 6
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 21
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test2" }
-                    , uniq = 20
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 3
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test2" }
-                    , uniq = 2
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 15
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test2" }
-                    , uniq = 14
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Float#"
+                { name = "Ptr#"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 11
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test2" }
-                    , uniq = 10
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test2" }
-                , uniq = 9
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test2" }
-                    , uniq = 8
-                    , sort = Temporal
-                    }
-                )
+            , TyArr TYPE TYPE
             )
         ]
     }

@@ -7,7 +7,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -26,8 +25,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "Test6" }
-                        , uniq = 30
-                        , sort = Temporal
+                        , sort = Temporal 30
                         }
                     , typ = SumT
                         [ Con
@@ -66,8 +64,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 30
-                            , sort = Temporal
+                            , sort = Temporal 30
                             }
                         )
                     )
@@ -79,7 +76,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -98,8 +94,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "Test6" }
-                        , uniq = 31
-                        , sort = Temporal
+                        , sort = Temporal 31
                         }
                     , typ = SumT
                         [ Con
@@ -138,8 +133,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 31
-                            , sort = Temporal
+                            , sort = Temporal 31
                             }
                         )
                     )
@@ -151,7 +145,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -170,8 +163,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "Test6" }
-                        , uniq = 32
-                        , sort = Temporal
+                        , sort = Temporal 32
                         }
                     , typ = SumT
                         [ Con
@@ -210,8 +202,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 32
-                            , sort = Temporal
+                            , sort = Temporal 32
                             }
                         )
                     )
@@ -226,7 +217,6 @@ Program
                     ] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -236,8 +226,7 @@ Program
                         [ Con Tuple [] ]
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 33
-                    , sort = Temporal
+                    , sort = Temporal 33
                     }
                 ]
             ,
@@ -257,8 +246,7 @@ Program
                             [ Con Tuple [] ]
                         , moduleName = ModuleName
                             { raw = "Test6" }
-                        , uniq = 33
-                        , sort = Temporal
+                        , sort = Temporal 33
                         }
                     )
                 ]
@@ -270,7 +258,6 @@ Program
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -279,8 +266,7 @@ Program
                     , meta = StringT
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 34
-                    , sort = Temporal
+                    , sort = Temporal 34
                     }
                 ]
             , [ StringT ] :-> SumT
@@ -295,8 +281,7 @@ Program
                         , meta = StringT
                         , moduleName = ModuleName
                             { raw = "Test6" }
-                        , uniq = 34
-                        , sort = Temporal
+                        , sort = Temporal 34
                         }
                     )
                 ]
@@ -307,7 +292,6 @@ Program
                 , meta = [ AnyT ] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -316,8 +300,7 @@ Program
                     , meta = AnyT
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 35
-                    , sort = Temporal
+                    , sort = Temporal 35
                     }
                 ]
             , [ AnyT ] :-> AnyT
@@ -338,8 +321,7 @@ Program
                             , meta = AnyT
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 35
-                            , sort = Temporal
+                            , sort = Temporal 35
                             }
                         )
                     )
@@ -354,7 +336,6 @@ Program
                             , meta = [] :-> AnyT
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = -1
                             , sort = External
                             }
                         ) []
@@ -370,8 +351,7 @@ Program
                                 [ Con Tuple [] ]
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 37
-                            , sort = Temporal
+                            , sort = Temporal 37
                             }
                         )
                         ( Let
@@ -382,8 +362,7 @@ Program
                                         [ Con Tuple [] ]
                                     , moduleName = ModuleName
                                         { raw = "Test6" }
-                                    , uniq = 36
-                                    , sort = Temporal
+                                    , sort = Temporal 36
                                     }
                                 , typ = SumT
                                     [ Con Tuple [] ]
@@ -402,8 +381,7 @@ Program
                                             [ Con Tuple [] ]
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = 36
-                                        , sort = Temporal
+                                        , sort = Temporal 36
                                         }
                                     )
                                 )
@@ -415,8 +393,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "Test6" }
-                                , uniq = 38
-                                , sort = Temporal
+                                , sort = Temporal 38
                                 }
                             )
                             ( Call
@@ -429,7 +406,6 @@ Program
                                             ] :-> AnyT
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = -1
                                         , sort = External
                                         }
                                     )
@@ -441,8 +417,7 @@ Program
                                             [ Con Tuple [] ]
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = 37
-                                        , sort = Temporal
+                                        , sort = Temporal 37
                                         }
                                     )
                                 ]
@@ -454,8 +429,7 @@ Program
                                         , meta = AnyT
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = 38
-                                        , sort = Temporal
+                                        , sort = Temporal 38
                                         }
                                     )
                                 )
@@ -473,8 +447,7 @@ Program
                                 [ Con Tuple [] ]
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 37
-                            , sort = Temporal
+                            , sort = Temporal 37
                             }
                         )
                         ( Let
@@ -485,8 +458,7 @@ Program
                                         [ Con Tuple [] ]
                                     , moduleName = ModuleName
                                         { raw = "Test6" }
-                                    , uniq = 36
-                                    , sort = Temporal
+                                    , sort = Temporal 36
                                     }
                                 , typ = SumT
                                     [ Con Tuple [] ]
@@ -505,8 +477,7 @@ Program
                                             [ Con Tuple [] ]
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = 36
-                                        , sort = Temporal
+                                        , sort = Temporal 36
                                         }
                                     )
                                 )
@@ -518,8 +489,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "Test6" }
-                                , uniq = 38
-                                , sort = Temporal
+                                , sort = Temporal 38
                                 }
                             )
                             ( Call
@@ -532,7 +502,6 @@ Program
                                             ] :-> AnyT
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = -1
                                         , sort = External
                                         }
                                     )
@@ -544,8 +513,7 @@ Program
                                             [ Con Tuple [] ]
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = 37
-                                        , sort = Temporal
+                                        , sort = Temporal 37
                                         }
                                     )
                                 ]
@@ -557,8 +525,7 @@ Program
                                         , meta = AnyT
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = 38
-                                        , sort = Temporal
+                                        , sort = Temporal 38
                                         }
                                     )
                                 )
@@ -577,7 +544,6 @@ Program
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -587,8 +553,7 @@ Program
                         [ Con Tuple [] ]
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 39
-                    , sort = Temporal
+                    , sort = Temporal 39
                     }
                 ]
             ,
@@ -603,8 +568,7 @@ Program
                         [ Con Tuple [] ]
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 44
-                    , sort = Temporal
+                    , sort = Temporal 44
                     }
                 )
                 ( Let
@@ -615,8 +579,7 @@ Program
                                 [ Con Tuple [] ]
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 43
-                            , sort = Temporal
+                            , sort = Temporal 43
                             }
                         , typ = [ AnyT ] :-> SumT
                             [ Con Tuple [] ]
@@ -626,8 +589,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "Test6" }
-                                , uniq = 40
-                                , sort = Temporal
+                                , sort = Temporal 40
                                 }
                             ]
                             ( Match
@@ -647,8 +609,7 @@ Program
                                             , meta = AnyT
                                             , moduleName = ModuleName
                                                 { raw = "Test6" }
-                                            , uniq = 40
-                                            , sort = Temporal
+                                            , sort = Temporal 40
                                             }
                                         )
                                     )
@@ -664,8 +625,7 @@ Program
                                                 [ Con Tuple [] ]
                                             , moduleName = ModuleName
                                                 { raw = "Test6" }
-                                            , uniq = 41
-                                            , sort = Temporal
+                                            , sort = Temporal 41
                                             }
                                         )
                                         ( Call
@@ -676,7 +636,6 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "Test6" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -696,8 +655,7 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "Test6" }
-                                                    , uniq = 41
-                                                    , sort = Temporal
+                                                    , sort = Temporal 41
                                                     }
                                                 )
                                             )
@@ -714,8 +672,7 @@ Program
                                                 [ Con Tuple [] ]
                                             , moduleName = ModuleName
                                                 { raw = "Test6" }
-                                            , uniq = 41
-                                            , sort = Temporal
+                                            , sort = Temporal 41
                                             }
                                         )
                                         ( Call
@@ -726,7 +683,6 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "Test6" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -746,8 +702,7 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "Test6" }
-                                                    , uniq = 41
-                                                    , sort = Temporal
+                                                    , sort = Temporal 41
                                                     }
                                                 )
                                             )
@@ -764,8 +719,7 @@ Program
                                                 [ Con Tuple [] ]
                                             , moduleName = ModuleName
                                                 { raw = "Test6" }
-                                            , uniq = 42
-                                            , sort = Temporal
+                                            , sort = Temporal 42
                                             }
                                         )
                                         ( Call
@@ -776,7 +730,6 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "Test6" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -796,8 +749,7 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "Test6" }
-                                                    , uniq = 42
-                                                    , sort = Temporal
+                                                    , sort = Temporal 42
                                                     }
                                                 )
                                             )
@@ -815,8 +767,7 @@ Program
                                     [ Con Tuple [] ]
                                 , moduleName = ModuleName
                                     { raw = "Test6" }
-                                , uniq = 43
-                                , sort = Temporal
+                                , sort = Temporal 43
                                 }
                             )
                         )
@@ -828,8 +779,7 @@ Program
                         , meta = AnyT
                         , moduleName = ModuleName
                             { raw = "Test6" }
-                        , uniq = 47
-                        , sort = Temporal
+                        , sort = Temporal 47
                         }
                     )
                     ( Assign
@@ -838,8 +788,7 @@ Program
                             , meta = AnyT
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 45
-                            , sort = Temporal
+                            , sort = Temporal 45
                             }
                         )
                         ( CallDirect
@@ -848,7 +797,6 @@ Program
                                 , meta = [] :-> AnyT
                                 , moduleName = ModuleName
                                     { raw = "Test6" }
-                                , uniq = -1
                                 , sort = External
                                 }
                             ) []
@@ -859,8 +807,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "Test6" }
-                                , uniq = 46
-                                , sort = Temporal
+                                , sort = Temporal 46
                                 }
                             )
                             ( Call
@@ -870,7 +817,6 @@ Program
                                         , meta = [ AnyT ] :-> AnyT
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = -1
                                         , sort = External
                                         }
                                     )
@@ -881,8 +827,7 @@ Program
                                         , meta = AnyT
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = 45
-                                        , sort = Temporal
+                                        , sort = Temporal 45
                                         }
                                     )
                                 ]
@@ -894,8 +839,7 @@ Program
                                         , meta = AnyT
                                         , moduleName = ModuleName
                                             { raw = "Test6" }
-                                        , uniq = 46
-                                        , sort = Temporal
+                                        , sort = Temporal 46
                                         }
                                     )
                                 )
@@ -909,8 +853,7 @@ Program
                                 [ Con Tuple [] ]
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = 48
-                            , sort = Temporal
+                            , sort = Temporal 48
                             }
                         )
                         ( Call
@@ -921,8 +864,7 @@ Program
                                         [ Con Tuple [] ]
                                     , moduleName = ModuleName
                                         { raw = "Test6" }
-                                    , uniq = 44
-                                    , sort = Temporal
+                                    , sort = Temporal 44
                                     }
                                 )
                             )
@@ -932,8 +874,7 @@ Program
                                     , meta = AnyT
                                     , moduleName = ModuleName
                                         { raw = "Test6" }
-                                    , uniq = 47
-                                    , sort = Temporal
+                                    , sort = Temporal 47
                                     }
                                 )
                             ]
@@ -949,8 +890,7 @@ Program
                                         [ Con Tuple [] ]
                                     , moduleName = ModuleName
                                         { raw = "Test6" }
-                                    , uniq = 48
-                                    , sort = Temporal
+                                    , sort = Temporal 48
                                     }
                                 )
                             )
@@ -978,29 +918,10 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
-                { name = "B"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "B"
-                , meta = [] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
                 { name = "main"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -1012,25 +933,6 @@ DsState
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "G"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "G"
-                , meta = [] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             )
@@ -1040,7 +942,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -1048,26 +949,7 @@ DsState
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 1
-                , sort = Internal
-                }
-            , Id
-                { name = "r"
-                , meta = AnyT
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 35
-                , sort = Temporal
                 }
             )
         ,
@@ -1076,7 +958,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -1084,45 +965,7 @@ DsState
                 , meta = [ AnyT ] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 2
-                , sort = Internal
-                }
-            , Id
-                { name = "b"
-                , meta = AnyT
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 40
-                , sort = Temporal
-                }
-            )
-        ,
-            ( Id
-                { name = "$_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 29
-                , sort = Internal
-                }
-            , Id
-                { name = "$_"
-                , meta = SumT
-                    [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 39
-                , sort = Temporal
                 }
             )
         ,
@@ -1131,7 +974,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -1140,8 +982,23 @@ DsState
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 2
+                }
+            , Id
+                { name = "b"
+                , meta = AnyT
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Temporal 40
                 }
             )
         ,
@@ -1150,7 +1007,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -1161,41 +1017,82 @@ DsState
                     ] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 1
+                }
+            , Id
+                { name = "r"
+                , meta = AnyT
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Temporal 35
+                }
+            )
+        ,
+            ( Id
+                { name = "G"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            , Id
+                { name = "G"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "B"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            , Id
+                { name = "B"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 29
+                }
+            , Id
+                { name = "$_"
+                , meta = SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Temporal 39
                 }
             )
         ]
     , _signatureMap = fromList
         [
             ( Id
-                { name = "B"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "Test6" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
                 { name = "main"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -1206,33 +1103,10 @@ DsState
             )
         ,
             ( Id
-                { name = "G"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "Test6" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
                 { name = "R"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -1242,29 +1116,6 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Test6" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 1
-                , sort = Internal
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "Test6" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1276,7 +1127,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -1287,7 +1137,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = -1
                             , sort = External
                             }
                         )
@@ -1298,8 +1147,71 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Test6" }
-                            , uniq = -1
                             , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 2
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test6" }
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_exit_failure"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            , Forall
+                [ Id
+                    { name = "a"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test6" }
+                    , sort = Internal 4
+                    }
+                ]
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyVar
+                        ( Id
+                            { name = "a"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test6" }
+                            , sort = Internal 4
                             }
                         )
                     )
@@ -1311,8 +1223,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = 2
-                , sort = Internal
+                , sort = Internal 1
                 }
             , Forall []
                 ( TyCon
@@ -1321,7 +1232,46 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Test6" }
-                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "G"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test6" }
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "B"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test6" }
                         , sort = External
                         }
                     )
@@ -1333,199 +1283,19 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = 29
-                , sort = Internal
+                , sort = Internal 29
                 }
             , Forall []
                 ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim StringT )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "malgo_exit_failure"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall
-                [ Id
-                    { name = "a"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test6" }
-                    , uniq = 4
-                    , sort = Internal
-                    }
-                ]
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyVar
-                        ( Id
-                            { name = "a"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "Test6" }
-                            , uniq = 4
-                            , sort = Internal
-                            }
-                        )
-                    )
-                )
             )
         ]
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "a"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 0
-                , sort = Internal
-                }
-            , TypeDef
-                { _typeConstructor = TyVar
-                    ( Id
-                        { name = "a"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "Test6" }
-                        , uniq = 4
-                        , sort = Internal
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "RGB"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyCon
-                    ( Id
-                        { name = "RGB"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "Test6" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors =
-                    [
-                        ( Id
-                            { name = "R"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "Test6" }
-                            , uniq = -1
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "RGB"
-                                    , meta = ()
-                                    , moduleName = ModuleName
-                                        { raw = "Test6" }
-                                    , uniq = -1
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ,
-                        ( Id
-                            { name = "G"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "Test6" }
-                            , uniq = -1
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "RGB"
-                                    , meta = ()
-                                    , moduleName = ModuleName
-                                        { raw = "Test6" }
-                                    , uniq = -1
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ,
-                        ( Id
-                            { name = "B"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "Test6" }
-                            , uniq = -1
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "RGB"
-                                    , meta = ()
-                                    , moduleName = ModuleName
-                                        { raw = "Test6" }
-                                    , uniq = -1
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ]
-                }
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPtr
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
                 { name = "String#"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1536,45 +1306,22 @@ DsState
             )
         ,
             ( Id
-                { name = "Int64#"
+                { name = "a"
                 , meta = ()
                 , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
+                    { raw = "Test6" }
+                , sort = Internal 0
                 }
             , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int32T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim DoubleT
+                { _typeConstructor = TyVar
+                    ( Id
+                        { name = "a"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test6" }
+                        , sort = Internal 4
+                        }
+                    )
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -1585,7 +1332,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1600,11 +1346,149 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
                 { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "RGB"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test6" }
+                        , sort = External
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "R"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test6" }
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Test6" }
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "G"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test6" }
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Test6" }
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "B"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test6" }
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Test6" }
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -1617,8 +1501,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = 10
-                , sort = Internal
+                , sort = Internal 28
                 }
             , TyMeta
                 ( Id
@@ -1626,39 +1509,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 9
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TyArr TYPE TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 8
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test6" }
-                    , uniq = 7
-                    , sort = Temporal
+                    , sort = Temporal 27
                     }
                 )
             )
@@ -1668,8 +1519,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = 12
-                , sort = Internal
+                , sort = Internal 24
                 }
             , TyMeta
                 ( Id
@@ -1677,8 +1527,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 11
-                    , sort = Temporal
+                    , sort = Temporal 23
                     }
                 )
             )
@@ -1688,8 +1537,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = 18
-                , sort = Internal
+                , sort = Internal 26
                 }
             , TyMeta
                 ( Id
@@ -1697,8 +1545,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 17
-                    , sort = Temporal
+                    , sort = Temporal 25
                     }
                 )
             )
@@ -1708,7 +1555,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1719,8 +1565,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = 16
-                , sort = Internal
+                , sort = Internal 20
                 }
             , TyMeta
                 ( Id
@@ -1728,8 +1573,153 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 15
-                    , sort = Temporal
+                    , sort = Temporal 19
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 22
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test6" }
+                    , sort = Temporal 21
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 16
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test6" }
+                    , sort = Temporal 15
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 18
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test6" }
+                    , sort = Temporal 17
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 12
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test6" }
+                    , sort = Temporal 11
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 8
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test6" }
+                    , sort = Temporal 7
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "a"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 4
+                }
+            , TyMeta
+                ( Id
+                    { name = "ka"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test6" }
+                    , sort = Temporal 3
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test6" }
+                , sort = Internal 10
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test6" }
+                    , sort = Temporal 9
                     }
                 )
             )
@@ -1739,7 +1729,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1750,8 +1739,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = 22
-                , sort = Internal
+                , sort = Internal 6
                 }
             , TyMeta
                 ( Id
@@ -1759,8 +1747,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 21
-                    , sort = Temporal
+                    , sort = Temporal 5
                     }
                 )
             )
@@ -1770,7 +1757,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1781,70 +1767,19 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
             )
         ,
             ( Id
-                { name = "t"
+                { name = "Ptr#"
                 , meta = ()
                 , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 20
-                , sort = Internal
+                    { raw = "Builtin" }
+                , sort = External
                 }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test6" }
-                    , uniq = 19
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 26
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test6" }
-                    , uniq = 25
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 24
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test6" }
-                    , uniq = 23
-                    , sort = Temporal
-                    }
-                )
+            , TyArr TYPE TYPE
             )
         ,
             ( Id
@@ -1852,8 +1787,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Test6" }
-                , uniq = 4
-                , sort = Internal
+                , sort = Internal 14
                 }
             , TyMeta
                 ( Id
@@ -1861,90 +1795,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "Test6" }
-                    , uniq = 3
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Float#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 28
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test6" }
-                    , uniq = 27
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "a"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 14
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "ka"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test6" }
-                    , uniq = 13
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Test6" }
-                , uniq = 6
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "Test6" }
-                    , uniq = 5
-                    , sort = Temporal
+                    , sort = Temporal 13
                     }
                 )
             )

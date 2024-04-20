@@ -22,7 +22,6 @@ Module
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "Double" }
-                        , uniq = -1
                         , sort = External
                         }
                     , Fn
@@ -114,7 +113,6 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -180,7 +178,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -218,7 +215,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -300,25 +296,10 @@ RnState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Prelude" }
-                , uniq = -1
                 , sort = External
                 }
             ,
                 ( RightA
-                , 0
-                )
-            )
-        ,
-            ( Id
-                { name = "|>"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , uniq = -1
-                , sort = External
-                }
-            ,
-                ( LeftA
                 , 0
                 )
             )
@@ -328,12 +309,24 @@ RnState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Prelude" }
-                , uniq = -1
                 , sort = External
                 }
             ,
                 ( RightA
                 , 9
+                )
+            )
+        ,
+            ( Id
+                { name = "|>"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Prelude" }
+                , sort = External
+                }
+            ,
+                ( LeftA
+                , 0
                 )
             )
         ]

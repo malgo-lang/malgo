@@ -88,8 +88,8 @@ deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
 
 instance (Pretty (XId x)) => Pretty (Type x) where
   pretty = prettyPrecType 0
-  
-prettyPrecType :: Pretty (XId x) => Int -> Type x -> Doc ann
+
+prettyPrecType :: (Pretty (XId x)) => Int -> Type x -> Doc ann
 prettyPrecType d (TyApp _ t ts) =
   maybeParens (d > 11) $ pretty t <+> sep (map (prettyPrecType 12) ts)
 prettyPrecType _ (TyVar _ i) = pretty i
@@ -333,7 +333,7 @@ deriving stock instance (ForallPatX Ord x, Ord (XId x)) => Ord (Pat x)
 instance (Pretty (XId x)) => Pretty (Pat x) where
   pretty = prettyPrecPat 0
 
-prettyPrecPat :: Pretty (XId x) => Int -> Pat x -> Doc ann
+prettyPrecPat :: (Pretty (XId x)) => Int -> Pat x -> Doc ann
 prettyPrecPat _ (VarP _ i) = pretty i
 prettyPrecPat _ (ConP _ i []) = pretty i
 prettyPrecPat d (ConP _ i ps) =

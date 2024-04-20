@@ -1,11 +1,11 @@
-module Koriel.Lens (
-  HasResolvedTypeIdentMap (..),
-  HasResolvedVarIdentMap (..),
-  HasSignatureMap (..),
-  HasTypeDefMap (..),
-  HasTypeSynonymMap (..),
-  HasKindCtx (..),
-)
+module Koriel.Lens
+  ( HasResolvedTypeIdentMap (..),
+    HasResolvedVarIdentMap (..),
+    HasSignatureMap (..),
+    HasTypeDefMap (..),
+    HasTypeSynonymMap (..),
+    HasKindCtx (..),
+  )
 where
 
 import Control.Lens

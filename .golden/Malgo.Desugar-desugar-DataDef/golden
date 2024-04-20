@@ -10,8 +10,7 @@ Program
                     ] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 24
-                , sort = Temporal
+                , sort = Temporal 24
                 }
             ,
                 [ Id
@@ -19,16 +18,14 @@ Program
                     , meta = AnyT
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 25
-                    , sort = Temporal
+                    , sort = Temporal 25
                     }
                 , Id
                     { name = "p"
                     , meta = AnyT
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 26
-                    , sort = Temporal
+                    , sort = Temporal 26
                     }
                 ]
             ,
@@ -50,8 +47,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 27
-                        , sort = Temporal
+                        , sort = Temporal 27
                         }
                     , typ = SumT
                         [ Con
@@ -85,8 +81,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 25
-                                , sort = Temporal
+                                , sort = Temporal 25
                                 }
                             )
                         , Var
@@ -95,8 +90,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 26
-                                , sort = Temporal
+                                , sort = Temporal 26
                                 }
                             )
                         ]
@@ -117,8 +111,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 27
-                            , sort = Temporal
+                            , sort = Temporal 27
                             }
                         )
                     )
@@ -130,7 +123,6 @@ Program
                 , meta = [ Int64T ] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -139,8 +131,7 @@ Program
                     , meta = Int64T
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 18
-                    , sort = Temporal
+                    , sort = Temporal 18
                     }
                 ]
             , [ Int64T ] :-> AnyT
@@ -154,8 +145,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 19
-                        , sort = Temporal
+                        , sort = Temporal 19
                         }
                     , typ = SumT
                         [ Con
@@ -176,8 +166,7 @@ Program
                                 , meta = Int64T
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 18
-                                , sort = Temporal
+                                , sort = Temporal 18
                                 }
                             )
                         ]
@@ -193,8 +182,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 19
-                            , sort = Temporal
+                            , sort = Temporal 19
                             }
                         )
                     )
@@ -206,7 +194,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -226,8 +213,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 20
-                        , sort = Temporal
+                        , sort = Temporal 20
                         }
                     , typ = SumT
                         [ Con
@@ -269,8 +255,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 20
-                            , sort = Temporal
+                            , sort = Temporal 20
                             }
                         )
                     )
@@ -283,7 +268,6 @@ Program
                     ( [ AnyT ] :-> AnyT )
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -292,8 +276,7 @@ Program
                     , meta = AnyT
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 21
-                    , sort = Temporal
+                    , sort = Temporal 21
                     }
                 ]
             , [ AnyT ] :->
@@ -305,8 +288,7 @@ Program
                         , meta = [ AnyT ] :-> AnyT
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 28
-                        , sort = Temporal
+                        , sort = Temporal 28
                         }
                     , typ = [ AnyT ] :-> AnyT
                     , _object = Fun
@@ -315,8 +297,7 @@ Program
                             , meta = AnyT
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 22
-                            , sort = Temporal
+                            , sort = Temporal 22
                             }
                         ]
                         ( CallDirect
@@ -328,8 +309,7 @@ Program
                                     ] :-> AnyT
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 24
-                                , sort = Temporal
+                                , sort = Temporal 24
                                 }
                             )
                             [ Var
@@ -338,8 +318,7 @@ Program
                                     , meta = AnyT
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = 21
-                                    , sort = Temporal
+                                    , sort = Temporal 21
                                     }
                                 )
                             , Var
@@ -348,8 +327,7 @@ Program
                                     , meta = AnyT
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = 22
-                                    , sort = Temporal
+                                    , sort = Temporal 22
                                     }
                                 )
                             ]
@@ -363,8 +341,7 @@ Program
                             , meta = [ AnyT ] :-> AnyT
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 28
-                            , sort = Temporal
+                            , sort = Temporal 28
                             }
                         )
                     )
@@ -376,7 +353,6 @@ Program
                 , meta = [ Int64T ] :-> StringT
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -385,8 +361,7 @@ Program
                     , meta = Int64T
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 29
-                    , sort = Temporal
+                    , sort = Temporal 29
                     }
                 ]
             , [ Int64T ] :-> StringT
@@ -398,8 +373,7 @@ Program
                         , meta = Int64T
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 29
-                        , sort = Temporal
+                        , sort = Temporal 29
                         }
                     )
                 ]
@@ -411,7 +385,6 @@ Program
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -420,8 +393,7 @@ Program
                     , meta = StringT
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 30
-                    , sort = Temporal
+                    , sort = Temporal 30
                     }
                 ]
             , [ StringT ] :-> SumT
@@ -436,8 +408,7 @@ Program
                         , meta = StringT
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 30
-                        , sort = Temporal
+                        , sort = Temporal 30
                         }
                     )
                 ]
@@ -452,7 +423,6 @@ Program
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -462,8 +432,7 @@ Program
                         [ Con Tuple [] ]
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 31
-                    , sort = Temporal
+                    , sort = Temporal 31
                     }
                 ]
             ,
@@ -478,8 +447,7 @@ Program
                         [ Con Tuple [] ]
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 38
-                    , sort = Temporal
+                    , sort = Temporal 38
                     }
                 )
                 ( Let
@@ -490,8 +458,7 @@ Program
                                 [ Con Tuple [] ]
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 37
-                            , sort = Temporal
+                            , sort = Temporal 37
                             }
                         , typ = [ AnyT ] :-> SumT
                             [ Con Tuple [] ]
@@ -501,8 +468,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 32
-                                , sort = Temporal
+                                , sort = Temporal 32
                                 }
                             ]
                             ( Match
@@ -518,8 +484,7 @@ Program
                                             , meta = AnyT
                                             , moduleName = ModuleName
                                                 { raw = "DataDef" }
-                                            , uniq = 32
-                                            , sort = Temporal
+                                            , sort = Temporal 32
                                             }
                                         )
                                     )
@@ -533,8 +498,7 @@ Program
                                         , meta = Int64T
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
-                                        , uniq = 33
-                                        , sort = Temporal
+                                        , sort = Temporal 33
                                         }
                                     ]
                                     ( Assign
@@ -543,8 +507,7 @@ Program
                                             , meta = StringT
                                             , moduleName = ModuleName
                                                 { raw = "DataDef" }
-                                            , uniq = 35
-                                            , sort = Temporal
+                                            , sort = Temporal 35
                                             }
                                         )
                                         ( Assign
@@ -553,8 +516,7 @@ Program
                                                 , meta = StringT
                                                 , moduleName = ModuleName
                                                     { raw = "DataDef" }
-                                                , uniq = 34
-                                                , sort = Temporal
+                                                , sort = Temporal 34
                                                 }
                                             )
                                             ( Call
@@ -564,7 +526,6 @@ Program
                                                         , meta = [ Int64T ] :-> StringT
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -575,8 +536,7 @@ Program
                                                         , meta = Int64T
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
-                                                        , uniq = 33
-                                                        , sort = Temporal
+                                                        , sort = Temporal 33
                                                         }
                                                     )
                                                 ]
@@ -588,8 +548,7 @@ Program
                                                         , meta = StringT
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
-                                                        , uniq = 34
-                                                        , sort = Temporal
+                                                        , sort = Temporal 34
                                                         }
                                                     )
                                                 )
@@ -602,8 +561,7 @@ Program
                                                     [ Con Tuple [] ]
                                                 , moduleName = ModuleName
                                                     { raw = "DataDef" }
-                                                , uniq = 36
-                                                , sort = Temporal
+                                                , sort = Temporal 36
                                                 }
                                             )
                                             ( Call
@@ -614,7 +572,6 @@ Program
                                                             [ Con Tuple [] ]
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -625,8 +582,7 @@ Program
                                                         , meta = StringT
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
-                                                        , uniq = 35
-                                                        , sort = Temporal
+                                                        , sort = Temporal 35
                                                         }
                                                     )
                                                 ]
@@ -642,8 +598,7 @@ Program
                                                             [ Con Tuple [] ]
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
-                                                        , uniq = 36
-                                                        , sort = Temporal
+                                                        , sort = Temporal 36
                                                         }
                                                     )
                                                 )
@@ -662,8 +617,7 @@ Program
                                     [ Con Tuple [] ]
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 37
-                                , sort = Temporal
+                                , sort = Temporal 37
                                 }
                             )
                         )
@@ -675,8 +629,7 @@ Program
                         , meta = AnyT
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 40
-                        , sort = Temporal
+                        , sort = Temporal 40
                         }
                     )
                     ( Assign
@@ -685,8 +638,7 @@ Program
                             , meta = AnyT
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 39
-                            , sort = Temporal
+                            , sort = Temporal 39
                             }
                         )
                         ( Call
@@ -696,7 +648,6 @@ Program
                                     , meta = [ Int64T ] :-> AnyT
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -712,8 +663,7 @@ Program
                                     , meta = AnyT
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = 39
-                                    , sort = Temporal
+                                    , sort = Temporal 39
                                     }
                                 )
                             )
@@ -726,8 +676,7 @@ Program
                                 [ Con Tuple [] ]
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 41
-                            , sort = Temporal
+                            , sort = Temporal 41
                             }
                         )
                         ( Call
@@ -738,8 +687,7 @@ Program
                                         [ Con Tuple [] ]
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = 38
-                                    , sort = Temporal
+                                    , sort = Temporal 38
                                     }
                                 )
                             )
@@ -749,8 +697,7 @@ Program
                                     , meta = AnyT
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = 40
-                                    , sort = Temporal
+                                    , sort = Temporal 40
                                     }
                                 )
                             ]
@@ -766,8 +713,7 @@ Program
                                         [ Con Tuple [] ]
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = 41
-                                    , sort = Temporal
+                                    , sort = Temporal 41
                                     }
                                 )
                             )
@@ -792,30 +738,11 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
-                { name = "malgo_int64_t_to_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "malgo_int64_t_to_string"
-                , meta = [ Int64T ] :-> StringT
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
                 { name = "$_"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 17
-                , sort = Internal
+                , sort = Internal 17
                 }
             , Id
                 { name = "$_"
@@ -823,8 +750,23 @@ DsState
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 31
-                , sort = Temporal
+                , sort = Temporal 31
+                }
+            )
+        ,
+            ( Id
+                { name = "x"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 1
+                }
+            , Id
+                { name = "p"
+                , meta = Int64T
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Temporal 33
                 }
             )
         ,
@@ -833,7 +775,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -845,62 +786,6 @@ DsState
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "x"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = 1
-                , sort = Internal
-                }
-            , Id
-                { name = "p"
-                , meta = Int64T
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = 33
-                , sort = Temporal
-                }
-            )
-        ,
-            ( Id
-                { name = "Int#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "Int#"
-                , meta = [ Int64T ] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "malgo_print_string"
-                , meta = [ StringT ] :-> SumT
-                    [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             )
@@ -910,7 +795,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -918,7 +802,6 @@ DsState
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             )
@@ -928,7 +811,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -937,7 +819,55 @@ DsState
                     ( [ AnyT ] :-> AnyT )
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , Id
+                { name = "malgo_print_string"
+                , meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "Int#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , Id
+                { name = "Int#"
+                , meta = [ Int64T ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_int64_t_to_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , Id
+                { name = "malgo_int64_t_to_string"
+                , meta = [ Int64T ] :-> StringT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
                 , sort = External
                 }
             )
@@ -945,27 +875,24 @@ DsState
     , _signatureMap = fromList
         [
             ( Id
-                { name = "malgo_int64_t_to_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim Int64T ) ( TyPrim StringT ) )
-            )
-        ,
-            ( Id
                 { name = "$_"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 17
-                , sort = Internal
+                , sort = Internal 17
                 }
             , Forall []
                 ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "x"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 1
+                }
+            , Forall [] ( TyPrim Int64T )
             )
         ,
             ( Id
@@ -973,7 +900,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -984,60 +910,10 @@ DsState
             )
         ,
             ( Id
-                { name = "x"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = 1
-                , sort = Internal
-                }
-            , Forall [] ( TyPrim Int64T )
-            )
-        ,
-            ( Id
-                { name = "Int#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim Int64T )
-                    ( TyCon
-                        ( Id
-                            { name = "Int"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "DataDef" }
-                            , uniq = -1
-                            , sort = External
-                            }
-                        )
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim StringT )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
                 { name = "Nil"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall
@@ -1046,8 +922,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 2
-                    , sort = Internal
+                    , sort = Internal 2
                     }
                 ]
                 ( TyApp
@@ -1057,7 +932,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = -1
                             , sort = External
                             }
                         )
@@ -1068,8 +942,7 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 2
-                            , sort = Internal
+                            , sort = Internal 2
                             }
                         )
                     )
@@ -1081,7 +954,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall
@@ -1090,8 +962,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 2
-                    , sort = Internal
+                    , sort = Internal 2
                     }
                 ]
                 ( TyArr
@@ -1101,8 +972,7 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 2
-                            , sort = Internal
+                            , sort = Internal 2
                             }
                         )
                     )
@@ -1114,7 +984,6 @@ DsState
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1125,8 +994,7 @@ DsState
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = 2
-                                    , sort = Internal
+                                    , sort = Internal 2
                                     }
                                 )
                             )
@@ -1138,7 +1006,6 @@ DsState
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1149,8 +1016,7 @@ DsState
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
-                                    , uniq = 2
-                                    , sort = Internal
+                                    , sort = Internal 2
                                     }
                                 )
                             )
@@ -1158,45 +1024,60 @@ DsState
                     )
                 )
             )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "Int#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim Int64T )
+                    ( TyCon
+                        ( Id
+                            { name = "Int"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_int64_t_to_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim Int64T ) ( TyPrim StringT ) )
+            )
         ]
     , _typeDefMap = fromList
         [
-            ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPtr
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim StringT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
             ( Id
                 { name = "Int"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1206,7 +1087,6 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1218,7 +1098,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall []
@@ -1229,7 +1108,6 @@ DsState
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
-                                        , uniq = -1
                                         , sort = External
                                         }
                                     )
@@ -1241,45 +1119,14 @@ DsState
             )
         ,
             ( Id
-                { name = "Int64#"
+                { name = "String#"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int32T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim DoubleT
+                { _typeConstructor = TyPrim StringT
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -1290,8 +1137,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 0
-                , sort = Internal
+                , sort = Internal 0
                 }
             , TypeDef
                 { _typeConstructor = TyVar
@@ -1300,8 +1146,7 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 2
-                        , sort = Internal
+                        , sort = Internal 2
                         }
                     )
                 , _typeParameters = []
@@ -1314,7 +1159,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1329,7 +1173,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1344,7 +1187,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1354,7 +1196,6 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1364,8 +1205,7 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 2
-                        , sort = Internal
+                        , sort = Internal 2
                         }
                     ]
                 , _valueConstructors =
@@ -1375,7 +1215,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall
@@ -1384,8 +1223,7 @@ DsState
                                 , meta = ()
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 2
-                                , sort = Internal
+                                , sort = Internal 2
                                 }
                             ]
                             ( TyApp
@@ -1395,7 +1233,6 @@ DsState
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
-                                        , uniq = -1
                                         , sort = External
                                         }
                                     )
@@ -1406,8 +1243,7 @@ DsState
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
-                                        , uniq = 2
-                                        , sort = Internal
+                                        , sort = Internal 2
                                         }
                                     )
                                 )
@@ -1419,7 +1255,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall
@@ -1428,8 +1263,7 @@ DsState
                                 , meta = ()
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 2
-                                , sort = Internal
+                                , sort = Internal 2
                                 }
                             ]
                             ( TyArr
@@ -1439,8 +1273,7 @@ DsState
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
-                                        , uniq = 2
-                                        , sort = Internal
+                                        , sort = Internal 2
                                         }
                                     )
                                 )
@@ -1452,7 +1285,6 @@ DsState
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "DataDef" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -1463,8 +1295,7 @@ DsState
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "DataDef" }
-                                                , uniq = 2
-                                                , sort = Internal
+                                                , sort = Internal 2
                                                 }
                                             )
                                         )
@@ -1476,7 +1307,6 @@ DsState
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "DataDef" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -1487,8 +1317,7 @@ DsState
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "DataDef" }
-                                                , uniq = 2
-                                                , sort = Internal
+                                                , sort = Internal 2
                                                 }
                                             )
                                         )
@@ -1499,27 +1328,47 @@ DsState
                     ]
                 }
             )
-        ]
-    , _kindCtx = fromList
-        [
+        ,
             ( Id
-                { name = "t"
+                { name = "Int64#"
                 , meta = ()
                 , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = 8
-                , sort = Internal
+                    { raw = "Builtin" }
+                , sort = External
                 }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "DataDef" }
-                    , uniq = 7
-                    , sort = Temporal
-                    }
-                )
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
             )
         ,
             ( Id
@@ -1527,21 +1376,145 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ]
+    , _kindCtx = fromList
+        [
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 16
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , sort = Temporal 15
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 8
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , sort = Temporal 7
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 10
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , sort = Temporal 9
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 12
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , sort = Temporal 11
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "List"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
                 , sort = External
                 }
             , TyArr TYPE TYPE
             )
         ,
             ( Id
-                { name = "String#"
+                { name = "t"
                 , meta = ()
                 , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
+                    { raw = "DataDef" }
+                , sort = Internal 14
                 }
-            , TYPE
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , sort = Temporal 13
+                    }
+                )
             )
         ,
             ( Id
@@ -1549,7 +1522,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1560,7 +1532,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1571,7 +1542,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1582,8 +1552,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 10
-                , sort = Internal
+                , sort = Internal 4
                 }
             , TyMeta
                 ( Id
@@ -1591,100 +1560,16 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 9
-                    , sort = Temporal
+                    , sort = Temporal 3
                     }
                 )
             )
         ,
             ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = 14
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "DataDef" }
-                    , uniq = 13
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = 12
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "DataDef" }
-                    , uniq = 11
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Float#"
+                { name = "Ptr#"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = 16
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "DataDef" }
-                    , uniq = 15
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "List"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = -1
                 , sort = External
                 }
             , TyArr TYPE TYPE
@@ -1695,8 +1580,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 6
-                , sort = Internal
+                , sort = Internal 6
                 }
             , TyMeta
                 ( Id
@@ -1704,28 +1588,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , uniq = 5
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , uniq = 4
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "DataDef" }
-                    , uniq = 3
-                    , sort = Temporal
+                    , sort = Temporal 5
                     }
                 )
             )
@@ -1740,8 +1603,7 @@ DsState
                     ] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 24
-                , sort = Temporal
+                , sort = Temporal 24
                 }
             )
             [ Id
@@ -1749,16 +1611,14 @@ DsState
                 , meta = AnyT
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 25
-                , sort = Temporal
+                , sort = Temporal 25
                 }
             , Id
                 { name = "p"
                 , meta = AnyT
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , uniq = 26
-                , sort = Temporal
+                , sort = Temporal 26
                 }
             ]
             (
@@ -1781,8 +1641,7 @@ DsState
                             ]
                         , moduleName = ModuleName
                             { raw = "DataDef" }
-                        , uniq = 27
-                        , sort = Temporal
+                        , sort = Temporal 27
                         }
                     , typ = SumT
                         [ Con
@@ -1816,8 +1675,7 @@ DsState
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 25
-                                , sort = Temporal
+                                , sort = Temporal 25
                                 }
                             )
                         , Var
@@ -1826,8 +1684,7 @@ DsState
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "DataDef" }
-                                , uniq = 26
-                                , sort = Temporal
+                                , sort = Temporal 26
                                 }
                             )
                         ]
@@ -1848,8 +1705,7 @@ DsState
                                 ]
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
-                            , uniq = 27
-                            , sort = Temporal
+                            , sort = Temporal 27
                             }
                         )
                     )

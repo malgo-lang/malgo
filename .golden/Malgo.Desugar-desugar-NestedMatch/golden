@@ -7,7 +7,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -24,8 +23,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 30
-                        , sort = Temporal
+                        , sort = Temporal 30
                         }
                     , typ = SumT
                         [ Con
@@ -58,8 +56,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 30
-                            , sort = Temporal
+                            , sort = Temporal 30
                             }
                         )
                     )
@@ -71,7 +68,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -88,8 +84,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 31
-                        , sort = Temporal
+                        , sort = Temporal 31
                         }
                     , typ = SumT
                         [ Con
@@ -122,8 +117,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 31
-                            , sort = Temporal
+                            , sort = Temporal 31
                             }
                         )
                     )
@@ -135,7 +129,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -152,8 +145,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 32
-                        , sort = Temporal
+                        , sort = Temporal 32
                         }
                     , typ = SumT
                         [ Con
@@ -186,8 +178,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 32
-                            , sort = Temporal
+                            , sort = Temporal 32
                             }
                         )
                     )
@@ -199,7 +190,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -216,8 +206,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 33
-                        , sort = Temporal
+                        , sort = Temporal 33
                         }
                     , typ = SumT
                         [ Con
@@ -250,8 +239,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 33
-                            , sort = Temporal
+                            , sort = Temporal 33
                             }
                         )
                     )
@@ -263,7 +251,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -280,8 +267,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 34
-                        , sort = Temporal
+                        , sort = Temporal 34
                         }
                     , typ = SumT
                         [ Con
@@ -314,8 +300,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 34
-                            , sort = Temporal
+                            , sort = Temporal 34
                             }
                         )
                     )
@@ -327,7 +312,6 @@ Program
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , []
@@ -344,8 +328,7 @@ Program
                             ]
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 35
-                        , sort = Temporal
+                        , sort = Temporal 35
                         }
                     , typ = SumT
                         [ Con
@@ -378,8 +361,7 @@ Program
                                 ]
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 35
-                            , sort = Temporal
+                            , sort = Temporal 35
                             }
                         )
                     )
@@ -392,7 +374,6 @@ Program
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -401,8 +382,7 @@ Program
                     , meta = StringT
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 36
-                    , sort = Temporal
+                    , sort = Temporal 36
                     }
                 ]
             , [ StringT ] :-> SumT
@@ -417,8 +397,7 @@ Program
                         , meta = StringT
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 36
-                        , sort = Temporal
+                        , sort = Temporal 36
                         }
                     )
                 ]
@@ -432,7 +411,6 @@ Program
                     ] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -442,8 +420,7 @@ Program
                         [ Con Tuple [] ]
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 37
-                    , sort = Temporal
+                    , sort = Temporal 37
                     }
                 ]
             ,
@@ -463,8 +440,7 @@ Program
                             [ Con Tuple [] ]
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 37
-                        , sort = Temporal
+                        , sort = Temporal 37
                         }
                     )
                 ]
@@ -479,7 +455,6 @@ Program
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             ,
@@ -489,8 +464,7 @@ Program
                         [ Con Tuple [] ]
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 38
-                    , sort = Temporal
+                    , sort = Temporal 38
                     }
                 ]
             ,
@@ -505,8 +479,7 @@ Program
                         [ Con Tuple [] ]
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 45
-                    , sort = Temporal
+                    , sort = Temporal 45
                     }
                 )
                 ( Let
@@ -517,8 +490,7 @@ Program
                                 [ Con Tuple [] ]
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 44
-                            , sort = Temporal
+                            , sort = Temporal 44
                             }
                         , typ = [ AnyT ] :-> SumT
                             [ Con Tuple [] ]
@@ -528,8 +500,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "NestedMatch" }
-                                , uniq = 39
-                                , sort = Temporal
+                                , sort = Temporal 39
                                 }
                             ]
                             ( Match
@@ -547,8 +518,7 @@ Program
                                             , meta = AnyT
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = 39
-                                            , sort = Temporal
+                                            , sort = Temporal 39
                                             }
                                         )
                                     )
@@ -564,8 +534,7 @@ Program
                                                 [ Con Tuple [] ]
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = 41
-                                            , sort = Temporal
+                                            , sort = Temporal 41
                                             }
                                         )
                                         ( Let
@@ -576,8 +545,7 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = 40
-                                                    , sort = Temporal
+                                                    , sort = Temporal 40
                                                     }
                                                 , typ = SumT
                                                     [ Con Tuple [] ]
@@ -596,8 +564,7 @@ Program
                                                             [ Con Tuple [] ]
                                                         , moduleName = ModuleName
                                                             { raw = "NestedMatch" }
-                                                        , uniq = 40
-                                                        , sort = Temporal
+                                                        , sort = Temporal 40
                                                         }
                                                     )
                                                 )
@@ -609,8 +576,7 @@ Program
                                                 , meta = AnyT
                                                 , moduleName = ModuleName
                                                     { raw = "NestedMatch" }
-                                                , uniq = 42
-                                                , sort = Temporal
+                                                , sort = Temporal 42
                                                 }
                                             )
                                             ( Call
@@ -623,7 +589,6 @@ Program
                                                             ] :-> AnyT
                                                         , moduleName = ModuleName
                                                             { raw = "NestedMatch" }
-                                                        , uniq = -1
                                                         , sort = External
                                                         }
                                                     )
@@ -635,8 +600,7 @@ Program
                                                             [ Con Tuple [] ]
                                                         , moduleName = ModuleName
                                                             { raw = "NestedMatch" }
-                                                        , uniq = 41
-                                                        , sort = Temporal
+                                                        , sort = Temporal 41
                                                         }
                                                     )
                                                 ]
@@ -651,8 +615,7 @@ Program
                                                         , meta = AnyT
                                                         , moduleName = ModuleName
                                                             { raw = "NestedMatch" }
-                                                        , uniq = 42
-                                                        , sort = Temporal
+                                                        , sort = Temporal 42
                                                         }
                                                     )
                                                 )
@@ -670,8 +633,7 @@ Program
                                                 [ Con Tuple [] ]
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = 43
-                                            , sort = Temporal
+                                            , sort = Temporal 43
                                             }
                                         )
                                         ( Call
@@ -682,7 +644,6 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -702,8 +663,7 @@ Program
                                                         [ Con Tuple [] ]
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = 43
-                                                    , sort = Temporal
+                                                    , sort = Temporal 43
                                                     }
                                                 )
                                             )
@@ -721,8 +681,7 @@ Program
                                     [ Con Tuple [] ]
                                 , moduleName = ModuleName
                                     { raw = "NestedMatch" }
-                                , uniq = 44
-                                , sort = Temporal
+                                , sort = Temporal 44
                                 }
                             )
                         )
@@ -734,8 +693,7 @@ Program
                         , meta = AnyT
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 56
-                        , sort = Temporal
+                        , sort = Temporal 56
                         }
                     )
                     ( Assign
@@ -744,8 +702,7 @@ Program
                             , meta = [ AnyT ] :-> AnyT
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 48
-                            , sort = Temporal
+                            , sort = Temporal 48
                             }
                         )
                         ( Let
@@ -755,8 +712,7 @@ Program
                                     , meta = [ AnyT ] :-> AnyT
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = 47
-                                    , sort = Temporal
+                                    , sort = Temporal 47
                                     }
                                 , typ = [ AnyT ] :-> AnyT
                                 , _object = Fun
@@ -765,8 +721,7 @@ Program
                                         , meta = AnyT
                                         , moduleName = ModuleName
                                             { raw = "NestedMatch" }
-                                        , uniq = 46
-                                        , sort = Temporal
+                                        , sort = Temporal 46
                                         }
                                     ]
                                     ( Match
@@ -784,8 +739,7 @@ Program
                                                     , meta = AnyT
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = 46
-                                                    , sort = Temporal
+                                                    , sort = Temporal 46
                                                     }
                                                 )
                                             )
@@ -800,7 +754,6 @@ Program
                                                     , meta = [] :-> AnyT
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 ) []
@@ -815,7 +768,6 @@ Program
                                                     , meta = [] :-> AnyT
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 ) []
@@ -831,8 +783,7 @@ Program
                                         , meta = [ AnyT ] :-> AnyT
                                         , moduleName = ModuleName
                                             { raw = "NestedMatch" }
-                                        , uniq = 47
-                                        , sort = Temporal
+                                        , sort = Temporal 47
                                         }
                                     )
                                 )
@@ -844,8 +795,7 @@ Program
                                 , meta = AnyT
                                 , moduleName = ModuleName
                                     { raw = "NestedMatch" }
-                                , uniq = 54
-                                , sort = Temporal
+                                , sort = Temporal 54
                                 }
                             )
                             ( Assign
@@ -854,8 +804,7 @@ Program
                                     , meta = [ AnyT ] :-> AnyT
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = 51
-                                    , sort = Temporal
+                                    , sort = Temporal 51
                                     }
                                 )
                                 ( Let
@@ -865,8 +814,7 @@ Program
                                             , meta = [ AnyT ] :-> AnyT
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = 50
-                                            , sort = Temporal
+                                            , sort = Temporal 50
                                             }
                                         , typ = [ AnyT ] :-> AnyT
                                         , _object = Fun
@@ -875,8 +823,7 @@ Program
                                                 , meta = AnyT
                                                 , moduleName = ModuleName
                                                     { raw = "NestedMatch" }
-                                                , uniq = 49
-                                                , sort = Temporal
+                                                , sort = Temporal 49
                                                 }
                                             ]
                                             ( Match
@@ -894,8 +841,7 @@ Program
                                                             , meta = AnyT
                                                             , moduleName = ModuleName
                                                                 { raw = "NestedMatch" }
-                                                            , uniq = 49
-                                                            , sort = Temporal
+                                                            , sort = Temporal 49
                                                             }
                                                         )
                                                     )
@@ -910,7 +856,6 @@ Program
                                                             , meta = [] :-> AnyT
                                                             , moduleName = ModuleName
                                                                 { raw = "NestedMatch" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         ) []
@@ -925,7 +870,6 @@ Program
                                                             , meta = [] :-> AnyT
                                                             , moduleName = ModuleName
                                                                 { raw = "NestedMatch" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         ) []
@@ -941,8 +885,7 @@ Program
                                                 , meta = [ AnyT ] :-> AnyT
                                                 , moduleName = ModuleName
                                                     { raw = "NestedMatch" }
-                                                , uniq = 50
-                                                , sort = Temporal
+                                                , sort = Temporal 50
                                                 }
                                             )
                                         )
@@ -954,8 +897,7 @@ Program
                                         , meta = AnyT
                                         , moduleName = ModuleName
                                             { raw = "NestedMatch" }
-                                        , uniq = 52
-                                        , sort = Temporal
+                                        , sort = Temporal 52
                                         }
                                     )
                                     ( CallDirect
@@ -964,7 +906,6 @@ Program
                                             , meta = [] :-> AnyT
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = -1
                                             , sort = External
                                             }
                                         ) []
@@ -975,8 +916,7 @@ Program
                                             , meta = AnyT
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = 53
-                                            , sort = Temporal
+                                            , sort = Temporal 53
                                             }
                                         )
                                         ( Call
@@ -986,8 +926,7 @@ Program
                                                     , meta = [ AnyT ] :-> AnyT
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = 51
-                                                    , sort = Temporal
+                                                    , sort = Temporal 51
                                                     }
                                                 )
                                             )
@@ -997,8 +936,7 @@ Program
                                                     , meta = AnyT
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = 52
-                                                    , sort = Temporal
+                                                    , sort = Temporal 52
                                                     }
                                                 )
                                             ]
@@ -1010,8 +948,7 @@ Program
                                                     , meta = AnyT
                                                     , moduleName = ModuleName
                                                         { raw = "NestedMatch" }
-                                                    , uniq = 53
-                                                    , sort = Temporal
+                                                    , sort = Temporal 53
                                                     }
                                                 )
                                             )
@@ -1025,8 +962,7 @@ Program
                                     , meta = AnyT
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = 55
-                                    , sort = Temporal
+                                    , sort = Temporal 55
                                     }
                                 )
                                 ( Call
@@ -1036,8 +972,7 @@ Program
                                             , meta = [ AnyT ] :-> AnyT
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = 48
-                                            , sort = Temporal
+                                            , sort = Temporal 48
                                             }
                                         )
                                     )
@@ -1047,8 +982,7 @@ Program
                                             , meta = AnyT
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = 54
-                                            , sort = Temporal
+                                            , sort = Temporal 54
                                             }
                                         )
                                     ]
@@ -1060,8 +994,7 @@ Program
                                             , meta = AnyT
                                             , moduleName = ModuleName
                                                 { raw = "NestedMatch" }
-                                            , uniq = 55
-                                            , sort = Temporal
+                                            , sort = Temporal 55
                                             }
                                         )
                                     )
@@ -1076,8 +1009,7 @@ Program
                                 [ Con Tuple [] ]
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 57
-                            , sort = Temporal
+                            , sort = Temporal 57
                             }
                         )
                         ( Call
@@ -1088,8 +1020,7 @@ Program
                                         [ Con Tuple [] ]
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = 45
-                                    , sort = Temporal
+                                    , sort = Temporal 45
                                     }
                                 )
                             )
@@ -1099,8 +1030,7 @@ Program
                                     , meta = AnyT
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = 56
-                                    , sort = Temporal
+                                    , sort = Temporal 56
                                     }
                                 )
                             ]
@@ -1116,8 +1046,7 @@ Program
                                         [ Con Tuple [] ]
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = 57
-                                    , sort = Temporal
+                                    , sort = Temporal 57
                                     }
                                 )
                             )
@@ -1145,37 +1074,17 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
-                { name = "False"
+                { name = "False2"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
-                { name = "False"
+                { name = "False2"
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "True"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "True"
-                , meta = [] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             )
@@ -1185,7 +1094,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -1193,7 +1101,6 @@ DsState
                 , meta = [] :-> AnyT
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             )
@@ -1203,8 +1110,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 29
-                , sort = Internal
+                , sort = Internal 29
                 }
             , Id
                 { name = "$_"
@@ -1212,102 +1118,7 @@ DsState
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 38
-                , sort = Temporal
-                }
-            )
-        ,
-            ( Id
-                { name = "False1"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "False1"
-                , meta = [] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "True2"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "True2"
-                , meta = [] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "False2"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "False2"
-                , meta = [] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "malgo_print_string"
-                , meta = [ StringT ] :-> SumT
-                    [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "malgo_exit_failure"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            , Id
-                { name = "malgo_exit_failure"
-                , meta =
-                    [ SumT
-                        [ Con Tuple [] ]
-                    ] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
+                , sort = Temporal 38
                 }
             )
         ,
@@ -1316,7 +1127,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Id
@@ -1328,33 +1138,24 @@ DsState
                     [ Con Tuple [] ]
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             )
-        ]
-    , _signatureMap = fromList
-        [
+        ,
             ( Id
-                { name = "False"
+                { name = "True2"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "Bool"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "NestedMatch" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
-                )
+            , Id
+                { name = "True2"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
             )
         ,
             ( Id
@@ -1362,17 +1163,101 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "True"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_exit_failure"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            , Id
+                { name = "malgo_exit_failure"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            , Id
+                { name = "malgo_print_string"
+                , meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "False1"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            , Id
+                { name = "False1"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "False"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            , Id
+                { name = "False"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            )
+        ]
+    , _signatureMap = fromList
+        [
+            ( Id
+                { name = "False2"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
                 , sort = External
                 }
             , Forall []
                 ( TyCon
                     ( Id
-                        { name = "Bool"
+                        { name = "Bool2"
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1384,7 +1269,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -1394,7 +1278,6 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1406,32 +1289,23 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 29
-                , sort = Internal
+                , sort = Internal 29
                 }
             , Forall []
                 ( TyTuple 0 )
             )
         ,
             ( Id
-                { name = "False1"
+                { name = "main"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "Bool1"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "NestedMatch" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
                 )
             )
         ,
@@ -1440,7 +1314,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
@@ -1450,7 +1323,6 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1458,38 +1330,22 @@ DsState
             )
         ,
             ( Id
-                { name = "False2"
+                { name = "True"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
                 ( TyCon
                     ( Id
-                        { name = "Bool2"
+                        { name = "Bool"
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
-                )
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim StringT )
-                    ( TyTuple 0 )
                 )
             )
         ,
@@ -1498,7 +1354,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall
@@ -1507,8 +1362,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 2
-                    , sort = Internal
+                    , sort = Internal 2
                     }
                 ]
                 ( TyArr
@@ -1519,8 +1373,7 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = 2
-                            , sort = Internal
+                            , sort = Internal 2
                             }
                         )
                     )
@@ -1528,43 +1381,65 @@ DsState
             )
         ,
             ( Id
-                { name = "main"
+                { name = "malgo_print_string"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , Forall []
-                ( TyArr
+                ( TyArr ( TyPrim StringT )
                     ( TyTuple 0 )
-                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "False1"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "Bool1"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "NestedMatch" }
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "False"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "Bool"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "NestedMatch" }
+                        , sort = External
+                        }
+                    )
                 )
             )
         ]
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPtr
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
                 { name = "String#"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1575,71 +1450,65 @@ DsState
             )
         ,
             ( Id
-                { name = "Int64#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int32T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim DoubleT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "a"
+                { name = "Bool"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 0
-                , sort = Internal
+                , sort = External
                 }
             , TypeDef
-                { _typeConstructor = TyVar
+                { _typeConstructor = TyCon
                     ( Id
-                        { name = "a"
+                        { name = "Bool"
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = 2
-                        , sort = Internal
+                        , sort = External
                         }
                     )
                 , _typeParameters = []
-                , _valueConstructors = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "False"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "Bool"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "NestedMatch" }
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "True"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "Bool"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "NestedMatch" }
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ]
                 }
             )
         ,
@@ -1648,7 +1517,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1658,7 +1526,6 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1670,7 +1537,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall []
@@ -1680,7 +1546,6 @@ DsState
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1692,7 +1557,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall []
@@ -1702,7 +1566,6 @@ DsState
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1717,7 +1580,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1732,7 +1594,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1747,7 +1608,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = -1
                 , sort = External
                 }
             , TypeDef
@@ -1757,7 +1617,6 @@ DsState
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "NestedMatch" }
-                        , uniq = -1
                         , sort = External
                         }
                     )
@@ -1769,7 +1628,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall []
@@ -1779,7 +1637,6 @@ DsState
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1791,7 +1648,6 @@ DsState
                             , meta = ()
                             , moduleName = ModuleName
                                 { raw = "NestedMatch" }
-                            , uniq = -1
                             , sort = External
                             }
                         , Forall []
@@ -1801,7 +1657,6 @@ DsState
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "NestedMatch" }
-                                    , uniq = -1
                                     , sort = External
                                     }
                                 )
@@ -1812,94 +1667,45 @@ DsState
             )
         ,
             ( Id
-                { name = "Bool"
+                { name = "Int64#"
                 , meta = ()
                 , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = -1
+                    { raw = "Builtin" }
                 , sort = External
                 }
             , TypeDef
-                { _typeConstructor = TyCon
-                    ( Id
-                        { name = "Bool"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "NestedMatch" }
-                        , uniq = -1
-                        , sort = External
-                        }
-                    )
+                { _typeConstructor = TyPrim Int64T
                 , _typeParameters = []
-                , _valueConstructors =
-                    [
-                        ( Id
-                            { name = "False"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "NestedMatch" }
-                            , uniq = -1
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "Bool"
-                                    , meta = ()
-                                    , moduleName = ModuleName
-                                        { raw = "NestedMatch" }
-                                    , uniq = -1
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ,
-                        ( Id
-                            { name = "True"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "NestedMatch" }
-                            , uniq = -1
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "Bool"
-                                    , meta = ()
-                                    , moduleName = ModuleName
-                                        { raw = "NestedMatch" }
-                                    , uniq = -1
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ]
+                , _valueConstructors = []
                 }
             )
-        ]
-    , _kindCtx = fromList
-        [
+        ,
             ( Id
-                { name = "a"
+                { name = "Int32#"
                 , meta = ()
                 , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = 2
-                , sort = Internal
+                    { raw = "Builtin" }
+                , sort = External
                 }
-            , TyMeta
-                ( Id
-                    { name = "ka"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "NestedMatch" }
-                    , uniq = 1
-                    , sort = Temporal
-                    }
-                )
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
             )
         ,
             ( Id
@@ -1907,19 +1713,45 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
-            , TyArr TYPE TYPE
+            , TypeDef
+                { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
             )
         ,
+            ( Id
+                { name = "a"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = Internal 0
+                }
+            , TypeDef
+                { _typeConstructor = TyVar
+                    ( Id
+                        { name = "a"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "NestedMatch" }
+                        , sort = Internal 2
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ]
+    , _kindCtx = fromList
+        [
             ( Id
                 { name = "t"
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 14
-                , sort = Internal
+                , sort = Internal 28
                 }
             , TyMeta
                 ( Id
@@ -1927,8 +1759,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 13
-                    , sort = Temporal
+                    , sort = Temporal 27
                     }
                 )
             )
@@ -1938,8 +1769,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 8
-                , sort = Internal
+                , sort = Internal 26
                 }
             , TyMeta
                 ( Id
@@ -1947,8 +1777,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 7
-                    , sort = Temporal
+                    , sort = Temporal 25
                     }
                 )
             )
@@ -1958,8 +1787,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 10
-                , sort = Internal
+                , sort = Internal 24
                 }
             , TyMeta
                 ( Id
@@ -1967,8 +1795,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 9
-                    , sort = Temporal
+                    , sort = Temporal 23
                     }
                 )
             )
@@ -1978,7 +1805,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -1989,8 +1815,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 20
-                , sort = Internal
+                , sort = Internal 22
                 }
             , TyMeta
                 ( Id
@@ -1998,8 +1823,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 19
-                    , sort = Temporal
+                    , sort = Temporal 21
                     }
                 )
             )
@@ -2009,8 +1833,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 22
-                , sort = Internal
+                , sort = Internal 20
                 }
             , TyMeta
                 ( Id
@@ -2018,8 +1841,153 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 21
-                    , sort = Temporal
+                    , sort = Temporal 19
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = Internal 18
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , sort = Temporal 17
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = Internal 16
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , sort = Temporal 15
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = Internal 14
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , sort = Temporal 13
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "a"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = Internal 12
+                }
+            , TyMeta
+                ( Id
+                    { name = "ka"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , sort = Temporal 11
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = Internal 10
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , sort = Temporal 9
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = Internal 8
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , sort = Temporal 7
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "NestedMatch" }
+                , sort = Internal 6
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , sort = Temporal 5
                     }
                 )
             )
@@ -2029,7 +1997,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -2040,8 +2007,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 16
-                , sort = Internal
+                , sort = Internal 4
                 }
             , TyMeta
                 ( Id
@@ -2049,8 +2015,7 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 15
-                    , sort = Temporal
+                    , sort = Temporal 3
                     }
                 )
             )
@@ -2060,7 +2025,6 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
@@ -2071,132 +2035,9 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
-                , uniq = -1
                 , sort = External
                 }
             , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = 18
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "NestedMatch" }
-                    , uniq = 17
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = 28
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "NestedMatch" }
-                    , uniq = 27
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = 24
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "NestedMatch" }
-                    , uniq = 23
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Float#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = 26
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "NestedMatch" }
-                    , uniq = 25
-                    , sort = Temporal
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , uniq = -1
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = 4
-                , sort = Internal
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "NestedMatch" }
-                    , uniq = 3
-                    , sort = Temporal
-                    }
-                )
             )
         ,
             ( Id
@@ -2204,8 +2045,7 @@ DsState
                 , meta = ()
                 , moduleName = ModuleName
                     { raw = "NestedMatch" }
-                , uniq = 12
-                , sort = Internal
+                , sort = Internal 2
                 }
             , TyMeta
                 ( Id
@@ -2213,30 +2053,19 @@ DsState
                     , meta = ()
                     , moduleName = ModuleName
                         { raw = "NestedMatch" }
-                    , uniq = 11
-                    , sort = Temporal
+                    , sort = Temporal 1
                     }
                 )
             )
         ,
             ( Id
-                { name = "t"
+                { name = "Ptr#"
                 , meta = ()
                 , moduleName = ModuleName
-                    { raw = "NestedMatch" }
-                , uniq = 6
-                , sort = Internal
+                    { raw = "Builtin" }
+                , sort = External
                 }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "NestedMatch" }
-                    , uniq = 5
-                    , sort = Temporal
-                    }
-                )
+            , TyArr TYPE TYPE
             )
         ]
     , _globalDefs = []

@@ -6,16 +6,16 @@ module Koriel.Pretty
   ( module Prettyprinter,
     errorDoc,
     render,
-    maybeParens
+    maybeParens,
   )
 where
 
 import Koriel.Prelude
-import Text.Megaparsec.Pos qualified as Megaparsec
 import Prettyprinter
-import Prelude qualified
 import Prettyprinter.Render.String (renderString)
 import Prettyprinter.Render.Text (renderStrict)
+import Text.Megaparsec.Pos qualified as Megaparsec
+import Prelude qualified
 
 errorDoc :: (HasCallStack) => Doc x -> a
 errorDoc x = Prelude.error $ renderString $ layoutSmart defaultLayoutOptions x

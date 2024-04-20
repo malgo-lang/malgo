@@ -26,7 +26,6 @@ Module
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "FuncOverUnboxed" }
-                        , uniq = -1
                         , sort = External
                         }
                     , Fn
@@ -155,7 +154,6 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Builtin" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
@@ -230,7 +228,6 @@ Module
                                                             , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
-                                                            , uniq = -1
                                                             , sort = External
                                                             }
                                                         )
@@ -368,7 +365,6 @@ Module
                                                     , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -443,7 +439,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -513,8 +508,7 @@ Module
                                         , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "FuncOverUnboxed" }
-                                        , uniq = 0
-                                        , sort = Internal
+                                        , sort = Internal 0
                                         }
                                     )
                                 ]
@@ -589,7 +583,6 @@ Module
                                                     , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
-                                                    , uniq = -1
                                                     , sort = External
                                                     }
                                                 )
@@ -664,7 +657,6 @@ Module
                                                                 , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
-                                                                , uniq = -1
                                                                 , sort = External
                                                                 }
                                                             )
@@ -722,7 +714,6 @@ Module
                         , meta = ()
                         , moduleName = ModuleName
                             { raw = "FuncOverUnboxed" }
-                        , uniq = -1
                         , sort = External
                         }
                     , Fn
@@ -785,8 +776,7 @@ Module
                                     , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "FuncOverUnboxed" }
-                                    , uniq = 21
-                                    , sort = Internal
+                                    , sort = Internal 21
                                     }
                                 )
                             ]
@@ -861,7 +851,6 @@ Module
                                                 , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "FuncOverUnboxed" }
-                                                , uniq = -1
                                                 , sort = External
                                                 }
                                             )
