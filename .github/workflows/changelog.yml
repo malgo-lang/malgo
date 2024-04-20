@@ -1,0 +1,20 @@
+name: Generate CHANGELOG.md
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install git-cliff
+        run: |
+          cargo install git-cliff
+      - name: Generate CHANGELOG.md
+        run: |
+          sh ./scripts/changelog.sh > CHANGELOG.md
