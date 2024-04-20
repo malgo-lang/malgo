@@ -21,6 +21,12 @@ jobs:
           args: --verbose a65e09d..HEAD
         env:
           OUTPUT: CHANGELOG.md
+      - name: Check if there are any changes
+        id: check_changes
+        run: |
+          git add -N .
+          git diff --exit-code
+        continue-on-error: true
       - name: Commit
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -28,3 +34,4 @@ jobs:
           git add .
           git commit -m "generate changelog"
           git push
+        if: steps.check_changes.outcome == 'failure'
