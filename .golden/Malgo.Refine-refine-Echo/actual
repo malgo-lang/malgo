@@ -1,0 +1,359 @@
+Module
+    { moduleName = ModuleName
+        { raw = "Echo" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyTuple 0 )
+                            ( TyTuple 0 )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Echo" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyTuple 0 )
+                                ( TyTuple 0 )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                    , sourceLine = Pos 6
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                    , sourceLine = Pos 7
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyTuple 0 )
+                                    ( TyTuple 0 )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                        , sourceLine = Pos 7
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "$_"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Echo" }
+                                    , uniq = 8
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Typed
+                                            { annotated = TyTuple 0
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                    , sourceLine = Pos 7
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Typed
+                                                { annotated = TyArr
+                                                    ( TyCon
+                                                        ( Id
+                                                            { name = "String"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "Builtin" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( TyTuple 0 )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 5
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 12
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "putStr"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Prelude" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Seq
+                                            ( Typed
+                                                { annotated = TyCon
+                                                    ( Id
+                                                        { name = "String"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "Builtin" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 12
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                        , sourceLine = Pos 7
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 13
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 27
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Typed
+                                                        { annotated = TyCon
+                                                            ( Id
+                                                                { name = "String"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 13
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 27
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Var
+                                                        ( Typed
+                                                            { annotated = TyArr
+                                                                ( TyTuple 0 )
+                                                                ( TyCon
+                                                                    ( Id
+                                                                        { name = "String"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "Builtin" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 13
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 25
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Id
+                                                            { name = "getContents"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "Builtin" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( Tuple
+                                                        ( Typed
+                                                            { annotated = TyTuple 0
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 25
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Echo.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 27
+                                                                    }
+                                                                }
+                                                            }
+                                                        ) []
+                                                    )
+                                                ) :| []
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs = []
+        , _dataDefs = []
+        , _typeSynonyms = []
+        , _foreigns = []
+        , _imports =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Builtin" }
+                , All
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Echo.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Prelude" }
+                , All
+                )
+            ]
+        }
+    }

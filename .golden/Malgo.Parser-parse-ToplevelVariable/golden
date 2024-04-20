@@ -1,0 +1,1096 @@
+Module
+    { moduleName = ModuleName
+        { raw = "ToplevelVariable" }
+    , moduleDefinition = ParsedDefinitions
+        [ Import
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 2
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 3
+                    , sourceColumn = Pos 3
+                    }
+                }
+            )
+            ( ModuleName
+                { raw = "Builtin" }
+            ) All
+        , Import
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 3
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 5
+                    , sourceColumn = Pos 3
+                    }
+                }
+            )
+            ( ModuleName
+                { raw = "Prelude" }
+            ) All
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 5
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 7
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "one"
+            ( Boxed
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 13
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( Int32 1 )
+            )
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 7
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "addOne"
+            ( Apply
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 16
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 9
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( Var
+                    ( Qualified
+                        { visibility = Implicit
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 16
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 25
+                                }
+                            }
+                        }
+                    ) "addInt32"
+                )
+                ( Var
+                    ( Qualified
+                        { visibility = Implicit
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 25
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        }
+                    ) "one"
+                )
+            )
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 11
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "constId"
+            ( Apply
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 9
+                        , sourceColumn = Pos 17
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 11
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( Var
+                    ( Qualified
+                        { visibility = Implicit
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 17
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 23
+                                }
+                            }
+                        }
+                    ) "const"
+                )
+                ( Var
+                    ( Qualified
+                        { visibility = Implicit
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 23
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        }
+                    ) "identity"
+                )
+            )
+        , ScSig
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 11
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 12
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "comp"
+            ( TyApp
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 11
+                        , sourceColumn = Pos 14
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 12
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( TyCon
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 14
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 20
+                            }
+                        }
+                    ) "Maybe"
+                )
+                [ TyVar
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 20
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 12
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) "a"
+                ]
+            )
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 12
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 17
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "comp"
+            ( Apply
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 13
+                        , sourceColumn = Pos 5
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 17
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( Fn
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 7
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 15
+                            , sourceColumn = Pos 5
+                            }
+                        }
+                    )
+                    ( Clause
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 7
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 25
+                                }
+                            }
+                        )
+                        [ ConP
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 13
+                                    , sourceColumn = Pos 7
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 13
+                                    , sourceColumn = Pos 15
+                                    }
+                                }
+                            ) "Nothing" []
+                        ]
+                        ( Seq
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 13
+                                    , sourceColumn = Pos 18
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 13
+                                    , sourceColumn = Pos 25
+                                    }
+                                }
+                            )
+                            ( NoBind
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 13
+                                        , sourceColumn = Pos 18
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 13
+                                        , sourceColumn = Pos 25
+                                        }
+                                    }
+                                )
+                                ( Var
+                                    ( Qualified
+                                        { visibility = Implicit
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                , sourceLine = Pos 13
+                                                , sourceColumn = Pos 18
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                , sourceLine = Pos 13
+                                                , sourceColumn = Pos 25
+                                                }
+                                            }
+                                        }
+                                    ) "Nothing"
+                                ) :| []
+                            )
+                        ) :|
+                        [ Clause
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 14
+                                    , sourceColumn = Pos 7
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 15
+                                    , sourceColumn = Pos 5
+                                    }
+                                }
+                            )
+                            [ ConP
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 7
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 12
+                                        }
+                                    }
+                                ) "Just" []
+                            , VarP
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 12
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 14
+                                        }
+                                    }
+                                ) "x"
+                            ]
+                            ( Seq
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 17
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 15
+                                        , sourceColumn = Pos 5
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                            , sourceLine = Pos 14
+                                            , sourceColumn = Pos 17
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                            , sourceLine = Pos 15
+                                            , sourceColumn = Pos 5
+                                            }
+                                        }
+                                    )
+                                    ( Var
+                                        ( Qualified
+                                            { visibility = Implicit
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 14
+                                                    , sourceColumn = Pos 17
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 15
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                }
+                                            }
+                                        ) "Nothing"
+                                    ) :| []
+                                )
+                            )
+                        ]
+                    )
+                )
+                ( Seq
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 15
+                            , sourceColumn = Pos 7
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 17
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    )
+                    ( NoBind
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 15
+                                , sourceColumn = Pos 8
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 15
+                                , sourceColumn = Pos 15
+                                }
+                            }
+                        )
+                        ( Apply
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 15
+                                    , sourceColumn = Pos 8
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 15
+                                    , sourceColumn = Pos 15
+                                    }
+                                }
+                            )
+                            ( Var
+                                ( Qualified
+                                    { visibility = Implicit
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                            , sourceLine = Pos 15
+                                            , sourceColumn = Pos 8
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                            , sourceLine = Pos 15
+                                            , sourceColumn = Pos 13
+                                            }
+                                        }
+                                    }
+                                ) "Just"
+                            )
+                            ( Tuple
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 15
+                                        , sourceColumn = Pos 13
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 15
+                                        , sourceColumn = Pos 15
+                                        }
+                                    }
+                                ) []
+                            )
+                        ) :| []
+                    )
+                )
+            )
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 17
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                    , sourceLine = Pos 23
+                    , sourceColumn = Pos 1
+                    }
+                }
+            ) "main"
+            ( Fn
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 18
+                        , sourceColumn = Pos 5
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                        , sourceLine = Pos 22
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( Clause
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 18
+                            , sourceColumn = Pos 5
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                            , sourceLine = Pos 22
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) []
+                    ( Seq
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 18
+                                , sourceColumn = Pos 5
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                , sourceLine = Pos 22
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( NoBind
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 18
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                    , sourceLine = Pos 20
+                                    , sourceColumn = Pos 11
+                                    }
+                                }
+                            )
+                            ( Apply
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 18
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 20
+                                        , sourceColumn = Pos 11
+                                        }
+                                    }
+                                )
+                                ( Fn
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                            , sourceLine = Pos 18
+                                            , sourceColumn = Pos 7
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                            , sourceLine = Pos 20
+                                            , sourceColumn = Pos 5
+                                            }
+                                        }
+                                    )
+                                    ( Clause
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                , sourceLine = Pos 18
+                                                , sourceColumn = Pos 7
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                , sourceLine = Pos 18
+                                                , sourceColumn = Pos 34
+                                                }
+                                            }
+                                        )
+                                        [ ConP
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 18
+                                                    , sourceColumn = Pos 7
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 18
+                                                    , sourceColumn = Pos 15
+                                                    }
+                                                }
+                                            ) "Nothing" []
+                                        ]
+                                        ( Seq
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 18
+                                                    , sourceColumn = Pos 18
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 18
+                                                    , sourceColumn = Pos 34
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 18
+                                                        , sourceColumn = Pos 18
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 18
+                                                        , sourceColumn = Pos 34
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                            , sourceLine = Pos 18
+                                                            , sourceColumn = Pos 18
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                            , sourceLine = Pos 18
+                                                            , sourceColumn = Pos 34
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Var
+                                                        ( Qualified
+                                                            { visibility = Implicit
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                    , sourceLine = Pos 18
+                                                                    , sourceColumn = Pos 18
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                    , sourceLine = Pos 18
+                                                                    , sourceColumn = Pos 30
+                                                                    }
+                                                                }
+                                                            }
+                                                        ) "printString"
+                                                    )
+                                                    ( Boxed
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                , sourceLine = Pos 18
+                                                                , sourceColumn = Pos 30
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                , sourceLine = Pos 18
+                                                                , sourceColumn = Pos 34
+                                                                }
+                                                            }
+                                                        )
+                                                        ( String "OK" )
+                                                    )
+                                                ) :| []
+                                            )
+                                        ) :|
+                                        [ Clause
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 19
+                                                    , sourceColumn = Pos 7
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 20
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                }
+                                            )
+                                            [ ConP
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 19
+                                                        , sourceColumn = Pos 7
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 19
+                                                        , sourceColumn = Pos 12
+                                                        }
+                                                    }
+                                                ) "Just" []
+                                            , VarP
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 19
+                                                        , sourceColumn = Pos 12
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 19
+                                                        , sourceColumn = Pos 14
+                                                        }
+                                                    }
+                                                ) "_"
+                                            ]
+                                            ( Seq
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 19
+                                                        , sourceColumn = Pos 17
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 20
+                                                        , sourceColumn = Pos 5
+                                                        }
+                                                    }
+                                                )
+                                                ( NoBind
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                            , sourceLine = Pos 19
+                                                            , sourceColumn = Pos 17
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                            , sourceLine = Pos 20
+                                                            , sourceColumn = Pos 5
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Tuple
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                , sourceLine = Pos 19
+                                                                , sourceColumn = Pos 17
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                , sourceLine = Pos 20
+                                                                , sourceColumn = Pos 5
+                                                                }
+                                                            }
+                                                        ) []
+                                                    ) :| []
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                                ( Var
+                                    ( Qualified
+                                        { visibility = Implicit
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                , sourceLine = Pos 20
+                                                , sourceColumn = Pos 7
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                , sourceLine = Pos 20
+                                                , sourceColumn = Pos 11
+                                                }
+                                            }
+                                        }
+                                    ) "comp"
+                                )
+                            ) :|
+                            [ NoBind
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 21
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                        , sourceLine = Pos 22
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( Apply
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                            , sourceLine = Pos 21
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                            , sourceLine = Pos 22
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Var
+                                        ( Qualified
+                                            { visibility = Implicit
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 21
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 21
+                                                    , sourceColumn = Pos 16
+                                                    }
+                                                }
+                                            }
+                                        ) "printInt32"
+                                    )
+                                    ( Seq
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                , sourceLine = Pos 21
+                                                , sourceColumn = Pos 16
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                , sourceLine = Pos 22
+                                                , sourceColumn = Pos 3
+                                                }
+                                            }
+                                        )
+                                        ( NoBind
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 21
+                                                    , sourceColumn = Pos 17
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                    , sourceLine = Pos 21
+                                                    , sourceColumn = Pos 43
+                                                    }
+                                                }
+                                            )
+                                            ( Apply
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 21
+                                                        , sourceColumn = Pos 17
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                        , sourceLine = Pos 21
+                                                        , sourceColumn = Pos 43
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                            , sourceLine = Pos 21
+                                                            , sourceColumn = Pos 17
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                            , sourceLine = Pos 21
+                                                            , sourceColumn = Pos 43
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Var
+                                                        ( Qualified
+                                                            { visibility = Implicit
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 17
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 25
+                                                                    }
+                                                                }
+                                                            }
+                                                        ) "constId"
+                                                    )
+                                                    ( Var
+                                                        ( Qualified
+                                                            { visibility = Implicit
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 25
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 31
+                                                                    }
+                                                                }
+                                                            }
+                                                        ) "const"
+                                                    )
+                                                )
+                                                ( Seq
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                            , sourceLine = Pos 21
+                                                            , sourceColumn = Pos 31
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                            , sourceLine = Pos 21
+                                                            , sourceColumn = Pos 43
+                                                            }
+                                                        }
+                                                    )
+                                                    ( NoBind
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                , sourceLine = Pos 21
+                                                                , sourceColumn = Pos 32
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                , sourceLine = Pos 21
+                                                                , sourceColumn = Pos 42
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Apply
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 32
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 42
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Var
+                                                                ( Qualified
+                                                                    { visibility = Implicit
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                            , sourceLine = Pos 21
+                                                                            , sourceColumn = Pos 32
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                            , sourceLine = Pos 21
+                                                                            , sourceColumn = Pos 39
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ) "addOne"
+                                                            )
+                                                            ( Var
+                                                                ( Qualified
+                                                                    { visibility = Implicit
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                            , sourceLine = Pos 21
+                                                                            , sourceColumn = Pos 39
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                                                                            , sourceLine = Pos 21
+                                                                            , sourceColumn = Pos 42
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ) "one"
+                                                            )
+                                                        ) :| []
+                                                    )
+                                                )
+                                            ) :| []
+                                        )
+                                    )
+                                )
+                            ]
+                        )
+                    ) :| []
+                )
+            )
+        ]
+    }

@@ -1,0 +1,1008 @@
+Module
+    { moduleName = ModuleName
+        { raw = "HelloBoxed" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 14
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 16
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    , Id
+                        { name = "string#"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 14
+                                , sourceColumn = Pos 19
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 14
+                                , sourceColumn = Pos 34
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 14
+                                    , sourceColumn = Pos 19
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 14
+                                    , sourceColumn = Pos 34
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 19
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 21
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "x"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , uniq = 1
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 24
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 34
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 14
+                                            , sourceColumn = Pos 24
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 14
+                                            , sourceColumn = Pos 34
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 14
+                                                , sourceColumn = Pos 24
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 14
+                                                , sourceColumn = Pos 34
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 14
+                                                    , sourceColumn = Pos 24
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 14
+                                                    , sourceColumn = Pos 32
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "String#"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Var
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 14
+                                                    , sourceColumn = Pos 32
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 14
+                                                    , sourceColumn = Pos 34
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "x"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , uniq = 1
+                                                , sort = Internal
+                                                }
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ,
+                [
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 8
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    , Id
+                        { name = "putStrLn"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 20
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 8
+                                    , sourceColumn = Pos 20
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 11
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            )
+                            [ ConP
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 8
+                                        , sourceColumn = Pos 21
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 8
+                                        , sourceColumn = Pos 32
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "String#"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                                [ VarP
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 8
+                                            , sourceColumn = Pos 29
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 8
+                                            , sourceColumn = Pos 32
+                                            }
+                                        }
+                                    )
+                                    ( Id
+                                        { name = "str"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "HelloBoxed" }
+                                        , uniq = 0
+                                        , sort = Internal
+                                        }
+                                    )
+                                ]
+                            ]
+                            ( Seq
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 9
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 11
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 27
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 27
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 9
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 9
+                                                    , sourceColumn = Pos 24
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "malgo_print_string"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Var
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 9
+                                                    , sourceColumn = Pos 24
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 9
+                                                    , sourceColumn = Pos 27
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "str"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , uniq = 0
+                                                , sort = Internal
+                                                }
+                                            )
+                                        )
+                                    ) :|
+                                    [ NoBind
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 10
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 11
+                                                , sourceColumn = Pos 3
+                                                }
+                                            }
+                                        )
+                                        ( Apply
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 10
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 11
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                }
+                                            )
+                                            ( Var
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , sourceLine = Pos 10
+                                                        , sourceColumn = Pos 5
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , sourceLine = Pos 10
+                                                        , sourceColumn = Pos 19
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "malgo_newline"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "HelloBoxed" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            ( Tuple
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , sourceLine = Pos 10
+                                                        , sourceColumn = Pos 19
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , sourceLine = Pos 11
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    }
+                                                ) []
+                                            )
+                                        )
+                                    ]
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ,
+                [
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 16
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 19
+                            , sourceColumn = Pos 1
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 17
+                                , sourceColumn = Pos 5
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 18
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 17
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 18
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            ) []
+                            ( Seq
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 17
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 18
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 17
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 18
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 17
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 18
+                                                , sourceColumn = Pos 3
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 17
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 17
+                                                    , sourceColumn = Pos 14
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "putStrLn"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Apply
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 17
+                                                    , sourceColumn = Pos 14
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 18
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                }
+                                            )
+                                            ( Var
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , sourceLine = Pos 17
+                                                        , sourceColumn = Pos 14
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , sourceLine = Pos 18
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "String#"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "HelloBoxed" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            ( Unboxed
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , sourceLine = Pos 17
+                                                        , sourceColumn = Pos 14
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , sourceLine = Pos 18
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    }
+                                                )
+                                                ( String "Hello, world" )
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , Id
+                    { name = "putStrLn"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , TyArr
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 7
+                            , sourceColumn = Pos 25
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 7
+                            , sourceColumn = Pos 28
+                            }
+                        }
+                    )
+                    ( TyCon
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 18
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 25
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "String"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyTuple
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 28
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        ) []
+                    )
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 13
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 14
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , Id
+                    { name = "string#"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , TyArr
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 25
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 28
+                            }
+                        }
+                    )
+                    ( TyCon
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 17
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 25
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "String#"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Builtin" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyCon
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 28
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 14
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "String"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            ]
+        , _dataDefs =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 8
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , Id
+                    { name = "String"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , []
+                ,
+                    [
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 17
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        , Id
+                            { name = "String#"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        ,
+                            [ TyCon
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 5
+                                        , sourceColumn = Pos 25
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 7
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "String#"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Builtin" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                            ]
+                        )
+                    ]
+                )
+            ]
+        , _typeSynonyms = []
+        , _foreigns =
+            [
+                (
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 2
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 3
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    , "malgo_print_string"
+                    )
+                , Id
+                    { name = "malgo_print_string"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , TyArr
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 2
+                            , sourceColumn = Pos 47
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 2
+                            , sourceColumn = Pos 50
+                            }
+                        }
+                    )
+                    ( TyCon
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 2
+                                , sourceColumn = Pos 39
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 2
+                                , sourceColumn = Pos 47
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "String#"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Builtin" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyTuple
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 2
+                                , sourceColumn = Pos 50
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 3
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        ) []
+                    )
+                )
+            ,
+                (
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 3
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 5
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    , "malgo_newline"
+                    )
+                , Id
+                    { name = "malgo_newline"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , TyArr
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 3
+                            , sourceColumn = Pos 37
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 3
+                            , sourceColumn = Pos 40
+                            }
+                        }
+                    )
+                    ( TyTuple
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 3
+                                , sourceColumn = Pos 34
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 3
+                                , sourceColumn = Pos 37
+                                }
+                            }
+                        ) []
+                    )
+                    ( TyTuple
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 3
+                                , sourceColumn = Pos 40
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        ) []
+                    )
+                )
+            ]
+        , _imports = []
+        }
+    }
+RnState
+    { infixInfo = fromList []
+    , dependencies = fromList []
+    }

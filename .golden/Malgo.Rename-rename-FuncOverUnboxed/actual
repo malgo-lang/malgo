@@ -1,0 +1,779 @@
+Module
+    { moduleName = ModuleName
+        { raw = "FuncOverUnboxed" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                            , sourceLine = Pos 4
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                            , sourceLine = Pos 10
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    , Id
+                        { name = "f"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "FuncOverUnboxed" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 7
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 5
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 5
+                                    , sourceColumn = Pos 7
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 5
+                                    , sourceColumn = Pos 47
+                                    }
+                                }
+                            )
+                            [ UnboxedP
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 5
+                                        , sourceColumn = Pos 7
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 5
+                                        , sourceColumn = Pos 11
+                                        }
+                                    }
+                                )
+                                ( Int64 0 )
+                            ]
+                            ( Seq
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 5
+                                        , sourceColumn = Pos 14
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 5
+                                        , sourceColumn = Pos 47
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 5
+                                            , sourceColumn = Pos 14
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 5
+                                            , sourceColumn = Pos 47
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                , sourceLine = Pos 5
+                                                , sourceColumn = Pos 14
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                , sourceLine = Pos 5
+                                                , sourceColumn = Pos 47
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 5
+                                                    , sourceColumn = Pos 14
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 5
+                                                    , sourceColumn = Pos 27
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "printString#"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Builtin" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Seq
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 5
+                                                    , sourceColumn = Pos 27
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 5
+                                                    , sourceColumn = Pos 47
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 5
+                                                        , sourceColumn = Pos 28
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 5
+                                                        , sourceColumn = Pos 46
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                            , sourceLine = Pos 5
+                                                            , sourceColumn = Pos 28
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                            , sourceLine = Pos 5
+                                                            , sourceColumn = Pos 46
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Var
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                , sourceLine = Pos 5
+                                                                , sourceColumn = Pos 28
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                , sourceLine = Pos 5
+                                                                , sourceColumn = Pos 43
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Id
+                                                            { name = "toStringInt64#"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "Builtin" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( Unboxed
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                , sourceLine = Pos 5
+                                                                , sourceColumn = Pos 43
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                , sourceLine = Pos 5
+                                                                , sourceColumn = Pos 46
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Int64 1 )
+                                                    )
+                                                ) :| []
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :|
+                            [ Clause
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 7
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 47
+                                        }
+                                    }
+                                )
+                                [ UnboxedP
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 7
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 11
+                                            }
+                                        }
+                                    )
+                                    ( Int64 1 )
+                                ]
+                                ( Seq
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 14
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 47
+                                            }
+                                        }
+                                    )
+                                    ( NoBind
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                , sourceLine = Pos 6
+                                                , sourceColumn = Pos 14
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                , sourceLine = Pos 6
+                                                , sourceColumn = Pos 47
+                                                }
+                                            }
+                                        )
+                                        ( Apply
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 14
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 47
+                                                    }
+                                                }
+                                            )
+                                            ( Var
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 14
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 27
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "printString#"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "Builtin" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            ( Seq
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 27
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 47
+                                                        }
+                                                    }
+                                                )
+                                                ( NoBind
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                            , sourceLine = Pos 6
+                                                            , sourceColumn = Pos 28
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                            , sourceLine = Pos 6
+                                                            , sourceColumn = Pos 46
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Apply
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 28
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 46
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Var
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 28
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 43
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Id
+                                                                { name = "toStringInt64#"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        )
+                                                        ( Unboxed
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 43
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 46
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Int64 1 )
+                                                        )
+                                                    ) :| []
+                                                )
+                                            )
+                                        ) :| []
+                                    )
+                                )
+                            , Clause
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 7
+                                        , sourceColumn = Pos 7
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 7
+                                        , sourceColumn = Pos 45
+                                        }
+                                    }
+                                )
+                                [ VarP
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 7
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 9
+                                            }
+                                        }
+                                    )
+                                    ( Id
+                                        { name = "_"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "FuncOverUnboxed" }
+                                        , uniq = 0
+                                        , sort = Internal
+                                        }
+                                    )
+                                ]
+                                ( Seq
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 12
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 45
+                                            }
+                                        }
+                                    )
+                                    ( NoBind
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 12
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 45
+                                                }
+                                            }
+                                        )
+                                        ( Apply
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 7
+                                                    , sourceColumn = Pos 12
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 7
+                                                    , sourceColumn = Pos 45
+                                                    }
+                                                }
+                                            )
+                                            ( Var
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 7
+                                                        , sourceColumn = Pos 12
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 7
+                                                        , sourceColumn = Pos 25
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "printString#"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "Builtin" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            ( Seq
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 7
+                                                        , sourceColumn = Pos 25
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        , sourceLine = Pos 7
+                                                        , sourceColumn = Pos 45
+                                                        }
+                                                    }
+                                                )
+                                                ( NoBind
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                            , sourceLine = Pos 7
+                                                            , sourceColumn = Pos 26
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                            , sourceLine = Pos 7
+                                                            , sourceColumn = Pos 44
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Apply
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                , sourceLine = Pos 7
+                                                                , sourceColumn = Pos 26
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                , sourceLine = Pos 7
+                                                                , sourceColumn = Pos 44
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Var
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                    , sourceLine = Pos 7
+                                                                    , sourceColumn = Pos 26
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                    , sourceLine = Pos 7
+                                                                    , sourceColumn = Pos 41
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Id
+                                                                { name = "toStringInt64#"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        )
+                                                        ( Unboxed
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                    , sourceLine = Pos 7
+                                                                    , sourceColumn = Pos 41
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                                    , sourceLine = Pos 7
+                                                                    , sourceColumn = Pos 44
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Int64 0 )
+                                                        )
+                                                    ) :| []
+                                                )
+                                            )
+                                        ) :| []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            ,
+                [
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                            , sourceLine = Pos 10
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 1
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "FuncOverUnboxed" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 5
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                , sourceLine = Pos 12
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 11
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 12
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            ) []
+                            ( Seq
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 11
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 12
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 11
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            , sourceLine = Pos 12
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                , sourceLine = Pos 11
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                , sourceLine = Pos 12
+                                                , sourceColumn = Pos 3
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 11
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 11
+                                                    , sourceColumn = Pos 7
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "f"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "FuncOverUnboxed" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Unboxed
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 11
+                                                    , sourceColumn = Pos 7
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    , sourceLine = Pos 12
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                }
+                                            )
+                                            ( Int64 0 )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs = []
+        , _dataDefs = []
+        , _typeSynonyms = []
+        , _foreigns = []
+        , _imports =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                        , sourceLine = Pos 4
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Builtin" }
+                , Selected
+                    [ "toStringInt64#"
+                    , "printString#"
+                    ]
+                )
+            ]
+        }
+    }
+RnState
+    { infixInfo = fromList []
+    , dependencies = fromList
+        [ ModuleName
+            { raw = "Builtin" }
+        ]
+    }

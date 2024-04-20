@@ -1,0 +1,1590 @@
+Program
+    { topVars = []
+    , topFuns =
+        [
+            ( Id
+                { name = "R"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , []
+            , [] :-> AnyT
+            , Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = SumT
+                            [ Con
+                                ( Data "Test2.R" ) []
+                            , Con
+                                ( Data "Test2.G" ) []
+                            , Con
+                                ( Data "Test2.B" ) []
+                            ]
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = 23
+                        , sort = Temporal
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "Test2.R" ) []
+                        , Con
+                            ( Data "Test2.G" ) []
+                        , Con
+                            ( Data "Test2.B" ) []
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "Test2.R" ) []
+                            , Con
+                                ( Data "Test2.G" ) []
+                            , Con
+                                ( Data "Test2.B" ) []
+                            ]
+                        )
+                        ( Con
+                            ( Data "Test2.R" ) []
+                        ) []
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = SumT
+                                [ Con
+                                    ( Data "Test2.R" ) []
+                                , Con
+                                    ( Data "Test2.G" ) []
+                                , Con
+                                    ( Data "Test2.B" ) []
+                                ]
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = 23
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "G"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , []
+            , [] :-> AnyT
+            , Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = SumT
+                            [ Con
+                                ( Data "Test2.R" ) []
+                            , Con
+                                ( Data "Test2.G" ) []
+                            , Con
+                                ( Data "Test2.B" ) []
+                            ]
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = 24
+                        , sort = Temporal
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "Test2.R" ) []
+                        , Con
+                            ( Data "Test2.G" ) []
+                        , Con
+                            ( Data "Test2.B" ) []
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "Test2.R" ) []
+                            , Con
+                                ( Data "Test2.G" ) []
+                            , Con
+                                ( Data "Test2.B" ) []
+                            ]
+                        )
+                        ( Con
+                            ( Data "Test2.G" ) []
+                        ) []
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = SumT
+                                [ Con
+                                    ( Data "Test2.R" ) []
+                                , Con
+                                    ( Data "Test2.G" ) []
+                                , Con
+                                    ( Data "Test2.B" ) []
+                                ]
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = 24
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "B"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , []
+            , [] :-> AnyT
+            , Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = SumT
+                            [ Con
+                                ( Data "Test2.R" ) []
+                            , Con
+                                ( Data "Test2.G" ) []
+                            , Con
+                                ( Data "Test2.B" ) []
+                            ]
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = 25
+                        , sort = Temporal
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "Test2.R" ) []
+                        , Con
+                            ( Data "Test2.G" ) []
+                        , Con
+                            ( Data "Test2.B" ) []
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "Test2.R" ) []
+                            , Con
+                                ( Data "Test2.G" ) []
+                            , Con
+                                ( Data "Test2.B" ) []
+                            ]
+                        )
+                        ( Con
+                            ( Data "Test2.B" ) []
+                        ) []
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = SumT
+                                [ Con
+                                    ( Data "Test2.R" ) []
+                                , Con
+                                    ( Data "Test2.G" ) []
+                                , Con
+                                    ( Data "Test2.B" ) []
+                                ]
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = 25
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = StringT
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 26
+                    , sort = Temporal
+                    }
+                ]
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            , RawCall "malgo_print_string"
+                ( [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                )
+                [ Var
+                    ( Id
+                        { name = "p"
+                        , meta = StringT
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = 26
+                        , sort = Temporal
+                        }
+                    )
+                ]
+            )
+        ,
+            ( Id
+                { name = "rtob"
+                , meta = [ AnyT ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "r"
+                    , meta = AnyT
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 27
+                    , sort = Temporal
+                    }
+                ]
+            , [ AnyT ] :-> AnyT
+            , Match
+                ( Cast
+                    ( SumT
+                        [ Con
+                            ( Data "Test2.R" ) []
+                        , Con
+                            ( Data "Test2.G" ) []
+                        , Con
+                            ( Data "Test2.B" ) []
+                        ]
+                    )
+                    ( Var
+                        ( Id
+                            { name = "r"
+                            , meta = AnyT
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = 27
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+                [ Unpack
+                    ( Con
+                        ( Data "Test2.R" ) []
+                    ) []
+                    ( CallDirect
+                        ( Id
+                            { name = "B"
+                            , meta = [] :-> AnyT
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        ) []
+                    )
+                , Unpack
+                    ( Con
+                        ( Data "Test2.G" ) []
+                    ) []
+                    ( Atom
+                        ( Var
+                            ( Id
+                                { name = "r"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "Test2" }
+                                , uniq = 27
+                                , sort = Temporal
+                                }
+                            )
+                        )
+                    )
+                , Unpack
+                    ( Con
+                        ( Data "Test2.B" ) []
+                    ) []
+                    ( Atom
+                        ( Var
+                            ( Id
+                                { name = "r"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "Test2" }
+                                , uniq = 27
+                                , sort = Temporal
+                                }
+                            )
+                        )
+                    )
+                ]
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "$_"
+                    , meta = SumT
+                        [ Con Tuple [] ]
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 28
+                    , sort = Temporal
+                    }
+                ]
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            , Assign
+                ( Id
+                    { name = "d"
+                    , meta = [ AnyT ] :-> SumT
+                        [ Con Tuple [] ]
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 33
+                    , sort = Temporal
+                    }
+                )
+                ( Let
+                    [ LocalDef
+                        { _variable = Id
+                            { name = "fun"
+                            , meta = [ AnyT ] :-> SumT
+                                [ Con Tuple [] ]
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = 32
+                            , sort = Temporal
+                            }
+                        , typ = [ AnyT ] :-> SumT
+                            [ Con Tuple [] ]
+                        , _object = Fun
+                            [ Id
+                                { name = "b"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "Test2" }
+                                , uniq = 29
+                                , sort = Temporal
+                                }
+                            ]
+                            ( Match
+                                ( Cast
+                                    ( SumT
+                                        [ Con
+                                            ( Data "Test2.R" ) []
+                                        , Con
+                                            ( Data "Test2.G" ) []
+                                        , Con
+                                            ( Data "Test2.B" ) []
+                                        ]
+                                    )
+                                    ( Var
+                                        ( Id
+                                            { name = "b"
+                                            , meta = AnyT
+                                            , moduleName = ModuleName
+                                                { raw = "Test2" }
+                                            , uniq = 29
+                                            , sort = Temporal
+                                            }
+                                        )
+                                    )
+                                )
+                                [ Unpack
+                                    ( Con
+                                        ( Data "Test2.R" ) []
+                                    ) []
+                                    ( Assign
+                                        ( Id
+                                            { name = "d"
+                                            , meta = SumT
+                                                [ Con Tuple [] ]
+                                            , moduleName = ModuleName
+                                                { raw = "Test2" }
+                                            , uniq = 30
+                                            , sort = Temporal
+                                            }
+                                        )
+                                        ( Call
+                                            ( Var
+                                                ( Id
+                                                    { name = "malgo_print_string"
+                                                    , meta = [ StringT ] :-> SumT
+                                                        [ Con Tuple [] ]
+                                                    , moduleName = ModuleName
+                                                        { raw = "Test2" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            [ Unboxed
+                                                ( String "WRONG" )
+                                            ]
+                                        )
+                                        ( Cast
+                                            ( SumT
+                                                [ Con Tuple [] ]
+                                            )
+                                            ( Var
+                                                ( Id
+                                                    { name = "d"
+                                                    , meta = SumT
+                                                        [ Con Tuple [] ]
+                                                    , moduleName = ModuleName
+                                                        { raw = "Test2" }
+                                                    , uniq = 30
+                                                    , sort = Temporal
+                                                    }
+                                                )
+                                            )
+                                        )
+                                    )
+                                , Unpack
+                                    ( Con
+                                        ( Data "Test2.G" ) []
+                                    ) []
+                                    ( Assign
+                                        ( Id
+                                            { name = "d"
+                                            , meta = SumT
+                                                [ Con Tuple [] ]
+                                            , moduleName = ModuleName
+                                                { raw = "Test2" }
+                                            , uniq = 30
+                                            , sort = Temporal
+                                            }
+                                        )
+                                        ( Call
+                                            ( Var
+                                                ( Id
+                                                    { name = "malgo_print_string"
+                                                    , meta = [ StringT ] :-> SumT
+                                                        [ Con Tuple [] ]
+                                                    , moduleName = ModuleName
+                                                        { raw = "Test2" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            [ Unboxed
+                                                ( String "WRONG" )
+                                            ]
+                                        )
+                                        ( Cast
+                                            ( SumT
+                                                [ Con Tuple [] ]
+                                            )
+                                            ( Var
+                                                ( Id
+                                                    { name = "d"
+                                                    , meta = SumT
+                                                        [ Con Tuple [] ]
+                                                    , moduleName = ModuleName
+                                                        { raw = "Test2" }
+                                                    , uniq = 30
+                                                    , sort = Temporal
+                                                    }
+                                                )
+                                            )
+                                        )
+                                    )
+                                , Unpack
+                                    ( Con
+                                        ( Data "Test2.B" ) []
+                                    ) []
+                                    ( Assign
+                                        ( Id
+                                            { name = "d"
+                                            , meta = SumT
+                                                [ Con Tuple [] ]
+                                            , moduleName = ModuleName
+                                                { raw = "Test2" }
+                                            , uniq = 31
+                                            , sort = Temporal
+                                            }
+                                        )
+                                        ( Call
+                                            ( Var
+                                                ( Id
+                                                    { name = "malgo_print_string"
+                                                    , meta = [ StringT ] :-> SumT
+                                                        [ Con Tuple [] ]
+                                                    , moduleName = ModuleName
+                                                        { raw = "Test2" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            [ Unboxed
+                                                ( String "OK" )
+                                            ]
+                                        )
+                                        ( Cast
+                                            ( SumT
+                                                [ Con Tuple [] ]
+                                            )
+                                            ( Var
+                                                ( Id
+                                                    { name = "d"
+                                                    , meta = SumT
+                                                        [ Con Tuple [] ]
+                                                    , moduleName = ModuleName
+                                                        { raw = "Test2" }
+                                                    , uniq = 31
+                                                    , sort = Temporal
+                                                    }
+                                                )
+                                            )
+                                        )
+                                    )
+                                ]
+                            )
+                        }
+                    ]
+                    ( Atom
+                        ( Var
+                            ( Id
+                                { name = "fun"
+                                , meta = [ AnyT ] :-> SumT
+                                    [ Con Tuple [] ]
+                                , moduleName = ModuleName
+                                    { raw = "Test2" }
+                                , uniq = 32
+                                , sort = Temporal
+                                }
+                            )
+                        )
+                    )
+                )
+                ( Assign
+                    ( Id
+                        { name = "d"
+                        , meta = AnyT
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = 36
+                        , sort = Temporal
+                        }
+                    )
+                    ( Assign
+                        ( Id
+                            { name = "d"
+                            , meta = AnyT
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = 34
+                            , sort = Temporal
+                            }
+                        )
+                        ( CallDirect
+                            ( Id
+                                { name = "R"
+                                , meta = [] :-> AnyT
+                                , moduleName = ModuleName
+                                    { raw = "Test2" }
+                                , uniq = -1
+                                , sort = External
+                                }
+                            ) []
+                        )
+                        ( Assign
+                            ( Id
+                                { name = "d"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "Test2" }
+                                , uniq = 35
+                                , sort = Temporal
+                                }
+                            )
+                            ( Call
+                                ( Var
+                                    ( Id
+                                        { name = "rtob"
+                                        , meta = [ AnyT ] :-> AnyT
+                                        , moduleName = ModuleName
+                                            { raw = "Test2" }
+                                        , uniq = -1
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                                [ Var
+                                    ( Id
+                                        { name = "d"
+                                        , meta = AnyT
+                                        , moduleName = ModuleName
+                                            { raw = "Test2" }
+                                        , uniq = 34
+                                        , sort = Temporal
+                                        }
+                                    )
+                                ]
+                            )
+                            ( Cast AnyT
+                                ( Var
+                                    ( Id
+                                        { name = "d"
+                                        , meta = AnyT
+                                        , moduleName = ModuleName
+                                            { raw = "Test2" }
+                                        , uniq = 35
+                                        , sort = Temporal
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                    )
+                    ( Assign
+                        ( Id
+                            { name = "d"
+                            , meta = SumT
+                                [ Con Tuple [] ]
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = 37
+                            , sort = Temporal
+                            }
+                        )
+                        ( Call
+                            ( Var
+                                ( Id
+                                    { name = "d"
+                                    , meta = [ AnyT ] :-> SumT
+                                        [ Con Tuple [] ]
+                                    , moduleName = ModuleName
+                                        { raw = "Test2" }
+                                    , uniq = 33
+                                    , sort = Temporal
+                                    }
+                                )
+                            )
+                            [ Var
+                                ( Id
+                                    { name = "d"
+                                    , meta = AnyT
+                                    , moduleName = ModuleName
+                                        { raw = "Test2" }
+                                    , uniq = 36
+                                    , sort = Temporal
+                                    }
+                                )
+                            ]
+                        )
+                        ( Cast
+                            ( SumT
+                                [ Con Tuple [] ]
+                            )
+                            ( Var
+                                ( Id
+                                    { name = "d"
+                                    , meta = SumT
+                                        [ Con Tuple [] ]
+                                    , moduleName = ModuleName
+                                        { raw = "Test2" }
+                                    , uniq = 37
+                                    , sort = Temporal
+                                    }
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ]
+    , extFuns =
+        [
+            ( "malgo_print_string"
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            )
+        ]
+    }
+DsState
+    { _nameEnv = fromList
+        [
+            ( Id
+                { name = "B"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "B"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "malgo_print_string"
+                , meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 22
+                , sort = Internal
+                }
+            , Id
+                { name = "$_"
+                , meta = SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 28
+                , sort = Temporal
+                }
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "main"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "a"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 0
+                , sort = Internal
+                }
+            , Id
+                { name = "r"
+                , meta = AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 27
+                , sort = Temporal
+                }
+            )
+        ,
+            ( Id
+                { name = "rtob"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "rtob"
+                , meta = [ AnyT ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 1
+                , sort = Internal
+                }
+            , Id
+                { name = "b"
+                , meta = AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 29
+                , sort = Temporal
+                }
+            )
+        ,
+            ( Id
+                { name = "G"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "G"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "R"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "R"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ]
+    , _signatureMap = fromList
+        [
+            ( Id
+                { name = "B"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 22
+                , sort = Internal
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "a"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 0
+                , sort = Internal
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "rtob"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyCon
+                        ( Id
+                            { name = "RGB"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyCon
+                        ( Id
+                            { name = "RGB"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 1
+                , sort = Internal
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "G"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "R"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ]
+    , _typeDefMap = fromList
+        [
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim StringT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "RGB"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "RGB"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Test2" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "R"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Test2" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "G"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Test2" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "B"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Test2" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Test2" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim FloatT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ]
+    , _kindCtx = fromList
+        [
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 5
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 4
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 19
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 18
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 17
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 16
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 13
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 12
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 7
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 6
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 21
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 20
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 3
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 2
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 15
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 14
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 11
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 10
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Test2" }
+                , uniq = 9
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "Test2" }
+                    , uniq = 8
+                    , sort = Temporal
+                    }
+                )
+            )
+        ]
+    , _globalDefs = []
+    , globalClosures = fromList []
+    }

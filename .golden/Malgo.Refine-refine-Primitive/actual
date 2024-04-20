@@ -1,0 +1,418 @@
+Module
+    { moduleName = ModuleName
+        { raw = "Primitive" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyTuple 0 )
+                            ( TyTuple 0 )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                , sourceLine = Pos 3
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                , sourceLine = Pos 4
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Primitive" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyTuple 0 )
+                                ( TyTuple 0 )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                    , sourceLine = Pos 3
+                                    , sourceColumn = Pos 16
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                    , sourceLine = Pos 3
+                                    , sourceColumn = Pos 67
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyTuple 0 )
+                                    ( TyTuple 0 )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                        , sourceLine = Pos 3
+                                        , sourceColumn = Pos 16
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                        , sourceLine = Pos 3
+                                        , sourceColumn = Pos 67
+                                        }
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                            , sourceLine = Pos 3
+                                            , sourceColumn = Pos 16
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                            , sourceLine = Pos 3
+                                            , sourceColumn = Pos 67
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "$_"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Primitive" }
+                                    , uniq = 10
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                            , sourceLine = Pos 3
+                                            , sourceColumn = Pos 16
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                            , sourceLine = Pos 3
+                                            , sourceColumn = Pos 67
+                                            }
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                            , sourceLine = Pos 3
+                                            , sourceColumn = Pos 16
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                            , sourceLine = Pos 3
+                                            , sourceColumn = Pos 67
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Typed
+                                            { annotated = TyTuple 0
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                    , sourceLine = Pos 3
+                                                    , sourceColumn = Pos 16
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                    , sourceLine = Pos 3
+                                                    , sourceColumn = Pos 67
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Typed
+                                                { annotated = TyArr ( TyPrim StringT )
+                                                    ( TyTuple 0 )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                        , sourceLine = Pos 3
+                                                        , sourceColumn = Pos 16
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                        , sourceLine = Pos 3
+                                                        , sourceColumn = Pos 29
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "printString#"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Builtin" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Seq
+                                            ( Typed
+                                                { annotated = TyPrim StringT
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                        , sourceLine = Pos 3
+                                                        , sourceColumn = Pos 29
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                        , sourceLine = Pos 3
+                                                        , sourceColumn = Pos 67
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                        , sourceLine = Pos 3
+                                                        , sourceColumn = Pos 30
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                        , sourceLine = Pos 3
+                                                        , sourceColumn = Pos 65
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Typed
+                                                        { annotated = TyPrim StringT
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                , sourceLine = Pos 3
+                                                                , sourceColumn = Pos 30
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                , sourceLine = Pos 3
+                                                                , sourceColumn = Pos 65
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Var
+                                                        ( Typed
+                                                            { annotated = TyArr ( TyPrim Int64T ) ( TyPrim StringT )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                    , sourceLine = Pos 3
+                                                                    , sourceColumn = Pos 30
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                    , sourceLine = Pos 3
+                                                                    , sourceColumn = Pos 45
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Id
+                                                            { name = "toStringInt64#"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "Builtin" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( Seq
+                                                        ( Typed
+                                                            { annotated = TyPrim Int64T
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                    , sourceLine = Pos 3
+                                                                    , sourceColumn = Pos 45
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                    , sourceLine = Pos 3
+                                                                    , sourceColumn = Pos 65
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( NoBind
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                    , sourceLine = Pos 3
+                                                                    , sourceColumn = Pos 46
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                    , sourceLine = Pos 3
+                                                                    , sourceColumn = Pos 64
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Apply
+                                                                ( Typed
+                                                                    { annotated = TyPrim Int64T
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                            , sourceLine = Pos 3
+                                                                            , sourceColumn = Pos 46
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                            , sourceLine = Pos 3
+                                                                            , sourceColumn = Pos 64
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( Apply
+                                                                    ( Typed
+                                                                        { annotated = TyArr ( TyPrim Int64T ) ( TyPrim Int64T )
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                                , sourceLine = Pos 3
+                                                                                , sourceColumn = Pos 46
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                                , sourceLine = Pos 3
+                                                                                , sourceColumn = Pos 64
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( Var
+                                                                        ( Typed
+                                                                            { annotated = TyArr ( TyPrim Int64T )
+                                                                                ( TyArr ( TyPrim Int64T ) ( TyPrim Int64T ) )
+                                                                            , value = Range
+                                                                                { _start = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                                    , sourceLine = Pos 3
+                                                                                    , sourceColumn = Pos 46
+                                                                                    }
+                                                                                , _end = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                                    , sourceLine = Pos 3
+                                                                                    , sourceColumn = Pos 56
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( Id
+                                                                            { name = "addInt64#"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "Builtin" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    )
+                                                                    ( Unboxed
+                                                                        ( Typed
+                                                                            { annotated = TyPrim Int64T
+                                                                            , value = Range
+                                                                                { _start = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                                    , sourceLine = Pos 3
+                                                                                    , sourceColumn = Pos 56
+                                                                                    }
+                                                                                , _end = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                                    , sourceLine = Pos 3
+                                                                                    , sourceColumn = Pos 61
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( Int64 40 )
+                                                                    )
+                                                                )
+                                                                ( Unboxed
+                                                                    ( Typed
+                                                                        { annotated = TyPrim Int64T
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                                , sourceLine = Pos 3
+                                                                                , sourceColumn = Pos 61
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                                                                                , sourceLine = Pos 3
+                                                                                , sourceColumn = Pos 64
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( Int64 2 )
+                                                                )
+                                                            ) :| []
+                                                        )
+                                                    )
+                                                ) :| []
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs = []
+        , _dataDefs = []
+        , _typeSynonyms = []
+        , _foreigns = []
+        , _imports =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Primitive.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Builtin" }
+                , All
+                )
+            ]
+        }
+    }

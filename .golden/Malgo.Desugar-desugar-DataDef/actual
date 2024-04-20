@@ -1,0 +1,1860 @@
+Program
+    { topVars = []
+    , topFuns =
+        [
+            ( Id
+                { name = "Cons_curry"
+                , meta =
+                    [ AnyT
+                    , AnyT
+                    ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 24
+                , sort = Temporal
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = AnyT
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 25
+                    , sort = Temporal
+                    }
+                , Id
+                    { name = "p"
+                    , meta = AnyT
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 26
+                    , sort = Temporal
+                    }
+                ]
+            ,
+                [ AnyT
+                , AnyT
+                ] :-> AnyT
+            , Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = SumT
+                            [ Con
+                                ( Data "DataDef.Nil" ) []
+                            , Con
+                                ( Data "DataDef.Cons" )
+                                [ AnyT
+                                , AnyT
+                                ]
+                            ]
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 27
+                        , sort = Temporal
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "DataDef.Nil" ) []
+                        , Con
+                            ( Data "DataDef.Cons" )
+                            [ AnyT
+                            , AnyT
+                            ]
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "DataDef.Nil" ) []
+                            , Con
+                                ( Data "DataDef.Cons" )
+                                [ AnyT
+                                , AnyT
+                                ]
+                            ]
+                        )
+                        ( Con
+                            ( Data "DataDef.Cons" )
+                            [ AnyT
+                            , AnyT
+                            ]
+                        )
+                        [ Var
+                            ( Id
+                                { name = "p"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 25
+                                , sort = Temporal
+                                }
+                            )
+                        , Var
+                            ( Id
+                                { name = "p"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 26
+                                , sort = Temporal
+                                }
+                            )
+                        ]
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = SumT
+                                [ Con
+                                    ( Data "DataDef.Nil" ) []
+                                , Con
+                                    ( Data "DataDef.Cons" )
+                                    [ AnyT
+                                    , AnyT
+                                    ]
+                                ]
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 27
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "Int#"
+                , meta = [ Int64T ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = Int64T
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 18
+                    , sort = Temporal
+                    }
+                ]
+            , [ Int64T ] :-> AnyT
+            , Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = SumT
+                            [ Con
+                                ( Data "DataDef.Int#" ) [ Int64T ]
+                            ]
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 19
+                        , sort = Temporal
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "DataDef.Int#" ) [ Int64T ]
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "DataDef.Int#" ) [ Int64T ]
+                            ]
+                        )
+                        ( Con
+                            ( Data "DataDef.Int#" ) [ Int64T ]
+                        )
+                        [ Var
+                            ( Id
+                                { name = "p"
+                                , meta = Int64T
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 18
+                                , sort = Temporal
+                                }
+                            )
+                        ]
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = SumT
+                                [ Con
+                                    ( Data "DataDef.Int#" ) [ Int64T ]
+                                ]
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 19
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "Nil"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , []
+            , [] :-> AnyT
+            , Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = SumT
+                            [ Con
+                                ( Data "DataDef.Nil" ) []
+                            , Con
+                                ( Data "DataDef.Cons" )
+                                [ AnyT
+                                , AnyT
+                                ]
+                            ]
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 20
+                        , sort = Temporal
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "DataDef.Nil" ) []
+                        , Con
+                            ( Data "DataDef.Cons" )
+                            [ AnyT
+                            , AnyT
+                            ]
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "DataDef.Nil" ) []
+                            , Con
+                                ( Data "DataDef.Cons" )
+                                [ AnyT
+                                , AnyT
+                                ]
+                            ]
+                        )
+                        ( Con
+                            ( Data "DataDef.Nil" ) []
+                        ) []
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = SumT
+                                [ Con
+                                    ( Data "DataDef.Nil" ) []
+                                , Con
+                                    ( Data "DataDef.Cons" )
+                                    [ AnyT
+                                    , AnyT
+                                    ]
+                                ]
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 20
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "Cons"
+                , meta = [ AnyT ] :->
+                    ( [ AnyT ] :-> AnyT )
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = AnyT
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 21
+                    , sort = Temporal
+                    }
+                ]
+            , [ AnyT ] :->
+                ( [ AnyT ] :-> AnyT )
+            , Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = [ AnyT ] :-> AnyT
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 28
+                        , sort = Temporal
+                        }
+                    , typ = [ AnyT ] :-> AnyT
+                    , _object = Fun
+                        [ Id
+                            { name = "p"
+                            , meta = AnyT
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 22
+                            , sort = Temporal
+                            }
+                        ]
+                        ( CallDirect
+                            ( Id
+                                { name = "Cons_curry"
+                                , meta =
+                                    [ AnyT
+                                    , AnyT
+                                    ] :-> AnyT
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 24
+                                , sort = Temporal
+                                }
+                            )
+                            [ Var
+                                ( Id
+                                    { name = "p"
+                                    , meta = AnyT
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = 21
+                                    , sort = Temporal
+                                    }
+                                )
+                            , Var
+                                ( Id
+                                    { name = "p"
+                                    , meta = AnyT
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = 22
+                                    , sort = Temporal
+                                    }
+                                )
+                            ]
+                        )
+                    }
+                ]
+                ( Atom
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = [ AnyT ] :-> AnyT
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 28
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_int64_t_to_string"
+                , meta = [ Int64T ] :-> StringT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = Int64T
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 29
+                    , sort = Temporal
+                    }
+                ]
+            , [ Int64T ] :-> StringT
+            , RawCall "malgo_int64_t_to_string"
+                ( [ Int64T ] :-> StringT )
+                [ Var
+                    ( Id
+                        { name = "p"
+                        , meta = Int64T
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 29
+                        , sort = Temporal
+                        }
+                    )
+                ]
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = StringT
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 30
+                    , sort = Temporal
+                    }
+                ]
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            , RawCall "malgo_print_string"
+                ( [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                )
+                [ Var
+                    ( Id
+                        { name = "p"
+                        , meta = StringT
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 30
+                        , sort = Temporal
+                        }
+                    )
+                ]
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "$_"
+                    , meta = SumT
+                        [ Con Tuple [] ]
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 31
+                    , sort = Temporal
+                    }
+                ]
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            , Assign
+                ( Id
+                    { name = "d"
+                    , meta = [ AnyT ] :-> SumT
+                        [ Con Tuple [] ]
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 38
+                    , sort = Temporal
+                    }
+                )
+                ( Let
+                    [ LocalDef
+                        { _variable = Id
+                            { name = "fun"
+                            , meta = [ AnyT ] :-> SumT
+                                [ Con Tuple [] ]
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 37
+                            , sort = Temporal
+                            }
+                        , typ = [ AnyT ] :-> SumT
+                            [ Con Tuple [] ]
+                        , _object = Fun
+                            [ Id
+                                { name = "int#"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 32
+                                , sort = Temporal
+                                }
+                            ]
+                            ( Match
+                                ( Cast
+                                    ( SumT
+                                        [ Con
+                                            ( Data "DataDef.Int#" ) [ Int64T ]
+                                        ]
+                                    )
+                                    ( Var
+                                        ( Id
+                                            { name = "int#"
+                                            , meta = AnyT
+                                            , moduleName = ModuleName
+                                                { raw = "DataDef" }
+                                            , uniq = 32
+                                            , sort = Temporal
+                                            }
+                                        )
+                                    )
+                                )
+                                [ Unpack
+                                    ( Con
+                                        ( Data "DataDef.Int#" ) [ Int64T ]
+                                    )
+                                    [ Id
+                                        { name = "p"
+                                        , meta = Int64T
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , uniq = 33
+                                        , sort = Temporal
+                                        }
+                                    ]
+                                    ( Assign
+                                        ( Id
+                                            { name = "d"
+                                            , meta = StringT
+                                            , moduleName = ModuleName
+                                                { raw = "DataDef" }
+                                            , uniq = 35
+                                            , sort = Temporal
+                                            }
+                                        )
+                                        ( Assign
+                                            ( Id
+                                                { name = "d"
+                                                , meta = StringT
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , uniq = 34
+                                                , sort = Temporal
+                                                }
+                                            )
+                                            ( Call
+                                                ( Var
+                                                    ( Id
+                                                        { name = "malgo_int64_t_to_string"
+                                                        , meta = [ Int64T ] :-> StringT
+                                                        , moduleName = ModuleName
+                                                            { raw = "DataDef" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    )
+                                                )
+                                                [ Var
+                                                    ( Id
+                                                        { name = "p"
+                                                        , meta = Int64T
+                                                        , moduleName = ModuleName
+                                                            { raw = "DataDef" }
+                                                        , uniq = 33
+                                                        , sort = Temporal
+                                                        }
+                                                    )
+                                                ]
+                                            )
+                                            ( Cast StringT
+                                                ( Var
+                                                    ( Id
+                                                        { name = "d"
+                                                        , meta = StringT
+                                                        , moduleName = ModuleName
+                                                            { raw = "DataDef" }
+                                                        , uniq = 34
+                                                        , sort = Temporal
+                                                        }
+                                                    )
+                                                )
+                                            )
+                                        )
+                                        ( Assign
+                                            ( Id
+                                                { name = "d"
+                                                , meta = SumT
+                                                    [ Con Tuple [] ]
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , uniq = 36
+                                                , sort = Temporal
+                                                }
+                                            )
+                                            ( Call
+                                                ( Var
+                                                    ( Id
+                                                        { name = "malgo_print_string"
+                                                        , meta = [ StringT ] :-> SumT
+                                                            [ Con Tuple [] ]
+                                                        , moduleName = ModuleName
+                                                            { raw = "DataDef" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    )
+                                                )
+                                                [ Var
+                                                    ( Id
+                                                        { name = "d"
+                                                        , meta = StringT
+                                                        , moduleName = ModuleName
+                                                            { raw = "DataDef" }
+                                                        , uniq = 35
+                                                        , sort = Temporal
+                                                        }
+                                                    )
+                                                ]
+                                            )
+                                            ( Cast
+                                                ( SumT
+                                                    [ Con Tuple [] ]
+                                                )
+                                                ( Var
+                                                    ( Id
+                                                        { name = "d"
+                                                        , meta = SumT
+                                                            [ Con Tuple [] ]
+                                                        , moduleName = ModuleName
+                                                            { raw = "DataDef" }
+                                                        , uniq = 36
+                                                        , sort = Temporal
+                                                        }
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                ]
+                            )
+                        }
+                    ]
+                    ( Atom
+                        ( Var
+                            ( Id
+                                { name = "fun"
+                                , meta = [ AnyT ] :-> SumT
+                                    [ Con Tuple [] ]
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 37
+                                , sort = Temporal
+                                }
+                            )
+                        )
+                    )
+                )
+                ( Assign
+                    ( Id
+                        { name = "d"
+                        , meta = AnyT
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 40
+                        , sort = Temporal
+                        }
+                    )
+                    ( Assign
+                        ( Id
+                            { name = "d"
+                            , meta = AnyT
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 39
+                            , sort = Temporal
+                            }
+                        )
+                        ( Call
+                            ( Var
+                                ( Id
+                                    { name = "Int#"
+                                    , meta = [ Int64T ] :-> AnyT
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                            )
+                            [ Unboxed
+                                ( Int64 1 )
+                            ]
+                        )
+                        ( Cast AnyT
+                            ( Var
+                                ( Id
+                                    { name = "d"
+                                    , meta = AnyT
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = 39
+                                    , sort = Temporal
+                                    }
+                                )
+                            )
+                        )
+                    )
+                    ( Assign
+                        ( Id
+                            { name = "d"
+                            , meta = SumT
+                                [ Con Tuple [] ]
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 41
+                            , sort = Temporal
+                            }
+                        )
+                        ( Call
+                            ( Var
+                                ( Id
+                                    { name = "d"
+                                    , meta = [ AnyT ] :-> SumT
+                                        [ Con Tuple [] ]
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = 38
+                                    , sort = Temporal
+                                    }
+                                )
+                            )
+                            [ Var
+                                ( Id
+                                    { name = "d"
+                                    , meta = AnyT
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = 40
+                                    , sort = Temporal
+                                    }
+                                )
+                            ]
+                        )
+                        ( Cast
+                            ( SumT
+                                [ Con Tuple [] ]
+                            )
+                            ( Var
+                                ( Id
+                                    { name = "d"
+                                    , meta = SumT
+                                        [ Con Tuple [] ]
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = 41
+                                    , sort = Temporal
+                                    }
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ]
+    , extFuns =
+        [
+            ( "malgo_int64_t_to_string"
+            , [ Int64T ] :-> StringT
+            )
+        ,
+            ( "malgo_print_string"
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            )
+        ]
+    }
+DsState
+    { _nameEnv = fromList
+        [
+            ( Id
+                { name = "malgo_int64_t_to_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "malgo_int64_t_to_string"
+                , meta = [ Int64T ] :-> StringT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 17
+                , sort = Internal
+                }
+            , Id
+                { name = "$_"
+                , meta = SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 31
+                , sort = Temporal
+                }
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "main"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "x"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 1
+                , sort = Internal
+                }
+            , Id
+                { name = "p"
+                , meta = Int64T
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 33
+                , sort = Temporal
+                }
+            )
+        ,
+            ( Id
+                { name = "Int#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "Int#"
+                , meta = [ Int64T ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "malgo_print_string"
+                , meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "Nil"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "Nil"
+                , meta = [] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "Cons"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "Cons"
+                , meta = [ AnyT ] :->
+                    ( [ AnyT ] :-> AnyT )
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ]
+    , _signatureMap = fromList
+        [
+            ( Id
+                { name = "malgo_int64_t_to_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim Int64T ) ( TyPrim StringT ) )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 17
+                , sort = Internal
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "x"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 1
+                , sort = Internal
+                }
+            , Forall [] ( TyPrim Int64T )
+            )
+        ,
+            ( Id
+                { name = "Int#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim Int64T )
+                    ( TyCon
+                        ( Id
+                            { name = "Int"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "Nil"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall
+                [ Id
+                    { name = "DataDef.#a_0"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 2
+                    , sort = Internal
+                    }
+                ]
+                ( TyApp
+                    ( TyCon
+                        ( Id
+                            { name = "List"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyVar
+                        ( Id
+                            { name = "DataDef.#a_0"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 2
+                            , sort = Internal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "Cons"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall
+                [ Id
+                    { name = "DataDef.#a_0"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 2
+                    , sort = Internal
+                    }
+                ]
+                ( TyArr
+                    ( TyVar
+                        ( Id
+                            { name = "DataDef.#a_0"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 2
+                            , sort = Internal
+                            }
+                        )
+                    )
+                    ( TyArr
+                        ( TyApp
+                            ( TyCon
+                                ( Id
+                                    { name = "List"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                            )
+                            ( TyVar
+                                ( Id
+                                    { name = "DataDef.#a_0"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = 2
+                                    , sort = Internal
+                                    }
+                                )
+                            )
+                        )
+                        ( TyApp
+                            ( TyCon
+                                ( Id
+                                    { name = "List"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                            )
+                            ( TyVar
+                                ( Id
+                                    { name = "DataDef.#a_0"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "DataDef" }
+                                    , uniq = 2
+                                    , sort = Internal
+                                    }
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ]
+    , _typeDefMap = fromList
+        [
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim StringT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "Int"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "Int#"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyArr ( TyPrim Int64T )
+                                ( TyCon
+                                    ( Id
+                                        { name = "Int"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , uniq = -1
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "a"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 0
+                , sort = Internal
+                }
+            , TypeDef
+                { _typeConstructor = TyVar
+                    ( Id
+                        { name = "DataDef.#a_0"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 2
+                        , sort = Internal
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim FloatT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "List"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "List"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                , _typeParameters =
+                    [ Id
+                        { name = "DataDef.#a_0"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 2
+                        , sort = Internal
+                        }
+                    ]
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "Nil"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , Forall
+                            [ Id
+                                { name = "DataDef.#a_0"
+                                , meta = ()
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 2
+                                , sort = Internal
+                                }
+                            ]
+                            ( TyApp
+                                ( TyCon
+                                    ( Id
+                                        { name = "List"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , uniq = -1
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                                ( TyVar
+                                    ( Id
+                                        { name = "DataDef.#a_0"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , uniq = 2
+                                        , sort = Internal
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "Cons"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , Forall
+                            [ Id
+                                { name = "DataDef.#a_0"
+                                , meta = ()
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 2
+                                , sort = Internal
+                                }
+                            ]
+                            ( TyArr
+                                ( TyVar
+                                    ( Id
+                                        { name = "DataDef.#a_0"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , uniq = 2
+                                        , sort = Internal
+                                        }
+                                    )
+                                )
+                                ( TyArr
+                                    ( TyApp
+                                        ( TyCon
+                                            ( Id
+                                                { name = "List"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( TyVar
+                                            ( Id
+                                                { name = "DataDef.#a_0"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , uniq = 2
+                                                , sort = Internal
+                                                }
+                                            )
+                                        )
+                                    )
+                                    ( TyApp
+                                        ( TyCon
+                                            ( Id
+                                                { name = "List"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( TyVar
+                                            ( Id
+                                                { name = "DataDef.#a_0"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , uniq = 2
+                                                , sort = Internal
+                                                }
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ]
+    , _kindCtx = fromList
+        [
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 8
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 7
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 10
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 9
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 14
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 13
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 12
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 11
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 16
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 15
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "List"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = -1
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 6
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 5
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 4
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , uniq = 3
+                    , sort = Temporal
+                    }
+                )
+            )
+        ]
+    , _globalDefs =
+        [ FunDef
+            ( Id
+                { name = "Cons_curry"
+                , meta =
+                    [ AnyT
+                    , AnyT
+                    ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 24
+                , sort = Temporal
+                }
+            )
+            [ Id
+                { name = "p"
+                , meta = AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 25
+                , sort = Temporal
+                }
+            , Id
+                { name = "p"
+                , meta = AnyT
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , uniq = 26
+                , sort = Temporal
+                }
+            ]
+            (
+                [ AnyT
+                , AnyT
+                ] :-> AnyT
+            )
+            ( Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = SumT
+                            [ Con
+                                ( Data "DataDef.Nil" ) []
+                            , Con
+                                ( Data "DataDef.Cons" )
+                                [ AnyT
+                                , AnyT
+                                ]
+                            ]
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , uniq = 27
+                        , sort = Temporal
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "DataDef.Nil" ) []
+                        , Con
+                            ( Data "DataDef.Cons" )
+                            [ AnyT
+                            , AnyT
+                            ]
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "DataDef.Nil" ) []
+                            , Con
+                                ( Data "DataDef.Cons" )
+                                [ AnyT
+                                , AnyT
+                                ]
+                            ]
+                        )
+                        ( Con
+                            ( Data "DataDef.Cons" )
+                            [ AnyT
+                            , AnyT
+                            ]
+                        )
+                        [ Var
+                            ( Id
+                                { name = "p"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 25
+                                , sort = Temporal
+                                }
+                            )
+                        , Var
+                            ( Id
+                                { name = "p"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , uniq = 26
+                                , sort = Temporal
+                                }
+                            )
+                        ]
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = SumT
+                                [ Con
+                                    ( Data "DataDef.Nil" ) []
+                                , Con
+                                    ( Data "DataDef.Cons" )
+                                    [ AnyT
+                                    , AnyT
+                                    ]
+                                ]
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , uniq = 27
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ]
+    , globalClosures = fromList []
+    }

@@ -1,0 +1,1053 @@
+Module
+    { moduleName = ModuleName
+        { raw = "TestNestedLetFunc" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyTuple 0 )
+                            ( TyTuple 0 )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , sourceLine = Pos 3
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "TestNestedLetFunc" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyTuple 0 )
+                                ( TyTuple 0 )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , sourceLine = Pos 4
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , sourceLine = Pos 6
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyTuple 0 )
+                                    ( TyTuple 0 )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , sourceLine = Pos 4
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , sourceLine = Pos 4
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "$_"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "TestNestedLetFunc" }
+                                    , uniq = 12
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , sourceLine = Pos 4
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Let
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , sourceLine = Pos 4
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , sourceLine = Pos 4
+                                            , sourceColumn = Pos 35
+                                            }
+                                        }
+                                    )
+                                    ( Id
+                                        { name = "f"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "TestNestedLetFunc" }
+                                        , uniq = 2
+                                        , sort = Internal
+                                        }
+                                    )
+                                    ( Fn
+                                        ( Typed
+                                            { annotated = TyArr
+                                                ( TyTuple 0 )
+                                                ( TyTuple 0 )
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , sourceLine = Pos 4
+                                                    , sourceColumn = Pos 14
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , sourceLine = Pos 4
+                                                    , sourceColumn = Pos 34
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Clause
+                                            ( Typed
+                                                { annotated = TyArr
+                                                    ( TyTuple 0 )
+                                                    ( TyTuple 0 )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , sourceLine = Pos 4
+                                                        , sourceColumn = Pos 14
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , sourceLine = Pos 4
+                                                        , sourceColumn = Pos 34
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            [ VarP
+                                                ( Typed
+                                                    { annotated = TyTuple 0
+                                                    , value = Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 4
+                                                            , sourceColumn = Pos 14
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 4
+                                                            , sourceColumn = Pos 34
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "$_"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "TestNestedLetFunc" }
+                                                    , uniq = 9
+                                                    , sort = Internal
+                                                    }
+                                                )
+                                            ]
+                                            ( Seq
+                                                ( Typed
+                                                    { annotated = TyTuple 0
+                                                    , value = Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 4
+                                                            , sourceColumn = Pos 14
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 4
+                                                            , sourceColumn = Pos 34
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                                ( Let
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 4
+                                                            , sourceColumn = Pos 14
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 4
+                                                            , sourceColumn = Pos 34
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Id
+                                                        { name = "y"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "TestNestedLetFunc" }
+                                                        , uniq = 1
+                                                        , sort = Internal
+                                                        }
+                                                    )
+                                                    ( Apply
+                                                        ( Typed
+                                                            { annotated = TyTuple 0
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                    , sourceLine = Pos 4
+                                                                    , sourceColumn = Pos 22
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                    , sourceLine = Pos 4
+                                                                    , sourceColumn = Pos 34
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Fn
+                                                            ( Typed
+                                                                { annotated = TyArr
+                                                                    ( TyTuple 0 )
+                                                                    ( TyTuple 0 )
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                        , sourceLine = Pos 4
+                                                                        , sourceColumn = Pos 23
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                        , sourceLine = Pos 4
+                                                                        , sourceColumn = Pos 30
+                                                                        }
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Clause
+                                                                ( Typed
+                                                                    { annotated = TyArr
+                                                                        ( TyTuple 0 )
+                                                                        ( TyTuple 0 )
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                            , sourceLine = Pos 4
+                                                                            , sourceColumn = Pos 23
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                            , sourceLine = Pos 4
+                                                                            , sourceColumn = Pos 30
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                [ VarP
+                                                                    ( Typed
+                                                                        { annotated = TyTuple 0
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , sourceLine = Pos 4
+                                                                                , sourceColumn = Pos 23
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , sourceLine = Pos 4
+                                                                                , sourceColumn = Pos 25
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( Id
+                                                                        { name = "a"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "TestNestedLetFunc" }
+                                                                        , uniq = 0
+                                                                        , sort = Internal
+                                                                        }
+                                                                    )
+                                                                ]
+                                                                ( Seq
+                                                                    ( Typed
+                                                                        { annotated = TyTuple 0
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , sourceLine = Pos 4
+                                                                                , sourceColumn = Pos 28
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , sourceLine = Pos 4
+                                                                                , sourceColumn = Pos 30
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( NoBind
+                                                                        ( Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , sourceLine = Pos 4
+                                                                                , sourceColumn = Pos 28
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , sourceLine = Pos 4
+                                                                                , sourceColumn = Pos 30
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( Tuple
+                                                                            ( Typed
+                                                                                { annotated = TyTuple 0
+                                                                                , value = Range
+                                                                                    { _start = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                        , sourceLine = Pos 4
+                                                                                        , sourceColumn = Pos 28
+                                                                                        }
+                                                                                    , _end = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                        , sourceLine = Pos 4
+                                                                                        , sourceColumn = Pos 30
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            ) []
+                                                                        ) :| []
+                                                                    )
+                                                                ) :| []
+                                                            )
+                                                        )
+                                                        ( Tuple
+                                                            ( Typed
+                                                                { annotated = TyTuple 0
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                        , sourceLine = Pos 4
+                                                                        , sourceColumn = Pos 32
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                        , sourceLine = Pos 4
+                                                                        , sourceColumn = Pos 34
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ) []
+                                                        )
+                                                    ) :| []
+                                                )
+                                            ) :| []
+                                        )
+                                    ) :|
+                                    [ NoBind
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , sourceLine = Pos 5
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , sourceLine = Pos 6
+                                                , sourceColumn = Pos 3
+                                                }
+                                            }
+                                        )
+                                        ( Apply
+                                            ( Typed
+                                                { annotated = TyTuple 0
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , sourceLine = Pos 5
+                                                        , sourceColumn = Pos 5
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Var
+                                                ( Typed
+                                                    { annotated = TyArr ( TyPrim StringT )
+                                                        ( TyTuple 0 )
+                                                    , value = Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 5
+                                                            , sourceColumn = Pos 5
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 5
+                                                            , sourceColumn = Pos 24
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "malgo_print_string"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "TestNestedLetFunc" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            ( Unboxed
+                                                ( Typed
+                                                    { annotated = TyPrim StringT
+                                                    , value = Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 5
+                                                            , sourceColumn = Pos 24
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , sourceLine = Pos 6
+                                                            , sourceColumn = Pos 3
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                                ( String "PASS" )
+                                            )
+                                        )
+                                    ]
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs = []
+        , _dataDefs = []
+        , _typeSynonyms = []
+        , _foreigns =
+            [
+                ( Typed
+                    { annotated = TyArr ( TyPrim StringT )
+                        ( TyTuple 0 )
+                    , value =
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , sourceLine = Pos 2
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , sourceLine = Pos 3
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        , "malgo_print_string"
+                        )
+                    }
+                , Id
+                    { name = "malgo_print_string"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , TyArr
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , sourceLine = Pos 2
+                            , sourceColumn = Pos 47
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , sourceLine = Pos 2
+                            , sourceColumn = Pos 50
+                            }
+                        }
+                    )
+                    ( TyCon
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , sourceLine = Pos 2
+                                , sourceColumn = Pos 39
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , sourceLine = Pos 2
+                                , sourceColumn = Pos 47
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "String#"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Builtin" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyTuple
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , sourceLine = Pos 2
+                                , sourceColumn = Pos 50
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , sourceLine = Pos 3
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        ) []
+                    )
+                )
+            ]
+        , _imports = []
+        }
+    }
+TcEnv
+    { _signatureMap = fromList
+        [
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 12
+                , sort = Internal
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "y"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 1
+                , sort = Internal
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 9
+                , sort = Internal
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "f"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 2
+                , sort = Internal
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "a"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 0
+                , sort = Internal
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ]
+    , _typeDefMap = fromList
+        [
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim StringT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim FloatT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ]
+    , _typeSynonymMap = fromList []
+    , _resolvedTypeIdentMap = fromList
+        [
+            ( "String#"
+            ,
+                [ Qualified
+                    { visibility = Implicit
+                    , value = Id
+                        { name = "String#"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Builtin" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    }
+                ]
+            )
+        ,
+            ( "Ptr#"
+            ,
+                [ Qualified
+                    { visibility = Implicit
+                    , value = Id
+                        { name = "Ptr#"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Builtin" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    }
+                ]
+            )
+        ,
+            ( "Char#"
+            ,
+                [ Qualified
+                    { visibility = Implicit
+                    , value = Id
+                        { name = "Char#"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Builtin" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    }
+                ]
+            )
+        ,
+            ( "Float#"
+            ,
+                [ Qualified
+                    { visibility = Implicit
+                    , value = Id
+                        { name = "Float#"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Builtin" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    }
+                ]
+            )
+        ,
+            ( "Int64#"
+            ,
+                [ Qualified
+                    { visibility = Implicit
+                    , value = Id
+                        { name = "Int64#"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Builtin" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    }
+                ]
+            )
+        ,
+            ( "Double#"
+            ,
+                [ Qualified
+                    { visibility = Implicit
+                    , value = Id
+                        { name = "Double#"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Builtin" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    }
+                ]
+            )
+        ,
+            ( "Int32#"
+            ,
+                [ Qualified
+                    { visibility = Implicit
+                    , value = Id
+                        { name = "Int32#"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Builtin" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    }
+                ]
+            )
+        ]
+    , _kindCtx = fromList
+        [
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 8
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , uniq = 7
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 6
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , uniq = 5
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 4
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , uniq = 3
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , uniq = 11
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , uniq = 10
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ]
+    }

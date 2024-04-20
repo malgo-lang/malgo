@@ -1,0 +1,1777 @@
+Module
+    { moduleName = ModuleName
+        { raw = "NestedMatch" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyTuple 0 )
+                            ( TyTuple 0 )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 15
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 23
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "NestedMatch" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyTuple 0 )
+                                ( TyTuple 0 )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , sourceLine = Pos 16
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , sourceLine = Pos 22
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyTuple 0 )
+                                    ( TyTuple 0 )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                        , sourceLine = Pos 16
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                        , sourceLine = Pos 22
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 16
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 22
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "$_"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "NestedMatch" }
+                                    , uniq = 29
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 16
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 22
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 16
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 22
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Typed
+                                            { annotated = TyTuple 0
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 16
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 22
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Fn
+                                            ( Typed
+                                                { annotated = TyArr
+                                                    ( TyCon
+                                                        ( Id
+                                                            { name = "Bool"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "NestedMatch" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( TyTuple 0 )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 16
+                                                        , sourceColumn = Pos 7
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 17
+                                                        , sourceColumn = Pos 38
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Clause
+                                                ( Typed
+                                                    { annotated = TyArr
+                                                        ( TyCon
+                                                            ( Id
+                                                                { name = "Bool"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "NestedMatch" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        )
+                                                        ( TyTuple 0 )
+                                                    , value = Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 16
+                                                            , sourceColumn = Pos 7
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 16
+                                                            , sourceColumn = Pos 39
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                                [ ConP
+                                                    ( Typed
+                                                        { annotated = TyCon
+                                                            ( Id
+                                                                { name = "Bool"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "NestedMatch" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 16
+                                                                , sourceColumn = Pos 7
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 16
+                                                                , sourceColumn = Pos 12
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Id
+                                                        { name = "True"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "NestedMatch" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    ) []
+                                                ]
+                                                ( Seq
+                                                    ( Typed
+                                                        { annotated = TyTuple 0
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 16
+                                                                , sourceColumn = Pos 15
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 16
+                                                                , sourceColumn = Pos 39
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( NoBind
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 16
+                                                                , sourceColumn = Pos 15
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 16
+                                                                , sourceColumn = Pos 39
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Apply
+                                                            ( Typed
+                                                                { annotated = TyTuple 0
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 16
+                                                                        , sourceColumn = Pos 15
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 16
+                                                                        , sourceColumn = Pos 39
+                                                                        }
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Var
+                                                                ( Typed
+                                                                    { annotated = TyArr ( TyPrim StringT )
+                                                                        ( TyTuple 0 )
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 16
+                                                                            , sourceColumn = Pos 15
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 16
+                                                                            , sourceColumn = Pos 34
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( Id
+                                                                    { name = "malgo_print_string"
+                                                                    , meta = ()
+                                                                    , moduleName = ModuleName
+                                                                        { raw = "NestedMatch" }
+                                                                    , uniq = -1
+                                                                    , sort = External
+                                                                    }
+                                                                )
+                                                            )
+                                                            ( Unboxed
+                                                                ( Typed
+                                                                    { annotated = TyPrim StringT
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 16
+                                                                            , sourceColumn = Pos 34
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 16
+                                                                            , sourceColumn = Pos 39
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( String "OK" )
+                                                            )
+                                                        ) :| []
+                                                    )
+                                                ) :|
+                                                [ Clause
+                                                    ( Typed
+                                                        { annotated = TyArr
+                                                            ( TyCon
+                                                                ( Id
+                                                                    { name = "Bool"
+                                                                    , meta = ()
+                                                                    , moduleName = ModuleName
+                                                                        { raw = "NestedMatch" }
+                                                                    , uniq = -1
+                                                                    , sort = External
+                                                                    }
+                                                                )
+                                                            )
+                                                            ( TyTuple 0 )
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 17
+                                                                , sourceColumn = Pos 7
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 17
+                                                                , sourceColumn = Pos 38
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    [ ConP
+                                                        ( Typed
+                                                            { annotated = TyCon
+                                                                ( Id
+                                                                    { name = "Bool"
+                                                                    , meta = ()
+                                                                    , moduleName = ModuleName
+                                                                        { raw = "NestedMatch" }
+                                                                    , uniq = -1
+                                                                    , sort = External
+                                                                    }
+                                                                )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 17
+                                                                    , sourceColumn = Pos 7
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 17
+                                                                    , sourceColumn = Pos 13
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Id
+                                                            { name = "False"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "NestedMatch" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        ) []
+                                                    ]
+                                                    ( Seq
+                                                        ( Typed
+                                                            { annotated = TyTuple 0
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 17
+                                                                    , sourceColumn = Pos 16
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 17
+                                                                    , sourceColumn = Pos 38
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( NoBind
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 17
+                                                                    , sourceColumn = Pos 16
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 17
+                                                                    , sourceColumn = Pos 38
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Apply
+                                                                ( Typed
+                                                                    { annotated = TyTuple 0
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 17
+                                                                            , sourceColumn = Pos 16
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 17
+                                                                            , sourceColumn = Pos 38
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( Var
+                                                                    ( Typed
+                                                                        { annotated = TyArr
+                                                                            ( TyTuple 0 )
+                                                                            ( TyTuple 0 )
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 17
+                                                                                , sourceColumn = Pos 16
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 17
+                                                                                , sourceColumn = Pos 35
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( Id
+                                                                        { name = "malgo_exit_failure"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "NestedMatch" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                                ( Tuple
+                                                                    ( Typed
+                                                                        { annotated = TyTuple 0
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 17
+                                                                                , sourceColumn = Pos 35
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 17
+                                                                                , sourceColumn = Pos 38
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ) []
+                                                                )
+                                                            ) :| []
+                                                        )
+                                                    )
+                                                ]
+                                            )
+                                        )
+                                        ( Seq
+                                            ( Typed
+                                                { annotated = TyCon
+                                                    ( Id
+                                                        { name = "Bool"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "NestedMatch" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 18
+                                                        , sourceColumn = Pos 7
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 22
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 18
+                                                        , sourceColumn = Pos 8
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 21
+                                                        , sourceColumn = Pos 34
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Typed
+                                                        { annotated = TyCon
+                                                            ( Id
+                                                                { name = "Bool"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "NestedMatch" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 18
+                                                                , sourceColumn = Pos 8
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 21
+                                                                , sourceColumn = Pos 34
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Fn
+                                                        ( Typed
+                                                            { annotated = TyArr
+                                                                ( TyCon
+                                                                    ( Id
+                                                                        { name = "Bool1"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "NestedMatch" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                                ( TyCon
+                                                                    ( Id
+                                                                        { name = "Bool"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "NestedMatch" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 18
+                                                                    , sourceColumn = Pos 10
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 19
+                                                                    , sourceColumn = Pos 24
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Clause
+                                                            ( Typed
+                                                                { annotated = TyArr
+                                                                    ( TyCon
+                                                                        ( Id
+                                                                            { name = "Bool1"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "NestedMatch" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    )
+                                                                    ( TyCon
+                                                                        ( Id
+                                                                            { name = "Bool"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "NestedMatch" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    )
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 18
+                                                                        , sourceColumn = Pos 10
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 18
+                                                                        , sourceColumn = Pos 24
+                                                                        }
+                                                                    }
+                                                                }
+                                                            )
+                                                            [ ConP
+                                                                ( Typed
+                                                                    { annotated = TyCon
+                                                                        ( Id
+                                                                            { name = "Bool1"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "NestedMatch" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 18
+                                                                            , sourceColumn = Pos 10
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 18
+                                                                            , sourceColumn = Pos 16
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( Id
+                                                                    { name = "True1"
+                                                                    , meta = ()
+                                                                    , moduleName = ModuleName
+                                                                        { raw = "NestedMatch" }
+                                                                    , uniq = -1
+                                                                    , sort = External
+                                                                    }
+                                                                ) []
+                                                            ]
+                                                            ( Seq
+                                                                ( Typed
+                                                                    { annotated = TyCon
+                                                                        ( Id
+                                                                            { name = "Bool"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "NestedMatch" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 18
+                                                                            , sourceColumn = Pos 19
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 18
+                                                                            , sourceColumn = Pos 24
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( NoBind
+                                                                    ( Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 18
+                                                                            , sourceColumn = Pos 19
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 18
+                                                                            , sourceColumn = Pos 24
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( Var
+                                                                        ( Typed
+                                                                            { annotated = TyCon
+                                                                                ( Id
+                                                                                    { name = "Bool"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "NestedMatch" }
+                                                                                    , uniq = -1
+                                                                                    , sort = External
+                                                                                    }
+                                                                                )
+                                                                            , value = Range
+                                                                                { _start = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , sourceLine = Pos 18
+                                                                                    , sourceColumn = Pos 19
+                                                                                    }
+                                                                                , _end = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , sourceLine = Pos 18
+                                                                                    , sourceColumn = Pos 24
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( Id
+                                                                            { name = "False"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "NestedMatch" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    ) :| []
+                                                                )
+                                                            ) :|
+                                                            [ Clause
+                                                                ( Typed
+                                                                    { annotated = TyArr
+                                                                        ( TyCon
+                                                                            ( Id
+                                                                                { name = "Bool1"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "NestedMatch" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            )
+                                                                        )
+                                                                        ( TyCon
+                                                                            ( Id
+                                                                                { name = "Bool"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "NestedMatch" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            )
+                                                                        )
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 19
+                                                                            , sourceColumn = Pos 10
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 19
+                                                                            , sourceColumn = Pos 24
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                [ ConP
+                                                                    ( Typed
+                                                                        { annotated = TyCon
+                                                                            ( Id
+                                                                                { name = "Bool1"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "NestedMatch" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            )
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 19
+                                                                                , sourceColumn = Pos 10
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 19
+                                                                                , sourceColumn = Pos 17
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( Id
+                                                                        { name = "False1"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "NestedMatch" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    ) []
+                                                                ]
+                                                                ( Seq
+                                                                    ( Typed
+                                                                        { annotated = TyCon
+                                                                            ( Id
+                                                                                { name = "Bool"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "NestedMatch" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            )
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 19
+                                                                                , sourceColumn = Pos 20
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 19
+                                                                                , sourceColumn = Pos 24
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( NoBind
+                                                                        ( Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 19
+                                                                                , sourceColumn = Pos 20
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 19
+                                                                                , sourceColumn = Pos 24
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( Var
+                                                                            ( Typed
+                                                                                { annotated = TyCon
+                                                                                    ( Id
+                                                                                        { name = "Bool"
+                                                                                        , meta = ()
+                                                                                        , moduleName = ModuleName
+                                                                                            { raw = "NestedMatch" }
+                                                                                        , uniq = -1
+                                                                                        , sort = External
+                                                                                        }
+                                                                                    )
+                                                                                , value = Range
+                                                                                    { _start = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 19
+                                                                                        , sourceColumn = Pos 20
+                                                                                        }
+                                                                                    , _end = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 19
+                                                                                        , sourceColumn = Pos 24
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            )
+                                                                            ( Id
+                                                                                { name = "True"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "NestedMatch" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            )
+                                                                        ) :| []
+                                                                    )
+                                                                )
+                                                            ]
+                                                        )
+                                                    )
+                                                    ( Seq
+                                                        ( Typed
+                                                            { annotated = TyCon
+                                                                ( Id
+                                                                    { name = "Bool1"
+                                                                    , meta = ()
+                                                                    , moduleName = ModuleName
+                                                                        { raw = "NestedMatch" }
+                                                                    , uniq = -1
+                                                                    , sort = External
+                                                                    }
+                                                                )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 20
+                                                                    , sourceColumn = Pos 7
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 34
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( NoBind
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 20
+                                                                    , sourceColumn = Pos 8
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 33
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Apply
+                                                                ( Typed
+                                                                    { annotated = TyCon
+                                                                        ( Id
+                                                                            { name = "Bool1"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "NestedMatch" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 20
+                                                                            , sourceColumn = Pos 8
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 21
+                                                                            , sourceColumn = Pos 33
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( Fn
+                                                                    ( Typed
+                                                                        { annotated = TyArr
+                                                                            ( TyCon
+                                                                                ( Id
+                                                                                    { name = "Bool2"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "NestedMatch" }
+                                                                                    , uniq = -1
+                                                                                    , sort = External
+                                                                                    }
+                                                                                )
+                                                                            )
+                                                                            ( TyCon
+                                                                                ( Id
+                                                                                    { name = "Bool1"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "NestedMatch" }
+                                                                                    , uniq = -1
+                                                                                    , sort = External
+                                                                                    }
+                                                                                )
+                                                                            )
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 20
+                                                                                , sourceColumn = Pos 10
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 21
+                                                                                , sourceColumn = Pos 26
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( Clause
+                                                                        ( Typed
+                                                                            { annotated = TyArr
+                                                                                ( TyCon
+                                                                                    ( Id
+                                                                                        { name = "Bool2"
+                                                                                        , meta = ()
+                                                                                        , moduleName = ModuleName
+                                                                                            { raw = "NestedMatch" }
+                                                                                        , uniq = -1
+                                                                                        , sort = External
+                                                                                        }
+                                                                                    )
+                                                                                )
+                                                                                ( TyCon
+                                                                                    ( Id
+                                                                                        { name = "Bool1"
+                                                                                        , meta = ()
+                                                                                        , moduleName = ModuleName
+                                                                                            { raw = "NestedMatch" }
+                                                                                        , uniq = -1
+                                                                                        , sort = External
+                                                                                        }
+                                                                                    )
+                                                                                )
+                                                                            , value = Range
+                                                                                { _start = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , sourceLine = Pos 20
+                                                                                    , sourceColumn = Pos 10
+                                                                                    }
+                                                                                , _end = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , sourceLine = Pos 20
+                                                                                    , sourceColumn = Pos 25
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        [ ConP
+                                                                            ( Typed
+                                                                                { annotated = TyCon
+                                                                                    ( Id
+                                                                                        { name = "Bool2"
+                                                                                        , meta = ()
+                                                                                        , moduleName = ModuleName
+                                                                                            { raw = "NestedMatch" }
+                                                                                        , uniq = -1
+                                                                                        , sort = External
+                                                                                        }
+                                                                                    )
+                                                                                , value = Range
+                                                                                    { _start = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 20
+                                                                                        , sourceColumn = Pos 10
+                                                                                        }
+                                                                                    , _end = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 20
+                                                                                        , sourceColumn = Pos 16
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            )
+                                                                            ( Id
+                                                                                { name = "True2"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "NestedMatch" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            ) []
+                                                                        ]
+                                                                        ( Seq
+                                                                            ( Typed
+                                                                                { annotated = TyCon
+                                                                                    ( Id
+                                                                                        { name = "Bool1"
+                                                                                        , meta = ()
+                                                                                        , moduleName = ModuleName
+                                                                                            { raw = "NestedMatch" }
+                                                                                        , uniq = -1
+                                                                                        , sort = External
+                                                                                        }
+                                                                                    )
+                                                                                , value = Range
+                                                                                    { _start = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 20
+                                                                                        , sourceColumn = Pos 19
+                                                                                        }
+                                                                                    , _end = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 20
+                                                                                        , sourceColumn = Pos 25
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            )
+                                                                            ( NoBind
+                                                                                ( Range
+                                                                                    { _start = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 20
+                                                                                        , sourceColumn = Pos 19
+                                                                                        }
+                                                                                    , _end = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 20
+                                                                                        , sourceColumn = Pos 25
+                                                                                        }
+                                                                                    }
+                                                                                )
+                                                                                ( Var
+                                                                                    ( Typed
+                                                                                        { annotated = TyCon
+                                                                                            ( Id
+                                                                                                { name = "Bool1"
+                                                                                                , meta = ()
+                                                                                                , moduleName = ModuleName
+                                                                                                    { raw = "NestedMatch" }
+                                                                                                , uniq = -1
+                                                                                                , sort = External
+                                                                                                }
+                                                                                            )
+                                                                                        , value = Range
+                                                                                            { _start = SourcePos
+                                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , sourceLine = Pos 20
+                                                                                                , sourceColumn = Pos 19
+                                                                                                }
+                                                                                            , _end = SourcePos
+                                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , sourceLine = Pos 20
+                                                                                                , sourceColumn = Pos 25
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    )
+                                                                                    ( Id
+                                                                                        { name = "False1"
+                                                                                        , meta = ()
+                                                                                        , moduleName = ModuleName
+                                                                                            { raw = "NestedMatch" }
+                                                                                        , uniq = -1
+                                                                                        , sort = External
+                                                                                        }
+                                                                                    )
+                                                                                ) :| []
+                                                                            )
+                                                                        ) :|
+                                                                        [ Clause
+                                                                            ( Typed
+                                                                                { annotated = TyArr
+                                                                                    ( TyCon
+                                                                                        ( Id
+                                                                                            { name = "Bool2"
+                                                                                            , meta = ()
+                                                                                            , moduleName = ModuleName
+                                                                                                { raw = "NestedMatch" }
+                                                                                            , uniq = -1
+                                                                                            , sort = External
+                                                                                            }
+                                                                                        )
+                                                                                    )
+                                                                                    ( TyCon
+                                                                                        ( Id
+                                                                                            { name = "Bool1"
+                                                                                            , meta = ()
+                                                                                            , moduleName = ModuleName
+                                                                                                { raw = "NestedMatch" }
+                                                                                            , uniq = -1
+                                                                                            , sort = External
+                                                                                            }
+                                                                                        )
+                                                                                    )
+                                                                                , value = Range
+                                                                                    { _start = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 21
+                                                                                        , sourceColumn = Pos 10
+                                                                                        }
+                                                                                    , _end = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 21
+                                                                                        , sourceColumn = Pos 26
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            )
+                                                                            [ ConP
+                                                                                ( Typed
+                                                                                    { annotated = TyCon
+                                                                                        ( Id
+                                                                                            { name = "Bool2"
+                                                                                            , meta = ()
+                                                                                            , moduleName = ModuleName
+                                                                                                { raw = "NestedMatch" }
+                                                                                            , uniq = -1
+                                                                                            , sort = External
+                                                                                            }
+                                                                                        )
+                                                                                    , value = Range
+                                                                                        { _start = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , sourceLine = Pos 21
+                                                                                            , sourceColumn = Pos 10
+                                                                                            }
+                                                                                        , _end = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , sourceLine = Pos 21
+                                                                                            , sourceColumn = Pos 17
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                )
+                                                                                ( Id
+                                                                                    { name = "False2"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "NestedMatch" }
+                                                                                    , uniq = -1
+                                                                                    , sort = External
+                                                                                    }
+                                                                                ) []
+                                                                            ]
+                                                                            ( Seq
+                                                                                ( Typed
+                                                                                    { annotated = TyCon
+                                                                                        ( Id
+                                                                                            { name = "Bool1"
+                                                                                            , meta = ()
+                                                                                            , moduleName = ModuleName
+                                                                                                { raw = "NestedMatch" }
+                                                                                            , uniq = -1
+                                                                                            , sort = External
+                                                                                            }
+                                                                                        )
+                                                                                    , value = Range
+                                                                                        { _start = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , sourceLine = Pos 21
+                                                                                            , sourceColumn = Pos 20
+                                                                                            }
+                                                                                        , _end = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , sourceLine = Pos 21
+                                                                                            , sourceColumn = Pos 26
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                )
+                                                                                ( NoBind
+                                                                                    ( Range
+                                                                                        { _start = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , sourceLine = Pos 21
+                                                                                            , sourceColumn = Pos 20
+                                                                                            }
+                                                                                        , _end = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , sourceLine = Pos 21
+                                                                                            , sourceColumn = Pos 26
+                                                                                            }
+                                                                                        }
+                                                                                    )
+                                                                                    ( Var
+                                                                                        ( Typed
+                                                                                            { annotated = TyCon
+                                                                                                ( Id
+                                                                                                    { name = "Bool1"
+                                                                                                    , meta = ()
+                                                                                                    , moduleName = ModuleName
+                                                                                                        { raw = "NestedMatch" }
+                                                                                                    , uniq = -1
+                                                                                                    , sort = External
+                                                                                                    }
+                                                                                                )
+                                                                                            , value = Range
+                                                                                                { _start = SourcePos
+                                                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , sourceLine = Pos 21
+                                                                                                    , sourceColumn = Pos 20
+                                                                                                    }
+                                                                                                , _end = SourcePos
+                                                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , sourceLine = Pos 21
+                                                                                                    , sourceColumn = Pos 26
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        )
+                                                                                        ( Id
+                                                                                            { name = "True1"
+                                                                                            , meta = ()
+                                                                                            , moduleName = ModuleName
+                                                                                                { raw = "NestedMatch" }
+                                                                                            , uniq = -1
+                                                                                            , sort = External
+                                                                                            }
+                                                                                        )
+                                                                                    ) :| []
+                                                                                )
+                                                                            )
+                                                                        ]
+                                                                    )
+                                                                )
+                                                                ( Var
+                                                                    ( Typed
+                                                                        { annotated = TyCon
+                                                                            ( Id
+                                                                                { name = "Bool2"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "NestedMatch" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            )
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 21
+                                                                                , sourceColumn = Pos 28
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 21
+                                                                                , sourceColumn = Pos 33
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( Id
+                                                                        { name = "True2"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "NestedMatch" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                            ) :| []
+                                                        )
+                                                    )
+                                                ) :| []
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs = []
+        , _dataDefs =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 6
+                        , sourceColumn = Pos 8
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , Id
+                    { name = "Bool"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , []
+                ,
+                    [
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 6
+                                , sourceColumn = Pos 15
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 6
+                                , sourceColumn = Pos 21
+                                }
+                            }
+                        , Id
+                            { name = "False"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , []
+                        )
+                    ,
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 6
+                                , sourceColumn = Pos 23
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        , Id
+                            { name = "True"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , []
+                        )
+                    ]
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 8
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , Id
+                    { name = "Bool1"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , []
+                ,
+                    [
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 16
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 23
+                                }
+                            }
+                        , Id
+                            { name = "False1"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , []
+                        )
+                    ,
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 25
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        , Id
+                            { name = "True1"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , []
+                        )
+                    ]
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 8
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 11
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , Id
+                    { name = "Bool2"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , []
+                ,
+                    [
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 16
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 23
+                                }
+                            }
+                        , Id
+                            { name = "False2"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , []
+                        )
+                    ,
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 25
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        , Id
+                            { name = "True2"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , []
+                        )
+                    ]
+                )
+            ]
+        , _typeSynonyms = []
+        , _foreigns =
+            [
+                ( Typed
+                    { annotated = TyArr ( TyPrim StringT )
+                        ( TyTuple 0 )
+                    , value =
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        , "malgo_print_string"
+                        )
+                    }
+                , Id
+                    { name = "malgo_print_string"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , TyArr
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 47
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 50
+                            }
+                        }
+                    )
+                    ( TyCon
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 39
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 47
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "String#"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "Builtin" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyTuple
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 50
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        ) []
+                    )
+                )
+            ,
+                ( Typed
+                    { annotated = TyArr
+                        ( TyTuple 0 )
+                        ( TyVar
+                            ( Id
+                                { name = "a"
+                                , meta = ()
+                                , moduleName = ModuleName
+                                    { raw = "NestedMatch" }
+                                , uniq = 2
+                                , sort = Internal
+                                }
+                            )
+                        )
+                    , value =
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 15
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        , "malgo_exit_failure"
+                        )
+                    }
+                , Id
+                    { name = "malgo_exit_failure"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "NestedMatch" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , TyArr
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 42
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 45
+                            }
+                        }
+                    )
+                    ( TyTuple
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 39
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 42
+                                }
+                            }
+                        ) []
+                    )
+                    ( TyVar
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 13
+                                , sourceColumn = Pos 45
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 15
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "a"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "NestedMatch" }
+                            , uniq = 0
+                            , sort = Internal
+                            }
+                        )
+                    )
+                )
+            ]
+        , _imports = []
+        }
+    }

@@ -12,14 +12,22 @@
 			"version": "15"
 		},
 		"ghcr.io/devcontainers-contrib/features/haskell:2": {
-			"ghcVersion": "9.6.4"
+			"ghcVersion": "9.6.4",
+			"globalPackages": "hpack hlint"
 		},
 		"ghcr.io/devcontainers-contrib/features/apt-packages": {
 			"packages": "libgmp-dev,pkg-config,libgc-dev"
 		}
 	},
 
-	"postCreateCommand": "/bin/bash ./.devcontainer/post-create.sh"
+	"postCreateCommand": "/bin/bash ./.devcontainer/post-create.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"haskell.haskell"
+			]
+		}
+	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],

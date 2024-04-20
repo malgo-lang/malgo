@@ -1,0 +1,936 @@
+Module
+    { moduleName = ModuleName
+        { raw = "DeferLaw" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyVar
+                                ( Id
+                                    { name = "t"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "DeferLaw" }
+                                    , uniq = 10
+                                    , sort = Internal
+                                    }
+                                )
+                            )
+                            ( TyVar
+                                ( Id
+                                    { name = "t"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "DeferLaw" }
+                                    , uniq = 10
+                                    , sort = Internal
+                                    }
+                                )
+                            )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 6
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "f"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "DeferLaw" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyVar
+                                    ( Id
+                                        { name = "t"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "DeferLaw" }
+                                        , uniq = 10
+                                        , sort = Internal
+                                        }
+                                    )
+                                )
+                                ( TyVar
+                                    ( Id
+                                        { name = "t"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "DeferLaw" }
+                                        , uniq = 10
+                                        , sort = Internal
+                                        }
+                                    )
+                                )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 6
+                                    , sourceColumn = Pos 13
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 6
+                                    , sourceColumn = Pos 27
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyVar
+                                        ( Id
+                                            { name = "t"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "DeferLaw" }
+                                            , uniq = 10
+                                            , sort = Internal
+                                            }
+                                        )
+                                    )
+                                    ( TyVar
+                                        ( Id
+                                            { name = "t"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "DeferLaw" }
+                                            , uniq = 10
+                                            , sort = Internal
+                                            }
+                                        )
+                                    )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 13
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 27
+                                        }
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Typed
+                                    { annotated = TyVar
+                                        ( Id
+                                            { name = "t"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "DeferLaw" }
+                                            , uniq = 10
+                                            , sort = Internal
+                                            }
+                                        )
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 13
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 15
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "x"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "DeferLaw" }
+                                    , uniq = 1
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyVar
+                                        ( Id
+                                            { name = "t"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "DeferLaw" }
+                                            , uniq = 10
+                                            , sort = Internal
+                                            }
+                                        )
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 18
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 27
+                                            }
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 18
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 27
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Typed
+                                            { annotated = TyVar
+                                                ( Id
+                                                    { name = "t"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "DeferLaw" }
+                                                    , uniq = 10
+                                                    , sort = Internal
+                                                    }
+                                                )
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 18
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 27
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Fn
+                                            ( Typed
+                                                { annotated = TyArr
+                                                    ( TyTuple 0 )
+                                                    ( TyVar
+                                                        ( Id
+                                                            { name = "t"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "DeferLaw" }
+                                                            , uniq = 10
+                                                            , sort = Internal
+                                                            }
+                                                        )
+                                                    )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 20
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 22
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Clause
+                                                ( Typed
+                                                    { annotated = TyArr
+                                                        ( TyTuple 0 )
+                                                        ( TyVar
+                                                            ( Id
+                                                                { name = "t"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "DeferLaw" }
+                                                                , uniq = 10
+                                                                , sort = Internal
+                                                                }
+                                                            )
+                                                        )
+                                                    , value = Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , sourceLine = Pos 6
+                                                            , sourceColumn = Pos 20
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , sourceLine = Pos 6
+                                                            , sourceColumn = Pos 22
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                                [ VarP
+                                                    ( Typed
+                                                        { annotated = TyTuple 0
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 20
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 22
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Id
+                                                        { name = "$_"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "DeferLaw" }
+                                                        , uniq = 8
+                                                        , sort = Internal
+                                                        }
+                                                    )
+                                                ]
+                                                ( Seq
+                                                    ( Typed
+                                                        { annotated = TyVar
+                                                            ( Id
+                                                                { name = "t"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "DeferLaw" }
+                                                                , uniq = 10
+                                                                , sort = Internal
+                                                                }
+                                                            )
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 20
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 22
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( NoBind
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 20
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 22
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Var
+                                                            ( Typed
+                                                                { annotated = TyVar
+                                                                    ( Id
+                                                                        { name = "t"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "DeferLaw" }
+                                                                        , uniq = 10
+                                                                        , sort = Internal
+                                                                        }
+                                                                    )
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , sourceLine = Pos 6
+                                                                        , sourceColumn = Pos 20
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , sourceLine = Pos 6
+                                                                        , sourceColumn = Pos 22
+                                                                        }
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Id
+                                                                { name = "x"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "DeferLaw" }
+                                                                , uniq = 1
+                                                                , sort = Internal
+                                                                }
+                                                            )
+                                                        ) :| []
+                                                    )
+                                                ) :| []
+                                            )
+                                        )
+                                        ( Tuple
+                                            ( Typed
+                                                { annotated = TyTuple 0
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 24
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 27
+                                                        }
+                                                    }
+                                                }
+                                            ) []
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ,
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyTuple 0 )
+                            ( TyTuple 0 )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "DeferLaw" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyTuple 0 )
+                                ( TyTuple 0 )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 10
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyTuple 0 )
+                                    ( TyTuple 0 )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                        , sourceLine = Pos 9
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                        , sourceLine = Pos 10
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "$_"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "DeferLaw" }
+                                    , uniq = 21
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Typed
+                                            { annotated = TyTuple 0
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 9
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 10
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Typed
+                                                { annotated = TyArr
+                                                    ( TyCon
+                                                        ( Id
+                                                            { name = "String"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "Builtin" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( TyTuple 0 )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 9
+                                                        , sourceColumn = Pos 5
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 9
+                                                        , sourceColumn = Pos 14
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "putStrLn"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Prelude" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Seq
+                                            ( Typed
+                                                { annotated = TyCon
+                                                    ( Id
+                                                        { name = "String"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "Builtin" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 9
+                                                        , sourceColumn = Pos 14
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 10
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 9
+                                                        , sourceColumn = Pos 15
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 9
+                                                        , sourceColumn = Pos 24
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Typed
+                                                        { annotated = TyCon
+                                                            ( Id
+                                                                { name = "String"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 9
+                                                                , sourceColumn = Pos 15
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 9
+                                                                , sourceColumn = Pos 24
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Var
+                                                        ( Typed
+                                                            { annotated = TyArr
+                                                                ( TyCon
+                                                                    ( Id
+                                                                        { name = "String"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "Builtin" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                                ( TyCon
+                                                                    ( Id
+                                                                        { name = "String"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "Builtin" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , sourceLine = Pos 9
+                                                                    , sourceColumn = Pos 15
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , sourceLine = Pos 9
+                                                                    , sourceColumn = Pos 17
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Id
+                                                            { name = "f"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "DeferLaw" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( Apply
+                                                        ( Typed
+                                                            { annotated = TyCon
+                                                                ( Id
+                                                                    { name = "String"
+                                                                    , meta = ()
+                                                                    , moduleName = ModuleName
+                                                                        { raw = "Builtin" }
+                                                                    , uniq = -1
+                                                                    , sort = External
+                                                                    }
+                                                                )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , sourceLine = Pos 9
+                                                                    , sourceColumn = Pos 17
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , sourceLine = Pos 9
+                                                                    , sourceColumn = Pos 24
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Var
+                                                            ( Typed
+                                                                { annotated = TyArr ( TyPrim StringT )
+                                                                    ( TyCon
+                                                                        ( Id
+                                                                            { name = "String"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "Builtin" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    )
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , sourceLine = Pos 9
+                                                                        , sourceColumn = Pos 17
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , sourceLine = Pos 9
+                                                                        , sourceColumn = Pos 24
+                                                                        }
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Id
+                                                                { name = "String#"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        )
+                                                        ( Unboxed
+                                                            ( Typed
+                                                                { annotated = TyPrim StringT
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , sourceLine = Pos 9
+                                                                        , sourceColumn = Pos 17
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , sourceLine = Pos 9
+                                                                        , sourceColumn = Pos 24
+                                                                        }
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( String "Hello" )
+                                                        )
+                                                    )
+                                                ) :| []
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                        , sourceLine = Pos 6
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , Id
+                    { name = "f"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "DeferLaw" }
+                    , uniq = -1
+                    , sort = External
+                    }
+                , TyArr
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                            , sourceLine = Pos 5
+                            , sourceColumn = Pos 13
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                            , sourceLine = Pos 5
+                            , sourceColumn = Pos 16
+                            }
+                        }
+                    )
+                    ( TyVar
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 11
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 13
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "a"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DeferLaw" }
+                            , uniq = 0
+                            , sort = Internal
+                            }
+                        )
+                    )
+                    ( TyVar
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 16
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 6
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "a"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "DeferLaw" }
+                            , uniq = 0
+                            , sort = Internal
+                            }
+                        )
+                    )
+                )
+            ]
+        , _dataDefs = []
+        , _typeSynonyms = []
+        , _foreigns = []
+        , _imports =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Builtin" }
+                , All
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Prelude" }
+                , All
+                )
+            ]
+        }
+    }

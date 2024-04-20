@@ -35,6 +35,7 @@ data Def
   = VarDef (Id C.Type) C.Type (C.Expr (Id C.Type))
   | FunDef (Id C.Type) [Id C.Type] C.Type (C.Expr (Id C.Type))
   | ExtDef Text C.Type
+  deriving stock (Show)
 
 makePrisms ''Def
 
@@ -53,6 +54,7 @@ data DsState = DsState
     -- | Closure Ids for global functions.
     globalClosures :: HashMap (Id C.Type) (Id C.Type)
   }
+  deriving stock (Show)
 
 makeFieldsNoPrefix ''DsState
 

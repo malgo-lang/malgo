@@ -35,6 +35,7 @@ data TcEnv = TcEnv
     _resolvedTypeIdentMap :: HashMap PsId [Resolved],
     _kindCtx :: KindCtx
   }
+  deriving stock (Show)
 
 makeFieldsNoPrefix ''TcEnv
 

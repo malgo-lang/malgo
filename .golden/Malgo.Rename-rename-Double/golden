@@ -1,0 +1,346 @@
+Module
+    { moduleName = ModuleName
+        { raw = "Double" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/Double.mlg"
+                            , sourceLine = Pos 5
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/Double.mlg"
+                            , sourceLine = Pos 8
+                            , sourceColumn = Pos 1
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Double" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/Double.mlg"
+                                , sourceLine = Pos 6
+                                , sourceColumn = Pos 5
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/Double.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                    , sourceLine = Pos 6
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                    , sourceLine = Pos 7
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            ) []
+                            ( Seq
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Double.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Double.mlg"
+                                        , sourceLine = Pos 7
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Double.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Double.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                , sourceLine = Pos 6
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 3
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 12
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "putStr"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Prelude" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Seq
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 12
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                    , sourceLine = Pos 7
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 13
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 32
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                            , sourceLine = Pos 6
+                                                            , sourceColumn = Pos 13
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                            , sourceLine = Pos 6
+                                                            , sourceColumn = Pos 32
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Var
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 13
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 28
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Id
+                                                            { name = "toStringDouble"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "Builtin" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( Apply
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 28
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 32
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Var
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 28
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 32
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Id
+                                                                { name = "Double#"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        )
+                                                        ( Unboxed
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 28
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/Double.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 32
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Double 3.14 )
+                                                        )
+                                                    )
+                                                ) :| []
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs = []
+        , _dataDefs = []
+        , _typeSynonyms = []
+        , _foreigns = []
+        , _imports =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Double.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Double.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Builtin" }
+                , All
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Double.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Double.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Prelude" }
+                , All
+                )
+            ]
+        }
+    }
+RnState
+    { infixInfo = fromList
+        [
+            ( Id
+                { name = "<|"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Prelude" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                ( RightA
+                , 0
+                )
+            )
+        ,
+            ( Id
+                { name = "|>"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Prelude" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                ( LeftA
+                , 0
+                )
+            )
+        ,
+            ( Id
+                { name = "."
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Prelude" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                ( RightA
+                , 9
+                )
+            )
+        ]
+    , dependencies = fromList
+        [ ModuleName
+            { raw = "Prelude" }
+        , ModuleName
+            { raw = "Builtin" }
+        ]
+    }

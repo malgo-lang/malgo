@@ -1,17 +1,17 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.35.4.
 --
 -- see: https://github.com/sol/hpack
 
 name:           malgo
-version:        0.2.0
+version:        1.0.0
 category:       Compilers/Interpreters
 homepage:       https://github.com/takoeight0821/malgo#readme
 bug-reports:    https://github.com/takoeight0821/malgo/issues
 author:         Yuya Kono
 maintainer:     takohati0821@gmail.com
-copyright:      2017-2021 Yuya Kono
+copyright:      2017-2024 Yuya Kono
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -199,6 +199,12 @@ test-suite malgo-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Malgo.DesugarSpec
+      Malgo.DriverSpec
+      Malgo.InferSpec
+      Malgo.ParserSpec
+      Malgo.RefineSpec
+      Malgo.RenameSpec
       Paths_malgo
   hs-source-dirs:
       test
@@ -220,7 +226,7 @@ test-suite malgo-test
       NoFieldSelectors
       TypeData
       Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
     , aeson
@@ -237,6 +243,7 @@ test-suite malgo-test
     , generic-data
     , hashable
     , hspec
+    , hspec-golden >=0.2.2.0
     , knob
     , lens
     , llvm-hs
@@ -248,6 +255,7 @@ test-suite malgo-test
     , mtl
     , optparse-applicative
     , parser-combinators
+    , pretty-simple
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
@@ -263,6 +271,7 @@ test-suite malgo-test
     , unordered-containers
     , witherable
   default-language: GHC2021
+  build-tool-depends: hspec-discover:hspec-discover == 2.*
 
 benchmark malgo-bench
   type: exitcode-stdio-1.0

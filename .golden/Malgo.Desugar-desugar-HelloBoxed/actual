@@ -1,0 +1,1359 @@
+Program
+    { topVars = []
+    , topFuns =
+        [
+            ( Id
+                { name = "String#"
+                , meta = [ StringT ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = StringT
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 21
+                    , sort = Temporal
+                    }
+                ]
+            , [ StringT ] :-> AnyT
+            , Let
+                [ LocalDef
+                    { _variable = Id
+                        { name = "let"
+                        , meta = SumT
+                            [ Con
+                                ( Data "HelloBoxed.String#" ) [ StringT ]
+                            ]
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = 22
+                        , sort = Temporal
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "HelloBoxed.String#" ) [ StringT ]
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "HelloBoxed.String#" ) [ StringT ]
+                            ]
+                        )
+                        ( Con
+                            ( Data "HelloBoxed.String#" ) [ StringT ]
+                        )
+                        [ Var
+                            ( Id
+                                { name = "p"
+                                , meta = StringT
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , uniq = 21
+                                , sort = Temporal
+                                }
+                            )
+                        ]
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "let"
+                            , meta = SumT
+                                [ Con
+                                    ( Data "HelloBoxed.String#" ) [ StringT ]
+                                ]
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = 22
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = StringT
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 23
+                    , sort = Temporal
+                    }
+                ]
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            , RawCall "malgo_print_string"
+                ( [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                )
+                [ Var
+                    ( Id
+                        { name = "p"
+                        , meta = StringT
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = 23
+                        , sort = Temporal
+                        }
+                    )
+                ]
+            )
+        ,
+            ( Id
+                { name = "malgo_newline"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "p"
+                    , meta = SumT
+                        [ Con Tuple [] ]
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 24
+                    , sort = Temporal
+                    }
+                ]
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            , RawCall "malgo_newline"
+                (
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                )
+                [ Var
+                    ( Id
+                        { name = "p"
+                        , meta = SumT
+                            [ Con Tuple [] ]
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = 24
+                        , sort = Temporal
+                        }
+                    )
+                ]
+            )
+        ,
+            ( Id
+                { name = "string#"
+                , meta = [ StringT ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "x"
+                    , meta = StringT
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 25
+                    , sort = Temporal
+                    }
+                ]
+            , [ StringT ] :-> AnyT
+            , Assign
+                ( Id
+                    { name = "d"
+                    , meta = AnyT
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 26
+                    , sort = Temporal
+                    }
+                )
+                ( Call
+                    ( Var
+                        ( Id
+                            { name = "String#"
+                            , meta = [ StringT ] :-> AnyT
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    [ Var
+                        ( Id
+                            { name = "x"
+                            , meta = StringT
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = 25
+                            , sort = Temporal
+                            }
+                        )
+                    ]
+                )
+                ( Cast AnyT
+                    ( Var
+                        ( Id
+                            { name = "d"
+                            , meta = AnyT
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = 26
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "putStrLn"
+                , meta = [ AnyT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "string#"
+                    , meta = AnyT
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 27
+                    , sort = Temporal
+                    }
+                ]
+            , [ AnyT ] :-> SumT
+                [ Con Tuple [] ]
+            , Match
+                ( Cast
+                    ( SumT
+                        [ Con
+                            ( Data "HelloBoxed.String#" ) [ StringT ]
+                        ]
+                    )
+                    ( Var
+                        ( Id
+                            { name = "string#"
+                            , meta = AnyT
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = 27
+                            , sort = Temporal
+                            }
+                        )
+                    )
+                )
+                [ Unpack
+                    ( Con
+                        ( Data "HelloBoxed.String#" ) [ StringT ]
+                    )
+                    [ Id
+                        { name = "p"
+                        , meta = StringT
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = 28
+                        , sort = Temporal
+                        }
+                    ]
+                    ( Assign
+                        ( Id
+                            { name = "d"
+                            , meta = SumT
+                                [ Con Tuple [] ]
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = 30
+                            , sort = Temporal
+                            }
+                        )
+                        ( Assign
+                            ( Id
+                                { name = "d"
+                                , meta = SumT
+                                    [ Con Tuple [] ]
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , uniq = 29
+                                , sort = Temporal
+                                }
+                            )
+                            ( Call
+                                ( Var
+                                    ( Id
+                                        { name = "malgo_print_string"
+                                        , meta = [ StringT ] :-> SumT
+                                            [ Con Tuple [] ]
+                                        , moduleName = ModuleName
+                                            { raw = "HelloBoxed" }
+                                        , uniq = -1
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                                [ Var
+                                    ( Id
+                                        { name = "p"
+                                        , meta = StringT
+                                        , moduleName = ModuleName
+                                            { raw = "HelloBoxed" }
+                                        , uniq = 28
+                                        , sort = Temporal
+                                        }
+                                    )
+                                ]
+                            )
+                            ( Cast
+                                ( SumT
+                                    [ Con Tuple [] ]
+                                )
+                                ( Var
+                                    ( Id
+                                        { name = "d"
+                                        , meta = SumT
+                                            [ Con Tuple [] ]
+                                        , moduleName = ModuleName
+                                            { raw = "HelloBoxed" }
+                                        , uniq = 29
+                                        , sort = Temporal
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                        ( Assign
+                            ( Id
+                                { name = "d"
+                                , meta = SumT
+                                    [ Con Tuple [] ]
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , uniq = 32
+                                , sort = Temporal
+                                }
+                            )
+                            ( Let
+                                [ LocalDef
+                                    { _variable = Id
+                                        { name = "let"
+                                        , meta = SumT
+                                            [ Con Tuple [] ]
+                                        , moduleName = ModuleName
+                                            { raw = "HelloBoxed" }
+                                        , uniq = 31
+                                        , sort = Temporal
+                                        }
+                                    , typ = SumT
+                                        [ Con Tuple [] ]
+                                    , _object = Pack
+                                        ( SumT
+                                            [ Con Tuple [] ]
+                                        )
+                                        ( Con Tuple [] ) []
+                                    }
+                                ]
+                                ( Atom
+                                    ( Var
+                                        ( Id
+                                            { name = "let"
+                                            , meta = SumT
+                                                [ Con Tuple [] ]
+                                            , moduleName = ModuleName
+                                                { raw = "HelloBoxed" }
+                                            , uniq = 31
+                                            , sort = Temporal
+                                            }
+                                        )
+                                    )
+                                )
+                            )
+                            ( Assign
+                                ( Id
+                                    { name = "d"
+                                    , meta = SumT
+                                        [ Con Tuple [] ]
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , uniq = 33
+                                    , sort = Temporal
+                                    }
+                                )
+                                ( Call
+                                    ( Var
+                                        ( Id
+                                            { name = "malgo_newline"
+                                            , meta =
+                                                [ SumT
+                                                    [ Con Tuple [] ]
+                                                ] :-> SumT
+                                                [ Con Tuple [] ]
+                                            , moduleName = ModuleName
+                                                { raw = "HelloBoxed" }
+                                            , uniq = -1
+                                            , sort = External
+                                            }
+                                        )
+                                    )
+                                    [ Var
+                                        ( Id
+                                            { name = "d"
+                                            , meta = SumT
+                                                [ Con Tuple [] ]
+                                            , moduleName = ModuleName
+                                                { raw = "HelloBoxed" }
+                                            , uniq = 32
+                                            , sort = Temporal
+                                            }
+                                        )
+                                    ]
+                                )
+                                ( Cast
+                                    ( SumT
+                                        [ Con Tuple [] ]
+                                    )
+                                    ( Var
+                                        ( Id
+                                            { name = "d"
+                                            , meta = SumT
+                                                [ Con Tuple [] ]
+                                            , moduleName = ModuleName
+                                                { raw = "HelloBoxed" }
+                                            , uniq = 33
+                                            , sort = Temporal
+                                            }
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ]
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            ,
+                [ Id
+                    { name = "$_"
+                    , meta = SumT
+                        [ Con Tuple [] ]
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 34
+                    , sort = Temporal
+                    }
+                ]
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            , Assign
+                ( Id
+                    { name = "d"
+                    , meta = AnyT
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 36
+                    , sort = Temporal
+                    }
+                )
+                ( Assign
+                    ( Id
+                        { name = "d"
+                        , meta = AnyT
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = 35
+                        , sort = Temporal
+                        }
+                    )
+                    ( Call
+                        ( Var
+                            ( Id
+                                { name = "String#"
+                                , meta = [ StringT ] :-> AnyT
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , uniq = -1
+                                , sort = External
+                                }
+                            )
+                        )
+                        [ Unboxed
+                            ( String "Hello, world" )
+                        ]
+                    )
+                    ( Cast AnyT
+                        ( Var
+                            ( Id
+                                { name = "d"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , uniq = 35
+                                , sort = Temporal
+                                }
+                            )
+                        )
+                    )
+                )
+                ( Assign
+                    ( Id
+                        { name = "d"
+                        , meta = SumT
+                            [ Con Tuple [] ]
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = 37
+                        , sort = Temporal
+                        }
+                    )
+                    ( Call
+                        ( Var
+                            ( Id
+                                { name = "putStrLn"
+                                , meta = [ AnyT ] :-> SumT
+                                    [ Con Tuple [] ]
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , uniq = -1
+                                , sort = External
+                                }
+                            )
+                        )
+                        [ Var
+                            ( Id
+                                { name = "d"
+                                , meta = AnyT
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , uniq = 36
+                                , sort = Temporal
+                                }
+                            )
+                        ]
+                    )
+                    ( Cast
+                        ( SumT
+                            [ Con Tuple [] ]
+                        )
+                        ( Var
+                            ( Id
+                                { name = "d"
+                                , meta = SumT
+                                    [ Con Tuple [] ]
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , uniq = 37
+                                , sort = Temporal
+                                }
+                            )
+                        )
+                    )
+                )
+            )
+        ]
+    , extFuns =
+        [
+            ( "malgo_print_string"
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            )
+        ,
+            ( "malgo_newline"
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            )
+        ]
+    }
+DsState
+    { _nameEnv = fromList
+        [
+            ( Id
+                { name = "malgo_newline"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "malgo_newline"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "malgo_print_string"
+                , meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "str"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 0
+                , sort = Internal
+                }
+            , Id
+                { name = "p"
+                , meta = StringT
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 28
+                , sort = Temporal
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "String#"
+                , meta = [ StringT ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "string#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "string#"
+                , meta = [ StringT ] :-> AnyT
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "x"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 1
+                , sort = Internal
+                }
+            , Id
+                { name = "x"
+                , meta = StringT
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 25
+                , sort = Temporal
+                }
+            )
+        ,
+            ( Id
+                { name = "putStrLn"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "putStrLn"
+                , meta = [ AnyT ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Id
+                { name = "main"
+                , meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 20
+                , sort = Internal
+                }
+            , Id
+                { name = "$_"
+                , meta = SumT
+                    [ Con Tuple [] ]
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 34
+                , sort = Temporal
+                }
+            )
+        ]
+    , _signatureMap = fromList
+        [
+            ( Id
+                { name = "malgo_newline"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "str"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 0
+                , sort = Internal
+                }
+            , Forall [] ( TyPrim StringT )
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyCon
+                        ( Id
+                            { name = "String"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "string#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyCon
+                        ( Id
+                            { name = "String"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "x"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 1
+                , sort = Internal
+                }
+            , Forall [] ( TyPrim StringT )
+            )
+        ,
+            ( Id
+                { name = "putStrLn"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyCon
+                        ( Id
+                            { name = "String"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 20
+                , sort = Internal
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ]
+    , _typeDefMap = fromList
+        [
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim StringT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "String"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "String"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "String#"
+                            , meta = ()
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , uniq = -1
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyArr ( TyPrim StringT )
+                                ( TyCon
+                                    ( Id
+                                        { name = "String"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "HelloBoxed" }
+                                        , uniq = -1
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim FloatT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ]
+    , _kindCtx = fromList
+        [
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 9
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 8
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 7
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 6
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 5
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 4
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 3
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 2
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 19
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 18
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 17
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 16
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , uniq = -1
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 15
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 14
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 13
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 12
+                    , sort = Temporal
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , uniq = 11
+                , sort = Internal
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , meta = ()
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , uniq = 10
+                    , sort = Temporal
+                    }
+                )
+            )
+        ]
+    , _globalDefs = []
+    , globalClosures = fromList []
+    }

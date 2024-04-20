@@ -1,0 +1,635 @@
+Module
+    { moduleName = ModuleName
+        { raw = "TypeAnnotation" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyTuple 0 )
+                            ( TyTuple 0 )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "TypeAnnotation" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyTuple 0 )
+                                ( TyTuple 0 )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                    , sourceLine = Pos 6
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                    , sourceLine = Pos 7
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyTuple 0 )
+                                    ( TyTuple 0 )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                        , sourceLine = Pos 7
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "$_"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "TypeAnnotation" }
+                                    , uniq = 11
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Typed
+                                            { annotated = TyTuple 0
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                    , sourceLine = Pos 7
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Typed
+                                                { annotated = TyArr
+                                                    ( TyCon
+                                                        ( Id
+                                                            { name = "String"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "Builtin" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( TyTuple 0 )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 5
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 17
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "printString"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Builtin" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Seq
+                                            ( Typed
+                                                { annotated = TyCon
+                                                    ( Id
+                                                        { name = "String"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "Builtin" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 17
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                        , sourceLine = Pos 7
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 18
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                        , sourceLine = Pos 6
+                                                        , sourceColumn = Pos 54
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Typed
+                                                        { annotated = TyCon
+                                                            ( Id
+                                                                { name = "String"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        , value = Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 18
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                , sourceLine = Pos 6
+                                                                , sourceColumn = Pos 54
+                                                                }
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Seq
+                                                        ( Typed
+                                                            { annotated = TyArr
+                                                                ( TyCon
+                                                                    ( Id
+                                                                        { name = "String"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "Builtin" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                                ( TyCon
+                                                                    ( Id
+                                                                        { name = "String"
+                                                                        , meta = ()
+                                                                        , moduleName = ModuleName
+                                                                            { raw = "Builtin" }
+                                                                        , uniq = -1
+                                                                        , sort = External
+                                                                        }
+                                                                    )
+                                                                )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 18
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 48
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( NoBind
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 19
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 46
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Fn
+                                                                ( Typed
+                                                                    { annotated = TyArr
+                                                                        ( TyCon
+                                                                            ( Id
+                                                                                { name = "String"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "Builtin" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            )
+                                                                        )
+                                                                        ( TyCon
+                                                                            ( Id
+                                                                                { name = "String"
+                                                                                , meta = ()
+                                                                                , moduleName = ModuleName
+                                                                                    { raw = "Builtin" }
+                                                                                , uniq = -1
+                                                                                , sort = External
+                                                                                }
+                                                                            )
+                                                                        )
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                            , sourceLine = Pos 6
+                                                                            , sourceColumn = Pos 20
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                            , sourceLine = Pos 6
+                                                                            , sourceColumn = Pos 26
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( Clause
+                                                                    ( Typed
+                                                                        { annotated = TyArr
+                                                                            ( TyCon
+                                                                                ( Id
+                                                                                    { name = "String"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "Builtin" }
+                                                                                    , uniq = -1
+                                                                                    , sort = External
+                                                                                    }
+                                                                                )
+                                                                            )
+                                                                            ( TyCon
+                                                                                ( Id
+                                                                                    { name = "String"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "Builtin" }
+                                                                                    , uniq = -1
+                                                                                    , sort = External
+                                                                                    }
+                                                                                )
+                                                                            )
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                , sourceLine = Pos 6
+                                                                                , sourceColumn = Pos 20
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                , sourceLine = Pos 6
+                                                                                , sourceColumn = Pos 26
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    [ VarP
+                                                                        ( Typed
+                                                                            { annotated = TyCon
+                                                                                ( Id
+                                                                                    { name = "String"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "Builtin" }
+                                                                                    , uniq = -1
+                                                                                    , sort = External
+                                                                                    }
+                                                                                )
+                                                                            , value = Range
+                                                                                { _start = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                    , sourceLine = Pos 6
+                                                                                    , sourceColumn = Pos 20
+                                                                                    }
+                                                                                , _end = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                    , sourceLine = Pos 6
+                                                                                    , sourceColumn = Pos 22
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( Id
+                                                                            { name = "x"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "TypeAnnotation" }
+                                                                            , uniq = 0
+                                                                            , sort = Internal
+                                                                            }
+                                                                        )
+                                                                    ]
+                                                                    ( Seq
+                                                                        ( Typed
+                                                                            { annotated = TyCon
+                                                                                ( Id
+                                                                                    { name = "String"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "Builtin" }
+                                                                                    , uniq = -1
+                                                                                    , sort = External
+                                                                                    }
+                                                                                )
+                                                                            , value = Range
+                                                                                { _start = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                    , sourceLine = Pos 6
+                                                                                    , sourceColumn = Pos 25
+                                                                                    }
+                                                                                , _end = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                    , sourceLine = Pos 6
+                                                                                    , sourceColumn = Pos 26
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( NoBind
+                                                                            ( Range
+                                                                                { _start = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                    , sourceLine = Pos 6
+                                                                                    , sourceColumn = Pos 25
+                                                                                    }
+                                                                                , _end = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                    , sourceLine = Pos 6
+                                                                                    , sourceColumn = Pos 26
+                                                                                    }
+                                                                                }
+                                                                            )
+                                                                            ( Var
+                                                                                ( Typed
+                                                                                    { annotated = TyCon
+                                                                                        ( Id
+                                                                                            { name = "String"
+                                                                                            , meta = ()
+                                                                                            , moduleName = ModuleName
+                                                                                                { raw = "Builtin" }
+                                                                                            , uniq = -1
+                                                                                            , sort = External
+                                                                                            }
+                                                                                        )
+                                                                                    , value = Range
+                                                                                        { _start = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                            , sourceLine = Pos 6
+                                                                                            , sourceColumn = Pos 25
+                                                                                            }
+                                                                                        , _end = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                                            , sourceLine = Pos 6
+                                                                                            , sourceColumn = Pos 26
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                )
+                                                                                ( Id
+                                                                                    { name = "x"
+                                                                                    , meta = ()
+                                                                                    , moduleName = ModuleName
+                                                                                        { raw = "TypeAnnotation" }
+                                                                                    , uniq = 0
+                                                                                    , sort = Internal
+                                                                                    }
+                                                                                )
+                                                                            ) :| []
+                                                                        )
+                                                                    ) :| []
+                                                                )
+                                                            ) :| []
+                                                        )
+                                                    )
+                                                    ( Apply
+                                                        ( Typed
+                                                            { annotated = TyCon
+                                                                ( Id
+                                                                    { name = "String"
+                                                                    , meta = ()
+                                                                    , moduleName = ModuleName
+                                                                        { raw = "Builtin" }
+                                                                    , uniq = -1
+                                                                    , sort = External
+                                                                    }
+                                                                )
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 48
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                    , sourceLine = Pos 6
+                                                                    , sourceColumn = Pos 54
+                                                                    }
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Var
+                                                            ( Typed
+                                                                { annotated = TyArr ( TyPrim StringT )
+                                                                    ( TyCon
+                                                                        ( Id
+                                                                            { name = "String"
+                                                                            , meta = ()
+                                                                            , moduleName = ModuleName
+                                                                                { raw = "Builtin" }
+                                                                            , uniq = -1
+                                                                            , sort = External
+                                                                            }
+                                                                        )
+                                                                    )
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                        , sourceLine = Pos 6
+                                                                        , sourceColumn = Pos 48
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                        , sourceLine = Pos 6
+                                                                        , sourceColumn = Pos 54
+                                                                        }
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Id
+                                                                { name = "String#"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        )
+                                                        ( Unboxed
+                                                            ( Typed
+                                                                { annotated = TyPrim StringT
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                        , sourceLine = Pos 6
+                                                                        , sourceColumn = Pos 48
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                                                                        , sourceLine = Pos 6
+                                                                        , sourceColumn = Pos 54
+                                                                        }
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( String "hoge" )
+                                                        )
+                                                    )
+                                                ) :| []
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ]
+        , _scSigs = []
+        , _dataDefs = []
+        , _typeSynonyms = []
+        , _foreigns = []
+        , _imports =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Builtin" }
+                , All
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Prelude" }
+                , All
+                )
+            ]
+        }
+    }

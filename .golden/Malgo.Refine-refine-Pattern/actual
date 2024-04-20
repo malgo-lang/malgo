@@ -1,0 +1,791 @@
+Module
+    { moduleName = ModuleName
+        { raw = "Pattern" }
+    , moduleDefinition = BindGroup
+        { _scDefs =
+            [
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyTuple 0 )
+                            ( TyTuple 0 )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                , sourceLine = Pos 10
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "main"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Pattern" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyTuple 0 )
+                                ( TyTuple 0 )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 10
+                                    , sourceColumn = Pos 16
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 10
+                                    , sourceColumn = Pos 30
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyTuple 0 )
+                                    ( TyTuple 0 )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                        , sourceLine = Pos 10
+                                        , sourceColumn = Pos 16
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                        , sourceLine = Pos 10
+                                        , sourceColumn = Pos 30
+                                        }
+                                    }
+                                }
+                            )
+                            [ VarP
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 16
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 30
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "$_"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Pattern" }
+                                    , uniq = 9
+                                    , sort = Internal
+                                    }
+                                )
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyTuple 0
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 16
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 30
+                                            }
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 16
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 30
+                                            }
+                                        }
+                                    )
+                                    ( Apply
+                                        ( Typed
+                                            { annotated = TyTuple 0
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                    , sourceLine = Pos 10
+                                                    , sourceColumn = Pos 16
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                    , sourceLine = Pos 10
+                                                    , sourceColumn = Pos 30
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Typed
+                                                { annotated = TyArr
+                                                    ( TyCon
+                                                        ( Id
+                                                            { name = "String"
+                                                            , meta = ()
+                                                            , moduleName = ModuleName
+                                                                { raw = "Builtin" }
+                                                            , uniq = -1
+                                                            , sort = External
+                                                            }
+                                                        )
+                                                    )
+                                                    ( TyTuple 0 )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                        , sourceLine = Pos 10
+                                                        , sourceColumn = Pos 16
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                        , sourceLine = Pos 10
+                                                        , sourceColumn = Pos 25
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "putStrLn"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Prelude" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( Apply
+                                            ( Typed
+                                                { annotated = TyCon
+                                                    ( Id
+                                                        { name = "String"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "Builtin" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                        , sourceLine = Pos 10
+                                                        , sourceColumn = Pos 25
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                        , sourceLine = Pos 10
+                                                        , sourceColumn = Pos 30
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Var
+                                                ( Typed
+                                                    { annotated = TyArr ( TyPrim StringT )
+                                                        ( TyCon
+                                                            ( Id
+                                                                { name = "String"
+                                                                , meta = ()
+                                                                , moduleName = ModuleName
+                                                                    { raw = "Builtin" }
+                                                                , uniq = -1
+                                                                , sort = External
+                                                                }
+                                                            )
+                                                        )
+                                                    , value = Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                            , sourceLine = Pos 10
+                                                            , sourceColumn = Pos 25
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                            , sourceLine = Pos 10
+                                                            , sourceColumn = Pos 30
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "String#"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "Builtin" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            ( Unboxed
+                                                ( Typed
+                                                    { annotated = TyPrim StringT
+                                                    , value = Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                            , sourceLine = Pos 10
+                                                            , sourceColumn = Pos 25
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                            , sourceLine = Pos 10
+                                                            , sourceColumn = Pos 30
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                                ( String "OK" )
+                                            )
+                                        )
+                                    ) :| []
+                                )
+                            ) :| []
+                        )
+                    )
+                ]
+            ,
+                [
+                    ( Typed
+                        { annotated = TyArr
+                            ( TyApp
+                                ( TyCon
+                                    ( Id
+                                        { name = "List"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "Prelude" }
+                                        , uniq = -1
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                                ( TyVar
+                                    ( Id
+                                        { name = "Prelude.#a_19"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "Pattern" }
+                                        , uniq = 11
+                                        , sort = Internal
+                                        }
+                                    )
+                                )
+                            )
+                            ( TyCon
+                                ( Id
+                                    { name = "Bool"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Builtin" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        , value = Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                , sourceLine = Pos 10
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        }
+                    , Id
+                        { name = "isNil"
+                        , meta = ()
+                        , moduleName = ModuleName
+                            { raw = "Pattern" }
+                        , uniq = -1
+                        , sort = External
+                        }
+                    , Fn
+                        ( Typed
+                            { annotated = TyArr
+                                ( TyApp
+                                    ( TyCon
+                                        ( Id
+                                            { name = "List"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "Prelude" }
+                                            , uniq = -1
+                                            , sort = External
+                                            }
+                                        )
+                                    )
+                                    ( TyVar
+                                        ( Id
+                                            { name = "Prelude.#a_19"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "Pattern" }
+                                            , uniq = 11
+                                            , sort = Internal
+                                            }
+                                        )
+                                    )
+                                )
+                                ( TyCon
+                                    ( Id
+                                        { name = "Bool"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "Builtin" }
+                                        , uniq = -1
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                            , value = Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 6
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 8
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            }
+                        )
+                        ( Clause
+                            ( Typed
+                                { annotated = TyArr
+                                    ( TyApp
+                                        ( TyCon
+                                            ( Id
+                                                { name = "List"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Prelude" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( TyVar
+                                            ( Id
+                                                { name = "Prelude.#a_19"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Pattern" }
+                                                , uniq = 11
+                                                , sort = Internal
+                                                }
+                                            )
+                                        )
+                                    )
+                                    ( TyCon
+                                        ( Id
+                                            { name = "Bool"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "Builtin" }
+                                            , uniq = -1
+                                            , sort = External
+                                            }
+                                        )
+                                    )
+                                , value = Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                        , sourceLine = Pos 6
+                                        , sourceColumn = Pos 15
+                                        }
+                                    }
+                                }
+                            )
+                            [ ConP
+                                ( Typed
+                                    { annotated = TyApp
+                                        ( TyCon
+                                            ( Id
+                                                { name = "List"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Prelude" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( TyVar
+                                            ( Id
+                                                { name = "Prelude.#a_19"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Pattern" }
+                                                , uniq = 11
+                                                , sort = Internal
+                                                }
+                                            )
+                                        )
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 8
+                                            }
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "Nil"
+                                    , meta = ()
+                                    , moduleName = ModuleName
+                                        { raw = "Prelude" }
+                                    , uniq = -1
+                                    , sort = External
+                                    }
+                                ) []
+                            ]
+                            ( Seq
+                                ( Typed
+                                    { annotated = TyCon
+                                        ( Id
+                                            { name = "Bool"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "Builtin" }
+                                            , uniq = -1
+                                            , sort = External
+                                            }
+                                        )
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 11
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 15
+                                            }
+                                        }
+                                    }
+                                )
+                                ( NoBind
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 11
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 6
+                                            , sourceColumn = Pos 15
+                                            }
+                                        }
+                                    )
+                                    ( Var
+                                        ( Typed
+                                            { annotated = TyCon
+                                                ( Id
+                                                    { name = "Bool"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "Builtin" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 11
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                    , sourceLine = Pos 6
+                                                    , sourceColumn = Pos 15
+                                                    }
+                                                }
+                                            }
+                                        )
+                                        ( Id
+                                            { name = "True"
+                                            , meta = ()
+                                            , moduleName = ModuleName
+                                                { raw = "Builtin" }
+                                            , uniq = -1
+                                            , sort = External
+                                            }
+                                        )
+                                    ) :| []
+                                )
+                            ) :|
+                            [ Clause
+                                ( Typed
+                                    { annotated = TyArr
+                                        ( TyApp
+                                            ( TyCon
+                                                ( Id
+                                                    { name = "List"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "Prelude" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            ( TyVar
+                                                ( Id
+                                                    { name = "Prelude.#a_19"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "Pattern" }
+                                                    , uniq = 11
+                                                    , sort = Internal
+                                                    }
+                                                )
+                                            )
+                                        )
+                                        ( TyCon
+                                            ( Id
+                                                { name = "Bool"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Builtin" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                    , value = Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 7
+                                            , sourceColumn = Pos 15
+                                            }
+                                        }
+                                    }
+                                )
+                                [ VarP
+                                    ( Typed
+                                        { annotated = TyApp
+                                            ( TyCon
+                                                ( Id
+                                                    { name = "List"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "Prelude" }
+                                                    , uniq = -1
+                                                    , sort = External
+                                                    }
+                                                )
+                                            )
+                                            ( TyVar
+                                                ( Id
+                                                    { name = "Prelude.#a_19"
+                                                    , meta = ()
+                                                    , moduleName = ModuleName
+                                                        { raw = "Pattern" }
+                                                    , uniq = 11
+                                                    , sort = Internal
+                                                    }
+                                                )
+                                            )
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 7
+                                                }
+                                            }
+                                        }
+                                    )
+                                    ( Id
+                                        { name = "_"
+                                        , meta = ()
+                                        , moduleName = ModuleName
+                                            { raw = "Pattern" }
+                                        , uniq = 0
+                                        , sort = Internal
+                                        }
+                                    )
+                                ]
+                                ( Seq
+                                    ( Typed
+                                        { annotated = TyCon
+                                            ( Id
+                                                { name = "Bool"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Builtin" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 10
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 15
+                                                }
+                                            }
+                                        }
+                                    )
+                                    ( NoBind
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 10
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 7
+                                                , sourceColumn = Pos 15
+                                                }
+                                            }
+                                        )
+                                        ( Var
+                                            ( Typed
+                                                { annotated = TyCon
+                                                    ( Id
+                                                        { name = "Bool"
+                                                        , meta = ()
+                                                        , moduleName = ModuleName
+                                                            { raw = "Builtin" }
+                                                        , uniq = -1
+                                                        , sort = External
+                                                        }
+                                                    )
+                                                , value = Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                        , sourceLine = Pos 7
+                                                        , sourceColumn = Pos 10
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                        , sourceLine = Pos 7
+                                                        , sourceColumn = Pos 15
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "False"
+                                                , meta = ()
+                                                , moduleName = ModuleName
+                                                    { raw = "Builtin" }
+                                                , uniq = -1
+                                                , sort = External
+                                                }
+                                            )
+                                        ) :| []
+                                    )
+                                )
+                            ]
+                        )
+                    )
+                ]
+            ]
+        , _scSigs = []
+        , _dataDefs = []
+        , _typeSynonyms = []
+        , _foreigns = []
+        , _imports =
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Builtin" }
+                , All
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , ModuleName
+                    { raw = "Prelude" }
+                , All
+                )
+            ]
+        }
+    }

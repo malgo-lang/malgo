@@ -1,0 +1,1036 @@
+Module
+    { moduleName = ModuleName
+        { raw = "NestedMatch" }
+    , moduleDefinition = ParsedDefinitions
+        [ DataDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 6
+                    , sourceColumn = Pos 8
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 7
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "Bool" []
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 6
+                        , sourceColumn = Pos 15
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 6
+                        , sourceColumn = Pos 21
+                        }
+                    }
+                , "False"
+                , []
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 6
+                        , sourceColumn = Pos 23
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , "True"
+                , []
+                )
+            ]
+        , DataDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 7
+                    , sourceColumn = Pos 8
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 8
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "Bool1" []
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 16
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 23
+                        }
+                    }
+                , "False1"
+                , []
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 25
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , "True1"
+                , []
+                )
+            ]
+        , DataDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 8
+                    , sourceColumn = Pos 8
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 11
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "Bool2" []
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 16
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 23
+                        }
+                    }
+                , "False2"
+                , []
+                )
+            ,
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 25
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 11
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , "True2"
+                , []
+                )
+            ]
+        , Foreign
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 11
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "malgo_print_string"
+            ( TyArr
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 11
+                        , sourceColumn = Pos 47
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 11
+                        , sourceColumn = Pos 50
+                        }
+                    }
+                )
+                ( TyCon
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 39
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 47
+                            }
+                        }
+                    ) "String#"
+                )
+                ( TyTuple
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 50
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) []
+                )
+            )
+        , Foreign
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 15
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "malgo_exit_failure"
+            ( TyArr
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 13
+                        , sourceColumn = Pos 42
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 13
+                        , sourceColumn = Pos 45
+                        }
+                    }
+                )
+                ( TyTuple
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 39
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 42
+                            }
+                        }
+                    ) []
+                )
+                ( TyVar
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 45
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 15
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) "a"
+                )
+            )
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 15
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 23
+                    , sourceColumn = Pos 1
+                    }
+                }
+            ) "main"
+            ( Fn
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 16
+                        , sourceColumn = Pos 5
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 22
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( Clause
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 16
+                            , sourceColumn = Pos 5
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                            , sourceLine = Pos 22
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) []
+                    ( Seq
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 16
+                                , sourceColumn = Pos 5
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                , sourceLine = Pos 22
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( NoBind
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , sourceLine = Pos 16
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , sourceLine = Pos 22
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            )
+                            ( Apply
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                        , sourceLine = Pos 16
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                        , sourceLine = Pos 22
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( Fn
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 16
+                                            , sourceColumn = Pos 7
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 17
+                                            , sourceColumn = Pos 38
+                                            }
+                                        }
+                                    )
+                                    ( Clause
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                , sourceLine = Pos 16
+                                                , sourceColumn = Pos 7
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                , sourceLine = Pos 16
+                                                , sourceColumn = Pos 39
+                                                }
+                                            }
+                                        )
+                                        [ ConP
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 16
+                                                    , sourceColumn = Pos 7
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 16
+                                                    , sourceColumn = Pos 12
+                                                    }
+                                                }
+                                            ) "True" []
+                                        ]
+                                        ( Seq
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 16
+                                                    , sourceColumn = Pos 15
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 16
+                                                    , sourceColumn = Pos 39
+                                                    }
+                                                }
+                                            )
+                                            ( NoBind
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 16
+                                                        , sourceColumn = Pos 15
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 16
+                                                        , sourceColumn = Pos 39
+                                                        }
+                                                    }
+                                                )
+                                                ( Apply
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 16
+                                                            , sourceColumn = Pos 15
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 16
+                                                            , sourceColumn = Pos 39
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Var
+                                                        ( Qualified
+                                                            { visibility = Implicit
+                                                            , value = Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 16
+                                                                    , sourceColumn = Pos 15
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 16
+                                                                    , sourceColumn = Pos 34
+                                                                    }
+                                                                }
+                                                            }
+                                                        ) "malgo_print_string"
+                                                    )
+                                                    ( Unboxed
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 16
+                                                                , sourceColumn = Pos 34
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 16
+                                                                , sourceColumn = Pos 39
+                                                                }
+                                                            }
+                                                        )
+                                                        ( String "OK" )
+                                                    )
+                                                ) :| []
+                                            )
+                                        ) :|
+                                        [ Clause
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 17
+                                                    , sourceColumn = Pos 7
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 17
+                                                    , sourceColumn = Pos 38
+                                                    }
+                                                }
+                                            )
+                                            [ ConP
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 17
+                                                        , sourceColumn = Pos 7
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 17
+                                                        , sourceColumn = Pos 13
+                                                        }
+                                                    }
+                                                ) "False" []
+                                            ]
+                                            ( Seq
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 17
+                                                        , sourceColumn = Pos 16
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 17
+                                                        , sourceColumn = Pos 38
+                                                        }
+                                                    }
+                                                )
+                                                ( NoBind
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 17
+                                                            , sourceColumn = Pos 16
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 17
+                                                            , sourceColumn = Pos 38
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Apply
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 17
+                                                                , sourceColumn = Pos 16
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 17
+                                                                , sourceColumn = Pos 38
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Var
+                                                            ( Qualified
+                                                                { visibility = Implicit
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 17
+                                                                        , sourceColumn = Pos 16
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 17
+                                                                        , sourceColumn = Pos 35
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ) "malgo_exit_failure"
+                                                        )
+                                                        ( Tuple
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 17
+                                                                    , sourceColumn = Pos 35
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 17
+                                                                    , sourceColumn = Pos 38
+                                                                    }
+                                                                }
+                                                            ) []
+                                                        )
+                                                    ) :| []
+                                                )
+                                            )
+                                        ]
+                                    )
+                                )
+                                ( Seq
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 18
+                                            , sourceColumn = Pos 7
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , sourceLine = Pos 22
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( NoBind
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                , sourceLine = Pos 18
+                                                , sourceColumn = Pos 8
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                , sourceLine = Pos 21
+                                                , sourceColumn = Pos 34
+                                                }
+                                            }
+                                        )
+                                        ( Apply
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 18
+                                                    , sourceColumn = Pos 8
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                    , sourceLine = Pos 21
+                                                    , sourceColumn = Pos 34
+                                                    }
+                                                }
+                                            )
+                                            ( Fn
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 18
+                                                        , sourceColumn = Pos 10
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 19
+                                                        , sourceColumn = Pos 24
+                                                        }
+                                                    }
+                                                )
+                                                ( Clause
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 18
+                                                            , sourceColumn = Pos 10
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 18
+                                                            , sourceColumn = Pos 24
+                                                            }
+                                                        }
+                                                    )
+                                                    [ ConP
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 18
+                                                                , sourceColumn = Pos 10
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 18
+                                                                , sourceColumn = Pos 16
+                                                                }
+                                                            }
+                                                        ) "True1" []
+                                                    ]
+                                                    ( Seq
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 18
+                                                                , sourceColumn = Pos 19
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 18
+                                                                , sourceColumn = Pos 24
+                                                                }
+                                                            }
+                                                        )
+                                                        ( NoBind
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 18
+                                                                    , sourceColumn = Pos 19
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 18
+                                                                    , sourceColumn = Pos 24
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Var
+                                                                ( Qualified
+                                                                    { visibility = Implicit
+                                                                    , value = Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 18
+                                                                            , sourceColumn = Pos 19
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 18
+                                                                            , sourceColumn = Pos 24
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ) "False"
+                                                            ) :| []
+                                                        )
+                                                    ) :|
+                                                    [ Clause
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 19
+                                                                , sourceColumn = Pos 10
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 19
+                                                                , sourceColumn = Pos 24
+                                                                }
+                                                            }
+                                                        )
+                                                        [ ConP
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 19
+                                                                    , sourceColumn = Pos 10
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 19
+                                                                    , sourceColumn = Pos 17
+                                                                    }
+                                                                }
+                                                            ) "False1" []
+                                                        ]
+                                                        ( Seq
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 19
+                                                                    , sourceColumn = Pos 20
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 19
+                                                                    , sourceColumn = Pos 24
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( NoBind
+                                                                ( Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 19
+                                                                        , sourceColumn = Pos 20
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 19
+                                                                        , sourceColumn = Pos 24
+                                                                        }
+                                                                    }
+                                                                )
+                                                                ( Var
+                                                                    ( Qualified
+                                                                        { visibility = Implicit
+                                                                        , value = Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 19
+                                                                                , sourceColumn = Pos 20
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 19
+                                                                                , sourceColumn = Pos 24
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ) "True"
+                                                                ) :| []
+                                                            )
+                                                        )
+                                                    ]
+                                                )
+                                            )
+                                            ( Seq
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 20
+                                                        , sourceColumn = Pos 7
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                        , sourceLine = Pos 21
+                                                        , sourceColumn = Pos 34
+                                                        }
+                                                    }
+                                                )
+                                                ( NoBind
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 20
+                                                            , sourceColumn = Pos 8
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                            , sourceLine = Pos 21
+                                                            , sourceColumn = Pos 33
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Apply
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 20
+                                                                , sourceColumn = Pos 8
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , sourceLine = Pos 21
+                                                                , sourceColumn = Pos 33
+                                                                }
+                                                            }
+                                                        )
+                                                        ( Fn
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 20
+                                                                    , sourceColumn = Pos 10
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , sourceLine = Pos 21
+                                                                    , sourceColumn = Pos 26
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Clause
+                                                                ( Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 20
+                                                                        , sourceColumn = Pos 10
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 20
+                                                                        , sourceColumn = Pos 25
+                                                                        }
+                                                                    }
+                                                                )
+                                                                [ ConP
+                                                                    ( Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 20
+                                                                            , sourceColumn = Pos 10
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 20
+                                                                            , sourceColumn = Pos 16
+                                                                            }
+                                                                        }
+                                                                    ) "True2" []
+                                                                ]
+                                                                ( Seq
+                                                                    ( Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 20
+                                                                            , sourceColumn = Pos 19
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 20
+                                                                            , sourceColumn = Pos 25
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    ( NoBind
+                                                                        ( Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 20
+                                                                                , sourceColumn = Pos 19
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 20
+                                                                                , sourceColumn = Pos 25
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( Var
+                                                                            ( Qualified
+                                                                                { visibility = Implicit
+                                                                                , value = Range
+                                                                                    { _start = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 20
+                                                                                        , sourceColumn = Pos 19
+                                                                                        }
+                                                                                    , _end = SourcePos
+                                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , sourceLine = Pos 20
+                                                                                        , sourceColumn = Pos 25
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            ) "False1"
+                                                                        ) :| []
+                                                                    )
+                                                                ) :|
+                                                                [ Clause
+                                                                    ( Range
+                                                                        { _start = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 21
+                                                                            , sourceColumn = Pos 10
+                                                                            }
+                                                                        , _end = SourcePos
+                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , sourceLine = Pos 21
+                                                                            , sourceColumn = Pos 26
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                    [ ConP
+                                                                        ( Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 21
+                                                                                , sourceColumn = Pos 10
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 21
+                                                                                , sourceColumn = Pos 17
+                                                                                }
+                                                                            }
+                                                                        ) "False2" []
+                                                                    ]
+                                                                    ( Seq
+                                                                        ( Range
+                                                                            { _start = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 21
+                                                                                , sourceColumn = Pos 20
+                                                                                }
+                                                                            , _end = SourcePos
+                                                                                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , sourceLine = Pos 21
+                                                                                , sourceColumn = Pos 26
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        ( NoBind
+                                                                            ( Range
+                                                                                { _start = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , sourceLine = Pos 21
+                                                                                    , sourceColumn = Pos 20
+                                                                                    }
+                                                                                , _end = SourcePos
+                                                                                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , sourceLine = Pos 21
+                                                                                    , sourceColumn = Pos 26
+                                                                                    }
+                                                                                }
+                                                                            )
+                                                                            ( Var
+                                                                                ( Qualified
+                                                                                    { visibility = Implicit
+                                                                                    , value = Range
+                                                                                        { _start = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , sourceLine = Pos 21
+                                                                                            , sourceColumn = Pos 20
+                                                                                            }
+                                                                                        , _end = SourcePos
+                                                                                            { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , sourceLine = Pos 21
+                                                                                            , sourceColumn = Pos 26
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                ) "True1"
+                                                                            ) :| []
+                                                                        )
+                                                                    )
+                                                                ]
+                                                            )
+                                                        )
+                                                        ( Var
+                                                            ( Qualified
+                                                                { visibility = Implicit
+                                                                , value = Range
+                                                                    { _start = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 21
+                                                                        , sourceColumn = Pos 28
+                                                                        }
+                                                                    , _end = SourcePos
+                                                                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , sourceLine = Pos 21
+                                                                        , sourceColumn = Pos 33
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ) "True2"
+                                                        )
+                                                    ) :| []
+                                                )
+                                            )
+                                        ) :| []
+                                    )
+                                )
+                            ) :| []
+                        )
+                    ) :| []
+                )
+            )
+        ]
+    }

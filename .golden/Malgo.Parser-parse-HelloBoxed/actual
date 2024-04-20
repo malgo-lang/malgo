@@ -1,0 +1,769 @@
+Module
+    { moduleName = ModuleName
+        { raw = "HelloBoxed" }
+    , moduleDefinition = ParsedDefinitions
+        [ Foreign
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 2
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 3
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "malgo_print_string"
+            ( TyArr
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 47
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 2
+                        , sourceColumn = Pos 50
+                        }
+                    }
+                )
+                ( TyCon
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 2
+                            , sourceColumn = Pos 39
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 2
+                            , sourceColumn = Pos 47
+                            }
+                        }
+                    ) "String#"
+                )
+                ( TyTuple
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 2
+                            , sourceColumn = Pos 50
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 3
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) []
+                )
+            )
+        , Foreign
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 3
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 5
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "malgo_newline"
+            ( TyArr
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 37
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 3
+                        , sourceColumn = Pos 40
+                        }
+                    }
+                )
+                ( TyTuple
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 3
+                            , sourceColumn = Pos 34
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 3
+                            , sourceColumn = Pos 37
+                            }
+                        }
+                    ) []
+                )
+                ( TyTuple
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 3
+                            , sourceColumn = Pos 40
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 5
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) []
+                )
+            )
+        , DataDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 5
+                    , sourceColumn = Pos 8
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 7
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "String" []
+            [
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 5
+                        , sourceColumn = Pos 17
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                , "String#"
+                ,
+                    [ TyCon
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 5
+                                , sourceColumn = Pos 25
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 7
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        ) "String#"
+                    ]
+                )
+            ]
+        , ScSig
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 7
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 8
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "putStrLn"
+            ( TyArr
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 25
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 7
+                        , sourceColumn = Pos 28
+                        }
+                    }
+                )
+                ( TyCon
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 7
+                            , sourceColumn = Pos 18
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 7
+                            , sourceColumn = Pos 25
+                            }
+                        }
+                    ) "String"
+                )
+                ( TyTuple
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 7
+                            , sourceColumn = Pos 28
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 8
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) []
+                )
+            )
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 8
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "putStrLn"
+            ( Fn
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 20
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 11
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( Clause
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 8
+                            , sourceColumn = Pos 20
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    )
+                    [ ConP
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 21
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 32
+                                }
+                            }
+                        ) "String#"
+                        [ VarP
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 8
+                                    , sourceColumn = Pos 29
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 8
+                                    , sourceColumn = Pos 32
+                                    }
+                                }
+                            ) "str"
+                        ]
+                    ]
+                    ( Seq
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 5
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( NoBind
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 27
+                                    }
+                                }
+                            )
+                            ( Apply
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 9
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 9
+                                        , sourceColumn = Pos 27
+                                        }
+                                    }
+                                )
+                                ( Var
+                                    ( Qualified
+                                        { visibility = Implicit
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 24
+                                                }
+                                            }
+                                        }
+                                    ) "malgo_print_string"
+                                )
+                                ( Var
+                                    ( Qualified
+                                        { visibility = Implicit
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 24
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 27
+                                                }
+                                            }
+                                        }
+                                    ) "str"
+                                )
+                            ) :|
+                            [ NoBind
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 10
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 11
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( Apply
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 10
+                                            , sourceColumn = Pos 5
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 11
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( Var
+                                        ( Qualified
+                                            { visibility = Implicit
+                                            , value = Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 10
+                                                    , sourceColumn = Pos 5
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , sourceLine = Pos 10
+                                                    , sourceColumn = Pos 19
+                                                    }
+                                                }
+                                            }
+                                        ) "malgo_newline"
+                                    )
+                                    ( Tuple
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 10
+                                                , sourceColumn = Pos 19
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 11
+                                                , sourceColumn = Pos 3
+                                                }
+                                            }
+                                        ) []
+                                    )
+                                )
+                            ]
+                        )
+                    ) :| []
+                )
+            )
+        , ScSig
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "string#"
+            ( TyArr
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 13
+                        , sourceColumn = Pos 25
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 13
+                        , sourceColumn = Pos 28
+                        }
+                    }
+                )
+                ( TyCon
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 17
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 25
+                            }
+                        }
+                    ) "String#"
+                )
+                ( TyCon
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 13
+                            , sourceColumn = Pos 28
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 14
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) "String"
+                )
+            )
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 3
+                    }
+                }
+            ) "string#"
+            ( Fn
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 14
+                        , sourceColumn = Pos 19
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 14
+                        , sourceColumn = Pos 34
+                        }
+                    }
+                )
+                ( Clause
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 14
+                            , sourceColumn = Pos 19
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 14
+                            , sourceColumn = Pos 34
+                            }
+                        }
+                    )
+                    [ VarP
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 14
+                                , sourceColumn = Pos 19
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 14
+                                , sourceColumn = Pos 21
+                                }
+                            }
+                        ) "x"
+                    ]
+                    ( Seq
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 14
+                                , sourceColumn = Pos 24
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 14
+                                , sourceColumn = Pos 34
+                                }
+                            }
+                        )
+                        ( NoBind
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 14
+                                    , sourceColumn = Pos 24
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 14
+                                    , sourceColumn = Pos 34
+                                    }
+                                }
+                            )
+                            ( Apply
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 24
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 14
+                                        , sourceColumn = Pos 34
+                                        }
+                                    }
+                                )
+                                ( Var
+                                    ( Qualified
+                                        { visibility = Implicit
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 14
+                                                , sourceColumn = Pos 24
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 14
+                                                , sourceColumn = Pos 32
+                                                }
+                                            }
+                                        }
+                                    ) "String#"
+                                )
+                                ( Var
+                                    ( Qualified
+                                        { visibility = Implicit
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 14
+                                                , sourceColumn = Pos 32
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 14
+                                                , sourceColumn = Pos 34
+                                                }
+                                            }
+                                        }
+                                    ) "x"
+                                )
+                            ) :| []
+                        )
+                    ) :| []
+                )
+            )
+        , ScDef
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                    , sourceLine = Pos 19
+                    , sourceColumn = Pos 1
+                    }
+                }
+            ) "main"
+            ( Fn
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 17
+                        , sourceColumn = Pos 5
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                        , sourceLine = Pos 18
+                        , sourceColumn = Pos 3
+                        }
+                    }
+                )
+                ( Clause
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 17
+                            , sourceColumn = Pos 5
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , sourceLine = Pos 18
+                            , sourceColumn = Pos 3
+                            }
+                        }
+                    ) []
+                    ( Seq
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 17
+                                , sourceColumn = Pos 5
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , sourceLine = Pos 18
+                                , sourceColumn = Pos 3
+                                }
+                            }
+                        )
+                        ( NoBind
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 17
+                                    , sourceColumn = Pos 5
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , sourceLine = Pos 18
+                                    , sourceColumn = Pos 3
+                                    }
+                                }
+                            )
+                            ( Apply
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 17
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , sourceLine = Pos 18
+                                        , sourceColumn = Pos 3
+                                        }
+                                    }
+                                )
+                                ( Var
+                                    ( Qualified
+                                        { visibility = Implicit
+                                        , value = Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 17
+                                                , sourceColumn = Pos 5
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , sourceLine = Pos 17
+                                                , sourceColumn = Pos 14
+                                                }
+                                            }
+                                        }
+                                    ) "putStrLn"
+                                )
+                                ( Boxed
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 17
+                                            , sourceColumn = Pos 14
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , sourceLine = Pos 18
+                                            , sourceColumn = Pos 3
+                                            }
+                                        }
+                                    )
+                                    ( String "Hello, world" )
+                                )
+                            ) :| []
+                        )
+                    ) :| []
+                )
+            )
+        ]
+    }
