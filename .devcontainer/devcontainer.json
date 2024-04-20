@@ -17,7 +17,9 @@
 		"ghcr.io/devcontainers-contrib/features/apt-packages": {
 			"packages": "libgmp-dev,pkg-config,libgc-dev"
 		}
-	}
+	},
+
+	"postCreateCommand": "/bin/bash ./.devcontainer/post-create.sh"
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
