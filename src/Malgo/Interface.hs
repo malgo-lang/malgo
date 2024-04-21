@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Interface (Interface (..), ModulePathList (..), coreIdentMap, buildInterface, toInterfacePath, loadInterface, externalFromInterface) where
+module Malgo.Interface (Interface (..), ModulePathList (..), buildInterface, toInterfacePath, loadInterface, externalFromInterface, exportedIdentList, exportedTypeIdentList) where
 
 import Control.Exception (IOException, catch)
 import Control.Lens (ifor_, (^.))
@@ -12,6 +12,7 @@ import Data.Store (Store, decodeEx)
 import Effectful (Eff, IOE, runPureEff, (:>))
 import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State, execState, get, modify)
+import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
@@ -35,16 +36,12 @@ data Interface = Interface
     -- | Used in Infer
     typeDefMap :: HashMap PsId (GT.TypeDef GT.Type),
     -- | Used in Infer
-    _typeSynonymMap :: HashMap GT.TypeVar ([GT.TypeVar], GT.Type),
-    _kindCtx :: KindCtx,
-    -- | Used in Rename
-    exportedIdentList :: [PsId],
-    -- | Used in Rename
-    exportedTypeIdentList :: [PsId],
+    typeSynonymMap :: HashMap GT.TypeVar ([GT.TypeVar], GT.Type),
+    kindCtx :: KindCtx,
     -- | Used in Desugar
-    _coreIdentMap :: HashMap RnId (Id C.Type),
+    coreIdentMap :: HashMap PsId (Id C.Type),
     -- | Used in Rename
-    infixInfo :: HashMap RnId (Assoc, Int),
+    infixInfo :: HashMap PsId (Assoc, Int),
     -- | Used in Rename
     dependencies :: HashSet ModuleName
   }
@@ -75,22 +72,17 @@ buildInterface moduleName rnState tcEnv dsState =
           { moduleName,
             signatureMap = mempty,
             typeDefMap = mempty,
-            _typeSynonymMap = mempty,
-            _kindCtx = mempty,
-            exportedIdentList = mempty,
-            exportedTypeIdentList = mempty,
-            _coreIdentMap = mempty,
-            infixInfo = rnState.infixInfo,
+            typeSynonymMap = mempty,
+            kindCtx = mempty,
+            coreIdentMap = mempty,
+            infixInfo = HashMap.mapKeys (\id -> id.name) rnState.infixInfo,
             dependencies = rnState.dependencies
           }
    in runPureEff $ execState inf do
         ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
           when (tcId.sort == External && tcId.moduleName == moduleName) do
             modify \inf@Interface {..} ->
-              inf
-                { exportedIdentList = tcId.name : exportedIdentList,
-                  _coreIdentMap = HashMap.insert tcId coreId _coreIdentMap
-                }
+              inf {coreIdentMap = HashMap.insert tcId.name coreId coreIdentMap}
         ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
           when (tcId.sort == External && tcId.moduleName == moduleName) do
             modify \inf@Interface {..} ->
@@ -98,18 +90,27 @@ buildInterface moduleName rnState tcEnv dsState =
         ifor_ (dsState ^. typeDefMap) $ \rnId typeDef -> do
           when (rnId.sort == External && rnId.moduleName == moduleName) do
             modify \inf@Interface {..} ->
-              inf
-                { exportedTypeIdentList = rnId.name : exportedTypeIdentList,
-                  typeDefMap = HashMap.insert rnId.name typeDef typeDefMap
-                }
+              inf {typeDefMap = HashMap.insert rnId.name typeDef typeDefMap}
         ifor_ (tcEnv ^. typeSynonymMap) $ \tv (tvs, ty) -> do
           when (tv.sort == External && tv.moduleName == moduleName) do
             modify \inf@Interface {..} ->
-              inf {_typeSynonymMap = HashMap.insert tv (tvs, ty) _typeSynonymMap}
+              inf {typeSynonymMap = HashMap.insert tv (tvs, ty) typeSynonymMap}
         ifor_ (dsState ^. kindCtx) $ \tv kind -> do
           when (tv.sort == External && tv.moduleName == moduleName) do
             modify \inf@Interface {..} ->
-              inf {_kindCtx = insertKind tv kind _kindCtx}
+              inf {kindCtx = insertKind tv kind kindCtx}
+
+exportedIdentList :: (HasField "signatureMap" r (HashMap k v)) => r -> [k]
+exportedIdentList inf = HashMap.keys inf.signatureMap
+
+exportedTypeIdentList ::
+  ( HasField "typeDefMap" inf (HashMap name a),
+    HasField "typeSynonymMap" inf (HashMap id b),
+    HasField "name" id name
+  ) =>
+  inf ->
+  [name]
+exportedTypeIdentList inf = HashMap.keys inf.typeDefMap <> map (\id -> id.name) (HashMap.keys inf.typeSynonymMap)
 
 toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"

@@ -99,7 +99,7 @@ rnDecl (Import pos modName importList) = do
   interface <- loadInterface modName
   modify \s@RnState {..} ->
     s
-      { RnState.infixInfo = s.infixInfo <> interface.infixInfo,
+      { RnState.infixInfo = s.infixInfo <> HashMap.mapKeys (externalFromInterface interface) interface.infixInfo,
         RnState.dependencies = HashSet.insert modName dependencies <> interface.dependencies
       }
   pure $ Import pos modName importList
@@ -351,11 +351,11 @@ genToplevelEnv (ds :: [Decl (Malgo 'Parse)]) env = do
       let varIdentAssoc =
             map
               (\name -> (name, externalFromInterface interface name))
-              interface.exportedIdentList
+              (exportedIdentList interface)
       let typeIdentAssoc =
             map
               (\name -> (name, externalFromInterface interface name))
-              interface.exportedTypeIdentList
+              (exportedTypeIdentList interface)
       modify $ appendRnEnv resolvedVarIdentMap (map (resolveImport modName' importList) varIdentAssoc)
       modify $ appendRnEnv resolvedTypeIdentMap (map (resolveImport modName' importList) typeIdentAssoc)
     aux Infix {} = pass

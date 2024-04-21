@@ -62,7 +62,7 @@ dsImport ::
   Eff es ()
 dsImport (_, modName, _) = do
   interface <- loadInterface modName
-  modify \s@DsState {..} -> s {_nameEnv = interface._coreIdentMap <> _nameEnv}
+  modify \s@DsState {..} -> s {_nameEnv = HashMap.mapKeys (externalFromInterface interface) interface.coreIdentMap <> _nameEnv}
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::
@@ -169,7 +169,7 @@ dsDataDef :: (State DsState :> es, Reader ModuleName :> es, State Uniq :> es) =>
 dsDataDef (_, name, _, cons) =
   for cons $ \(_, conName, _) -> do
     -- lookup constructor infomations
-    vcs <- (._valueConstructors) . fromJust <$> (HashMap.lookup name <$> gets @DsState (._typeDefMap))
+    vcs <- ((._valueConstructors) . fromJust) . HashMap.lookup name <$> gets @DsState (._typeDefMap)
     let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType

@@ -68,8 +68,8 @@ mergeInterface interface tcEnv =
           %~ HashMap.union
             (HashMap.mapKeys (externalFromInterface interface) interface.typeDefMap)
       )
-    & (typeSynonymMap %~ HashMap.union (interface ^. typeSynonymMap))
-    & (kindCtx %~ HashMap.union (interface ^. kindCtx))
+    & (typeSynonymMap %~ HashMap.union interface.typeSynonymMap)
+    & (kindCtx %~ HashMap.union interface.kindCtx)
 
 genTcEnv :: (Applicative f) => RnEnv -> f TcEnv
 genTcEnv rnEnv = do
