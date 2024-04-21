@@ -32,8 +32,8 @@ import Malgo.Syntax.Extension
 
 -- | トップレベル宣言
 data Def
-  = VarDef (Id C.Type) C.Type (C.Expr (Id C.Type))
-  | FunDef (Id C.Type) [Id C.Type] C.Type (C.Expr (Id C.Type))
+  = VarDef (Meta C.Type) C.Type (C.Expr (Meta C.Type))
+  | FunDef (Meta C.Type) [Meta C.Type] C.Type (C.Expr (Meta C.Type))
   | ExtDef Text C.Type
   deriving stock (Show)
 
@@ -42,7 +42,7 @@ makePrisms ''Def
 -- | 'DsState' tracks the state of desugaring.
 data DsState = DsState
   { -- | Name mapping from Malgo's 'RnId' to Koriel's 'Id'.
-    _nameEnv :: HashMap RnId (Id C.Type),
+    _nameEnv :: HashMap RnId (Meta C.Type),
     -- | Type signatures.
     _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
     -- | Type definitions.
@@ -52,7 +52,7 @@ data DsState = DsState
     -- | Top-level definitions.
     _globalDefs :: [Def],
     -- | Closure Ids for global functions.
-    globalClosures :: HashMap (Id C.Type) (Id C.Type)
+    globalClosures :: HashMap (Meta C.Type) (Meta C.Type)
   }
   deriving stock (Show)
 
@@ -60,7 +60,7 @@ makeFieldsNoPrefix ''DsState
 
 -- | 'makeDsStore' only takes 'TcEnv', but importing 'RnEnv' causes cyclic dependency.
 makeDsState ::
-  (HasSignatureMap env (HashMap RnId (Scheme Type)), HasTypeDefMap env (HashMap (Id ()) (TypeDef Type)), HasKindCtx env KindCtx) =>
+  (HasSignatureMap env (HashMap RnId (Scheme Type)), HasTypeDefMap env (HashMap Id (TypeDef Type)), HasKindCtx env KindCtx) =>
   env ->
   DsState
 makeDsState tcEnv =

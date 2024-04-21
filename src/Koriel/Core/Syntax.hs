@@ -73,29 +73,29 @@ instance HasExpr Program where
       <*> traverseOf (traversed . _4) f topFuns
       <*> pure extFuns
 
-runDef :: Eff (Writer (Endo (Expr (Id Type))) : es) (Expr (Id Type)) -> Eff es (Expr (Id Type))
+runDef :: Eff (Writer (Endo (Expr (Meta Type))) : es) (Expr (Meta Type)) -> Eff es (Expr (Meta Type))
 runDef m = uncurry (flip appEndo) <$> runWriter m
 
-let_ :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Id Type))) :> es) => Type -> Obj (Id Type) -> Eff es (Atom (Id Type))
+let_ :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Meta Type))) :> es) => Type -> Obj (Meta Type) -> Eff es (Atom (Meta Type))
 let_ otype obj = do
-  x <- newTemporalId "let" otype
+  x <- withMeta otype <$> newTemporalId "let"
   tell $ Endo $ \e -> Let [LocalDef x otype obj] e
   pure (Var x)
 
-bind :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Id Type))) :> es) => Expr (Id Type) -> Eff es (Atom (Id Type))
+bind :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Meta Type))) :> es) => Expr (Meta Type) -> Eff es (Atom (Meta Type))
 bind (Atom a) = pure a
 bind v = do
-  x <- newTemporalId "d" (typeOf v)
+  x <- withMeta (typeOf v) <$> newTemporalId "d"
   tell $ Endo $ \e ->
     Assign x v e
   pure (Var x)
 
-cast :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Id Type))) :> es) => Type -> Expr (Id Type) -> Eff es (Atom (Id Type))
+cast :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Meta Type))) :> es) => Type -> Expr (Meta Type) -> Eff es (Atom (Meta Type))
 cast ty e
   | ty == typeOf e = bind e
   | otherwise = do
       v <- bind e
-      x <- newTemporalId "cast" ty
+      x <- withMeta ty <$> newTemporalId "cast"
       tell $ Endo $ \e -> Assign x (Cast ty v) e
       pure (Var x)
 
@@ -106,7 +106,7 @@ cast ty e
 -- 1. Programmer must check whether the type can be treated that have only one constructor.
 -- 2. There is more safe and convenenient way: `if let` in Rust.
 
--- destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Expr (Id Type) -> Con -> DefBuilderT m [Atom (Id Type)]
+-- destruct :: (MonadIO m, MonadReader env m, HasUniqSupply env UniqSupply) => Expr (Meta Type) -> Con -> DefBuilderT m [Atom (Meta Type)]
 -- destruct val con@(Con _ ts) = do
 --   vs <- traverse (newTemporalId "p") ts
 --   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])

@@ -72,15 +72,15 @@ makeFieldsNoPrefix ''CodeGenState
 data CodeGenEnv = CodeGenEnv
   { -- In optimization, some variables are defined multiple times.
     -- So, we need to treat them as as scoped variables.
-    _valueMap :: HashMap (Id C.Type) Operand,
-    _globalValueMap :: HashMap (Id C.Type) Operand,
-    _funcMap :: HashMap (Id C.Type) Operand,
+    _valueMap :: HashMap (Meta C.Type) Operand,
+    _globalValueMap :: HashMap (Meta C.Type) Operand,
+    _funcMap :: HashMap (Meta C.Type) Operand,
     moduleName :: ModuleName
   }
 
 makeFieldsNoPrefix ''CodeGenEnv
 
-newCodeGenEnv :: ModuleName -> Program (Id C.Type) -> CodeGenEnv
+newCodeGenEnv :: ModuleName -> Program (Meta C.Type) -> CodeGenEnv
 newCodeGenEnv moduleName Program {..} =
   CodeGenEnv
     { _valueMap = mempty,
@@ -118,10 +118,10 @@ codeGen ::
   -- | Module name of the source program
   ModuleName ->
   -- | Entry point of the source program
-  Maybe (Id C.Type) ->
+  Maybe (Meta C.Type) ->
   Int ->
   -- | Source program
-  Program (Id C.Type) ->
+  Program (Meta C.Type) ->
   m ()
 codeGen srcPath dstPath modName mentry n Program {..} = do
   llvmir <- runCodeGenT n (newCodeGenEnv modName Program {..}) do
@@ -167,7 +167,7 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
     -- Generate main function.
     mainFunc e = do
       -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
-      mainFuncId <- newNativeId "main" ([] :-> Int32T)
+      mainFuncId <- withMeta ([] :-> Int32T) <$> newNativeId "main"
       mainFuncBody <- runDef do
         _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
         _ <- bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
@@ -227,7 +227,7 @@ sizeofType (RecordT _) = 8
 sizeofType AnyT = 8
 sizeofType VoidT = 0
 
-findVar :: (MonadCodeGen m, MonadIRBuilder m) => Id C.Type -> m Operand
+findVar :: (MonadCodeGen m, MonadIRBuilder m) => Meta C.Type -> m Operand
 findVar x = findLocalVar
   where
     findLocalVar =
@@ -244,8 +244,8 @@ findVar x = findLocalVar
           -- Generate a closure for the function
           let capture = ConstantOperand $ C.Null ptr
           closAddr <- mallocType (StructureType False [ptr, ptr])
-          gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` BS.toShort (convertString x.name <> "_capture")
-          gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] opr `named` BS.toShort (convertString x.name <> "_func")
+          gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` BS.toShort (convertString x.id.name <> "_capture")
+          gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] opr `named` BS.toShort (convertString x.id.name <> "_func")
           pure closAddr
         Nothing -> findExtVar
     findExtVar =
@@ -264,7 +264,7 @@ findVar x = findLocalVar
       primMap . at (toName x) ?= opr
       load (convType $ C.typeOf x) opr 0
 
-findFun :: (MonadCodeGen m) => Id C.Type -> m Operand
+findFun :: (MonadCodeGen m) => Meta C.Type -> m Operand
 findFun x =
   view (funcMap . at x) >>= \case
     Just opr -> pure opr
@@ -300,14 +300,14 @@ sizeof ty = C.PtrToInt szPtr LT.i64
     nullPtr = C.IntToPtr (C.Int 32 0) ptrType
     szPtr = C.GetElementPtr True ty nullPtr [C.Int 32 1]
 
-toName :: Id a -> LLVM.AST.Name
-toName id = LLVM.AST.mkName $ convertString $ idToText id
+toName :: Meta a -> LLVM.AST.Name
+toName meta = LLVM.AST.mkName $ convertString $ idToText meta.id
 
 toLabel :: (ConvertibleStrings s BS.ByteString) => s -> ShortByteString
 toLabel s = BS.toShort $ convertString s
 
 -- generate code for a toplevel variable definition
-genVar :: (MonadModuleBuilder m) => Id C.Type -> Expr (Id C.Type) -> m Operand
+genVar :: (MonadModuleBuilder m) => Meta C.Type -> Expr (Meta C.Type) -> m Operand
 genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (convType $ C.typeOf expr))
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
@@ -321,13 +321,13 @@ genFunc ::
     MonadFix m,
     MonadIO m
   ) =>
-  Id C.Type ->
-  [Id C.Type] ->
-  Expr (Id C.Type) ->
+  Meta C.Type ->
+  [Meta C.Type] ->
+  Expr (Meta C.Type) ->
   m Operand
 genFunc name params body = do
   let funcBuilder =
-        if idIsNative name
+        if idIsNative name.id
           then function
           else internalFunction
   funcBuilder funcName llvmParams retty $ \args ->
@@ -337,7 +337,7 @@ genFunc name params body = do
     llvmParams =
       (ptr, NoParameterName) -- capture pointer (not used)
         : map
-          (\x -> (convType x.meta, ParameterName $ BS.toShort $ convertString $ idToText x))
+          (\x -> (convType x.meta, ParameterName $ BS.toShort $ convertString $ idToText x.id))
           params
     retty = convType (C.typeOf body)
 
@@ -347,7 +347,7 @@ genExpr ::
     MonadFix m,
     MonadIO m
   ) =>
-  Expr (Id C.Type) ->
+  Expr (Meta C.Type) ->
   ContT () m Operand
 genExpr (Atom x) = genAtom x
 genExpr e@(Call f xs) = do
@@ -465,7 +465,7 @@ constructorList scrutinee =
 
 genAtom ::
   (MonadCodeGen m, MonadIRBuilder m) =>
-  Atom (Id C.Type) ->
+  Atom (Meta C.Type) ->
   m Operand
 genAtom (Var x) = findVar x
 genAtom (Unboxed (Int32 x)) = pure $ int32 x
@@ -484,15 +484,15 @@ genLocalDef ::
     MonadFix m,
     MonadIO m
   ) =>
-  LocalDef (Id C.Type) ->
-  m (HashMap (Id C.Type) Operand)
+  LocalDef (Meta C.Type) ->
+  m (HashMap (Meta C.Type) Operand)
 genLocalDef (LocalDef funName _ (Fun ps e)) = do
   globalValues <- HashSet.fromList . HashMap.keys <$> view globalValueMap
   let fvs = toList $ freevars (Fun ps e) `HashSet.difference` globalValues
   -- キャプチャされる変数を詰める構造体の型
   let capType = StructureType False (map (convType . C.typeOf) fvs)
   -- クロージャの元になる関数を生成する
-  name <- toName <$> runEffOnCodeGen (newInternalId (funName.name <> "_closure") ())
+  name <- toName <$> runEffOnCodeGen (withMeta () <$> newInternalId (funName.id.name <> "_closure"))
   func <- internalFunction name (map (,NoParameterName) psTypes) retType $ \case
     [] -> error "The length of internal function parameters must be 1 or more"
     (capture : ps') -> do
@@ -500,17 +500,17 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
       env <-
         HashMap.fromList <$> ifor fvs \i fv ->
           (fv,) <$> do
-            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` toLabel (fv.name <> "_addr")
-            load (convType $ C.typeOf fv) fvAddr 0 `named` toLabel fv.name
+            fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` toLabel (fv.id.name <> "_addr")
+            load (convType $ C.typeOf fv) fvAddr 0 `named` toLabel fv.id.name
       local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
   -- キャプチャされる変数を構造体に詰める
-  capture <- mallocType capType `named` toLabel (funName.name <> "_capture")
+  capture <- mallocType capType `named` toLabel (funName.id.name <> "_capture")
   ifor_ fvs $ \i fv -> do
     fvOpr <- findVar fv
-    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr `named` toLabel fv.name
+    gepAndStore capType capture [int32 0, int32 $ fromIntegral i] fvOpr `named` toLabel fv.id.name
   closAddr <- findVar funName
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` toLabel (funName.name <> "_capture")
-  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` toLabel (funName.name <> "_func")
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` toLabel (funName.id.name <> "_capture")
+  gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` toLabel (funName.id.name <> "_func")
   pure $ HashMap.singleton funName closAddr
   where
     psTypes = ptr : map (convType . C.typeOf) ps

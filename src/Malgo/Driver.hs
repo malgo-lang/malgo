@@ -18,7 +18,7 @@ import Koriel.Core.Flat qualified as Flat
 import Koriel.Core.LambdaLift (lambdalift)
 import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (OptimizeOption, optimizeProgram)
-import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), ModuleName (..))
+import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), Meta (..), ModuleName (..))
 import Koriel.MonadUniq
 import Koriel.Pretty
 import Malgo.Desugar.DsState (_nameEnv)
@@ -166,7 +166,7 @@ compileFromAST srcPath parsedAst = do
       Uniq i <- get @Uniq
       LLVM.codeGen srcPath dstPath moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) i coreLL
     -- エントリーポイントとなるmain関数を検索する
-    searchMain :: [(Id a, Id b)] -> Maybe (Id b)
+    searchMain :: [(Id, Meta b)] -> Maybe (Meta b)
     searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
       | griffId.name
           == "main"

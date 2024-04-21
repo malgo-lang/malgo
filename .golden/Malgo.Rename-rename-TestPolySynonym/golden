@@ -19,7 +19,6 @@ Module
                         }
                     , Id
                         { name = "first"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestPolySynonym" }
                         , sort = External
@@ -84,7 +83,6 @@ Module
                                         )
                                         ( Id
                                             { name = "x"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "TestPolySynonym" }
                                             , sort = Internal 5
@@ -109,7 +107,6 @@ Module
                                         )
                                         ( Id
                                             { name = "_"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "TestPolySynonym" }
                                             , sort = Internal 6
@@ -162,7 +159,6 @@ Module
                                         )
                                         ( Id
                                             { name = "x"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "TestPolySynonym" }
                                             , sort = Internal 5
@@ -190,7 +186,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestPolySynonym" }
                         , sort = External
@@ -253,7 +248,6 @@ Module
                                     )
                                     ( Id
                                         { name = "x"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "TestPolySynonym" }
                                         , sort = Internal 7
@@ -305,7 +299,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "Int32#"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -361,7 +354,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "String#"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -421,7 +413,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "|>"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
                                                 , sort = External
@@ -457,7 +448,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "first"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "TestPolySynonym" }
                                                         , sort = External
@@ -480,7 +470,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "x"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "TestPolySynonym" }
                                                         , sort = Internal 7
@@ -504,7 +493,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "printInt32"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Prelude" }
                                                     , sort = External
@@ -535,7 +523,6 @@ Module
                     }
                 , Id
                     { name = "first"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestPolySynonym" }
                     , sort = External
@@ -586,7 +573,6 @@ Module
                                 )
                                 ( Id
                                     { name = "a"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestPolySynonym" }
                                     , sort = Internal 3
@@ -611,7 +597,6 @@ Module
                                 )
                                 ( Id
                                     { name = "b"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestPolySynonym" }
                                     , sort = Internal 4
@@ -636,7 +621,6 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "TestPolySynonym" }
                             , sort = Internal 3
@@ -659,7 +643,6 @@ Module
                     }
                 , Id
                     { name = "main"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestPolySynonym" }
                     , sort = External
@@ -694,7 +677,6 @@ Module
                         )
                         ( Id
                             { name = "Fun0"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "TestPolySynonym" }
                             , sort = External
@@ -735,7 +717,6 @@ Module
                     }
                 , Id
                     { name = "Fun0"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestPolySynonym" }
                     , sort = External
@@ -743,7 +724,6 @@ Module
                 ,
                     [ Id
                         { name = "a"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestPolySynonym" }
                         , sort = Internal 0
@@ -794,7 +774,6 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "TestPolySynonym" }
                             , sort = Internal 0
@@ -817,7 +796,6 @@ Module
                     }
                 , Id
                     { name = "Pair"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestPolySynonym" }
                     , sort = External
@@ -825,14 +803,12 @@ Module
                 ,
                     [ Id
                         { name = "a"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestPolySynonym" }
                         , sort = Internal 1
                         }
                     , Id
                         { name = "b"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestPolySynonym" }
                         , sort = Internal 2
@@ -870,7 +846,6 @@ Module
                             )
                             ( Id
                                 { name = "b"
-                                , meta = ()
                                 , moduleName = ModuleName
                                     { raw = "TestPolySynonym" }
                                 , sort = Internal 2
@@ -895,7 +870,6 @@ Module
                             )
                             ( Id
                                 { name = "a"
-                                , meta = ()
                                 , moduleName = ModuleName
                                     { raw = "TestPolySynonym" }
                                 , sort = Internal 1
@@ -948,21 +922,19 @@ RnState
     { infixInfo = fromList
         [
             ( Id
-                { name = "<|"
-                , meta = ()
+                { name = "|>"
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
                 }
             ,
-                ( RightA
+                ( LeftA
                 , 0
                 )
             )
         ,
             ( Id
                 { name = "."
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
@@ -974,14 +946,13 @@ RnState
             )
         ,
             ( Id
-                { name = "|>"
-                , meta = ()
+                { name = "<|"
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
                 }
             ,
-                ( LeftA
+                ( RightA
                 , 0
                 )
             )

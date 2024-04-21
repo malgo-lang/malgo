@@ -24,7 +24,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestExplicitModule" }
                         , sort = External
@@ -86,7 +85,6 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestExplicitModule" }
                                     , sort = Internal 6
@@ -147,7 +145,6 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "String"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -171,7 +168,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "putStrLn"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
                                                 , sort = External
@@ -183,7 +179,6 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "String"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -209,7 +204,6 @@ Module
                                                         ( TyCon
                                                             ( Id
                                                                 { name = "String"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -232,7 +226,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "String#"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External

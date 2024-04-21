@@ -54,8 +54,8 @@ freshVar ::
   Eff es MetaVar
 freshVar hint = do
   hint <- pure $ fromMaybe "t" hint
-  kind <- newTemporalId ("k" <> hint) ()
-  newVar <- newInternalId hint ()
+  kind <- newTemporalId ("k" <> hint)
+  newVar <- newInternalId hint
   modify @TcEnv (over kindCtx (insertKind newVar (TyMeta $ MetaVar kind)))
   pure $ MetaVar newVar
 

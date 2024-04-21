@@ -9,7 +9,7 @@ import Malgo.Infer.TypeRep
 import Malgo.Prelude
 
 data RefineEnv = RefineEnv
-  { signatureMap :: HashMap (Id ()) (Scheme Type),
+  { signatureMap :: HashMap Id (Scheme Type),
     typeDefEnv :: HashMap TypeVar (TypeDef Type)
   }
 

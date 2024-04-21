@@ -13,11 +13,11 @@ import Koriel.Pretty
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.
-lint :: Bool -> Program (Id Type) -> Eff es ()
+lint :: Bool -> Program (Meta Type) -> Eff es ()
 lint normalized = runLint normalized . lintProgram
 
 data LintEnv = LintEnv
-  { defs :: HashSet (Id Type),
+  { defs :: HashSet (Meta Type),
     normalized :: Bool,
     isIncludeAssign :: Bool,
     isStatement :: Bool
@@ -37,14 +37,14 @@ statement e m = do
     | isStatement -> m
     | otherwise -> errorDoc $ pretty e <+> "must be a statement"
 
-defined :: (Reader LintEnv :> es) => Id Type -> Eff es ()
+defined :: (Reader LintEnv :> es) => Meta Type -> Eff es ()
 defined x
-  | idIsExternal x = pass
+  | idIsExternal x.id = pass
   | otherwise = do
       env <- asks @LintEnv (.defs)
       unless (HashSet.member x env) $ errorDoc $ pretty x <> " is not defined"
 
-define :: (Reader LintEnv :> es) => Doc x -> [Id Type] -> Eff es a -> Eff es a
+define :: (Reader LintEnv :> es) => Doc x -> [Meta Type] -> Eff es a -> Eff es a
 define pos xs m = do
   env <- asks @LintEnv (.defs)
   for_ xs \x ->
@@ -80,7 +80,7 @@ match x y
             nest 2 (":" <> pretty (typeOf y))
           ]
 
-lintExpr :: (Reader LintEnv :> es) => Expr (Id Type) -> Eff es ()
+lintExpr :: (Reader LintEnv :> es) => Expr (Meta Type) -> Eff es ()
 lintExpr (Atom x) = lintAtom x
 lintExpr (Call f xs) = do
   lintAtom f
@@ -140,12 +140,12 @@ lintExpr (Assign x v e) = statement (Assign x v e) do
       define "assign" [x] (lintExpr e)
 lintExpr Error {} = pass
 
-lintObj :: (Reader LintEnv :> es) => Obj (Id Type) -> Eff es ()
+lintObj :: (Reader LintEnv :> es) => Obj (Meta Type) -> Eff es ()
 lintObj (Fun params body) = define "fun" params $ asStatement $ lintExpr body
 lintObj (Pack _ _ xs) = traverse_ lintAtom xs
 lintObj (Record kvs) = traverse_ lintAtom kvs
 
-lintCase :: (Reader LintEnv :> es, HasType a, Pretty a) => a -> Case (Id Type) -> Eff es ()
+lintCase :: (Reader LintEnv :> es, HasType a, Pretty a) => a -> Case (Meta Type) -> Eff es ()
 lintCase _ (Unpack _ vs e) = define "unpack" vs $ lintExpr e
 lintCase _ (OpenRecord kvs e) = define "open-record" (HashMap.elems kvs) $ lintExpr e
 lintCase _ (Exact _ e) = lintExpr e
@@ -154,11 +154,11 @@ lintCase scrutinee (Bind x t e) = define "bind" [x] do
   match scrutinee x
   lintExpr e
 
-lintAtom :: (Reader LintEnv :> es) => Atom (Id Type) -> Eff es ()
+lintAtom :: (Reader LintEnv :> es) => Atom (Meta Type) -> Eff es ()
 lintAtom (Var x) = defined x
 lintAtom (Unboxed _) = pass
 
-lintProgram :: (Reader LintEnv :> es) => Program (Id Type) -> Eff es ()
+lintProgram :: (Reader LintEnv :> es) => Program (Meta Type) -> Eff es ()
 lintProgram Program {..} = do
   let vs = map (view _1) topVars
   let fs = map (view _1) topFuns

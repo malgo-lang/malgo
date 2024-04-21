@@ -2,34 +2,40 @@ Program
     { topVars = []
     , topFuns =
         [
-            ( Id
-                { name = "String#"
-                , meta = [ StringT ] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            ,
-                [ Id
-                    { name = "p"
-                    , meta = StringT
+            ( Meta
+                { meta = [ StringT ] :-> AnyT
+                , id = Id
+                    { name = "String#"
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
-                    , sort = Temporal 21
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = StringT
+                    , id = Id
+                        { name = "p"
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , sort = Temporal 21
+                        }
                     }
                 ]
             , [ StringT ] :-> AnyT
             , Let
                 [ LocalDef
-                    { _variable = Id
-                        { name = "let"
-                        , meta = SumT
+                    { _variable = Meta
+                        { meta = SumT
                             [ Con
                                 ( Data "HelloBoxed.String#" ) [ StringT ]
                             ]
-                        , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
-                        , sort = Temporal 22
+                        , id = Id
+                            { name = "let"
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , sort = Temporal 22
+                            }
                         }
                     , typ = SumT
                         [ Con
@@ -45,12 +51,14 @@ Program
                             ( Data "HelloBoxed.String#" ) [ StringT ]
                         )
                         [ Var
-                            ( Id
-                                { name = "p"
-                                , meta = StringT
-                                , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
-                                , sort = Temporal 21
+                            ( Meta
+                                { meta = StringT
+                                , id = Id
+                                    { name = "p"
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , sort = Temporal 21
+                                    }
                                 }
                             )
                         ]
@@ -58,36 +66,42 @@ Program
                 ]
                 ( Cast AnyT
                     ( Var
-                        ( Id
-                            { name = "let"
-                            , meta = SumT
+                        ( Meta
+                            { meta = SumT
                                 [ Con
                                     ( Data "HelloBoxed.String#" ) [ StringT ]
                                 ]
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = Temporal 22
+                            , id = Id
+                                { name = "let"
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , sort = Temporal 22
+                                }
                             }
                         )
                     )
                 )
             )
         ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = [ StringT ] :-> SumT
+            ( Meta
+                { meta = [ StringT ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            ,
-                [ Id
-                    { name = "p"
-                    , meta = StringT
+                , id = Id
+                    { name = "malgo_print_string"
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
-                    , sort = Temporal 23
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = StringT
+                    , id = Id
+                        { name = "p"
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , sort = Temporal 23
+                        }
                     }
                 ]
             , [ StringT ] :-> SumT
@@ -97,36 +111,42 @@ Program
                     [ Con Tuple [] ]
                 )
                 [ Var
-                    ( Id
-                        { name = "p"
-                        , meta = StringT
-                        , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
-                        , sort = Temporal 23
+                    ( Meta
+                        { meta = StringT
+                        , id = Id
+                            { name = "p"
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , sort = Temporal 23
+                            }
                         }
                     )
                 ]
             )
         ,
-            ( Id
-                { name = "malgo_newline"
-                , meta =
+            ( Meta
+                { meta =
                     [ SumT
                         [ Con Tuple [] ]
                     ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            ,
-                [ Id
-                    { name = "p"
-                    , meta = SumT
-                        [ Con Tuple [] ]
+                , id = Id
+                    { name = "malgo_newline"
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
-                    , sort = Temporal 24
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = SumT
+                        [ Con Tuple [] ]
+                    , id = Id
+                        { name = "p"
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , sort = Temporal 24
+                        }
                     }
                 ]
             ,
@@ -142,95 +162,113 @@ Program
                     [ Con Tuple [] ]
                 )
                 [ Var
-                    ( Id
-                        { name = "p"
-                        , meta = SumT
+                    ( Meta
+                        { meta = SumT
                             [ Con Tuple [] ]
-                        , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
-                        , sort = Temporal 24
+                        , id = Id
+                            { name = "p"
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , sort = Temporal 24
+                            }
                         }
                     )
                 ]
             )
         ,
-            ( Id
-                { name = "string#"
-                , meta = [ StringT ] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            ,
-                [ Id
-                    { name = "x"
-                    , meta = StringT
+            ( Meta
+                { meta = [ StringT ] :-> AnyT
+                , id = Id
+                    { name = "string#"
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
-                    , sort = Temporal 25
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = StringT
+                    , id = Id
+                        { name = "x"
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , sort = Temporal 25
+                        }
                     }
                 ]
             , [ StringT ] :-> AnyT
             , Assign
-                ( Id
-                    { name = "d"
-                    , meta = AnyT
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 26
+                ( Meta
+                    { meta = AnyT
+                    , id = Id
+                        { name = "d"
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , sort = Temporal 26
+                        }
                     }
                 )
                 ( Call
                     ( Var
-                        ( Id
-                            { name = "String#"
-                            , meta = [ StringT ] :-> AnyT
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = External
+                        ( Meta
+                            { meta = [ StringT ] :-> AnyT
+                            , id = Id
+                                { name = "String#"
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , sort = External
+                                }
                             }
                         )
                     )
                     [ Var
-                        ( Id
-                            { name = "x"
-                            , meta = StringT
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = Temporal 25
+                        ( Meta
+                            { meta = StringT
+                            , id = Id
+                                { name = "x"
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , sort = Temporal 25
+                                }
                             }
                         )
                     ]
                 )
                 ( Cast AnyT
                     ( Var
-                        ( Id
-                            { name = "d"
-                            , meta = AnyT
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = Temporal 26
+                        ( Meta
+                            { meta = AnyT
+                            , id = Id
+                                { name = "d"
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , sort = Temporal 26
+                                }
                             }
                         )
                     )
                 )
             )
         ,
-            ( Id
-                { name = "putStrLn"
-                , meta = [ AnyT ] :-> SumT
+            ( Meta
+                { meta = [ AnyT ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            ,
-                [ Id
-                    { name = "string#"
-                    , meta = AnyT
+                , id = Id
+                    { name = "putStrLn"
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
-                    , sort = Temporal 27
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = AnyT
+                    , id = Id
+                        { name = "string#"
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , sort = Temporal 27
+                        }
                     }
                 ]
             , [ AnyT ] :-> SumT
@@ -243,12 +281,14 @@ Program
                         ]
                     )
                     ( Var
-                        ( Id
-                            { name = "string#"
-                            , meta = AnyT
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = Temporal 27
+                        ( Meta
+                            { meta = AnyT
+                            , id = Id
+                                { name = "string#"
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , sort = Temporal 27
+                                }
                             }
                         )
                     )
@@ -257,53 +297,63 @@ Program
                     ( Con
                         ( Data "HelloBoxed.String#" ) [ StringT ]
                     )
-                    [ Id
-                        { name = "p"
-                        , meta = StringT
-                        , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
-                        , sort = Temporal 28
+                    [ Meta
+                        { meta = StringT
+                        , id = Id
+                            { name = "p"
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , sort = Temporal 28
+                            }
                         }
                     ]
                     ( Assign
-                        ( Id
-                            { name = "d"
-                            , meta = SumT
+                        ( Meta
+                            { meta = SumT
                                 [ Con Tuple [] ]
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = Temporal 30
+                            , id = Id
+                                { name = "d"
+                                , moduleName = ModuleName
+                                    { raw = "HelloBoxed" }
+                                , sort = Temporal 30
+                                }
                             }
                         )
                         ( Assign
-                            ( Id
-                                { name = "d"
-                                , meta = SumT
+                            ( Meta
+                                { meta = SumT
                                     [ Con Tuple [] ]
-                                , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
-                                , sort = Temporal 29
+                                , id = Id
+                                    { name = "d"
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , sort = Temporal 29
+                                    }
                                 }
                             )
                             ( Call
                                 ( Var
-                                    ( Id
-                                        { name = "malgo_print_string"
-                                        , meta = [ StringT ] :-> SumT
+                                    ( Meta
+                                        { meta = [ StringT ] :-> SumT
                                             [ Con Tuple [] ]
-                                        , moduleName = ModuleName
-                                            { raw = "HelloBoxed" }
-                                        , sort = External
+                                        , id = Id
+                                            { name = "malgo_print_string"
+                                            , moduleName = ModuleName
+                                                { raw = "HelloBoxed" }
+                                            , sort = External
+                                            }
                                         }
                                     )
                                 )
                                 [ Var
-                                    ( Id
-                                        { name = "p"
-                                        , meta = StringT
-                                        , moduleName = ModuleName
-                                            { raw = "HelloBoxed" }
-                                        , sort = Temporal 28
+                                    ( Meta
+                                        { meta = StringT
+                                        , id = Id
+                                            { name = "p"
+                                            , moduleName = ModuleName
+                                                { raw = "HelloBoxed" }
+                                            , sort = Temporal 28
+                                            }
                                         }
                                     )
                                 ]
@@ -313,37 +363,43 @@ Program
                                     [ Con Tuple [] ]
                                 )
                                 ( Var
-                                    ( Id
-                                        { name = "d"
-                                        , meta = SumT
+                                    ( Meta
+                                        { meta = SumT
                                             [ Con Tuple [] ]
-                                        , moduleName = ModuleName
-                                            { raw = "HelloBoxed" }
-                                        , sort = Temporal 29
+                                        , id = Id
+                                            { name = "d"
+                                            , moduleName = ModuleName
+                                                { raw = "HelloBoxed" }
+                                            , sort = Temporal 29
+                                            }
                                         }
                                     )
                                 )
                             )
                         )
                         ( Assign
-                            ( Id
-                                { name = "d"
-                                , meta = SumT
+                            ( Meta
+                                { meta = SumT
                                     [ Con Tuple [] ]
-                                , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
-                                , sort = Temporal 32
+                                , id = Id
+                                    { name = "d"
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , sort = Temporal 32
+                                    }
                                 }
                             )
                             ( Let
                                 [ LocalDef
-                                    { _variable = Id
-                                        { name = "let"
-                                        , meta = SumT
+                                    { _variable = Meta
+                                        { meta = SumT
                                             [ Con Tuple [] ]
-                                        , moduleName = ModuleName
-                                            { raw = "HelloBoxed" }
-                                        , sort = Temporal 31
+                                        , id = Id
+                                            { name = "let"
+                                            , moduleName = ModuleName
+                                                { raw = "HelloBoxed" }
+                                            , sort = Temporal 31
+                                            }
                                         }
                                     , typ = SumT
                                         [ Con Tuple [] ]
@@ -356,51 +412,59 @@ Program
                                 ]
                                 ( Atom
                                     ( Var
-                                        ( Id
-                                            { name = "let"
-                                            , meta = SumT
+                                        ( Meta
+                                            { meta = SumT
                                                 [ Con Tuple [] ]
-                                            , moduleName = ModuleName
-                                                { raw = "HelloBoxed" }
-                                            , sort = Temporal 31
+                                            , id = Id
+                                                { name = "let"
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , sort = Temporal 31
+                                                }
                                             }
                                         )
                                     )
                                 )
                             )
                             ( Assign
-                                ( Id
-                                    { name = "d"
-                                    , meta = SumT
+                                ( Meta
+                                    { meta = SumT
                                         [ Con Tuple [] ]
-                                    , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
-                                    , sort = Temporal 33
+                                    , id = Id
+                                        { name = "d"
+                                        , moduleName = ModuleName
+                                            { raw = "HelloBoxed" }
+                                        , sort = Temporal 33
+                                        }
                                     }
                                 )
                                 ( Call
                                     ( Var
-                                        ( Id
-                                            { name = "malgo_newline"
-                                            , meta =
+                                        ( Meta
+                                            { meta =
                                                 [ SumT
                                                     [ Con Tuple [] ]
                                                 ] :-> SumT
                                                 [ Con Tuple [] ]
-                                            , moduleName = ModuleName
-                                                { raw = "HelloBoxed" }
-                                            , sort = External
+                                            , id = Id
+                                                { name = "malgo_newline"
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , sort = External
+                                                }
                                             }
                                         )
                                     )
                                     [ Var
-                                        ( Id
-                                            { name = "d"
-                                            , meta = SumT
+                                        ( Meta
+                                            { meta = SumT
                                                 [ Con Tuple [] ]
-                                            , moduleName = ModuleName
-                                                { raw = "HelloBoxed" }
-                                            , sort = Temporal 32
+                                            , id = Id
+                                                { name = "d"
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , sort = Temporal 32
+                                                }
                                             }
                                         )
                                     ]
@@ -410,13 +474,15 @@ Program
                                         [ Con Tuple [] ]
                                     )
                                     ( Var
-                                        ( Id
-                                            { name = "d"
-                                            , meta = SumT
+                                        ( Meta
+                                            { meta = SumT
                                                 [ Con Tuple [] ]
-                                            , moduleName = ModuleName
-                                                { raw = "HelloBoxed" }
-                                            , sort = Temporal 33
+                                            , id = Id
+                                                { name = "d"
+                                                , moduleName = ModuleName
+                                                    { raw = "HelloBoxed" }
+                                                , sort = Temporal 33
+                                                }
                                             }
                                         )
                                     )
@@ -427,25 +493,29 @@ Program
                 ]
             )
         ,
-            ( Id
-                { name = "main"
-                , meta =
+            ( Meta
+                { meta =
                     [ SumT
                         [ Con Tuple [] ]
                     ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            ,
-                [ Id
-                    { name = "$_"
-                    , meta = SumT
-                        [ Con Tuple [] ]
+                , id = Id
+                    { name = "main"
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
-                    , sort = Temporal 34
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = SumT
+                        [ Con Tuple [] ]
+                    , id = Id
+                        { name = "$_"
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , sort = Temporal 34
+                        }
                     }
                 ]
             ,
@@ -454,31 +524,37 @@ Program
                 ] :-> SumT
                 [ Con Tuple [] ]
             , Assign
-                ( Id
-                    { name = "d"
-                    , meta = AnyT
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 36
+                ( Meta
+                    { meta = AnyT
+                    , id = Id
+                        { name = "d"
+                        , moduleName = ModuleName
+                            { raw = "HelloBoxed" }
+                        , sort = Temporal 36
+                        }
                     }
                 )
                 ( Assign
-                    ( Id
-                        { name = "d"
-                        , meta = AnyT
-                        , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
-                        , sort = Temporal 35
+                    ( Meta
+                        { meta = AnyT
+                        , id = Id
+                            { name = "d"
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , sort = Temporal 35
+                            }
                         }
                     )
                     ( Call
                         ( Var
-                            ( Id
-                                { name = "String#"
-                                , meta = [ StringT ] :-> AnyT
-                                , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
-                                , sort = External
+                            ( Meta
+                                { meta = [ StringT ] :-> AnyT
+                                , id = Id
+                                    { name = "String#"
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , sort = External
+                                    }
                                 }
                             )
                         )
@@ -488,46 +564,54 @@ Program
                     )
                     ( Cast AnyT
                         ( Var
-                            ( Id
-                                { name = "d"
-                                , meta = AnyT
-                                , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
-                                , sort = Temporal 35
+                            ( Meta
+                                { meta = AnyT
+                                , id = Id
+                                    { name = "d"
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , sort = Temporal 35
+                                    }
                                 }
                             )
                         )
                     )
                 )
                 ( Assign
-                    ( Id
-                        { name = "d"
-                        , meta = SumT
+                    ( Meta
+                        { meta = SumT
                             [ Con Tuple [] ]
-                        , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
-                        , sort = Temporal 37
+                        , id = Id
+                            { name = "d"
+                            , moduleName = ModuleName
+                                { raw = "HelloBoxed" }
+                            , sort = Temporal 37
+                            }
                         }
                     )
                     ( Call
                         ( Var
-                            ( Id
-                                { name = "putStrLn"
-                                , meta = [ AnyT ] :-> SumT
+                            ( Meta
+                                { meta = [ AnyT ] :-> SumT
                                     [ Con Tuple [] ]
-                                , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
-                                , sort = External
+                                , id = Id
+                                    { name = "putStrLn"
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , sort = External
+                                    }
                                 }
                             )
                         )
                         [ Var
-                            ( Id
-                                { name = "d"
-                                , meta = AnyT
-                                , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
-                                , sort = Temporal 36
+                            ( Meta
+                                { meta = AnyT
+                                , id = Id
+                                    { name = "d"
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , sort = Temporal 36
+                                    }
                                 }
                             )
                         ]
@@ -537,13 +621,15 @@ Program
                             [ Con Tuple [] ]
                         )
                         ( Var
-                            ( Id
-                                { name = "d"
-                                , meta = SumT
+                            ( Meta
+                                { meta = SumT
                                     [ Con Tuple [] ]
-                                , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
-                                , sort = Temporal 37
+                                , id = Id
+                                    { name = "d"
+                                    , moduleName = ModuleName
+                                        { raw = "HelloBoxed" }
+                                    , sort = Temporal 37
+                                    }
                                 }
                             )
                         )
@@ -571,175 +657,185 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
-                { name = "x"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 1
-                }
-            , Id
-                { name = "x"
-                , meta = StringT
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Temporal 25
-                }
-            )
-        ,
-            ( Id
-                { name = "putStrLn"
-                , meta = ()
+                { name = "malgo_print_string"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = External
                 }
-            , Id
-                { name = "putStrLn"
-                , meta = [ AnyT ] :-> SumT
+            , Meta
+                { meta = [ StringT ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
+                , id = Id
+                    { name = "malgo_print_string"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = External
+                    }
                 }
             )
         ,
             ( Id
-                { name = "main"
-                , meta = ()
+                { name = "putStrLn"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = External
                 }
-            , Id
-                { name = "main"
-                , meta =
+            , Meta
+                { meta = [ AnyT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "putStrLn"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "string#"
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ StringT ] :-> AnyT
+                , id = Id
+                    { name = "string#"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ StringT ] :-> AnyT
+                , id = Id
+                    { name = "String#"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_newline"
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = External
+                }
+            , Meta
+                { meta =
                     [ SumT
                         [ Con Tuple [] ]
                     ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
+                , id = Id
+                    { name = "malgo_newline"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = External
+                    }
                 }
             )
         ,
             ( Id
-                { name = "malgo_print_string"
-                , meta = ()
+                { name = "main"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = External
                 }
-            , Id
-                { name = "malgo_print_string"
-                , meta = [ StringT ] :-> SumT
+            , Meta
+                { meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
+                , id = Id
+                    { name = "main"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = External
+                    }
                 }
             )
         ,
             ( Id
-                { name = "string#"
-                , meta = ()
+                { name = "$_"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
-                , sort = External
+                , sort = Internal 20
                 }
-            , Id
-                { name = "string#"
-                , meta = [ StringT ] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Id
-                { name = "String#"
-                , meta = [ StringT ] :-> AnyT
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
+            , Meta
+                { meta = SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "$_"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = Temporal 34
+                    }
                 }
             )
         ,
             ( Id
                 { name = "str"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = Internal 0
                 }
-            , Id
-                { name = "p"
-                , meta = StringT
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Temporal 28
+            , Meta
+                { meta = StringT
+                , id = Id
+                    { name = "p"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = Temporal 28
+                    }
                 }
             )
         ,
             ( Id
-                { name = "$_"
-                , meta = ()
+                { name = "x"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
-                , sort = Internal 20
+                , sort = Internal 1
                 }
-            , Id
-                { name = "$_"
-                , meta = SumT
-                    [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Temporal 34
-                }
-            )
-        ,
-            ( Id
-                { name = "malgo_newline"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Id
-                { name = "malgo_newline"
-                , meta =
-                    [ SumT
-                        [ Con Tuple [] ]
-                    ] :-> SumT
-                    [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
+            , Meta
+                { meta = StringT
+                , id = Id
+                    { name = "x"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = Temporal 25
+                    }
                 }
             )
         ]
     , _signatureMap = fromList
         [
             ( Id
-                { name = "x"
-                , meta = ()
+                { name = "malgo_print_string"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
-                , sort = Internal 1
+                , sort = External
                 }
-            , Forall [] ( TyPrim StringT )
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
             )
         ,
             ( Id
                 { name = "putStrLn"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = External
@@ -749,7 +845,6 @@ DsState
                     ( TyCon
                         ( Id
                             { name = "String"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "HelloBoxed" }
                             , sort = External
@@ -761,35 +856,7 @@ DsState
             )
         ,
             ( Id
-                { name = "main"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim StringT )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
                 { name = "string#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = External
@@ -799,7 +866,6 @@ DsState
                     ( TyCon
                         ( Id
                             { name = "String"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "HelloBoxed" }
                             , sort = External
@@ -811,7 +877,6 @@ DsState
         ,
             ( Id
                 { name = "String#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = External
@@ -821,7 +886,6 @@ DsState
                     ( TyCon
                         ( Id
                             { name = "String"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "HelloBoxed" }
                             , sort = External
@@ -832,18 +896,33 @@ DsState
             )
         ,
             ( Id
-                { name = "str"
-                , meta = ()
+                { name = "malgo_newline"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
-                , sort = Internal 0
+                , sort = External
                 }
-            , Forall [] ( TyPrim StringT )
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
             )
         ,
             ( Id
                 { name = "$_"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = Internal 20
@@ -853,30 +932,33 @@ DsState
             )
         ,
             ( Id
-                { name = "malgo_newline"
-                , meta = ()
+                { name = "str"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
-                , sort = External
+                , sort = Internal 0
                 }
-            , Forall []
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
-                )
+            , Forall [] ( TyPrim StringT )
+            )
+        ,
+            ( Id
+                { name = "x"
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = Internal 1
+                }
+            , Forall [] ( TyPrim StringT )
             )
         ]
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "String#"
-                , meta = ()
+                { name = "Int64#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
                 }
             , TypeDef
-                { _typeConstructor = TyPrim StringT
+                { _typeConstructor = TyPrim Int64T
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -884,7 +966,6 @@ DsState
         ,
             ( Id
                 { name = "String"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = External
@@ -893,7 +974,6 @@ DsState
                 { _typeConstructor = TyCon
                     ( Id
                         { name = "String"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "HelloBoxed" }
                         , sort = External
@@ -904,7 +984,6 @@ DsState
                     [
                         ( Id
                             { name = "String#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "HelloBoxed" }
                             , sort = External
@@ -914,7 +993,6 @@ DsState
                                 ( TyCon
                                     ( Id
                                         { name = "String"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "HelloBoxed" }
                                         , sort = External
@@ -928,8 +1006,59 @@ DsState
             )
         ,
             ( Id
+                { name = "Double#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim StringT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
                 { name = "Float#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -943,7 +1072,6 @@ DsState
         ,
             ( Id
                 { name = "Char#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -954,140 +1082,27 @@ DsState
                 , _valueConstructors = []
                 }
             )
-        ,
-            ( Id
-                { name = "Int64#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int32T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim DoubleT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPtr
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
         ]
     , _kindCtx = fromList
         [
             ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
-                , sort = Internal 13
+                , sort = Internal 7
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
-                    , sort = Temporal 12
+                    , sort = Temporal 6
                     }
                 )
             )
         ,
             ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 15
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 14
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 9
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 8
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 11
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 10
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , meta = ()
+                { name = "Int64#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1097,7 +1112,6 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = Internal 5
@@ -1105,7 +1119,6 @@ DsState
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
                     , sort = Temporal 4
@@ -1115,25 +1128,6 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 7
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 6
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = Internal 3
@@ -1141,7 +1135,6 @@ DsState
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
                     , sort = Temporal 2
@@ -1150,28 +1143,7 @@ DsState
             )
         ,
             ( Id
-                { name = "Float#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Int64#"
-                , meta = ()
+                { name = "Double#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1181,17 +1153,6 @@ DsState
         ,
             ( Id
                 { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1201,25 +1162,38 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
-                , sort = Internal 17
+                , sort = Internal 15
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
-                    , sort = Temporal 16
+                    , sort = Temporal 14
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = Internal 13
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = Temporal 12
                     }
                 )
             )
         ,
             ( Id
                 { name = "Ptr#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1229,7 +1203,47 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = Internal 11
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = Temporal 10
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = Internal 9
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = Temporal 8
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
                 , moduleName = ModuleName
                     { raw = "HelloBoxed" }
                 , sort = Internal 19
@@ -1237,12 +1251,45 @@ DsState
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "HelloBoxed" }
                     , sort = Temporal 18
                     }
                 )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "HelloBoxed" }
+                , sort = Internal 17
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "HelloBoxed" }
+                    , sort = Temporal 16
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
             )
         ]
     , _globalDefs = []

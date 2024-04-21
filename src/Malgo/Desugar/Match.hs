@@ -60,14 +60,14 @@ splitCol mat = (headCol mat, tailCol mat)
 match ::
   (State DsState :> es, Reader ModuleName :> es, State Uniq :> es) =>
   -- | マッチ対象
-  [Id Core.Type] ->
+  [Meta Core.Type] ->
   -- | パターン（転置行列）
   PatMatrix ->
   -- | righthand
-  [Eff es (Core.Expr (Id Core.Type))] ->
+  [Eff es (Core.Expr (Meta Core.Type))] ->
   -- | fail
-  Core.Expr (Id Core.Type) ->
-  Eff es (Core.Expr (Id Core.Type))
+  Core.Expr (Meta Core.Type) ->
+  Eff es (Core.Expr (Meta Core.Type))
 match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- Variable Rule
   -- パターンの先頭がすべて変数のとき
@@ -100,7 +100,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       cases <- for valueConstructors \(conName, Forall _ conType) -> do
         paramTypes <- traverse dsType $ fst $ splitTyArr conType
         let coreCon = Core.Con (Data $ idToText conName) paramTypes
-        params <- traverse (newTemporalId "p") paramTypes
+        params <- traverse (\t -> withMeta t <$> newTemporalId "p") paramTypes
         let (pat', es') = group conName pat es
         Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
       unfoldedType <- unfoldType patType
@@ -110,7 +110,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       let patType = Malgo.typeOf $ List.head heads
       dsType patType >>= \case
         RecordT kts -> do
-          params <- traverse (newTemporalId "p") kts
+          params <- traverse (\t -> withMeta t <$> newTemporalId "p") kts
           clause <- do
             (pat', es') <- groupRecord pat es
             OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
@@ -121,7 +121,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       let patType = Malgo.typeOf $ List.head heads
       dsType patType >>= \case
         SumT [con@(Core.Con Core.Tuple ts)] -> do
-          params <- traverse (newTemporalId "p") ts
+          params <- traverse (\t -> withMeta t <$> newTemporalId "p") ts
           clause <- do
             let (pat', es') = groupTuple pat es
             Unpack con params <$> match (params <> restScrutinee) pat' es' err
@@ -139,7 +139,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       cases <- traverse (\c -> Exact c <$> match restScrutinee tails es err) cs
       -- パターンの網羅性を保証するため、
       -- `_ -> err` を追加する
-      hole <- newTemporalId "_" (Core.typeOf scrutinee)
+      hole <- withMeta (Core.typeOf scrutinee) <$> newTemporalId "_"
       pure $ Match (Atom $ Core.Var scrutinee) $ cases <> [Core.Bind hole (Core.typeOf hole) err]
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
@@ -163,9 +163,9 @@ match scrutinees pat es err = do
 -- , [ [Nil] ])
 partition ::
   PatMatrix ->
-  [m (Core.Expr (Id Core.Type))] ->
+  [m (Core.Expr (Meta Core.Type))] ->
   ( (PatMatrix, PatMatrix),
-    ([m (Core.Expr (Id Core.Type))], [m (Core.Expr (Id Core.Type))])
+    ([m (Core.Expr (Meta Core.Type))], [m (Core.Expr (Meta Core.Type))])
   )
 partition (splitCol -> (Just heads@(VarP {} : _), PatMatrix tails)) es = partitionOn _VarP heads tails es
 partition (splitCol -> (Just heads@(ConP {} : _), PatMatrix tails)) es = partitionOn _ConP heads tails es
@@ -194,8 +194,8 @@ partitionOn prism heads tails es =
 group ::
   XId (Malgo 'Refine) ->
   PatMatrix ->
-  [m (Core.Expr (Id Core.Type))] ->
-  (PatMatrix, [m (Core.Expr (Id Core.Type))])
+  [m (Core.Expr (Meta Core.Type))] ->
+  (PatMatrix, [m (Core.Expr (Meta Core.Type))])
 group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMaybe (aux gcon) (zip pss es)
   where
     aux gcon (ConP _ gcon' ps : pss, e)
@@ -204,7 +204,7 @@ group gcon (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ mapMa
     aux _ (p : _, _) = errorDoc $ "Invalid pattern:" <+> pretty p
     aux _ ([], _) = error "ps must be not empty"
 
-groupTuple :: PatMatrix -> [m (Core.Expr (Id Core.Type))] -> (PatMatrix, [m (Core.Expr (Id Core.Type))])
+groupTuple :: PatMatrix -> [m (Core.Expr (Meta Core.Type))] -> (PatMatrix, [m (Core.Expr (Meta Core.Type))])
 groupTuple (PatMatrix (transpose -> pss)) es = over _1 patMatrix $ unzip $ zipWith aux pss es
   where
     aux (TupleP _ ps : pss) e = (ps <> pss, e)
@@ -223,6 +223,6 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
       let kts = HashMap.toList ktsMap
       for kts \(key, ty) ->
         case List.lookup key ps of
-          Nothing -> VarP (Typed ty pos) <$> newTemporalId "_p" ()
+          Nothing -> VarP (Typed ty pos) <$> newTemporalId "_p"
           Just p -> pure p
     extendRecordP _ _ = error "typeOf x must be TyRecord"

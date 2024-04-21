@@ -24,7 +24,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "DataDef" }
                         , sort = External
@@ -86,7 +85,6 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
                                     , sort = Internal 17
@@ -147,7 +145,6 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "Int"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "DataDef" }
                                                             , sort = External
@@ -175,7 +172,6 @@ Module
                                                         ( TyCon
                                                             ( Id
                                                                 { name = "Int"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "DataDef" }
                                                                 , sort = External
@@ -202,7 +198,6 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "Int"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "DataDef" }
                                                                 , sort = External
@@ -224,7 +219,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "Int#"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
                                                         , sort = External
@@ -249,7 +243,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "x"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "DataDef" }
                                                             , sort = Internal 1
@@ -325,7 +318,6 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "malgo_print_string"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "DataDef" }
                                                                     , sort = External
@@ -399,7 +391,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "malgo_int64_t_to_string"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "DataDef" }
                                                                                 , sort = External
@@ -425,7 +416,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "x"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "DataDef" }
                                                                                 , sort = Internal 1
@@ -445,7 +435,6 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "Int"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
                                                         , sort = External
@@ -484,7 +473,6 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "Int"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "DataDef" }
                                                                 , sort = External
@@ -510,7 +498,6 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "Int"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "DataDef" }
                                                                         , sort = External
@@ -533,7 +520,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "Int#"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "DataDef" }
                                                             , sort = External
@@ -586,7 +572,6 @@ Module
                     }
                 , Id
                     { name = "Int"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = External
@@ -608,7 +593,6 @@ Module
                             }
                         , Id
                             { name = "Int#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = External
@@ -630,7 +614,6 @@ Module
                                 )
                                 ( Id
                                     { name = "Int64#"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -655,7 +638,6 @@ Module
                     }
                 , Id
                     { name = "List"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = External
@@ -676,7 +658,6 @@ Module
                             }
                         , Id
                             { name = "a"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = Internal 0
@@ -699,7 +680,6 @@ Module
                             }
                         , Id
                             { name = "Nil"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = External
@@ -721,7 +701,6 @@ Module
                             }
                         , Id
                             { name = "Cons"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = External
@@ -743,7 +722,6 @@ Module
                                 )
                                 ( Id
                                     { name = "a"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
                                     , sort = Internal 0
@@ -779,7 +757,6 @@ Module
                                     )
                                     ( Id
                                         { name = "List"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
                                         , sort = External
@@ -802,7 +779,6 @@ Module
                                     )
                                     ( Id
                                         { name = "a"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
                                         , sort = Internal 0
@@ -837,7 +813,6 @@ Module
                     }
                 , Id
                     { name = "malgo_int64_t_to_string"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = External
@@ -872,7 +847,6 @@ Module
                         )
                         ( Id
                             { name = "Int64#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External
@@ -895,7 +869,6 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External
@@ -925,7 +898,6 @@ Module
                     }
                 , Id
                     { name = "malgo_print_string"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = External
@@ -960,7 +932,6 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External

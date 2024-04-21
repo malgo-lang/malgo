@@ -7,6 +7,7 @@ module Koriel.Id
   ( IdSort (..),
     ModuleName (..),
     Id (..),
+    Meta (..),
     idToText,
     newInternalId,
     newExternalId,
@@ -15,12 +16,12 @@ module Koriel.Id
     newNativeId,
     idIsNative,
     HasModuleName,
+    withMeta,
   )
 where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
-import Data.Hashable (Hashable (..))
 import Data.Store ()
 import Data.Store.TH
 import Effectful (Eff, (:>))
@@ -63,29 +64,15 @@ data IdSort
 
 makeStore ''IdSort
 
--- TODO: Add uniq :: Int field
-data Id a = Id
+data Id = Id
   { name :: Text,
-    meta :: a,
     moduleName :: ModuleName,
     sort :: IdSort
   }
-  deriving stock (Show, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
-  deriving anyclass (ToJSON, FromJSON)
+  deriving stock (Show, Eq, Ord, Generic, Data, Typeable)
+  deriving anyclass (Hashable, ToJSON, FromJSON)
 
-instance Eq (Id a) where
-  -- Don't compare meta
-  (==) Id {name = name1, moduleName = moduleName1, sort = sort1} Id {name = name2, moduleName = moduleName2, sort = sort2} =
-    name1 == name2 && moduleName1 == moduleName2 && sort1 == sort2
-  {-# INLINE (==) #-}
-
-instance Hashable (Id a) where
-  hash Id {name, moduleName, sort} = hash name `hashWithSalt` hash moduleName `hashWithSalt` hash sort
-  {-# INLINE hash #-}
-  hashWithSalt salt Id {name, moduleName, sort} = salt `hashWithSalt` hash name `hashWithSalt` hash moduleName `hashWithSalt` hash sort
-  {-# INLINE hashWithSalt #-}
-
-instance Pretty (Id a) where
+instance Pretty Id where
   pretty Id {name, moduleName, sort = External} = "@" <> brackets (pretty moduleName <+> pretty name)
   pretty Id {name, moduleName, sort = Internal uniq} = "#" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, moduleName, sort = Temporal uniq} = "$" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
@@ -93,42 +80,57 @@ instance Pretty (Id a) where
 
 makeStore ''Id
 
-idToText :: Id a -> Text
+data Meta a = Meta
+  { meta :: a,
+    id :: Id
+  }
+  deriving stock (Show, Eq, Ord, Functor, Foldable, Traversable, Generic, Data, Typeable)
+  deriving anyclass (Hashable, ToJSON, FromJSON)
+
+withMeta :: a -> Id -> Meta a
+withMeta meta id = Meta {..}
+
+instance (Pretty a) => Pretty (Meta a) where
+  pretty Meta {id} = pretty id
+
+makeStore ''Meta
+
+idToText :: Id -> Text
 idToText Id {name, moduleName, sort = External} = moduleName.raw <> "." <> name
 idToText Id {name, moduleName, sort = Internal uniq} = moduleName.raw <> ".#" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, moduleName, sort = Temporal uniq} = moduleName.raw <> ".$" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, sort = Native} = name
 
-newTemporalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
-newTemporalId name meta = do
+newTemporalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> Eff es Id
+newTemporalId name = do
   uniq <- getUniq
   moduleName <- ask @ModuleName
   let sort = Temporal uniq
   pure Id {..}
 
-newInternalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
-newInternalId name meta = do
+newInternalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> Eff es Id
+newInternalId name = do
   uniq <- getUniq
   moduleName <- ask @ModuleName
   let sort = Internal uniq
   pure Id {..}
 
-newExternalId :: (Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
-newExternalId name meta = do
+newExternalId :: (Reader ModuleName :> es) => Text -> Eff es Id
+newExternalId name = do
   moduleName <- ask @ModuleName
   let sort = External
   pure Id {..}
 
-newNativeId :: (Reader ModuleName :> es) => Text -> a -> Eff es (Id a)
-newNativeId name meta = do
+newNativeId :: (Reader ModuleName :> es) => Text -> Eff es Id
+newNativeId name = do
   moduleName <- ask @ModuleName
   let sort = Native
   pure Id {..}
 
-idIsExternal :: Id a -> Bool
+idIsExternal :: Id -> Bool
 idIsExternal Id {sort = External} = True
 idIsExternal _ = False
 
-idIsNative :: Id a -> Bool
+idIsNative :: Id -> Bool
 idIsNative Id {sort = Native} = True
 idIsNative _ = False

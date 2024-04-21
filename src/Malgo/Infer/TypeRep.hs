@@ -65,7 +65,7 @@ instance Pretty PrimT where
 
 type Kind = Type
 
-type TypeVar = Id ()
+type TypeVar = Id
 
 type KindCtx = HashMap TypeVar Kind
 
@@ -158,7 +158,7 @@ splitTyArr t = ([], t)
 -- Type variable --
 -------------------
 
-newtype MetaVar = MetaVar {metaVar :: Id ()}
+newtype MetaVar = MetaVar {metaVar :: Id}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
   deriving stock (Data, Typeable)
   deriving anyclass (Store)
@@ -229,7 +229,7 @@ instance (Pretty ty) => Pretty (Scheme ty) where
 data TypeDef ty = TypeDef
   { _typeConstructor :: ty,
     _typeParameters :: [TypeVar],
-    _valueConstructors :: [(Id (), Scheme ty)]
+    _valueConstructors :: [(Id, Scheme ty)]
   }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
   deriving anyclass (Store)

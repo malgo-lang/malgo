@@ -22,7 +22,7 @@ data Space
   | -- | type space e.g. Int32, Int32#, List a, Maybe Int32
     Type Type
   | -- | constructor space e.g. Nil, Cons a (List a), Just Int32
-    Constructor (Id ()) [Space]
+    Constructor Id [Space]
   | Tuple [Space]
   | Record [(Text, Space)]
   | -- | union of spaces
@@ -96,7 +96,7 @@ decompose t = pure $ Type t
 constructorSpace ::
   (Reader RefineEnv :> es) =>
   HashMap TypeVar Type ->
-  (Id (), Scheme Type) ->
+  (Id, Scheme Type) ->
   Eff es Space
 constructorSpace subst (con, Forall _ (splitTyArr -> (ps, _))) = do
   env <- ask

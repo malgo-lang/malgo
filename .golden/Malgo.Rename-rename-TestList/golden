@@ -19,7 +19,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestList" }
                         , sort = External
@@ -82,7 +81,6 @@ Module
                                     )
                                     ( Id
                                         { name = "xs"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "TestList" }
                                         , sort = Internal 0
@@ -132,7 +130,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "Cons"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Prelude" }
                                                     , sort = External
@@ -169,7 +166,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "Int32#"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -238,7 +234,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "Cons"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Prelude" }
                                                         , sort = External
@@ -275,7 +270,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "Int32#"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -344,7 +338,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "Cons"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Prelude" }
                                                             , sort = External
@@ -381,7 +374,6 @@ Module
                                                             )
                                                             ( Id
                                                                 { name = "Int32#"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -422,7 +414,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "Nil"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Prelude" }
                                                         , sort = External
@@ -448,7 +439,6 @@ Module
                                         )
                                         ( Id
                                             { name = "nil"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "TestList" }
                                             , sort = Internal 1
@@ -470,7 +460,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "Nil"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
                                                 , sort = External
@@ -521,7 +510,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "putStrLn"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Prelude" }
                                                     , sort = External
@@ -586,7 +574,6 @@ Module
                                                             )
                                                             ( Id
                                                                 { name = "toStringInt32"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -651,7 +638,6 @@ Module
                                                                         )
                                                                         ( Id
                                                                             { name = "head"
-                                                                            , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Prelude" }
                                                                             , sort = External
@@ -674,7 +660,6 @@ Module
                                                                         )
                                                                         ( Id
                                                                             { name = "xs"
-                                                                            , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "TestList" }
                                                                             , sort = Internal 0
@@ -741,21 +726,19 @@ RnState
     { infixInfo = fromList
         [
             ( Id
-                { name = "<|"
-                , meta = ()
+                { name = "|>"
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
                 }
             ,
-                ( RightA
+                ( LeftA
                 , 0
                 )
             )
         ,
             ( Id
                 { name = "."
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
@@ -767,14 +750,13 @@ RnState
             )
         ,
             ( Id
-                { name = "|>"
-                , meta = ()
+                { name = "<|"
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
                 }
             ,
-                ( LeftA
+                ( RightA
                 , 0
                 )
             )

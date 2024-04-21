@@ -33,7 +33,7 @@ desugar ::
   (IOE :> es, Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
   TcEnv ->
   Module (Malgo 'Refine) ->
-  Eff es (DsState, Program (Id C.Type))
+  Eff es (DsState, Program (Meta C.Type))
 desugar tcEnv (Module name ds) = runReader name do
   (ds', dsEnv) <- runState (makeDsState tcEnv) (dsBindGroup ds)
   let ds'' = dsEnv._globalDefs <> ds' -- ds' needs variables defined in globalDefs
@@ -125,9 +125,9 @@ fnToObj ::
   Bool ->
   Text ->
   NonEmpty (Clause (Malgo Refine)) ->
-  Eff es ([Id C.Type], C.Expr (Id C.Type))
+  Eff es ([Meta C.Type], C.Expr (Meta C.Type))
 fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
-  ps' <- traverse (\p -> newTemporalId (patToName p) =<< dsType (GT.typeOf p)) ps
+  ps' <- traverse (\p -> withMeta <$> dsType (GT.typeOf p) <*> newTemporalId (patToName p)) ps
   eType <- dsType (GT.typeOf e)
   -- destruct Clauses
   (pss, es) <-
@@ -160,7 +160,7 @@ dsForeign (Typed typ (_, primName), name, _) = do
   let (paramTypes, retType) = splitTyArr typ
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
-  params <- traverse (newTemporalId "p") paramTypes'
+  params <- traverse (\t -> withMeta t <$> newTemporalId "p") paramTypes'
   (ps, e) <- curryFun True name.name params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
   modify \s@DsState {..} -> s {_nameEnv = HashMap.insert name name' _nameEnv}
   pure [FunDef name' ps (C.typeOf name') e, ExtDef primName (paramTypes' :-> retType)]
@@ -179,7 +179,7 @@ dsDataDef (_, name, _, cons) =
 
     -- generate constructor code
     let conName' = toCoreId conName $ buildConType paramTypes' retType'
-    ps <- traverse (newTemporalId "p") paramTypes'
+    ps <- traverse (\t -> withMeta t <$> newTemporalId "p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
       packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ idToText conName) paramTypes') $ map C.Var ps)
@@ -203,7 +203,7 @@ dsUnboxed (G.Double x) = C.Double x
 dsUnboxed (G.Char x) = C.Char x
 dsUnboxed (G.String x) = C.String x
 
-dsExpr :: (State DsState :> es, State Uniq :> es, Reader ModuleName :> es) => G.Expr (Malgo Refine) -> Eff es (C.Expr (Id C.Type))
+dsExpr :: (State DsState :> es, State Uniq :> es, Reader ModuleName :> es) => G.Expr (Malgo Refine) -> Eff es (C.Expr (Meta C.Type))
 dsExpr (G.Var (Typed typ _) name) = do
   name' <- lookupName name
   -- Malgoでの型とCoreでの型に矛盾がないかを検査
@@ -234,7 +234,7 @@ dsExpr (G.Apply (Typed typ _) fun arg) = runDef $ do
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
 dsExpr (G.Fn (Typed typ _) cs) = do
   obj <- fnToObj False "inner" cs
-  v <- newTemporalId "fun" =<< dsType typ
+  v <- withMeta <$> dsType typ <*> newTemporalId "fun"
   pure $ C.Let [C.LocalDef v (C.typeOf v) (uncurry Fun obj)] $ Atom $ C.Var v
 dsExpr (G.Tuple _ es) = runDef $ do
   es' <- traverse (bind <=< dsExpr) es
@@ -245,12 +245,12 @@ dsExpr (G.Tuple _ es) = runDef $ do
 dsExpr (G.Record (Typed (GT.TyRecord recordType) _) kvs) = runDef $ do
   kvs' <- traverseOf (traversed . _2) (bind <=< dsExpr) kvs
   kts <- HashMap.toList <$> traverse dsType recordType
-  v <- newTemporalId "record" $ RecordT (HashMap.fromList kts)
+  v <- withMeta (RecordT (HashMap.fromList kts)) <$> newTemporalId "record"
   pure $ C.Let [C.LocalDef v (C.typeOf v) (C.Record $ HashMap.fromList kvs')] $ Atom $ C.Var v
 dsExpr (G.Record _ _) = error "unreachable"
 dsExpr (G.Seq _ ss) = dsStmts ss
 
-dsStmts :: (State Uniq :> es, Reader ModuleName :> es, State DsState :> es) => NonEmpty (Stmt (Malgo Refine)) -> Eff es (C.Expr (Id C.Type))
+dsStmts :: (State Uniq :> es, Reader ModuleName :> es, State DsState :> es) => NonEmpty (Stmt (Malgo Refine)) -> Eff es (C.Expr (Meta C.Type))
 dsStmts (NoBind _ e :| []) = dsExpr e
 dsStmts (G.Let _ _ e :| []) = dsExpr e
 dsStmts (NoBind _ e :| s : ss) = runDef $ do
@@ -258,22 +258,22 @@ dsStmts (NoBind _ e :| s : ss) = runDef $ do
   dsStmts (s :| ss)
 dsStmts (G.Let _ v e :| s : ss) = do
   e' <- dsExpr e
-  v' <- newTemporalId ("let_" <> idToText v) (C.typeOf e')
+  v' <- withMeta (C.typeOf e') <$> newTemporalId ("let_" <> idToText v)
   modify $ \s@DsState {..} -> s {_nameEnv = HashMap.insert v v' _nameEnv}
   ss' <- dsStmts (s :| ss)
   pure $ Match e' [Bind v' (C.typeOf v') ss']
 
 -- Desugar Monad
 
-lookupName :: (State DsState :> es) => Id () -> Eff es (Id C.Type)
+lookupName :: (State DsState :> es) => Id -> Eff es (Meta C.Type)
 lookupName name = do
   mname' <- gets @DsState ((._nameEnv) >>> HashMap.lookup name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty name)
 
-toCoreId :: RnId -> C.Type -> Id C.Type
-toCoreId griffId coreType = griffId {meta = coreType}
+toCoreId :: RnId -> C.Type -> Meta C.Type
+toCoreId griffId coreType = Meta {meta = coreType, id = griffId}
 
 -- 関数をカリー化する
 -- η展開
@@ -284,9 +284,9 @@ curryFun ::
   ) =>
   Bool ->
   Text ->
-  [Id C.Type] ->
-  C.Expr (Id C.Type) ->
-  Eff es ([Id C.Type], C.Expr (Id C.Type))
+  [Meta C.Type] ->
+  C.Expr (Meta C.Type) ->
+  Eff es ([Meta C.Type], C.Expr (Meta C.Type))
 curryFun isToplevel hint [] e = do
   case C.typeOf e of
     [] :-> _ -> do
@@ -295,7 +295,7 @@ curryFun isToplevel hint [] e = do
         pure $ C.Call f []
       pure ([], body)
     pts :-> _ -> do
-      ps <- traverse (newTemporalId "eta") pts
+      ps <- traverse (\t -> withMeta t <$> newTemporalId "eta") pts
       body <- runDef do
         f <- bind e
         pure $ C.Call f (map C.Var ps)
@@ -310,16 +310,16 @@ curryFun isToplevel hint ps e = curryFun' ps []
         then do
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
-          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
-          ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
+          fun <- withMeta (C.typeOf $ Fun ps e) <$> newTemporalId (hint <> "_curry")
+          ps' <- traverse (\p -> withMeta p.meta <$> newTemporalId p.id.name) ps
           e' <- alpha (HashMap.fromList $ zip ps $ map C.Var ps') e
           modify \s@DsState {..} -> s {_globalDefs = FunDef fun ps' (C.typeOf fun) e' : _globalDefs}
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do
-          fun <- newTemporalId (hint <> "_curry") (C.typeOf $ Fun ps e)
+          fun <- withMeta (C.typeOf $ Fun ps e) <$> newTemporalId (hint <> "_curry")
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
-          ps' <- traverse (\p -> newTemporalId p.name p.meta) ps
+          ps' <- traverse (\p -> withMeta p.meta <$> newTemporalId p.id.name) ps
           e' <- alpha (HashMap.fromList $ zip ps $ map C.Var ps') e
           pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
     curryFun' (x : xs) as = do

@@ -2,21 +2,25 @@ Program
     { topVars = []
     , topFuns =
         [
-            ( Id
-                { name = "malgo_print_string"
-                , meta = [ StringT ] :-> SumT
+            ( Meta
+                { meta = [ StringT ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = External
-                }
-            ,
-                [ Id
-                    { name = "p"
-                    , meta = StringT
+                , id = Id
+                    { name = "malgo_print_string"
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
-                    , sort = Temporal 13
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = StringT
+                    , id = Id
+                        { name = "p"
+                        , moduleName = ModuleName
+                            { raw = "TestNestedLetFunc" }
+                        , sort = Temporal 13
+                        }
                     }
                 ]
             , [ StringT ] :-> SumT
@@ -26,36 +30,42 @@ Program
                     [ Con Tuple [] ]
                 )
                 [ Var
-                    ( Id
-                        { name = "p"
-                        , meta = StringT
-                        , moduleName = ModuleName
-                            { raw = "TestNestedLetFunc" }
-                        , sort = Temporal 13
+                    ( Meta
+                        { meta = StringT
+                        , id = Id
+                            { name = "p"
+                            , moduleName = ModuleName
+                                { raw = "TestNestedLetFunc" }
+                            , sort = Temporal 13
+                            }
                         }
                     )
                 ]
             )
         ,
-            ( Id
-                { name = "main"
-                , meta =
+            ( Meta
+                { meta =
                     [ SumT
                         [ Con Tuple [] ]
                     ] :-> SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = External
-                }
-            ,
-                [ Id
-                    { name = "$_"
-                    , meta = SumT
-                        [ Con Tuple [] ]
+                , id = Id
+                    { name = "main"
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
-                    , sort = Temporal 14
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = SumT
+                        [ Con Tuple [] ]
+                    , id = Id
+                        { name = "$_"
+                        , moduleName = ModuleName
+                            { raw = "TestNestedLetFunc" }
+                        , sort = Temporal 14
+                        }
                     }
                 ]
             ,
@@ -66,16 +76,18 @@ Program
             , Match
                 ( Let
                     [ LocalDef
-                        { _variable = Id
-                            { name = "fun"
-                            , meta =
+                        { _variable = Meta
+                            { meta =
                                 [ SumT
                                     [ Con Tuple [] ]
                                 ] :-> SumT
                                 [ Con Tuple [] ]
-                            , moduleName = ModuleName
-                                { raw = "TestNestedLetFunc" }
-                            , sort = Temporal 23
+                            , id = Id
+                                { name = "fun"
+                                , moduleName = ModuleName
+                                    { raw = "TestNestedLetFunc" }
+                                , sort = Temporal 23
+                                }
                             }
                         , typ =
                             [ SumT
@@ -83,40 +95,46 @@ Program
                             ] :-> SumT
                             [ Con Tuple [] ]
                         , _object = Fun
-                            [ Id
-                                { name = "$_"
-                                , meta = SumT
+                            [ Meta
+                                { meta = SumT
                                     [ Con Tuple [] ]
-                                , moduleName = ModuleName
-                                    { raw = "TestNestedLetFunc" }
-                                , sort = Temporal 15
+                                , id = Id
+                                    { name = "$_"
+                                    , moduleName = ModuleName
+                                        { raw = "TestNestedLetFunc" }
+                                    , sort = Temporal 15
+                                    }
                                 }
                             ]
                             ( Assign
-                                ( Id
-                                    { name = "d"
-                                    , meta =
+                                ( Meta
+                                    { meta =
                                         [ SumT
                                             [ Con Tuple [] ]
                                         ] :-> SumT
                                         [ Con Tuple [] ]
-                                    , moduleName = ModuleName
-                                        { raw = "TestNestedLetFunc" }
-                                    , sort = Temporal 19
+                                    , id = Id
+                                        { name = "d"
+                                        , moduleName = ModuleName
+                                            { raw = "TestNestedLetFunc" }
+                                        , sort = Temporal 19
+                                        }
                                     }
                                 )
                                 ( Let
                                     [ LocalDef
-                                        { _variable = Id
-                                            { name = "fun"
-                                            , meta =
+                                        { _variable = Meta
+                                            { meta =
                                                 [ SumT
                                                     [ Con Tuple [] ]
                                                 ] :-> SumT
                                                 [ Con Tuple [] ]
-                                            , moduleName = ModuleName
-                                                { raw = "TestNestedLetFunc" }
-                                            , sort = Temporal 18
+                                            , id = Id
+                                                { name = "fun"
+                                                , moduleName = ModuleName
+                                                    { raw = "TestNestedLetFunc" }
+                                                , sort = Temporal 18
+                                                }
                                             }
                                         , typ =
                                             [ SumT
@@ -124,24 +142,28 @@ Program
                                             ] :-> SumT
                                             [ Con Tuple [] ]
                                         , _object = Fun
-                                            [ Id
-                                                { name = "a"
-                                                , meta = SumT
+                                            [ Meta
+                                                { meta = SumT
                                                     [ Con Tuple [] ]
-                                                , moduleName = ModuleName
-                                                    { raw = "TestNestedLetFunc" }
-                                                , sort = Temporal 16
+                                                , id = Id
+                                                    { name = "a"
+                                                    , moduleName = ModuleName
+                                                        { raw = "TestNestedLetFunc" }
+                                                    , sort = Temporal 16
+                                                    }
                                                 }
                                             ]
                                             ( Let
                                                 [ LocalDef
-                                                    { _variable = Id
-                                                        { name = "let"
-                                                        , meta = SumT
+                                                    { _variable = Meta
+                                                        { meta = SumT
                                                             [ Con Tuple [] ]
-                                                        , moduleName = ModuleName
-                                                            { raw = "TestNestedLetFunc" }
-                                                        , sort = Temporal 17
+                                                        , id = Id
+                                                            { name = "let"
+                                                            , moduleName = ModuleName
+                                                                { raw = "TestNestedLetFunc" }
+                                                            , sort = Temporal 17
+                                                            }
                                                         }
                                                     , typ = SumT
                                                         [ Con Tuple [] ]
@@ -154,13 +176,15 @@ Program
                                                 ]
                                                 ( Atom
                                                     ( Var
-                                                        ( Id
-                                                            { name = "let"
-                                                            , meta = SumT
+                                                        ( Meta
+                                                            { meta = SumT
                                                                 [ Con Tuple [] ]
-                                                            , moduleName = ModuleName
-                                                                { raw = "TestNestedLetFunc" }
-                                                            , sort = Temporal 17
+                                                            , id = Id
+                                                                { name = "let"
+                                                                , moduleName = ModuleName
+                                                                    { raw = "TestNestedLetFunc" }
+                                                                , sort = Temporal 17
+                                                                }
                                                             }
                                                         )
                                                     )
@@ -170,40 +194,46 @@ Program
                                     ]
                                     ( Atom
                                         ( Var
-                                            ( Id
-                                                { name = "fun"
-                                                , meta =
+                                            ( Meta
+                                                { meta =
                                                     [ SumT
                                                         [ Con Tuple [] ]
                                                     ] :-> SumT
                                                     [ Con Tuple [] ]
-                                                , moduleName = ModuleName
-                                                    { raw = "TestNestedLetFunc" }
-                                                , sort = Temporal 18
+                                                , id = Id
+                                                    { name = "fun"
+                                                    , moduleName = ModuleName
+                                                        { raw = "TestNestedLetFunc" }
+                                                    , sort = Temporal 18
+                                                    }
                                                 }
                                             )
                                         )
                                     )
                                 )
                                 ( Assign
-                                    ( Id
-                                        { name = "d"
-                                        , meta = SumT
+                                    ( Meta
+                                        { meta = SumT
                                             [ Con Tuple [] ]
-                                        , moduleName = ModuleName
-                                            { raw = "TestNestedLetFunc" }
-                                        , sort = Temporal 21
+                                        , id = Id
+                                            { name = "d"
+                                            , moduleName = ModuleName
+                                                { raw = "TestNestedLetFunc" }
+                                            , sort = Temporal 21
+                                            }
                                         }
                                     )
                                     ( Let
                                         [ LocalDef
-                                            { _variable = Id
-                                                { name = "let"
-                                                , meta = SumT
+                                            { _variable = Meta
+                                                { meta = SumT
                                                     [ Con Tuple [] ]
-                                                , moduleName = ModuleName
-                                                    { raw = "TestNestedLetFunc" }
-                                                , sort = Temporal 20
+                                                , id = Id
+                                                    { name = "let"
+                                                    , moduleName = ModuleName
+                                                        { raw = "TestNestedLetFunc" }
+                                                    , sort = Temporal 20
+                                                    }
                                                 }
                                             , typ = SumT
                                                 [ Con Tuple [] ]
@@ -216,51 +246,59 @@ Program
                                         ]
                                         ( Atom
                                             ( Var
-                                                ( Id
-                                                    { name = "let"
-                                                    , meta = SumT
+                                                ( Meta
+                                                    { meta = SumT
                                                         [ Con Tuple [] ]
-                                                    , moduleName = ModuleName
-                                                        { raw = "TestNestedLetFunc" }
-                                                    , sort = Temporal 20
+                                                    , id = Id
+                                                        { name = "let"
+                                                        , moduleName = ModuleName
+                                                            { raw = "TestNestedLetFunc" }
+                                                        , sort = Temporal 20
+                                                        }
                                                     }
                                                 )
                                             )
                                         )
                                     )
                                     ( Assign
-                                        ( Id
-                                            { name = "d"
-                                            , meta = SumT
+                                        ( Meta
+                                            { meta = SumT
                                                 [ Con Tuple [] ]
-                                            , moduleName = ModuleName
-                                                { raw = "TestNestedLetFunc" }
-                                            , sort = Temporal 22
+                                            , id = Id
+                                                { name = "d"
+                                                , moduleName = ModuleName
+                                                    { raw = "TestNestedLetFunc" }
+                                                , sort = Temporal 22
+                                                }
                                             }
                                         )
                                         ( Call
                                             ( Var
-                                                ( Id
-                                                    { name = "d"
-                                                    , meta =
+                                                ( Meta
+                                                    { meta =
                                                         [ SumT
                                                             [ Con Tuple [] ]
                                                         ] :-> SumT
                                                         [ Con Tuple [] ]
-                                                    , moduleName = ModuleName
-                                                        { raw = "TestNestedLetFunc" }
-                                                    , sort = Temporal 19
+                                                    , id = Id
+                                                        { name = "d"
+                                                        , moduleName = ModuleName
+                                                            { raw = "TestNestedLetFunc" }
+                                                        , sort = Temporal 19
+                                                        }
                                                     }
                                                 )
                                             )
                                             [ Var
-                                                ( Id
-                                                    { name = "d"
-                                                    , meta = SumT
+                                                ( Meta
+                                                    { meta = SumT
                                                         [ Con Tuple [] ]
-                                                    , moduleName = ModuleName
-                                                        { raw = "TestNestedLetFunc" }
-                                                    , sort = Temporal 21
+                                                    , id = Id
+                                                        { name = "d"
+                                                        , moduleName = ModuleName
+                                                            { raw = "TestNestedLetFunc" }
+                                                        , sort = Temporal 21
+                                                        }
                                                     }
                                                 )
                                             ]
@@ -270,13 +308,15 @@ Program
                                                 [ Con Tuple [] ]
                                             )
                                             ( Var
-                                                ( Id
-                                                    { name = "d"
-                                                    , meta = SumT
+                                                ( Meta
+                                                    { meta = SumT
                                                         [ Con Tuple [] ]
-                                                    , moduleName = ModuleName
-                                                        { raw = "TestNestedLetFunc" }
-                                                    , sort = Temporal 22
+                                                    , id = Id
+                                                        { name = "d"
+                                                        , moduleName = ModuleName
+                                                            { raw = "TestNestedLetFunc" }
+                                                        , sort = Temporal 22
+                                                        }
                                                     }
                                                 )
                                             )
@@ -288,32 +328,36 @@ Program
                     ]
                     ( Atom
                         ( Var
-                            ( Id
-                                { name = "fun"
-                                , meta =
+                            ( Meta
+                                { meta =
                                     [ SumT
                                         [ Con Tuple [] ]
                                     ] :-> SumT
                                     [ Con Tuple [] ]
-                                , moduleName = ModuleName
-                                    { raw = "TestNestedLetFunc" }
-                                , sort = Temporal 23
+                                , id = Id
+                                    { name = "fun"
+                                    , moduleName = ModuleName
+                                        { raw = "TestNestedLetFunc" }
+                                    , sort = Temporal 23
+                                    }
                                 }
                             )
                         )
                     )
                 )
                 [ Bind
-                    ( Id
-                        { name = "let_TestNestedLetFunc.#f_2"
-                        , meta =
+                    ( Meta
+                        { meta =
                             [ SumT
                                 [ Con Tuple [] ]
                             ] :-> SumT
                             [ Con Tuple [] ]
-                        , moduleName = ModuleName
-                            { raw = "TestNestedLetFunc" }
-                        , sort = Temporal 24
+                        , id = Id
+                            { name = "let_TestNestedLetFunc.#f_2"
+                            , moduleName = ModuleName
+                                { raw = "TestNestedLetFunc" }
+                            , sort = Temporal 24
+                            }
                         }
                     )
                     (
@@ -323,24 +367,28 @@ Program
                         [ Con Tuple [] ]
                     )
                     ( Assign
-                        ( Id
-                            { name = "d"
-                            , meta = SumT
+                        ( Meta
+                            { meta = SumT
                                 [ Con Tuple [] ]
-                            , moduleName = ModuleName
-                                { raw = "TestNestedLetFunc" }
-                            , sort = Temporal 25
+                            , id = Id
+                                { name = "d"
+                                , moduleName = ModuleName
+                                    { raw = "TestNestedLetFunc" }
+                                , sort = Temporal 25
+                                }
                             }
                         )
                         ( Call
                             ( Var
-                                ( Id
-                                    { name = "malgo_print_string"
-                                    , meta = [ StringT ] :-> SumT
+                                ( Meta
+                                    { meta = [ StringT ] :-> SumT
                                         [ Con Tuple [] ]
-                                    , moduleName = ModuleName
-                                        { raw = "TestNestedLetFunc" }
-                                    , sort = External
+                                    , id = Id
+                                        { name = "malgo_print_string"
+                                        , moduleName = ModuleName
+                                            { raw = "TestNestedLetFunc" }
+                                        , sort = External
+                                        }
                                     }
                                 )
                             )
@@ -353,13 +401,15 @@ Program
                                 [ Con Tuple [] ]
                             )
                             ( Var
-                                ( Id
-                                    { name = "d"
-                                    , meta = SumT
+                                ( Meta
+                                    { meta = SumT
                                         [ Con Tuple [] ]
-                                    , moduleName = ModuleName
-                                        { raw = "TestNestedLetFunc" }
-                                    , sort = Temporal 25
+                                    , id = Id
+                                        { name = "d"
+                                        , moduleName = ModuleName
+                                            { raw = "TestNestedLetFunc" }
+                                        , sort = Temporal 25
+                                        }
                                     }
                                 )
                             )
@@ -380,179 +430,123 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
+                { name = "malgo_print_string"
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "malgo_print_string"
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
                 { name = "f"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = Internal 2
                 }
-            , Id
-                { name = "let_TestNestedLetFunc.#f_2"
-                , meta =
+            , Meta
+                { meta =
                     [ SumT
                         [ Con Tuple [] ]
                     ] :-> SumT
                     [ Con Tuple [] ]
+                , id = Id
+                    { name = "let_TestNestedLetFunc.#f_2"
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , sort = Temporal 24
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "main"
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
-                , sort = Temporal 24
+                , sort = External
+                }
+            , Meta
+                { meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "main"
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , sort = External
+                    }
                 }
             )
         ,
             ( Id
                 { name = "$_"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = Internal 12
                 }
-            , Id
-                { name = "$_"
-                , meta = SumT
+            , Meta
+                { meta = SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = Temporal 14
+                , id = Id
+                    { name = "$_"
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , sort = Temporal 14
+                    }
                 }
             )
         ,
             ( Id
                 { name = "$_"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = Internal 9
                 }
-            , Id
-                { name = "$_"
-                , meta = SumT
+            , Meta
+                { meta = SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = Temporal 15
-                }
-            )
-        ,
-            ( Id
-                { name = "main"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = External
-                }
-            , Id
-                { name = "main"
-                , meta =
-                    [ SumT
-                        [ Con Tuple [] ]
-                    ] :-> SumT
-                    [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = External
-                }
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = External
-                }
-            , Id
-                { name = "malgo_print_string"
-                , meta = [ StringT ] :-> SumT
-                    [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = External
+                , id = Id
+                    { name = "$_"
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , sort = Temporal 15
+                    }
                 }
             )
         ,
             ( Id
                 { name = "a"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = Internal 0
                 }
-            , Id
-                { name = "a"
-                , meta = SumT
+            , Meta
+                { meta = SumT
                     [ Con Tuple [] ]
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = Temporal 16
+                , id = Id
+                    { name = "a"
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , sort = Temporal 16
+                    }
                 }
             )
         ]
     , _signatureMap = fromList
         [
             ( Id
-                { name = "f"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = Internal 2
-                }
-            , Forall []
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "y"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = Internal 1
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "$_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = Internal 12
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "$_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = Internal 9
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "main"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
                 { name = "malgo_print_string"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = External
@@ -564,8 +558,63 @@ DsState
             )
         ,
             ( Id
+                { name = "y"
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 1
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "f"
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 2
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 12
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 9
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
                 { name = "a"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = Internal 0
@@ -577,8 +626,59 @@ DsState
     , _typeDefMap = fromList
         [
             ( Id
+                { name = "Int64#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim DoubleT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
                 { name = "String#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -592,7 +692,6 @@ DsState
         ,
             ( Id
                 { name = "Float#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -606,7 +705,6 @@ DsState
         ,
             ( Id
                 { name = "Char#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -617,68 +715,11 @@ DsState
                 , _valueConstructors = []
                 }
             )
-        ,
-            ( Id
-                { name = "Int64#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int32T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim DoubleT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPtr
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
         ]
     , _kindCtx = fromList
         [
             ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = Internal 8
@@ -686,7 +727,6 @@ DsState
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
                     , sort = Temporal 7
@@ -695,26 +735,7 @@ DsState
             )
         ,
             ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "TestNestedLetFunc" }
-                , sort = Internal 11
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "TestNestedLetFunc" }
-                    , sort = Temporal 10
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , meta = ()
+                { name = "Int64#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -724,7 +745,40 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , meta = ()
+                , moduleName = ModuleName
+                    { raw = "TestNestedLetFunc" }
+                , sort = Internal 11
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "TestNestedLetFunc" }
+                    , sort = Temporal 10
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Double#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = Internal 4
@@ -732,7 +786,6 @@ DsState
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
                     , sort = Temporal 3
@@ -741,8 +794,16 @@ DsState
             )
         ,
             ( Id
+                { name = "Ptr#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "TestNestedLetFunc" }
                 , sort = Internal 6
@@ -750,7 +811,6 @@ DsState
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
                     , sort = Temporal 5
@@ -759,8 +819,16 @@ DsState
             )
         ,
             ( Id
+                { name = "String#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
                 { name = "Float#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -770,52 +838,11 @@ DsState
         ,
             ( Id
                 { name = "Char#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
                 }
             , TYPE
-            )
-        ,
-            ( Id
-                { name = "Int64#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TyArr TYPE TYPE
             )
         ]
     , _globalDefs = []

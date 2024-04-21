@@ -85,9 +85,9 @@ data Malgo (p :: MalgoPhase)
 -- | Id
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = Text
-  MalgoId 'Rename = Id ()
-  MalgoId 'Infer = Id ()
-  MalgoId 'Refine = Id ()
+  MalgoId 'Rename = Id
+  MalgoId 'Infer = Id
+  MalgoId 'Refine = Id
 
 data Visibility
   = Explicit ModuleName -- variable that must be qualified

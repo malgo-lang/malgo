@@ -16,8 +16,8 @@ import Koriel.Prelude
 
 normalize ::
   (State Uniq :> es, Reader ModuleName :> es) =>
-  Program (Id Type) ->
-  Eff es (Program (Id Type))
+  Program (Meta Type) ->
+  Eff es (Program (Meta Type))
 normalize Program {..} = do
   topVars <- for topVars \(name, ty, expr) -> do
     expr' <- runContT (flat expr) pure
@@ -29,15 +29,15 @@ normalize Program {..} = do
 
 normalizeExpr ::
   (State Uniq :> es, Reader ModuleName :> es) =>
-  Expr (Id Type) ->
-  Eff es (Expr (Id Type))
+  Expr (Meta Type) ->
+  Eff es (Expr (Meta Type))
 normalizeExpr e = runContT (flat e) pure
 
 -- Traverse the expression tree.
 flat ::
   (State Uniq :> es, Reader ModuleName :> es) =>
-  Expr (Id Type) ->
-  ContT (Expr (Id Type)) (Eff es) (Expr (Id Type))
+  Expr (Meta Type) ->
+  ContT (Expr (Meta Type)) (Eff es) (Expr (Meta Type))
 flat e@Atom {} = pure e
 flat e@Call {} = pure e
 flat e@CallDirect {} = pure e
@@ -50,7 +50,7 @@ flat (Let ds e) = shiftT \k -> do
 flat (Match scr cs) = shiftT \k -> do
   scr <- flat scr
   cs <- traverse (flatCase k) cs
-  scr' <- lift $ newTemporalId "scrutinee" (typeOf scr)
+  scr' <- withMeta (typeOf scr) <$> lift (newTemporalId "scrutinee")
   pure $ assign scr' scr $ matchToSwitch scr' cs
 flat (Switch v cs e) = shiftT \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
@@ -79,9 +79,9 @@ flat e@Error {} = pure e
 
 flatCase ::
   (State Uniq :> es, Reader ModuleName :> es) =>
-  (Expr (Id Type) -> Eff es (Expr (Id Type))) ->
-  Case (Id Type) ->
-  ContT r' (Eff es) (Case (Id Type))
+  (Expr (Meta Type) -> Eff es (Expr (Meta Type))) ->
+  Case (Meta Type) ->
+  ContT r' (Eff es) (Case (Meta Type))
 flatCase k (Unpack con as e) = do
   e <- inScope k $ flat e
   pure $ Unpack con as e
@@ -95,7 +95,7 @@ flatCase k (Bind n t e) = do
   e <- inScope k $ flat e
   pure $ Bind n t e
 
-matchToSwitch :: Id Type -> [Case (Id Type)] -> Expr (Id Type)
+matchToSwitch :: Meta Type -> [Case (Meta Type)] -> Expr (Meta Type)
 matchToSwitch scr cs@(c@Unpack {} : _) =
   let cs' = map (unpackToDestruct scr) $ takeWhile (has _Unpack) cs
       defaultCase = maybe (Error $ typeOf c) (bindToAssign scr) (find (has _Bind) cs)
@@ -115,20 +115,20 @@ matchToSwitch scr cs@(c@Exact {} : _) =
 matchToSwitch scr (Bind x _ e : _) = assign x (Atom $ Var scr) e
 matchToSwitch _ [] = error "matchToSwitch: unreachable"
 
-bindToAssign :: Id Type -> Case (Id Type) -> Expr (Id Type)
+bindToAssign :: Meta Type -> Case (Meta Type) -> Expr (Meta Type)
 bindToAssign scr (Bind x _ e) = assign x (Atom $ Var scr) e
 bindToAssign _ _ = error "bindToAssign: unreachable"
 
 flatLocalDef ::
   (State Uniq :> es, Reader ModuleName :> es) =>
-  LocalDef (Id Type) ->
-  Eff es (LocalDef (Id Type))
+  LocalDef (Meta Type) ->
+  Eff es (LocalDef (Meta Type))
 flatLocalDef (LocalDef var ty obj) = LocalDef var ty <$> flatObj obj
 
 flatObj ::
   (State Uniq :> es, Reader ModuleName :> es) =>
-  Obj (Id Type) ->
-  Eff es (Obj (Id Type))
+  Obj (Meta Type) ->
+  Eff es (Obj (Meta Type))
 flatObj (Fun ps e) =
   -- eがFunを飛び出ないようresetする
   Fun ps <$> evalContT (flat e)
@@ -166,7 +166,7 @@ inScope k e =
   -}
   lift $ runContT e k
 
-assign :: Id Type -> Expr (Id Type) -> Expr (Id Type) -> Expr (Id Type)
+assign :: Meta Type -> Expr (Meta Type) -> Expr (Meta Type) -> Expr (Meta Type)
 assign x v (Atom (Var y)) | x == y = v
 assign x (Atom v) e = replaceOf atom (Var x) v e
 assign x v e = Assign x v e

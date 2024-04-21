@@ -67,8 +67,8 @@ optimizeProgram ::
     Reader ModuleName :> es,
     State Uniq :> es
   ) =>
-  Program (Id Type) ->
-  Eff es (Program (Id Type))
+  Program (Meta Type) ->
+  Eff es (Program (Meta Type))
 optimizeProgram Program {..} = do
   state <-
     {-# SCC "buildState" #-}
@@ -85,7 +85,7 @@ optimizeProgram Program {..} = do
   -- If a global definition is (external or native) and defined in the current module, it cannot be removed.
   -- Otherwise, delete it if it is not reachable from above definitions.
   moduleName <- ask @ModuleName
-  let roots = {-# SCC "roots" #-} filter (\x -> x.sort `elem` [External, Native] && x.moduleName == moduleName) $ map (view _1) topFuns <> map (view _1) topVars
+  let roots = {-# SCC "roots" #-} filter (\x -> x.id.sort `elem` [External, Native] && x.id.moduleName == moduleName) $ map (view _1) topFuns <> map (view _1) topVars
   let (graph, _, toVertex) = {-# SCC "callGraph" #-} callGraph Program {..}
   let reachableFromMain = {-# SCC "reachable" #-} ordNub $ concatMap (toVertex >>> Maybe.fromJust >>> Graph.reachable graph) roots
 
@@ -95,7 +95,7 @@ optimizeProgram Program {..} = do
   topFuns <- {-# SCC "filter_topFuns" #-} pure $ filter (\(n, _, _, _) -> isUsed n) topFuns
   pure $ {-# SCC "buildProgram" #-} Program {..}
 
-optimizeExpr :: (Reader OptimizeOption :> es, Reader ModuleName :> es, State Uniq :> es) => CallInlineEnv -> Expr (Id Type) -> Eff es (Expr (Id Type))
+optimizeExpr :: (Reader OptimizeOption :> es, Reader ModuleName :> es, State Uniq :> es) => CallInlineEnv -> Expr (Meta Type) -> Eff es (Expr (Meta Type))
 optimizeExpr state expr = do
   option <- ask @OptimizeOption
   5 `times` opt option $ expr
@@ -124,10 +124,10 @@ foldVariable = transformM
     -- Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
     x -> pure x
 
-type InlineConstructorMap = HashMap (Id Type) (Con, [Atom (Id Type)])
+type InlineConstructorMap = HashMap (Meta Type) (Con, [Atom (Meta Type)])
 
 -- | Inline simple pattern match and pack.
-inlineConstructor :: (Reader InlineConstructorMap :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
+inlineConstructor :: (Reader InlineConstructorMap :> es) => Expr (Meta Type) -> Eff es (Expr (Meta Type))
 inlineConstructor =
   transformM \case
     Let ds e -> do
@@ -149,7 +149,7 @@ inlineConstructor =
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
-eliminateUnusedLet :: (Monad f) => Expr (Id a) -> f (Expr (Id a))
+eliminateUnusedLet :: (Monad f, Hashable a) => Expr (Meta a) -> f (Expr (Meta a))
 eliminateUnusedLet =
   transformM \case
     Let ds e -> do
@@ -162,7 +162,7 @@ eliminateUnusedLet =
   where
     reachable limit gamma v fvs
       | limit <= (0 :: Int) = True
-      | idIsExternal v = True
+      | idIsExternal v.id = True
       | HashSet.member v fvs = True
       | otherwise =
           -- Add gamma[fv] to fvs
@@ -170,10 +170,10 @@ eliminateUnusedLet =
            in fvs /= fvs' && reachable limit gamma v fvs'
 
 -- TODO: Merge with OptimizeEnv
-type CallInlineEnv = HashMap (Id Type) ([Id Type], Expr (Id Type))
+type CallInlineEnv = HashMap (Meta Type) ([Meta Type], Expr (Meta Type))
 
 -- | Inline a function call.
-inlineFunction :: (Reader OptimizeOption :> es, L.State CallInlineEnv :> es, Reader ModuleName :> es, State Uniq :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
+inlineFunction :: (Reader OptimizeOption :> es, L.State CallInlineEnv :> es, Reader ModuleName :> es, State Uniq :> es) => Expr (Meta Type) -> Eff es (Expr (Meta Type))
 inlineFunction =
   transformM
     ( \case
@@ -189,7 +189,7 @@ inlineFunction =
 
 checkInlinable ::
   (Reader OptimizeOption :> es, L.State CallInlineEnv :> es) =>
-  LocalDef (Id Type) ->
+  LocalDef (Meta Type) ->
   Eff es ()
 checkInlinable (LocalDef f _ (Fun ps v)) = do
   threshold <- asks @OptimizeOption (.inlineThreshold)
@@ -210,10 +210,10 @@ lookupCallInline ::
     Reader ModuleName :> es,
     State Uniq :> es
   ) =>
-  (Id Type -> [Atom (Id Type)] -> Expr (Id Type)) ->
-  Id Type ->
-  [Atom (Id Type)] ->
-  Eff es (Expr (Id Type))
+  (Meta Type -> [Atom (Meta Type)] -> Expr (Meta Type)) ->
+  Meta Type ->
+  [Atom (Meta Type)] ->
+  Eff es (Expr (Meta Type))
 lookupCallInline call f as = do
   env <- get @CallInlineEnv
   case HashMap.lookup f env of
@@ -227,7 +227,7 @@ lookupCallInline call f as = do
 
 -- | Remove a cast if it is redundant.
 -- TODO: switch and match that ends with a cast can be simplified.
-foldRedundantCast :: (Monad f) => Expr (Id Type) -> f (Expr (Id Type))
+foldRedundantCast :: (Monad f) => Expr (Meta Type) -> f (Expr (Meta Type))
 foldRedundantCast =
   transformM \case
     -- (= x (cast t a) (= y (cast t' x)) e) -> (= y (cast t' a) e)
@@ -239,14 +239,14 @@ foldRedundantCast =
     e -> pure e
 
 -- | (let ((f (fun ps body))) (f as)) = body[as/ps]
-foldTrivialCall :: (Reader ModuleName :> es, State Uniq :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
+foldTrivialCall :: (Reader ModuleName :> es, State Uniq :> es) => Expr (Meta Type) -> Eff es (Expr (Meta Type))
 foldTrivialCall = transformM \case
   Let [LocalDef f _ (Fun ps body)] (Call (Var f') as) | f == f' -> do
     alpha (HashMap.fromList $ zip ps as) body
   x -> pure x
 
 -- | Remove `destruct` if it does not bind any variables.
-removeNoopDestruct :: Expr (Id a) -> Expr (Id a)
+removeNoopDestruct :: Expr (Meta a) -> Expr (Meta a)
 removeNoopDestruct =
   transform \case
     Destruct _ _ [] e -> e

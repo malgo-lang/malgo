@@ -24,7 +24,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestNestedLetFunc" }
                         , sort = External
@@ -86,7 +85,6 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestNestedLetFunc" }
                                     , sort = Internal 12
@@ -126,7 +124,6 @@ Module
                                     )
                                     ( Id
                                         { name = "f"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "TestNestedLetFunc" }
                                         , sort = Internal 2
@@ -189,7 +186,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "$_"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestNestedLetFunc" }
                                                     , sort = Internal 9
@@ -229,7 +225,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "y"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "TestNestedLetFunc" }
                                                         , sort = Internal 1
@@ -309,7 +304,6 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "a"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "TestNestedLetFunc" }
                                                                         , sort = Internal 0
@@ -443,7 +437,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "malgo_print_string"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestNestedLetFunc" }
                                                     , sort = External
@@ -503,7 +496,6 @@ Module
                     }
                 , Id
                     { name = "malgo_print_string"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestNestedLetFunc" }
                     , sort = External
@@ -538,7 +530,6 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External

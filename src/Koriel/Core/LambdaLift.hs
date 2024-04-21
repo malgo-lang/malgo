@@ -20,31 +20,31 @@ import Koriel.MonadUniq
 import Koriel.Prelude
 
 data LambdaLiftState = LambdaLiftState
-  { funcs :: HashMap (Id Type) ([Id Type], Type, Expr (Id Type)),
+  { funcs :: HashMap (Meta Type) ([Meta Type], Type, Expr (Meta Type)),
     -- | Known functions. If a function is known, that function can be called directly.
-    knowns :: HashSet (Id Type),
+    knowns :: HashSet (Meta Type),
     -- | Variables that defined in global scope.
-    defined :: HashSet (Id Type)
+    defined :: HashSet (Meta Type)
   }
 
 -- | Add a function to the state.
 -- It does not use lens.
-addFunc :: (State LambdaLiftState :> es) => Id Type -> ([Id Type], Type, Expr (Id Type)) -> Eff es ()
+addFunc :: (State LambdaLiftState :> es) => Meta Type -> ([Meta Type], Type, Expr (Meta Type)) -> Eff es ()
 addFunc f x = modify $ \state@LambdaLiftState {funcs} -> state {funcs = HashMap.insert f x funcs}
 
 -- | Add a known function to the state.
 -- It does not use lens.
-addKnown :: (State LambdaLiftState :> es) => Id Type -> Eff es ()
+addKnown :: (State LambdaLiftState :> es) => Meta Type -> Eff es ()
 addKnown f = modify $ \state@LambdaLiftState {knowns} -> state {knowns = HashSet.insert f knowns}
 
-isKnown :: (State LambdaLiftState :> es) => Id Type -> Eff es Bool
+isKnown :: (State LambdaLiftState :> es) => Meta Type -> Eff es Bool
 isKnown f = do
   ks <- gets @LambdaLiftState (.knowns)
   pure $ f `HashSet.member` ks
 
-def :: (State LambdaLiftState :> es, Reader ModuleName :> es, State Uniq :> es) => Id Type -> [Id Type] -> Expr (Id Type) -> Eff es (Id Type)
+def :: (State LambdaLiftState :> es, Reader ModuleName :> es, State Uniq :> es) => Meta Type -> [Meta Type] -> Expr (Meta Type) -> Eff es (Meta Type)
 def name xs e = do
-  f <- newTemporalId ("raw_" <> name.name) (map typeOf xs :-> typeOf e)
+  f <- withMeta (map typeOf xs :-> typeOf e) <$> newTemporalId ("raw_" <> name.id.name)
   -- knowns . at f ?= ()
   addFunc f (xs, typeOf f, e)
   pure f
@@ -52,8 +52,8 @@ def name xs e = do
 -- | Lambda lifting
 lambdalift ::
   (Reader ModuleName :> es, State Uniq :> es) =>
-  Program (Id Type) ->
-  Eff es (Program (Id Type))
+  Program (Meta Type) ->
+  Eff es (Program (Meta Type))
 lambdalift Program {..} =
   evalState
     LambdaLiftState {funcs = mempty, knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars}
@@ -79,8 +79,8 @@ llift ::
     Reader ModuleName :> es,
     State Uniq :> es
   ) =>
-  Expr (Id Type) ->
-  Eff es (Expr (Id Type))
+  Expr (Meta Type) ->
+  Eff es (Expr (Meta Type))
 llift (Atom a) = pure $ Atom a
 llift (Call (Var f) xs) = do
   ifM (isKnown f) (pure $ CallDirect f xs) (pure $ Call (Var f) xs)
@@ -133,7 +133,7 @@ llift (Error t) = pure $ Error t
 -- | `toDirect` converts `Call` to `CallDirect` if the callee is known.
 -- If `f` is a known function, we must call it directly.
 -- These conversions are almost done in `llift`, but not all of them.
-toDirect :: (State LambdaLiftState :> es) => Expr (Id Type) -> Eff es (Expr (Id Type))
+toDirect :: (State LambdaLiftState :> es) => Expr (Meta Type) -> Eff es (Expr (Meta Type))
 toDirect (Atom a) = pure $ Atom a
 toDirect (Call (Var f) xs) = do
   ks <- gets @LambdaLiftState (.knowns)

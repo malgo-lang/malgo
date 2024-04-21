@@ -19,7 +19,6 @@ Module
                         }
                     , Id
                         { name = "=="
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Factorial" }
                         , sort = External
@@ -68,7 +67,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 0
@@ -90,7 +88,6 @@ Module
                                 )
                                 ( Id
                                     { name = "y"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 1
@@ -169,7 +166,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "eqInt64"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -192,7 +188,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "x"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Factorial" }
                                                     , sort = Internal 0
@@ -216,7 +211,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "y"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Factorial" }
                                                 , sort = Internal 1
@@ -245,7 +239,6 @@ Module
                         }
                     , Id
                         { name = "-"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Factorial" }
                         , sort = External
@@ -294,7 +287,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 2
@@ -316,7 +308,6 @@ Module
                                 )
                                 ( Id
                                     { name = "y"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 3
@@ -395,7 +386,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "subInt64"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -418,7 +408,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "x"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Factorial" }
                                                     , sort = Internal 2
@@ -442,7 +431,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "y"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Factorial" }
                                                 , sort = Internal 3
@@ -471,7 +459,6 @@ Module
                         }
                     , Id
                         { name = "*"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Factorial" }
                         , sort = External
@@ -520,7 +507,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 4
@@ -542,7 +528,6 @@ Module
                                 )
                                 ( Id
                                     { name = "y"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 5
@@ -621,7 +606,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "mulInt64"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -644,7 +628,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "x"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Factorial" }
                                                     , sort = Internal 4
@@ -668,7 +651,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "y"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Factorial" }
                                                 , sort = Internal 5
@@ -697,7 +679,6 @@ Module
                         }
                     , Id
                         { name = "factAcc"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Factorial" }
                         , sort = External
@@ -746,7 +727,6 @@ Module
                                 )
                                 ( Id
                                     { name = "n"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 7
@@ -768,7 +748,6 @@ Module
                                 )
                                 ( Id
                                     { name = "acc"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 8
@@ -861,7 +840,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "if"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Prelude" }
                                                         , sort = External
@@ -916,7 +894,6 @@ Module
                                                             )
                                                             ( Id
                                                                 { name = "=="
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Factorial" }
                                                                 , sort = External
@@ -938,7 +915,6 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "n"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Factorial" }
                                                                     , sort = Internal 7
@@ -975,7 +951,6 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "Int64#"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
                                                                         , sort = External
@@ -1075,7 +1050,6 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "acc"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Factorial" }
                                                                     , sort = Internal 8
@@ -1187,7 +1161,6 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "factAcc"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Factorial" }
                                                                         , sort = External
@@ -1242,7 +1215,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "-"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Factorial" }
                                                                                 , sort = External
@@ -1264,7 +1236,6 @@ Module
                                                                                 )
                                                                                 ( Id
                                                                                     { name = "n"
-                                                                                    , meta = ()
                                                                                     , moduleName = ModuleName
                                                                                         { raw = "Factorial" }
                                                                                     , sort = Internal 7
@@ -1301,7 +1272,6 @@ Module
                                                                                     )
                                                                                     ( Id
                                                                                         { name = "Int64#"
-                                                                                        , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "Builtin" }
                                                                                         , sort = External
@@ -1377,7 +1347,6 @@ Module
                                                                         )
                                                                         ( Id
                                                                             { name = "*"
-                                                                            , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Factorial" }
                                                                             , sort = External
@@ -1399,7 +1368,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "n"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Factorial" }
                                                                                 , sort = Internal 7
@@ -1422,7 +1390,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "acc"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Factorial" }
                                                                                 , sort = Internal 8
@@ -1459,7 +1426,6 @@ Module
                         }
                     , Id
                         { name = "fact"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Factorial" }
                         , sort = External
@@ -1508,7 +1474,6 @@ Module
                                 )
                                 ( Id
                                     { name = "n"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Factorial" }
                                     , sort = Internal 6
@@ -1587,7 +1552,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "factAcc"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Factorial" }
                                                     , sort = External
@@ -1610,7 +1574,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "n"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Factorial" }
                                                     , sort = Internal 6
@@ -1648,7 +1611,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "Int64#"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -1694,7 +1656,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Factorial" }
                         , sort = External
@@ -1775,7 +1736,6 @@ Module
                                         )
                                         ( Id
                                             { name = "|>"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Prelude" }
                                             , sort = External
@@ -1801,7 +1761,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "|>"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
                                                 , sort = External
@@ -1837,7 +1796,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "fact"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Factorial" }
                                                         , sort = External
@@ -1874,7 +1832,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "Int64#"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -1915,7 +1872,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "toStringInt64"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -1939,7 +1895,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "putStrLn"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
                                                 , sort = External
@@ -1999,47 +1954,19 @@ RnState
     { infixInfo = fromList
         [
             ( Id
-                { name = "=="
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Factorial" }
-                , sort = External
-                }
-            ,
-                ( NeutralA
-                , 4
-                )
-            )
-        ,
-            ( Id
-                { name = "<|"
-                , meta = ()
+                { name = "|>"
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
                 }
             ,
-                ( RightA
+                ( LeftA
                 , 0
                 )
             )
         ,
             ( Id
-                { name = "."
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , sort = External
-                }
-            ,
-                ( RightA
-                , 9
-                )
-            )
-        ,
-            ( Id
                 { name = "-"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Factorial" }
                 , sort = External
@@ -2052,7 +1979,6 @@ RnState
         ,
             ( Id
                 { name = "*"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Factorial" }
                 , sort = External
@@ -2064,14 +1990,37 @@ RnState
             )
         ,
             ( Id
-                { name = "|>"
-                , meta = ()
+                { name = "=="
+                , moduleName = ModuleName
+                    { raw = "Factorial" }
+                , sort = External
+                }
+            ,
+                ( NeutralA
+                , 4
+                )
+            )
+        ,
+            ( Id
+                { name = "."
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
                 }
             ,
-                ( LeftA
+                ( RightA
+                , 9
+                )
+            )
+        ,
+            ( Id
+                { name = "<|"
+                , moduleName = ModuleName
+                    { raw = "Prelude" }
+                , sort = External
+                }
+            ,
+                ( RightA
                 , 0
                 )
             )

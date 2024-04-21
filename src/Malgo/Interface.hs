@@ -39,7 +39,7 @@ data Interface = Interface
     typeSynonymMap :: HashMap GT.TypeVar ([GT.TypeVar], GT.Type),
     kindCtx :: KindCtx,
     -- | Used in Desugar
-    coreIdentMap :: HashMap PsId (Id C.Type),
+    coreIdentMap :: HashMap PsId (Meta C.Type),
     -- | Used in Rename
     infixInfo :: HashMap PsId (Assoc, Int),
     -- | Used in Rename
@@ -56,7 +56,7 @@ instance Pretty Interface where
 
 externalFromInterface :: Interface -> PsId -> RnId
 externalFromInterface Interface {moduleName} psId =
-  Id {name = psId, sort = External, meta = (), moduleName}
+  Id {name = psId, sort = External, moduleName}
 
 buildInterface ::
   (HasTypeSynonymMap tcEnv (HashMap GT.TypeVar ([GT.TypeVar], GT.Type))) =>

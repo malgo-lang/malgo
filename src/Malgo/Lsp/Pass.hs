@@ -228,14 +228,14 @@ indexPat (UnboxedP Typed {value = range} u) = do
   let info = Info {name = convertString $ show $ pretty u, typeSignature = Forall [] (typeOf u), definitions = [range]}
   addReferences info [range]
 
-lookupSignature :: (State IndexEnv :> es) => Id () -> Eff es (Scheme Type)
+lookupSignature :: (State IndexEnv :> es) => Id -> Eff es (Scheme Type)
 lookupSignature ident = do
   mIdentType <- gets @IndexEnv ((._signatureMap) >>> HashMap.lookup ident)
   case mIdentType of
     Just identType -> pure identType
     Nothing -> error $ "lookupSignature: " <> show ident <> " not found"
 
-lookupTypeKind :: (State IndexEnv :> es) => Id () -> Eff es Kind
+lookupTypeKind :: (State IndexEnv :> es) => Id -> Eff es Kind
 lookupTypeKind typeName = do
   mTypeDef <- gets @IndexEnv ((._typeDefMap) >>> HashMap.lookup typeName)
   case mTypeDef of
@@ -244,7 +244,7 @@ lookupTypeKind typeName = do
       pure $ kindOf ctx (typeDef ^. typeConstructor)
     Nothing -> error $ "lookupTypeKind: " <> show typeName <> " not found"
 
-lookupInfo :: (State IndexEnv :> es) => Id () -> Eff es (Maybe Info)
+lookupInfo :: (State IndexEnv :> es) => Id -> Eff es (Maybe Info)
 lookupInfo ident =
   gets @IndexEnv ((._buildingIndex) >>> (._definitionMap) >>> HashMap.lookup ident)
 
@@ -258,7 +258,7 @@ addReferences info refs =
             }
       }
 
-addDefinition :: (State IndexEnv :> es) => Id () -> Info -> Eff es ()
+addDefinition :: (State IndexEnv :> es) => Id -> Info -> Eff es ()
 addDefinition ident info =
   modify \s@IndexEnv {..} ->
     s
@@ -268,7 +268,7 @@ addDefinition ident info =
             }
       }
 
-addSymbolInfo :: (State IndexEnv :> es) => Id () -> Symbol -> Eff es ()
+addSymbolInfo :: (State IndexEnv :> es) => Id -> Symbol -> Eff es ()
 addSymbolInfo ident symbol =
   modify \s@IndexEnv {..} ->
     s
@@ -278,5 +278,5 @@ addSymbolInfo ident symbol =
             }
       }
 
-symbol :: SymbolKind -> Id a -> Range -> Symbol
+symbol :: SymbolKind -> Id -> Range -> Symbol
 symbol kind name = Symbol kind name.name

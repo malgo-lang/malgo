@@ -10,7 +10,6 @@ Module
                             ( TyCon
                                 ( Id
                                     { name = "B"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "RecordTest" }
                                     , sort = External
@@ -20,7 +19,6 @@ Module
                             ( TyCon
                                 ( Id
                                     { name = "Int32"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -42,7 +40,6 @@ Module
                         }
                     , Id
                         { name = "g"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "RecordTest" }
                         , sort = External
@@ -53,7 +50,6 @@ Module
                                 ( TyCon
                                     ( Id
                                         { name = "B"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "RecordTest" }
                                         , sort = External
@@ -63,7 +59,6 @@ Module
                                 ( TyCon
                                     ( Id
                                         { name = "Int32"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Builtin" }
                                         , sort = External
@@ -90,7 +85,6 @@ Module
                                     ( TyCon
                                         ( Id
                                             { name = "B"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "RecordTest" }
                                             , sort = External
@@ -100,7 +94,6 @@ Module
                                     ( TyCon
                                         ( Id
                                             { name = "Int32"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Builtin" }
                                             , sort = External
@@ -126,7 +119,6 @@ Module
                                     { annotated = TyCon
                                         ( Id
                                             { name = "B"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "RecordTest" }
                                             , sort = External
@@ -148,7 +140,6 @@ Module
                                 )
                                 ( Id
                                     { name = "B"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "RecordTest" }
                                     , sort = External
@@ -163,7 +154,6 @@ Module
                                                     , TyCon
                                                         ( Id
                                                             { name = "Int32"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -175,7 +165,6 @@ Module
                                                     , TyCon
                                                         ( Id
                                                             { name = "Int32"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -205,7 +194,6 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "Int32"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -227,7 +215,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "a"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "RecordTest" }
                                                 , sort = Internal 3
@@ -241,7 +228,6 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "Int32"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -263,7 +249,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "_"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "RecordTest" }
                                                 , sort = Internal 4
@@ -278,7 +263,6 @@ Module
                                     { annotated = TyCon
                                         ( Id
                                             { name = "Int32"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Builtin" }
                                             , sort = External
@@ -317,7 +301,6 @@ Module
                                             { annotated = TyCon
                                                 ( Id
                                                     { name = "Int32"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -339,7 +322,6 @@ Module
                                         )
                                         ( Id
                                             { name = "a"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "RecordTest" }
                                             , sort = Internal 3
@@ -362,7 +344,6 @@ Module
                                         , TyVar
                                             ( Id
                                                 { name = "t"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "RecordTest" }
                                                 , sort = Internal 22
@@ -374,7 +355,6 @@ Module
                                         , TyVar
                                             ( Id
                                                 { name = "t"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "RecordTest" }
                                                 , sort = Internal 24
@@ -387,7 +367,6 @@ Module
                             ( TyVar
                                 ( Id
                                     { name = "t"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "RecordTest" }
                                     , sort = Internal 22
@@ -409,7 +388,6 @@ Module
                         }
                     , Id
                         { name = "f"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "RecordTest" }
                         , sort = External
@@ -424,7 +402,6 @@ Module
                                             , TyVar
                                                 ( Id
                                                     { name = "t"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "RecordTest" }
                                                     , sort = Internal 22
@@ -436,7 +413,6 @@ Module
                                             , TyVar
                                                 ( Id
                                                     { name = "t"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "RecordTest" }
                                                     , sort = Internal 24
@@ -449,7 +425,6 @@ Module
                                 ( TyVar
                                     ( Id
                                         { name = "t"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "RecordTest" }
                                         , sort = Internal 22
@@ -480,7 +455,6 @@ Module
                                                 , TyVar
                                                     ( Id
                                                         { name = "t"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "RecordTest" }
                                                         , sort = Internal 22
@@ -492,7 +466,6 @@ Module
                                                 , TyVar
                                                     ( Id
                                                         { name = "t"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "RecordTest" }
                                                         , sort = Internal 24
@@ -505,7 +478,6 @@ Module
                                     ( TyVar
                                         ( Id
                                             { name = "t"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "RecordTest" }
                                             , sort = Internal 22
@@ -535,7 +507,6 @@ Module
                                                 , TyVar
                                                     ( Id
                                                         { name = "t"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "RecordTest" }
                                                         , sort = Internal 22
@@ -547,7 +518,6 @@ Module
                                                 , TyVar
                                                     ( Id
                                                         { name = "t"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "RecordTest" }
                                                         , sort = Internal 24
@@ -577,7 +547,6 @@ Module
                                             { annotated = TyVar
                                                 ( Id
                                                     { name = "t"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "RecordTest" }
                                                     , sort = Internal 22
@@ -599,7 +568,6 @@ Module
                                         )
                                         ( Id
                                             { name = "a"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "RecordTest" }
                                             , sort = Internal 1
@@ -613,7 +581,6 @@ Module
                                             { annotated = TyVar
                                                 ( Id
                                                     { name = "t"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "RecordTest" }
                                                     , sort = Internal 24
@@ -635,7 +602,6 @@ Module
                                         )
                                         ( Id
                                             { name = "_"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "RecordTest" }
                                             , sort = Internal 2
@@ -649,7 +615,6 @@ Module
                                     { annotated = TyVar
                                         ( Id
                                             { name = "t"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "RecordTest" }
                                             , sort = Internal 22
@@ -688,7 +653,6 @@ Module
                                             { annotated = TyVar
                                                 ( Id
                                                     { name = "t"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "RecordTest" }
                                                     , sort = Internal 22
@@ -710,7 +674,6 @@ Module
                                         )
                                         ( Id
                                             { name = "a"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "RecordTest" }
                                             , sort = Internal 1
@@ -743,7 +706,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "RecordTest" }
                         , sort = External
@@ -805,7 +767,6 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "RecordTest" }
                                     , sort = Internal 49
@@ -845,7 +806,6 @@ Module
                                     )
                                     ( Id
                                         { name = "x"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "RecordTest" }
                                         , sort = Internal 5
@@ -860,7 +820,6 @@ Module
                                                         , TyCon
                                                             ( Id
                                                                 { name = "Int32"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -872,7 +831,6 @@ Module
                                                         , TyCon
                                                             ( Id
                                                                 { name = "Int32"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -902,7 +860,6 @@ Module
                                                     { annotated = TyCon
                                                         ( Id
                                                             { name = "Int32"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -928,7 +885,6 @@ Module
                                                             ( TyCon
                                                                 ( Id
                                                                     { name = "Int32"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
                                                                     , sort = External
@@ -951,7 +907,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "Int32#"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -985,7 +940,6 @@ Module
                                                     { annotated = TyCon
                                                         ( Id
                                                             { name = "Int32"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -1011,7 +965,6 @@ Module
                                                             ( TyCon
                                                                 ( Id
                                                                     { name = "Int32"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
                                                                     , sort = External
@@ -1034,7 +987,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "Int32#"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -1100,7 +1052,6 @@ Module
                                                         ( TyCon
                                                             ( Id
                                                                 { name = "String"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -1124,7 +1075,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "printString"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -1136,7 +1086,6 @@ Module
                                                     { annotated = TyCon
                                                         ( Id
                                                             { name = "String"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -1175,7 +1124,6 @@ Module
                                                             { annotated = TyCon
                                                                 ( Id
                                                                     { name = "String"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
                                                                     , sort = External
@@ -1201,7 +1149,6 @@ Module
                                                                     ( TyCon
                                                                         ( Id
                                                                             { name = "Int32"
-                                                                            , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Builtin" }
                                                                             , sort = External
@@ -1211,7 +1158,6 @@ Module
                                                                     ( TyCon
                                                                         ( Id
                                                                             { name = "String"
-                                                                            , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Builtin" }
                                                                             , sort = External
@@ -1234,7 +1180,6 @@ Module
                                                             )
                                                             ( Id
                                                                 { name = "toStringInt32"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -1246,7 +1191,6 @@ Module
                                                                 { annotated = TyCon
                                                                     ( Id
                                                                         { name = "Int32"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
                                                                         , sort = External
@@ -1285,7 +1229,6 @@ Module
                                                                         { annotated = TyCon
                                                                             ( Id
                                                                                 { name = "Int32"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Builtin" }
                                                                                 , sort = External
@@ -1311,7 +1254,6 @@ Module
                                                                                 ( TyCon
                                                                                     ( Id
                                                                                         { name = "Int32"
-                                                                                        , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "Builtin" }
                                                                                         , sort = External
@@ -1321,7 +1263,6 @@ Module
                                                                                 ( TyCon
                                                                                     ( Id
                                                                                         { name = "Int32"
-                                                                                        , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "Builtin" }
                                                                                         , sort = External
@@ -1348,7 +1289,6 @@ Module
                                                                                     ( TyCon
                                                                                         ( Id
                                                                                             { name = "Int32"
-                                                                                            , meta = ()
                                                                                             , moduleName = ModuleName
                                                                                                 { raw = "Builtin" }
                                                                                             , sort = External
@@ -1359,7 +1299,6 @@ Module
                                                                                         ( TyCon
                                                                                             ( Id
                                                                                                 { name = "Int32"
-                                                                                                , meta = ()
                                                                                                 , moduleName = ModuleName
                                                                                                     { raw = "Builtin" }
                                                                                                 , sort = External
@@ -1369,7 +1308,6 @@ Module
                                                                                         ( TyCon
                                                                                             ( Id
                                                                                                 { name = "Int32"
-                                                                                                , meta = ()
                                                                                                 , moduleName = ModuleName
                                                                                                     { raw = "Builtin" }
                                                                                                 , sort = External
@@ -1393,7 +1331,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "addInt32"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Builtin" }
                                                                                 , sort = External
@@ -1405,7 +1342,6 @@ Module
                                                                                 { annotated = TyCon
                                                                                     ( Id
                                                                                         { name = "Int32"
-                                                                                        , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "Builtin" }
                                                                                         , sort = External
@@ -1444,7 +1380,6 @@ Module
                                                                                         { annotated = TyCon
                                                                                             ( Id
                                                                                                 { name = "Int32"
-                                                                                                , meta = ()
                                                                                                 , moduleName = ModuleName
                                                                                                     { raw = "Builtin" }
                                                                                                 , sort = External
@@ -1474,7 +1409,6 @@ Module
                                                                                                             , TyCon
                                                                                                                 ( Id
                                                                                                                     { name = "Int32"
-                                                                                                                    , meta = ()
                                                                                                                     , moduleName = ModuleName
                                                                                                                         { raw = "Builtin" }
                                                                                                                     , sort = External
@@ -1486,7 +1420,6 @@ Module
                                                                                                             , TyCon
                                                                                                                 ( Id
                                                                                                                     { name = "Int32"
-                                                                                                                    , meta = ()
                                                                                                                     , moduleName = ModuleName
                                                                                                                         { raw = "Builtin" }
                                                                                                                     , sort = External
@@ -1499,7 +1432,6 @@ Module
                                                                                                 ( TyCon
                                                                                                     ( Id
                                                                                                         { name = "Int32"
-                                                                                                        , meta = ()
                                                                                                         , moduleName = ModuleName
                                                                                                             { raw = "Builtin" }
                                                                                                         , sort = External
@@ -1522,7 +1454,6 @@ Module
                                                                                         )
                                                                                         ( Id
                                                                                             { name = "f"
-                                                                                            , meta = ()
                                                                                             , moduleName = ModuleName
                                                                                                 { raw = "RecordTest" }
                                                                                             , sort = External
@@ -1538,7 +1469,6 @@ Module
                                                                                                         , TyCon
                                                                                                             ( Id
                                                                                                                 { name = "Int32"
-                                                                                                                , meta = ()
                                                                                                                 , moduleName = ModuleName
                                                                                                                     { raw = "Builtin" }
                                                                                                                 , sort = External
@@ -1550,7 +1480,6 @@ Module
                                                                                                         , TyCon
                                                                                                             ( Id
                                                                                                                 { name = "Int32"
-                                                                                                                , meta = ()
                                                                                                                 , moduleName = ModuleName
                                                                                                                     { raw = "Builtin" }
                                                                                                                 , sort = External
@@ -1575,7 +1504,6 @@ Module
                                                                                         )
                                                                                         ( Id
                                                                                             { name = "x"
-                                                                                            , meta = ()
                                                                                             , moduleName = ModuleName
                                                                                                 { raw = "RecordTest" }
                                                                                             , sort = Internal 5
@@ -1591,7 +1519,6 @@ Module
                                                                             { annotated = TyCon
                                                                                 ( Id
                                                                                     { name = "Int32"
-                                                                                    , meta = ()
                                                                                     , moduleName = ModuleName
                                                                                         { raw = "Builtin" }
                                                                                     , sort = External
@@ -1630,7 +1557,6 @@ Module
                                                                                     { annotated = TyCon
                                                                                         ( Id
                                                                                             { name = "Int32"
-                                                                                            , meta = ()
                                                                                             , moduleName = ModuleName
                                                                                                 { raw = "Builtin" }
                                                                                             , sort = External
@@ -1660,7 +1586,6 @@ Module
                                                                                                         , TyCon
                                                                                                             ( Id
                                                                                                                 { name = "Int32"
-                                                                                                                , meta = ()
                                                                                                                 , moduleName = ModuleName
                                                                                                                     { raw = "Builtin" }
                                                                                                                 , sort = External
@@ -1672,7 +1597,6 @@ Module
                                                                                                         , TyCon
                                                                                                             ( Id
                                                                                                                 { name = "Int32"
-                                                                                                                , meta = ()
                                                                                                                 , moduleName = ModuleName
                                                                                                                     { raw = "Builtin" }
                                                                                                                 , sort = External
@@ -1685,7 +1609,6 @@ Module
                                                                                             ( TyCon
                                                                                                 ( Id
                                                                                                     { name = "Int32"
-                                                                                                    , meta = ()
                                                                                                     , moduleName = ModuleName
                                                                                                         { raw = "Builtin" }
                                                                                                     , sort = External
@@ -1716,7 +1639,6 @@ Module
                                                                                                             , TyCon
                                                                                                                 ( Id
                                                                                                                     { name = "Int32"
-                                                                                                                    , meta = ()
                                                                                                                     , moduleName = ModuleName
                                                                                                                         { raw = "Builtin" }
                                                                                                                     , sort = External
@@ -1728,7 +1650,6 @@ Module
                                                                                                             , TyCon
                                                                                                                 ( Id
                                                                                                                     { name = "Int32"
-                                                                                                                    , meta = ()
                                                                                                                     , moduleName = ModuleName
                                                                                                                         { raw = "Builtin" }
                                                                                                                     , sort = External
@@ -1741,7 +1662,6 @@ Module
                                                                                                 ( TyCon
                                                                                                     ( Id
                                                                                                         { name = "Int32"
-                                                                                                        , meta = ()
                                                                                                         , moduleName = ModuleName
                                                                                                             { raw = "Builtin" }
                                                                                                         , sort = External
@@ -1771,7 +1691,6 @@ Module
                                                                                                             , TyCon
                                                                                                                 ( Id
                                                                                                                     { name = "Int32"
-                                                                                                                    , meta = ()
                                                                                                                     , moduleName = ModuleName
                                                                                                                         { raw = "Builtin" }
                                                                                                                     , sort = External
@@ -1783,7 +1702,6 @@ Module
                                                                                                             , TyCon
                                                                                                                 ( Id
                                                                                                                     { name = "Int32"
-                                                                                                                    , meta = ()
                                                                                                                     , moduleName = ModuleName
                                                                                                                         { raw = "Builtin" }
                                                                                                                     , sort = External
@@ -1813,7 +1731,6 @@ Module
                                                                                                         { annotated = TyCon
                                                                                                             ( Id
                                                                                                                 { name = "Int32"
-                                                                                                                , meta = ()
                                                                                                                 , moduleName = ModuleName
                                                                                                                     { raw = "Builtin" }
                                                                                                                 , sort = External
@@ -1835,7 +1752,6 @@ Module
                                                                                                     )
                                                                                                     ( Id
                                                                                                         { name = "_"
-                                                                                                        , meta = ()
                                                                                                         , moduleName = ModuleName
                                                                                                             { raw = "RecordTest" }
                                                                                                         , sort = Internal 6
@@ -1849,7 +1765,6 @@ Module
                                                                                                         { annotated = TyCon
                                                                                                             ( Id
                                                                                                                 { name = "Int32"
-                                                                                                                , meta = ()
                                                                                                                 , moduleName = ModuleName
                                                                                                                     { raw = "Builtin" }
                                                                                                                 , sort = External
@@ -1871,7 +1786,6 @@ Module
                                                                                                     )
                                                                                                     ( Id
                                                                                                         { name = "b"
-                                                                                                        , meta = ()
                                                                                                         , moduleName = ModuleName
                                                                                                             { raw = "RecordTest" }
                                                                                                         , sort = Internal 7
@@ -1885,7 +1799,6 @@ Module
                                                                                                 { annotated = TyCon
                                                                                                     ( Id
                                                                                                         { name = "Int32"
-                                                                                                        , meta = ()
                                                                                                         , moduleName = ModuleName
                                                                                                             { raw = "Builtin" }
                                                                                                         , sort = External
@@ -1924,7 +1837,6 @@ Module
                                                                                                         { annotated = TyCon
                                                                                                             ( Id
                                                                                                                 { name = "Int32"
-                                                                                                                , meta = ()
                                                                                                                 , moduleName = ModuleName
                                                                                                                     { raw = "Builtin" }
                                                                                                                 , sort = External
@@ -1946,7 +1858,6 @@ Module
                                                                                                     )
                                                                                                     ( Id
                                                                                                         { name = "b"
-                                                                                                        , meta = ()
                                                                                                         , moduleName = ModuleName
                                                                                                             { raw = "RecordTest" }
                                                                                                         , sort = Internal 7
@@ -1966,7 +1877,6 @@ Module
                                                                                                     , TyCon
                                                                                                         ( Id
                                                                                                             { name = "Int32"
-                                                                                                            , meta = ()
                                                                                                             , moduleName = ModuleName
                                                                                                                 { raw = "Builtin" }
                                                                                                             , sort = External
@@ -1978,7 +1888,6 @@ Module
                                                                                                     , TyCon
                                                                                                         ( Id
                                                                                                             { name = "Int32"
-                                                                                                            , meta = ()
                                                                                                             , moduleName = ModuleName
                                                                                                                 { raw = "Builtin" }
                                                                                                             , sort = External
@@ -2003,7 +1912,6 @@ Module
                                                                                     )
                                                                                     ( Id
                                                                                         { name = "x"
-                                                                                        , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "RecordTest" }
                                                                                         , sort = Internal 5
@@ -2044,7 +1952,6 @@ Module
                     }
                 , Id
                     { name = "B"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "RecordTest" }
                     , sort = External
@@ -2066,7 +1973,6 @@ Module
                             }
                         , Id
                             { name = "B"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "RecordTest" }
                             , sort = External
@@ -2088,7 +1994,6 @@ Module
                                 )
                                 ( Id
                                     { name = "A"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "RecordTest" }
                                     , sort = External
@@ -2115,7 +2020,6 @@ Module
                     }
                 , Id
                     { name = "A"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "RecordTest" }
                     , sort = External
@@ -2153,7 +2057,6 @@ Module
                             )
                             ( Id
                                 { name = "Int32"
-                                , meta = ()
                                 , moduleName = ModuleName
                                     { raw = "Builtin" }
                                 , sort = External
@@ -2178,7 +2081,6 @@ Module
                             )
                             ( Id
                                 { name = "Int32"
-                                , meta = ()
                                 , moduleName = ModuleName
                                     { raw = "Builtin" }
                                 , sort = External
@@ -2202,7 +2104,6 @@ Module
                     }
                 , Id
                     { name = "C"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "RecordTest" }
                     , sort = External
@@ -2210,7 +2111,6 @@ Module
                 ,
                     [ Id
                         { name = "a"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "RecordTest" }
                         , sort = Internal 0
@@ -2248,7 +2148,6 @@ Module
                             )
                             ( Id
                                 { name = "a"
-                                , meta = ()
                                 , moduleName = ModuleName
                                     { raw = "RecordTest" }
                                 , sort = Internal 0
@@ -2273,7 +2172,6 @@ Module
                             )
                             ( Id
                                 { name = "a"
-                                , meta = ()
                                 , moduleName = ModuleName
                                     { raw = "RecordTest" }
                                 , sort = Internal 0

@@ -24,7 +24,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestCast" }
                         , sort = External
@@ -86,7 +85,6 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestCast" }
                                     , sort = Internal 26
@@ -147,7 +145,6 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "Int32"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -171,7 +168,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "printInt32"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
                                                 , sort = External
@@ -183,7 +179,6 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "Int32"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -222,7 +217,6 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "Int32"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -249,7 +243,6 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "Int32"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
                                                                         , sort = External
@@ -272,7 +265,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "malgo_unsafe_cast"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -373,7 +365,6 @@ Module
                                                                         )
                                                                         ( Id
                                                                             { name = "malgo_read_vector"
-                                                                            , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "TestCast" }
                                                                             , sort = External
@@ -496,7 +487,6 @@ Module
                                                                                     )
                                                                                     ( Id
                                                                                         { name = "malgo_new_vector"
-                                                                                        , meta = ()
                                                                                         , moduleName = ModuleName
                                                                                             { raw = "TestCast" }
                                                                                         , sort = External
@@ -577,7 +567,6 @@ Module
                                                                                                     ( TyCon
                                                                                                         ( Id
                                                                                                             { name = "Int32"
-                                                                                                            , meta = ()
                                                                                                             , moduleName = ModuleName
                                                                                                                 { raw = "Builtin" }
                                                                                                             , sort = External
@@ -601,7 +590,6 @@ Module
                                                                                             )
                                                                                             ( Id
                                                                                                 { name = "malgo_unsafe_cast"
-                                                                                                , meta = ()
                                                                                                 , moduleName = ModuleName
                                                                                                     { raw = "Builtin" }
                                                                                                 , sort = External
@@ -613,7 +601,6 @@ Module
                                                                                                 { annotated = TyCon
                                                                                                     ( Id
                                                                                                         { name = "Int32"
-                                                                                                        , meta = ()
                                                                                                         , moduleName = ModuleName
                                                                                                             { raw = "Builtin" }
                                                                                                         , sort = External
@@ -639,7 +626,6 @@ Module
                                                                                                         ( TyCon
                                                                                                             ( Id
                                                                                                                 { name = "Int32"
-                                                                                                                , meta = ()
                                                                                                                 , moduleName = ModuleName
                                                                                                                     { raw = "Builtin" }
                                                                                                                 , sort = External
@@ -662,7 +648,6 @@ Module
                                                                                                 )
                                                                                                 ( Id
                                                                                                     { name = "Int32#"
-                                                                                                    , meta = ()
                                                                                                     , moduleName = ModuleName
                                                                                                         { raw = "Builtin" }
                                                                                                     , sort = External
@@ -739,7 +724,6 @@ Module
                     }
                 , Id
                     { name = "malgo_new_vector"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestCast" }
                     , sort = External
@@ -774,7 +758,6 @@ Module
                         )
                         ( Id
                             { name = "Int64#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External
@@ -825,7 +808,6 @@ Module
                                 )
                                 ( Id
                                     { name = "Ptr#"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -848,7 +830,6 @@ Module
                                 )
                                 ( Id
                                     { name = "Char#"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -886,7 +867,6 @@ Module
                                 )
                                 ( Id
                                     { name = "Ptr#"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -923,7 +903,6 @@ Module
                                     )
                                     ( Id
                                         { name = "Ptr#"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Builtin" }
                                         , sort = External
@@ -946,7 +925,6 @@ Module
                                     )
                                     ( Id
                                         { name = "Char#"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Builtin" }
                                         , sort = External
@@ -984,7 +962,6 @@ Module
                     }
                 , Id
                     { name = "malgo_read_vector"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestCast" }
                     , sort = External
@@ -1019,7 +996,6 @@ Module
                         )
                         ( Id
                             { name = "Int64#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External
@@ -1070,7 +1046,6 @@ Module
                                 )
                                 ( Id
                                     { name = "Ptr#"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -1107,7 +1082,6 @@ Module
                                     )
                                     ( Id
                                         { name = "Ptr#"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Builtin" }
                                         , sort = External
@@ -1130,7 +1104,6 @@ Module
                                     )
                                     ( Id
                                         { name = "Char#"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Builtin" }
                                         , sort = External
@@ -1169,7 +1142,6 @@ Module
                                 )
                                 ( Id
                                     { name = "Ptr#"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -1192,7 +1164,6 @@ Module
                                 )
                                 ( Id
                                     { name = "Char#"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External

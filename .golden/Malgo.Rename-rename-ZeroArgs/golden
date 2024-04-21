@@ -19,7 +19,6 @@ Module
                         }
                     , Id
                         { name = "one"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "ZeroArgs" }
                         , sort = External
@@ -124,7 +123,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "Int32#"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -185,7 +183,6 @@ Module
                         }
                     , Id
                         { name = "id"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "ZeroArgs" }
                         , sort = External
@@ -234,7 +231,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "ZeroArgs" }
                                     , sort = Internal 1
@@ -355,7 +351,6 @@ Module
                                                             )
                                                             ( Id
                                                                 { name = "x"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "ZeroArgs" }
                                                                 , sort = Internal 1
@@ -403,7 +398,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "ZeroArgs" }
                         , sort = External
@@ -564,7 +558,6 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "printString"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "Builtin" }
                                                                     , sort = External
@@ -629,7 +622,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "toStringInt32"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "Builtin" }
                                                                                 , sort = External
@@ -694,7 +686,6 @@ Module
                                                                                         )
                                                                                         ( Id
                                                                                             { name = "id"
-                                                                                            , meta = ()
                                                                                             , moduleName = ModuleName
                                                                                                 { raw = "ZeroArgs" }
                                                                                             , sort = External
@@ -717,7 +708,6 @@ Module
                                                                                         )
                                                                                         ( Id
                                                                                             { name = "one"
-                                                                                            , meta = ()
                                                                                             , moduleName = ModuleName
                                                                                                 { raw = "ZeroArgs" }
                                                                                             , sort = External
@@ -773,7 +763,6 @@ Module
                     }
                 , Id
                     { name = "one"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "ZeroArgs" }
                     , sort = External
@@ -794,7 +783,6 @@ Module
                     )
                     ( Id
                         { name = "Int32"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
                         , sort = External
@@ -816,7 +804,6 @@ Module
                     }
                 , Id
                     { name = "id"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "ZeroArgs" }
                     , sort = External
@@ -851,7 +838,6 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "ZeroArgs" }
                             , sort = Internal 0
@@ -874,7 +860,6 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "ZeroArgs" }
                             , sort = Internal 0
@@ -897,7 +882,6 @@ Module
                     }
                 , Id
                     { name = "main"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "ZeroArgs" }
                     , sort = External
@@ -993,21 +977,19 @@ RnState
     { infixInfo = fromList
         [
             ( Id
-                { name = "<|"
-                , meta = ()
+                { name = "|>"
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
                 }
             ,
-                ( RightA
+                ( LeftA
                 , 0
                 )
             )
         ,
             ( Id
                 { name = "."
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
@@ -1019,14 +1001,13 @@ RnState
             )
         ,
             ( Id
-                { name = "|>"
-                , meta = ()
+                { name = "<|"
                 , moduleName = ModuleName
                     { raw = "Prelude" }
                 , sort = External
                 }
             ,
-                ( LeftA
+                ( RightA
                 , 0
                 )
             )

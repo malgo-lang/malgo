@@ -33,14 +33,14 @@ import Malgo.Syntax.Extension
 lookupVar ::
   (State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
   Range ->
-  Id () ->
+  Id ->
   Eff es (Scheme Type)
 lookupVar pos name =
   gets @TcEnv (view signatureMap >>> HashMap.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just scheme -> pure scheme
 
-lookupType :: (State TcEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Id () -> Eff es Type
+lookupType :: (State TcEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Id -> Eff es Type
 lookupType pos name =
   gets @TcEnv (view typeDefMap >>> HashMap.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
@@ -113,7 +113,7 @@ tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     lookupType pos name >>= \case
       TyCon con -> do
-        params' <- for params \p -> newInternalId (idToText p) ()
+        params' <- for params $ newInternalId . idToText
         zipWithM_
           ( \p p' ->
               modify $ insertTypeDef p (TypeDef (TyVar p') [] [])
@@ -130,7 +130,7 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
     name' <- lookupType pos name
-    params' <- for params \(_, p) -> newInternalId (idToText p) ()
+    params' <- for params \(_, p) -> newInternalId (idToText p)
     zipWithM_
       ( \(_, p) p' ->
           modify $ insertTypeDef p (TypeDef (TyVar p') [] [])
@@ -317,7 +317,7 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   pure $ OpApp (Typed retType x) op e1' e2'
 tcExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- tcExpr e
-  hole <- newInternalId "$_" ()
+  hole <- newInternalId "$_"
   modify $ insertSignature hole (Forall [] (TyTuple 0))
   pure $ Fn (Typed (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Typed (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Typed (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do

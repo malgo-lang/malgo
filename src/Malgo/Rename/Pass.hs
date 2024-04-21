@@ -153,7 +153,7 @@ rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExpr (Parens _ e) = rnExpr e
 
 -- | Renamed identifier corresponding Boxed literals.
-lookupBox :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Literal x -> Eff es (Id ())
+lookupBox :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Literal x -> Eff es Id
 lookupBox pos Int32 {} = lookupVarName pos "Int32#"
 lookupBox pos Int64 {} = lookupVarName pos "Int64#"
 lookupBox pos Float {} = lookupVarName pos "Float#"

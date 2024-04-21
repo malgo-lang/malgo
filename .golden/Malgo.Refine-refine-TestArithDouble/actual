@@ -10,7 +10,6 @@ Module
                             ( TyCon
                                 ( Id
                                     { name = "String"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -32,7 +31,6 @@ Module
                         }
                     , Id
                         { name = "show"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -43,7 +41,6 @@ Module
                                 ( TyCon
                                     ( Id
                                         { name = "String"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "Builtin" }
                                         , sort = External
@@ -70,7 +67,6 @@ Module
                                     ( TyCon
                                         ( Id
                                             { name = "String"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Builtin" }
                                             , sort = External
@@ -110,7 +106,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 9
@@ -122,7 +117,6 @@ Module
                                     { annotated = TyCon
                                         ( Id
                                             { name = "String"
-                                            , meta = ()
                                             , moduleName = ModuleName
                                                 { raw = "Builtin" }
                                             , sort = External
@@ -161,7 +155,6 @@ Module
                                             { annotated = TyCon
                                                 ( Id
                                                     { name = "String"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -187,7 +180,6 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "String"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -210,7 +202,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "String#"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Builtin" }
                                                 , sort = External
@@ -284,7 +275,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "toStringDouble#"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -310,7 +300,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "x"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "TestArithDouble" }
                                                             , sort = Internal 9
@@ -345,7 +334,6 @@ Module
                         }
                     , Id
                         { name = "traceShowId"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -403,7 +391,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 10
@@ -464,7 +451,6 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "String"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -488,7 +474,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "putStrLn"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
                                                 , sort = External
@@ -500,7 +485,6 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "String"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -539,7 +523,6 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "String"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -565,7 +548,6 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "String"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
                                                                         , sort = External
@@ -588,7 +570,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "show"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "TestArithDouble" }
                                                             , sort = External
@@ -614,7 +595,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "x"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "TestArithDouble" }
                                                             , sort = Internal 10
@@ -658,7 +638,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "x"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "TestArithDouble" }
                                                 , sort = Internal 10
@@ -690,7 +669,6 @@ Module
                         }
                     , Id
                         { name = "neg"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -748,7 +726,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 0
@@ -840,7 +817,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "subDouble#"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -886,7 +862,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "x"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "TestArithDouble" }
                                                 , sort = Internal 0
@@ -919,7 +894,6 @@ Module
                         }
                     , Id
                         { name = "mul"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -979,7 +953,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 3
@@ -1004,7 +977,6 @@ Module
                                 )
                                 ( Id
                                     { name = "y"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 4
@@ -1096,7 +1068,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "mulDouble#"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -1122,7 +1093,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "x"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestArithDouble" }
                                                     , sort = Internal 3
@@ -1149,7 +1119,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "y"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "TestArithDouble" }
                                                 , sort = Internal 4
@@ -1182,7 +1151,6 @@ Module
                         }
                     , Id
                         { name = "add"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -1242,7 +1210,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 7
@@ -1267,7 +1234,6 @@ Module
                                 )
                                 ( Id
                                     { name = "y"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 8
@@ -1359,7 +1325,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "addDouble#"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -1385,7 +1350,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "x"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestArithDouble" }
                                                     , sort = Internal 7
@@ -1412,7 +1376,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "y"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "TestArithDouble" }
                                                 , sort = Internal 8
@@ -1445,7 +1408,6 @@ Module
                         }
                     , Id
                         { name = "+"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -1505,7 +1467,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 5
@@ -1530,7 +1491,6 @@ Module
                                 )
                                 ( Id
                                     { name = "y"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 6
@@ -1622,7 +1582,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "addDouble#"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -1648,7 +1607,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "x"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestArithDouble" }
                                                     , sort = Internal 5
@@ -1675,7 +1633,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "y"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "TestArithDouble" }
                                                 , sort = Internal 6
@@ -1708,7 +1665,6 @@ Module
                         }
                     , Id
                         { name = "*"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -1768,7 +1724,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 1
@@ -1793,7 +1748,6 @@ Module
                                 )
                                 ( Id
                                     { name = "y"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 2
@@ -1885,7 +1839,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "mulDouble#"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "Builtin" }
                                                     , sort = External
@@ -1911,7 +1864,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "x"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestArithDouble" }
                                                     , sort = Internal 1
@@ -1938,7 +1890,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "y"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "TestArithDouble" }
                                                 , sort = Internal 2
@@ -1970,7 +1921,6 @@ Module
                         }
                     , Id
                         { name = "f"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -2028,7 +1978,6 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 11
@@ -2120,7 +2069,6 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "*"
-                                                    , meta = ()
                                                     , moduleName = ModuleName
                                                         { raw = "TestArithDouble" }
                                                     , sort = External
@@ -2212,7 +2160,6 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "+"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "TestArithDouble" }
                                                                     , sort = External
@@ -2238,7 +2185,6 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "x"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "TestArithDouble" }
                                                                     , sort = Internal 11
@@ -2288,7 +2234,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "x"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "TestArithDouble" }
                                                 , sort = Internal 11
@@ -2322,7 +2267,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "TestArithDouble" }
                         , sort = External
@@ -2384,7 +2328,6 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "TestArithDouble" }
                                     , sort = Internal 90
@@ -2445,7 +2388,6 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "String"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -2469,7 +2411,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "putStrLn"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Prelude" }
                                                 , sort = External
@@ -2481,7 +2422,6 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "String"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "Builtin" }
                                                         , sort = External
@@ -2520,7 +2460,6 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "String"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "Builtin" }
                                                                 , sort = External
@@ -2546,7 +2485,6 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "String"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "Builtin" }
                                                                         , sort = External
@@ -2569,7 +2507,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "show"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "TestArithDouble" }
                                                             , sort = External
@@ -2643,7 +2580,6 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "f"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "TestArithDouble" }
                                                                         , sort = External
@@ -2698,7 +2634,6 @@ Module
                     }
                 , Id
                     { name = "f"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "TestArithDouble" }
                     , sort = External
@@ -2733,7 +2668,6 @@ Module
                         )
                         ( Id
                             { name = "Double#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External
@@ -2756,7 +2690,6 @@ Module
                         )
                         ( Id
                             { name = "Double#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External

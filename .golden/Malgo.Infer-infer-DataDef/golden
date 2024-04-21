@@ -24,7 +24,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "DataDef" }
                         , sort = External
@@ -86,7 +85,6 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
                                     , sort = Internal 17
@@ -147,7 +145,6 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "Int"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "DataDef" }
                                                             , sort = External
@@ -175,7 +172,6 @@ Module
                                                         ( TyCon
                                                             ( Id
                                                                 { name = "Int"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "DataDef" }
                                                                 , sort = External
@@ -202,7 +198,6 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "Int"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "DataDef" }
                                                                 , sort = External
@@ -224,7 +219,6 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "Int#"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
                                                         , sort = External
@@ -249,7 +243,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "x"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "DataDef" }
                                                             , sort = Internal 1
@@ -325,7 +318,6 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "malgo_print_string"
-                                                                    , meta = ()
                                                                     , moduleName = ModuleName
                                                                         { raw = "DataDef" }
                                                                     , sort = External
@@ -399,7 +391,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "malgo_int64_t_to_string"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "DataDef" }
                                                                                 , sort = External
@@ -425,7 +416,6 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "x"
-                                                                                , meta = ()
                                                                                 , moduleName = ModuleName
                                                                                     { raw = "DataDef" }
                                                                                 , sort = Internal 1
@@ -445,7 +435,6 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "Int"
-                                                        , meta = ()
                                                         , moduleName = ModuleName
                                                             { raw = "DataDef" }
                                                         , sort = External
@@ -484,7 +473,6 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "Int"
-                                                                , meta = ()
                                                                 , moduleName = ModuleName
                                                                     { raw = "DataDef" }
                                                                 , sort = External
@@ -510,7 +498,6 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "Int"
-                                                                        , meta = ()
                                                                         , moduleName = ModuleName
                                                                             { raw = "DataDef" }
                                                                         , sort = External
@@ -533,7 +520,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "Int#"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "DataDef" }
                                                             , sort = External
@@ -586,7 +572,6 @@ Module
                     }
                 , Id
                     { name = "Int"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = External
@@ -608,7 +593,6 @@ Module
                             }
                         , Id
                             { name = "Int#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = External
@@ -630,7 +614,6 @@ Module
                                 )
                                 ( Id
                                     { name = "Int64#"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "Builtin" }
                                     , sort = External
@@ -655,7 +638,6 @@ Module
                     }
                 , Id
                     { name = "List"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = External
@@ -676,7 +658,6 @@ Module
                             }
                         , Id
                             { name = "a"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = Internal 0
@@ -699,7 +680,6 @@ Module
                             }
                         , Id
                             { name = "Nil"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = External
@@ -721,7 +701,6 @@ Module
                             }
                         , Id
                             { name = "Cons"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = External
@@ -743,7 +722,6 @@ Module
                                 )
                                 ( Id
                                     { name = "a"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
                                     , sort = Internal 0
@@ -779,7 +757,6 @@ Module
                                     )
                                     ( Id
                                         { name = "List"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
                                         , sort = External
@@ -802,7 +779,6 @@ Module
                                     )
                                     ( Id
                                         { name = "a"
-                                        , meta = ()
                                         , moduleName = ModuleName
                                             { raw = "DataDef" }
                                         , sort = Internal 0
@@ -837,7 +813,6 @@ Module
                     }
                 , Id
                     { name = "malgo_int64_t_to_string"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = External
@@ -872,7 +847,6 @@ Module
                         )
                         ( Id
                             { name = "Int64#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External
@@ -895,7 +869,6 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External
@@ -925,7 +898,6 @@ Module
                     }
                 , Id
                     { name = "malgo_print_string"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = External
@@ -960,7 +932,6 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "Builtin" }
                             , sort = External
@@ -991,19 +962,7 @@ TcEnv
     { _signatureMap = fromList
         [
             ( Id
-                { name = "$_"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = Internal 17
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
                 { name = "x"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
                 , sort = Internal 1
@@ -1012,22 +971,7 @@ TcEnv
             )
         ,
             ( Id
-                { name = "main"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
                 { name = "Nil"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
                 , sort = External
@@ -1035,7 +979,6 @@ TcEnv
             , Forall
                 [ Id
                     { name = "DataDef.#a_0"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = Internal 2
@@ -1045,7 +988,6 @@ TcEnv
                     ( TyCon
                         ( Id
                             { name = "List"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = External
@@ -1055,7 +997,6 @@ TcEnv
                     ( TyVar
                         ( Id
                             { name = "DataDef.#a_0"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = Internal 2
@@ -1066,8 +1007,27 @@ TcEnv
             )
         ,
             ( Id
+                { name = "$_"
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 17
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "malgo_int64_t_to_string"
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim Int64T ) ( TyPrim StringT ) )
+            )
+        ,
+            ( Id
                 { name = "Cons"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
                 , sort = External
@@ -1075,7 +1035,6 @@ TcEnv
             , Forall
                 [ Id
                     { name = "DataDef.#a_0"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = Internal 2
@@ -1085,7 +1044,6 @@ TcEnv
                     ( TyVar
                         ( Id
                             { name = "DataDef.#a_0"
-                            , meta = ()
                             , moduleName = ModuleName
                                 { raw = "DataDef" }
                             , sort = Internal 2
@@ -1097,7 +1055,6 @@ TcEnv
                             ( TyCon
                                 ( Id
                                     { name = "List"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
                                     , sort = External
@@ -1107,7 +1064,6 @@ TcEnv
                             ( TyVar
                                 ( Id
                                     { name = "DataDef.#a_0"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
                                     , sort = Internal 2
@@ -1119,7 +1075,6 @@ TcEnv
                             ( TyCon
                                 ( Id
                                     { name = "List"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
                                     , sort = External
@@ -1129,7 +1084,6 @@ TcEnv
                             ( TyVar
                                 ( Id
                                     { name = "DataDef.#a_0"
-                                    , meta = ()
                                     , moduleName = ModuleName
                                         { raw = "DataDef" }
                                     , sort = Internal 2
@@ -1142,8 +1096,27 @@ TcEnv
             )
         ,
             ( Id
+                { name = "Int#"
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim Int64T )
+                    ( TyCon
+                        ( Id
+                            { name = "Int"
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
                 { name = "malgo_print_string"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
                 , sort = External
@@ -1155,299 +1128,22 @@ TcEnv
             )
         ,
             ( Id
-                { name = "Int#"
-                , meta = ()
+                { name = "main"
                 , moduleName = ModuleName
                     { raw = "DataDef" }
                 , sort = External
                 }
             , Forall []
-                ( TyArr ( TyPrim Int64T )
-                    ( TyCon
-                        ( Id
-                            { name = "Int"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "DataDef" }
-                            , sort = External
-                            }
-                        )
-                    )
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
                 )
-            )
-        ,
-            ( Id
-                { name = "malgo_int64_t_to_string"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim Int64T ) ( TyPrim StringT ) )
             )
         ]
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "Int"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyCon
-                    ( Id
-                        { name = "Int"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "DataDef" }
-                        , sort = External
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors =
-                    [
-                        ( Id
-                            { name = "Int#"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "DataDef" }
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyArr ( TyPrim Int64T )
-                                ( TyCon
-                                    ( Id
-                                        { name = "Int"
-                                        , meta = ()
-                                        , moduleName = ModuleName
-                                            { raw = "DataDef" }
-                                        , sort = External
-                                        }
-                                    )
-                                )
-                            )
-                        )
-                    ]
-                }
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim StringT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "a"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = Internal 0
-                }
-            , TypeDef
-                { _typeConstructor = TyVar
-                    ( Id
-                        { name = "DataDef.#a_0"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "DataDef" }
-                        , sort = Internal 2
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Float#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim FloatT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim CharT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "List"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyCon
-                    ( Id
-                        { name = "List"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "DataDef" }
-                        , sort = External
-                        }
-                    )
-                , _typeParameters =
-                    [ Id
-                        { name = "DataDef.#a_0"
-                        , meta = ()
-                        , moduleName = ModuleName
-                            { raw = "DataDef" }
-                        , sort = Internal 2
-                        }
-                    ]
-                , _valueConstructors =
-                    [
-                        ( Id
-                            { name = "Nil"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "DataDef" }
-                            , sort = External
-                            }
-                        , Forall
-                            [ Id
-                                { name = "DataDef.#a_0"
-                                , meta = ()
-                                , moduleName = ModuleName
-                                    { raw = "DataDef" }
-                                , sort = Internal 2
-                                }
-                            ]
-                            ( TyApp
-                                ( TyCon
-                                    ( Id
-                                        { name = "List"
-                                        , meta = ()
-                                        , moduleName = ModuleName
-                                            { raw = "DataDef" }
-                                        , sort = External
-                                        }
-                                    )
-                                )
-                                ( TyVar
-                                    ( Id
-                                        { name = "DataDef.#a_0"
-                                        , meta = ()
-                                        , moduleName = ModuleName
-                                            { raw = "DataDef" }
-                                        , sort = Internal 2
-                                        }
-                                    )
-                                )
-                            )
-                        )
-                    ,
-                        ( Id
-                            { name = "Cons"
-                            , meta = ()
-                            , moduleName = ModuleName
-                                { raw = "DataDef" }
-                            , sort = External
-                            }
-                        , Forall
-                            [ Id
-                                { name = "DataDef.#a_0"
-                                , meta = ()
-                                , moduleName = ModuleName
-                                    { raw = "DataDef" }
-                                , sort = Internal 2
-                                }
-                            ]
-                            ( TyArr
-                                ( TyVar
-                                    ( Id
-                                        { name = "DataDef.#a_0"
-                                        , meta = ()
-                                        , moduleName = ModuleName
-                                            { raw = "DataDef" }
-                                        , sort = Internal 2
-                                        }
-                                    )
-                                )
-                                ( TyArr
-                                    ( TyApp
-                                        ( TyCon
-                                            ( Id
-                                                { name = "List"
-                                                , meta = ()
-                                                , moduleName = ModuleName
-                                                    { raw = "DataDef" }
-                                                , sort = External
-                                                }
-                                            )
-                                        )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "DataDef.#a_0"
-                                                , meta = ()
-                                                , moduleName = ModuleName
-                                                    { raw = "DataDef" }
-                                                , sort = Internal 2
-                                                }
-                                            )
-                                        )
-                                    )
-                                    ( TyApp
-                                        ( TyCon
-                                            ( Id
-                                                { name = "List"
-                                                , meta = ()
-                                                , moduleName = ModuleName
-                                                    { raw = "DataDef" }
-                                                , sort = External
-                                                }
-                                            )
-                                        )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "DataDef.#a_0"
-                                                , meta = ()
-                                                , moduleName = ModuleName
-                                                    { raw = "DataDef" }
-                                                , sort = Internal 2
-                                                }
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    ]
-                }
-            )
-        ,
-            ( Id
                 { name = "Int64#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1460,14 +1156,20 @@ TcEnv
             )
         ,
             ( Id
-                { name = "Int32#"
-                , meta = ()
+                { name = "a"
                 , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
+                    { raw = "DataDef" }
+                , sort = Internal 0
                 }
             , TypeDef
-                { _typeConstructor = TyPrim Int32T
+                { _typeConstructor = TyVar
+                    ( Id
+                        { name = "DataDef.#a_0"
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , sort = Internal 2
+                        }
+                    )
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -1475,7 +1177,6 @@ TcEnv
         ,
             ( Id
                 { name = "Double#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1488,14 +1189,239 @@ TcEnv
             )
         ,
             ( Id
+                { name = "Int32#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int32T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int"
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "Int"
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , sort = External
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "Int#"
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyArr ( TyPrim Int64T )
+                                ( TyCon
+                                    ( Id
+                                        { name = "Int"
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ,
+            ( Id
                 { name = "Ptr#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
                 }
             , TypeDef
                 { _typeConstructor = TyPtr
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim StringT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim FloatT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "List"
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "List"
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , sort = External
+                        }
+                    )
+                , _typeParameters =
+                    [ Id
+                        { name = "DataDef.#a_0"
+                        , moduleName = ModuleName
+                            { raw = "DataDef" }
+                        , sort = Internal 2
+                        }
+                    ]
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "Nil"
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , sort = External
+                            }
+                        , Forall
+                            [ Id
+                                { name = "DataDef.#a_0"
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , sort = Internal 2
+                                }
+                            ]
+                            ( TyApp
+                                ( TyCon
+                                    ( Id
+                                        { name = "List"
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                                ( TyVar
+                                    ( Id
+                                        { name = "DataDef.#a_0"
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , sort = Internal 2
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "Cons"
+                            , moduleName = ModuleName
+                                { raw = "DataDef" }
+                            , sort = External
+                            }
+                        , Forall
+                            [ Id
+                                { name = "DataDef.#a_0"
+                                , moduleName = ModuleName
+                                    { raw = "DataDef" }
+                                , sort = Internal 2
+                                }
+                            ]
+                            ( TyArr
+                                ( TyVar
+                                    ( Id
+                                        { name = "DataDef.#a_0"
+                                        , moduleName = ModuleName
+                                            { raw = "DataDef" }
+                                        , sort = Internal 2
+                                        }
+                                    )
+                                )
+                                ( TyArr
+                                    ( TyApp
+                                        ( TyCon
+                                            ( Id
+                                                { name = "List"
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( TyVar
+                                            ( Id
+                                                { name = "DataDef.#a_0"
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , sort = Internal 2
+                                                }
+                                            )
+                                        )
+                                    )
+                                    ( TyApp
+                                        ( TyCon
+                                            ( Id
+                                                { name = "List"
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( TyVar
+                                            ( Id
+                                                { name = "DataDef.#a_0"
+                                                , moduleName = ModuleName
+                                                    { raw = "DataDef" }
+                                                , sort = Internal 2
+                                                }
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim CharT
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -1510,7 +1436,6 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "String#"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
                         , sort = External
@@ -1525,7 +1450,6 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Ptr#"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
                         , sort = External
@@ -1540,7 +1464,6 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Char#"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
                         , sort = External
@@ -1555,7 +1478,6 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Float#"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
                         , sort = External
@@ -1570,7 +1492,6 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Int64#"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
                         , sort = External
@@ -1585,7 +1506,6 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Double#"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
                         , sort = External
@@ -1600,7 +1520,6 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Int32#"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Builtin" }
                         , sort = External
@@ -1612,8 +1531,23 @@ TcEnv
     , _kindCtx = fromList
         [
             ( Id
-                { name = "String#"
-                , meta = ()
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 12
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , sort = Temporal 11
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Int64#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1623,25 +1557,22 @@ TcEnv
         ,
             ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , sort = Internal 16
+                , sort = Internal 14
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , sort = Temporal 15
+                    , sort = Temporal 13
                     }
                 )
             )
         ,
             ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
                 , sort = Internal 8
@@ -1649,7 +1580,6 @@ TcEnv
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = Temporal 7
@@ -1659,7 +1589,6 @@ TcEnv
         ,
             ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
                 , sort = Internal 10
@@ -1667,7 +1596,6 @@ TcEnv
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = Temporal 9
@@ -1676,74 +1604,7 @@ TcEnv
             )
         ,
             ( Id
-                { name = "Float#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = Internal 12
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "DataDef" }
-                    , sort = Temporal 11
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "List"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = External
-                }
-            , TyArr TYPE TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "DataDef" }
-                , sort = Internal 14
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , meta = ()
-                    , moduleName = ModuleName
-                        { raw = "DataDef" }
-                    , sort = Temporal 13
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Int64#"
-                , meta = ()
+                { name = "Double#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1753,17 +1614,6 @@ TcEnv
         ,
             ( Id
                 { name = "Int32#"
-                , meta = ()
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1773,7 +1623,6 @@ TcEnv
         ,
             ( Id
                 { name = "t"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "DataDef" }
                 , sort = Internal 4
@@ -1781,7 +1630,6 @@ TcEnv
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
                     , sort = Temporal 3
@@ -1790,8 +1638,23 @@ TcEnv
             )
         ,
             ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 6
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "DataDef" }
+                    , sort = Temporal 5
+                    }
+                )
+            )
+        ,
+            ( Id
                 { name = "Ptr#"
-                , meta = ()
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
@@ -1800,21 +1663,55 @@ TcEnv
             )
         ,
             ( Id
-                { name = "t"
-                , meta = ()
+                { name = "String#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "List"
                 , moduleName = ModuleName
                     { raw = "DataDef" }
-                , sort = Internal 6
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "DataDef" }
+                , sort = Internal 16
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , meta = ()
                     , moduleName = ModuleName
                         { raw = "DataDef" }
-                    , sort = Temporal 5
+                    , sort = Temporal 15
                     }
                 )
+            )
+        ,
+            ( Id
+                { name = "Char#"
+                , moduleName = ModuleName
+                    { raw = "Builtin" }
+                , sort = External
+                }
+            , TYPE
             )
         ]
     }

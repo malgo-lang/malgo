@@ -47,44 +47,43 @@ appendRnEnv lens newEnv = over lens
 
 -- | Generate RnId of primitive types
 genBuiltinRnEnv :: Eff es RnEnv
-genBuiltinRnEnv = do
-  runReader (ModuleName "Builtin") do
-    int32_t <- newExternalId "Int32#" ()
-    int64_t <- newExternalId "Int64#" ()
-    float_t <- newExternalId "Float#" ()
-    double_t <- newExternalId "Double#" ()
-    char_t <- newExternalId "Char#" ()
-    string_t <- newExternalId "String#" ()
-    ptr_t <- newExternalId "Ptr#" ()
+genBuiltinRnEnv = runReader (ModuleName "Builtin") do
+  int32_t <- newExternalId "Int32#"
+  int64_t <- newExternalId "Int64#"
+  float_t <- newExternalId "Float#"
+  double_t <- newExternalId "Double#"
+  char_t <- newExternalId "Char#"
+  string_t <- newExternalId "String#"
+  ptr_t <- newExternalId "Ptr#"
 
-    pure
-      $ RnEnv
-        { _resolvedVarIdentMap = mempty,
-          _resolvedTypeIdentMap =
-            HashMap.fromList
-              [ ("Int32#", [Qualified Implicit int32_t]),
-                ("Int64#", [Qualified Implicit int64_t]),
-                ("Float#", [Qualified Implicit float_t]),
-                ("Double#", [Qualified Implicit double_t]),
-                ("Char#", [Qualified Implicit char_t]),
-                ("String#", [Qualified Implicit string_t]),
-                ("Ptr#", [Qualified Implicit ptr_t])
-              ]
-        }
+  pure
+    $ RnEnv
+      { _resolvedVarIdentMap = mempty,
+        _resolvedTypeIdentMap =
+          HashMap.fromList
+            [ ("Int32#", [Qualified Implicit int32_t]),
+              ("Int64#", [Qualified Implicit int64_t]),
+              ("Float#", [Qualified Implicit float_t]),
+              ("Double#", [Qualified Implicit double_t]),
+              ("Char#", [Qualified Implicit char_t]),
+              ("String#", [Qualified Implicit string_t]),
+              ("Ptr#", [Qualified Implicit ptr_t])
+            ]
+      }
 
 -- | Resolving a new (local) name
 resolveName ::
   (State Uniq :> es, Reader ModuleName :> es) =>
   Text ->
-  Eff es (Id ())
-resolveName name = newInternalId name ()
+  Eff es Id
+resolveName = newInternalId
 
 -- | Resolving a new global (toplevel) name
-resolveGlobalName :: (Reader ModuleName :> es) => Text -> Eff es (Id ())
-resolveGlobalName name = newExternalId name ()
+resolveGlobalName :: (Reader ModuleName :> es) => Text -> Eff es Id
+resolveGlobalName = newExternalId
 
 -- | Resolving a variable name that is already resolved
-lookupVarName :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Text -> Eff es (Id ())
+lookupVarName :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Text -> Eff es Id
 lookupVarName pos name =
   asks @RnEnv ((._resolvedVarIdentMap) >>> HashMap.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
@@ -100,7 +99,7 @@ lookupVarName pos name =
     _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
 
 -- | Resolving a type name that is already resolved
-lookupTypeName :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Text -> Eff es (Id ())
+lookupTypeName :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Text -> Eff es Id
 lookupTypeName pos name =
   asks @RnEnv ((._resolvedTypeIdentMap) >>> HashMap.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
@@ -121,7 +120,7 @@ lookupQualifiedVarName ::
   Range ->
   ModuleName ->
   Text ->
-  Eff es (Id ())
+  Eff es Id
 lookupQualifiedVarName pos modName name =
   asks @RnEnv ((._resolvedVarIdentMap) >>> HashMap.lookup name) >>= \case
     Just names ->

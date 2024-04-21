@@ -19,7 +19,6 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , meta = ()
                         , moduleName = ModuleName
                             { raw = "Primitive" }
                         , sort = External
@@ -110,7 +109,6 @@ Module
                                             )
                                             ( Id
                                                 { name = "printString#"
-                                                , meta = ()
                                                 , moduleName = ModuleName
                                                     { raw = "Builtin" }
                                                 , sort = External
@@ -175,7 +173,6 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "toStringInt64#"
-                                                            , meta = ()
                                                             , moduleName = ModuleName
                                                                 { raw = "Builtin" }
                                                             , sort = External
@@ -254,7 +251,6 @@ Module
                                                                         )
                                                                         ( Id
                                                                             { name = "addInt64#"
-                                                                            , meta = ()
                                                                             , moduleName = ModuleName
                                                                                 { raw = "Builtin" }
                                                                             , sort = External

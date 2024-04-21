@@ -81,5 +81,5 @@ class HasType a where
 instance HasType Type where
   typeOf x = x
 
-instance (HasType a) => HasType (Id a) where
+instance (HasType a) => HasType (Meta a) where
   typeOf x = typeOf x.meta
