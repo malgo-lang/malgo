@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🚜 Refactor
+
+- Simple interface
+- ExportedIdentList and exportedTypeIdentList as function
+- Split meta informations in Id to wrapper type Meta
+
 ### 🧪 Testing
 
 - Add golden tests for malgo passes
