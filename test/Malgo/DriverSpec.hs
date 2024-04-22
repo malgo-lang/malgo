@@ -42,14 +42,13 @@ import System.Process.Typed
 import Test.Hspec
   ( Spec,
     anyException,
-    describe,
-    example,
     it,
     parallel,
     runIO,
     shouldBe,
     shouldThrow,
   )
+import Test.Hspec.Golden (golden)
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
@@ -67,30 +66,20 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO (filter (isExtensionOf "mlg") <$> listDirectory testcaseDir)
-  describe "Test malgo to-ll" do
-    for_ testcases \testcase -> do
-      describe testcase do
-        it ("test normal case " <> testcaseDir </> testcase) $ example do
-          testNormal (testcaseDir </> testcase)
-        it ("test nono case " <> testcaseDir </> testcase <> " (no optimization, no lambda-lifting)") $ example do
-          testNoNo (testcaseDir </> testcase)
-        it ("test noopt case " <> testcaseDir </> testcase <> " (no optimization)") $ example do
-          testNoOpt (testcaseDir </> testcase)
-        it ("test nolift case " <> testcaseDir </> testcase <> " (no lambda-lift)") $ example do
-          testNoLift (testcaseDir </> testcase)
-        it ("test agressive case " <> testcaseDir </> testcase <> " (agressive optimization)") $ example do
-          testAggressive (testcaseDir </> testcase)
+  for_ testcases \testcase -> do
+    golden ("driver-normalCase-" <> takeBaseName testcase) $ testNormal (testcaseDir </> testcase)
+    golden ("driver-nonoCase-" <> takeBaseName testcase) $ testNoNo (testcaseDir </> testcase)
+    golden ("driver-nooptCase-" <> takeBaseName testcase) $ testNoOpt (testcaseDir </> testcase)
+    golden ("driver-noliftCase-" <> takeBaseName testcase) $ testNoLift (testcaseDir </> testcase)
+    golden ("driver-agressiveCase-" <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
   examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
-  describe "Test example malgo to-ll" do
-    for_ examples \examplecase -> do
-      it ("test " <> "./examples/malgo" </> examplecase) $ example do
-        testNormal ("./examples/malgo" </> examplecase)
+  for_ examples \examplecase -> do
+    golden ("driver-exampleCase-" <> takeBaseName examplecase) $ testNormal ("./examples/malgo" </> examplecase)
   errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
-  describe "Test malgo to-ll (must be error)" do
-    for_ errorcases \errorcase -> do
-      it ("test error case " <> testcaseDir </> "error" </> errorcase)
-        $ testError (testcaseDir </> "error" </> errorcase)
-        `shouldThrow` anyException
+  for_ errorcases \errorcase -> do
+    it ("driver-errorCase-" <> takeBaseName errorcase)
+      $ testError (testcaseDir </> "error" </> errorcase)
+      `shouldThrow` anyException
 
 setupTestDir :: IO ()
 setupTestDir = do
@@ -169,7 +158,7 @@ test ::
   OptimizeOption ->
   -- | Compile mode
   CompileMode ->
-  IO ()
+  IO String
 test testcase typ lambdaLift noOptimize option compileMode = retry 3 do
   createDirectoryIfMissing True (outputDir </> typ)
   let llPath = outputDir </> typ </> takeBaseName testcase -<.> ".ll"
@@ -224,8 +213,7 @@ test testcase typ lambdaLift noOptimize option compileMode = retry 3 do
             & setStdin (byteStringInput "Hello")
         )
   ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
-  expected <- filter ("-- Expected: " `T.isPrefixOf`) . T.lines . convertString <$> BS.readFile testcase
-  map ("-- Expected: " <>) (T.lines $ T.stripEnd result) `shouldBe` expected
+  pure $ convertString $ T.stripEnd result
   where
     timeoutWrapper phase m = do
       timeout (60 * 5) m >>= \case
@@ -236,23 +224,23 @@ testError :: FilePath -> IO ()
 testError testcase = do
   compile testcase (outputDir </> takeBaseName testcase -<.> ".ll") [outputDir </> "libs"] False False defaultOptimizeOption LLVM
 
-testNormal :: FilePath -> IO ()
+testNormal :: FilePath -> IO String
 testNormal testcase =
   test testcase "normal" True False defaultOptimizeOption LLVM
 
-testNoLift :: FilePath -> IO ()
+testNoLift :: FilePath -> IO String
 testNoLift testcase =
   test testcase "nolift" False False defaultOptimizeOption LLVM
 
-testNoOpt :: FilePath -> IO ()
+testNoOpt :: FilePath -> IO String
 testNoOpt testcase =
   test testcase "noopt" True True defaultOptimizeOption LLVM
 
-testNoNo :: FilePath -> IO ()
+testNoNo :: FilePath -> IO String
 testNoNo testcase =
   test testcase "nono" False True defaultOptimizeOption LLVM
 
-testAggressive :: FilePath -> IO ()
+testAggressive :: FilePath -> IO String
 testAggressive testcase =
   test testcase "aggressive" True False aggressiveOptimizeOption LLVM
 
