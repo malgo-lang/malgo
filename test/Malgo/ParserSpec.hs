@@ -23,7 +23,7 @@ spec :: Spec
 spec = parallel do
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("parse-" <> takeBaseName testcase) (driveParse (testcaseDir </> testcase))
+    golden ("parse " <> takeBaseName testcase) (driveParse (testcaseDir </> testcase))
 
 driveParse :: FilePath -> IO String
 driveParse srcPath = do

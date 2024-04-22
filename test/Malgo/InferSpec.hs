@@ -31,7 +31,7 @@ spec = parallel do
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("infer-" <> takeBaseName testcase) (driveInfer (testcaseDir </> testcase))
+    golden ("infer " <> takeBaseName testcase) (driveInfer (testcaseDir </> testcase))
 
 driveInfer :: FilePath -> IO String
 driveInfer srcPath = do

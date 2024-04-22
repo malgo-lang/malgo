@@ -30,7 +30,7 @@ spec = parallel do
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("rename-" <> takeBaseName testcase) (driveRename (testcaseDir </> testcase))
+    golden ("rename " <> takeBaseName testcase) (driveRename (testcaseDir </> testcase))
 
 driveRename :: FilePath -> IO String
 driveRename srcPath = do

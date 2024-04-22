@@ -32,7 +32,7 @@ spec = parallel do
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("refine-" <> takeBaseName testcase) (driveRefine (testcaseDir </> testcase))
+    golden ("refine " <> takeBaseName testcase) (driveRefine (testcaseDir </> testcase))
 
 driveRefine :: FilePath -> IO String
 driveRefine srcPath = do

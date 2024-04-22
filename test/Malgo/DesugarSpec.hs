@@ -33,7 +33,7 @@ spec = parallel do
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("desugar-" <> takeBaseName testcase) (driveDesugar (testcaseDir </> testcase))
+    golden ("desugar " <> takeBaseName testcase) (driveDesugar (testcaseDir </> testcase))
 
 driveDesugar :: FilePath -> IO String
 driveDesugar srcPath = do

@@ -71,31 +71,31 @@ spec = parallel do
   testcases <- runIO (filter (isExtensionOf "mlg") <$> listDirectory testcaseDir)
   for_ testcases \testcase -> do
     sequential do
-      golden ("driver-normalCase-" <> takeBaseName testcase) $ testNormal (testcaseDir </> testcase)
-      goldenLLVM ("llvm-normalCase-" <> takeBaseName testcase) $ readLLVMNormal (testcaseDir </> testcase)
-      goldenLLVM ("llvm-opt-normalCase-" <> takeBaseName testcase) $ readLLVMOptNormal (testcaseDir </> testcase)
+      golden ("driver normalCase " <> takeBaseName testcase) $ testNormal (testcaseDir </> testcase)
+      goldenLLVM ("llvm normalCase " <> takeBaseName testcase) $ readLLVMNormal (testcaseDir </> testcase)
+      goldenLLVM ("llvm opt normalCase " <> takeBaseName testcase) $ readLLVMOptNormal (testcaseDir </> testcase)
     sequential do
-      golden ("driver-nonoCase-" <> takeBaseName testcase) $ testNoNo (testcaseDir </> testcase)
-      goldenLLVM ("llvm-nonoCase-" <> takeBaseName testcase) $ readLLVMNoNo (testcaseDir </> testcase)
-      goldenLLVM ("llvm-opt-nonoCase-" <> takeBaseName testcase) $ readLLVMOptNoNo (testcaseDir </> testcase)
+      golden ("driver nonoCase " <> takeBaseName testcase) $ testNoNo (testcaseDir </> testcase)
+      goldenLLVM ("llvm nonoCase " <> takeBaseName testcase) $ readLLVMNoNo (testcaseDir </> testcase)
+      goldenLLVM ("llvm opt nonoCase " <> takeBaseName testcase) $ readLLVMOptNoNo (testcaseDir </> testcase)
     sequential do
-      golden ("driver-nooptCase-" <> takeBaseName testcase) $ testNoOpt (testcaseDir </> testcase)
-      goldenLLVM ("llvm-nooptCase-" <> takeBaseName testcase) $ readLLVMNoOpt (testcaseDir </> testcase)
-      goldenLLVM ("llvm-opt-nooptCase-" <> takeBaseName testcase) $ readLLVMOptNoOpt (testcaseDir </> testcase)
+      golden ("driver nooptCase " <> takeBaseName testcase) $ testNoOpt (testcaseDir </> testcase)
+      goldenLLVM ("llvm nooptCase " <> takeBaseName testcase) $ readLLVMNoOpt (testcaseDir </> testcase)
+      goldenLLVM ("llvm opt nooptCase " <> takeBaseName testcase) $ readLLVMOptNoOpt (testcaseDir </> testcase)
     sequential do
-      golden ("driver-noliftCase-" <> takeBaseName testcase) $ testNoLift (testcaseDir </> testcase)
-      goldenLLVM ("llvm-noliftCase-" <> takeBaseName testcase) $ readLLVMNoLift (testcaseDir </> testcase)
-      goldenLLVM ("llvm-opt-noliftCase-" <> takeBaseName testcase) $ readLLVMOptNoLift (testcaseDir </> testcase)
+      golden ("driver noliftCase " <> takeBaseName testcase) $ testNoLift (testcaseDir </> testcase)
+      goldenLLVM ("llvm noliftCase " <> takeBaseName testcase) $ readLLVMNoLift (testcaseDir </> testcase)
+      goldenLLVM ("llvm opt noliftCase " <> takeBaseName testcase) $ readLLVMOptNoLift (testcaseDir </> testcase)
     sequential do
-      golden ("driver-agressiveCase-" <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
-      goldenLLVM ("llvm-agressiveCase-" <> takeBaseName testcase) $ readLLVMAggressive (testcaseDir </> testcase)
-      goldenLLVM ("llvm-opt-agressiveCase-" <> takeBaseName testcase) $ readLLVMOptAggressive (testcaseDir </> testcase)
+      golden ("driver agressiveCase " <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
+      goldenLLVM ("llvm agressiveCase " <> takeBaseName testcase) $ readLLVMAggressive (testcaseDir </> testcase)
+      goldenLLVM ("llvm opt agressiveCase " <> takeBaseName testcase) $ readLLVMOptAggressive (testcaseDir </> testcase)
   examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
   for_ examples \examplecase -> do
-    golden ("driver-exampleCase-" <> takeBaseName examplecase) $ testNormal ("./examples/malgo" </> examplecase)
+    golden ("driver exampleCase " <> takeBaseName examplecase) $ testNormal ("./examples/malgo" </> examplecase)
   errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
   for_ errorcases \errorcase -> do
-    it ("driver-errorCase-" <> takeBaseName errorcase)
+    it ("driver errorCase " <> takeBaseName errorcase)
       $ testError (testcaseDir </> "error" </> errorcase)
       `shouldThrow` anyException
 
