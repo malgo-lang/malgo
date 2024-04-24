@@ -47,17 +47,20 @@ import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax.Extension
 
+sexpr :: [Doc ann] -> Doc ann
+sexpr = parens . sep
+
 -- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
   deriving stock (Show, Eq, Ord)
 
 instance Pretty (Literal x) where
-  pretty (Int32 i) = pretty (toInteger i)
-  pretty (Int64 i) = pretty (toInteger i) <> "L"
-  pretty (Float f) = pretty f <> "F"
-  pretty (Double d) = pretty d
-  pretty (Char c) = squotes (pretty c)
-  pretty (String s) = dquotes (pretty s)
+  pretty (Int32 i) = sexpr ["int32", pretty (toInteger i)]
+  pretty (Int64 i) = sexpr ["int64", pretty (toInteger i)]
+  pretty (Float f) = sexpr ["float", pretty f]
+  pretty (Double d) = sexpr ["double", pretty d]
+  pretty (Char c) = sexpr ["char", squotes (pretty c)]
+  pretty (String s) = sexpr ["string", dquotes (pretty s)]
 
 instance HasType (Literal x) where
   typeOf Int32 {} = TyPrim Int32T
@@ -87,18 +90,13 @@ deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
 deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
 
 instance (Pretty (XId x)) => Pretty (Type x) where
-  pretty = prettyPrecType 0
-
-prettyPrecType :: (Pretty (XId x)) => Int -> Type x -> Doc ann
-prettyPrecType d (TyApp _ t ts) =
-  maybeParens (d > 11) $ pretty t <+> sep (map (prettyPrecType 12) ts)
-prettyPrecType _ (TyVar _ i) = pretty i
-prettyPrecType _ (TyCon _ i) = pretty i
-prettyPrecType d (TyArr _ t1 t2) =
-  maybeParens (d > 10) $ prettyPrecType 11 t1 <+> "->" <+> prettyPrecType 10 t2
-prettyPrecType _ (TyTuple _ ts) = parens $ sep $ punctuate "," $ map pretty ts
-prettyPrecType _ (TyRecord _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> prettyPrecType 0 v) kvs
-prettyPrecType _ (TyBlock _ t) = braces $ pretty t
+  pretty (TyApp _ t ts) = sexpr $ ["app", pretty t] <> map pretty ts
+  pretty (TyVar _ v) = pretty v
+  pretty (TyCon _ c) = pretty c
+  pretty (TyArr _ t1 t2) = sexpr ["->", pretty t1, pretty t2]
+  pretty (TyTuple _ ts) = sexpr $ "tuple" : map pretty ts
+  pretty (TyRecord _ kvs) = sexpr $ "record" : map (\(k, v) -> sexpr [pretty k, pretty v]) kvs
+  pretty (TyBlock _ t) = sexpr ["block", pretty t]
 
 instance (HasRange (XTyApp x) r, HasRange (XTyVar x) r, HasRange (XTyCon x) r, HasRange (XTyArr x) r, HasRange (XTyTuple x) r, HasRange (XTyRecord x) r, HasRange (XTyBlock x) r) => HasRange (Type x) r where
   range f = \case
@@ -140,28 +138,18 @@ deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, F
 deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Expr x)
 
 instance (Pretty (XId x)) => Pretty (Expr x) where
-  pretty = prettyPrec 0
-    where
-      prettyPrec :: Int -> Expr x -> Doc ann
-      prettyPrec _ (Var _ i) = pretty i
-      prettyPrec _ (Unboxed _ lit) = pretty lit <> "#"
-      prettyPrec _ (Boxed _ lit) = pretty lit
-      prettyPrec d (Apply _ e1 e2) =
-        maybeParens (d > 10) $ sep [prettyPrec 10 e1, prettyPrec 11 e2]
-      prettyPrec d (OpApp _ o e1 e2) =
-        maybeParens (d > 10) $ sep [prettyPrec 11 e1, pretty o <+> prettyPrec 11 e2]
-      prettyPrec _ (Fn _ cs) =
-        braces
-          $ space
-          <> foldl1
-            (\a b -> sep [a, nest (-2) $ "|" <+> b])
-            (toList $ fmap pretty cs)
-      prettyPrec _ (Tuple _ xs) = parens $ sep $ punctuate "," $ map pretty xs
-      prettyPrec _ (Record _ kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) kvs
-      prettyPrec _ (List _ xs) = brackets $ sep $ punctuate "," $ map pretty xs
-      prettyPrec _ (Ann _ e t) = parens $ pretty e <+> ":" <+> pretty t
-      prettyPrec _ (Seq _ ss) = parens $ sep $ punctuate ";" $ toList $ fmap pretty ss
-      prettyPrec _ (Parens _ x) = parens $ pretty x
+  pretty (Var _ id) = pretty id
+  pretty (Unboxed _ l) = sexpr ["unboxed", pretty l]
+  pretty (Boxed _ l) = sexpr ["boxed", pretty l]
+  pretty (Apply _ e1 e2) = sexpr ["apply", pretty e1, pretty e2]
+  pretty (OpApp _ op e1 e2) = sexpr ["opapp", pretty op, pretty e1, pretty e2]
+  pretty (Fn _ cs) = sexpr ["fn", sexpr $ map pretty (toList cs)]
+  pretty (Tuple _ es) = sexpr $ "tuple" : map pretty es
+  pretty (Record _ kvs) = sexpr $ "record" : map (\(k, v) -> sexpr [pretty k, pretty v]) kvs
+  pretty (List _ es) = sexpr $ "list" : map pretty es
+  pretty (Ann _ e t) = sexpr ["ann", pretty e, pretty t]
+  pretty (Seq _ ss) = sexpr $ "seq" : map pretty (toList ss)
+  pretty (Parens _ e) = sexpr ["parens", pretty e]
 
 instance
   (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
@@ -269,10 +257,10 @@ deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, F
 deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Stmt x)
 
 instance (Pretty (XId x)) => Pretty (Stmt x) where
-  pretty (Let _ v e) = "let" <+> pretty v <+> "=" <+> pretty e
-  pretty (With _ Nothing e) = "with" <+> pretty e
-  pretty (With _ (Just v) e) = "with" <+> pretty v <+> "=" <+> pretty e
-  pretty (NoBind _ e) = pretty e
+  pretty (Let _ var body) = sexpr ["let", pretty var, pretty body]
+  pretty (With _ Nothing body) = sexpr ["with", pretty body]
+  pretty (With _ (Just var) body) = sexpr ["with", pretty var, pretty body]
+  pretty (NoBind _ body) = sexpr ["do", pretty body]
 
 instance
   (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
@@ -299,11 +287,7 @@ instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), For
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
-  pretty = prettyPrec 0
-    where
-      prettyPrec :: Int -> Clause x -> Doc ann
-      prettyPrec _ (Clause _ [] e) = pretty e
-      prettyPrec _ (Clause _ ps e) = sep [sep (map (prettyPrecPat 11) ps) <+> "->", pretty e]
+  pretty (Clause _ pats body) = sexpr ["clause", sexpr $ map pretty pats, pretty body]
 
 instance
   (ForallClauseX HasType x, ForallPatX HasType x, ForallExpX HasType x) =>
@@ -331,21 +315,13 @@ deriving stock instance (ForallPatX Show x, Show (XId x)) => Show (Pat x)
 deriving stock instance (ForallPatX Ord x, Ord (XId x)) => Ord (Pat x)
 
 instance (Pretty (XId x)) => Pretty (Pat x) where
-  pretty = prettyPrecPat 0
-
-prettyPrecPat :: (Pretty (XId x)) => Int -> Pat x -> Doc ann
-prettyPrecPat _ (VarP _ i) = pretty i
-prettyPrecPat _ (ConP _ i []) = pretty i
-prettyPrecPat d (ConP _ i ps) =
-  maybeParens (d > 10) $ pretty i <+> sep (map (prettyPrecPat 11) ps)
-prettyPrecPat _ (TupleP _ ps) =
-  parens $ sep $ punctuate "," $ map pretty ps
-prettyPrecPat _ (RecordP _ kps) =
-  braces $ sep $ punctuate "," $ map (\(k, p) -> pretty k <> ":" <+> pretty p) kps
-prettyPrecPat _ (ListP _ ps) =
-  brackets $ sep $ punctuate "," $ map pretty ps
-prettyPrecPat _ (UnboxedP _ u) = pretty u
-prettyPrecPat _ (BoxedP _ x) = pretty x
+  pretty (VarP _ id) = pretty id
+  pretty (ConP _ id ps) = sexpr $ ["con", pretty id] <> map pretty ps
+  pretty (TupleP _ ps) = sexpr $ "tuple" : map pretty ps
+  pretty (RecordP _ kps) = sexpr $ "record" : map (\(k, p) -> sexpr [pretty k, pretty p]) kps
+  pretty (ListP _ ps) = sexpr $ "list" : map pretty ps
+  pretty (UnboxedP _ l) = sexpr ["unboxed", pretty l]
+  pretty (BoxedP _ l) = sexpr ["boxed", pretty l]
 
 instance
   (ForallPatX HasType x) =>
@@ -406,25 +382,45 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (Decl x)
 
 instance (Pretty (XId x)) => Pretty (Decl x) where
-  pretty (ScDef _ f e) = sep [pretty f <+> "=", nest 2 $ pretty e]
-  pretty (ScSig _ f t) = pretty f <+> ":" <+> pretty t
-  pretty (DataDef _ d xs cs) =
-    sep
-      [ "data" <+> pretty d <+> sep (map pretty xs) <+> "=",
-        nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
-      ]
-    where
-      pprConDef (_, con, ts) = pretty con <+> sep (map (prettyPrecType 12) ts)
-  pretty (TypeSynonym _ t xs t') =
-    sep
-      [ "type" <+> pretty t <+> sep (map pretty xs) <+> "=",
-        pretty t'
-      ]
-  pretty (Infix _ a o x) = "infix" <> pretty a <+> pretty o <+> pretty x
-  pretty (Foreign _ x t) = "foreign import" <+> pretty x <+> ":" <+> pretty t
-  pretty (Import _ name All) = "module" <+> braces ".." <+> "=" <+> "import" <+> pretty name
-  pretty (Import _ name (Selected xs)) = "module" <+> braces (sep $ punctuate "," $ map pretty xs) <+> "=" <+> "import" <+> pretty name
-  pretty (Import _ name (As name')) = "module" <+> pretty name' <+> "=" <+> "import" <+> pretty name
+  pretty (ScDef x name expr) = prettyScDef (x, name, expr)
+  pretty (ScSig x name ty) = prettyScSig (x, name, ty)
+  pretty (DataDef x name params cons) = prettyDataDef (x, name, params, cons)
+  pretty (TypeSynonym x name params ty) = prettyTypeSynonym (x, name, params, ty)
+  pretty (Infix _ assoc prec op) = sexpr ["infix", pretty assoc, pretty prec, pretty op]
+  pretty (Foreign x name ty) = prettyForeign (x, name, ty)
+  pretty (Import x name list) = prettyImport (x, name, list)
+
+prettyScDef :: (Pretty (XId x)) => ScDef x -> Doc ann
+prettyScDef (_, f, e) = sexpr ["def", pretty f, pretty e]
+
+prettyScSig :: (Pretty (XId x)) => ScSig x -> Doc ann
+prettyScSig (_, f, t) = sexpr ["sig", pretty f, pretty t]
+
+prettyDataDef :: (Pretty (XId x)) => DataDef x -> Doc ann
+prettyDataDef (_, t, ps, cons) =
+  sexpr
+    [ "data",
+      pretty t,
+      sexpr $ map (pretty . view _2) ps,
+      sexpr $ map prettyConDef cons
+    ]
+  where
+    prettyConDef (_, con, ts) = sexpr [pretty con, sexpr $ map pretty ts]
+
+prettyTypeSynonym :: (Pretty (XId x)) => TypeSynonym x -> Doc ann
+prettyTypeSynonym (_, t, ps, ty) = sexpr ["type", pretty t, sexpr $ map pretty ps, pretty ty]
+
+prettyForeign :: (Pretty (XId x)) => Foreign x -> Doc ann
+prettyForeign (_, n, t) = sexpr ["foreign", pretty n, pretty t]
+
+-- prettyImport :: Import x -> Doc ann
+prettyImport :: (x, ModuleName, ImportList) -> Doc ann
+prettyImport (_, m, list) =
+  sexpr ["import", pretty m, prettyImportList list]
+  where
+    prettyImportList All = "all"
+    prettyImportList (Selected xs) = sexpr $ "selected" : map pretty xs
+    prettyImportList (As m) = sexpr ["as", pretty m]
 
 -- * Module
 
@@ -436,13 +432,13 @@ deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XModule x)) => 
 
 instance (Pretty (XId x), Pretty (XModule x)) => Pretty (Module x) where
   pretty (Module name defs) =
-    vsep ["module" <+> pretty name <+> "=", braces (pretty defs)]
+    sexpr ["module", pretty name, pretty defs]
 
 newtype ParsedDefinitions = ParsedDefinitions [Decl (Malgo 'Parse)]
   deriving stock (Eq, Show)
 
 instance Pretty ParsedDefinitions where
-  pretty (ParsedDefinitions ds) = sep $ map (\x -> pretty x <> ";") ds
+  pretty (ParsedDefinitions ds) = sep $ map pretty ds
 
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
 type instance XModule (Malgo 'Parse) = ParsedDefinitions
@@ -486,21 +482,15 @@ deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
 instance (Pretty (XId x)) => Pretty (BindGroup x) where
   pretty BindGroup {..} =
     sep
-      $ punctuate ";"
-      $ map prettyDataDef _dataDefs
-      <> map prettyForeign _foreigns
-      <> map prettyScSig _scSigs
-      <> concatMap (map prettyScDef) _scDefs
+      [ sexpr $ map prettyScDefs _scDefs,
+        sexpr $ map prettyScSig _scSigs,
+        sexpr $ map prettyDataDef _dataDefs,
+        sexpr $ map prettyTypeSynonym _typeSynonyms,
+        sexpr $ map prettyForeign _foreigns,
+        sexpr $ map prettyImport _imports
+      ]
     where
-      prettyDataDef (_, d, xs, cs) =
-        sep
-          [ "data" <+> pretty d <+> sep (map pretty xs) <+> "=",
-            nest 2 $ foldl1 (\a b -> sep [a, "|" <+> b]) $ map pprConDef cs
-          ]
-      pprConDef (_, con, ts) = pretty con <+> sep (map (prettyPrecType 12) ts)
-      prettyForeign (_, x, t) = "foreign import" <+> pretty x <+> ":" <+> pretty t
-      prettyScSig (_, f, t) = pretty f <+> ":" <+> pretty t
-      prettyScDef (_, f, e) = sep [pretty f <+> "=", nest 2 $ pretty e]
+      prettyScDefs = sexpr . map prettyScDef
 
 makeBindGroup :: (Hashable (XId x), Ord (XId x)) => [Decl x] -> BindGroup x
 makeBindGroup ds =
