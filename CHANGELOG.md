@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Simple interface
 - ExportedIdentList and exportedTypeIdentList as function
 - Split meta informations in Id to wrapper type Meta
+- Change Pretty instance for Malgo.Syntax
 
 ### 🧪 Testing
 
