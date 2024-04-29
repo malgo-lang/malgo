@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/aggressive/TypeAnnotation.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/TypeAnnotation.ll'
 source_filename = "./test/testcases/malgo/TypeAnnotation.mlg"
 
 @str3428 = unnamed_addr constant [5 x i8] c"hoge\00"

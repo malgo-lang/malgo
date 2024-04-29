@@ -11,7 +11,7 @@ import Koriel.MonadUniq (Uniq)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Driver qualified as Driver
 import Malgo.Infer.Pass (infer)
-import Malgo.Interface (Interface, ModulePathList)
+import Malgo.Interface (Interface)
 import Malgo.Monad (CompileMode (..), DstPath, runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -73,7 +73,7 @@ runMalgoEff ::
   FilePath ->
   Eff
     '[ Reader OptimizeOption,
-       Reader ModulePathList,
+       Reader FilePath,
        Reader Flag,
        Reader CompileMode,
        Reader DstPath,
@@ -84,6 +84,4 @@ runMalgoEff ::
     a ->
   IO a
 runMalgoEff src action = do
-  let dst = outputDir </> takeBaseName src -<.> "ll"
-  let modPaths = [outputDir]
-  runEff $ runMalgoM dst modPaths LLVM Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode = True} defaultOptimizeOption action
+  runEff $ runMalgoM src LLVM Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode = True} defaultOptimizeOption action

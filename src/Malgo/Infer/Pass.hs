@@ -19,7 +19,7 @@ import Koriel.Pretty
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.Unify hiding (lookupVar)
-import Malgo.Interface (Interface (..), ModulePathList, loadInterface)
+import Malgo.Interface (Interface (..), loadInterface)
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (RnEnv (..))
 import Malgo.Syntax hiding (Type (..))
@@ -46,7 +46,7 @@ lookupType pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
-infer :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
+infer :: (State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
 infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
   tcEnv <- genTcEnv rnEnv
   evalState tcEnv
@@ -66,7 +66,7 @@ infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
       pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
-  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es, Reader Flag :> es) =>
+  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader Flag :> es) =>
   BindGroup (Malgo Rename) ->
   Eff es (BindGroup (Malgo Infer))
 tcBindGroup bindGroup = do
@@ -78,7 +78,7 @@ tcBindGroup bindGroup = do
   _scDefs <- tcScDefGroup $ bindGroup ^. scDefs
   pure BindGroup {..}
 
-tcImports :: (State TcEnv :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) => [Import (Malgo Rename)] -> Eff es [Import (Malgo Infer)]
+tcImports :: (State TcEnv :> es, IOE :> es, State (HashMap ModuleName Interface) :> es) => [Import (Malgo Rename)] -> Eff es [Import (Malgo Infer)]
 tcImports = traverse tcImport
   where
     tcImport (pos, modName, importList) = do

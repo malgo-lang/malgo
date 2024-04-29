@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/noopt/FuncOverUnboxed.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/FuncOverUnboxed.ll'
 source_filename = "./test/testcases/malgo/FuncOverUnboxed.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef

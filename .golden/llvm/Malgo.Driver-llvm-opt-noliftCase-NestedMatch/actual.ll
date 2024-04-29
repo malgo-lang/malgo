@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/nolift/NestedMatch.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/NestedMatch.ll'
 source_filename = "./test/testcases/malgo/NestedMatch.mlg"
 
 @str80 = unnamed_addr constant [3 x i8] c"OK\00"

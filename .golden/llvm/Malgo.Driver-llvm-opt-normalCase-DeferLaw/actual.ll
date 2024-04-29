@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/normal/DeferLaw.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/DeferLaw.ll'
 source_filename = "./test/testcases/malgo/DeferLaw.mlg"
 
 @str2824 = unnamed_addr constant [6 x i8] c"Hello\00"

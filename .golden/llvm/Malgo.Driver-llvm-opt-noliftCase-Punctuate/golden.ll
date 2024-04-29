@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/nolift/Punctuate.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/Punctuate.ll'
 source_filename = "./test/testcases/malgo/Punctuate.mlg"
 
 @str3168 = unnamed_addr constant [1 x i8] zeroinitializer

@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/nolift/TestEither.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/TestEither.ll'
 source_filename = "./test/testcases/malgo/TestEither.mlg"
 
 @str3549 = unnamed_addr constant [12 x i8] c"unreachable\00"

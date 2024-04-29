@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/noopt/TestPatSynRecon.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/TestPatSynRecon.ll'
 source_filename = "./test/testcases/malgo/TestPatSynRecon.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef

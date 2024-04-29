@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/noopt/Punctuate.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/Punctuate.ll'
 source_filename = "./test/testcases/malgo/Punctuate.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef

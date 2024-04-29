@@ -30,7 +30,7 @@ import Malgo.Syntax.Extension as G
 
 -- | MalgoからCoreへの変換
 desugar ::
-  (IOE :> es, Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
+  (IOE :> es, State (HashMap ModuleName Interface) :> es, State Uniq :> es) =>
   TcEnv ->
   Module (Malgo 'Refine) ->
   Eff es (DsState, Program (Meta C.Type))
@@ -44,7 +44,7 @@ desugar tcEnv (Module name ds) = runReader name do
 
 -- BindGroupの脱糖衣
 -- DataDef, Foreign, ScDefの順で処理する
-dsBindGroup :: (Reader ModulePathList :> es, State (HashMap ModuleName Interface) :> es, State DsState :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es) => BindGroup (Malgo Refine) -> Eff es [Def]
+dsBindGroup :: (State (HashMap ModuleName Interface) :> es, State DsState :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es) => BindGroup (Malgo Refine) -> Eff es [Def]
 dsBindGroup bg = do
   traverse_ dsImport (bg ^. imports)
   dataDefs' <- traverse dsDataDef (bg ^. dataDefs)
@@ -54,7 +54,6 @@ dsBindGroup bg = do
 
 dsImport ::
   ( State (HashMap ModuleName Interface) :> es,
-    Reader ModulePathList :> es,
     State DsState :> es,
     IOE :> es
   ) =>

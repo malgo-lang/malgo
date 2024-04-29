@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/aggressive/DataDef.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/DataDef.ll'
 source_filename = "./test/testcases/malgo/DataDef.mlg"
 
 declare void @GC_init() local_unnamed_addr

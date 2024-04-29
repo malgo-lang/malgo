@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/nono/TestArithDouble.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/TestArithDouble.ll'
 source_filename = "./test/testcases/malgo/TestArithDouble.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef

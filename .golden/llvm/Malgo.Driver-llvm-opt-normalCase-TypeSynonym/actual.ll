@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/normal/TypeSynonym.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/TypeSynonym.ll'
 source_filename = "./test/testcases/malgo/TypeSynonym.mlg"
 
 @TypeSynonym.hello = local_unnamed_addr global ptr undef

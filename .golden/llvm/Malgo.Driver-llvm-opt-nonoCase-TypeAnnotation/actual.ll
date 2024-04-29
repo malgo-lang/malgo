@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/nono/TypeAnnotation.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/TypeAnnotation.ll'
 source_filename = "./test/testcases/malgo/TypeAnnotation.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef

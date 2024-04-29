@@ -1,16 +1,25 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-redundant-constraints #-}
 
-module Malgo.Interface (Interface (..), ModulePathList (..), buildInterface, toInterfacePath, loadInterface, externalFromInterface, exportedIdentList, exportedTypeIdentList) where
+module Malgo.Interface
+  ( Interface (..),
+    buildInterface,
+    toInterfacePath,
+    loadInterface,
+    externalFromInterface,
+    exportedIdentList,
+    exportedTypeIdentList,
+    getWorkspaceDir,
+  )
+where
 
-import Control.Exception (IOException, catch)
 import Control.Lens (ifor_, (^.))
 import Control.Lens.TH
 import Data.ByteString qualified as BS
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store (Store, decodeEx)
 import Effectful (Eff, IOE, runPureEff, (:>))
-import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State, execState, get, modify)
 import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
@@ -24,10 +33,8 @@ import Malgo.Prelude
 import Malgo.Rename.RnState (RnState)
 import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
-import System.Directory qualified as Directory
+import System.Directory (createDirectoryIfMissing, getCurrentDirectory)
 import System.FilePath (replaceExtension, (</>))
-
-newtype ModulePathList = ModulePathList [FilePath]
 
 data Interface = Interface
   { moduleName :: ModuleName,
@@ -115,35 +122,28 @@ exportedTypeIdentList inf = HashMap.keys inf.typeDefMap <> map (\id -> id.name) 
 toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"
 
+-- | Get workspace directory.
+-- If directory does not exist, create it.
+getWorkspaceDir :: (MonadIO m) => m FilePath
+getWorkspaceDir = liftIO do
+  pwd <- getCurrentDirectory
+  createDirectoryIfMissing True $ pwd </> ".malgo-work"
+  createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "build"
+  return $ pwd </> ".malgo-work"
+
 loadInterface ::
-  (HasCallStack, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader ModulePathList :> es) =>
+  (HasCallStack) =>
+  (IOE :> es, State (HashMap ModuleName Interface) :> es) =>
   ModuleName ->
   Eff es Interface
 loadInterface (ModuleName modName) = do
-  ModulePathList modulePaths <- ask
   interfaces <- get
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
-      message <-
-        firstJustM
-          (liftIO . readFileIfExists (toInterfacePath $ convertString modName))
-          modulePaths
-      case message of
-        Just x -> do
-          modify $ HashMap.insert (ModuleName modName) x
-          pure x
-        Nothing -> do
-          errorDoc $ "Cannot find module:" <+> squotes (pretty modName)
-  where
-    readFileIfExists file directory =
-      ifM
-        (liftIO $ Directory.doesFileExist (directory </> file))
-        (Just <$> liftIO (decodeEx <$> BS.readFile (directory </> file)))
-        (pure Nothing)
-        `catch` \(_ :: IOException) -> do
-          _ <- warningDoc $ "Cannot read interface file:" <+> squotes (pretty file)
-          readFileIfExists file directory
-
-warningDoc :: Doc x -> IO ()
-warningDoc doc = hPutTextLn stderr $ render $ "Warning:" <+> doc
+      workspaceDir <- liftIO getWorkspaceDir
+      let modulePath = workspaceDir </> convertString modName <> ".mlgi"
+      message <- liftIO $ BS.readFile modulePath
+      let interface = decodeEx message
+      modify $ HashMap.insert (ModuleName modName) interface
+      pure interface

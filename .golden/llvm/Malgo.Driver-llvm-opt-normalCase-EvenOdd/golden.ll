@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/normal/EvenOdd.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/EvenOdd.ll'
 source_filename = "./test/testcases/malgo/EvenOdd.mlg"
 
 @str2947 = unnamed_addr constant [6 x i8] c"False\00"

@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/noopt/InlineFunction.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/InlineFunction.ll'
 source_filename = "./test/testcases/malgo/InlineFunction.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef

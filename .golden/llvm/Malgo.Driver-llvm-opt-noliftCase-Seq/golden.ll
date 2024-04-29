@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/nolift/Seq.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/Seq.ll'
 source_filename = "./test/testcases/malgo/Seq.mlg"
 
 @Seq.executeWhenLoaded = local_unnamed_addr global ptr undef

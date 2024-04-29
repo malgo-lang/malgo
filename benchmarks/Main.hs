@@ -9,7 +9,7 @@ import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
 import System.Directory (copyFile, createDirectoryIfMissing, listDirectory)
-import System.FilePath (isExtensionOf, takeBaseName, takeDirectory, (-<.>), (</>))
+import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
 import System.Process.Typed (ExitCode (..), nullStream, proc, readProcessStderr_, readProcessStdout_, runProcess, runProcess_, setStderr, setStdout)
 
 benchmarkDir :: FilePath
@@ -29,9 +29,9 @@ setupEnv = do
     let llOptPath = outputDir </> benchmark -<.> "ll"
     let llNoOptPath = outputDir </> benchmark -<.> "no-opt.ll"
     let llNoLLPath = outputDir </> benchmark -<.> "no-ll.ll"
-    compile (benchmarkDir </> benchmark) llOptPath [outputDir </> "libs"] True False
-    compile (benchmarkDir </> benchmark) llNoOptPath [outputDir </> "libs"] True True
-    compile (benchmarkDir </> benchmark) llNoLLPath [outputDir </> "libs"] False False
+    compile (benchmarkDir </> benchmark) llOptPath True False
+    compile (benchmarkDir </> benchmark) llNoOptPath True True
+    compile (benchmarkDir </> benchmark) llNoLLPath False False
     runClang llOptPath
     runClang llNoOptPath
     runClang llNoLLPath
@@ -100,11 +100,11 @@ setupOutputDir = do
 
 setupBuiltin :: IO ()
 setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") [outputDir </> "libs"] False False
+  compile "./runtime/malgo/Builtin.mlg" (outputDir </> "libs/Builtin.ll") False False
 
 setupPrelude :: IO ()
 setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") [outputDir </> "libs"] False False
+  compile "./runtime/malgo/Prelude.mlg" (outputDir </> "libs/Prelude.ll") False False
 
 setupRuntime :: IO ()
 setupRuntime = do
@@ -115,17 +115,8 @@ setupRuntime = do
   copyFile "./runtime/malgo/runtime.c" (outputDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
-compile :: FilePath -> FilePath -> [FilePath] -> Bool -> Bool -> IO ()
-compile src dst modPaths lambdaLift noOptimize =
+compile :: FilePath -> FilePath -> Bool -> Bool -> IO ()
+compile src dst lambdaLift noOptimize =
   runEff
-    $ runMalgoM dst (takeDirectory dst : modPaths) LLVM Flag {lambdaLift, noOptimize, debugMode = False, testMode = False} defaultOptimizeOption
-    -- malgoEnv <- newMalgoEnv src modPaths Nothing (ModuleName "tmp") Nothing Nothing
-    -- malgoEnv <-
-    --   pure
-    --     malgoEnv
-    --       { dstPath = dst,
-    --         modulePaths = takeDirectory dst : malgoEnv.modulePaths,
-    --         lambdaLift,
-    --         noOptimize
-    --       }
+    $ runMalgoM dst LLVM Flag {lambdaLift, noOptimize, debugMode = False, testMode = False} defaultOptimizeOption
     $ Driver.compile src

@@ -1,7 +1,6 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
-import Control.Exception (assert)
 import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
@@ -24,7 +23,7 @@ import Koriel.Pretty
 import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (Interface, ModulePathList (..), buildInterface, loadInterface, toInterfacePath)
+import Malgo.Interface (Interface, buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
 import Malgo.Monad
 import Malgo.Parser (parseMalgo)
@@ -37,7 +36,7 @@ import Malgo.Syntax.Extension
 import Prettyprinter qualified as PrettyPrinter
 import Prettyprinter.Render.Text qualified as PrettyPrinter
 import System.Exit (exitFailure)
-import System.FilePath (takeBaseName, takeDirectory, (-<.>))
+import System.FilePath (takeBaseName, (-<.>))
 import System.IO (hFlush)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
@@ -61,7 +60,6 @@ withDump isDump label m = do
 compileFromAST ::
   ( Reader OptimizeOption :> es,
     Reader DstPath :> es,
-    Reader ModulePathList :> es,
     Reader Flag :> es,
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,
@@ -79,7 +77,6 @@ compileFromAST srcPath parsedAst = do
         $ error "Module name must be source file's base name."
 
       DstPath dstPath <- ask @DstPath
-      ModulePathList modulePaths <- ask @ModulePathList
       flags <- ask @Flag
 
       when flags.debugMode $ liftIO do
@@ -101,8 +98,6 @@ compileFromAST srcPath parsedAst = do
         let inf = buildInterface moduleName rnState tcEnv dsEnv
         liftIO $ BS.writeFile (toInterfacePath dstPath) $ Store.encode inf
 
-        -- check module paths include dstName's directory
-        assert (takeDirectory dstPath `elem` modulePaths) pass
         core <- Link.link inf core
         liftIO $ T.writeFile (dstPath -<.> "kor") $ render $ pretty core
 
@@ -173,7 +168,6 @@ compileFromAST srcPath parsedAst = do
 compile ::
   ( Reader OptimizeOption :> es,
     Reader DstPath :> es,
-    Reader ModulePathList :> es,
     Reader Flag :> es,
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,

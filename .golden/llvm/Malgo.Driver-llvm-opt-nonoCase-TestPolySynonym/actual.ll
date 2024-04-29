@@ -1,4 +1,4 @@
-; ModuleID = './test/tmp/malgo_test/nono/TestPolySynonym.ll'
+; ModuleID = '/workspaces/malgo/.malgo-work/TestPolySynonym.ll'
 source_filename = "./test/testcases/malgo/TestPolySynonym.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
