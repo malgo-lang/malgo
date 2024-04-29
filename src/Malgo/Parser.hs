@@ -10,16 +10,15 @@ import Koriel.Id (ModuleName (ModuleName))
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
+import System.FilePath (takeBaseName)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
 type Parser = Parsec Void TL.Text
 
--- | パーサー
---
--- ファイル1つにつきモジュール1つ
-parseMalgo :: String -> TL.Text -> Either (ParseErrorBundle TL.Text Void) (Module (Malgo 'Parse))
+-- | Parse a module from a file.
+parseMalgo :: FilePath -> TL.Text -> Either (ParseErrorBundle TL.Text Void) (Module (Malgo 'Parse))
 parseMalgo = parse do
   sc
   mod <- pModule
@@ -29,11 +28,13 @@ parseMalgo = parse do
 -- entry point
 pModule :: Parser (Module (Malgo 'Parse))
 pModule = do
-  void $ pKeyword "module"
-  x <- pModuleName
-  void $ pOperator "="
-  ds <- between (symbol "{") (symbol "}") $ many pDecl
-  pure $ Module {moduleName = ModuleName x, moduleDefinition = ParsedDefinitions ds}
+  sourcePath <- (.sourceName) <$> getSourcePos
+  ds <- many pDecl
+  pure
+    Module
+      { moduleName = ModuleName (convertString $ takeBaseName sourcePath),
+        moduleDefinition = ParsedDefinitions ds
+      }
 
 -- module name
 pModuleName :: Parser Text
