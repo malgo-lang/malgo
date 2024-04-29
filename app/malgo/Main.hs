@@ -4,7 +4,6 @@
 
 module Main (main) where
 
-import Control.Concurrent (MVar, newMVar)
 import Control.Lens (makeFieldsNoPrefix, (.~))
 import Data.ByteString qualified as BS
 import Effectful
@@ -12,21 +11,15 @@ import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, pr
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
 import Koriel.Core.Parser qualified as Koriel
-import Koriel.Id (ModuleName)
 import Koriel.Pretty
-import Malgo.Build qualified as Build
 import Malgo.Driver qualified as Driver
-import Malgo.Interface (ModulePathList (..))
-import Malgo.Lsp.Index (Index, LspOpt (LspOpt))
-import Malgo.Lsp.Index qualified as Lsp
-import Malgo.Lsp.Server qualified as Lsp
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Monad qualified as Flag
 import Malgo.Prelude
 import Options.Applicative
-import System.Directory (XdgDirectory (XdgData), getXdgDirectory, makeAbsolute)
+import System.Directory (makeAbsolute)
 import System.Exit (exitFailure)
-import System.FilePath (takeDirectory, (</>))
+import System.FilePath (takeDirectory)
 import System.FilePath.Lens (extension)
 
 data ToLLOpt = ToLLOpt
@@ -61,13 +54,6 @@ main = do
               Flag.testMode = False
             }
           opt.optimizeOption
-    Lsp opt -> do
-      basePath <- getXdgDirectory XdgData ("malgo" </> "base")
-      let ModulePathList modulePaths = opt.modulePaths
-      opt <- pure $ opt {Lsp.modulePaths = ModulePathList $ modulePaths <> [".malgo-work" </> "build", basePath]}
-      void $ Lsp.server opt
-    Build _ -> do
-      Build.run
     Koriel (KorielOpt srcPath) -> do
       srcContents <- BS.readFile srcPath
       case Koriel.parse srcPath (convertString srcContents) of
@@ -112,31 +98,18 @@ toLLOpt =
   )
     <**> helper
 
-lspOpt :: MVar (HashMap ModuleName Index) -> Parser LspOpt
-lspOpt cache =
-  LspOpt
-    <$> (ModulePathList <$> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH")))
-    <*> pure cache
-    <**> helper
-
-data BuildOpt = BuildOpt
-  deriving stock (Eq, Show)
-
 newtype KorielOpt = KorielOpt FilePath
   deriving stock (Eq, Show)
 
 data Command
   = ToLL ToLLOpt
-  | Lsp LspOpt
-  | Build BuildOpt
   | Koriel KorielOpt
 
 parseCommand :: IO Command
 parseCommand = do
-  cache <- newMVar mempty
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser (lsp cache) <|> subparser build <|> subparser koriel) <**> helper)
+      ( info ((subparser toLL <|> subparser koriel) <**> helper)
           $ fullDesc
           <> header "malgo programming language"
       )
@@ -146,8 +119,6 @@ parseCommand = do
       if null opt.dstPath
         then pure $ ToLL $ opt {srcPath = srcPath, dstPath = srcPath & extension .~ ".ll"}
         else pure $ ToLL $ opt {srcPath = srcPath}
-    Lsp opt -> pure $ Lsp opt
-    Build opt -> pure $ Build opt
     Koriel opt -> pure $ Koriel opt
   where
     toLL =
@@ -156,19 +127,6 @@ parseCommand = do
         $ fullDesc
         <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
         <> header "malgo to LLVM Textual IR Compiler"
-    lsp cache = do
-      command "lsp"
-        $ info (Lsp <$> lspOpt cache)
-        $ fullDesc
-        <> progDesc "Language Server for Malgo"
-        <> header "Malgo Language Server"
-    build =
-      command "build"
-        $ info (Build <$> buildOpt)
-        $ fullDesc
-        <> progDesc "Build Malgo program"
-        <> header "malgo build"
-    buildOpt = pure BuildOpt
     koriel =
       command "koriel"
         $ info (Koriel <$> korielOpt)

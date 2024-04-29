@@ -7,7 +7,6 @@ import Koriel.Core.Optimize (OptimizeOption)
 import Koriel.Id
 import Koriel.MonadUniq
 import Malgo.Interface (Interface, ModulePathList (..))
-import Malgo.Lsp.Index (Index)
 import Malgo.Prelude
 import System.Directory (XdgDirectory (XdgData), createDirectoryIfMissing, getCurrentDirectory, getXdgDirectory)
 import System.FilePath ((</>))
@@ -39,7 +38,6 @@ runMalgoM ::
         : Reader CompileMode
         : Reader DstPath
         : State Uniq
-        : State (HashMap ModuleName Index)
         : State (HashMap ModuleName Interface)
         : es
     )
@@ -54,5 +52,4 @@ runMalgoM dstPath modulePaths compileMode flag opt e = do
     & runReader compileMode
     & runReader (DstPath dstPath)
     & evalState (Uniq 0)
-    & evalState @(HashMap ModuleName Index) mempty
     & evalState @(HashMap ModuleName Interface) mempty

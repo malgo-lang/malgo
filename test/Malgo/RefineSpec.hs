@@ -11,7 +11,6 @@ import Koriel.MonadUniq (Uniq)
 import Malgo.Driver qualified as Driver
 import Malgo.Infer.Pass (infer)
 import Malgo.Interface (Interface, ModulePathList)
-import Malgo.Lsp.Index (Index)
 import Malgo.Monad (CompileMode (..), DstPath, runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -77,7 +76,6 @@ runMalgoEff ::
        Reader CompileMode,
        Reader DstPath,
        State Uniq,
-       State (HashMap ModuleName Index),
        State (HashMap ModuleName Interface),
        IOE
      ]

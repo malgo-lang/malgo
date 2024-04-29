@@ -26,8 +26,6 @@ import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (Interface, ModulePathList (..), buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
-import Malgo.Lsp.Index (Index, storeIndex)
-import Malgo.Lsp.Pass qualified as Lsp
 import Malgo.Monad
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -67,8 +65,7 @@ compileFromAST ::
     Reader Flag :> es,
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,
-    State Uniq :> es,
-    State (HashMap ModuleName Index) :> es
+    State Uniq :> es
   ) =>
   FilePath ->
   Syntax.Module (Malgo 'Parse) ->
@@ -93,10 +90,6 @@ compileFromAST srcPath parsedAst = do
       (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
       _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
       refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst
-
-      -- index <- withDump env.debugMode "=== INDEX ===" $ Lsp.index tcEnv refinedAst
-      index <- Lsp.index tcEnv refinedAst
-      storeIndex dstPath index
 
       (dsEnv, core) <- desugar tcEnv refinedAst
 
@@ -184,8 +177,7 @@ compile ::
     Reader Flag :> es,
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,
-    State Uniq :> es,
-    State (HashMap ModuleName Index) :> es
+    State Uniq :> es
   ) =>
   FilePath ->
   Eff es ()
