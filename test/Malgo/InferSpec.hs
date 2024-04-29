@@ -25,7 +25,6 @@ import Text.Pretty.Simple (pShowNoColor)
 spec :: Spec
 spec = parallel do
   runIO do
-    setupTestDir
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
@@ -46,14 +45,6 @@ driveInfer srcPath = do
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
-
-outputDir :: FilePath
-outputDir = "./test/tmp/rename/malgo_test"
-
-setupTestDir :: IO ()
-setupTestDir = do
-  createDirectoryIfMissing True outputDir
-  createDirectoryIfMissing True (outputDir </> "libs")
 
 setupBuiltin :: IO ()
 setupBuiltin =

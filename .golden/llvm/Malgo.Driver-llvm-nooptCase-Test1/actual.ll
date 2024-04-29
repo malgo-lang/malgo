@@ -157,7 +157,7 @@ define internal ptr @"Test1.$raw_let_79"(ptr %0, ptr %"Test1.$true_42_0", ptr %"
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_Test1()
+  call void @malgo_load_Test1()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -165,6 +165,6 @@ define i32 @main(ptr %0) {
   ret i32 0
 }
 
-define internal void @koriel_load_Test1() {
+define internal void @malgo_load_Test1() {
   ret void
 }

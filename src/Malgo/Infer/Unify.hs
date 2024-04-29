@@ -26,7 +26,6 @@ import GHC.Records (HasField)
 import Koriel.Id
 import Koriel.Lens (kindCtx, typeSynonymMap)
 import Koriel.MonadUniq
-import Koriel.Pretty
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Prelude hiding (Constraint)

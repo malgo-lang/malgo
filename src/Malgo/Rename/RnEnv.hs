@@ -23,7 +23,6 @@ import Effectful.State.Static.Local (State)
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
-import Koriel.Pretty
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 

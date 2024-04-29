@@ -316,7 +316,7 @@ define internal i64 @"Builtin.$malgo_add_int64_t_curry_1834"(ptr %0, i64 %"Built
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_TestDot()
+  call void @malgo_load_TestDot()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -324,6 +324,6 @@ define i32 @main(ptr %0) {
   ret i32 0
 }
 
-define internal void @koriel_load_TestDot() {
+define internal void @malgo_load_TestDot() {
   ret void
 }

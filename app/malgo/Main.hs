@@ -11,7 +11,6 @@ import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, pr
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Koriel.Core.Optimize (OptimizeOption (..))
 import Koriel.Core.Parser qualified as Koriel
-import Koriel.Pretty
 import Malgo.Driver qualified as Driver
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Monad qualified as Flag

@@ -39,7 +39,6 @@ import Data.Store (Store)
 import Effectful (Eff)
 import Effectful.State.Static.Local (State, evalState)
 import Koriel.Id
-import Koriel.Pretty
 import Malgo.Prelude
 
 --------------------------------

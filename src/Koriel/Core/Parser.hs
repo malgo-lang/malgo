@@ -7,7 +7,7 @@ import Data.Text qualified as T
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
 import Koriel.Core.Syntax hiding (atom, expr, object)
 import Koriel.Core.Type
-import Koriel.Prelude
+import Malgo.Prelude hiding (space)
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec qualified as Megaparsec
 import Text.Megaparsec.Char qualified as Char

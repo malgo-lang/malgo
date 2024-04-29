@@ -12,7 +12,6 @@ import Effectful.State.Static.Local (State, execState, get, gets, modify, put, r
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq (Uniq)
-import Koriel.Pretty
 import Malgo.Interface
 import Malgo.Prelude hiding (All)
 import Malgo.Rename.RnEnv

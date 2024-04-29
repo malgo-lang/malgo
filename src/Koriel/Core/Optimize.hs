@@ -21,7 +21,7 @@ import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
+import Malgo.Prelude
 import Witherable (ordNub)
 
 -- | 'OptimizeOption' is a set of options for the optimizer.

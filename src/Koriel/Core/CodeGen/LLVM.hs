@@ -35,8 +35,6 @@ import Koriel.Core.Type hiding (typeOf)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
-import Koriel.Pretty
 import LLVM.AST
   ( Definition (..),
     Module (..),
@@ -57,6 +55,7 @@ import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
+import Malgo.Prelude
 
 data CodeGenState = CodeGenState
   { -- | 'primMap' is a map from primitive function name to its LLVM function.
@@ -170,7 +169,7 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
       mainFuncId <- withMeta ([] :-> Int32T) <$> newNativeId "main"
       mainFuncBody <- runDef do
         _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
-        _ <- bind $ RawCall ("koriel_load_" <> modName.raw) ([] :-> VoidT) []
+        _ <- bind $ RawCall ("malgo_load_" <> modName.raw) ([] :-> VoidT) []
         pure e
       pure (mainFuncId, ([], mainFuncBody))
 
@@ -313,7 +312,7 @@ genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (con
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
 genLoadModule m = do
   ModuleName modName <- asks (.moduleName)
-  internalFunction (LLVM.AST.mkName $ convertString $ "koriel_load_" <> modName) [] LT.void $ const m
+  internalFunction (LLVM.AST.mkName $ convertString $ "malgo_load_" <> modName) [] LT.void $ const m
 
 -- generate code for a 'known' function
 genFunc ::

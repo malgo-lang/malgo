@@ -5,7 +5,6 @@ import Effectful.State.Static.Local (State, gets)
 import Koriel.Core.Type
 import Koriel.Core.Type qualified as C
 import Koriel.Id
-import Koriel.Pretty
 import Malgo.Desugar.DsState
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as GT

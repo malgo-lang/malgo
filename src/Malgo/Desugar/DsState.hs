@@ -24,7 +24,6 @@ import Koriel.Core.Syntax qualified as C
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
-import Koriel.Pretty
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude

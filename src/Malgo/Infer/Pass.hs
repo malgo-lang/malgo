@@ -15,7 +15,6 @@ import Effectful.Writer.Static.Local
 import Koriel.Id
 import Koriel.Lens
 import Koriel.MonadUniq
-import Koriel.Pretty
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.Unify hiding (lookupVar)

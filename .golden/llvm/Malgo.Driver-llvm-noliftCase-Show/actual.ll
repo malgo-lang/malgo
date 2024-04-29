@@ -798,7 +798,7 @@ define internal ptr @Show.main(ptr %0, ptr %"Show.$$__225_0") {
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_Show()
+  call void @malgo_load_Show()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -829,7 +829,7 @@ switch_default_0:                                 ; preds = %2
   unreachable
 }
 
-define internal void @koriel_load_Show() {
+define internal void @malgo_load_Show() {
   %1 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_1 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0

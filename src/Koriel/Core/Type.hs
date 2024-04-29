@@ -8,8 +8,7 @@ import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store.TH
 import Koriel.Id
-import Koriel.Prelude
-import Koriel.Pretty
+import Malgo.Prelude
 
 {-
 Constructors  C ::= <tag n>

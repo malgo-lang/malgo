@@ -1,6 +1,6 @@
 module Koriel.Core.Syntax.Common (HasFreeVar (..)) where
 
-import Koriel.Prelude
+import Malgo.Prelude
 
 -- | 'f' may have free variables
 -- 'freevars' does not include callees of `call-direct`.

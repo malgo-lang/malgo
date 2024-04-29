@@ -7,8 +7,7 @@ import Data.Store (Store)
 import Koriel.Core.Syntax.Atom (HasAtom)
 import Koriel.Core.Syntax.Common (HasFreeVar)
 import Koriel.Core.Type (HasType)
-import Koriel.Prelude (Eq, Foldable, Functor, Ord, Show)
-import Koriel.Pretty (Pretty)
+import Malgo.Prelude (Eq, Foldable, Functor, Ord, Pretty, Show)
 
 data Expr (a :: Data.Kind.Type)
 

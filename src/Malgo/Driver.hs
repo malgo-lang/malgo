@@ -19,7 +19,6 @@ import Koriel.Core.Lint (lint)
 import Koriel.Core.Optimize (OptimizeOption, optimizeProgram)
 import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), Meta (..), ModuleName (..))
 import Koriel.MonadUniq
-import Koriel.Pretty
 import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass qualified as Infer

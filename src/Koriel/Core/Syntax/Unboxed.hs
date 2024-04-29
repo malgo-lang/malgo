@@ -9,8 +9,7 @@ import Data.Store ()
 import Data.Store.TH
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Koriel.Core.Type
-import Koriel.Prelude
-import Koriel.Pretty
+import Malgo.Prelude
 import Numeric (showHex)
 
 -- | unboxed values

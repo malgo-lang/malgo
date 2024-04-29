@@ -11,8 +11,7 @@ import Data.Store.TH
 import Koriel.Core.Syntax.Common
 import Koriel.Core.Syntax.Unboxed
 import Koriel.Core.Type
-import Koriel.Prelude
-import Koriel.Pretty
+import Malgo.Prelude
 
 -- | atoms
 data Atom a

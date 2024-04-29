@@ -20,8 +20,7 @@ import Koriel.Core.Syntax.Atom
 import Koriel.Core.Syntax.Common
 import {-# SOURCE #-} Koriel.Core.Syntax.Expr
 import Koriel.Core.Type
-import Koriel.Prelude
-import Koriel.Pretty
+import Malgo.Prelude
 
 -- | Let bindings
 data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}

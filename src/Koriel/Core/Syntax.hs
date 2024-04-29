@@ -39,8 +39,7 @@ import Koriel.Core.Syntax.Unboxed
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
-import Koriel.Pretty
+import Malgo.Prelude
 
 -- | toplevel function definitions
 data Program a = Program

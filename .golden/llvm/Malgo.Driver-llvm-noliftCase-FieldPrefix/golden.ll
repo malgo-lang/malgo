@@ -290,7 +290,7 @@ define internal ptr @FieldPrefix.main(ptr %0, ptr %"FieldPrefix.$$__81_0") {
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_FieldPrefix()
+  call void @malgo_load_FieldPrefix()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -302,7 +302,7 @@ declare ptr @malgo_hash_table_new()
 
 declare void @malgo_hash_table_insert(ptr, ptr, ptr)
 
-define internal void @koriel_load_FieldPrefix() {
+define internal void @malgo_load_FieldPrefix() {
   %1 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { float } }, ptr null, i32 1) to i64))
   %2 = getelementptr { i8, { float } }, ptr %1, i32 0, i32 0
   store i8 0, ptr %2, align 1

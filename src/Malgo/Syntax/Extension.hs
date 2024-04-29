@@ -72,8 +72,6 @@ import Data.Kind qualified as K
 import Data.Store.TH
 import Data.Void
 import Koriel.Id
-import Koriel.Pretty
-import Language.LSP.Types.Lens (HasRange (range))
 import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Prelude
 
@@ -121,9 +119,6 @@ instance (Pretty x) => Pretty (Typed x) where
 instance HasType (Typed x) where
   typeOf (Typed t _) = t
   types = lens (.annotated) (\x y -> x {annotated = y})
-
-instance (HasRange x r) => HasRange (Typed x) r where
-  range f (Typed t v) = range f v <&> \v -> Typed t v
 
 type PsId = XId (Malgo 'Parse)
 

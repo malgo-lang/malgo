@@ -17,8 +17,7 @@ import Koriel.Core.Syntax.Common
 import Koriel.Core.Syntax.LocalDef
 import Koriel.Core.Syntax.Unboxed
 import Koriel.Core.Type
-import Koriel.Prelude
-import Koriel.Pretty
+import Malgo.Prelude
 
 -- | expressions
 data Expr a

@@ -8,8 +8,7 @@ import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.Prelude
-import Koriel.Pretty
+import Malgo.Prelude
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.

@@ -25,7 +25,6 @@ import GHC.Records (HasField)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.Lens
-import Koriel.Pretty
 import Malgo.Desugar.DsState (DsState, HasNameEnv (nameEnv))
 import Malgo.Infer.TypeRep (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT

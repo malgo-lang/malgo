@@ -12,7 +12,7 @@ import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq (Uniq)
-import Koriel.Prelude
+import Malgo.Prelude
 
 normalize ::
   (State Uniq :> es, Reader ModuleName :> es) =>

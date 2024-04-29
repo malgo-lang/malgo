@@ -2,7 +2,7 @@ module Koriel.MonadUniq (getUniq, Uniq (..)) where
 
 import Effectful (Eff, (:>))
 import Effectful.State.Static.Local (State, state)
-import Koriel.Prelude
+import Malgo.Prelude
 
 newtype Uniq = Uniq Int
 

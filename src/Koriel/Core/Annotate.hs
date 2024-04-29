@@ -9,8 +9,7 @@ import Effectful.Reader.Static
 import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
-import Koriel.Prelude
-import Koriel.Pretty (Pretty (pretty), errorDoc)
+import Malgo.Prelude hiding (annotate)
 
 -- | Type-check the program and annotate with type information.
 annotate :: (IOE :> es) => ModuleName -> Program Text -> Eff es (Program (Meta Type))

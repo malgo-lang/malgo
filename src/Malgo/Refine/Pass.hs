@@ -7,7 +7,6 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.List.NonEmpty qualified as NonEmpty
 import Effectful
 import Effectful.Reader.Static
-import Koriel.Pretty
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as T

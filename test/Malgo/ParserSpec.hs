@@ -5,7 +5,6 @@ import Data.String.Conversions.Monomorphic (toString)
 import Error.Diagnose (TabSize (..), WithUnicode (..), prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Error.Diagnose.Diagnostic (addFile)
-import Koriel.Pretty
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Prettyprinter qualified as PP

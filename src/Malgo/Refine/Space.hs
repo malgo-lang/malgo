@@ -8,9 +8,8 @@ import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
 import Koriel.Id (Id)
-import Koriel.Pretty hiding (space)
 import Malgo.Infer.TypeRep
-import Malgo.Prelude hiding (subtract)
+import Malgo.Prelude hiding (subtract, space)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension

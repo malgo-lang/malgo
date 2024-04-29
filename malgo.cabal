@@ -41,8 +41,6 @@ library
       Koriel.Id
       Koriel.Lens
       Koriel.MonadUniq
-      Koriel.Prelude
-      Koriel.Pretty
       Malgo.Desugar.DsState
       Malgo.Desugar.Match
       Malgo.Desugar.Pass
@@ -108,12 +106,11 @@ library
     , lens
     , llvm-hs
     , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
     , megaparsec
     , mtl
     , optparse-applicative
     , parser-combinators
+    , path
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
@@ -171,13 +168,12 @@ executable malgo
     , lens
     , llvm-hs
     , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
     , malgo
     , megaparsec
     , mtl
     , optparse-applicative
     , parser-combinators
+    , path
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
@@ -245,13 +241,12 @@ test-suite malgo-test
     , lens
     , llvm-hs
     , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
     , malgo
     , megaparsec
     , mtl
     , optparse-applicative
     , parser-combinators
+    , path
     , pretty-simple
     , prettyprinter
     , raw-strings-qq
@@ -316,13 +311,12 @@ benchmark malgo-bench
     , lens
     , llvm-hs
     , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
     , malgo
     , megaparsec
     , mtl
     , optparse-applicative
     , parser-combinators
+    , path
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa

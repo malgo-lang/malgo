@@ -17,7 +17,7 @@ import Koriel.Core.Syntax
 import Koriel.Core.Type
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Prelude
+import Malgo.Prelude
 
 data LambdaLiftState = LambdaLiftState
   { funcs :: HashMap (Meta Type) ([Meta Type], Type, Expr (Meta Type)),

@@ -17,7 +17,6 @@ import Koriel.Core.Type hiding (Type)
 import Koriel.Core.Type qualified as C
 import Koriel.Id
 import Koriel.MonadUniq
-import Koriel.Pretty
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Match
 import Malgo.Desugar.Type

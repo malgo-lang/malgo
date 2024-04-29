@@ -29,8 +29,7 @@ import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State)
 import GHC.Records
 import Koriel.MonadUniq
-import Koriel.Prelude hiding (toList)
-import Koriel.Pretty as P
+import Malgo.Prelude hiding (toList)
 
 newtype ModuleName = ModuleName {raw :: Text}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
