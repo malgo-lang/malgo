@@ -6,7 +6,7 @@ import Control.Monad.Combinators.Expr
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Data.Void
-import Malgo.Id (ModuleName (ModuleName))
+import Malgo.Module (ModuleName (ModuleName))
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension

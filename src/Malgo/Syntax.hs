@@ -40,8 +40,8 @@ where
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.HashSet qualified as HashSet
-import Malgo.Id
 import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
+import Malgo.Module
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax.Extension
 

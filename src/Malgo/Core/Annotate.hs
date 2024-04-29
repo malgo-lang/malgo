@@ -9,6 +9,7 @@ import Effectful.Reader.Static
 import Malgo.Core.Syntax
 import Malgo.Core.Type
 import Malgo.Id
+import Malgo.Module
 import Malgo.Prelude hiding (annotate)
 
 -- | Type-check the program and annotate with type information.

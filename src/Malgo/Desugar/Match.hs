@@ -18,6 +18,7 @@ import Malgo.Desugar.Unboxed (dsUnboxed)
 import Malgo.Id
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as Malgo
+import Malgo.Module
 import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (group)
 import Malgo.Syntax

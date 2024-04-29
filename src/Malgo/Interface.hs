@@ -28,6 +28,7 @@ import Malgo.Id
 import Malgo.Infer.TypeRep (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Lens
+import Malgo.Module
 import Malgo.Prelude
 import Malgo.Rename.RnState (RnState)
 import Malgo.Rename.RnState qualified as RnState
@@ -127,7 +128,6 @@ getWorkspaceDir :: (MonadIO m) => m FilePath
 getWorkspaceDir = liftIO do
   pwd <- getCurrentDirectory
   createDirectoryIfMissing True $ pwd </> ".malgo-work"
-  createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "build"
   return $ pwd </> ".malgo-work"
 
 loadInterface ::

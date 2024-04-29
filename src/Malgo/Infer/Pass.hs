@@ -18,6 +18,7 @@ import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), loadInterface)
 import Malgo.Lens
+import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (RnEnv (..))

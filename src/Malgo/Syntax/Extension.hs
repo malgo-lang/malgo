@@ -73,6 +73,7 @@ import Data.Store.TH
 import Data.Void
 import Malgo.Id
 import Malgo.Infer.TypeRep as TypeRep
+import Malgo.Module
 import Malgo.Prelude
 
 -- | Phase and type instance

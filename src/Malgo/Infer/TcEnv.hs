@@ -22,6 +22,7 @@ import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.TypeRep qualified as TypeRep
 import Malgo.Interface (Interface (..), externalFromInterface)
 import Malgo.Lens
+import Malgo.Module
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (Resolved, RnEnv)
 import Malgo.Syntax.Extension

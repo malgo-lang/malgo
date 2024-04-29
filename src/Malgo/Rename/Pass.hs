@@ -12,6 +12,7 @@ import Effectful.State.Static.Local (State, execState, get, gets, modify, put, r
 import Malgo.Id
 import Malgo.Interface
 import Malgo.Lens
+import Malgo.Module
 import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (All)
 import Malgo.Rename.RnEnv

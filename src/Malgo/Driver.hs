@@ -19,10 +19,11 @@ import Malgo.Core.Lint (lint)
 import Malgo.Core.Optimize (OptimizeOption, optimizeProgram)
 import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
-import Malgo.Id (Id (Id, moduleName, name, sort), IdSort (External), Meta (..), ModuleName (..))
+import Malgo.Id (Id (Id, moduleName, name, sort), IdSort (External), Meta (..))
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (Interface, buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
+import Malgo.Module
 import Malgo.Monad
 import Malgo.MonadUniq
 import Malgo.Parser (parseMalgo)

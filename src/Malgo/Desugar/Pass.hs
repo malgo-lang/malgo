@@ -22,6 +22,7 @@ import Malgo.Id
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep as GT
 import Malgo.Interface
+import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.Syntax as G

@@ -6,8 +6,8 @@ import Data.Store (Store)
 import Data.Store qualified as Store
 import Effectful (Eff, IOE, (:>))
 import Malgo.Core.Syntax
-import Malgo.Id
 import Malgo.Interface
+import Malgo.Module
 import Malgo.Prelude
 import System.FilePath ((</>))
 

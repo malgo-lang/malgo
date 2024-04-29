@@ -20,6 +20,7 @@ import Malgo.Core.Flat
 import Malgo.Core.Syntax
 import Malgo.Core.Type
 import Malgo.Id
+import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
 import Witherable (ordNub)

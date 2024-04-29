@@ -22,6 +22,7 @@ import Effectful.Reader.Static (Reader, asks, runReader)
 import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Lens
+import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.Syntax.Extension

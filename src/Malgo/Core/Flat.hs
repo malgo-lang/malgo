@@ -11,6 +11,7 @@ import Effectful.State.Static.Local (State)
 import Malgo.Core.Syntax
 import Malgo.Core.Type
 import Malgo.Id
+import Malgo.Module
 import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude
 

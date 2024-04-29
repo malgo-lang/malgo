@@ -16,6 +16,7 @@ import Malgo.Core.Flat (normalize)
 import Malgo.Core.Syntax
 import Malgo.Core.Type
 import Malgo.Id
+import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
 
@@ -65,11 +66,11 @@ lambdalift Program {..} =
       LambdaLiftState {funcs} <- get
       -- TODO: lambdalift topVars
       prog <-
-        normalize $
-          Program
+        normalize
+          $ Program
             topVars
-            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
-                HashMap.toList funcs
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e))
+                $ HashMap.toList funcs
             )
             extFuns
       traverseOf expr toDirect prog

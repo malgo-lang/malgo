@@ -38,6 +38,7 @@ import Malgo.Core.Syntax.LocalDef
 import Malgo.Core.Syntax.Unboxed
 import Malgo.Core.Type
 import Malgo.Id
+import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
 
@@ -55,8 +56,8 @@ makeStore ''Program
 
 instance (Pretty a, Ord a) => Pretty (Program a) where
   pretty Program {..} =
-    vcat $
-      concat
+    vcat
+      $ concat
         [ ["; variables"],
           map (\(v, t, e) -> parens $ sep ["define" <+> pretty v, pretty t, pretty e]) topVars,
           ["; functions"],

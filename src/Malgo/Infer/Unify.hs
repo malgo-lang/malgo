@@ -27,6 +27,7 @@ import Malgo.Id
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
 import Malgo.Lens (kindCtx, typeSynonymMap)
+import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint)
 

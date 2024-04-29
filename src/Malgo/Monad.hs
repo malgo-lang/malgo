@@ -4,8 +4,8 @@ import Effectful (Eff, IOE, runEff)
 import Effectful.Reader.Static (Reader, runReader)
 import Effectful.State.Static.Local
 import Malgo.Core.Optimize (OptimizeOption)
-import Malgo.Id
 import Malgo.Interface (Interface, getWorkspaceDir)
+import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
 import System.FilePath (takeFileName, (-<.>), (</>))
