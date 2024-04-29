@@ -1,7 +1,7 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE Strict #-}
 
-module Koriel.Core.LambdaLift
+module Malgo.Core.LambdaLift
   ( lambdalift,
   )
 where
@@ -12,11 +12,11 @@ import Data.HashSet qualified as HashSet
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Koriel.Core.Flat (normalize)
-import Koriel.Core.Syntax
-import Koriel.Core.Type
-import Koriel.Id
-import Koriel.MonadUniq
+import Malgo.Core.Flat (normalize)
+import Malgo.Core.Syntax
+import Malgo.Core.Type
+import Malgo.Id
+import Malgo.MonadUniq
 import Malgo.Prelude
 
 data LambdaLiftState = LambdaLiftState
@@ -65,11 +65,11 @@ lambdalift Program {..} =
       LambdaLiftState {funcs} <- get
       -- TODO: lambdalift topVars
       prog <-
-        normalize
-          $ Program
+        normalize $
+          Program
             topVars
-            ( map (\(f, (ps, t, e)) -> (f, ps, t, e))
-                $ HashMap.toList funcs
+            ( map (\(f, (ps, t, e)) -> (f, ps, t, e)) $
+                HashMap.toList funcs
             )
             extFuns
       traverseOf expr toDirect prog

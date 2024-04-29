@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Syntax.LocalDef
+module Malgo.Core.Syntax.LocalDef
   ( LocalDef (..),
     HasObject (..),
     HasVariable (..),
@@ -16,10 +16,10 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.Store.TH
 import Data.String.Conversions
 import Generic.Data
-import Koriel.Core.Syntax.Atom
-import Koriel.Core.Syntax.Common
-import {-# SOURCE #-} Koriel.Core.Syntax.Expr
-import Koriel.Core.Type
+import Malgo.Core.Syntax.Atom
+import Malgo.Core.Syntax.Common
+import {-# SOURCE #-} Malgo.Core.Syntax.Expr
+import Malgo.Core.Type
 import Malgo.Prelude
 
 -- | Let bindings
@@ -67,12 +67,12 @@ instance (Pretty a) => Pretty (Obj a) where
   pretty (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pretty xs), pretty e]
   pretty (Pack ty c xs) = parens $ sep (["pack", pretty ty, pretty c] <> map pretty xs)
   pretty (Record kvs) =
-    parens
-      $ sep
+    parens $
+      sep
         [ "record"
             <+> parens
-              ( sep
-                  $ map
+              ( sep $
+                  map
                     ( \(k, v) ->
                         pretty k
                           <+> pretty v

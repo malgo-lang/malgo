@@ -11,7 +11,7 @@ import Data.List (intercalate)
 import Data.Text qualified as T
 import Effectful
 import Extra (retry, timeout)
-import Koriel.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
+import Malgo.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
 import Malgo.Interface (getWorkspaceDir)
 import Malgo.Monad

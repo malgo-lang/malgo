@@ -2,7 +2,7 @@ module Malgo.Rename.RnState (RnState (..)) where
 
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
-import Koriel.Id
+import Malgo.Id
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 

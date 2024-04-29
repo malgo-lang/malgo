@@ -1,13 +1,13 @@
-module Koriel.Core.Lint (lint) where
+module Malgo.Core.Lint (lint) where
 
 import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
-import Koriel.Core.Syntax
-import Koriel.Core.Type
-import Koriel.Id
+import Malgo.Core.Syntax
+import Malgo.Core.Type
+import Malgo.Id
 import Malgo.Prelude
 
 -- | Lint a program.
@@ -47,15 +47,15 @@ define :: (Reader LintEnv :> es) => Doc x -> [Meta Type] -> Eff es a -> Eff es a
 define pos xs m = do
   env <- asks @LintEnv (.defs)
   for_ xs \x ->
-    when (HashSet.member x env)
-      $ errorDoc
-      $ vsep
-        [ pretty x
-            <> " is already defined",
-          "while defining"
-            <+> pos
-            <+> pretty xs
-        ]
+    when (HashSet.member x env) $
+      errorDoc $
+        vsep
+          [ pretty x
+              <> " is already defined",
+            "while defining"
+              <+> pos
+              <+> pretty xs
+          ]
   local (\e -> e {defs = HashSet.fromList xs <> e.defs}) m
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
@@ -70,8 +70,8 @@ match :: (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> 
 match x y
   | isMatch x y = pass
   | otherwise =
-      errorDoc
-        $ vsep
+      errorDoc $
+        vsep
           [ "type mismatch:",
             pretty x,
             nest 2 (":" <> pretty (typeOf x)),
@@ -98,8 +98,8 @@ lintExpr (RawCall _ (ps :-> _) xs) = do
   zipWithM_ match ps xs
 lintExpr RawCall {} = error "primitive must be a function"
 lintExpr (Cast _ x) = lintAtom x
-lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True})
-  $ define "let" (map (._variable) ds) do
+lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True}) $
+  define "let" (map (._variable) ds) do
     traverse_ (lintObj . (._object)) ds
     for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
     asStatement $ lintExpr e

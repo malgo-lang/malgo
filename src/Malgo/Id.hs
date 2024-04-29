@@ -3,7 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Id
+module Malgo.Id
   ( IdSort (..),
     ModuleName (..),
     Id (..),
@@ -28,7 +28,7 @@ import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State)
 import GHC.Records
-import Koriel.MonadUniq
+import Malgo.MonadUniq
 import Malgo.Prelude hiding (toList)
 
 newtype ModuleName = ModuleName {raw :: Text}

@@ -1,4 +1,4 @@
-module Koriel.MonadUniq (getUniq, Uniq (..)) where
+module Malgo.MonadUniq (getUniq, Uniq (..)) where
 
 import Effectful (Eff, (:>))
 import Effectful.State.Static.Local (State, state)

@@ -22,12 +22,12 @@ import Data.Store (Store, decodeEx)
 import Effectful (Eff, IOE, runPureEff, (:>))
 import Effectful.State.Static.Local (State, execState, get, modify)
 import GHC.Records (HasField)
-import Koriel.Core.Type qualified as C
-import Koriel.Id
-import Koriel.Lens
+import Malgo.Core.Type qualified as C
 import Malgo.Desugar.DsState (DsState, HasNameEnv (nameEnv))
+import Malgo.Id
 import Malgo.Infer.TypeRep (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT
+import Malgo.Lens
 import Malgo.Prelude
 import Malgo.Rename.RnState (RnState)
 import Malgo.Rename.RnState qualified as RnState

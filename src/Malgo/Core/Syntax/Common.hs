@@ -1,4 +1,4 @@
-module Koriel.Core.Syntax.Common (HasFreeVar (..)) where
+module Malgo.Core.Syntax.Common (HasFreeVar (..)) where
 
 import Malgo.Prelude
 

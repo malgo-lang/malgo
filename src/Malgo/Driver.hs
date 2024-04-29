@@ -12,19 +12,19 @@ import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
-import Koriel.Core.CodeGen.LLVM qualified as LLVM
-import Koriel.Core.Flat qualified as Flat
-import Koriel.Core.LambdaLift (lambdalift)
-import Koriel.Core.Lint (lint)
-import Koriel.Core.Optimize (OptimizeOption, optimizeProgram)
-import Koriel.Id (Id (Id, moduleName, name, sort), IdSort (External), Meta (..), ModuleName (..))
-import Koriel.MonadUniq
+import Malgo.Core.CodeGen.LLVM qualified as LLVM
+import Malgo.Core.Flat qualified as Flat
+import Malgo.Core.LambdaLift (lambdalift)
+import Malgo.Core.Lint (lint)
+import Malgo.Core.Optimize (OptimizeOption, optimizeProgram)
 import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
+import Malgo.Id (Id (Id, moduleName, name, sort), IdSort (External), Meta (..), ModuleName (..))
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (Interface, buildInterface, loadInterface, toInterfacePath)
 import Malgo.Link qualified as Link
 import Malgo.Monad
+import Malgo.MonadUniq
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
@@ -154,7 +154,7 @@ compileFromAST srcPath parsedAst = do
       LLVM.codeGen srcPath dstPath moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) i coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id, Meta b)] -> Maybe (Meta b)
-    searchMain ((griffId@Id {sort = Koriel.Id.External}, coreId) : _)
+    searchMain ((griffId@Id {sort = External}, coreId) : _)
       | griffId.name
           == "main"
           && griffId.moduleName

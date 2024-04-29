@@ -20,9 +20,9 @@ import Data.HashMap.Strict qualified as HashMap
 import Effectful (Eff, IOE, (:>))
 import Effectful.Reader.Static (Reader, asks, runReader)
 import Effectful.State.Static.Local (State)
-import Koriel.Id
-import Koriel.Lens
-import Koriel.MonadUniq
+import Malgo.Id
+import Malgo.Lens
+import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 

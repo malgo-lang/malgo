@@ -1,5 +1,5 @@
 -- | Alpha conversion
-module Koriel.Core.Alpha
+module Malgo.Core.Alpha
   ( alpha,
     equiv,
     Subst,
@@ -12,10 +12,10 @@ import Data.HashMap.Strict qualified as HashMap
 import Effectful (Eff, runPureEff, (:>))
 import Effectful.Reader.Static (Reader, ask, local, runReader)
 import Effectful.State.Static.Local (State)
-import Koriel.Core.Syntax
-import Koriel.Core.Type
-import Koriel.Id
-import Koriel.MonadUniq
+import Malgo.Core.Syntax
+import Malgo.Core.Type
+import Malgo.Id
+import Malgo.MonadUniq
 import Malgo.Prelude
 
 type Subst = HashMap (Meta Type) (Atom (Meta Type))
@@ -202,8 +202,8 @@ equivLocalDef ::
   LocalDef (Meta Type) ->
   Eff es (HashMap (Meta Type) (Atom (Meta Type)))
 equivLocalDef (LocalDef x t o) (LocalDef y u p) =
-  local (HashMap.insert x (Var y))
-    $ ifM
+  local (HashMap.insert x (Var y)) $
+    ifM
       ((t == u &&) <$> equivObj o p)
       (pure $ HashMap.singleton x (Var y))
       (pure mempty)
@@ -220,7 +220,7 @@ equivObj _ _ = pure False
 equivAtom :: (Reader Subst :> es) => Atom (Meta Type) -> Atom (Meta Type) -> Eff es Bool
 equivAtom (Var x) (Var y) = do
   subst <- ask
-  pure
-    $ HashMap.lookupDefault (Var x) x subst
-    == HashMap.lookupDefault (Var y) y subst
+  pure $
+    HashMap.lookupDefault (Var x) x subst
+      == HashMap.lookupDefault (Var y) y subst
 equivAtom x y = pure $ x == y

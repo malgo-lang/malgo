@@ -2,14 +2,14 @@
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE TemplateHaskell #-}
 
--- | AST definitions for Koriel language
-module Koriel.Core.Syntax
-  ( module Koriel.Core.Syntax.Common,
-    module Koriel.Core.Syntax.Unboxed,
-    module Koriel.Core.Syntax.Atom,
-    module Koriel.Core.Syntax.Expr,
-    module Koriel.Core.Syntax.LocalDef,
-    module Koriel.Core.Syntax.Case,
+-- | AST definitions for Core language
+module Malgo.Core.Syntax
+  ( module Malgo.Core.Syntax.Common,
+    module Malgo.Core.Syntax.Unboxed,
+    module Malgo.Core.Syntax.Atom,
+    module Malgo.Core.Syntax.Expr,
+    module Malgo.Core.Syntax.LocalDef,
+    module Malgo.Core.Syntax.Case,
     Program (..),
     runDef,
     let_,
@@ -30,15 +30,15 @@ import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
 import Effectful.Writer.Static.Local (Writer, runWriter, tell)
 import Generic.Data
-import Koriel.Core.Syntax.Atom
-import Koriel.Core.Syntax.Case
-import Koriel.Core.Syntax.Common
-import Koriel.Core.Syntax.Expr
-import Koriel.Core.Syntax.LocalDef
-import Koriel.Core.Syntax.Unboxed
-import Koriel.Core.Type
-import Koriel.Id
-import Koriel.MonadUniq
+import Malgo.Core.Syntax.Atom
+import Malgo.Core.Syntax.Case
+import Malgo.Core.Syntax.Common
+import Malgo.Core.Syntax.Expr
+import Malgo.Core.Syntax.LocalDef
+import Malgo.Core.Syntax.Unboxed
+import Malgo.Core.Type
+import Malgo.Id
+import Malgo.MonadUniq
 import Malgo.Prelude
 
 -- | toplevel function definitions
@@ -55,8 +55,8 @@ makeStore ''Program
 
 instance (Pretty a, Ord a) => Pretty (Program a) where
   pretty Program {..} =
-    vcat
-      $ concat
+    vcat $
+      concat
         [ ["; variables"],
           map (\(v, t, e) -> parens $ sep ["define" <+> pretty v, pretty t, pretty e]) topVars,
           ["; functions"],

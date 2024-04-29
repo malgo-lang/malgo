@@ -8,17 +8,17 @@ import Data.Traversable (for)
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State, modify)
-import Koriel.Core.Syntax
-import Koriel.Core.Syntax qualified as Core
-import Koriel.Core.Type
-import Koriel.Core.Type qualified as Core
-import Koriel.Id
-import Koriel.MonadUniq (Uniq)
+import Malgo.Core.Syntax
+import Malgo.Core.Syntax qualified as Core
+import Malgo.Core.Type
+import Malgo.Core.Type qualified as Core
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Type (dsType, unfoldType)
 import Malgo.Desugar.Unboxed (dsUnboxed)
+import Malgo.Id
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as Malgo
+import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (group)
 import Malgo.Syntax
 import Malgo.Syntax.Extension

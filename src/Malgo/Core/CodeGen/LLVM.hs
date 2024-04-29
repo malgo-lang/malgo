@@ -4,7 +4,7 @@
 {-# OPTIONS_GHC -Wno-incomplete-record-updates #-}
 
 -- | LLVM Code Generator
-module Koriel.Core.CodeGen.LLVM
+module Malgo.Core.CodeGen.LLVM
   ( codeGen,
   )
 where
@@ -30,11 +30,6 @@ import Effectful (Eff, runPureEff)
 import Effectful.Reader.Static qualified as Eff
 import Effectful.State.Static.Local qualified as Eff
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
-import Koriel.Core.Syntax
-import Koriel.Core.Type hiding (typeOf)
-import Koriel.Core.Type qualified as C
-import Koriel.Id
-import Koriel.MonadUniq
 import LLVM.AST
   ( Definition (..),
     Module (..),
@@ -55,6 +50,11 @@ import LLVM.AST.Typed (typeOf)
 import LLVM.Context (withContext)
 import LLVM.IRBuilder hiding (globalStringPtr, sizeof)
 import LLVM.Module (moduleLLVMAssembly, withModuleFromAST)
+import Malgo.Core.Syntax
+import Malgo.Core.Type hiding (typeOf)
+import Malgo.Core.Type qualified as C
+import Malgo.Id
+import Malgo.MonadUniq
 import Malgo.Prelude
 
 data CodeGenState = CodeGenState
@@ -104,8 +104,8 @@ type MonadCodeGen m =
 
 runCodeGenT :: (Monad m) => Int -> CodeGenEnv -> Lazy.StateT CodeGenState (ReaderT CodeGenEnv (ModuleBuilderT m)) a -> m [Definition]
 runCodeGenT n env m =
-  execModuleBuilderT emptyModuleBuilder
-    $ runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty n) env
+  execModuleBuilderT emptyModuleBuilder $
+    runReaderT (Lazy.evalStateT m $ CodeGenState mempty mempty n) env
 
 -- | Generate LLVM IR from a program.
 codeGen ::
@@ -137,13 +137,13 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
     case mentry of
       Just entry -> do
         (f, (ps, body)) <-
-          runEffOnCodeGen
-            $ mainFunc
-            =<< runDef do
-              let unitCon = C.Con C.Tuple []
-              unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
-              _ <- bind $ CallDirect entry [unit]
-              pure (Atom $ Unboxed $ Int32 0)
+          runEffOnCodeGen $
+            mainFunc
+              =<< runDef do
+                let unitCon = C.Con C.Tuple []
+                unit <- let_ (SumT [unitCon]) (Pack (SumT [unitCon]) unitCon [])
+                _ <- bind $ CallDirect entry [unit]
+                pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
     genLoadModule $ runContT (initTopVars topVars) (const retVoid)
@@ -165,7 +165,7 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
           initTopVars xs
     -- Generate main function.
     mainFunc e = do
-      -- `Builtin.main` are compiled as `main` in `Koriel.Core.CodeGen.toName`
+      -- `Builtin.main` are compiled as `main` in `Malgo.Core.CodeGen.toName`
       mainFuncId <- withMeta ([] :-> Int32T) <$> newNativeId "main"
       mainFuncBody <- runDef do
         _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
@@ -252,8 +252,8 @@ findVar x = findLocalVar
         Just opr -> load (convType $ C.typeOf x) opr 0
         Nothing -> internExtVar
     internExtVar = do
-      emitDefn
-        $ GlobalDefinition
+      emitDefn $
+        GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = toName x,
               LLVM.AST.Global.type' = convType $ C.typeOf x,
@@ -366,10 +366,10 @@ genExpr e@(CallDirect f xs) = do
     (map (,[]) (ConstantOperand (C.Null ptr) : xsOprs))
 genExpr e@(RawCall name _ xs) = do
   let primOpr =
-        ConstantOperand
-          $ C.GlobalReference
-          $ LLVM.AST.mkName
-          $ convertString name
+        ConstantOperand $
+          C.GlobalReference $
+            LLVM.AST.mkName $
+              convertString name
   xsOprs <- traverse genAtom xs
   call (FunctionType (convType $ C.typeOf e) (map (convType . C.typeOf) xs) False) primOpr (map (,[]) xsOprs)
 genExpr (Cast ty x) = do
@@ -554,8 +554,8 @@ globalStringPtr str = do
         LLVM.AST.Typed.typeOf charArray >>= \case
           Left err -> error $ show err
           Right ty -> pure ty
-      emitDefn
-        $ GlobalDefinition
+      emitDefn $
+        GlobalDefinition
           globalVariableDefaults
             { LLVM.AST.Global.name = name,
               LLVM.AST.Global.type' = ty,

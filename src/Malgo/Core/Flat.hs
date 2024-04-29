@@ -1,5 +1,5 @@
 -- | Normalization for Core using delimited continuations.
-module Koriel.Core.Flat (normalize, normalizeExpr) where
+module Malgo.Core.Flat (normalize, normalizeExpr) where
 
 import Control.Lens (has, traverseOf, traversed, _2)
 import Control.Monad.Trans.Class (lift)
@@ -8,10 +8,10 @@ import Data.Traversable (for)
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
-import Koriel.Core.Syntax
-import Koriel.Core.Type
-import Koriel.Id
-import Koriel.MonadUniq (Uniq)
+import Malgo.Core.Syntax
+import Malgo.Core.Type
+import Malgo.Id
+import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude
 
 normalize ::

@@ -1,19 +1,19 @@
-module Koriel.Core.Parser (parse) where
+module Malgo.Core.Parser (parse) where
 
 import Data.Char qualified as Char
 import Data.HashMap.Strict qualified as HashMap
 import Data.HashSet qualified as HashSet
 import Data.Text qualified as T
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
-import Koriel.Core.Syntax hiding (atom, expr, object)
-import Koriel.Core.Type
+import Malgo.Core.Syntax hiding (atom, expr, object)
+import Malgo.Core.Type
 import Malgo.Prelude hiding (space)
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec qualified as Megaparsec
 import Text.Megaparsec.Char qualified as Char
 import Text.Megaparsec.Char.Lexer qualified as Lexer
 
--- | Parse a Koriel program.
+-- | Parse a Core program.
 parse :: String -> Text -> Either (ParseErrorBundle Text Void) (Program Text)
 parse = Megaparsec.parse do
   space
@@ -306,7 +306,7 @@ isIdentLetter c = Char.isAlphaNum c || HashSet.member c identLetterSet
     identLetterSet = HashSet.fromList "_+-*/\\%=><:;|&!#.@$"
 
 -- | Parse an identifier.
--- In Koriel, we always know where an identifier appears,
+-- In Core, we always know where an identifier appears,
 -- so we don't need to check if it is a keyword.
 -- (And identifiers that textually look like keywords are allowed.)
 ident :: Parser Text

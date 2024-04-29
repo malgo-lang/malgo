@@ -38,7 +38,7 @@ import Data.HashSet qualified as HashSet
 import Data.Store (Store)
 import Effectful (Eff)
 import Effectful.State.Static.Local (State, evalState)
-import Koriel.Id
+import Malgo.Id
 import Malgo.Prelude
 
 --------------------------------

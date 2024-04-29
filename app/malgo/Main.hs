@@ -9,8 +9,8 @@ import Data.ByteString qualified as BS
 import Effectful
 import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
-import Koriel.Core.Optimize (OptimizeOption (..))
-import Koriel.Core.Parser qualified as Koriel
+import Malgo.Core.Optimize (OptimizeOption (..))
+import Malgo.Core.Parser qualified as Core
 import Malgo.Driver qualified as Driver
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Monad qualified as Flag
@@ -52,9 +52,9 @@ main = do
               Flag.testMode = False
             }
           opt.optimizeOption
-    Koriel (KorielOpt srcPath) -> do
+    Core (CoreOpt srcPath) -> do
       srcContents <- BS.readFile srcPath
-      case Koriel.parse srcPath (convertString srcContents) of
+      case Core.parse srcPath (convertString srcContents) of
         Left err ->
           let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
               diag' = addFile diag srcPath (convertString srcContents)
@@ -96,18 +96,18 @@ toLLOpt =
   )
     <**> helper
 
-newtype KorielOpt = KorielOpt FilePath
+newtype CoreOpt = CoreOpt FilePath
   deriving stock (Eq, Show)
 
 data Command
   = ToLL ToLLOpt
-  | Koriel KorielOpt
+  | Core CoreOpt
 
 parseCommand :: IO Command
 parseCommand = do
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser koriel) <**> helper)
+      ( info ((subparser toLL <|> subparser core) <**> helper)
           $ fullDesc
           <> header "malgo programming language"
       )
@@ -117,7 +117,7 @@ parseCommand = do
       if null opt.dstPath
         then pure $ ToLL $ opt {srcPath = srcPath, dstPath = srcPath & extension .~ ".ll"}
         else pure $ ToLL $ opt {srcPath = srcPath}
-    Koriel opt -> pure $ Koriel opt
+    Core opt -> pure $ Core opt
   where
     toLL =
       command "to-ll"
@@ -125,10 +125,10 @@ parseCommand = do
         $ fullDesc
         <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
         <> header "malgo to LLVM Textual IR Compiler"
-    koriel =
-      command "koriel"
-        $ info (Koriel <$> korielOpt)
+    core =
+      command "core"
+        $ info (Core <$> coreOpt)
         $ fullDesc
-        <> progDesc "Koriel Compiler"
-        <> header "malgo koriel"
-    korielOpt = KorielOpt <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
+        <> progDesc "Core Compiler"
+        <> header "malgo core"
+    coreOpt = CoreOpt <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")

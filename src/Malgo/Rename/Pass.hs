@@ -9,10 +9,10 @@ import Data.List.Extra (anySame, disjoint)
 import Effectful (Eff, IOE, (:>))
 import Effectful.Reader.Static (Reader, ask, local, runReader)
 import Effectful.State.Static.Local (State, execState, get, gets, modify, put, runState)
-import Koriel.Id
-import Koriel.Lens
-import Koriel.MonadUniq (Uniq)
+import Malgo.Id
 import Malgo.Interface
+import Malgo.Lens
+import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (All)
 import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState as RnState

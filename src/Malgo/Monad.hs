@@ -3,10 +3,10 @@ module Malgo.Monad (DstPath (..), Flag (..), CompileMode (..), runMalgoM) where
 import Effectful (Eff, IOE, (:>))
 import Effectful.Reader.Static (Reader, runReader)
 import Effectful.State.Static.Local
-import Koriel.Core.Optimize (OptimizeOption)
-import Koriel.Id
-import Koriel.MonadUniq
+import Malgo.Core.Optimize (OptimizeOption)
+import Malgo.Id
 import Malgo.Interface (Interface, getWorkspaceDir)
+import Malgo.MonadUniq
 import Malgo.Prelude
 import System.FilePath (takeFileName, (-<.>), (</>))
 

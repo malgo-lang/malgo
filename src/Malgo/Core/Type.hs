@@ -1,13 +1,13 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Type (Tag (..), Con (..), Type (..), HasType (..)) where
+module Malgo.Core.Type (Tag (..), Con (..), Type (..), HasType (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store.TH
-import Koriel.Id
+import Malgo.Id
 import Malgo.Prelude
 
 {-

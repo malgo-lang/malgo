@@ -1,4 +1,4 @@
--- | MalgoをKoriel.Coreに変換（脱糖衣）する
+-- | MalgoをMalgo.Coreに変換（脱糖衣）する
 module Malgo.Desugar.Pass (desugar) where
 
 import Control.Lens (preview, traverseOf, traversed, (^.), _2)
@@ -11,18 +11,18 @@ import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Koriel.Core.Alpha (alpha)
-import Koriel.Core.Syntax as C
-import Koriel.Core.Type hiding (Type)
-import Koriel.Core.Type qualified as C
-import Koriel.Id
-import Koriel.MonadUniq
+import Malgo.Core.Alpha (alpha)
+import Malgo.Core.Syntax as C
+import Malgo.Core.Type hiding (Type)
+import Malgo.Core.Type qualified as C
 import Malgo.Desugar.DsState
 import Malgo.Desugar.Match
 import Malgo.Desugar.Type
+import Malgo.Id
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep as GT
 import Malgo.Interface
+import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G

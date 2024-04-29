@@ -1,4 +1,4 @@
-module Koriel.Core.Optimize
+module Malgo.Core.Optimize
   ( optimizeProgram,
     OptimizeOption (..),
     defaultOptimizeOption,
@@ -15,12 +15,12 @@ import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Effectful.State.Static.Local (State, evalState, execState, get, modify)
 import Effectful.State.Static.Local qualified as L
-import Koriel.Core.Alpha
-import Koriel.Core.Flat
-import Koriel.Core.Syntax
-import Koriel.Core.Type
-import Koriel.Id
-import Koriel.MonadUniq
+import Malgo.Core.Alpha
+import Malgo.Core.Flat
+import Malgo.Core.Syntax
+import Malgo.Core.Type
+import Malgo.Id
+import Malgo.MonadUniq
 import Malgo.Prelude
 import Witherable (ordNub)
 
@@ -120,7 +120,7 @@ foldVariable = transformM
   \case
     Match (Atom a) [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
     -- (= x a e) -> e[x := a] is a valid transformation in 'foldVariable'.
-    -- But this transformation is not necessary, because 'Koriel.Core.Flat' and 'Koriel.Core.Lint' guarantee that '=' never binds an atom.
+    -- But this transformation is not necessary, because 'Malgo.Core.Flat' and 'Malgo.Core.Lint' guarantee that '=' never binds an atom.
     -- Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
     x -> pure x
 

@@ -71,7 +71,7 @@ import Control.Lens (lens)
 import Data.Kind qualified as K
 import Data.Store.TH
 import Data.Void
-import Koriel.Id
+import Malgo.Id
 import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Prelude
 

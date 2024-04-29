@@ -20,12 +20,12 @@ import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
 import Effectful (Eff, (:>))
 import Effectful.State.Static.Local (State, gets)
-import Koriel.Core.Syntax qualified as C
-import Koriel.Core.Type qualified as C
-import Koriel.Id
-import Koriel.Lens
+import Malgo.Core.Syntax qualified as C
+import Malgo.Core.Type qualified as C
+import Malgo.Id
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as GT
+import Malgo.Lens
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 
@@ -40,7 +40,7 @@ makePrisms ''Def
 
 -- | 'DsState' tracks the state of desugaring.
 data DsState = DsState
-  { -- | Name mapping from Malgo's 'RnId' to Koriel's 'Id'.
+  { -- | Name mapping from Malgo's 'RnId' to Core's 'Id'.
     _nameEnv :: HashMap RnId (Meta C.Type),
     -- | Type signatures.
     _signatureMap :: HashMap RnId (GT.Scheme GT.Type),

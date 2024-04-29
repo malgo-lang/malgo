@@ -1,14 +1,14 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Syntax.Unboxed (Unboxed (..)) where
+module Malgo.Core.Syntax.Unboxed (Unboxed (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Store ()
 import Data.Store.TH
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
-import Koriel.Core.Type
+import Malgo.Core.Type
 import Malgo.Prelude
 import Numeric (showHex)
 

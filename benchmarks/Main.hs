@@ -4,7 +4,7 @@ import Criterion
 import Criterion.Main
 import Data.String.Conversions
 import Effectful
-import Koriel.Core.Optimize (defaultOptimizeOption)
+import Malgo.Core.Optimize (defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude

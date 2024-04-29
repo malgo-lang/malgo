@@ -1,12 +1,12 @@
-module Koriel.Core.Syntax.Expr (Expr) where
+module Malgo.Core.Syntax.Expr (Expr) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Kind qualified
 import Data.Store (Store)
-import Koriel.Core.Syntax.Atom (HasAtom)
-import Koriel.Core.Syntax.Common (HasFreeVar)
-import Koriel.Core.Type (HasType)
+import Malgo.Core.Syntax.Atom (HasAtom)
+import Malgo.Core.Syntax.Common (HasFreeVar)
+import Malgo.Core.Type (HasType)
 import Malgo.Prelude (Eq, Foldable, Functor, Ord, Pretty, Show)
 
 data Expr (a :: Data.Kind.Type)

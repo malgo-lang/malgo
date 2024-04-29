@@ -5,8 +5,8 @@ import Data.HashSet qualified as HashSet
 import Data.Store (Store)
 import Data.Store qualified as Store
 import Effectful (Eff, IOE, (:>))
-import Koriel.Core.Syntax
-import Koriel.Id
+import Malgo.Core.Syntax
+import Malgo.Id
 import Malgo.Interface
 import Malgo.Prelude
 import System.FilePath ((</>))

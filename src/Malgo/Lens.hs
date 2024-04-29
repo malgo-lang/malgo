@@ -1,4 +1,4 @@
-module Koriel.Lens
+module Malgo.Lens
   ( HasResolvedTypeIdentMap (..),
     HasResolvedVarIdentMap (..),
     HasSignatureMap (..),

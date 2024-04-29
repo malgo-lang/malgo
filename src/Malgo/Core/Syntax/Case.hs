@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Syntax.Case
+module Malgo.Core.Syntax.Case
   ( Case (..),
     _Unpack,
     _OpenRecord,
@@ -15,11 +15,11 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store.TH
-import Koriel.Core.Syntax.Atom (HasAtom (..))
-import Koriel.Core.Syntax.Common
-import {-# SOURCE #-} Koriel.Core.Syntax.Expr
-import Koriel.Core.Syntax.Unboxed
-import Koriel.Core.Type
+import Malgo.Core.Syntax.Atom (HasAtom (..))
+import Malgo.Core.Syntax.Common
+import {-# SOURCE #-} Malgo.Core.Syntax.Expr
+import Malgo.Core.Syntax.Unboxed
+import Malgo.Core.Type
 import Malgo.Prelude
 
 -- | alternatives

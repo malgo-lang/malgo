@@ -6,7 +6,7 @@ import Control.Monad.Combinators.Expr
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Data.Void
-import Koriel.Id (ModuleName (ModuleName))
+import Malgo.Id (ModuleName (ModuleName))
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
@@ -598,7 +598,7 @@ reservedKeywords =
   ]
 
 reserved :: Parser ()
-reserved = choice $ map (try . pKeyword) reservedKeywords -- #| and |# are for block comments in Koriel
+reserved = choice $ map (try . pKeyword) reservedKeywords -- #| and |# are for block comments in Core
 
 reservedOperators :: [TL.Text]
 reservedOperators = ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"]

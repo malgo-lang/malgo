@@ -17,11 +17,11 @@ where
 import Control.Lens (At (at), makeFieldsNoPrefix, view, (%~), (^.))
 import Data.HashMap.Strict qualified as HashMap
 import Data.Maybe (fromJust)
-import Koriel.Id
-import Koriel.Lens
+import Malgo.Id
 import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.TypeRep qualified as TypeRep
 import Malgo.Interface (Interface (..), externalFromInterface)
+import Malgo.Lens
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (Resolved, RnEnv)
 import Malgo.Syntax.Extension

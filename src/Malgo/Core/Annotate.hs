@@ -1,4 +1,4 @@
-module Koriel.Core.Annotate (annotate) where
+module Malgo.Core.Annotate (annotate) where
 
 import Control.Lens (ifor)
 import Data.HashMap.Strict qualified as HashMap
@@ -6,9 +6,9 @@ import Data.Text qualified as T
 import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
-import Koriel.Core.Syntax
-import Koriel.Core.Type
-import Koriel.Id
+import Malgo.Core.Syntax
+import Malgo.Core.Type
+import Malgo.Id
 import Malgo.Prelude hiding (annotate)
 
 -- | Type-check the program and annotate with type information.

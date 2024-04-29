@@ -23,11 +23,11 @@ import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import GHC.Records (HasField)
-import Koriel.Id
-import Koriel.Lens (kindCtx, typeSynonymMap)
-import Koriel.MonadUniq
+import Malgo.Id
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
+import Malgo.Lens (kindCtx, typeSynonymMap)
+import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint)
 
 -- * Constraint

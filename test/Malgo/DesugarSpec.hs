@@ -5,14 +5,14 @@ import Effectful
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local
 import Error.Diagnose
-import Koriel.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
-import Koriel.Id (ModuleName)
-import Koriel.MonadUniq (Uniq)
+import Malgo.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Driver qualified as Driver
+import Malgo.Id (ModuleName)
 import Malgo.Infer.Pass (infer)
 import Malgo.Interface (Interface)
 import Malgo.Monad (CompileMode (..), DstPath, runMalgoM)
+import Malgo.MonadUniq (Uniq)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)

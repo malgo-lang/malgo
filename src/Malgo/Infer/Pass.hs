@@ -12,13 +12,13 @@ import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Effectful.Writer.Static.Local
-import Koriel.Id
-import Koriel.Lens
-import Koriel.MonadUniq
+import Malgo.Id
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), loadInterface)
+import Malgo.Lens
+import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename.RnEnv (RnEnv (..))
 import Malgo.Syntax hiding (Type (..))

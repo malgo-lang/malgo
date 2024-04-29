@@ -2,7 +2,7 @@ module Malgo.Desugar.Unboxed (dsUnboxed) where
 
 -- Unboxedの脱糖衣
 
-import Koriel.Core.Syntax as Core
+import Malgo.Core.Syntax as Core
 import Malgo.Prelude
 import Malgo.Syntax as Malgo
 import Malgo.Syntax.Extension as Malgo

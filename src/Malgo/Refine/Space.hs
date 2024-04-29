@@ -7,9 +7,9 @@ import Data.List qualified as List
 import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
-import Koriel.Id (Id)
+import Malgo.Id (Id)
 import Malgo.Infer.TypeRep
-import Malgo.Prelude hiding (subtract, space)
+import Malgo.Prelude hiding (space, subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension

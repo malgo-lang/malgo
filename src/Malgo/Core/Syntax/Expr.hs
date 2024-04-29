@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Syntax.Expr (Expr (..), HasExpr (..)) where
+module Malgo.Core.Syntax.Expr (Expr (..), HasExpr (..)) where
 
 import Control.Lens (Plated (..), Traversal', sans, traverseOf, traversed, _2)
 import Data.Aeson (FromJSON, ToJSON)
@@ -11,12 +11,12 @@ import Data.HashSet qualified as HashSet
 import Data.Store.TH
 import Data.String.Conversions
 import Generic.Data
-import Koriel.Core.Syntax.Atom
-import Koriel.Core.Syntax.Case
-import Koriel.Core.Syntax.Common
-import Koriel.Core.Syntax.LocalDef
-import Koriel.Core.Syntax.Unboxed
-import Koriel.Core.Type
+import Malgo.Core.Syntax.Atom
+import Malgo.Core.Syntax.Case
+import Malgo.Core.Syntax.Common
+import Malgo.Core.Syntax.LocalDef
+import Malgo.Core.Syntax.Unboxed
+import Malgo.Core.Type
 import Malgo.Prelude
 
 -- | expressions

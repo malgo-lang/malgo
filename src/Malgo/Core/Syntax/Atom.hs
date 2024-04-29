@@ -1,16 +1,16 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Koriel.Core.Syntax.Atom (Atom (..), HasAtom (..)) where
+module Malgo.Core.Syntax.Atom (Atom (..), HasAtom (..)) where
 
 import Control.Lens (Traversal')
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.HashSet qualified as HashSet
 import Data.Store.TH
-import Koriel.Core.Syntax.Common
-import Koriel.Core.Syntax.Unboxed
-import Koriel.Core.Type
+import Malgo.Core.Syntax.Common
+import Malgo.Core.Syntax.Unboxed
+import Malgo.Core.Type
 import Malgo.Prelude
 
 -- | atoms

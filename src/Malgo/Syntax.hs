@@ -40,7 +40,7 @@ where
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.HashSet qualified as HashSet
-import Koriel.Id
+import Malgo.Id
 import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax.Extension
