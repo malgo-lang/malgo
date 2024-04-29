@@ -6,7 +6,6 @@ module Main (main) where
 
 import Control.Lens (makeFieldsNoPrefix)
 import Data.ByteString qualified as BS
-import Effectful
 import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, printDiagnostic)
 import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Malgo.Core.Optimize (OptimizeOption (..))
@@ -35,8 +34,7 @@ main = do
   command <- parseCommand
   case command of
     ToLL opt ->
-      runEff
-        $ Driver.compile opt.srcPath
+      Driver.compile opt.srcPath
         & runMalgoM
           opt.srcPath
           opt.compileMode

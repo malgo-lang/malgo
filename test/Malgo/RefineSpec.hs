@@ -1,17 +1,11 @@
 module Malgo.RefineSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Effectful
-import Effectful.Reader.Static (Reader)
-import Effectful.State.Static.Local
 import Error.Diagnose
 import Malgo.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
-import Malgo.Id (ModuleName)
 import Malgo.Infer.Pass (infer)
-import Malgo.Interface (Interface)
-import Malgo.Monad (CompileMode (..), DstPath, runMalgoM)
-import Malgo.MonadUniq (Uniq)
+import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
@@ -38,7 +32,7 @@ driveRefine srcPath = do
   let parsed = case parseMalgo srcPath src of
         Left err -> error $ show err
         Right parsed -> parsed
-  runMalgoEff srcPath do
+  runMalgoM srcPath LLVM flag option do
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
@@ -50,27 +44,16 @@ testcaseDir = "./test/testcases/malgo"
 
 setupBuiltin :: IO ()
 setupBuiltin =
-  runMalgoEff "./runtime/malgo/Builtin.mlg" do
+  runMalgoM "./runtime/malgo/Builtin.mlg" LLVM flag option do
     Driver.compile "./runtime/malgo/Builtin.mlg"
 
 setupPrelude :: IO ()
 setupPrelude =
-  runMalgoEff "./runtime/malgo/Prelude.mlg" $ do
+  runMalgoM "./runtime/malgo/Prelude.mlg" LLVM flag option do
     Driver.compile "./runtime/malgo/Prelude.mlg"
 
-runMalgoEff ::
-  FilePath ->
-  Eff
-    '[ Reader OptimizeOption,
-       Reader FilePath,
-       Reader Flag,
-       Reader CompileMode,
-       Reader DstPath,
-       State Uniq,
-       State (HashMap ModuleName Interface),
-       IOE
-     ]
-    a ->
-  IO a
-runMalgoEff src action = do
-  runEff $ runMalgoM src LLVM Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode = True} defaultOptimizeOption action
+flag :: Flag
+flag = Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode = True}
+
+option :: OptimizeOption
+option = defaultOptimizeOption

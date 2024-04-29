@@ -9,7 +9,6 @@ import Control.Exception (IOException, catch)
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
 import Data.Text qualified as T
-import Effectful
 import Extra (retry, timeout)
 import Malgo.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
@@ -110,18 +109,17 @@ setupRuntime = do
 compile :: FilePath -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
 compile src lambdaLift noOptimize option compileMode =
   do
-    runEff
-      $ Driver.compile src
-      & runMalgoM
-        src
-        compileMode
-        Flag
-          { noOptimize,
-            lambdaLift,
-            debugMode = False,
-            testMode = True
-          }
-        option
+    Driver.compile src
+    & runMalgoM
+      src
+      compileMode
+      Flag
+        { noOptimize,
+          lambdaLift,
+          debugMode = False,
+          testMode = True
+        }
+      option
 
 findCommand :: [String] -> IO String
 findCommand list =

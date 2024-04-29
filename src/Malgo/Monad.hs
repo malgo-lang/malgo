@@ -1,6 +1,6 @@
 module Malgo.Monad (DstPath (..), Flag (..), CompileMode (..), runMalgoM) where
 
-import Effectful (Eff, IOE, (:>))
+import Effectful (Eff, IOE, runEff)
 import Effectful.Reader.Static (Reader, runReader)
 import Effectful.State.Static.Local
 import Malgo.Core.Optimize (OptimizeOption)
@@ -18,28 +18,25 @@ extensionOf :: (IsString a) => CompileMode -> a
 extensionOf LLVM = "ll"
 
 runMalgoM ::
-  (IOE :> es) =>
   FilePath ->
   CompileMode ->
   Flag ->
   OptimizeOption ->
   Eff
-    ( Reader OptimizeOption
-        : Reader FilePath
-        : Reader Flag
-        : Reader CompileMode
-        : Reader DstPath
-        : State Uniq
-        : State (HashMap ModuleName Interface)
-        : es
-    )
+    '[ Reader OptimizeOption,
+       Reader Flag,
+       Reader CompileMode,
+       Reader DstPath,
+       State Uniq,
+       State (HashMap ModuleName Interface),
+       IOE
+     ]
     b ->
-  Eff es b
-runMalgoM srcPath compileMode flag opt e = do
+  IO b
+runMalgoM srcPath compileMode flag opt e = runEff do
   workspaceDir <- getWorkspaceDir
   let dstPath = workspaceDir </> takeFileName srcPath -<.> extensionOf compileMode
   runReader opt e
-    & runReader workspaceDir
     & runReader flag
     & runReader compileMode
     & runReader (DstPath dstPath)

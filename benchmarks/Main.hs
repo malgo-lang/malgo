@@ -3,7 +3,6 @@ module Main (main) where
 import Criterion
 import Criterion.Main
 import Data.String.Conversions
-import Effectful
 import Malgo.Core.Optimize (defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
@@ -117,6 +116,5 @@ setupRuntime = do
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> FilePath -> Bool -> Bool -> IO ()
 compile src dst lambdaLift noOptimize =
-  runEff
-    $ runMalgoM dst LLVM Flag {lambdaLift, noOptimize, debugMode = False, testMode = False} defaultOptimizeOption
+  runMalgoM dst LLVM Flag {lambdaLift, noOptimize, debugMode = False, testMode = False} defaultOptimizeOption
     $ Driver.compile src
