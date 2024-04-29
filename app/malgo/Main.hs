@@ -4,7 +4,7 @@
 
 module Main (main) where
 
-import Control.Lens (makeFieldsNoPrefix, (.~))
+import Control.Lens (makeFieldsNoPrefix)
 import Data.ByteString qualified as BS
 import Effectful
 import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, printDiagnostic)
@@ -18,18 +18,14 @@ import Malgo.Prelude
 import Options.Applicative
 import System.Directory (makeAbsolute)
 import System.Exit (exitFailure)
-import System.FilePath (takeDirectory)
-import System.FilePath.Lens (extension)
 
 data ToLLOpt = ToLLOpt
   { srcPath :: FilePath,
-    dstPath :: FilePath,
     compileMode :: CompileMode,
     noOptimize :: Bool,
     lambdaLift :: Bool,
     optimizeOption :: OptimizeOption,
-    debugMode :: Bool,
-    modulePaths :: [FilePath]
+    debugMode :: Bool
   }
 
 makeFieldsNoPrefix ''ToLLOpt
@@ -38,8 +34,7 @@ main :: IO ()
 main = do
   command <- parseCommand
   case command of
-    ToLL opt -> do
-      opt <- pure $ opt {modulePaths = opt.modulePaths <> [takeDirectory opt.dstPath]}
+    ToLL opt ->
       runEff
         $ Driver.compile opt.srcPath
         & runMalgoM
@@ -66,14 +61,6 @@ toLLOpt :: Parser ToLLOpt
 toLLOpt =
   ( ToLLOpt
       <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
-      <*> strOption
-        ( long "output"
-            <> short 'o'
-            <> metavar "OUTPUT"
-            <> value ""
-            <> help
-              "Write LLVM IR to OUTPUT"
-        )
       <*> ( strOption (long "compile-mode" <> short 'c' <> metavar "COMPILE_MODE" <> value "llvm") <&> \case
               ("llvm" :: String) -> LLVM
               _ -> error "Invalid compile mode"
@@ -92,7 +79,6 @@ toLLOpt =
               <*> switch (long "fremove-noop-destruct")
           )
       <*> switch (long "debug-mode")
-      <*> many (strOption (long "module-path" <> short 'M' <> metavar "MODULE_PATH"))
   )
     <**> helper
 
@@ -114,9 +100,7 @@ parseCommand = do
   case command of
     ToLL opt -> do
       srcPath <- makeAbsolute opt.srcPath
-      if null opt.dstPath
-        then pure $ ToLL $ opt {srcPath = srcPath, dstPath = srcPath & extension .~ ".ll"}
-        else pure $ ToLL $ opt {srcPath = srcPath}
+      pure $ ToLL opt {srcPath = srcPath}
     Core opt -> pure $ Core opt
   where
     toLL =
