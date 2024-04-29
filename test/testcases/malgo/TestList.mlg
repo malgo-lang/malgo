@@ -1,12 +1,8 @@
-module TestList = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import Builtin
+module {..} = import Prelude
 
-  def main = {
-    let xs = [1, 2, 3];
-    let nil = [];
-    putStrLn (toStringInt32 (head xs))
-  }
+def main = {
+  let xs = [1, 2, 3];
+  let nil = [];
+  putStrLn (toStringInt32 (head xs))
 }
-
--- Expected: 1

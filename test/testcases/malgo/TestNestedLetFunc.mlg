@@ -1,9 +1,5 @@
-module TestNestedLetFunc = {
-  foreign import malgo_print_string : String# -> ()
-  def main = {
-    let f = {let y = {a -> ()} ()};
-    malgo_print_string "PASS"#
-  }
+foreign import malgo_print_string : String# -> ()
+def main = {
+  let f = {let y = {a -> ()} ()};
+  malgo_print_string "PASS"#
 }
-
--- Expected: PASS

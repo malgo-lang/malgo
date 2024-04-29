@@ -1,23 +1,20 @@
-module TypeSynonym = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import Builtin
+module {..} = import Prelude
 
-  type MyTuple a = (a, a)
+type MyTuple a = (a, a)
 
-  type MyString = String
+type MyString = String
 
-  def hello : MyTuple MyString
-  def hello = ("hello", "world")
+def hello : MyTuple MyString
+def hello = ("hello", "world")
 
-  data T = TCon
-  type S = T
+data T = TCon
+type S = T
 
-  def idOverS : S -> T
-  def idOverS = { x -> x }
+def idOverS : S -> T
+def idOverS = { x -> x }
 
-  def main : { () }
-  def main = {
-    hello |> { (h, w) -> putStr h; putStr " "; putStrLn w }
-  }
+def main : { () }
+def main = {
+  hello |> { (h, w) -> putStr h; putStr " "; putStrLn w }
 }
--- Expected: hello world

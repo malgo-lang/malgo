@@ -1,44 +1,40 @@
-module Null = {
-  data Maybe a = Nothing | Just a
+data Maybe a = Nothing | Just a
 
-  data Bool = False | True
+data Bool = False | True
 
-  data List a = Nil | Cons a (List a)
+data List a = Nil | Cons a (List a)
 
-  def isNothing : Maybe a -> Bool
-  def isNothing =
-    { Nothing -> True,
-      Just _ -> False
-    }
-
-  def mHead : List a -> Maybe a
-  def mHead =
-    { Nil -> Nothing,
-      Cons p _ -> Just p
-    }
-
-  def null : List a -> Bool
-  def null = {
-    as -> isNothing (mHead as) 
+def isNothing : Maybe a -> Bool
+def isNothing =
+  { Nothing -> True,
+    Just _ -> False
   }
 
-  infixl 0 (|>)
-  def (|>) : a -> (a -> b) -> b
-  def (|>) = {
-    x f -> f x
+def mHead : List a -> Maybe a
+def mHead =
+  { Nil -> Nothing,
+    Cons p _ -> Just p
   }
 
-
-  foreign import malgo_print_string : String# -> ()
-
-  foreign import malgo_exit_failure : () -> a
-
-  def main = {
-    (null (Cons True (Cons True Nil)))
-    |> { False -> malgo_print_string "OK"#,
-         True -> malgo_exit_failure ()
-       }
-  }  
+def null : List a -> Bool
+def null = {
+  as -> isNothing (mHead as) 
 }
 
--- Expected: OK
+infixl 0 (|>)
+def (|>) : a -> (a -> b) -> b
+def (|>) = {
+  x f -> f x
+}
+
+
+foreign import malgo_print_string : String# -> ()
+
+foreign import malgo_exit_failure : () -> a
+
+def main = {
+  (null (Cons True (Cons True Nil)))
+  |> { False -> malgo_print_string "OK"#,
+       True -> malgo_exit_failure ()
+     }
+}  

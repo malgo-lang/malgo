@@ -1,10 +1,6 @@
-module TypeAnnotation = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import Builtin
+module {..} = import Prelude
 
-  def main = {
-    printString (({x -> x} : String -> String) "hoge")
-  }
+def main = {
+  printString (({x -> x} : String -> String) "hoge")
 }
-
--- Expected: hoge

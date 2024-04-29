@@ -1,6 +1,2 @@
-module Primitive = {
-  module {..} = import Builtin
-  def main = { printString# (toStringInt64# (addInt64# 40L# 2L#)) }
-}
-
--- Expected: 42
+module {..} = import Builtin
+def main = { printString# (toStringInt64# (addInt64# 40L# 2L#)) }

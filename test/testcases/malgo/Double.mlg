@@ -1,10 +1,6 @@
-module Double = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import Builtin
+module {..} = import Prelude
 
-  def main = {
-    putStr (toStringDouble 3.14)
-  }
+def main = {
+  putStr (toStringDouble 3.14)
 }
-
--- Expected: 3.140000

@@ -1,9 +1,6 @@
-module TestDot = {
-  module {..} = import Builtin
-  module {..} = import Prelude
-  
-  def succ = {(Int64# x) -> (Int64# (addInt64# x 1L#))}
+module {..} = import Builtin
+module {..} = import Prelude
 
-  def main = { printInt64 ((succ . succ) (Int64# 0L#)) }
-}
--- Expected: 2
+def succ = {(Int64# x) -> (Int64# (addInt64# x 1L#))}
+
+def main = { printInt64 ((succ . succ) (Int64# 0L#)) }

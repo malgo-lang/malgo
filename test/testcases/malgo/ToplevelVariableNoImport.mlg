@@ -1,57 +1,43 @@
-module ToplevelVariableNoImport = {
-  -- module {..} = import Builtin
-  -- module {..} = import Prelude
+data Int32 = Int32# Int32# data String = String# String# foreign import malgo_add_int32_t : Int32# -> Int32# -> Int32# def addInt32# : Int32# -> Int32# -> Int32# def addInt32# = { x y -> malgo_add_int32_t x y } def addInt32 : Int32 -> Int32 -> Int32 def addInt32 = { (Int32# x) (Int32# y) -> Int32# (addInt32# x y) }
 
-  data Int32 = Int32# Int32#
-  data String = String# String#
+foreign import malgo_print_string : String# -> ()
+def printString# : String# -> ()
+def printString# = { x -> malgo_print_string x }
+def printString : String -> ()
+def printString = { String# x -> printString# x }
 
-  foreign import malgo_add_int32_t : Int32# -> Int32# -> Int32#
-  def addInt32# : Int32# -> Int32# -> Int32#
-  def addInt32# = { x y -> malgo_add_int32_t x y }
-  def addInt32 : Int32 -> Int32 -> Int32
-  def addInt32 = { (Int32# x) (Int32# y) -> Int32# (addInt32# x y) }
+def identity : a -> a
+def identity = { x -> x }
 
-  foreign import malgo_print_string : String# -> ()
-  def printString# : String# -> ()
-  def printString# = { x -> malgo_print_string x }
-  def printString : String -> ()
-  def printString = { String# x -> printString# x }
+def const : a -> b -> a
+def const = { a _ -> a }
 
-  def identity : a -> a
-  def identity = { x -> x }
+data Maybe a = Nothing | Just a
 
-  def const : a -> b -> a
-  def const = { a _ -> a }
+def printInt32 : Int32 -> ()
+def printInt32 = { i -> printString (toStringInt32 i) }
 
-  data Maybe a = Nothing | Just a
+foreign import malgo_int32_t_to_string : Int32# -> String#
+def toStringInt32# : Int32# -> String#
+def toStringInt32# = { x -> malgo_int32_t_to_string x }
+def toStringInt32 : Int32 -> String
+def toStringInt32 = { Int32# x -> String# (toStringInt32# x) }
 
-  def printInt32 : Int32 -> ()
-  def printInt32 = { i -> printString (toStringInt32 i) }
+def one = 1
 
-  foreign import malgo_int32_t_to_string : Int32# -> String#
-  def toStringInt32# : Int32# -> String#
-  def toStringInt32# = { x -> malgo_int32_t_to_string x }
-  def toStringInt32 : Int32 -> String
-  def toStringInt32 = { Int32# x -> String# (toStringInt32# x) }
+def addOne = addInt32 one
 
-  def one = 1
+def constId = const identity
 
-  def addOne = addInt32 one
+def comp : Maybe a
+def comp =
+  { Nothing -> Nothing,
+    Just x -> Nothing
+  } (Just ())
 
-  def constId = const identity
-
-  def comp : Maybe a
-  def comp =
-    { Nothing -> Nothing,
-      Just x -> Nothing
-    } (Just ())
-
-  def main = {
-    { Nothing -> printString "OK",
-      Just _ -> ()
-    } comp;
-    printInt32 (constId const (addOne one))
-  }
+def main = {
+  { Nothing -> printString "OK",
+    Just _ -> ()
+  } comp;
+  printInt32 (constId const (addOne one))
 }
-
--- Expected: OK2
