@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/InlineFunction.ll'
-source_filename = "./test/testcases/malgo/InlineFunction.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/InlineFunction.ll'
+source_filename = "test/testcases/malgo/InlineFunction.mlg"
 
 declare void @GC_init() local_unnamed_addr
 

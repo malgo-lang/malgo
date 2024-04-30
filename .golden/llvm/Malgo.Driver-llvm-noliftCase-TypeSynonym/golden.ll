@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TypeSynonym.mlg'
-source_filename = "./test/testcases/malgo/TypeSynonym.mlg"
+; ModuleID = 'test/testcases/malgo/TypeSynonym.mlg'
+source_filename = "test/testcases/malgo/TypeSynonym.mlg"
 
 @TypeSynonym.hello = global ptr undef
 @str2862 = unnamed_addr constant [2 x i8] c" \00"

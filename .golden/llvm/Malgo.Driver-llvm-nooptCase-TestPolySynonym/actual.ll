@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TestPolySynonym.mlg'
-source_filename = "./test/testcases/malgo/TestPolySynonym.mlg"
+; ModuleID = 'test/testcases/malgo/TestPolySynonym.mlg'
+source_filename = "test/testcases/malgo/TestPolySynonym.mlg"
 
 @Builtin.undefined = global ptr undef
 @str104 = unnamed_addr constant [1 x i8] zeroinitializer

@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/TestPatSynRecon.ll'
-source_filename = "./test/testcases/malgo/TestPatSynRecon.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestPatSynRecon.ll'
+source_filename = "test/testcases/malgo/TestPatSynRecon.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @str144 = unnamed_addr constant [1 x i8] zeroinitializer

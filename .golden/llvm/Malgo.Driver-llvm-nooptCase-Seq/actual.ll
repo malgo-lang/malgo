@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/Seq.mlg'
-source_filename = "./test/testcases/malgo/Seq.mlg"
+; ModuleID = 'test/testcases/malgo/Seq.mlg'
+source_filename = "test/testcases/malgo/Seq.mlg"
 
 @Builtin.undefined = global ptr undef
 @Seq.executeWhenLoaded = global ptr undef

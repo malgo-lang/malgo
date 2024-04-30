@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/ToplevelVariable.mlg'
-source_filename = "./test/testcases/malgo/ToplevelVariable.mlg"
+; ModuleID = 'test/testcases/malgo/ToplevelVariable.mlg'
+source_filename = "test/testcases/malgo/ToplevelVariable.mlg"
 
 @Builtin.undefined = global ptr undef
 @ToplevelVariable.one = global ptr undef

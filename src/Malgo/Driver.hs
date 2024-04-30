@@ -3,7 +3,6 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Data.ByteString qualified as BS
 import Data.HashMap.Strict qualified as HashMap
-import Data.Store qualified as Store
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text.IO qualified as T
 import Effectful
@@ -20,7 +19,7 @@ import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Id (Id (Id, moduleName, name, sort), IdSort (External), Meta (..))
 import Malgo.Infer.Pass qualified as Infer
-import Malgo.Interface (Interface, buildInterface, loadInterface, toInterfacePath)
+import Malgo.Interface (Interface, buildInterface, loadInterface)
 import Malgo.Link qualified as Link
 import Malgo.Module
 import Malgo.Monad
@@ -32,10 +31,11 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
+import Path (replaceExtension, toFilePath)
 import Prettyprinter qualified as PrettyPrinter
 import Prettyprinter.Render.Text qualified as PrettyPrinter
 import System.Exit (exitFailure)
-import System.FilePath (takeBaseName, (-<.>))
+import System.FilePath ((-<.>))
 import System.IO (hFlush)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
@@ -58,14 +58,13 @@ withDump isDump label m = do
 -- | Compile the parsed AST.
 compileFromAST ::
   ( Reader OptimizeOption :> es,
-    Reader DstPath :> es,
     Reader Flag :> es,
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,
     State Uniq :> es,
     Workspace :> es
   ) =>
-  FilePath ->
+  ArtifactPath ->
   Syntax.Module (Malgo 'Parse) ->
   Eff es ()
 compileFromAST srcPath parsedAst = do
@@ -73,10 +72,8 @@ compileFromAST srcPath parsedAst = do
   where
     moduleName = parsedAst.moduleName
     act = do
-      when (convertString (takeBaseName srcPath) /= moduleName.raw)
-        $ error "Module name must be source file's base name."
-
-      DstPath dstPath <- ask @DstPath
+      registerModule moduleName srcPath
+      dstPath <- replaceExtension ".ll" srcPath.targetPath
       flags <- ask @Flag
 
       when flags.debugMode $ liftIO do
@@ -93,13 +90,13 @@ compileFromAST srcPath parsedAst = do
       core <- do
         core <- runReader moduleName $ Flat.normalize core
         _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
-        liftIO $ BS.writeFile (dstPath -<.> "kor.bin") $ Store.encode core
+        save srcPath ".mo" (ViaStore core)
 
         let inf = buildInterface moduleName rnState tcEnv dsEnv
-        liftIO $ BS.writeFile (toInterfacePath dstPath) $ Store.encode inf
+        save srcPath ".mlgi" (ViaStore inf)
 
         core <- Link.link inf core
-        liftIO $ T.writeFile (dstPath -<.> "kor") $ render $ pretty core
+        liftIO $ T.writeFile (toFilePath dstPath -<.> "kor") $ render $ pretty core
 
         lint True core
         pure core
@@ -122,7 +119,7 @@ compileFromAST srcPath parsedAst = do
         hPutStrLn stderr "=== OPTIMIZE ==="
         hPrint stderr $ pretty coreOpt
       when flags.testMode do
-        liftIO $ T.writeFile (dstPath -<.> "kor.opt") $ render $ pretty coreOpt
+        liftIO $ T.writeFile (toFilePath dstPath -<.> "kor.opt") $ render $ pretty coreOpt
       lint True coreOpt
 
       coreLL <- if flags.lambdaLift then runReader moduleName $ lambdalift coreOpt >>= Flat.normalize else pure coreOpt
@@ -131,7 +128,7 @@ compileFromAST srcPath parsedAst = do
           hPutStrLn stderr "=== LAMBDALIFT ==="
           hPrint stderr $ pretty coreLL
       when flags.testMode do
-        liftIO $ T.writeFile (dstPath -<.> "kor.opt.lift") $ render $ pretty coreLL
+        liftIO $ T.writeFile (toFilePath dstPath -<.> "kor.opt.lift") $ render $ pretty coreLL
       lint True coreLL
 
       -- Optimization after lambda lifting causes code explosion.
@@ -152,7 +149,8 @@ compileFromAST srcPath parsedAst = do
       --   liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pretty coreLLOpt
       -- lint True coreLLOpt
       Uniq i <- get @Uniq
-      LLVM.codeGen srcPath dstPath moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) i coreLL
+      srcRelPath <- toFilePath <$> originRelPath srcPath
+      LLVM.codeGen srcRelPath (toFilePath dstPath) moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) i coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id, Meta b)] -> Maybe (Meta b)
     searchMain ((griffId@Id {sort = External}, coreId) : _)
@@ -167,7 +165,6 @@ compileFromAST srcPath parsedAst = do
 -- | Read the source file and parse it, then compile.
 compile ::
   ( Reader OptimizeOption :> es,
-    Reader DstPath :> es,
     Reader Flag :> es,
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,
@@ -199,4 +196,4 @@ compile srcPath = do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst
   runReader parsedAst.moduleName
-    $ compileFromAST srcPath parsedAst
+    $ compileFromAST srcModulePath parsedAst

@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TestEither.mlg'
-source_filename = "./test/testcases/malgo/TestEither.mlg"
+; ModuleID = 'test/testcases/malgo/TestEither.mlg'
+source_filename = "test/testcases/malgo/TestEither.mlg"
 
 @str5040 = unnamed_addr constant [12 x i8] c"unreachable\00"
 @str5097 = unnamed_addr constant [6 x i8] c"error\00"

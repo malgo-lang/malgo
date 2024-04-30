@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/Punctuate.ll'
-source_filename = "./test/testcases/malgo/Punctuate.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Punctuate.ll'
+source_filename = "test/testcases/malgo/Punctuate.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @str210 = unnamed_addr constant [1 x i8] zeroinitializer

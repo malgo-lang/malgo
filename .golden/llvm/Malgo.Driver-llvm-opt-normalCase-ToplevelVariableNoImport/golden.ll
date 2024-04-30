@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/ToplevelVariableNoImport.ll'
-source_filename = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.ll'
+source_filename = "test/testcases/malgo/ToplevelVariableNoImport.mlg"
 
 @ToplevelVariableNoImport.one = local_unnamed_addr global ptr undef
 @ToplevelVariableNoImport.comp = local_unnamed_addr global ptr undef

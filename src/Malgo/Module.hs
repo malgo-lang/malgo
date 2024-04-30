@@ -6,6 +6,8 @@ module Malgo.Module
     HasModuleName,
     Workspace,
     getWorkspace,
+    registerModule,
+    getModulePath,
     runWorkspaceOnPwd,
     ArtifactPath (..),
     Resource (..),
@@ -13,21 +15,28 @@ module Malgo.Module
     parseArtifactPath,
     targetRelPath,
     originRelPath,
+    ViaStore (..),
   )
 where
 
+import Control.Monad.Catch
 import Data.Aeson hiding (encode)
 import Data.ByteString (ByteString)
 import Data.ByteString qualified as BS
 import Data.Data
+import Data.HashMap.Strict qualified as HashMap
 import Data.Store
 import Data.Store.TH
 import Effectful
 import Effectful.Dispatch.Static
+import Effectful.Error.Dynamic (prettyCallStack)
 import GHC.Records
+import GHC.Stack (callStack)
 import Malgo.Prelude
 import Path
-import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, getCurrentDirectory, makeAbsolute)
+import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, findFile, getCurrentDirectory, makeAbsolute)
+import System.Directory.Extra (listDirectories)
+import System.FilePath (makeRelative)
 import System.FilePath qualified as F
 
 newtype ModuleName = ModuleName {raw :: Text}
@@ -41,11 +50,14 @@ type HasModuleName r = HasField "moduleName" r ModuleName
 instance HasField "moduleName" ModuleName ModuleName where
   getField = identity
 
-newtype WorkspaceHolder = WorkspaceHolder {getWorkspace :: FilePath}
+data WorkspaceHolder = WorkspaceHolder
+  { getWorkspace :: FilePath,
+    modulePathMap :: IORef (HashMap ModuleName ArtifactPath)
+  }
 
 data Workspace :: Effect
 
-type instance DispatchOf Workspace = Static NoSideEffects
+type instance DispatchOf Workspace = Static WithSideEffects
 
 newtype instance StaticRep Workspace = Workspace WorkspaceHolder
 
@@ -60,18 +72,64 @@ runWorkspaceOnPwd action = do
   pwd <- liftIO getCurrentDirectory
   liftIO $ createDirectoryIfMissing True $ pwd F.</> ".malgo-work"
   workspaceDir <- liftIO $ makeAbsolute $ pwd F.</> ".malgo-work"
-  evalStaticRep (Workspace $ WorkspaceHolder workspaceDir) action
+  modulePathMap <- newIORef mempty
+  evalStaticRep (Workspace $ WorkspaceHolder workspaceDir modulePathMap) action
 
 getWorkspaceAbs :: (Workspace :> es) => Eff es (Path Abs Dir)
 getWorkspaceAbs = do
   workspace <- getWorkspace
   parseAbsDir workspace
 
+registerModule :: (Workspace :> es, IOE :> es) => ModuleName -> ArtifactPath -> Eff es ()
+registerModule moduleName path = do
+  Workspace WorkspaceHolder {modulePathMap} <- getStaticRep
+  modifyIORef modulePathMap $ HashMap.insert moduleName path
+
+getModulePath :: (HasCallStack) => (Workspace :> es, IOE :> es) => ModuleName -> Eff es ArtifactPath
+getModulePath moduleName = do
+  Workspace WorkspaceHolder {modulePathMap} <- getStaticRep
+  modulePathMap' <- readIORef modulePathMap
+  case HashMap.lookup moduleName modulePathMap' of
+    Just path -> pure path
+    Nothing -> searchAndRegister moduleName
+
+searchAndRegister :: (HasCallStack) => (Workspace :> es, IOE :> es) => ModuleName -> Eff es ArtifactPath
+searchAndRegister moduleName = do
+  let fileName = convertString moduleName.raw <> ".mlg"
+  -- Find fileName in workspace
+  workspace <- getWorkspaceAbs
+  file <- search [toFilePath workspace] fileName
+  let relPath = makeRelative (toFilePath workspace) file
+  pwd <- pwdPath
+  path <- parseArtifactPath pwd relPath
+  registerModule moduleName path
+  pure path
+  where
+    search [] _ = throwM $ ModuleNotFound moduleName
+    search dirs fileName = do
+      mfile <- liftIO $ findFile dirs fileName
+      case mfile of
+        Just file -> pure file
+        Nothing -> do
+          subDirs <- liftIO $ traverse listDirectories dirs
+          search (concat subDirs) fileName
+
+data WorkspaceError where
+  ModuleNotFound :: (HasCallStack) => ModuleName -> WorkspaceError
+
+instance Show WorkspaceError where
+  show = displayException
+
+instance Exception WorkspaceError where
+  displayException (ModuleNotFound moduleName) =
+    "Module not found: " <> convertString moduleName.raw <> "\n" <> prettyCallStack callStack
+
 data ArtifactPath = ArtifactPath
   { rawPath :: FilePath,
     originPath :: Path Abs File,
     targetPath :: Path Abs File
   }
+  deriving stock (Show)
 
 pwdPath :: (Workspace :> es) => Eff es ArtifactPath
 pwdPath = do

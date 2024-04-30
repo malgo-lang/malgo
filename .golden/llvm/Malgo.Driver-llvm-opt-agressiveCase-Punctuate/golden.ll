@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/Punctuate.ll'
-source_filename = "./test/testcases/malgo/Punctuate.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Punctuate.ll'
+source_filename = "test/testcases/malgo/Punctuate.mlg"
 
 @str3915 = unnamed_addr constant [8 x i8] c"Symbol \00"
 @str3917 = unnamed_addr constant [6 x i8] c"SInt \00"

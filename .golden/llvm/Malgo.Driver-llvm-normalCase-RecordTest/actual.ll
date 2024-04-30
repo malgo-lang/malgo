@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/RecordTest.mlg'
-source_filename = "./test/testcases/malgo/RecordTest.mlg"
+; ModuleID = 'test/testcases/malgo/RecordTest.mlg'
+source_filename = "test/testcases/malgo/RecordTest.mlg"
 
 @str2905 = unnamed_addr constant [2 x i8] c"a\00"
 @str2906 = unnamed_addr constant [2 x i8] c"b\00"

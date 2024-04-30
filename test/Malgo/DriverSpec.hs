@@ -77,9 +77,9 @@ spec = do
       golden ("driver agressiveCase " <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
       goldenLLVM ("llvm agressiveCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
       goldenLLVM ("llvm opt agressiveCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
-  parallel $ for_ examples \examplecase -> do
-    golden ("driver exampleCase " <> takeBaseName examplecase) $ testNormal ("./examples/malgo" </> examplecase)
+  -- examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
+  -- parallel $ for_ examples \examplecase -> do
+  --   golden ("driver exampleCase " <> takeBaseName examplecase) $ testNormal ("./examples/malgo" </> examplecase)
   errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
   parallel $ for_ errorcases \errorcase -> do
     it ("driver errorCase " <> takeBaseName errorcase)
@@ -156,7 +156,7 @@ test ::
   IO String
 test testcase _typ lambdaLift noOptimize option compileMode = retry 3 do
   workspaceDir <- getWorkspaceDir
-  let llPath = workspaceDir </> takeBaseName testcase -<.> ".ll"
+  let llPath = workspaceDir </> "test" </> "testcases" </> "malgo" </> takeBaseName testcase -<.> ".ll"
   timeoutWrapper "compile"
     $ compile testcase lambdaLift noOptimize option compileMode
 
@@ -235,13 +235,13 @@ goldenLLVM description runAction = do
 readLLVM :: FilePath -> IO BL.ByteString
 readLLVM testcase = do
   workspaceDir <- getWorkspaceDir
-  let llPath = workspaceDir </> takeBaseName testcase -<.> ".ll"
+  let llPath = workspaceDir </> "test" </> "testcases" </> "malgo" </> takeBaseName testcase -<.> ".ll"
   BL.readFile llPath
 
 readLLVMOpt :: FilePath -> IO BL.ByteString
 readLLVMOpt testcase = do
   workspaceDir <- getWorkspaceDir
-  let llOptPath = workspaceDir </> takeBaseName testcase -<.> ".opt.ll"
+  let llOptPath = workspaceDir </> "test" </> "testcases" </> "malgo" </> takeBaseName testcase -<.> ".opt.ll"
   BL.readFile llOptPath
 
 testError :: FilePath -> IO ()

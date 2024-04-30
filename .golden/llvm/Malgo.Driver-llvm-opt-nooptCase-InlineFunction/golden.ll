@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/InlineFunction.ll'
-source_filename = "./test/testcases/malgo/InlineFunction.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/InlineFunction.ll'
+source_filename = "test/testcases/malgo/InlineFunction.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @str324 = unnamed_addr constant [1 x i8] zeroinitializer

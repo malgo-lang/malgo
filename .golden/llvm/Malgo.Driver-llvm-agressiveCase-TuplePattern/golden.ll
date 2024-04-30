@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TuplePattern.mlg'
-source_filename = "./test/testcases/malgo/TuplePattern.mlg"
+; ModuleID = 'test/testcases/malgo/TuplePattern.mlg'
+source_filename = "test/testcases/malgo/TuplePattern.mlg"
 
 @str3463 = unnamed_addr constant [2 x i8] c"A\00"
 

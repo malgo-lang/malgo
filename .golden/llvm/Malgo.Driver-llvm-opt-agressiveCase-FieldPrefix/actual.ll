@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/FieldPrefix.ll'
-source_filename = "./test/testcases/malgo/FieldPrefix.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/FieldPrefix.ll'
+source_filename = "test/testcases/malgo/FieldPrefix.mlg"
 
 @FieldPrefix.zero3D = local_unnamed_addr global ptr undef
 @FieldPrefix.zero2D = local_unnamed_addr global ptr undef

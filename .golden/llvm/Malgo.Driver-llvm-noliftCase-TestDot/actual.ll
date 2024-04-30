@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TestDot.mlg'
-source_filename = "./test/testcases/malgo/TestDot.mlg"
+; ModuleID = 'test/testcases/malgo/TestDot.mlg'
+source_filename = "test/testcases/malgo/TestDot.mlg"
 
 declare void @GC_init()
 

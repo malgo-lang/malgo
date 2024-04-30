@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/DeferLaw.ll'
-source_filename = "./test/testcases/malgo/DeferLaw.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.ll'
+source_filename = "test/testcases/malgo/DeferLaw.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @str39 = unnamed_addr constant [1 x i8] zeroinitializer

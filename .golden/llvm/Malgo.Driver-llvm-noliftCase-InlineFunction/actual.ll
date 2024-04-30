@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/InlineFunction.mlg'
-source_filename = "./test/testcases/malgo/InlineFunction.mlg"
+; ModuleID = 'test/testcases/malgo/InlineFunction.mlg'
+source_filename = "test/testcases/malgo/InlineFunction.mlg"
 
 declare void @GC_init()
 

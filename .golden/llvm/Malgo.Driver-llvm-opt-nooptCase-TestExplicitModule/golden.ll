@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/TestExplicitModule.ll'
-source_filename = "./test/testcases/malgo/TestExplicitModule.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestExplicitModule.ll'
+source_filename = "test/testcases/malgo/TestExplicitModule.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @str59 = unnamed_addr constant [1 x i8] zeroinitializer

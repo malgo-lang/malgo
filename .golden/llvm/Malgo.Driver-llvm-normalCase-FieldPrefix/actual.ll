@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/FieldPrefix.mlg'
-source_filename = "./test/testcases/malgo/FieldPrefix.mlg"
+; ModuleID = 'test/testcases/malgo/FieldPrefix.mlg'
+source_filename = "test/testcases/malgo/FieldPrefix.mlg"
 
 @FieldPrefix.zero3D = global ptr undef
 @FieldPrefix.zero2D = global ptr undef

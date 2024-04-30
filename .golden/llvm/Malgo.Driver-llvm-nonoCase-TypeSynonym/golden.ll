@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TypeSynonym.mlg'
-source_filename = "./test/testcases/malgo/TypeSynonym.mlg"
+; ModuleID = 'test/testcases/malgo/TypeSynonym.mlg'
+source_filename = "test/testcases/malgo/TypeSynonym.mlg"
 
 @Builtin.undefined = global ptr undef
 @TypeSynonym.hello = global ptr undef

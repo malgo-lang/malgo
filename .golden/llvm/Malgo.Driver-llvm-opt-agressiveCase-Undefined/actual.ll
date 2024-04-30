@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/Undefined.ll'
-source_filename = "./test/testcases/malgo/Undefined.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Undefined.ll'
+source_filename = "test/testcases/malgo/Undefined.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @str3440 = unnamed_addr constant [3 x i8] c"OK\00"

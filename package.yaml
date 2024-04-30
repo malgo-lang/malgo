@@ -45,6 +45,7 @@ dependencies:
   - unliftio
   - unordered-containers
   - witherable
+  - exceptions
 
 ghc-options:
   - -Wall
@@ -110,12 +111,3 @@ tests:
       - hspec-golden >= 0.2.2.0
       - string-conversions
       - pretty-simple
-
-benchmarks:
-  malgo-bench:
-    main: Main.hs
-    source-dirs: benchmarks
-    dependencies:
-      - malgo
-      - typed-process
-      - criterion

@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TuplePattern.mlg'
-source_filename = "./test/testcases/malgo/TuplePattern.mlg"
+; ModuleID = 'test/testcases/malgo/TuplePattern.mlg'
+source_filename = "test/testcases/malgo/TuplePattern.mlg"
 
 @Builtin.undefined = global ptr undef
 @str98 = unnamed_addr constant [1 x i8] zeroinitializer

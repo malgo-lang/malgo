@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/Eventually.mlg'
-source_filename = "./test/testcases/malgo/Eventually.mlg"
+; ModuleID = 'test/testcases/malgo/Eventually.mlg'
+source_filename = "test/testcases/malgo/Eventually.mlg"
 
 @Builtin.undefined = global ptr undef
 @Eventually.eventually = global ptr undef

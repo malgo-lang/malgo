@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/Show.ll'
-source_filename = "./test/testcases/malgo/Show.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Show.ll'
+source_filename = "test/testcases/malgo/Show.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @Show.showInt32 = local_unnamed_addr global ptr undef

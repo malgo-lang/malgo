@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/TestPolySynonym.ll'
-source_filename = "./test/testcases/malgo/TestPolySynonym.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestPolySynonym.ll'
+source_filename = "test/testcases/malgo/TestPolySynonym.mlg"
 
 @str2837 = unnamed_addr constant [4 x i8] c"snd\00"
 @str2838 = unnamed_addr constant [4 x i8] c"fst\00"

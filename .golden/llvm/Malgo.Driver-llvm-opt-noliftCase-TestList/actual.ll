@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/TestList.ll'
-source_filename = "./test/testcases/malgo/TestList.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestList.ll'
+source_filename = "test/testcases/malgo/TestList.mlg"
 
 declare void @GC_init() local_unnamed_addr
 

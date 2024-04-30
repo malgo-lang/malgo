@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/FuncOverUnboxed.mlg'
-source_filename = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+; ModuleID = 'test/testcases/malgo/FuncOverUnboxed.mlg'
+source_filename = "test/testcases/malgo/FuncOverUnboxed.mlg"
 
 declare void @GC_init()
 

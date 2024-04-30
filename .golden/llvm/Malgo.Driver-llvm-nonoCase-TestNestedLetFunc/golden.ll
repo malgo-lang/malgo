@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TestNestedLetFunc.mlg'
-source_filename = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+; ModuleID = 'test/testcases/malgo/TestNestedLetFunc.mlg'
+source_filename = "test/testcases/malgo/TestNestedLetFunc.mlg"
 
 @str29 = unnamed_addr constant [5 x i8] c"PASS\00"
 

@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TestExplicitModule.mlg'
-source_filename = "./test/testcases/malgo/TestExplicitModule.mlg"
+; ModuleID = 'test/testcases/malgo/TestExplicitModule.mlg'
+source_filename = "test/testcases/malgo/TestExplicitModule.mlg"
 
 @str3425 = unnamed_addr constant [13 x i8] c"Hello, world\00"
 

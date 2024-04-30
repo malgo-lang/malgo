@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/ZeroArgs.ll'
-source_filename = "./test/testcases/malgo/ZeroArgs.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.ll'
+source_filename = "test/testcases/malgo/ZeroArgs.mlg"
 
 @ZeroArgs.one = local_unnamed_addr global ptr undef
 

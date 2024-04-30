@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/Double.mlg'
-source_filename = "./test/testcases/malgo/Double.mlg"
+; ModuleID = 'test/testcases/malgo/Double.mlg'
+source_filename = "test/testcases/malgo/Double.mlg"
 
 @Builtin.undefined = global ptr undef
 @str19 = unnamed_addr constant [1 x i8] zeroinitializer

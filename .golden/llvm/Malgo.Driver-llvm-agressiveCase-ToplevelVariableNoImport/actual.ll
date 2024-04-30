@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/ToplevelVariableNoImport.mlg'
-source_filename = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+; ModuleID = 'test/testcases/malgo/ToplevelVariableNoImport.mlg'
+source_filename = "test/testcases/malgo/ToplevelVariableNoImport.mlg"
 
 @ToplevelVariableNoImport.one = global ptr undef
 @ToplevelVariableNoImport.comp = global ptr undef

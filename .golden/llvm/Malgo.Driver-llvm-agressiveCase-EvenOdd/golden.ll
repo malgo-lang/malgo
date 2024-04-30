@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/EvenOdd.mlg'
-source_filename = "./test/testcases/malgo/EvenOdd.mlg"
+; ModuleID = 'test/testcases/malgo/EvenOdd.mlg'
+source_filename = "test/testcases/malgo/EvenOdd.mlg"
 
 @str4779 = unnamed_addr constant [6 x i8] c"False\00"
 @str4780 = unnamed_addr constant [5 x i8] c"True\00"

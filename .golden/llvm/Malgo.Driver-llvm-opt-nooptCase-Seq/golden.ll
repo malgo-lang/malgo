@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/Seq.ll'
-source_filename = "./test/testcases/malgo/Seq.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Seq.ll'
+source_filename = "test/testcases/malgo/Seq.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @Seq.executeWhenLoaded = local_unnamed_addr global ptr undef

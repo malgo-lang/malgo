@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/Test6.ll'
-source_filename = "./test/testcases/malgo/Test6.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Test6.ll'
+source_filename = "test/testcases/malgo/Test6.mlg"
 
 @str52 = unnamed_addr constant [6 x i8] c"WRONG\00"
 @str53 = unnamed_addr constant [3 x i8] c"OK\00"

@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/Test0.mlg'
-source_filename = "./test/testcases/malgo/Test0.mlg"
+; ModuleID = 'test/testcases/malgo/Test0.mlg'
+source_filename = "test/testcases/malgo/Test0.mlg"
 
 @Builtin.undefined = global ptr undef
 

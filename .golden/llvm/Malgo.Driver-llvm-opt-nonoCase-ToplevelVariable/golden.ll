@@ -1,5 +1,5 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/ToplevelVariable.ll'
-source_filename = "./test/testcases/malgo/ToplevelVariable.mlg"
+; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariable.ll'
+source_filename = "test/testcases/malgo/ToplevelVariable.mlg"
 
 @Builtin.undefined = local_unnamed_addr global ptr undef
 @ToplevelVariable.one = local_unnamed_addr global ptr undef

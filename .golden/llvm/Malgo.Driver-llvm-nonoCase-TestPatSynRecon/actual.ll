@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TestPatSynRecon.mlg'
-source_filename = "./test/testcases/malgo/TestPatSynRecon.mlg"
+; ModuleID = 'test/testcases/malgo/TestPatSynRecon.mlg'
+source_filename = "test/testcases/malgo/TestPatSynRecon.mlg"
 
 @Builtin.undefined = global ptr undef
 @str144 = unnamed_addr constant [1 x i8] zeroinitializer

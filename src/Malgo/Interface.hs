@@ -15,9 +15,8 @@ where
 
 import Control.Lens (ifor_, (^.))
 import Control.Lens.TH
-import Data.ByteString qualified as BS
 import Data.HashMap.Strict qualified as HashMap
-import Data.Store (Store, decodeEx)
+import Data.Store (Store)
 import Effectful (Eff, IOE, runPureEff, (:>))
 import Effectful.State.Static.Local (State, execState, get, modify)
 import GHC.Records (HasField)
@@ -32,7 +31,7 @@ import Malgo.Prelude
 import Malgo.Rename.RnState (RnState)
 import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
-import System.FilePath (replaceExtension, (</>))
+import System.FilePath (replaceExtension)
 
 data Interface = Interface
   { moduleName :: ModuleName,
@@ -125,14 +124,12 @@ loadInterface ::
   (IOE :> es, Workspace :> es, State (HashMap ModuleName Interface) :> es) =>
   ModuleName ->
   Eff es Interface
-loadInterface (ModuleName modName) = do
+loadInterface modName = do
   interfaces <- get
-  case HashMap.lookup (ModuleName modName) interfaces of
+  case HashMap.lookup modName interfaces of
     Just interface -> pure interface
     Nothing -> do
-      workspaceDir <- getWorkspace
-      let modulePath = workspaceDir </> convertString modName <> ".mlgi"
-      message <- liftIO $ BS.readFile modulePath
-      let interface = decodeEx message
-      modify $ HashMap.insert (ModuleName modName) interface
+      modPath <- getModulePath modName
+      ViaStore interface <- load modPath ".mlgi"
+      modify $ HashMap.insert modName interface
       pure interface

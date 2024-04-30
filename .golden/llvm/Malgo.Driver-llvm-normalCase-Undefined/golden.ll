@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/Undefined.mlg'
-source_filename = "./test/testcases/malgo/Undefined.mlg"
+; ModuleID = 'test/testcases/malgo/Undefined.mlg'
+source_filename = "test/testcases/malgo/Undefined.mlg"
 
 @Builtin.undefined = global ptr undef
 @str2811 = unnamed_addr constant [3 x i8] c"OK\00"

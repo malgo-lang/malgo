@@ -100,6 +100,7 @@ library
     , directory
     , effectful
     , effectful-core
+    , exceptions
     , extra
     , filepath
     , generic-data
@@ -163,6 +164,7 @@ executable malgo
     , directory
     , effectful
     , effectful-core
+    , exceptions
     , extra
     , filepath
     , generic-data
@@ -234,6 +236,7 @@ test-suite malgo-test
     , directory
     , effectful
     , effectful-core
+    , exceptions
     , extra
     , filepath
     , generic-data
@@ -268,70 +271,3 @@ test-suite malgo-test
     , witherable
   default-language: GHC2021
   build-tool-depends: hspec-discover:hspec-discover == 2.*
-
-benchmark malgo-bench
-  type: exitcode-stdio-1.0
-  main-is: Main.hs
-  other-modules:
-      Paths_malgo
-  hs-source-dirs:
-      benchmarks
-  default-extensions:
-      BlockArguments
-      DataKinds
-      DefaultSignatures
-      DerivingStrategies
-      FunctionalDependencies
-      LambdaCase
-      MultiWayIf
-      NoImplicitPrelude
-      OverloadedStrings
-      RecordWildCards
-      StrictData
-      TypeFamilies
-      ViewPatterns
-      OverloadedRecordDot
-      NoFieldSelectors
-      TypeData
-      Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
-  build-depends:
-      Glob
-    , aeson
-    , base
-    , binary
-    , binary-instances
-    , bytestring
-    , containers
-    , criterion
-    , diagnose ==2.5.1
-    , directory
-    , effectful
-    , effectful-core
-    , extra
-    , filepath
-    , generic-data
-    , hashable
-    , knob
-    , lens
-    , llvm-hs
-    , llvm-hs-pure
-    , malgo
-    , megaparsec
-    , mtl
-    , optparse-applicative
-    , parser-combinators
-    , path
-    , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
-    , store
-    , string-conversions
-    , syb
-    , text
-    , transformers
-    , typed-process
-    , unliftio
-    , unordered-containers
-    , witherable
-  default-language: GHC2021

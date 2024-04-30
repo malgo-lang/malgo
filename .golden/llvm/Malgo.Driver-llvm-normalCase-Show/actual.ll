@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/Show.mlg'
-source_filename = "./test/testcases/malgo/Show.mlg"
+; ModuleID = 'test/testcases/malgo/Show.mlg'
+source_filename = "test/testcases/malgo/Show.mlg"
 
 @Show.showInt32 = global ptr undef
 @str3222 = unnamed_addr constant [5 x i8] c"show\00"
