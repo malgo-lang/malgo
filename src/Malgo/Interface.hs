@@ -10,7 +10,6 @@ module Malgo.Interface
     externalFromInterface,
     exportedIdentList,
     exportedTypeIdentList,
-    getWorkspaceDir,
   )
 where
 
@@ -33,7 +32,6 @@ import Malgo.Prelude
 import Malgo.Rename.RnState (RnState)
 import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
-import System.Directory (createDirectoryIfMissing, getCurrentDirectory)
 import System.FilePath (replaceExtension, (</>))
 
 data Interface = Interface
@@ -122,17 +120,9 @@ exportedTypeIdentList inf = HashMap.keys inf.typeDefMap <> map (\id -> id.name) 
 toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"
 
--- | Get workspace directory.
--- If directory does not exist, create it.
-getWorkspaceDir :: (MonadIO m) => m FilePath
-getWorkspaceDir = liftIO do
-  pwd <- getCurrentDirectory
-  createDirectoryIfMissing True $ pwd </> ".malgo-work"
-  return $ pwd </> ".malgo-work"
-
 loadInterface ::
   (HasCallStack) =>
-  (IOE :> es, State (HashMap ModuleName Interface) :> es) =>
+  (IOE :> es, Workspace :> es, State (HashMap ModuleName Interface) :> es) =>
   ModuleName ->
   Eff es Interface
 loadInterface (ModuleName modName) = do
@@ -140,7 +130,7 @@ loadInterface (ModuleName modName) = do
   case HashMap.lookup (ModuleName modName) interfaces of
     Just interface -> pure interface
     Nothing -> do
-      workspaceDir <- liftIO getWorkspaceDir
+      workspaceDir <- getWorkspace
       let modulePath = workspaceDir </> convertString modName <> ".mlgi"
       message <- liftIO $ BS.readFile modulePath
       let interface = decodeEx message

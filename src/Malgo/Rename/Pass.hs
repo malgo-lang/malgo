@@ -21,7 +21,7 @@ import Malgo.Syntax
 import Malgo.Syntax.Extension
 
 -- | Entry point of this 'Malgo.Rename.Pass'
-rename :: (State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
+rename :: (State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
   (ds', rnState) <- runState (RnState mempty HashSet.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
@@ -36,7 +36,8 @@ rnDecls ::
     State (HashMap ModuleName Interface) :> es,
     State Uniq :> es,
     IOE :> es,
-    Reader Flag :> es
+    Reader Flag :> es,
+    Workspace :> es
   ) =>
   [Decl (Malgo Parse)] ->
   Eff es [Decl (Malgo Rename)]
@@ -59,7 +60,8 @@ rnDecl ::
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     IOE :> es,
-    Reader Flag :> es
+    Reader Flag :> es,
+    Workspace :> es
   ) =>
   Decl (Malgo Parse) ->
   Eff es (Decl (Malgo Rename))
@@ -308,7 +310,7 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (HashMap ModuleName Interface) :> es, Reader Flag :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
+genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (HashMap ModuleName Interface) :> es, Reader Flag :> es, Workspace :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
 genToplevelEnv (ds :: [Decl (Malgo 'Parse)]) env = do
   execState env (traverse aux ds)
   where

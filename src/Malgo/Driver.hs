@@ -63,7 +63,8 @@ compileFromAST ::
     Reader Flag :> es,
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,
-    State Uniq :> es
+    State Uniq :> es,
+    Workspace :> es
   ) =>
   FilePath ->
   Syntax.Module (Malgo 'Parse) ->
@@ -171,7 +172,8 @@ compile ::
     Reader Flag :> es,
     IOE :> es,
     State (HashMap ModuleName Interface) :> es,
-    State Uniq :> es
+    State Uniq :> es,
+    Workspace :> es
   ) =>
   FilePath ->
   Eff es ()

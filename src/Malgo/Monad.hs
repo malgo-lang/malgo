@@ -4,7 +4,7 @@ import Effectful (Eff, IOE, runEff)
 import Effectful.Reader.Static (Reader, runReader)
 import Effectful.State.Static.Local
 import Malgo.Core.Optimize (OptimizeOption)
-import Malgo.Interface (Interface, getWorkspaceDir)
+import Malgo.Interface (Interface)
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
@@ -29,12 +29,13 @@ runMalgoM ::
        Reader DstPath,
        State Uniq,
        State (HashMap ModuleName Interface),
+       Workspace,
        IOE
      ]
     b ->
   IO b
-runMalgoM srcPath compileMode flag opt e = runEff do
-  workspaceDir <- getWorkspaceDir
+runMalgoM srcPath compileMode flag opt e = runEff $ runWorkspaceOnPwd do
+  workspaceDir <- getWorkspace
   let dstPath = workspaceDir </> takeFileName srcPath -<.> extensionOf compileMode
   runReader opt e
     & runReader flag

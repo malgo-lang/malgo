@@ -12,14 +12,14 @@ import Malgo.Prelude
 import System.FilePath ((</>))
 
 -- | Linking a program with its dependencies.
-link :: (IOE :> es, Store a) => Interface -> Program a -> Eff es (Program a)
+link :: (IOE :> es, Store a, Workspace :> es) => Interface -> Program a -> Eff es (Program a)
 link (interface :: Interface) mainCoreIR = do
   -- FIXME: Sort dependencies by topological order
   depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)
   pure $ mconcat (depCoreIRs <> [mainCoreIR])
 
-loadCore :: (IOE :> es, Store b) => ModuleName -> Eff es b
+loadCore :: (IOE :> es, Store b, Workspace :> es) => ModuleName -> Eff es b
 loadCore (ModuleName modName) = do
-  workspaceDir <- getWorkspaceDir
+  workspaceDir <- getWorkspace
   let modulePath = workspaceDir </> convertString modName <> ".kor.bin"
   liftIO $ Store.decodeEx <$> BS.readFile modulePath

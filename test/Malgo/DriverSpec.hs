@@ -12,10 +12,9 @@ import Data.Text qualified as T
 import Extra (retry, timeout)
 import Malgo.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
-import Malgo.Interface (getWorkspaceDir)
 import Malgo.Monad
 import Malgo.Prelude
-import System.Directory (copyFile, createDirectory, listDirectory, removeDirectoryRecursive)
+import System.Directory (copyFile, createDirectory, createDirectoryIfMissing, getCurrentDirectory, listDirectory, removeDirectoryRecursive)
 import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
@@ -36,6 +35,12 @@ import Test.Hspec.Golden (Golden (..), golden)
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
+
+getWorkspaceDir :: (MonadIO m) => m FilePath
+getWorkspaceDir = liftIO do
+  pwd <- getCurrentDirectory
+  createDirectoryIfMissing True $ pwd </> ".malgo-work"
+  return $ pwd </> ".malgo-work"
 
 spec :: Spec
 spec = do
