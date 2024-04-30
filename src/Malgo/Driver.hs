@@ -2,7 +2,6 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Data.ByteString qualified as BS
-import Data.ByteString.Lazy qualified as BL
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store qualified as Store
 import Data.String.Conversions.Monomorphic (toString)
@@ -179,8 +178,10 @@ compile ::
   Eff es ()
 compile srcPath = do
   flags <- ask @Flag
-  src <- liftIO $ BL.readFile srcPath
-  parsedAst <- case parseMalgo srcPath (convertString src) of
+  pwd <- pwdPath
+  srcModulePath <- parseArtifactPath pwd srcPath
+  src <- load srcModulePath ".mlg"
+  parsedAst <- case parseMalgo srcPath (convertString @BS.ByteString src) of
     Right x -> pure x
     Left err -> liftIO do
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err

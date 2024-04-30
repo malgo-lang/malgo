@@ -58,7 +58,7 @@ main = do
 toLLOpt :: Parser ToLLOpt
 toLLOpt =
   ( ToLLOpt
-      <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")
+      <$> strArgument (metavar "SOURCE" <> help "Source file (relative path)" <> action "file")
       <*> ( strOption (long "compile-mode" <> short 'c' <> metavar "COMPILE_MODE" <> value "llvm") <&> \case
               ("llvm" :: String) -> LLVM
               _ -> error "Invalid compile mode"

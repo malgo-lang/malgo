@@ -54,7 +54,7 @@ import Malgo.Core.Syntax
 import Malgo.Core.Type hiding (typeOf)
 import Malgo.Core.Type qualified as C
 import Malgo.Id
-import Malgo.Module
+import Malgo.Module (ModuleName (..))
 import Malgo.MonadUniq
 import Malgo.Prelude
 
