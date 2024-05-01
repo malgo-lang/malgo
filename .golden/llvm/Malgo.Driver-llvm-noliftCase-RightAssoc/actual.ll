@@ -163,7 +163,7 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @"RightAssoc.#let_closure_3029"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_3029"(ptr %0, ptr %1) {
   %eta_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %eta_0 = load ptr, ptr %eta_addr_0, align 8
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
@@ -176,19 +176,19 @@ define internal ptr @"RightAssoc.#let_closure_3029"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @"RightAssoc.<|>"(ptr %0, ptr %"RightAssoc.$eta_86_0") {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.<|>"(ptr %0, ptr %"test/testcases/malgo/RightAssoc.mlg.$eta_86_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
   %eta_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %"RightAssoc.$eta_86_0", ptr %eta_0, align 8
+  store ptr %"test/testcases/malgo/RightAssoc.mlg.$eta_86_0", ptr %eta_0, align 8
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"RightAssoc.#let_closure_3029", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_3029", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal ptr @"RightAssoc.#fun_closure_3030"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3030"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -197,7 +197,7 @@ define internal ptr @"RightAssoc.#fun_closure_3030"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @"RightAssoc.#fun_closure_3031"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3031"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -206,7 +206,7 @@ define internal ptr @"RightAssoc.#fun_closure_3031"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @"RightAssoc.#fun_closure_3032"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3032"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -215,7 +215,7 @@ define internal ptr @"RightAssoc.#fun_closure_3032"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @"RightAssoc.#fun_closure_3033"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3033"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -224,7 +224,7 @@ define internal ptr @"RightAssoc.#fun_closure_3033"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @"RightAssoc.#fun_closure_3034"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3034"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -233,7 +233,7 @@ define internal ptr @"RightAssoc.#fun_closure_3034"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @"RightAssoc.#fun_closure_3035"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3035"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -242,7 +242,7 @@ define internal ptr @"RightAssoc.#fun_closure_3035"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @"RightAssoc.#fun_closure_3036"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3036"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -251,7 +251,7 @@ define internal ptr @"RightAssoc.#fun_closure_3036"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @"RightAssoc.#fun_closure_3037"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3037"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -260,7 +260,7 @@ define internal ptr @"RightAssoc.#fun_closure_3037"(ptr %0, ptr %1) {
   ret ptr %3
 }
 
-define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr %0, ptr %"test/testcases/malgo/RightAssoc.mlg.$n_87_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 1, ptr %3, align 1
@@ -269,7 +269,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   %fun_capture_1 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 0
   store ptr %fun_capture_0, ptr %fun_capture_1, align 8
   %fun_func_0 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3030", ptr %fun_func_0, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3030", ptr %fun_func_0, align 8
   %5 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %6 = getelementptr { i8, { ptr, ptr } }, ptr %5, i32 0, i32 0
   store i8 0, ptr %6, align 1
@@ -285,7 +285,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   %fun_capture_3 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 0
   store ptr %fun_capture_2, ptr %fun_capture_3, align 8
   %fun_func_1 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3031", ptr %fun_func_1, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3031", ptr %fun_func_1, align 8
   %12 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %13 = getelementptr { i8, { ptr, ptr } }, ptr %12, i32 0, i32 0
   store i8 0, ptr %13, align 1
@@ -301,7 +301,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   %fun_capture_5 = getelementptr { ptr, ptr }, ptr %18, i32 0, i32 0
   store ptr %fun_capture_4, ptr %fun_capture_5, align 8
   %fun_func_2 = getelementptr { ptr, ptr }, ptr %18, i32 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3032", ptr %fun_func_2, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3032", ptr %fun_func_2, align 8
   %19 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %20 = getelementptr { i8, { ptr, ptr } }, ptr %19, i32 0, i32 0
   store i8 0, ptr %20, align 1
@@ -317,7 +317,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   %fun_capture_7 = getelementptr { ptr, ptr }, ptr %25, i32 0, i32 0
   store ptr %fun_capture_6, ptr %fun_capture_7, align 8
   %fun_func_3 = getelementptr { ptr, ptr }, ptr %25, i32 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3033", ptr %fun_func_3, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3033", ptr %fun_func_3, align 8
   %26 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %27 = getelementptr { i8, { ptr, ptr } }, ptr %26, i32 0, i32 0
   store i8 0, ptr %27, align 1
@@ -364,7 +364,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   %fun_capture_9 = getelementptr { ptr, ptr }, ptr %50, i32 0, i32 0
   store ptr %fun_capture_8, ptr %fun_capture_9, align 8
   %fun_func_4 = getelementptr { ptr, ptr }, ptr %50, i32 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3034", ptr %fun_func_4, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3034", ptr %fun_func_4, align 8
   %51 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %52 = getelementptr { i8, { ptr, ptr } }, ptr %51, i32 0, i32 0
   store i8 0, ptr %52, align 1
@@ -380,7 +380,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   %fun_capture_11 = getelementptr { ptr, ptr }, ptr %57, i32 0, i32 0
   store ptr %fun_capture_10, ptr %fun_capture_11, align 8
   %fun_func_5 = getelementptr { ptr, ptr }, ptr %57, i32 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3035", ptr %fun_func_5, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3035", ptr %fun_func_5, align 8
   %58 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %59 = getelementptr { i8, { ptr, ptr } }, ptr %58, i32 0, i32 0
   store i8 0, ptr %59, align 1
@@ -396,7 +396,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   %fun_capture_13 = getelementptr { ptr, ptr }, ptr %64, i32 0, i32 0
   store ptr %fun_capture_12, ptr %fun_capture_13, align 8
   %fun_func_6 = getelementptr { ptr, ptr }, ptr %64, i32 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3036", ptr %fun_func_6, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3036", ptr %fun_func_6, align 8
   %65 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %66 = getelementptr { i8, { ptr, ptr } }, ptr %65, i32 0, i32 0
   store i8 0, ptr %66, align 1
@@ -412,7 +412,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   %fun_capture_15 = getelementptr { ptr, ptr }, ptr %71, i32 0, i32 0
   store ptr %fun_capture_14, ptr %fun_capture_15, align 8
   %fun_func_7 = getelementptr { ptr, ptr }, ptr %71, i32 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3037", ptr %fun_func_7, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3037", ptr %fun_func_7, align 8
   %72 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %73 = getelementptr { i8, { ptr, ptr } }, ptr %72, i32 0, i32 0
   store i8 0, ptr %73, align 1
@@ -454,7 +454,7 @@ define internal ptr @RightAssoc.f(ptr %0, ptr %"RightAssoc.$n_87_0") {
   ret ptr %90
 }
 
-define internal ptr @RightAssoc.main(ptr %0, ptr %"RightAssoc.$$__186_0") {
+define internal ptr @"test/testcases/malgo/RightAssoc.mlg.main"(ptr %0, ptr %"test/testcases/malgo/RightAssoc.mlg.$$__186_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -464,7 +464,7 @@ define internal ptr @RightAssoc.main(ptr %0, ptr %"RightAssoc.$$__186_0") {
   %f_capture_0 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 0
   store ptr null, ptr %f_capture_0, align 8
   %f_func_0 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 1
-  store ptr @RightAssoc.f, ptr %f_func_0, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.f", ptr %f_func_0, align 8
   %6 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 0
   %7 = load ptr, ptr %6, align 8
   %8 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 1
@@ -478,10 +478,10 @@ define internal ptr @RightAssoc.main(ptr %0, ptr %"RightAssoc.$$__186_0") {
   %14 = getelementptr { i8, <8 x i8> }, ptr %11, i32 0, i32 0
   %15 = load i8, ptr %14, align 1
   switch i8 %15, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
   %16 = getelementptr { i8, { ptr } }, ptr %11, i32 0, i32 1
   %17 = getelementptr { ptr }, ptr %16, i32 0, i32 0
   %18 = load ptr, ptr %17, align 8
@@ -494,14 +494,14 @@ switch_default_0:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @malgo_load_RightAssoc()
+  call void @"malgo_load_test/testcases/malgo/RightAssoc.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @RightAssoc.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/RightAssoc.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @malgo_load_RightAssoc() {
+define internal void @"malgo_load_test/testcases/malgo/RightAssoc.mlg"() {
   ret void
 }

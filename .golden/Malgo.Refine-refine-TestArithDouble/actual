@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "TestArithDouble" }
+        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -11,7 +11,7 @@ Module
                                 ( Id
                                     { name = "String"
                                     , moduleName = ModuleName
-                                        { raw = "Builtin" }
+                                        { raw = "runtime/malgo/Builtin.mlg" }
                                     , sort = External
                                     }
                                 )
@@ -32,7 +32,7 @@ Module
                     , Id
                         { name = "show"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -42,7 +42,7 @@ Module
                                     ( Id
                                         { name = "String"
                                         , moduleName = ModuleName
-                                            { raw = "Builtin" }
+                                            { raw = "runtime/malgo/Builtin.mlg" }
                                         , sort = External
                                         }
                                     )
@@ -68,7 +68,7 @@ Module
                                         ( Id
                                             { name = "String"
                                             , moduleName = ModuleName
-                                                { raw = "Builtin" }
+                                                { raw = "runtime/malgo/Builtin.mlg" }
                                             , sort = External
                                             }
                                         )
@@ -107,7 +107,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 9
                                     }
                                 )
@@ -118,7 +118,7 @@ Module
                                         ( Id
                                             { name = "String"
                                             , moduleName = ModuleName
-                                                { raw = "Builtin" }
+                                                { raw = "runtime/malgo/Builtin.mlg" }
                                             , sort = External
                                             }
                                         )
@@ -156,7 +156,7 @@ Module
                                                 ( Id
                                                     { name = "String"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -181,7 +181,7 @@ Module
                                                         ( Id
                                                             { name = "String"
                                                             , moduleName = ModuleName
-                                                                { raw = "Builtin" }
+                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -203,7 +203,7 @@ Module
                                             ( Id
                                                 { name = "String#"
                                                 , moduleName = ModuleName
-                                                    { raw = "Builtin" }
+                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -276,7 +276,7 @@ Module
                                                         ( Id
                                                             { name = "toStringDouble#"
                                                             , moduleName = ModuleName
-                                                                { raw = "Builtin" }
+                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -301,7 +301,7 @@ Module
                                                         ( Id
                                                             { name = "x"
                                                             , moduleName = ModuleName
-                                                                { raw = "TestArithDouble" }
+                                                                { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                             , sort = Internal 9
                                                             }
                                                         )
@@ -335,7 +335,7 @@ Module
                     , Id
                         { name = "traceShowId"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -392,7 +392,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 10
                                     }
                                 )
@@ -452,7 +452,7 @@ Module
                                                         ( Id
                                                             { name = "String"
                                                             , moduleName = ModuleName
-                                                                { raw = "Builtin" }
+                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -475,7 +475,7 @@ Module
                                             ( Id
                                                 { name = "putStrLn"
                                                 , moduleName = ModuleName
-                                                    { raw = "Prelude" }
+                                                    { raw = "runtime/malgo/Prelude.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -486,7 +486,7 @@ Module
                                                     ( Id
                                                         { name = "String"
                                                         , moduleName = ModuleName
-                                                            { raw = "Builtin" }
+                                                            { raw = "runtime/malgo/Builtin.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -524,7 +524,7 @@ Module
                                                             ( Id
                                                                 { name = "String"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Builtin" }
+                                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                                 , sort = External
                                                                 }
                                                             )
@@ -549,7 +549,7 @@ Module
                                                                     ( Id
                                                                         { name = "String"
                                                                         , moduleName = ModuleName
-                                                                            { raw = "Builtin" }
+                                                                            { raw = "runtime/malgo/Builtin.mlg" }
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -571,7 +571,7 @@ Module
                                                         ( Id
                                                             { name = "show"
                                                             , moduleName = ModuleName
-                                                                { raw = "TestArithDouble" }
+                                                                { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -596,7 +596,7 @@ Module
                                                         ( Id
                                                             { name = "x"
                                                             , moduleName = ModuleName
-                                                                { raw = "TestArithDouble" }
+                                                                { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                             , sort = Internal 10
                                                             }
                                                         )
@@ -639,7 +639,7 @@ Module
                                             ( Id
                                                 { name = "x"
                                                 , moduleName = ModuleName
-                                                    { raw = "TestArithDouble" }
+                                                    { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                 , sort = Internal 10
                                                 }
                                             )
@@ -670,7 +670,7 @@ Module
                     , Id
                         { name = "neg"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -727,7 +727,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 0
                                     }
                                 )
@@ -818,7 +818,7 @@ Module
                                                 ( Id
                                                     { name = "subDouble#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -863,7 +863,7 @@ Module
                                             ( Id
                                                 { name = "x"
                                                 , moduleName = ModuleName
-                                                    { raw = "TestArithDouble" }
+                                                    { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                 , sort = Internal 0
                                                 }
                                             )
@@ -895,7 +895,7 @@ Module
                     , Id
                         { name = "mul"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -954,7 +954,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 3
                                     }
                                 )
@@ -978,7 +978,7 @@ Module
                                 ( Id
                                     { name = "y"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 4
                                     }
                                 )
@@ -1069,7 +1069,7 @@ Module
                                                 ( Id
                                                     { name = "mulDouble#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -1094,7 +1094,7 @@ Module
                                                 ( Id
                                                     { name = "x"
                                                     , moduleName = ModuleName
-                                                        { raw = "TestArithDouble" }
+                                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                     , sort = Internal 3
                                                     }
                                                 )
@@ -1120,7 +1120,7 @@ Module
                                             ( Id
                                                 { name = "y"
                                                 , moduleName = ModuleName
-                                                    { raw = "TestArithDouble" }
+                                                    { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                 , sort = Internal 4
                                                 }
                                             )
@@ -1152,7 +1152,7 @@ Module
                     , Id
                         { name = "add"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -1211,7 +1211,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 7
                                     }
                                 )
@@ -1235,7 +1235,7 @@ Module
                                 ( Id
                                     { name = "y"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 8
                                     }
                                 )
@@ -1326,7 +1326,7 @@ Module
                                                 ( Id
                                                     { name = "addDouble#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -1351,7 +1351,7 @@ Module
                                                 ( Id
                                                     { name = "x"
                                                     , moduleName = ModuleName
-                                                        { raw = "TestArithDouble" }
+                                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                     , sort = Internal 7
                                                     }
                                                 )
@@ -1377,7 +1377,7 @@ Module
                                             ( Id
                                                 { name = "y"
                                                 , moduleName = ModuleName
-                                                    { raw = "TestArithDouble" }
+                                                    { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                 , sort = Internal 8
                                                 }
                                             )
@@ -1409,7 +1409,7 @@ Module
                     , Id
                         { name = "+"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -1468,7 +1468,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 5
                                     }
                                 )
@@ -1492,7 +1492,7 @@ Module
                                 ( Id
                                     { name = "y"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 6
                                     }
                                 )
@@ -1583,7 +1583,7 @@ Module
                                                 ( Id
                                                     { name = "addDouble#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -1608,7 +1608,7 @@ Module
                                                 ( Id
                                                     { name = "x"
                                                     , moduleName = ModuleName
-                                                        { raw = "TestArithDouble" }
+                                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                     , sort = Internal 5
                                                     }
                                                 )
@@ -1634,7 +1634,7 @@ Module
                                             ( Id
                                                 { name = "y"
                                                 , moduleName = ModuleName
-                                                    { raw = "TestArithDouble" }
+                                                    { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                 , sort = Internal 6
                                                 }
                                             )
@@ -1666,7 +1666,7 @@ Module
                     , Id
                         { name = "*"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -1725,7 +1725,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 1
                                     }
                                 )
@@ -1749,7 +1749,7 @@ Module
                                 ( Id
                                     { name = "y"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 2
                                     }
                                 )
@@ -1840,7 +1840,7 @@ Module
                                                 ( Id
                                                     { name = "mulDouble#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -1865,7 +1865,7 @@ Module
                                                 ( Id
                                                     { name = "x"
                                                     , moduleName = ModuleName
-                                                        { raw = "TestArithDouble" }
+                                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                     , sort = Internal 1
                                                     }
                                                 )
@@ -1891,7 +1891,7 @@ Module
                                             ( Id
                                                 { name = "y"
                                                 , moduleName = ModuleName
-                                                    { raw = "TestArithDouble" }
+                                                    { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                 , sort = Internal 2
                                                 }
                                             )
@@ -1922,7 +1922,7 @@ Module
                     , Id
                         { name = "f"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -1979,7 +1979,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 11
                                     }
                                 )
@@ -2070,7 +2070,7 @@ Module
                                                 ( Id
                                                     { name = "*"
                                                     , moduleName = ModuleName
-                                                        { raw = "TestArithDouble" }
+                                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -2161,7 +2161,7 @@ Module
                                                                 ( Id
                                                                     { name = "+"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "TestArithDouble" }
+                                                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -2186,7 +2186,7 @@ Module
                                                                 ( Id
                                                                     { name = "x"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "TestArithDouble" }
+                                                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                                     , sort = Internal 11
                                                                     }
                                                                 )
@@ -2235,7 +2235,7 @@ Module
                                             ( Id
                                                 { name = "x"
                                                 , moduleName = ModuleName
-                                                    { raw = "TestArithDouble" }
+                                                    { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                 , sort = Internal 11
                                                 }
                                             )
@@ -2268,7 +2268,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "TestArithDouble" }
+                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -2329,7 +2329,7 @@ Module
                                 ( Id
                                     { name = "$_"
                                     , moduleName = ModuleName
-                                        { raw = "TestArithDouble" }
+                                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                     , sort = Internal 90
                                     }
                                 )
@@ -2389,7 +2389,7 @@ Module
                                                         ( Id
                                                             { name = "String"
                                                             , moduleName = ModuleName
-                                                                { raw = "Builtin" }
+                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -2412,7 +2412,7 @@ Module
                                             ( Id
                                                 { name = "putStrLn"
                                                 , moduleName = ModuleName
-                                                    { raw = "Prelude" }
+                                                    { raw = "runtime/malgo/Prelude.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -2423,7 +2423,7 @@ Module
                                                     ( Id
                                                         { name = "String"
                                                         , moduleName = ModuleName
-                                                            { raw = "Builtin" }
+                                                            { raw = "runtime/malgo/Builtin.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -2461,7 +2461,7 @@ Module
                                                             ( Id
                                                                 { name = "String"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Builtin" }
+                                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                                 , sort = External
                                                                 }
                                                             )
@@ -2486,7 +2486,7 @@ Module
                                                                     ( Id
                                                                         { name = "String"
                                                                         , moduleName = ModuleName
-                                                                            { raw = "Builtin" }
+                                                                            { raw = "runtime/malgo/Builtin.mlg" }
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -2508,7 +2508,7 @@ Module
                                                         ( Id
                                                             { name = "show"
                                                             , moduleName = ModuleName
-                                                                { raw = "TestArithDouble" }
+                                                                { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -2581,7 +2581,7 @@ Module
                                                                     ( Id
                                                                         { name = "f"
                                                                         , moduleName = ModuleName
-                                                                            { raw = "TestArithDouble" }
+                                                                            { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -2635,7 +2635,7 @@ Module
                 , Id
                     { name = "f"
                     , moduleName = ModuleName
-                        { raw = "TestArithDouble" }
+                        { raw = "test/testcases/malgo/TestArithDouble.mlg" }
                     , sort = External
                     }
                 , TyArr

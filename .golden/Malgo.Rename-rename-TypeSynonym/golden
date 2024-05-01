@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "TypeSynonym" }
+        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -20,7 +20,7 @@ Module
                     , Id
                         { name = "idOverS"
                         , moduleName = ModuleName
-                            { raw = "TypeSynonym" }
+                            { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -68,7 +68,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "TypeSynonym" }
+                                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                                     , sort = Internal 1
                                     }
                                 )
@@ -118,7 +118,7 @@ Module
                                         ( Id
                                             { name = "x"
                                             , moduleName = ModuleName
-                                                { raw = "TypeSynonym" }
+                                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                                             , sort = Internal 1
                                             }
                                         )
@@ -145,7 +145,7 @@ Module
                     , Id
                         { name = "hello"
                         , moduleName = ModuleName
-                            { raw = "TypeSynonym" }
+                            { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                         , sort = External
                         }
                     , Tuple
@@ -193,7 +193,7 @@ Module
                                 ( Id
                                     { name = "String#"
                                     , moduleName = ModuleName
-                                        { raw = "Builtin" }
+                                        { raw = "runtime/malgo/Builtin.mlg" }
                                     , sort = External
                                     }
                                 )
@@ -245,7 +245,7 @@ Module
                                 ( Id
                                     { name = "String#"
                                     , moduleName = ModuleName
-                                        { raw = "Builtin" }
+                                        { raw = "runtime/malgo/Builtin.mlg" }
                                     , sort = External
                                     }
                                 )
@@ -286,7 +286,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "TypeSynonym" }
+                            { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -366,7 +366,7 @@ Module
                                         ( Id
                                             { name = "|>"
                                             , moduleName = ModuleName
-                                                { raw = "Prelude" }
+                                                { raw = "runtime/malgo/Prelude.mlg" }
                                             , sort = External
                                             }
                                         )
@@ -387,7 +387,7 @@ Module
                                             ( Id
                                                 { name = "hello"
                                                 , moduleName = ModuleName
-                                                    { raw = "TypeSynonym" }
+                                                    { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -451,7 +451,7 @@ Module
                                                         ( Id
                                                             { name = "h"
                                                             , moduleName = ModuleName
-                                                                { raw = "TypeSynonym" }
+                                                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                                                             , sort = Internal 2
                                                             }
                                                         )
@@ -472,7 +472,7 @@ Module
                                                         ( Id
                                                             { name = "w"
                                                             , moduleName = ModuleName
-                                                                { raw = "TypeSynonym" }
+                                                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                                                             , sort = Internal 3
                                                             }
                                                         )
@@ -537,7 +537,7 @@ Module
                                                                 ( Id
                                                                     { name = "putStr"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "Prelude" }
+                                                                        { raw = "runtime/malgo/Prelude.mlg" }
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -559,7 +559,7 @@ Module
                                                                 ( Id
                                                                     { name = "h"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "TypeSynonym" }
+                                                                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                                                                     , sort = Internal 2
                                                                     }
                                                                 )
@@ -610,7 +610,7 @@ Module
                                                                     ( Id
                                                                         { name = "putStr"
                                                                         , moduleName = ModuleName
-                                                                            { raw = "Prelude" }
+                                                                            { raw = "runtime/malgo/Prelude.mlg" }
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -646,7 +646,7 @@ Module
                                                                         ( Id
                                                                             { name = "String#"
                                                                             , moduleName = ModuleName
-                                                                                { raw = "Builtin" }
+                                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -714,7 +714,7 @@ Module
                                                                     ( Id
                                                                         { name = "putStrLn"
                                                                         , moduleName = ModuleName
-                                                                            { raw = "Prelude" }
+                                                                            { raw = "runtime/malgo/Prelude.mlg" }
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -736,7 +736,7 @@ Module
                                                                     ( Id
                                                                         { name = "w"
                                                                         , moduleName = ModuleName
-                                                                            { raw = "TypeSynonym" }
+                                                                            { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                                                                         , sort = Internal 3
                                                                         }
                                                                     )
@@ -771,7 +771,7 @@ Module
                 , Id
                     { name = "hello"
                     , moduleName = ModuleName
-                        { raw = "TypeSynonym" }
+                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                     , sort = External
                     }
                 , TyApp
@@ -805,7 +805,7 @@ Module
                         ( Id
                             { name = "MyTuple"
                             , moduleName = ModuleName
-                                { raw = "TypeSynonym" }
+                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                             , sort = External
                             }
                         )
@@ -827,7 +827,7 @@ Module
                         ( Id
                             { name = "MyString"
                             , moduleName = ModuleName
-                                { raw = "TypeSynonym" }
+                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                             , sort = External
                             }
                         )
@@ -849,7 +849,7 @@ Module
                 , Id
                     { name = "idOverS"
                     , moduleName = ModuleName
-                        { raw = "TypeSynonym" }
+                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                     , sort = External
                     }
                 , TyArr
@@ -883,7 +883,7 @@ Module
                         ( Id
                             { name = "S"
                             , moduleName = ModuleName
-                                { raw = "TypeSynonym" }
+                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                             , sort = External
                             }
                         )
@@ -905,7 +905,7 @@ Module
                         ( Id
                             { name = "T"
                             , moduleName = ModuleName
-                                { raw = "TypeSynonym" }
+                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                             , sort = External
                             }
                         )
@@ -927,7 +927,7 @@ Module
                 , Id
                     { name = "main"
                     , moduleName = ModuleName
-                        { raw = "TypeSynonym" }
+                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                     , sort = External
                     }
                 , TyArr
@@ -993,7 +993,7 @@ Module
                 , Id
                     { name = "T"
                     , moduleName = ModuleName
-                        { raw = "TypeSynonym" }
+                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                     , sort = External
                     }
                 , []
@@ -1014,7 +1014,7 @@ Module
                         , Id
                             { name = "TCon"
                             , moduleName = ModuleName
-                                { raw = "TypeSynonym" }
+                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                             , sort = External
                             }
                         , []
@@ -1039,14 +1039,14 @@ Module
                 , Id
                     { name = "MyTuple"
                     , moduleName = ModuleName
-                        { raw = "TypeSynonym" }
+                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                     , sort = External
                     }
                 ,
                     [ Id
                         { name = "a"
                         , moduleName = ModuleName
-                            { raw = "TypeSynonym" }
+                            { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                         , sort = Internal 0
                         }
                     ]
@@ -1081,7 +1081,7 @@ Module
                         ( Id
                             { name = "a"
                             , moduleName = ModuleName
-                                { raw = "TypeSynonym" }
+                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                             , sort = Internal 0
                             }
                         )
@@ -1102,7 +1102,7 @@ Module
                         ( Id
                             { name = "a"
                             , moduleName = ModuleName
-                                { raw = "TypeSynonym" }
+                                { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                             , sort = Internal 0
                             }
                         )
@@ -1124,7 +1124,7 @@ Module
                 , Id
                     { name = "MyString"
                     , moduleName = ModuleName
-                        { raw = "TypeSynonym" }
+                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                     , sort = External
                     }
                 , []
@@ -1145,7 +1145,7 @@ Module
                     ( Id
                         { name = "String"
                         , moduleName = ModuleName
-                            { raw = "Builtin" }
+                            { raw = "runtime/malgo/Builtin.mlg" }
                         , sort = External
                         }
                     )
@@ -1166,7 +1166,7 @@ Module
                 , Id
                     { name = "S"
                     , moduleName = ModuleName
-                        { raw = "TypeSynonym" }
+                        { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                     , sort = External
                     }
                 , []
@@ -1187,7 +1187,7 @@ Module
                     ( Id
                         { name = "T"
                         , moduleName = ModuleName
-                            { raw = "TypeSynonym" }
+                            { raw = "test/testcases/malgo/TypeSynonym.mlg" }
                         , sort = External
                         }
                     )
@@ -1236,9 +1236,21 @@ RnState
     { infixInfo = fromList
         [
             ( Id
+                { name = "<|"
+                , moduleName = ModuleName
+                    { raw = "runtime/malgo/Prelude.mlg" }
+                , sort = External
+                }
+            ,
+                ( RightA
+                , 0
+                )
+            )
+        ,
+            ( Id
                 { name = "|>"
                 , moduleName = ModuleName
-                    { raw = "Prelude" }
+                    { raw = "runtime/malgo/Prelude.mlg" }
                 , sort = External
                 }
             ,
@@ -1250,24 +1262,12 @@ RnState
             ( Id
                 { name = "."
                 , moduleName = ModuleName
-                    { raw = "Prelude" }
+                    { raw = "runtime/malgo/Prelude.mlg" }
                 , sort = External
                 }
             ,
                 ( RightA
                 , 9
-                )
-            )
-        ,
-            ( Id
-                { name = "<|"
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , sort = External
-                }
-            ,
-                ( RightA
-                , 0
                 )
             )
         ]

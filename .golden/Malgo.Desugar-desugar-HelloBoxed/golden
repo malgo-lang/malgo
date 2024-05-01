@@ -7,7 +7,7 @@ Program
                 , id = Id
                     { name = "String#"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = External
                     }
                 }
@@ -17,7 +17,7 @@ Program
                     , id = Id
                         { name = "p"
                         , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                         , sort = Temporal 21
                         }
                     }
@@ -28,27 +28,27 @@ Program
                     { _variable = Meta
                         { meta = SumT
                             [ Con
-                                ( Data "HelloBoxed.String#" ) [ StringT ]
+                                ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
                             ]
                         , id = Id
                             { name = "let"
                             , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                             , sort = Temporal 22
                             }
                         }
                     , typ = SumT
                         [ Con
-                            ( Data "HelloBoxed.String#" ) [ StringT ]
+                            ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
                         ]
                     , _object = Pack
                         ( SumT
                             [ Con
-                                ( Data "HelloBoxed.String#" ) [ StringT ]
+                                ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
                             ]
                         )
                         ( Con
-                            ( Data "HelloBoxed.String#" ) [ StringT ]
+                            ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
                         )
                         [ Var
                             ( Meta
@@ -56,7 +56,7 @@ Program
                                 , id = Id
                                     { name = "p"
                                     , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
+                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                     , sort = Temporal 21
                                     }
                                 }
@@ -69,12 +69,12 @@ Program
                         ( Meta
                             { meta = SumT
                                 [ Con
-                                    ( Data "HelloBoxed.String#" ) [ StringT ]
+                                    ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
                                 ]
                             , id = Id
                                 { name = "let"
                                 , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
+                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                 , sort = Temporal 22
                                 }
                             }
@@ -89,7 +89,7 @@ Program
                 , id = Id
                     { name = "malgo_print_string"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = External
                     }
                 }
@@ -99,7 +99,7 @@ Program
                     , id = Id
                         { name = "p"
                         , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                         , sort = Temporal 23
                         }
                     }
@@ -116,7 +116,7 @@ Program
                         , id = Id
                             { name = "p"
                             , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                             , sort = Temporal 23
                             }
                         }
@@ -133,7 +133,7 @@ Program
                 , id = Id
                     { name = "malgo_newline"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = External
                     }
                 }
@@ -144,7 +144,7 @@ Program
                     , id = Id
                         { name = "p"
                         , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                         , sort = Temporal 24
                         }
                     }
@@ -168,7 +168,7 @@ Program
                         , id = Id
                             { name = "p"
                             , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                             , sort = Temporal 24
                             }
                         }
@@ -181,7 +181,7 @@ Program
                 , id = Id
                     { name = "string#"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = External
                     }
                 }
@@ -191,7 +191,7 @@ Program
                     , id = Id
                         { name = "x"
                         , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                         , sort = Temporal 25
                         }
                     }
@@ -203,7 +203,7 @@ Program
                     , id = Id
                         { name = "d"
                         , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                         , sort = Temporal 26
                         }
                     }
@@ -215,7 +215,7 @@ Program
                             , id = Id
                                 { name = "String#"
                                 , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
+                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                 , sort = External
                                 }
                             }
@@ -227,7 +227,7 @@ Program
                             , id = Id
                                 { name = "x"
                                 , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
+                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                 , sort = Temporal 25
                                 }
                             }
@@ -241,7 +241,7 @@ Program
                             , id = Id
                                 { name = "d"
                                 , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
+                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                 , sort = Temporal 26
                                 }
                             }
@@ -256,7 +256,7 @@ Program
                 , id = Id
                     { name = "putStrLn"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = External
                     }
                 }
@@ -266,7 +266,7 @@ Program
                     , id = Id
                         { name = "string#"
                         , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                         , sort = Temporal 27
                         }
                     }
@@ -277,7 +277,7 @@ Program
                 ( Cast
                     ( SumT
                         [ Con
-                            ( Data "HelloBoxed.String#" ) [ StringT ]
+                            ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
                         ]
                     )
                     ( Var
@@ -286,7 +286,7 @@ Program
                             , id = Id
                                 { name = "string#"
                                 , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
+                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                 , sort = Temporal 27
                                 }
                             }
@@ -295,14 +295,14 @@ Program
                 )
                 [ Unpack
                     ( Con
-                        ( Data "HelloBoxed.String#" ) [ StringT ]
+                        ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
                     )
                     [ Meta
                         { meta = StringT
                         , id = Id
                             { name = "p"
                             , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                             , sort = Temporal 28
                             }
                         }
@@ -314,7 +314,7 @@ Program
                             , id = Id
                                 { name = "d"
                                 , moduleName = ModuleName
-                                    { raw = "HelloBoxed" }
+                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                 , sort = Temporal 30
                                 }
                             }
@@ -326,7 +326,7 @@ Program
                                 , id = Id
                                     { name = "d"
                                     , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
+                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                     , sort = Temporal 29
                                     }
                                 }
@@ -339,7 +339,7 @@ Program
                                         , id = Id
                                             { name = "malgo_print_string"
                                             , moduleName = ModuleName
-                                                { raw = "HelloBoxed" }
+                                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                             , sort = External
                                             }
                                         }
@@ -351,7 +351,7 @@ Program
                                         , id = Id
                                             { name = "p"
                                             , moduleName = ModuleName
-                                                { raw = "HelloBoxed" }
+                                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                             , sort = Temporal 28
                                             }
                                         }
@@ -369,7 +369,7 @@ Program
                                         , id = Id
                                             { name = "d"
                                             , moduleName = ModuleName
-                                                { raw = "HelloBoxed" }
+                                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                             , sort = Temporal 29
                                             }
                                         }
@@ -384,7 +384,7 @@ Program
                                 , id = Id
                                     { name = "d"
                                     , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
+                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                     , sort = Temporal 32
                                     }
                                 }
@@ -397,7 +397,7 @@ Program
                                         , id = Id
                                             { name = "let"
                                             , moduleName = ModuleName
-                                                { raw = "HelloBoxed" }
+                                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                             , sort = Temporal 31
                                             }
                                         }
@@ -418,7 +418,7 @@ Program
                                             , id = Id
                                                 { name = "let"
                                                 , moduleName = ModuleName
-                                                    { raw = "HelloBoxed" }
+                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                                 , sort = Temporal 31
                                                 }
                                             }
@@ -433,7 +433,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "HelloBoxed" }
+                                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                         , sort = Temporal 33
                                         }
                                     }
@@ -449,7 +449,7 @@ Program
                                             , id = Id
                                                 { name = "malgo_newline"
                                                 , moduleName = ModuleName
-                                                    { raw = "HelloBoxed" }
+                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                                 , sort = External
                                                 }
                                             }
@@ -462,7 +462,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "HelloBoxed" }
+                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                                 , sort = Temporal 32
                                                 }
                                             }
@@ -480,7 +480,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "HelloBoxed" }
+                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                                 , sort = Temporal 33
                                                 }
                                             }
@@ -502,7 +502,7 @@ Program
                 , id = Id
                     { name = "main"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = External
                     }
                 }
@@ -513,7 +513,7 @@ Program
                     , id = Id
                         { name = "$_"
                         , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                         , sort = Temporal 34
                         }
                     }
@@ -529,7 +529,7 @@ Program
                     , id = Id
                         { name = "d"
                         , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                         , sort = Temporal 36
                         }
                     }
@@ -540,7 +540,7 @@ Program
                         , id = Id
                             { name = "d"
                             , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                             , sort = Temporal 35
                             }
                         }
@@ -552,7 +552,7 @@ Program
                                 , id = Id
                                     { name = "String#"
                                     , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
+                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                     , sort = External
                                     }
                                 }
@@ -569,7 +569,7 @@ Program
                                 , id = Id
                                     { name = "d"
                                     , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
+                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                     , sort = Temporal 35
                                     }
                                 }
@@ -584,7 +584,7 @@ Program
                         , id = Id
                             { name = "d"
                             , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                             , sort = Temporal 37
                             }
                         }
@@ -597,7 +597,7 @@ Program
                                 , id = Id
                                     { name = "putStrLn"
                                     , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
+                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                     , sort = External
                                     }
                                 }
@@ -609,7 +609,7 @@ Program
                                 , id = Id
                                     { name = "d"
                                     , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
+                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                     , sort = Temporal 36
                                     }
                                 }
@@ -627,7 +627,7 @@ Program
                                 , id = Id
                                     { name = "d"
                                     , moduleName = ModuleName
-                                        { raw = "HelloBoxed" }
+                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                                     , sort = Temporal 37
                                     }
                                 }
@@ -657,79 +657,9 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
-                { name = "malgo_print_string"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Meta
-                { meta = [ StringT ] :-> SumT
-                    [ Con Tuple [] ]
-                , id = Id
-                    { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "putStrLn"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Meta
-                { meta = [ AnyT ] :-> SumT
-                    [ Con Tuple [] ]
-                , id = Id
-                    { name = "putStrLn"
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "string#"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Meta
-                { meta = [ StringT ] :-> AnyT
-                , id = Id
-                    { name = "string#"
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Meta
-                { meta = [ StringT ] :-> AnyT
-                , id = Id
-                    { name = "String#"
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
                 { name = "malgo_newline"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                 , sort = External
                 }
             , Meta
@@ -741,7 +671,7 @@ DsState
                 , id = Id
                     { name = "malgo_newline"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = External
                     }
                 }
@@ -750,7 +680,7 @@ DsState
             ( Id
                 { name = "main"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                 , sort = External
                 }
             , Meta
@@ -762,7 +692,7 @@ DsState
                 , id = Id
                     { name = "main"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = External
                     }
                 }
@@ -771,7 +701,7 @@ DsState
             ( Id
                 { name = "$_"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                 , sort = Internal 20
                 }
             , Meta
@@ -780,25 +710,78 @@ DsState
                 , id = Id
                     { name = "$_"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = Temporal 34
                     }
                 }
             )
         ,
             ( Id
-                { name = "str"
+                { name = "string#"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 0
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
                 }
             , Meta
-                { meta = StringT
+                { meta = [ StringT ] :-> AnyT
                 , id = Id
-                    { name = "p"
+                    { name = "string#"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 28
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ StringT ] :-> AnyT
+                , id = Id
+                    { name = "String#"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "putStrLn"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ AnyT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "putStrLn"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "malgo_print_string"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = External
                     }
                 }
             )
@@ -806,7 +789,7 @@ DsState
             ( Id
                 { name = "x"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                 , sort = Internal 1
                 }
             , Meta
@@ -814,8 +797,25 @@ DsState
                 , id = Id
                     { name = "x"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                     , sort = Temporal 25
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "str"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 0
+                }
+            , Meta
+                { meta = StringT
+                , id = Id
+                    { name = "p"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 28
                     }
                 }
             )
@@ -823,82 +823,9 @@ DsState
     , _signatureMap = fromList
         [
             ( Id
-                { name = "malgo_print_string"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim StringT )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "putStrLn"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr
-                    ( TyCon
-                        ( Id
-                            { name = "String"
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = External
-                            }
-                        )
-                    )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "string#"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim StringT )
-                    ( TyCon
-                        ( Id
-                            { name = "String"
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = External
-                            }
-                        )
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr ( TyPrim StringT )
-                    ( TyCon
-                        ( Id
-                            { name = "String"
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = External
-                            }
-                        )
-                    )
-                )
-            )
-        ,
-            ( Id
                 { name = "malgo_newline"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                 , sort = External
                 }
             , Forall []
@@ -911,7 +838,7 @@ DsState
             ( Id
                 { name = "main"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                 , sort = External
                 }
             , Forall []
@@ -924,7 +851,7 @@ DsState
             ( Id
                 { name = "$_"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                 , sort = Internal 20
                 }
             , Forall []
@@ -932,19 +859,92 @@ DsState
             )
         ,
             ( Id
-                { name = "str"
+                { name = "string#"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 0
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
                 }
-            , Forall [] ( TyPrim StringT )
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyCon
+                        ( Id
+                            { name = "String"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyCon
+                        ( Id
+                            { name = "String"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "putStrLn"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyCon
+                        ( Id
+                            { name = "String"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr ( TyPrim StringT )
+                    ( TyTuple 0 )
+                )
             )
         ,
             ( Id
                 { name = "x"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
                 , sort = Internal 1
+                }
+            , Forall [] ( TyPrim StringT )
+            )
+        ,
+            ( Id
+                { name = "str"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 0
                 }
             , Forall [] ( TyPrim StringT )
             )
@@ -961,47 +961,6 @@ DsState
                 { _typeConstructor = TyPrim Int64T
                 , _typeParameters = []
                 , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "String"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyCon
-                    ( Id
-                        { name = "String"
-                        , moduleName = ModuleName
-                            { raw = "HelloBoxed" }
-                        , sort = External
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors =
-                    [
-                        ( Id
-                            { name = "String#"
-                            , moduleName = ModuleName
-                                { raw = "HelloBoxed" }
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyArr ( TyPrim StringT )
-                                ( TyCon
-                                    ( Id
-                                        { name = "String"
-                                        , moduleName = ModuleName
-                                            { raw = "HelloBoxed" }
-                                        , sort = External
-                                        }
-                                    )
-                                )
-                            )
-                        )
-                    ]
                 }
             )
         ,
@@ -1041,6 +1000,47 @@ DsState
                 { _typeConstructor = TyPtr
                 , _typeParameters = []
                 , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "String"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "String"
+                        , moduleName = ModuleName
+                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                        , sort = External
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "String#"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyArr ( TyPrim StringT )
+                                ( TyCon
+                                    ( Id
+                                        { name = "String"
+                                        , moduleName = ModuleName
+                                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                    ]
                 }
             )
         ,
@@ -1088,15 +1088,15 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 7
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 15
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 6
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 14
                     }
                 )
             )
@@ -1113,15 +1113,15 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 5
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 13
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 4
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 12
                     }
                 )
             )
@@ -1129,15 +1129,31 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 3
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 11
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 2
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 10
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 9
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 8
                     }
                 )
             )
@@ -1163,15 +1179,15 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 15
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 7
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 14
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 6
                     }
                 )
             )
@@ -1179,15 +1195,15 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 13
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 5
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 12
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 4
                     }
                 )
             )
@@ -1204,31 +1220,15 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 11
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 3
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 10
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 9
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 8
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 2
                     }
                 )
             )
@@ -1243,38 +1243,6 @@ DsState
             )
         ,
             ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 19
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 18
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "HelloBoxed" }
-                , sort = Internal 17
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "HelloBoxed" }
-                    , sort = Temporal 16
-                    }
-                )
-            )
-        ,
-            ( Id
                 { name = "Float#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
@@ -1284,12 +1252,44 @@ DsState
             )
         ,
             ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 19
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 18
+                    }
+                )
+            )
+        ,
+            ( Id
                 { name = "Char#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
                 , sort = External
                 }
             , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                , sort = Internal 17
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , sort = Temporal 16
+                    }
+                )
             )
         ]
     , _globalDefs = []

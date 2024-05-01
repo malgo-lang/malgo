@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "FuncOverUnboxed" }
+        { raw = "test/testcases/malgo/FuncOverUnboxed.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -24,7 +24,7 @@ Module
                     , Id
                         { name = "f"
                         , moduleName = ModuleName
-                            { raw = "FuncOverUnboxed" }
+                            { raw = "test/testcases/malgo/FuncOverUnboxed.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -151,7 +151,7 @@ Module
                                             ( Id
                                                 { name = "printString#"
                                                 , moduleName = ModuleName
-                                                    { raw = "Builtin" }
+                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -224,7 +224,7 @@ Module
                                                         ( Id
                                                             { name = "toStringInt64#"
                                                             , moduleName = ModuleName
-                                                                { raw = "Builtin" }
+                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -360,7 +360,7 @@ Module
                                                 ( Id
                                                     { name = "printString#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -433,7 +433,7 @@ Module
                                                             ( Id
                                                                 { name = "toStringInt64#"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Builtin" }
+                                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                                 , sort = External
                                                                 }
                                                             )
@@ -501,7 +501,7 @@ Module
                                     ( Id
                                         { name = "_"
                                         , moduleName = ModuleName
-                                            { raw = "FuncOverUnboxed" }
+                                            { raw = "test/testcases/malgo/FuncOverUnboxed.mlg" }
                                         , sort = Internal 0
                                         }
                                     )
@@ -575,7 +575,7 @@ Module
                                                 ( Id
                                                     { name = "printString#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -648,7 +648,7 @@ Module
                                                             ( Id
                                                                 { name = "toStringInt64#"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Builtin" }
+                                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                                 , sort = External
                                                                 }
                                                             )
@@ -704,7 +704,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "FuncOverUnboxed" }
+                            { raw = "test/testcases/malgo/FuncOverUnboxed.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -765,7 +765,7 @@ Module
                                 ( Id
                                     { name = "$_"
                                     , moduleName = ModuleName
-                                        { raw = "FuncOverUnboxed" }
+                                        { raw = "test/testcases/malgo/FuncOverUnboxed.mlg" }
                                     , sort = Internal 21
                                     }
                                 )
@@ -839,7 +839,7 @@ Module
                                             ( Id
                                                 { name = "f"
                                                 , moduleName = ModuleName
-                                                    { raw = "FuncOverUnboxed" }
+                                                    { raw = "test/testcases/malgo/FuncOverUnboxed.mlg" }
                                                 , sort = External
                                                 }
                                             )

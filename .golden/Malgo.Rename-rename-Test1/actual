@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "Test1" }
+        { raw = "test/testcases/malgo/Test1.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -20,7 +20,7 @@ Module
                     , Id
                         { name = "if"
                         , moduleName = ModuleName
-                            { raw = "Test1" }
+                            { raw = "test/testcases/malgo/Test1.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -68,7 +68,7 @@ Module
                                 ( Id
                                     { name = "True"
                                     , moduleName = ModuleName
-                                        { raw = "Test1" }
+                                        { raw = "test/testcases/malgo/Test1.mlg" }
                                     , sort = External
                                     }
                                 ) []
@@ -89,7 +89,7 @@ Module
                                 ( Id
                                     { name = "t"
                                     , moduleName = ModuleName
-                                        { raw = "Test1" }
+                                        { raw = "test/testcases/malgo/Test1.mlg" }
                                     , sort = Internal 0
                                     }
                                 )
@@ -110,7 +110,7 @@ Module
                                 ( Id
                                     { name = "_"
                                     , moduleName = ModuleName
-                                        { raw = "Test1" }
+                                        { raw = "test/testcases/malgo/Test1.mlg" }
                                     , sort = Internal 1
                                     }
                                 )
@@ -174,7 +174,7 @@ Module
                                             ( Id
                                                 { name = "t"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test1" }
+                                                    { raw = "test/testcases/malgo/Test1.mlg" }
                                                 , sort = Internal 0
                                                 }
                                             )
@@ -228,7 +228,7 @@ Module
                                     ( Id
                                         { name = "False"
                                         , moduleName = ModuleName
-                                            { raw = "Test1" }
+                                            { raw = "test/testcases/malgo/Test1.mlg" }
                                         , sort = External
                                         }
                                     ) []
@@ -249,7 +249,7 @@ Module
                                     ( Id
                                         { name = "_"
                                         , moduleName = ModuleName
-                                            { raw = "Test1" }
+                                            { raw = "test/testcases/malgo/Test1.mlg" }
                                         , sort = Internal 2
                                         }
                                     )
@@ -270,7 +270,7 @@ Module
                                     ( Id
                                         { name = "f"
                                         , moduleName = ModuleName
-                                            { raw = "Test1" }
+                                            { raw = "test/testcases/malgo/Test1.mlg" }
                                         , sort = Internal 3
                                         }
                                     )
@@ -334,7 +334,7 @@ Module
                                                 ( Id
                                                     { name = "f"
                                                     , moduleName = ModuleName
-                                                        { raw = "Test1" }
+                                                        { raw = "test/testcases/malgo/Test1.mlg" }
                                                     , sort = Internal 3
                                                     }
                                                 )
@@ -378,7 +378,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "Test1" }
+                            { raw = "test/testcases/malgo/Test1.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -496,7 +496,7 @@ Module
                                                     ( Id
                                                         { name = "if"
                                                         , moduleName = ModuleName
-                                                            { raw = "Test1" }
+                                                            { raw = "test/testcases/malgo/Test1.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -518,7 +518,7 @@ Module
                                                     ( Id
                                                         { name = "True"
                                                         , moduleName = ModuleName
-                                                            { raw = "Test1" }
+                                                            { raw = "test/testcases/malgo/Test1.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -611,7 +611,7 @@ Module
                                                                     ( Id
                                                                         { name = "malgo_print_string"
                                                                         , moduleName = ModuleName
-                                                                            { raw = "Test1" }
+                                                                            { raw = "test/testcases/malgo/Test1.mlg" }
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -725,7 +725,7 @@ Module
                                                                 ( Id
                                                                     { name = "malgo_print_string"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "Test1" }
+                                                                        { raw = "test/testcases/malgo/Test1.mlg" }
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -776,7 +776,7 @@ Module
                 , Id
                     { name = "Bool"
                     , moduleName = ModuleName
-                        { raw = "Test1" }
+                        { raw = "test/testcases/malgo/Test1.mlg" }
                     , sort = External
                     }
                 , []
@@ -797,7 +797,7 @@ Module
                         , Id
                             { name = "True"
                             , moduleName = ModuleName
-                                { raw = "Test1" }
+                                { raw = "test/testcases/malgo/Test1.mlg" }
                             , sort = External
                             }
                         , []
@@ -818,7 +818,7 @@ Module
                         , Id
                             { name = "False"
                             , moduleName = ModuleName
-                                { raw = "Test1" }
+                                { raw = "test/testcases/malgo/Test1.mlg" }
                             , sort = External
                             }
                         , []
@@ -847,7 +847,7 @@ Module
                 , Id
                     { name = "malgo_print_string"
                     , moduleName = ModuleName
-                        { raw = "Test1" }
+                        { raw = "test/testcases/malgo/Test1.mlg" }
                     , sort = External
                     }
                 , TyArr

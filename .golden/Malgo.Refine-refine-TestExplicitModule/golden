@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "TestExplicitModule" }
+        { raw = "test/testcases/malgo/TestExplicitModule.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -25,7 +25,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "TestExplicitModule" }
+                            { raw = "test/testcases/malgo/TestExplicitModule.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -86,7 +86,7 @@ Module
                                 ( Id
                                     { name = "$_"
                                     , moduleName = ModuleName
-                                        { raw = "TestExplicitModule" }
+                                        { raw = "test/testcases/malgo/TestExplicitModule.mlg" }
                                     , sort = Internal 6
                                     }
                                 )
@@ -146,7 +146,7 @@ Module
                                                         ( Id
                                                             { name = "String"
                                                             , moduleName = ModuleName
-                                                                { raw = "Builtin" }
+                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -169,7 +169,7 @@ Module
                                             ( Id
                                                 { name = "putStrLn"
                                                 , moduleName = ModuleName
-                                                    { raw = "Prelude" }
+                                                    { raw = "runtime/malgo/Prelude.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -180,7 +180,7 @@ Module
                                                     ( Id
                                                         { name = "String"
                                                         , moduleName = ModuleName
-                                                            { raw = "Builtin" }
+                                                            { raw = "runtime/malgo/Builtin.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -205,7 +205,7 @@ Module
                                                             ( Id
                                                                 { name = "String"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Builtin" }
+                                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                                 , sort = External
                                                                 }
                                                             )
@@ -227,7 +227,7 @@ Module
                                                 ( Id
                                                     { name = "String#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )

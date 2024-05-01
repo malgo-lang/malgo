@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "TestNestedLetFunc" }
+        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -20,7 +20,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "TestNestedLetFunc" }
+                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -82,7 +82,7 @@ Module
                                     ( Id
                                         { name = "f"
                                         , moduleName = ModuleName
-                                            { raw = "TestNestedLetFunc" }
+                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
                                         , sort = Internal 2
                                         }
                                     )
@@ -145,7 +145,7 @@ Module
                                                     ( Id
                                                         { name = "y"
                                                         , moduleName = ModuleName
-                                                            { raw = "TestNestedLetFunc" }
+                                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
                                                         , sort = Internal 1
                                                         }
                                                     )
@@ -208,7 +208,7 @@ Module
                                                                     ( Id
                                                                         { name = "a"
                                                                         , moduleName = ModuleName
-                                                                            { raw = "TestNestedLetFunc" }
+                                                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
                                                                         , sort = Internal 0
                                                                         }
                                                                     )
@@ -325,7 +325,7 @@ Module
                                                 ( Id
                                                     { name = "malgo_print_string"
                                                     , moduleName = ModuleName
-                                                        { raw = "TestNestedLetFunc" }
+                                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -377,7 +377,7 @@ Module
                 , Id
                     { name = "malgo_print_string"
                     , moduleName = ModuleName
-                        { raw = "TestNestedLetFunc" }
+                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
                     , sort = External
                     }
                 , TyArr

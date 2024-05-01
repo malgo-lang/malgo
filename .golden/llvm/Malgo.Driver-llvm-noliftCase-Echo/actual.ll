@@ -161,7 +161,7 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @Echo.main(ptr %0, ptr %"Echo.$$__9_0") {
+define internal ptr @"test/testcases/malgo/Echo.mlg.main"(ptr %0, ptr %"test/testcases/malgo/Echo.mlg.$$__9_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -177,10 +177,10 @@ define internal ptr @Echo.main(ptr %0, ptr %"Echo.$$__9_0") {
   %10 = getelementptr { i8, <8 x i8> }, ptr %7, i32 0, i32 0
   %11 = load i8, ptr %10, align 1
   switch i8 %11, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
   %12 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1
   %13 = getelementptr { ptr }, ptr %12, i32 0, i32 0
   %14 = load ptr, ptr %13, align 8
@@ -193,14 +193,14 @@ switch_default_0:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @malgo_load_Echo()
+  call void @"malgo_load_test/testcases/malgo/Echo.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @Echo.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/Echo.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @malgo_load_Echo() {
+define internal void @"malgo_load_test/testcases/malgo/Echo.mlg"() {
   ret void
 }

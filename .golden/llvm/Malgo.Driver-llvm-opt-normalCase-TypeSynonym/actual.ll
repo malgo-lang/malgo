@@ -1,7 +1,7 @@
 ; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TypeSynonym.ll'
 source_filename = "test/testcases/malgo/TypeSynonym.mlg"
 
-@TypeSynonym.hello = local_unnamed_addr global ptr undef
+@"test/testcases/malgo/TypeSynonym.mlg.hello" = local_unnamed_addr global ptr undef
 @str2861 = unnamed_addr constant [2 x i8] c" \00"
 @str2868 = unnamed_addr constant [6 x i8] c"hello\00"
 @str2869 = unnamed_addr constant [6 x i8] c"world\00"
@@ -14,7 +14,7 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @"TypeSynonym.#let_closure_2862"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.#let_closure_2862"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
   %cast_0 = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
@@ -23,7 +23,7 @@ define internal ptr @"TypeSynonym.#let_closure_2862"(ptr nocapture nofree nounde
   ret ptr %6
 }
 
-define internal ptr @"TypeSynonym.#fun_closure_2863"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %1) {
+define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.#fun_closure_2863"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %1) {
   %3 = getelementptr i8, ptr %1, i64 8
   %.val = load ptr, ptr %3, align 8
   %4 = getelementptr i8, ptr %1, i64 16
@@ -63,21 +63,21 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %2, ptr %7, align 8
   %8 = getelementptr { i8, { ptr, ptr } }, ptr %6, i64 0, i32 1, i32 1
   store ptr %4, ptr %8, align 8
-  store ptr %6, ptr @TypeSynonym.hello, align 8
+  store ptr %6, ptr @"test/testcases/malgo/TypeSynonym.mlg.hello", align 8
   %9 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %9, align 1
-  %10 = load ptr, ptr @TypeSynonym.hello, align 8
+  %10 = load ptr, ptr @"test/testcases/malgo/TypeSynonym.mlg.hello", align 8
   %11 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 8)
   store ptr %10, ptr %let_capture_0.i, align 8
   store ptr %let_capture_0.i, ptr %11, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
-  store ptr @"TypeSynonym.#let_closure_2862", ptr %let_func_0.i, align 8
+  store ptr @"test/testcases/malgo/TypeSynonym.mlg.#let_closure_2862", ptr %let_func_0.i, align 8
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_0.i, ptr %12, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %12, i64 0, i32 1
-  store ptr @"TypeSynonym.#fun_closure_2863", ptr %fun_func_0.i, align 8
+  store ptr @"test/testcases/malgo/TypeSynonym.mlg.#fun_closure_2863", ptr %fun_func_0.i, align 8
   %13 = load ptr, ptr %11, align 8
   %14 = load ptr, ptr %let_func_0.i, align 8
   %15 = tail call ptr %14(ptr %13, ptr nonnull %12)

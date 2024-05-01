@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "FieldPrefix" }
+        { raw = "test/testcases/malgo/FieldPrefix.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -20,7 +20,7 @@ Module
                     , Id
                         { name = "zero3D"
                         , moduleName = ModuleName
-                            { raw = "FieldPrefix" }
+                            { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                         , sort = External
                         }
                     , Record
@@ -70,7 +70,7 @@ Module
                                     ( Id
                                         { name = "Float#"
                                         , moduleName = ModuleName
-                                            { raw = "Builtin" }
+                                            { raw = "runtime/malgo/Builtin.mlg" }
                                         , sort = External
                                         }
                                     )
@@ -125,7 +125,7 @@ Module
                                     ( Id
                                         { name = "Float#"
                                         , moduleName = ModuleName
-                                            { raw = "Builtin" }
+                                            { raw = "runtime/malgo/Builtin.mlg" }
                                         , sort = External
                                         }
                                     )
@@ -180,7 +180,7 @@ Module
                                     ( Id
                                         { name = "Float#"
                                         , moduleName = ModuleName
-                                            { raw = "Builtin" }
+                                            { raw = "runtime/malgo/Builtin.mlg" }
                                         , sort = External
                                         }
                                     )
@@ -222,7 +222,7 @@ Module
                     , Id
                         { name = "zero2D"
                         , moduleName = ModuleName
-                            { raw = "FieldPrefix" }
+                            { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                         , sort = External
                         }
                     , Record
@@ -272,7 +272,7 @@ Module
                                     ( Id
                                         { name = "Int32#"
                                         , moduleName = ModuleName
-                                            { raw = "Builtin" }
+                                            { raw = "runtime/malgo/Builtin.mlg" }
                                         , sort = External
                                         }
                                     )
@@ -327,7 +327,7 @@ Module
                                     ( Id
                                         { name = "Int32#"
                                         , moduleName = ModuleName
-                                            { raw = "Builtin" }
+                                            { raw = "runtime/malgo/Builtin.mlg" }
                                         , sort = External
                                         }
                                     )
@@ -369,7 +369,7 @@ Module
                     , Id
                         { name = "y2D"
                         , moduleName = ModuleName
-                            { raw = "FieldPrefix" }
+                            { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -433,7 +433,7 @@ Module
                                         ( Id
                                             { name = "_"
                                             , moduleName = ModuleName
-                                                { raw = "FieldPrefix" }
+                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                             , sort = Internal 4
                                             }
                                         )
@@ -457,7 +457,7 @@ Module
                                         ( Id
                                             { name = "y"
                                             , moduleName = ModuleName
-                                                { raw = "FieldPrefix" }
+                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                             , sort = Internal 5
                                             }
                                         )
@@ -509,7 +509,7 @@ Module
                                         ( Id
                                             { name = "y"
                                             , moduleName = ModuleName
-                                                { raw = "FieldPrefix" }
+                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                             , sort = Internal 5
                                             }
                                         )
@@ -536,7 +536,7 @@ Module
                     , Id
                         { name = "x2D"
                         , moduleName = ModuleName
-                            { raw = "FieldPrefix" }
+                            { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -600,7 +600,7 @@ Module
                                         ( Id
                                             { name = "x"
                                             , moduleName = ModuleName
-                                                { raw = "FieldPrefix" }
+                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                             , sort = Internal 2
                                             }
                                         )
@@ -624,7 +624,7 @@ Module
                                         ( Id
                                             { name = "_"
                                             , moduleName = ModuleName
-                                                { raw = "FieldPrefix" }
+                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                             , sort = Internal 3
                                             }
                                         )
@@ -676,7 +676,7 @@ Module
                                         ( Id
                                             { name = "x"
                                             , moduleName = ModuleName
-                                                { raw = "FieldPrefix" }
+                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                             , sort = Internal 2
                                             }
                                         )
@@ -703,7 +703,7 @@ Module
                     , Id
                         { name = "print2D"
                         , moduleName = ModuleName
-                            { raw = "FieldPrefix" }
+                            { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -767,7 +767,7 @@ Module
                                         ( Id
                                             { name = "x"
                                             , moduleName = ModuleName
-                                                { raw = "FieldPrefix" }
+                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                             , sort = Internal 0
                                             }
                                         )
@@ -791,7 +791,7 @@ Module
                                         ( Id
                                             { name = "y"
                                             , moduleName = ModuleName
-                                                { raw = "FieldPrefix" }
+                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                             , sort = Internal 1
                                             }
                                         )
@@ -857,7 +857,7 @@ Module
                                             ( Id
                                                 { name = "printString"
                                                 , moduleName = ModuleName
-                                                    { raw = "Builtin" }
+                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -921,7 +921,7 @@ Module
                                                         ( Id
                                                             { name = "toStringInt32"
                                                             , moduleName = ModuleName
-                                                                { raw = "Builtin" }
+                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -943,7 +943,7 @@ Module
                                                         ( Id
                                                             { name = "x"
                                                             , moduleName = ModuleName
-                                                                { raw = "FieldPrefix" }
+                                                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                                             , sort = Internal 0
                                                             }
                                                         )
@@ -997,7 +997,7 @@ Module
                                                 ( Id
                                                     { name = "printString"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -1033,7 +1033,7 @@ Module
                                                     ( Id
                                                         { name = "String#"
                                                         , moduleName = ModuleName
-                                                            { raw = "Builtin" }
+                                                            { raw = "runtime/malgo/Builtin.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -1101,7 +1101,7 @@ Module
                                                 ( Id
                                                     { name = "printString"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -1165,7 +1165,7 @@ Module
                                                             ( Id
                                                                 { name = "toStringInt32"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Builtin" }
+                                                                    { raw = "runtime/malgo/Builtin.mlg" }
                                                                 , sort = External
                                                                 }
                                                             )
@@ -1187,7 +1187,7 @@ Module
                                                             ( Id
                                                                 { name = "y"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "FieldPrefix" }
+                                                                    { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                                                 , sort = Internal 1
                                                                 }
                                                             )
@@ -1219,7 +1219,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "FieldPrefix" }
+                            { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -1309,7 +1309,7 @@ Module
                                             ( Id
                                                 { name = "print2D"
                                                 , moduleName = ModuleName
-                                                    { raw = "FieldPrefix" }
+                                                    { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -1331,7 +1331,7 @@ Module
                                             ( Id
                                                 { name = "zero2D"
                                                 , moduleName = ModuleName
-                                                    { raw = "FieldPrefix" }
+                                                    { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -1360,7 +1360,7 @@ Module
                 , Id
                     { name = "x2D"
                     , moduleName = ModuleName
-                        { raw = "FieldPrefix" }
+                        { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                     , sort = External
                     }
                 , TyArr
@@ -1394,7 +1394,7 @@ Module
                         ( Id
                             { name = "Point2D"
                             , moduleName = ModuleName
-                                { raw = "FieldPrefix" }
+                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                             , sort = External
                             }
                         )
@@ -1416,7 +1416,7 @@ Module
                         ( Id
                             { name = "Int32"
                             , moduleName = ModuleName
-                                { raw = "Builtin" }
+                                { raw = "runtime/malgo/Builtin.mlg" }
                             , sort = External
                             }
                         )
@@ -1438,7 +1438,7 @@ Module
                 , Id
                     { name = "y2D"
                     , moduleName = ModuleName
-                        { raw = "FieldPrefix" }
+                        { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                     , sort = External
                     }
                 , TyArr
@@ -1472,7 +1472,7 @@ Module
                         ( Id
                             { name = "Point2D"
                             , moduleName = ModuleName
-                                { raw = "FieldPrefix" }
+                                { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                             , sort = External
                             }
                         )
@@ -1494,7 +1494,7 @@ Module
                         ( Id
                             { name = "Int32"
                             , moduleName = ModuleName
-                                { raw = "Builtin" }
+                                { raw = "runtime/malgo/Builtin.mlg" }
                             , sort = External
                             }
                         )
@@ -1516,7 +1516,7 @@ Module
                 , Id
                     { name = "zero2D"
                     , moduleName = ModuleName
-                        { raw = "FieldPrefix" }
+                        { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                     , sort = External
                     }
                 , TyCon
@@ -1536,7 +1536,7 @@ Module
                     ( Id
                         { name = "Point2D"
                         , moduleName = ModuleName
-                            { raw = "FieldPrefix" }
+                            { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                         , sort = External
                         }
                     )
@@ -1557,7 +1557,7 @@ Module
                 , Id
                     { name = "zero3D"
                     , moduleName = ModuleName
-                        { raw = "FieldPrefix" }
+                        { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                     , sort = External
                     }
                 , TyCon
@@ -1577,7 +1577,7 @@ Module
                     ( Id
                         { name = "Point3D"
                         , moduleName = ModuleName
-                            { raw = "FieldPrefix" }
+                            { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                         , sort = External
                         }
                     )
@@ -1601,7 +1601,7 @@ Module
                 , Id
                     { name = "Point2D"
                     , moduleName = ModuleName
-                        { raw = "FieldPrefix" }
+                        { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                     , sort = External
                     }
                 , []
@@ -1638,7 +1638,7 @@ Module
                             ( Id
                                 { name = "Int32"
                                 , moduleName = ModuleName
-                                    { raw = "Builtin" }
+                                    { raw = "runtime/malgo/Builtin.mlg" }
                                 , sort = External
                                 }
                             )
@@ -1662,7 +1662,7 @@ Module
                             ( Id
                                 { name = "Int32"
                                 , moduleName = ModuleName
-                                    { raw = "Builtin" }
+                                    { raw = "runtime/malgo/Builtin.mlg" }
                                 , sort = External
                                 }
                             )
@@ -1685,7 +1685,7 @@ Module
                 , Id
                     { name = "Point3D"
                     , moduleName = ModuleName
-                        { raw = "FieldPrefix" }
+                        { raw = "test/testcases/malgo/FieldPrefix.mlg" }
                     , sort = External
                     }
                 , []
@@ -1722,7 +1722,7 @@ Module
                             ( Id
                                 { name = "Float"
                                 , moduleName = ModuleName
-                                    { raw = "Builtin" }
+                                    { raw = "runtime/malgo/Builtin.mlg" }
                                 , sort = External
                                 }
                             )
@@ -1746,7 +1746,7 @@ Module
                             ( Id
                                 { name = "Float"
                                 , moduleName = ModuleName
-                                    { raw = "Builtin" }
+                                    { raw = "runtime/malgo/Builtin.mlg" }
                                 , sort = External
                                 }
                             )
@@ -1770,7 +1770,7 @@ Module
                             ( Id
                                 { name = "Float"
                                 , moduleName = ModuleName
-                                    { raw = "Builtin" }
+                                    { raw = "runtime/malgo/Builtin.mlg" }
                                 , sort = External
                                 }
                             )
@@ -1821,9 +1821,21 @@ RnState
     { infixInfo = fromList
         [
             ( Id
+                { name = "<|"
+                , moduleName = ModuleName
+                    { raw = "runtime/malgo/Prelude.mlg" }
+                , sort = External
+                }
+            ,
+                ( RightA
+                , 0
+                )
+            )
+        ,
+            ( Id
                 { name = "|>"
                 , moduleName = ModuleName
-                    { raw = "Prelude" }
+                    { raw = "runtime/malgo/Prelude.mlg" }
                 , sort = External
                 }
             ,
@@ -1835,24 +1847,12 @@ RnState
             ( Id
                 { name = "."
                 , moduleName = ModuleName
-                    { raw = "Prelude" }
+                    { raw = "runtime/malgo/Prelude.mlg" }
                 , sort = External
                 }
             ,
                 ( RightA
                 , 9
-                )
-            )
-        ,
-            ( Id
-                { name = "<|"
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , sort = External
-                }
-            ,
-                ( RightA
-                , 0
                 )
             )
         ]

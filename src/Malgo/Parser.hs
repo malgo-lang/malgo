@@ -3,15 +3,17 @@
 module Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
+import Control.Monad.Trans (lift)
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Data.Void
 import Effectful
-import Malgo.Module (ModuleName (ModuleName))
+import Effectful.FileSystem (runFileSystem)
+import Malgo.Module (ArtifactPath (..), ModuleName (ModuleName), Workspace, parseArtifactPath, pwdPath)
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import System.FilePath (takeBaseName)
+import Path (toFilePath)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
@@ -20,25 +22,30 @@ type Parser es = ParsecT Void TL.Text (Eff es)
 
 -- | Parse a module from a file.
 parseMalgo ::
+  (IOE :> es, Workspace :> es) =>
   String ->
   TL.Text ->
   Eff
     es
     (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
-parseMalgo = runParserT do
-  sc
-  mod <- pModule
-  eof
-  pure mod
+parseMalgo srcPath text = runFileSystem $ runParserT parser srcPath text
+  where
+    parser = do
+      sc
+      mod <- pModule
+      eof
+      pure mod
 
 -- entry point
-pModule :: Parser es (Module (Malgo 'Parse))
+pModule :: (Workspace :> es, IOE :> es) => Parser es (Module (Malgo 'Parse))
 pModule = do
   sourcePath <- (.sourceName) <$> getSourcePos
+  pwd <- lift pwdPath
+  sourcePath' <- lift $ parseArtifactPath pwd sourcePath
   ds <- many pDecl
   pure
     Module
-      { moduleName = ModuleName (convertString $ takeBaseName sourcePath),
+      { moduleName = ModuleName (convertString $ toFilePath sourcePath'.relPath),
         moduleDefinition = ParsedDefinitions ds
       }
 

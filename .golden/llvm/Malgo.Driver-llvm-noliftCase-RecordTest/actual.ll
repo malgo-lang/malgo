@@ -162,52 +162,52 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal i32 @"Builtin.$addInt32#_curry_4032"(ptr %0, i32 %"Builtin.$x_4033_0", i32 %"Builtin.$y_4034_0") {
-  %2 = call i32 @malgo_add_int32_t(i32 %"Builtin.$x_4033_0", i32 %"Builtin.$y_4034_0")
+define internal i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$x_4033_0", i32 %"runtime/malgo/Builtin.mlg.$y_4034_0") {
+  %2 = call i32 @malgo_add_int32_t(i32 %"runtime/malgo/Builtin.mlg.$x_4033_0", i32 %"runtime/malgo/Builtin.mlg.$y_4034_0")
   ret i32 %2
 }
 
 declare ptr @malgo_malloc(i64)
 
-define internal i32 @"RecordTest.#let_closure_2904"(ptr %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/RecordTest.mlg.#let_closure_2904"(ptr %0, i32 %1) {
   %p_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
   %p_0 = load i32, ptr %p_addr_0, align 4
   %3 = call i32 @malgo_add_int32_t(i32 %p_0, i32 %1)
   ret i32 %3
 }
 
-define internal ptr @Builtin.malgo_add_int32_t(ptr %0, i32 %"Builtin.$p_1808_0") {
+define internal ptr @"runtime/malgo/Builtin.mlg.malgo_add_int32_t"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_1808_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i32 }, ptr null, i32 1) to i64))
   %p_0 = getelementptr { i32 }, ptr %let_capture_0, i32 0, i32 0
-  store i32 %"Builtin.$p_1808_0", ptr %p_0, align 4
+  store i32 %"runtime/malgo/Builtin.mlg.$p_1808_0", ptr %p_0, align 4
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"RecordTest.#let_closure_2904", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/RecordTest.mlg.#let_closure_2904", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal ptr @RecordTest.B(ptr %0, ptr %"RecordTest.$p_50_0") {
+define internal ptr @"test/testcases/malgo/RecordTest.mlg.B"(ptr %0, ptr %"test/testcases/malgo/RecordTest.mlg.$p_50_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %"RecordTest.$p_50_0", ptr %4, align 8
+  store ptr %"test/testcases/malgo/RecordTest.mlg.$p_50_0", ptr %4, align 8
   ret ptr %2
 }
 
 declare ptr @malgo_hash_table_get(ptr, ptr)
 
-define internal ptr @RecordTest.g(ptr %0, ptr %"RecordTest.$b_52_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"RecordTest.$b_52_0", i32 0, i32 0
+define internal ptr @"test/testcases/malgo/RecordTest.mlg.g"(ptr %0, ptr %"test/testcases/malgo/RecordTest.mlg.$b_52_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/RecordTest.mlg.$b_52_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_0 [
-    i8 0, label %switch_branch_RecordTest.B_0
+    i8 0, label %"switch_branch_test/testcases/malgo/RecordTest.mlg.B_0"
   ]
 
-switch_branch_RecordTest.B_0:                     ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"RecordTest.$b_52_0", i32 0, i32 1
+"switch_branch_test/testcases/malgo/RecordTest.mlg.B_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/RecordTest.mlg.$b_52_0", i32 0, i32 1
   %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
   %6 = load ptr, ptr %5, align 8
   %7 = call ptr @malgo_hash_table_get(ptr %6, ptr @str2905)
@@ -218,9 +218,9 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @RecordTest.f(ptr %0, ptr %"RecordTest.$record_56_0") {
-  %2 = call ptr @malgo_hash_table_get(ptr %"RecordTest.$record_56_0", ptr @str2905)
-  %3 = call ptr @malgo_hash_table_get(ptr %"RecordTest.$record_56_0", ptr @str2906)
+define internal ptr @"test/testcases/malgo/RecordTest.mlg.f"(ptr %0, ptr %"test/testcases/malgo/RecordTest.mlg.$record_56_0") {
+  %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/RecordTest.mlg.$record_56_0", ptr @str2905)
+  %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/RecordTest.mlg.$record_56_0", ptr @str2906)
   ret ptr %2
 }
 
@@ -228,7 +228,7 @@ declare ptr @malgo_hash_table_new()
 
 declare void @malgo_hash_table_insert(ptr, ptr, ptr)
 
-define internal i32 @"RecordTest.#let_closure_2907"(ptr %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/RecordTest.mlg.#let_closure_2907"(ptr %0, i32 %1) {
   %p_addr_0 = getelementptr { i32, ptr }, ptr %0, i32 0, i32 0
   %p_0 = load i32, ptr %p_addr_0, align 4
   %malgo_add_int32_t_addr_0 = getelementptr { i32, ptr }, ptr %0, i32 0, i32 1
@@ -246,7 +246,7 @@ define internal i32 @"RecordTest.#let_closure_2907"(ptr %0, i32 %1) {
   ret i32 %12
 }
 
-define internal ptr @RecordTest.main(ptr %0, ptr %"RecordTest.$$__59_0") {
+define internal ptr @"test/testcases/malgo/RecordTest.mlg.main"(ptr %0, ptr %"test/testcases/malgo/RecordTest.mlg.$$__59_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -267,20 +267,20 @@ define internal ptr @RecordTest.main(ptr %0, ptr %"RecordTest.$$__59_0") {
   %13 = getelementptr { i8, <4 x i8> }, ptr %9, i32 0, i32 0
   %14 = load i8, ptr %13, align 1
   switch i8 %14, label %switch_default_3 [
-    i8 0, label %"switch_branch_Builtin.Int32#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   ]
 
-"switch_branch_Builtin.Int32#_0":                 ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
   %15 = getelementptr { i8, { i32 } }, ptr %9, i32 0, i32 1
   %16 = getelementptr { i32 }, ptr %15, i32 0, i32 0
   %17 = load i32, ptr %16, align 4
   %18 = getelementptr { i8, <4 x i8> }, ptr %12, i32 0, i32 0
   %19 = load i8, ptr %18, align 1
   switch i8 %19, label %switch_default_2 [
-    i8 0, label %"switch_branch_Builtin.Int32#_1"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_1"
   ]
 
-"switch_branch_Builtin.Int32#_1":                 ; preds = %"switch_branch_Builtin.Int32#_0"
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_1": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   %20 = getelementptr { i8, { i32 } }, ptr %12, i32 0, i32 1
   %21 = getelementptr { i32 }, ptr %20, i32 0, i32 0
   %22 = load i32, ptr %21, align 4
@@ -292,14 +292,14 @@ define internal ptr @RecordTest.main(ptr %0, ptr %"RecordTest.$$__59_0") {
   %malgo_add_int32_t_capture_0 = getelementptr { ptr, ptr }, ptr %24, i32 0, i32 0
   store ptr null, ptr %malgo_add_int32_t_capture_0, align 8
   %malgo_add_int32_t_func_0 = getelementptr { ptr, ptr }, ptr %24, i32 0, i32 1
-  store ptr @Builtin.malgo_add_int32_t, ptr %malgo_add_int32_t_func_0, align 8
+  store ptr @"runtime/malgo/Builtin.mlg.malgo_add_int32_t", ptr %malgo_add_int32_t_func_0, align 8
   %malgo_add_int32_t_0 = getelementptr { i32, ptr }, ptr %let_capture_0, i32 0, i32 1
   store ptr %24, ptr %malgo_add_int32_t_0, align 8
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 1
-  store ptr @"RecordTest.#let_closure_2907", ptr %let_func_0, align 8
-  %25 = call i32 @"Builtin.$addInt32#_curry_4032"(ptr null, i32 %17, i32 %22)
+  store ptr @"test/testcases/malgo/RecordTest.mlg.#let_closure_2907", ptr %let_func_0, align 8
+  %25 = call i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr null, i32 %17, i32 %22)
   %26 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %27 = getelementptr { i8, { i32 } }, ptr %26, i32 0, i32 0
   store i8 0, ptr %27, align 1
@@ -308,10 +308,10 @@ define internal ptr @RecordTest.main(ptr %0, ptr %"RecordTest.$$__59_0") {
   %29 = getelementptr { i8, <4 x i8> }, ptr %26, i32 0, i32 0
   %30 = load i8, ptr %29, align 1
   switch i8 %30, label %switch_default_1 [
-    i8 0, label %"switch_branch_Builtin.Int32#_2"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_2"
   ]
 
-"switch_branch_Builtin.Int32#_2":                 ; preds = %"switch_branch_Builtin.Int32#_1"
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_2": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_1"
   %31 = getelementptr { i8, { i32 } }, ptr %26, i32 0, i32 1
   %32 = getelementptr { i32 }, ptr %31, i32 0, i32 0
   %33 = load i32, ptr %32, align 4
@@ -324,23 +324,23 @@ define internal ptr @RecordTest.main(ptr %0, ptr %"RecordTest.$$__59_0") {
   %38 = getelementptr { i8, <8 x i8> }, ptr %35, i32 0, i32 0
   %39 = load i8, ptr %38, align 1
   switch i8 %39, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %"switch_branch_Builtin.Int32#_2"
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_2"
   %40 = getelementptr { i8, { ptr } }, ptr %35, i32 0, i32 1
   %41 = getelementptr { ptr }, ptr %40, i32 0, i32 0
   %42 = load ptr, ptr %41, align 8
   %43 = call ptr @malgo_print_string(ptr %42)
   ret ptr %43
 
-switch_default_0:                                 ; preds = %"switch_branch_Builtin.Int32#_2"
+switch_default_0:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_2"
   unreachable
 
-switch_default_1:                                 ; preds = %"switch_branch_Builtin.Int32#_1"
+switch_default_1:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_1"
   unreachable
 
-switch_default_2:                                 ; preds = %"switch_branch_Builtin.Int32#_0"
+switch_default_2:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   unreachable
 
 switch_default_3:                                 ; preds = %1
@@ -349,14 +349,14 @@ switch_default_3:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @malgo_load_RecordTest()
+  call void @"malgo_load_test/testcases/malgo/RecordTest.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @RecordTest.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/RecordTest.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @malgo_load_RecordTest() {
+define internal void @"malgo_load_test/testcases/malgo/RecordTest.mlg"() {
   ret void
 }

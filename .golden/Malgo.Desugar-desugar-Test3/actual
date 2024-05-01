@@ -10,7 +10,7 @@ Program
                 , id = Id
                     { name = "|>_curry"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 81
                     }
                 }
@@ -20,7 +20,7 @@ Program
                     , id = Id
                         { name = "x"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 82
                         }
                     }
@@ -29,7 +29,7 @@ Program
                     , id = Id
                         { name = "f"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 83
                         }
                     }
@@ -44,7 +44,7 @@ Program
                     , id = Id
                         { name = "d"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 84
                         }
                     }
@@ -56,7 +56,7 @@ Program
                             , id = Id
                                 { name = "f"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 83
                                 }
                             }
@@ -68,7 +68,7 @@ Program
                             , id = Id
                                 { name = "x"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 82
                                 }
                             }
@@ -82,7 +82,7 @@ Program
                             , id = Id
                                 { name = "d"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 84
                                 }
                             }
@@ -99,7 +99,7 @@ Program
                 , id = Id
                     { name = "Cons_curry"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 72
                     }
                 }
@@ -109,7 +109,7 @@ Program
                     , id = Id
                         { name = "p"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 73
                         }
                     }
@@ -118,7 +118,7 @@ Program
                     , id = Id
                         { name = "p"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 74
                         }
                     }
@@ -132,9 +132,9 @@ Program
                     { _variable = Meta
                         { meta = SumT
                             [ Con
-                                ( Data "Test3.Nil" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                             , Con
-                                ( Data "Test3.Cons" )
+                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                 [ AnyT
                                 , AnyT
                                 ]
@@ -142,15 +142,15 @@ Program
                         , id = Id
                             { name = "let"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 75
                             }
                         }
                     , typ = SumT
                         [ Con
-                            ( Data "Test3.Nil" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                         , Con
-                            ( Data "Test3.Cons" )
+                            ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                             [ AnyT
                             , AnyT
                             ]
@@ -158,16 +158,16 @@ Program
                     , _object = Pack
                         ( SumT
                             [ Con
-                                ( Data "Test3.Nil" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                             , Con
-                                ( Data "Test3.Cons" )
+                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                 [ AnyT
                                 , AnyT
                                 ]
                             ]
                         )
                         ( Con
-                            ( Data "Test3.Cons" )
+                            ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                             [ AnyT
                             , AnyT
                             ]
@@ -178,7 +178,7 @@ Program
                                 , id = Id
                                     { name = "p"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 73
                                     }
                                 }
@@ -189,7 +189,7 @@ Program
                                 , id = Id
                                     { name = "p"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 74
                                     }
                                 }
@@ -202,9 +202,9 @@ Program
                         ( Meta
                             { meta = SumT
                                 [ Con
-                                    ( Data "Test3.Nil" ) []
+                                    ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                 , Con
-                                    ( Data "Test3.Cons" )
+                                    ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                     [ AnyT
                                     , AnyT
                                     ]
@@ -212,7 +212,7 @@ Program
                             , id = Id
                                 { name = "let"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 75
                                 }
                             }
@@ -226,7 +226,7 @@ Program
                 , id = Id
                     { name = "A"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
                     }
                 }
@@ -237,33 +237,33 @@ Program
                     { _variable = Meta
                         { meta = SumT
                             [ Con
-                                ( Data "Test3.A" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                             , Con
-                                ( Data "Test3.B" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                             ]
                         , id = Id
                             { name = "let"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 66
                             }
                         }
                     , typ = SumT
                         [ Con
-                            ( Data "Test3.A" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                         , Con
-                            ( Data "Test3.B" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                         ]
                     , _object = Pack
                         ( SumT
                             [ Con
-                                ( Data "Test3.A" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                             , Con
-                                ( Data "Test3.B" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                             ]
                         )
                         ( Con
-                            ( Data "Test3.A" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                         ) []
                     }
                 ]
@@ -272,14 +272,14 @@ Program
                         ( Meta
                             { meta = SumT
                                 [ Con
-                                    ( Data "Test3.A" ) []
+                                    ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                                 , Con
-                                    ( Data "Test3.B" ) []
+                                    ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                                 ]
                             , id = Id
                                 { name = "let"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 66
                                 }
                             }
@@ -293,7 +293,7 @@ Program
                 , id = Id
                     { name = "B"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
                     }
                 }
@@ -304,33 +304,33 @@ Program
                     { _variable = Meta
                         { meta = SumT
                             [ Con
-                                ( Data "Test3.A" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                             , Con
-                                ( Data "Test3.B" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                             ]
                         , id = Id
                             { name = "let"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 67
                             }
                         }
                     , typ = SumT
                         [ Con
-                            ( Data "Test3.A" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                         , Con
-                            ( Data "Test3.B" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                         ]
                     , _object = Pack
                         ( SumT
                             [ Con
-                                ( Data "Test3.A" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                             , Con
-                                ( Data "Test3.B" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                             ]
                         )
                         ( Con
-                            ( Data "Test3.B" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                         ) []
                     }
                 ]
@@ -339,14 +339,14 @@ Program
                         ( Meta
                             { meta = SumT
                                 [ Con
-                                    ( Data "Test3.A" ) []
+                                    ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                                 , Con
-                                    ( Data "Test3.B" ) []
+                                    ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                                 ]
                             , id = Id
                                 { name = "let"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 67
                                 }
                             }
@@ -360,7 +360,7 @@ Program
                 , id = Id
                     { name = "Nil"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
                     }
                 }
@@ -371,9 +371,9 @@ Program
                     { _variable = Meta
                         { meta = SumT
                             [ Con
-                                ( Data "Test3.Nil" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                             , Con
-                                ( Data "Test3.Cons" )
+                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                 [ AnyT
                                 , AnyT
                                 ]
@@ -381,15 +381,15 @@ Program
                         , id = Id
                             { name = "let"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 68
                             }
                         }
                     , typ = SumT
                         [ Con
-                            ( Data "Test3.Nil" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                         , Con
-                            ( Data "Test3.Cons" )
+                            ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                             [ AnyT
                             , AnyT
                             ]
@@ -397,16 +397,16 @@ Program
                     , _object = Pack
                         ( SumT
                             [ Con
-                                ( Data "Test3.Nil" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                             , Con
-                                ( Data "Test3.Cons" )
+                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                 [ AnyT
                                 , AnyT
                                 ]
                             ]
                         )
                         ( Con
-                            ( Data "Test3.Nil" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                         ) []
                     }
                 ]
@@ -415,9 +415,9 @@ Program
                         ( Meta
                             { meta = SumT
                                 [ Con
-                                    ( Data "Test3.Nil" ) []
+                                    ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                 , Con
-                                    ( Data "Test3.Cons" )
+                                    ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                     [ AnyT
                                     , AnyT
                                     ]
@@ -425,7 +425,7 @@ Program
                             , id = Id
                                 { name = "let"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 68
                                 }
                             }
@@ -440,7 +440,7 @@ Program
                 , id = Id
                     { name = "Cons"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
                     }
                 }
@@ -450,7 +450,7 @@ Program
                     , id = Id
                         { name = "p"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 69
                         }
                     }
@@ -464,7 +464,7 @@ Program
                         , id = Id
                             { name = "let"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 76
                             }
                         }
@@ -475,7 +475,7 @@ Program
                             , id = Id
                                 { name = "p"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 70
                                 }
                             }
@@ -489,7 +489,7 @@ Program
                                 , id = Id
                                     { name = "Cons_curry"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 72
                                     }
                                 }
@@ -500,7 +500,7 @@ Program
                                     , id = Id
                                         { name = "p"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 69
                                         }
                                     }
@@ -511,7 +511,7 @@ Program
                                     , id = Id
                                         { name = "p"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 70
                                         }
                                     }
@@ -527,7 +527,7 @@ Program
                             , id = Id
                                 { name = "let"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 76
                                 }
                             }
@@ -542,7 +542,7 @@ Program
                 , id = Id
                     { name = "malgo_print_string"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
                     }
                 }
@@ -552,7 +552,7 @@ Program
                     , id = Id
                         { name = "p"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 77
                         }
                     }
@@ -569,7 +569,7 @@ Program
                         , id = Id
                             { name = "p"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 77
                             }
                         }
@@ -585,7 +585,7 @@ Program
                 , id = Id
                     { name = "|>"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
                     }
                 }
@@ -595,7 +595,7 @@ Program
                     , id = Id
                         { name = "x"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 78
                         }
                     }
@@ -612,7 +612,7 @@ Program
                         , id = Id
                             { name = "let"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 85
                             }
                         }
@@ -624,7 +624,7 @@ Program
                             , id = Id
                                 { name = "f"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 79
                                 }
                             }
@@ -638,7 +638,7 @@ Program
                                 , id = Id
                                     { name = "|>_curry"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 81
                                     }
                                 }
@@ -649,7 +649,7 @@ Program
                                     , id = Id
                                         { name = "x"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 78
                                         }
                                     }
@@ -660,7 +660,7 @@ Program
                                     , id = Id
                                         { name = "f"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 79
                                         }
                                     }
@@ -677,7 +677,7 @@ Program
                             , id = Id
                                 { name = "let"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 85
                                 }
                             }
@@ -695,7 +695,7 @@ Program
                 , id = Id
                     { name = "main"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
                     }
                 }
@@ -706,7 +706,7 @@ Program
                     , id = Id
                         { name = "$_"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 86
                         }
                     }
@@ -726,7 +726,7 @@ Program
                     , id = Id
                         { name = "d"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 99
                         }
                     }
@@ -737,7 +737,7 @@ Program
                         , id = Id
                             { name = "d"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 97
                             }
                         }
@@ -748,7 +748,7 @@ Program
                             , id = Id
                                 { name = "d"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 89
                                 }
                             }
@@ -759,7 +759,7 @@ Program
                                 , id = Id
                                     { name = "d"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 87
                                     }
                                 }
@@ -770,7 +770,7 @@ Program
                                     , id = Id
                                         { name = "A"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = External
                                         }
                                     }
@@ -782,7 +782,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 88
                                         }
                                     }
@@ -795,7 +795,7 @@ Program
                                             , id = Id
                                                 { name = "Cons"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = External
                                                 }
                                             }
@@ -807,7 +807,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 87
                                                 }
                                             }
@@ -822,7 +822,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 88
                                                 }
                                             }
@@ -837,7 +837,7 @@ Program
                                 , id = Id
                                     { name = "d"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 95
                                     }
                                 }
@@ -848,7 +848,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 92
                                         }
                                     }
@@ -859,7 +859,7 @@ Program
                                         , id = Id
                                             { name = "d"
                                             , moduleName = ModuleName
-                                                { raw = "Test3" }
+                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                             , sort = Temporal 90
                                             }
                                         }
@@ -870,7 +870,7 @@ Program
                                             , id = Id
                                                 { name = "B"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = External
                                                 }
                                             }
@@ -882,7 +882,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 91
                                                 }
                                             }
@@ -895,7 +895,7 @@ Program
                                                     , id = Id
                                                         { name = "Cons"
                                                         , moduleName = ModuleName
-                                                            { raw = "Test3" }
+                                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                                         , sort = External
                                                         }
                                                     }
@@ -907,7 +907,7 @@ Program
                                                     , id = Id
                                                         { name = "d"
                                                         , moduleName = ModuleName
-                                                            { raw = "Test3" }
+                                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                                         , sort = Temporal 90
                                                         }
                                                     }
@@ -922,7 +922,7 @@ Program
                                                     , id = Id
                                                         { name = "d"
                                                         , moduleName = ModuleName
-                                                            { raw = "Test3" }
+                                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                                         , sort = Temporal 91
                                                         }
                                                     }
@@ -937,7 +937,7 @@ Program
                                         , id = Id
                                             { name = "d"
                                             , moduleName = ModuleName
-                                                { raw = "Test3" }
+                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                             , sort = Temporal 93
                                             }
                                         }
@@ -948,7 +948,7 @@ Program
                                             , id = Id
                                                 { name = "Nil"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = External
                                                 }
                                             }
@@ -960,7 +960,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 94
                                                 }
                                             }
@@ -972,7 +972,7 @@ Program
                                                     , id = Id
                                                         { name = "d"
                                                         , moduleName = ModuleName
-                                                            { raw = "Test3" }
+                                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                                         , sort = Temporal 92
                                                         }
                                                     }
@@ -984,7 +984,7 @@ Program
                                                     , id = Id
                                                         { name = "d"
                                                         , moduleName = ModuleName
-                                                            { raw = "Test3" }
+                                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                                         , sort = Temporal 93
                                                         }
                                                     }
@@ -998,7 +998,7 @@ Program
                                                     , id = Id
                                                         { name = "d"
                                                         , moduleName = ModuleName
-                                                            { raw = "Test3" }
+                                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                                         , sort = Temporal 94
                                                         }
                                                     }
@@ -1014,7 +1014,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 96
                                         }
                                     }
@@ -1026,7 +1026,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 89
                                                 }
                                             }
@@ -1038,7 +1038,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 95
                                                 }
                                             }
@@ -1052,7 +1052,7 @@ Program
                                             , id = Id
                                                 { name = "d"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 96
                                                 }
                                             }
@@ -1069,7 +1069,7 @@ Program
                             , id = Id
                                 { name = "d"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 98
                                 }
                             }
@@ -1084,7 +1084,7 @@ Program
                                     , id = Id
                                         { name = "|>"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = External
                                         }
                                     }
@@ -1096,7 +1096,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 97
                                         }
                                     }
@@ -1117,7 +1117,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 98
                                         }
                                     }
@@ -1133,7 +1133,7 @@ Program
                         , id = Id
                             { name = "d"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 110
                             }
                         }
@@ -1146,7 +1146,7 @@ Program
                                 , id = Id
                                     { name = "fun"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 109
                                     }
                                 }
@@ -1158,7 +1158,7 @@ Program
                                     , id = Id
                                         { name = "cons"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 100
                                         }
                                     }
@@ -1167,9 +1167,9 @@ Program
                                     ( Cast
                                         ( SumT
                                             [ Con
-                                                ( Data "Test3.Nil" ) []
+                                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                             , Con
-                                                ( Data "Test3.Cons" )
+                                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                                 [ AnyT
                                                 , AnyT
                                                 ]
@@ -1181,7 +1181,7 @@ Program
                                                 , id = Id
                                                     { name = "cons"
                                                     , moduleName = ModuleName
-                                                        { raw = "Test3" }
+                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                     , sort = Temporal 100
                                                     }
                                                 }
@@ -1190,7 +1190,7 @@ Program
                                     )
                                     [ Unpack
                                         ( Con
-                                            ( Data "Test3.Nil" ) []
+                                            ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                         ) []
                                         ( Assign
                                             ( Meta
@@ -1199,7 +1199,7 @@ Program
                                                 , id = Id
                                                     { name = "d"
                                                     , moduleName = ModuleName
-                                                        { raw = "Test3" }
+                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                     , sort = Temporal 101
                                                     }
                                                 }
@@ -1212,7 +1212,7 @@ Program
                                                         , id = Id
                                                             { name = "malgo_print_string"
                                                             , moduleName = ModuleName
-                                                                { raw = "Test3" }
+                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                             , sort = External
                                                             }
                                                         }
@@ -1233,7 +1233,7 @@ Program
                                                         , id = Id
                                                             { name = "d"
                                                             , moduleName = ModuleName
-                                                                { raw = "Test3" }
+                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                             , sort = Temporal 101
                                                             }
                                                         }
@@ -1243,7 +1243,7 @@ Program
                                         )
                                     , Unpack
                                         ( Con
-                                            ( Data "Test3.Cons" )
+                                            ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                             [ AnyT
                                             , AnyT
                                             ]
@@ -1253,7 +1253,7 @@ Program
                                             , id = Id
                                                 { name = "p"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 102
                                                 }
                                             }
@@ -1262,7 +1262,7 @@ Program
                                             , id = Id
                                                 { name = "p"
                                                 , moduleName = ModuleName
-                                                    { raw = "Test3" }
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                 , sort = Temporal 103
                                                 }
                                             }
@@ -1271,9 +1271,9 @@ Program
                                             ( Cast
                                                 ( SumT
                                                     [ Con
-                                                        ( Data "Test3.A" ) []
+                                                        ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                                                     , Con
-                                                        ( Data "Test3.B" ) []
+                                                        ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                                                     ]
                                                 )
                                                 ( Var
@@ -1282,7 +1282,7 @@ Program
                                                         , id = Id
                                                             { name = "p"
                                                             , moduleName = ModuleName
-                                                                { raw = "Test3" }
+                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                             , sort = Temporal 102
                                                             }
                                                         }
@@ -1291,15 +1291,15 @@ Program
                                             )
                                             [ Unpack
                                                 ( Con
-                                                    ( Data "Test3.A" ) []
+                                                    ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                                                 ) []
                                                 ( Match
                                                     ( Cast
                                                         ( SumT
                                                             [ Con
-                                                                ( Data "Test3.Nil" ) []
+                                                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                                             , Con
-                                                                ( Data "Test3.Cons" )
+                                                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                                                 [ AnyT
                                                                 , AnyT
                                                                 ]
@@ -1311,7 +1311,7 @@ Program
                                                                 , id = Id
                                                                     { name = "p"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "Test3" }
+                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                     , sort = Temporal 103
                                                                     }
                                                                 }
@@ -1320,7 +1320,7 @@ Program
                                                     )
                                                     [ Unpack
                                                         ( Con
-                                                            ( Data "Test3.Nil" ) []
+                                                            ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                                         ) []
                                                         ( Assign
                                                             ( Meta
@@ -1329,7 +1329,7 @@ Program
                                                                 , id = Id
                                                                     { name = "d"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "Test3" }
+                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                     , sort = Temporal 101
                                                                     }
                                                                 }
@@ -1342,7 +1342,7 @@ Program
                                                                         , id = Id
                                                                             { name = "malgo_print_string"
                                                                             , moduleName = ModuleName
-                                                                                { raw = "Test3" }
+                                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                                             , sort = External
                                                                             }
                                                                         }
@@ -1363,7 +1363,7 @@ Program
                                                                         , id = Id
                                                                             { name = "d"
                                                                             , moduleName = ModuleName
-                                                                                { raw = "Test3" }
+                                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                                             , sort = Temporal 101
                                                                             }
                                                                         }
@@ -1373,7 +1373,7 @@ Program
                                                         )
                                                     , Unpack
                                                         ( Con
-                                                            ( Data "Test3.Cons" )
+                                                            ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                                             [ AnyT
                                                             , AnyT
                                                             ]
@@ -1383,7 +1383,7 @@ Program
                                                             , id = Id
                                                                 { name = "p"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Test3" }
+                                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                                 , sort = Temporal 104
                                                                 }
                                                             }
@@ -1392,7 +1392,7 @@ Program
                                                             , id = Id
                                                                 { name = "p"
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Test3" }
+                                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                                 , sort = Temporal 105
                                                                 }
                                                             }
@@ -1401,9 +1401,9 @@ Program
                                                             ( Cast
                                                                 ( SumT
                                                                     [ Con
-                                                                        ( Data "Test3.A" ) []
+                                                                        ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                                                                     , Con
-                                                                        ( Data "Test3.B" ) []
+                                                                        ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                                                                     ]
                                                                 )
                                                                 ( Var
@@ -1412,7 +1412,7 @@ Program
                                                                         , id = Id
                                                                             { name = "p"
                                                                             , moduleName = ModuleName
-                                                                                { raw = "Test3" }
+                                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                                             , sort = Temporal 104
                                                                             }
                                                                         }
@@ -1421,7 +1421,7 @@ Program
                                                             )
                                                             [ Unpack
                                                                 ( Con
-                                                                    ( Data "Test3.A" ) []
+                                                                    ( Data "test/testcases/malgo/Test3.mlg.A" ) []
                                                                 ) []
                                                                 ( Assign
                                                                     ( Meta
@@ -1430,7 +1430,7 @@ Program
                                                                         , id = Id
                                                                             { name = "d"
                                                                             , moduleName = ModuleName
-                                                                                { raw = "Test3" }
+                                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                                             , sort = Temporal 101
                                                                             }
                                                                         }
@@ -1443,7 +1443,7 @@ Program
                                                                                 , id = Id
                                                                                     { name = "malgo_print_string"
                                                                                     , moduleName = ModuleName
-                                                                                        { raw = "Test3" }
+                                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                     , sort = External
                                                                                     }
                                                                                 }
@@ -1464,7 +1464,7 @@ Program
                                                                                 , id = Id
                                                                                     { name = "d"
                                                                                     , moduleName = ModuleName
-                                                                                        { raw = "Test3" }
+                                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                     , sort = Temporal 101
                                                                                     }
                                                                                 }
@@ -1474,15 +1474,15 @@ Program
                                                                 )
                                                             , Unpack
                                                                 ( Con
-                                                                    ( Data "Test3.B" ) []
+                                                                    ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                                                                 ) []
                                                                 ( Match
                                                                     ( Cast
                                                                         ( SumT
                                                                             [ Con
-                                                                                ( Data "Test3.Nil" ) []
+                                                                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                                                             , Con
-                                                                                ( Data "Test3.Cons" )
+                                                                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                                                                 [ AnyT
                                                                                 , AnyT
                                                                                 ]
@@ -1494,7 +1494,7 @@ Program
                                                                                 , id = Id
                                                                                     { name = "p"
                                                                                     , moduleName = ModuleName
-                                                                                        { raw = "Test3" }
+                                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                     , sort = Temporal 105
                                                                                     }
                                                                                 }
@@ -1503,7 +1503,7 @@ Program
                                                                     )
                                                                     [ Unpack
                                                                         ( Con
-                                                                            ( Data "Test3.Nil" ) []
+                                                                            ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                                                         ) []
                                                                         ( Assign
                                                                             ( Meta
@@ -1512,7 +1512,7 @@ Program
                                                                                 , id = Id
                                                                                     { name = "d"
                                                                                     , moduleName = ModuleName
-                                                                                        { raw = "Test3" }
+                                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                     , sort = Temporal 106
                                                                                     }
                                                                                 }
@@ -1525,7 +1525,7 @@ Program
                                                                                         , id = Id
                                                                                             { name = "malgo_print_string"
                                                                                             , moduleName = ModuleName
-                                                                                                { raw = "Test3" }
+                                                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                             , sort = External
                                                                                             }
                                                                                         }
@@ -1546,7 +1546,7 @@ Program
                                                                                         , id = Id
                                                                                             { name = "d"
                                                                                             , moduleName = ModuleName
-                                                                                                { raw = "Test3" }
+                                                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                             , sort = Temporal 106
                                                                                             }
                                                                                         }
@@ -1556,7 +1556,7 @@ Program
                                                                         )
                                                                     , Unpack
                                                                         ( Con
-                                                                            ( Data "Test3.Cons" )
+                                                                            ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                                                             [ AnyT
                                                                             , AnyT
                                                                             ]
@@ -1566,7 +1566,7 @@ Program
                                                                             , id = Id
                                                                                 { name = "p"
                                                                                 , moduleName = ModuleName
-                                                                                    { raw = "Test3" }
+                                                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                 , sort = Temporal 107
                                                                                 }
                                                                             }
@@ -1575,7 +1575,7 @@ Program
                                                                             , id = Id
                                                                                 { name = "p"
                                                                                 , moduleName = ModuleName
-                                                                                    { raw = "Test3" }
+                                                                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                 , sort = Temporal 108
                                                                                 }
                                                                             }
@@ -1587,7 +1587,7 @@ Program
                                                                                 , id = Id
                                                                                     { name = "d"
                                                                                     , moduleName = ModuleName
-                                                                                        { raw = "Test3" }
+                                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                     , sort = Temporal 101
                                                                                     }
                                                                                 }
@@ -1600,7 +1600,7 @@ Program
                                                                                         , id = Id
                                                                                             { name = "malgo_print_string"
                                                                                             , moduleName = ModuleName
-                                                                                                { raw = "Test3" }
+                                                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                             , sort = External
                                                                                             }
                                                                                         }
@@ -1621,7 +1621,7 @@ Program
                                                                                         , id = Id
                                                                                             { name = "d"
                                                                                             , moduleName = ModuleName
-                                                                                                { raw = "Test3" }
+                                                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                                                             , sort = Temporal 101
                                                                                             }
                                                                                         }
@@ -1637,7 +1637,7 @@ Program
                                                 )
                                             , Unpack
                                                 ( Con
-                                                    ( Data "Test3.B" ) []
+                                                    ( Data "test/testcases/malgo/Test3.mlg.B" ) []
                                                 ) []
                                                 ( Assign
                                                     ( Meta
@@ -1646,7 +1646,7 @@ Program
                                                         , id = Id
                                                             { name = "d"
                                                             , moduleName = ModuleName
-                                                                { raw = "Test3" }
+                                                                { raw = "test/testcases/malgo/Test3.mlg" }
                                                             , sort = Temporal 101
                                                             }
                                                         }
@@ -1659,7 +1659,7 @@ Program
                                                                 , id = Id
                                                                     { name = "malgo_print_string"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "Test3" }
+                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                     , sort = External
                                                                     }
                                                                 }
@@ -1680,7 +1680,7 @@ Program
                                                                 , id = Id
                                                                     { name = "d"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "Test3" }
+                                                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                                                     , sort = Temporal 101
                                                                     }
                                                                 }
@@ -1702,7 +1702,7 @@ Program
                                     , id = Id
                                         { name = "fun"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 109
                                         }
                                     }
@@ -1717,7 +1717,7 @@ Program
                             , id = Id
                                 { name = "d"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 111
                                 }
                             }
@@ -1733,7 +1733,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 99
                                         }
                                     }
@@ -1746,7 +1746,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 110
                                         }
                                     }
@@ -1764,7 +1764,7 @@ Program
                                     , id = Id
                                         { name = "d"
                                         , moduleName = ModuleName
-                                            { raw = "Test3" }
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
                                         , sort = Temporal 111
                                         }
                                     }
@@ -1787,9 +1787,116 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
+                { name = "Nil"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Meta
+                { meta = [] :-> AnyT
+                , id = Id
+                    { name = "Nil"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "Cons"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ AnyT ] :->
+                    ( [ AnyT ] :-> AnyT )
+                , id = Id
+                    { name = "Cons"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "malgo_print_string"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "malgo_print_string"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "B"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Meta
+                { meta = [] :-> AnyT
+                , id = Id
+                    { name = "B"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "|>"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Meta
+                { meta = [ AnyT ] :->
+                    (
+                        [ [ AnyT ] :-> AnyT ] :-> AnyT
+                    )
+                , id = Id
+                    { name = "|>"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "f"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 4
+                }
+            , Meta
+                { meta = [ AnyT ] :-> AnyT
+                , id = Id
+                    { name = "f"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 79
+                    }
+                }
+            )
+        ,
+            ( Id
                 { name = "main"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = External
                 }
             , Meta
@@ -1801,94 +1908,25 @@ DsState
                 , id = Id
                     { name = "main"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
                     }
                 }
             )
         ,
             ( Id
-                { name = "malgo_print_string"
+                { name = "A"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , Meta
-                { meta = [ StringT ] :-> SumT
-                    [ Con Tuple [] ]
-                , id = Id
-                    { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "_"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 5
-                }
-            , Meta
-                { meta = AnyT
-                , id = Id
-                    { name = "cons"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 100
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "x"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 3
-                }
-            , Meta
-                { meta = AnyT
-                , id = Id
-                    { name = "x"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 78
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "B"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = External
                 }
             , Meta
                 { meta = [] :-> AnyT
                 , id = Id
-                    { name = "B"
+                    { name = "A"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "f"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 4
-                }
-            , Meta
-                { meta = [ AnyT ] :-> AnyT
-                , id = Id
-                    { name = "f"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 79
                     }
                 }
             )
@@ -1896,7 +1934,7 @@ DsState
             ( Id
                 { name = "$_"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = Internal 65
                 }
             , Meta
@@ -1905,80 +1943,42 @@ DsState
                 , id = Id
                     { name = "$_"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 86
                     }
                 }
             )
         ,
             ( Id
-                { name = "A"
+                { name = "_"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 5
                 }
             , Meta
-                { meta = [] :-> AnyT
+                { meta = AnyT
                 , id = Id
-                    { name = "A"
+                    { name = "cons"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = External
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 100
                     }
                 }
             )
         ,
             ( Id
-                { name = "|>"
+                { name = "x"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 3
                 }
             , Meta
-                { meta = [ AnyT ] :->
-                    (
-                        [ [ AnyT ] :-> AnyT ] :-> AnyT
-                    )
+                { meta = AnyT
                 , id = Id
-                    { name = "|>"
+                    { name = "x"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "Nil"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , Meta
-                { meta = [] :-> AnyT
-                , id = Id
-                    { name = "Nil"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "Cons"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , Meta
-                { meta = [ AnyT ] :->
-                    ( [ AnyT ] :-> AnyT )
-                , id = Id
-                    { name = "Cons"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = External
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 78
                     }
                 }
             )
@@ -1986,22 +1986,114 @@ DsState
     , _signatureMap = fromList
         [
             ( Id
-                { name = "main"
+                { name = "Nil"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = External
                 }
-            , Forall []
+            , Forall
+                [ Id
+                    { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Internal 6
+                    }
+                ]
+                ( TyApp
+                    ( TyCon
+                        ( Id
+                            { name = "List"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/Test3.mlg" }
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyVar
+                        ( Id
+                            { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/Test3.mlg" }
+                            , sort = Internal 6
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "Cons"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Forall
+                [ Id
+                    { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Internal 6
+                    }
+                ]
                 ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
+                    ( TyVar
+                        ( Id
+                            { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/Test3.mlg" }
+                            , sort = Internal 6
+                            }
+                        )
+                    )
+                    ( TyArr
+                        ( TyApp
+                            ( TyCon
+                                ( Id
+                                    { name = "List"
+                                    , moduleName = ModuleName
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
+                                    , sort = External
+                                    }
+                                )
+                            )
+                            ( TyVar
+                                ( Id
+                                    { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                                    , moduleName = ModuleName
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
+                                    , sort = Internal 6
+                                    }
+                                )
+                            )
+                        )
+                        ( TyApp
+                            ( TyCon
+                                ( Id
+                                    { name = "List"
+                                    , moduleName = ModuleName
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
+                                    , sort = External
+                                    }
+                                )
+                            )
+                            ( TyVar
+                                ( Id
+                                    { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                                    , moduleName = ModuleName
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
+                                    , sort = Internal 6
+                                    }
+                                )
+                            )
+                        )
+                    )
                 )
             )
         ,
             ( Id
                 { name = "malgo_print_string"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = External
                 }
             , Forall []
@@ -2011,9 +2103,161 @@ DsState
             )
         ,
             ( Id
+                { name = "B"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "Tag"
+                        , moduleName = ModuleName
+                            { raw = "test/testcases/malgo/Test3.mlg" }
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "|>"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Forall
+                [ Id
+                    { name = "a"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Internal 8
+                    }
+                , Id
+                    { name = "b"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Internal 10
+                    }
+                ]
+                ( TyArr
+                    ( TyVar
+                        ( Id
+                            { name = "a"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/Test3.mlg" }
+                            , sort = Internal 8
+                            }
+                        )
+                    )
+                    ( TyArr
+                        ( TyArr
+                            ( TyVar
+                                ( Id
+                                    { name = "a"
+                                    , moduleName = ModuleName
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
+                                    , sort = Internal 8
+                                    }
+                                )
+                            )
+                            ( TyVar
+                                ( Id
+                                    { name = "b"
+                                    , moduleName = ModuleName
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
+                                    , sort = Internal 10
+                                    }
+                                )
+                            )
+                        )
+                        ( TyVar
+                            ( Id
+                                { name = "b"
+                                , moduleName = ModuleName
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
+                                , sort = Internal 10
+                                }
+                            )
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "f"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 4
+                }
+            , Forall []
+                ( TyArr
+                    ( TyVar
+                        ( Id
+                            { name = "t"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/Test3.mlg" }
+                            , sort = Internal 14
+                            }
+                        )
+                    )
+                    ( TyVar
+                        ( Id
+                            { name = "t"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/Test3.mlg" }
+                            , sort = Internal 18
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "A"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "Tag"
+                        , moduleName = ModuleName
+                            { raw = "test/testcases/malgo/Test3.mlg" }
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 65
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
                 { name = "_"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = Internal 5
                 }
             , Forall []
@@ -2022,7 +2266,7 @@ DsState
                         ( Id
                             { name = "List"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = External
                             }
                         )
@@ -2031,7 +2275,7 @@ DsState
                         ( Id
                             { name = "Tag"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = External
                             }
                         )
@@ -2042,7 +2286,7 @@ DsState
             ( Id
                 { name = "x"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = Internal 3
                 }
             , Forall []
@@ -2050,253 +2294,9 @@ DsState
                     ( Id
                         { name = "t"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Internal 14
                         }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "B"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "Tag"
-                        , moduleName = ModuleName
-                            { raw = "Test3" }
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "f"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 4
-                }
-            , Forall []
-                ( TyArr
-                    ( TyVar
-                        ( Id
-                            { name = "t"
-                            , moduleName = ModuleName
-                                { raw = "Test3" }
-                            , sort = Internal 14
-                            }
-                        )
-                    )
-                    ( TyVar
-                        ( Id
-                            { name = "t"
-                            , moduleName = ModuleName
-                                { raw = "Test3" }
-                            , sort = Internal 18
-                            }
-                        )
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "$_"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 65
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "A"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "Tag"
-                        , moduleName = ModuleName
-                            { raw = "Test3" }
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "|>"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , Forall
-                [ Id
-                    { name = "b"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Internal 8
-                    }
-                , Id
-                    { name = "a"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Internal 10
-                    }
-                ]
-                ( TyArr
-                    ( TyVar
-                        ( Id
-                            { name = "a"
-                            , moduleName = ModuleName
-                                { raw = "Test3" }
-                            , sort = Internal 10
-                            }
-                        )
-                    )
-                    ( TyArr
-                        ( TyArr
-                            ( TyVar
-                                ( Id
-                                    { name = "a"
-                                    , moduleName = ModuleName
-                                        { raw = "Test3" }
-                                    , sort = Internal 10
-                                    }
-                                )
-                            )
-                            ( TyVar
-                                ( Id
-                                    { name = "b"
-                                    , moduleName = ModuleName
-                                        { raw = "Test3" }
-                                    , sort = Internal 8
-                                    }
-                                )
-                            )
-                        )
-                        ( TyVar
-                            ( Id
-                                { name = "b"
-                                , moduleName = ModuleName
-                                    { raw = "Test3" }
-                                , sort = Internal 8
-                                }
-                            )
-                        )
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "Nil"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , Forall
-                [ Id
-                    { name = "Test3.#a_0"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Internal 6
-                    }
-                ]
-                ( TyApp
-                    ( TyCon
-                        ( Id
-                            { name = "List"
-                            , moduleName = ModuleName
-                                { raw = "Test3" }
-                            , sort = External
-                            }
-                        )
-                    )
-                    ( TyVar
-                        ( Id
-                            { name = "Test3.#a_0"
-                            , moduleName = ModuleName
-                                { raw = "Test3" }
-                            , sort = Internal 6
-                            }
-                        )
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "Cons"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , Forall
-                [ Id
-                    { name = "Test3.#a_0"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Internal 6
-                    }
-                ]
-                ( TyArr
-                    ( TyVar
-                        ( Id
-                            { name = "Test3.#a_0"
-                            , moduleName = ModuleName
-                                { raw = "Test3" }
-                            , sort = Internal 6
-                            }
-                        )
-                    )
-                    ( TyArr
-                        ( TyApp
-                            ( TyCon
-                                ( Id
-                                    { name = "List"
-                                    , moduleName = ModuleName
-                                        { raw = "Test3" }
-                                    , sort = External
-                                    }
-                                )
-                            )
-                            ( TyVar
-                                ( Id
-                                    { name = "Test3.#a_0"
-                                    , moduleName = ModuleName
-                                        { raw = "Test3" }
-                                    , sort = Internal 6
-                                    }
-                                )
-                            )
-                        )
-                        ( TyApp
-                            ( TyCon
-                                ( Id
-                                    { name = "List"
-                                    , moduleName = ModuleName
-                                        { raw = "Test3" }
-                                    , sort = External
-                                    }
-                                )
-                            )
-                            ( TyVar
-                                ( Id
-                                    { name = "Test3.#a_0"
-                                    , moduleName = ModuleName
-                                        { raw = "Test3" }
-                                    , sort = Internal 6
-                                    }
-                                )
-                            )
-                        )
                     )
                 )
             )
@@ -2317,135 +2317,42 @@ DsState
             )
         ,
             ( Id
-                { name = "List"
+                { name = "a"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 1
                 }
             , TypeDef
-                { _typeConstructor = TyCon
+                { _typeConstructor = TyVar
                     ( Id
-                        { name = "List"
+                        { name = "a"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
-                        , sort = External
+                            { raw = "test/testcases/malgo/Test3.mlg" }
+                        , sort = Internal 8
                         }
                     )
-                , _typeParameters =
-                    [ Id
-                        { name = "Test3.#a_0"
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "a"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 0
+                }
+            , TypeDef
+                { _typeConstructor = TyVar
+                    ( Id
+                        { name = "test/testcases/malgo/Test3.mlg.#a_0"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Internal 6
                         }
-                    ]
-                , _valueConstructors =
-                    [
-                        ( Id
-                            { name = "Nil"
-                            , moduleName = ModuleName
-                                { raw = "Test3" }
-                            , sort = External
-                            }
-                        , Forall
-                            [ Id
-                                { name = "Test3.#a_0"
-                                , moduleName = ModuleName
-                                    { raw = "Test3" }
-                                , sort = Internal 6
-                                }
-                            ]
-                            ( TyApp
-                                ( TyCon
-                                    ( Id
-                                        { name = "List"
-                                        , moduleName = ModuleName
-                                            { raw = "Test3" }
-                                        , sort = External
-                                        }
-                                    )
-                                )
-                                ( TyVar
-                                    ( Id
-                                        { name = "Test3.#a_0"
-                                        , moduleName = ModuleName
-                                            { raw = "Test3" }
-                                        , sort = Internal 6
-                                        }
-                                    )
-                                )
-                            )
-                        )
-                    ,
-                        ( Id
-                            { name = "Cons"
-                            , moduleName = ModuleName
-                                { raw = "Test3" }
-                            , sort = External
-                            }
-                        , Forall
-                            [ Id
-                                { name = "Test3.#a_0"
-                                , moduleName = ModuleName
-                                    { raw = "Test3" }
-                                , sort = Internal 6
-                                }
-                            ]
-                            ( TyArr
-                                ( TyVar
-                                    ( Id
-                                        { name = "Test3.#a_0"
-                                        , moduleName = ModuleName
-                                            { raw = "Test3" }
-                                        , sort = Internal 6
-                                        }
-                                    )
-                                )
-                                ( TyArr
-                                    ( TyApp
-                                        ( TyCon
-                                            ( Id
-                                                { name = "List"
-                                                , moduleName = ModuleName
-                                                    { raw = "Test3" }
-                                                , sort = External
-                                                }
-                                            )
-                                        )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "Test3.#a_0"
-                                                , moduleName = ModuleName
-                                                    { raw = "Test3" }
-                                                , sort = Internal 6
-                                                }
-                                            )
-                                        )
-                                    )
-                                    ( TyApp
-                                        ( TyCon
-                                            ( Id
-                                                { name = "List"
-                                                , moduleName = ModuleName
-                                                    { raw = "Test3" }
-                                                , sort = External
-                                                }
-                                            )
-                                        )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "Test3.#a_0"
-                                                , moduleName = ModuleName
-                                                    { raw = "Test3" }
-                                                , sort = Internal 6
-                                                }
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    ]
+                    )
+                , _typeParameters = []
+                , _valueConstructors = []
                 }
             )
         ,
@@ -2478,7 +2385,7 @@ DsState
             ( Id
                 { name = "Tag"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = External
                 }
             , TypeDef
@@ -2486,7 +2393,7 @@ DsState
                     ( Id
                         { name = "Tag"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = External
                         }
                     )
@@ -2496,7 +2403,7 @@ DsState
                         ( Id
                             { name = "A"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = External
                             }
                         , Forall []
@@ -2504,7 +2411,7 @@ DsState
                                 ( Id
                                     { name = "Tag"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = External
                                     }
                                 )
@@ -2514,7 +2421,7 @@ DsState
                         ( Id
                             { name = "B"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = External
                             }
                         , Forall []
@@ -2522,7 +2429,7 @@ DsState
                                 ( Id
                                     { name = "Tag"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = External
                                     }
                                 )
@@ -2546,6 +2453,139 @@ DsState
             )
         ,
             ( Id
+                { name = "List"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "List"
+                        , moduleName = ModuleName
+                            { raw = "test/testcases/malgo/Test3.mlg" }
+                        , sort = External
+                        }
+                    )
+                , _typeParameters =
+                    [ Id
+                        { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                        , moduleName = ModuleName
+                            { raw = "test/testcases/malgo/Test3.mlg" }
+                        , sort = Internal 6
+                        }
+                    ]
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "Nil"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/Test3.mlg" }
+                            , sort = External
+                            }
+                        , Forall
+                            [ Id
+                                { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                                , moduleName = ModuleName
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
+                                , sort = Internal 6
+                                }
+                            ]
+                            ( TyApp
+                                ( TyCon
+                                    ( Id
+                                        { name = "List"
+                                        , moduleName = ModuleName
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
+                                        , sort = External
+                                        }
+                                    )
+                                )
+                                ( TyVar
+                                    ( Id
+                                        { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                                        , moduleName = ModuleName
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
+                                        , sort = Internal 6
+                                        }
+                                    )
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "Cons"
+                            , moduleName = ModuleName
+                                { raw = "test/testcases/malgo/Test3.mlg" }
+                            , sort = External
+                            }
+                        , Forall
+                            [ Id
+                                { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                                , moduleName = ModuleName
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
+                                , sort = Internal 6
+                                }
+                            ]
+                            ( TyArr
+                                ( TyVar
+                                    ( Id
+                                        { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                                        , moduleName = ModuleName
+                                            { raw = "test/testcases/malgo/Test3.mlg" }
+                                        , sort = Internal 6
+                                        }
+                                    )
+                                )
+                                ( TyArr
+                                    ( TyApp
+                                        ( TyCon
+                                            ( Id
+                                                { name = "List"
+                                                , moduleName = ModuleName
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( TyVar
+                                            ( Id
+                                                { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                                                , moduleName = ModuleName
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
+                                                , sort = Internal 6
+                                                }
+                                            )
+                                        )
+                                    )
+                                    ( TyApp
+                                        ( TyCon
+                                            ( Id
+                                                { name = "List"
+                                                , moduleName = ModuleName
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
+                                                , sort = External
+                                                }
+                                            )
+                                        )
+                                        ( TyVar
+                                            ( Id
+                                                { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                                                , moduleName = ModuleName
+                                                    { raw = "test/testcases/malgo/Test3.mlg" }
+                                                , sort = Internal 6
+                                                }
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ,
+            ( Id
                 { name = "String#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
@@ -2553,26 +2593,6 @@ DsState
                 }
             , TypeDef
                 { _typeConstructor = TyPrim StringT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "b"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 2
-                }
-            , TypeDef
-                { _typeConstructor = TyVar
-                    ( Id
-                        { name = "b"
-                        , moduleName = ModuleName
-                            { raw = "Test3" }
-                        , sort = Internal 8
-                        }
-                    )
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -2592,6 +2612,26 @@ DsState
             )
         ,
             ( Id
+                { name = "b"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 2
+                }
+            , TypeDef
+                { _typeConstructor = TyVar
+                    ( Id
+                        { name = "b"
+                        , moduleName = ModuleName
+                            { raw = "test/testcases/malgo/Test3.mlg" }
+                        , sort = Internal 10
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
                 { name = "Char#"
                 , moduleName = ModuleName
                     { raw = "Builtin" }
@@ -2603,93 +2643,21 @@ DsState
                 , _valueConstructors = []
                 }
             )
-        ,
-            ( Id
-                { name = "a"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 0
-                }
-            , TypeDef
-                { _typeConstructor = TyVar
-                    ( Id
-                        { name = "Test3.#a_0"
-                        , moduleName = ModuleName
-                            { raw = "Test3" }
-                        , sort = Internal 6
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "a"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 1
-                }
-            , TypeDef
-                { _typeConstructor = TyVar
-                    ( Id
-                        { name = "a"
-                        , moduleName = ModuleName
-                            { raw = "Test3" }
-                        , sort = Internal 10
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
         ]
     , _kindCtx = fromList
         [
             ( Id
-                { name = "a"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 62
-                }
-            , TyMeta
-                ( Id
-                    { name = "ka"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 61
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Test3.#a_0"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 42
-                }
-            , TyMeta
-                ( Id
-                    { name = "kTest3.#a_0"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 41
-                    }
-                )
-            )
-        ,
-            ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 64
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 14
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 63
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 13
                     }
                 )
             )
@@ -2704,42 +2672,17 @@ DsState
             )
         ,
             ( Id
-                { name = "List"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = External
-                }
-            , TyArr TYPE TYPE
-            )
-        ,
-            ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 34
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 12
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 33
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Test3.#a_0"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 46
-                }
-            , TyMeta
-                ( Id
-                    { name = "kTest3.#a_0"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 45
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 11
                     }
                 )
             )
@@ -2747,15 +2690,31 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 36
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 44
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 35
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 43
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 40
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 39
                     }
                 )
             )
@@ -2763,15 +2722,15 @@ DsState
             ( Id
                 { name = "b"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 60
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 62
                 }
             , TyMeta
                 ( Id
                     { name = "kb"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 59
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 61
                     }
                 )
             )
@@ -2795,17 +2754,17 @@ DsState
             )
         ,
             ( Id
-                { name = "a"
+                { name = "test/testcases/malgo/Test3.mlg.#a_0"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 22
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 24
                 }
             , TyMeta
                 ( Id
-                    { name = "ka"
+                    { name = "ktest/testcases/malgo/Test3.mlg.#a_0"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 21
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 23
                     }
                 )
             )
@@ -2813,31 +2772,47 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 40
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 36
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 39
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 35
                     }
                 )
             )
         ,
             ( Id
-                { name = "Test3.#a_0"
+                { name = "a"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 32
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 8
                 }
             , TyMeta
                 ( Id
-                    { name = "kTest3.#a_0"
+                    { name = "ka"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 31
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 7
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 34
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 33
                     }
                 )
             )
@@ -2852,17 +2827,17 @@ DsState
             )
         ,
             ( Id
-                { name = "Test3.#a_0"
+                { name = "test/testcases/malgo/Test3.mlg.#a_0"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 38
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 28
                 }
             , TyMeta
                 ( Id
-                    { name = "kTest3.#a_0"
+                    { name = "ktest/testcases/malgo/Test3.mlg.#a_0"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 37
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 27
                     }
                 )
             )
@@ -2870,47 +2845,15 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 12
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 64
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 11
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 44
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 43
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 14
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 13
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 63
                     }
                 )
             )
@@ -2918,95 +2861,56 @@ DsState
             ( Id
                 { name = "b"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 20
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 22
                 }
             , TyMeta
                 ( Id
                     { name = "kb"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 19
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 21
                     }
                 )
+            )
+        ,
+            ( Id
+                { name = "List"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = External
+                }
+            , TyArr TYPE TYPE
             )
         ,
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 16
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 30
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 15
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 29
                     }
                 )
             )
         ,
             ( Id
-                { name = "t"
+                { name = "test/testcases/malgo/Test3.mlg.#a_0"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 48
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 32
                 }
             , TyMeta
                 ( Id
-                    { name = "kt"
+                    { name = "ktest/testcases/malgo/Test3.mlg.#a_0"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 47
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Test3.#a_0"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 24
-                }
-            , TyMeta
-                ( Id
-                    { name = "kTest3.#a_0"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 23
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 18
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 17
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 50
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 49
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 31
                     }
                 )
             )
@@ -3014,31 +2918,47 @@ DsState
             ( Id
                 { name = "b"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 8
-                }
-            , TyMeta
-                ( Id
-                    { name = "kb"
-                    , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 7
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "a"
-                , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = Internal 10
                 }
             , TyMeta
                 ( Id
-                    { name = "ka"
+                    { name = "kb"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 9
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 26
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 25
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 58
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 57
                     }
                 )
             )
@@ -3055,31 +2975,47 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 52
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 56
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 51
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 55
                     }
                 )
             )
         ,
             ( Id
-                { name = "Test3.#a_0"
+                { name = "test/testcases/malgo/Test3.mlg.#a_0"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 28
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 38
                 }
             , TyMeta
                 ( Id
-                    { name = "kTest3.#a_0"
+                    { name = "ktest/testcases/malgo/Test3.mlg.#a_0"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 27
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 37
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "a"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 20
+                }
+            , TyMeta
+                ( Id
+                    { name = "ka"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 19
                     }
                 )
             )
@@ -3087,14 +3023,14 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
+                    { raw = "test/testcases/malgo/Test3.mlg" }
                 , sort = Internal 54
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 53
                     }
                 )
@@ -3103,15 +3039,15 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 56
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 52
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 55
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 51
                     }
                 )
             )
@@ -3126,17 +3062,17 @@ DsState
             )
         ,
             ( Id
-                { name = "t"
+                { name = "test/testcases/malgo/Test3.mlg.#a_0"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 26
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 42
                 }
             , TyMeta
                 ( Id
-                    { name = "kt"
+                    { name = "ktest/testcases/malgo/Test3.mlg.#a_0"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 25
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 41
                     }
                 )
             )
@@ -3144,15 +3080,31 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 58
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 18
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 57
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 17
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 50
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 49
                     }
                 )
             )
@@ -3169,15 +3121,63 @@ DsState
             ( Id
                 { name = "t"
                 , moduleName = ModuleName
-                    { raw = "Test3" }
-                , sort = Internal 30
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 16
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
-                    , sort = Temporal 29
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 15
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 48
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 47
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "test/testcases/malgo/Test3.mlg.#a_0"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 46
+                }
+            , TyMeta
+                ( Id
+                    { name = "ktest/testcases/malgo/Test3.mlg.#a_0"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 45
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "a"
+                , moduleName = ModuleName
+                    { raw = "test/testcases/malgo/Test3.mlg" }
+                , sort = Internal 60
+                }
+            , TyMeta
+                ( Id
+                    { name = "ka"
+                    , moduleName = ModuleName
+                        { raw = "test/testcases/malgo/Test3.mlg" }
+                    , sort = Temporal 59
                     }
                 )
             )
@@ -3192,7 +3192,7 @@ DsState
                 , id = Id
                     { name = "|>_curry"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 81
                     }
                 }
@@ -3202,7 +3202,7 @@ DsState
                 , id = Id
                     { name = "x"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 82
                     }
                 }
@@ -3211,7 +3211,7 @@ DsState
                 , id = Id
                     { name = "f"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 83
                     }
                 }
@@ -3227,7 +3227,7 @@ DsState
                     , id = Id
                         { name = "d"
                         , moduleName = ModuleName
-                            { raw = "Test3" }
+                            { raw = "test/testcases/malgo/Test3.mlg" }
                         , sort = Temporal 84
                         }
                     }
@@ -3239,7 +3239,7 @@ DsState
                             , id = Id
                                 { name = "f"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 83
                                 }
                             }
@@ -3251,7 +3251,7 @@ DsState
                             , id = Id
                                 { name = "x"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 82
                                 }
                             }
@@ -3265,7 +3265,7 @@ DsState
                             , id = Id
                                 { name = "d"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 84
                                 }
                             }
@@ -3282,7 +3282,7 @@ DsState
                 , id = Id
                     { name = "Cons_curry"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 72
                     }
                 }
@@ -3292,7 +3292,7 @@ DsState
                 , id = Id
                     { name = "p"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 73
                     }
                 }
@@ -3301,7 +3301,7 @@ DsState
                 , id = Id
                     { name = "p"
                     , moduleName = ModuleName
-                        { raw = "Test3" }
+                        { raw = "test/testcases/malgo/Test3.mlg" }
                     , sort = Temporal 74
                     }
                 }
@@ -3316,9 +3316,9 @@ DsState
                     { _variable = Meta
                         { meta = SumT
                             [ Con
-                                ( Data "Test3.Nil" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                             , Con
-                                ( Data "Test3.Cons" )
+                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                 [ AnyT
                                 , AnyT
                                 ]
@@ -3326,15 +3326,15 @@ DsState
                         , id = Id
                             { name = "let"
                             , moduleName = ModuleName
-                                { raw = "Test3" }
+                                { raw = "test/testcases/malgo/Test3.mlg" }
                             , sort = Temporal 75
                             }
                         }
                     , typ = SumT
                         [ Con
-                            ( Data "Test3.Nil" ) []
+                            ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                         , Con
-                            ( Data "Test3.Cons" )
+                            ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                             [ AnyT
                             , AnyT
                             ]
@@ -3342,16 +3342,16 @@ DsState
                     , _object = Pack
                         ( SumT
                             [ Con
-                                ( Data "Test3.Nil" ) []
+                                ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                             , Con
-                                ( Data "Test3.Cons" )
+                                ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                 [ AnyT
                                 , AnyT
                                 ]
                             ]
                         )
                         ( Con
-                            ( Data "Test3.Cons" )
+                            ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                             [ AnyT
                             , AnyT
                             ]
@@ -3362,7 +3362,7 @@ DsState
                                 , id = Id
                                     { name = "p"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 73
                                     }
                                 }
@@ -3373,7 +3373,7 @@ DsState
                                 , id = Id
                                     { name = "p"
                                     , moduleName = ModuleName
-                                        { raw = "Test3" }
+                                        { raw = "test/testcases/malgo/Test3.mlg" }
                                     , sort = Temporal 74
                                     }
                                 }
@@ -3386,9 +3386,9 @@ DsState
                         ( Meta
                             { meta = SumT
                                 [ Con
-                                    ( Data "Test3.Nil" ) []
+                                    ( Data "test/testcases/malgo/Test3.mlg.Nil" ) []
                                 , Con
-                                    ( Data "Test3.Cons" )
+                                    ( Data "test/testcases/malgo/Test3.mlg.Cons" )
                                     [ AnyT
                                     , AnyT
                                     ]
@@ -3396,7 +3396,7 @@ DsState
                             , id = Id
                                 { name = "let"
                                 , moduleName = ModuleName
-                                    { raw = "Test3" }
+                                    { raw = "test/testcases/malgo/Test3.mlg" }
                                 , sort = Temporal 75
                                 }
                             }

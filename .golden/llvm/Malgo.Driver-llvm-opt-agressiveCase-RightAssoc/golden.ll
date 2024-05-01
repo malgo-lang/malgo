@@ -1,7 +1,7 @@
 ; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/RightAssoc.ll'
 source_filename = "test/testcases/malgo/RightAssoc.mlg"
 
-@str3922 = unnamed_addr constant [3 x i8] c"OK\00"
+@str3914 = unnamed_addr constant [3 x i8] c"OK\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -9,7 +9,7 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal noundef ptr @"RightAssoc.#fun_closure_3914"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3916"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { i32 } }, ptr %3, i64 0, i32 1, i32 0
@@ -17,7 +17,7 @@ define internal noundef ptr @"RightAssoc.#fun_closure_3914"(ptr nocapture nofree
   ret ptr %3
 }
 
-define internal noundef ptr @"RightAssoc.#fun_closure_3915"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3917"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { i32 } }, ptr %3, i64 0, i32 1, i32 0
@@ -25,7 +25,7 @@ define internal noundef ptr @"RightAssoc.#fun_closure_3915"(ptr nocapture nofree
   ret ptr %3
 }
 
-define internal noundef ptr @"RightAssoc.#fun_closure_3916"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3918"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { i32 } }, ptr %3, i64 0, i32 1, i32 0
@@ -33,7 +33,7 @@ define internal noundef ptr @"RightAssoc.#fun_closure_3916"(ptr nocapture nofree
   ret ptr %3
 }
 
-define internal noundef ptr @"RightAssoc.#fun_closure_3917"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3919"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { i32 } }, ptr %3, i64 0, i32 1, i32 0
@@ -41,7 +41,7 @@ define internal noundef ptr @"RightAssoc.#fun_closure_3917"(ptr nocapture nofree
   ret ptr %3
 }
 
-define internal noundef ptr @"RightAssoc.#fun_closure_3918"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3920"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { i32 } }, ptr %3, i64 0, i32 1, i32 0
@@ -49,7 +49,7 @@ define internal noundef ptr @"RightAssoc.#fun_closure_3918"(ptr nocapture nofree
   ret ptr %3
 }
 
-define internal noundef ptr @"RightAssoc.#fun_closure_3919"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3921"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { i32 } }, ptr %3, i64 0, i32 1, i32 0
@@ -57,7 +57,7 @@ define internal noundef ptr @"RightAssoc.#fun_closure_3919"(ptr nocapture nofree
   ret ptr %3
 }
 
-define internal noundef ptr @"RightAssoc.#fun_closure_3920"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3922"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { i32 } }, ptr %3, i64 0, i32 1, i32 0
@@ -65,7 +65,7 @@ define internal noundef ptr @"RightAssoc.#fun_closure_3920"(ptr nocapture nofree
   ret ptr %3
 }
 
-define internal noundef ptr @"RightAssoc.#fun_closure_3921"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3923"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { i32 } }, ptr %3, i64 0, i32 1, i32 0
@@ -87,7 +87,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_0.i.i, ptr %6, align 8
   %fun_func_0.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3914", ptr %fun_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3916", ptr %fun_func_0.i.i, align 8
   %7 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 0, ptr %7, align 1
   %8 = getelementptr { i8, { ptr, ptr } }, ptr %7, i64 0, i32 1, i32 0
@@ -100,7 +100,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_2.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_2.i.i, ptr %11, align 8
   %fun_func_1.i.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3915", ptr %fun_func_1.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3917", ptr %fun_func_1.i.i, align 8
   %12 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 0, ptr %12, align 1
   %13 = getelementptr { i8, { ptr, ptr } }, ptr %12, i64 0, i32 1, i32 0
@@ -113,7 +113,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_4.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_4.i.i, ptr %16, align 8
   %fun_func_2.i.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3916", ptr %fun_func_2.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3918", ptr %fun_func_2.i.i, align 8
   %17 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 0, ptr %17, align 1
   %18 = getelementptr { i8, { ptr, ptr } }, ptr %17, i64 0, i32 1, i32 0
@@ -126,7 +126,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_6.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_6.i.i, ptr %21, align 8
   %fun_func_3.i.i = getelementptr { ptr, ptr }, ptr %21, i64 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3917", ptr %fun_func_3.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3919", ptr %fun_func_3.i.i, align 8
   %22 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 0, ptr %22, align 1
   %23 = getelementptr { i8, { ptr, ptr } }, ptr %22, i64 0, i32 1, i32 0
@@ -165,7 +165,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_8.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_8.i.i, ptr %39, align 8
   %fun_func_4.i.i = getelementptr { ptr, ptr }, ptr %39, i64 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3918", ptr %fun_func_4.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3920", ptr %fun_func_4.i.i, align 8
   %40 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 0, ptr %40, align 1
   %41 = getelementptr { i8, { ptr, ptr } }, ptr %40, i64 0, i32 1, i32 0
@@ -178,7 +178,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_10.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_10.i.i, ptr %44, align 8
   %fun_func_5.i.i = getelementptr { ptr, ptr }, ptr %44, i64 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3919", ptr %fun_func_5.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3921", ptr %fun_func_5.i.i, align 8
   %45 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 0, ptr %45, align 1
   %46 = getelementptr { i8, { ptr, ptr } }, ptr %45, i64 0, i32 1, i32 0
@@ -191,7 +191,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_12.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_12.i.i, ptr %49, align 8
   %fun_func_6.i.i = getelementptr { ptr, ptr }, ptr %49, i64 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3920", ptr %fun_func_6.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3922", ptr %fun_func_6.i.i, align 8
   %50 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 0, ptr %50, align 1
   %51 = getelementptr { i8, { ptr, ptr } }, ptr %50, i64 0, i32 1, i32 0
@@ -204,7 +204,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_14.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_14.i.i, ptr %54, align 8
   %fun_func_7.i.i = getelementptr { ptr, ptr }, ptr %54, i64 0, i32 1
-  store ptr @"RightAssoc.#fun_closure_3921", ptr %fun_func_7.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#fun_closure_3923", ptr %fun_func_7.i.i, align 8
   %55 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 0, ptr %55, align 1
   %56 = getelementptr { i8, { ptr, ptr } }, ptr %55, i64 0, i32 1, i32 0
@@ -240,7 +240,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %71 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %71, align 1
   %72 = getelementptr { i8, { ptr } }, ptr %71, i64 0, i32 1, i32 0
-  store ptr @str3922, ptr %72, align 8
-  %73 = tail call ptr @malgo_print_string(ptr noundef nonnull @str3922)
+  store ptr @str3914, ptr %72, align 8
+  %73 = tail call ptr @malgo_print_string(ptr noundef nonnull @str3914)
   ret i32 0
 }

@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "UseModule" }
+        { raw = "test/testcases/malgo/UseModule.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -20,7 +20,7 @@ Module
                     , Id
                         { name = "succ"
                         , moduleName = ModuleName
-                            { raw = "UseModule" }
+                            { raw = "test/testcases/malgo/UseModule.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -68,7 +68,7 @@ Module
                                 ( Id
                                     { name = "x"
                                     , moduleName = ModuleName
-                                        { raw = "UseModule" }
+                                        { raw = "test/testcases/malgo/UseModule.mlg" }
                                     , sort = Internal 0
                                     }
                                 )
@@ -146,7 +146,7 @@ Module
                                                 ( Id
                                                     { name = "addInt32"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -168,7 +168,7 @@ Module
                                                 ( Id
                                                     { name = "x"
                                                     , moduleName = ModuleName
-                                                        { raw = "UseModule" }
+                                                        { raw = "test/testcases/malgo/UseModule.mlg" }
                                                     , sort = Internal 0
                                                     }
                                                 )
@@ -205,7 +205,7 @@ Module
                                                 ( Id
                                                     { name = "Int32#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -250,7 +250,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "UseModule" }
+                            { raw = "test/testcases/malgo/UseModule.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -340,7 +340,7 @@ Module
                                             ( Id
                                                 { name = "putStrLn"
                                                 , moduleName = ModuleName
-                                                    { raw = "Prelude" }
+                                                    { raw = "runtime/malgo/Prelude.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -376,7 +376,7 @@ Module
                                                 ( Id
                                                     { name = "String#"
                                                     , moduleName = ModuleName
-                                                        { raw = "Builtin" }
+                                                        { raw = "runtime/malgo/Builtin.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -434,7 +434,7 @@ Module
                                             ( Id
                                                 { name = "<|"
                                                 , moduleName = ModuleName
-                                                    { raw = "Prelude" }
+                                                    { raw = "runtime/malgo/Prelude.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -455,7 +455,7 @@ Module
                                                 ( Id
                                                     { name = "printInt32"
                                                     , moduleName = ModuleName
-                                                        { raw = "Prelude" }
+                                                        { raw = "runtime/malgo/Prelude.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -523,7 +523,7 @@ Module
                                                             ( Id
                                                                 { name = "."
                                                                 , moduleName = ModuleName
-                                                                    { raw = "Prelude" }
+                                                                    { raw = "runtime/malgo/Prelude.mlg" }
                                                                 , sort = External
                                                                 }
                                                             )
@@ -544,7 +544,7 @@ Module
                                                                 ( Id
                                                                     { name = "succ"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "UseModule" }
+                                                                        { raw = "test/testcases/malgo/UseModule.mlg" }
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -566,7 +566,7 @@ Module
                                                                 ( Id
                                                                     { name = "succ"
                                                                     , moduleName = ModuleName
-                                                                        { raw = "UseModule" }
+                                                                        { raw = "test/testcases/malgo/UseModule.mlg" }
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -605,7 +605,7 @@ Module
                                                         ( Id
                                                             { name = "Int32#"
                                                             , moduleName = ModuleName
-                                                                { raw = "Builtin" }
+                                                                { raw = "runtime/malgo/Builtin.mlg" }
                                                             , sort = External
                                                             }
                                                         )
@@ -706,9 +706,21 @@ RnState
     { infixInfo = fromList
         [
             ( Id
+                { name = "<|"
+                , moduleName = ModuleName
+                    { raw = "runtime/malgo/Prelude.mlg" }
+                , sort = External
+                }
+            ,
+                ( RightA
+                , 0
+                )
+            )
+        ,
+            ( Id
                 { name = "|>"
                 , moduleName = ModuleName
-                    { raw = "Prelude" }
+                    { raw = "runtime/malgo/Prelude.mlg" }
                 , sort = External
                 }
             ,
@@ -720,24 +732,12 @@ RnState
             ( Id
                 { name = "."
                 , moduleName = ModuleName
-                    { raw = "Prelude" }
+                    { raw = "runtime/malgo/Prelude.mlg" }
                 , sort = External
                 }
             ,
                 ( RightA
                 , 9
-                )
-            )
-        ,
-            ( Id
-                { name = "<|"
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , sort = External
-                }
-            ,
-                ( RightA
-                , 0
                 )
             )
         ]

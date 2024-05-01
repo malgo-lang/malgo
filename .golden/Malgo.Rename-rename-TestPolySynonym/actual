@@ -1,6 +1,6 @@
 Module
     { moduleName = ModuleName
-        { raw = "TestPolySynonym" }
+        { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -20,7 +20,7 @@ Module
                     , Id
                         { name = "first"
                         , moduleName = ModuleName
-                            { raw = "TestPolySynonym" }
+                            { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -84,7 +84,7 @@ Module
                                         ( Id
                                             { name = "x"
                                             , moduleName = ModuleName
-                                                { raw = "TestPolySynonym" }
+                                                { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                             , sort = Internal 5
                                             }
                                         )
@@ -108,7 +108,7 @@ Module
                                         ( Id
                                             { name = "_"
                                             , moduleName = ModuleName
-                                                { raw = "TestPolySynonym" }
+                                                { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                             , sort = Internal 6
                                             }
                                         )
@@ -160,7 +160,7 @@ Module
                                         ( Id
                                             { name = "x"
                                             , moduleName = ModuleName
-                                                { raw = "TestPolySynonym" }
+                                                { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                             , sort = Internal 5
                                             }
                                         )
@@ -187,7 +187,7 @@ Module
                     , Id
                         { name = "main"
                         , moduleName = ModuleName
-                            { raw = "TestPolySynonym" }
+                            { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                         , sort = External
                         }
                     , Fn
@@ -249,7 +249,7 @@ Module
                                     ( Id
                                         { name = "x"
                                         , moduleName = ModuleName
-                                            { raw = "TestPolySynonym" }
+                                            { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                         , sort = Internal 7
                                         }
                                     )
@@ -300,7 +300,7 @@ Module
                                                     ( Id
                                                         { name = "Int32#"
                                                         , moduleName = ModuleName
-                                                            { raw = "Builtin" }
+                                                            { raw = "runtime/malgo/Builtin.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -355,7 +355,7 @@ Module
                                                     ( Id
                                                         { name = "String#"
                                                         , moduleName = ModuleName
-                                                            { raw = "Builtin" }
+                                                            { raw = "runtime/malgo/Builtin.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -414,7 +414,7 @@ Module
                                             ( Id
                                                 { name = "|>"
                                                 , moduleName = ModuleName
-                                                    { raw = "Prelude" }
+                                                    { raw = "runtime/malgo/Prelude.mlg" }
                                                 , sort = External
                                                 }
                                             )
@@ -449,7 +449,7 @@ Module
                                                     ( Id
                                                         { name = "first"
                                                         , moduleName = ModuleName
-                                                            { raw = "TestPolySynonym" }
+                                                            { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                                         , sort = External
                                                         }
                                                     )
@@ -471,7 +471,7 @@ Module
                                                     ( Id
                                                         { name = "x"
                                                         , moduleName = ModuleName
-                                                            { raw = "TestPolySynonym" }
+                                                            { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                                         , sort = Internal 7
                                                         }
                                                     )
@@ -494,7 +494,7 @@ Module
                                                 ( Id
                                                     { name = "printInt32"
                                                     , moduleName = ModuleName
-                                                        { raw = "Prelude" }
+                                                        { raw = "runtime/malgo/Prelude.mlg" }
                                                     , sort = External
                                                     }
                                                 )
@@ -524,7 +524,7 @@ Module
                 , Id
                     { name = "first"
                     , moduleName = ModuleName
-                        { raw = "TestPolySynonym" }
+                        { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                     , sort = External
                     }
                 , TyArr
@@ -574,7 +574,7 @@ Module
                                 ( Id
                                     { name = "a"
                                     , moduleName = ModuleName
-                                        { raw = "TestPolySynonym" }
+                                        { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                     , sort = Internal 3
                                     }
                                 )
@@ -598,7 +598,7 @@ Module
                                 ( Id
                                     { name = "b"
                                     , moduleName = ModuleName
-                                        { raw = "TestPolySynonym" }
+                                        { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                     , sort = Internal 4
                                     }
                                 )
@@ -622,7 +622,7 @@ Module
                         ( Id
                             { name = "a"
                             , moduleName = ModuleName
-                                { raw = "TestPolySynonym" }
+                                { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                             , sort = Internal 3
                             }
                         )
@@ -644,7 +644,7 @@ Module
                 , Id
                     { name = "main"
                     , moduleName = ModuleName
-                        { raw = "TestPolySynonym" }
+                        { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                     , sort = External
                     }
                 , TyApp
@@ -678,7 +678,7 @@ Module
                         ( Id
                             { name = "Fun0"
                             , moduleName = ModuleName
-                                { raw = "TestPolySynonym" }
+                                { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                             , sort = External
                             }
                         )
@@ -718,14 +718,14 @@ Module
                 , Id
                     { name = "Fun0"
                     , moduleName = ModuleName
-                        { raw = "TestPolySynonym" }
+                        { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                     , sort = External
                     }
                 ,
                     [ Id
                         { name = "a"
                         , moduleName = ModuleName
-                            { raw = "TestPolySynonym" }
+                            { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                         , sort = Internal 0
                         }
                     ]
@@ -775,7 +775,7 @@ Module
                         ( Id
                             { name = "a"
                             , moduleName = ModuleName
-                                { raw = "TestPolySynonym" }
+                                { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                             , sort = Internal 0
                             }
                         )
@@ -797,20 +797,20 @@ Module
                 , Id
                     { name = "Pair"
                     , moduleName = ModuleName
-                        { raw = "TestPolySynonym" }
+                        { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                     , sort = External
                     }
                 ,
                     [ Id
                         { name = "a"
                         , moduleName = ModuleName
-                            { raw = "TestPolySynonym" }
+                            { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                         , sort = Internal 1
                         }
                     , Id
                         { name = "b"
                         , moduleName = ModuleName
-                            { raw = "TestPolySynonym" }
+                            { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                         , sort = Internal 2
                         }
                     ]
@@ -847,7 +847,7 @@ Module
                             ( Id
                                 { name = "b"
                                 , moduleName = ModuleName
-                                    { raw = "TestPolySynonym" }
+                                    { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                 , sort = Internal 2
                                 }
                             )
@@ -871,7 +871,7 @@ Module
                             ( Id
                                 { name = "a"
                                 , moduleName = ModuleName
-                                    { raw = "TestPolySynonym" }
+                                    { raw = "test/testcases/malgo/TestPolySynonym.mlg" }
                                 , sort = Internal 1
                                 }
                             )
@@ -922,9 +922,21 @@ RnState
     { infixInfo = fromList
         [
             ( Id
+                { name = "<|"
+                , moduleName = ModuleName
+                    { raw = "runtime/malgo/Prelude.mlg" }
+                , sort = External
+                }
+            ,
+                ( RightA
+                , 0
+                )
+            )
+        ,
+            ( Id
                 { name = "|>"
                 , moduleName = ModuleName
-                    { raw = "Prelude" }
+                    { raw = "runtime/malgo/Prelude.mlg" }
                 , sort = External
                 }
             ,
@@ -936,24 +948,12 @@ RnState
             ( Id
                 { name = "."
                 , moduleName = ModuleName
-                    { raw = "Prelude" }
+                    { raw = "runtime/malgo/Prelude.mlg" }
                 , sort = External
                 }
             ,
                 ( RightA
                 , 9
-                )
-            )
-        ,
-            ( Id
-                { name = "<|"
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , sort = External
-                }
-            ,
-                ( RightA
-                , 0
                 )
             )
         ]
