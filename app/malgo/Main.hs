@@ -36,7 +36,6 @@ main = do
     ToLL opt ->
       Driver.compile opt.srcPath
         & runMalgoM
-          opt.srcPath
           opt.compileMode
           Flag
             { Flag.noOptimize = opt.noOptimize,
