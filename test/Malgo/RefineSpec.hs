@@ -29,10 +29,11 @@ spec = parallel do
 driveRefine :: FilePath -> IO String
 driveRefine srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  let parsed = case parseMalgo srcPath src of
-        Left err -> error $ show err
-        Right parsed -> parsed
   runMalgoM LLVM flag option do
+    parsed <-
+      parseMalgo srcPath src >>= \case
+        Left err -> error $ show err
+        Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed

@@ -27,10 +27,11 @@ spec = parallel do
 driveRename :: FilePath -> IO String
 driveRename srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  let parsed = case parseMalgo srcPath src of
-        Left err -> error $ show err
-        Right parsed -> parsed
   runMalgoM LLVM flag option do
+    parsed <-
+      parseMalgo srcPath src >>= \case
+        Left err -> error $ show err
+        Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, rnState) <- rename rnEnv parsed
     pure $ convertString $ pShowNoColor renamed <> "\n" <> pShowNoColor rnState

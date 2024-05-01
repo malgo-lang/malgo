@@ -1,5 +1,7 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Module
   ( ModuleName (..),
@@ -27,12 +29,12 @@ import Data.Store
 import Data.Store.TH
 import Effectful
 import Effectful.Dispatch.Static
-import Effectful.Error.Dynamic (prettyCallStack)
+import Effectful.Error.Static (prettyCallStack)
 import GHC.Records
 import GHC.Stack (callStack)
 import Malgo.Prelude
 import Path
-import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, findFile, getCurrentDirectory, makeAbsolute)
+import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, findFile, getCurrentDirectory, makeAbsolute, withCurrentDirectory)
 import System.Directory.Extra (listDirectories)
 import System.FilePath (makeRelative)
 import System.FilePath qualified as F
@@ -128,7 +130,12 @@ data ArtifactPath = ArtifactPath
     relPath :: Path Rel File,
     targetPath :: Path Abs File
   }
-  deriving stock (Show)
+  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
+  deriving anyclass (Hashable, ToJSON, FromJSON, Store)
+
+deriving anyclass instance Store (Path Abs File)
+
+deriving anyclass instance Store (Path Rel File)
 
 instance Pretty ArtifactPath where
   pretty path = pretty $ toFilePath path.relPath
@@ -151,16 +158,15 @@ pwdPath = do
 parseArtifactPath :: (IOE :> es, Workspace :> es) => ArtifactPath -> FilePath -> Eff es ArtifactPath
 parseArtifactPath from path = do
   let basePath = toFilePath $ parent from.originPath
-  let rawPath = basePath F.</> path
-  rawPath' <- liftIO $ canonicalizePath rawPath
-  originPath <- parseAbsFile rawPath'
+  rawPath <- liftIO $ withCurrentDirectory basePath $ canonicalizePath path
+  originPath <- parseAbsFile rawPath
 
   workspace <- getWorkspaceAbs
   let originBasePath = parent workspace
   relPath <- stripProperPrefix originBasePath originPath
 
   let targetPath = workspace </> relPath
-  pure $ ArtifactPath {rawPath = rawPath', originPath, relPath, targetPath}
+  pure $ ArtifactPath {rawPath = path, originPath, relPath, targetPath}
 
 class Resource a where
   toByteString :: a -> ByteString

@@ -178,7 +178,8 @@ compile srcPath = do
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
   src <- load srcModulePath ".mlg"
-  parsedAst <- case parseMalgo srcPath (convertString @BS.ByteString src) of
+  parseResult <- parseMalgo srcPath (convertString @BS.ByteString src)
+  parsedAst <- case parseResult of
     Right x -> pure x
     Left err -> liftIO do
       let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
