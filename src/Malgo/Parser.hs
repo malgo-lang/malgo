@@ -9,11 +9,10 @@ import Data.Text.Lazy qualified as TL
 import Data.Void
 import Effectful
 import Effectful.FileSystem (runFileSystem)
-import Malgo.Module (ArtifactPath (..), ModuleName (ModuleName), Workspace, parseArtifactPath, pwdPath)
+import Malgo.Module (ModuleName (..), Workspace, parseArtifactPath, pwdPath)
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Path (toFilePath)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
@@ -45,7 +44,7 @@ pModule = do
   ds <- many pDecl
   pure
     Module
-      { moduleName = ModuleName (convertString $ toFilePath sourcePath'.relPath),
+      { moduleName = Artifact sourcePath',
         moduleDefinition = ParsedDefinitions ds
       }
 

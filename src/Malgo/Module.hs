@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Module
@@ -16,6 +15,7 @@ module Malgo.Module
     pwdPath,
     parseArtifactPath,
     ViaStore (..),
+    moduleNameToString,
   )
 where
 
@@ -26,7 +26,6 @@ import Data.ByteString qualified as BS
 import Data.Data
 import Data.HashMap.Strict qualified as HashMap
 import Data.Store
-import Data.Store.TH
 import Effectful
 import Effectful.Dispatch.Static
 import Effectful.Error.Static (prettyCallStack)
@@ -39,11 +38,19 @@ import System.Directory.Extra (listDirectories)
 import System.FilePath (makeRelative)
 import System.FilePath qualified as F
 
-newtype ModuleName = ModuleName {raw :: Text}
+data ModuleName
+  = ModuleName Text
+  | Artifact ArtifactPath
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving newtype (Hashable, Pretty, ToJSON, FromJSON)
+  deriving anyclass (Hashable, ToJSON, FromJSON, Store)
 
-makeStore ''ModuleName
+instance Pretty ModuleName where
+  pretty (ModuleName raw) = pretty raw
+  pretty (Artifact path) = pretty $ toFilePath path.relPath
+
+moduleNameToString :: (ConvertibleStrings FilePath b, ConvertibleStrings Text b) => ModuleName -> b
+moduleNameToString (ModuleName raw) = convertString raw
+moduleNameToString (Artifact path) = convertString $ toFilePath path.relPath
 
 type HasModuleName r = HasField "moduleName" r ModuleName
 
@@ -94,18 +101,18 @@ getModulePath moduleName = do
     Nothing -> searchAndRegister moduleName
 
 searchAndRegister :: (HasCallStack) => (Workspace :> es, IOE :> es) => ModuleName -> Eff es ArtifactPath
-searchAndRegister moduleName = do
-  let fileName = convertString moduleName.raw <> ".mlg"
+searchAndRegister (ModuleName moduleName) = do
+  let fileName = convertString moduleName <> ".mlg"
   -- Find fileName in workspace
   workspace <- getWorkspaceAbs
   file <- search [toFilePath workspace] fileName
   let relPath = makeRelative (toFilePath workspace) file
   pwd <- pwdPath
   path <- parseArtifactPath pwd relPath
-  registerModule moduleName path
+  registerModule (ModuleName moduleName) path
   pure path
   where
-    search [] _ = throwM $ ModuleNotFound moduleName
+    search [] _ = throwM $ ModuleNotFound $ ModuleName moduleName
     search dirs fileName = do
       mfile <- liftIO $ findFile dirs fileName
       case mfile of
@@ -113,6 +120,7 @@ searchAndRegister moduleName = do
         Nothing -> do
           subDirs <- liftIO $ traverse listDirectories dirs
           search (concat subDirs) fileName
+searchAndRegister (Artifact path) = pure path
 
 data WorkspaceError where
   ModuleNotFound :: (HasCallStack) => ModuleName -> WorkspaceError
@@ -122,7 +130,7 @@ instance Show WorkspaceError where
 
 instance Exception WorkspaceError where
   displayException (ModuleNotFound moduleName) =
-    "Module not found: " <> convertString moduleName.raw <> "\n" <> prettyCallStack callStack
+    "Module not found: " <> moduleNameToString moduleName <> "\n" <> prettyCallStack callStack
 
 data ArtifactPath = ArtifactPath
   { rawPath :: FilePath,

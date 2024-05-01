@@ -54,7 +54,7 @@ import Malgo.Core.Syntax
 import Malgo.Core.Type hiding (typeOf)
 import Malgo.Core.Type qualified as C
 import Malgo.Id
-import Malgo.Module (ModuleName (..))
+import Malgo.Module (ModuleName (..), moduleNameToString)
 import Malgo.MonadUniq
 import Malgo.Prelude
 
@@ -170,7 +170,7 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
       mainFuncId <- withMeta ([] :-> Int32T) <$> newNativeId "main"
       mainFuncBody <- runDef do
         _ <- bind $ RawCall "GC_init" ([] :-> VoidT) []
-        _ <- bind $ RawCall ("malgo_load_" <> modName.raw) ([] :-> VoidT) []
+        _ <- bind $ RawCall ("malgo_load_" <> moduleNameToString modName) ([] :-> VoidT) []
         pure e
       pure (mainFuncId, ([], mainFuncBody))
 
@@ -312,8 +312,8 @@ genVar name expr = global (toName name) (convType $ C.typeOf expr) (C.Undef (con
 
 genLoadModule :: (MonadModuleBuilder m, MonadReader CodeGenEnv m) => IRBuilderT m () -> m Operand
 genLoadModule m = do
-  ModuleName modName <- asks (.moduleName)
-  internalFunction (LLVM.AST.mkName $ convertString $ "malgo_load_" <> modName) [] LT.void $ const m
+  modName <- asks (.moduleName)
+  internalFunction (LLVM.AST.mkName $ "malgo_load_" <> moduleNameToString modName) [] LT.void $ const m
 
 -- generate code for a 'known' function
 genFunc ::

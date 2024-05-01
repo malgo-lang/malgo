@@ -59,7 +59,7 @@ data Id = Id
   deriving anyclass (Hashable, ToJSON, FromJSON)
 
 instance Pretty Id where
-  pretty Id {name, moduleName, sort = External} = "@" <> brackets (pretty moduleName <+> pretty name)
+  pretty Id {name, sort = External} = pretty name
   pretty Id {name, moduleName, sort = Internal uniq} = "#" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, moduleName, sort = Temporal uniq} = "$" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, sort = Native} = "%" <> pretty name
@@ -82,9 +82,9 @@ instance (Pretty a) => Pretty (Meta a) where
 makeStore ''Meta
 
 idToText :: Id -> Text
-idToText Id {name, moduleName, sort = External} = moduleName.raw <> "." <> name
-idToText Id {name, moduleName, sort = Internal uniq} = moduleName.raw <> ".#" <> name <> "_" <> convertString (show uniq)
-idToText Id {name, moduleName, sort = Temporal uniq} = moduleName.raw <> ".$" <> name <> "_" <> convertString (show uniq)
+idToText Id {name, moduleName, sort = External} = moduleNameToString moduleName <> "." <> name
+idToText Id {name, moduleName, sort = Internal uniq} = moduleNameToString moduleName <> ".#" <> name <> "_" <> convertString (show uniq)
+idToText Id {name, moduleName, sort = Temporal uniq} = moduleNameToString moduleName <> ".$" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, sort = Native} = name
 
 newTemporalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> Eff es Id
