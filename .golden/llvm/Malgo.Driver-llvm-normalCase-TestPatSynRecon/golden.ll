@@ -159,14 +159,129 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
+declare ptr @malgo_malloc(i64)
+
+define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2990"(ptr %0, i64 %1) {
+  %x_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
+  %x_0 = load i64, ptr %x_addr_0, align 4
+  %3 = call i64 @"runtime/malgo/Builtin.mlg.$malgo_add_int64_t_curry_1834"(ptr null, i64 %x_0, i64 %1)
+  ret i64 %3
+}
+
+define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.$raw_let_2988"(ptr %0, i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$x_83_0", i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$y_84_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i64 }, ptr null, i32 1) to i64))
+  %x_0 = getelementptr { i64 }, ptr %let_capture_0, i32 0, i32 0
+  store i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$x_83_0", ptr %x_0, align 4
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2990", ptr %let_func_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call i64 %6(ptr %4, i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$y_84_0")
+  ret i64 %7
+}
+
+define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2991"(ptr %0, i64 %1) {
+  %x_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
+  %x_0 = load i64, ptr %x_addr_0, align 4
+  %3 = call i64 @"test/testcases/malgo/TestPatSynRecon.mlg.$raw_let_2988"(ptr null, i64 %x_0, i64 %1)
+  ret i64 %3
+}
+
+define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.+#"(ptr %0, i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$x_83_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i64 }, ptr null, i32 1) to i64))
+  %x_0 = getelementptr { i64 }, ptr %let_capture_0, i32 0, i32 0
+  store i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$x_83_0", ptr %x_0, align 4
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2991", ptr %let_func_0, align 8
+  ret ptr %2
+}
+
+define internal i64 @"runtime/malgo/Builtin.mlg.$malgo_add_int64_t_curry_1834"(ptr %0, i64 %"runtime/malgo/Builtin.mlg.$p_1835_0", i64 %"runtime/malgo/Builtin.mlg.$p_1836_0") {
+  %2 = call i64 @malgo_add_int64_t(i64 %"runtime/malgo/Builtin.mlg.$p_1835_0", i64 %"runtime/malgo/Builtin.mlg.$p_1836_0")
+  ret i64 %2
+}
+
+define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2992"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_2993"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestPatSynRecon.mlg.$raw_fun_2989"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TestPatSynRecon.mlg.$$__114_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i64 } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  %4 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 1, i32 0
+  store i64 1, ptr %4, align 4
+  %5 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i64 } }, ptr null, i32 1) to i64))
+  %6 = getelementptr { i8, { i64 } }, ptr %5, i32 0, i32 0
+  store i8 0, ptr %6, align 1
+  %7 = getelementptr { i8, { i64 } }, ptr %5, i32 0, i32 1, i32 0
+  store i64 2, ptr %7, align 4
+  %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %9 = getelementptr { i8, {} }, ptr %8, i32 0, i32 0
+  store i8 0, ptr %9, align 1
+  %10 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
+  %11 = getelementptr { i8, { ptr, ptr } }, ptr %10, i32 0, i32 0
+  store i8 1, ptr %11, align 1
+  %12 = getelementptr { i8, { ptr, ptr } }, ptr %10, i32 0, i32 1, i32 0
+  store ptr %5, ptr %12, align 8
+  %13 = getelementptr { i8, { ptr, ptr } }, ptr %10, i32 0, i32 1, i32 1
+  store ptr %8, ptr %13, align 8
+  %14 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
+  %15 = getelementptr { i8, { ptr, ptr } }, ptr %14, i32 0, i32 0
+  store i8 1, ptr %15, align 1
+  %16 = getelementptr { i8, { ptr, ptr } }, ptr %14, i32 0, i32 1, i32 0
+  store ptr %2, ptr %16, align 8
+  %17 = getelementptr { i8, { ptr, ptr } }, ptr %14, i32 0, i32 1, i32 1
+  store ptr %10, ptr %17, align 8
+  %18 = call ptr @"test/testcases/malgo/TestPatSynRecon.mlg.sum"(ptr null, ptr %14)
+  %19 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %18, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2992", ptr %let_func_0, align 8
+  %20 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
+  %fun_capture_1 = getelementptr { ptr, ptr }, ptr %20, i32 0, i32 0
+  store ptr %fun_capture_0, ptr %fun_capture_1, align 8
+  %fun_func_0 = getelementptr { ptr, ptr }, ptr %20, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_2993", ptr %fun_func_0, align 8
+  %21 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 0
+  %22 = load ptr, ptr %21, align 8
+  %23 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 1
+  %24 = load ptr, ptr %23, align 8
+  %25 = call ptr %24(ptr %22, ptr %20)
+  ret ptr %25
+}
+
 define internal i64 @"runtime/malgo/Builtin.mlg.$addInt64#_curry_4000"(ptr %0, i64 %"runtime/malgo/Builtin.mlg.$x_4001_0", i64 %"runtime/malgo/Builtin.mlg.$y_4002_0") {
   %2 = call i64 @malgo_add_int64_t(i64 %"runtime/malgo/Builtin.mlg.$x_4001_0", i64 %"runtime/malgo/Builtin.mlg.$y_4002_0")
   ret i64 %2
 }
 
-declare ptr @malgo_malloc(i64)
-
-define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2990"(ptr %0, i64 %1) {
+define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2994"(ptr %0, i64 %1) {
   %p_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
   %p_0 = load i64, ptr %p_addr_0, align 4
   %3 = call i64 @"runtime/malgo/Builtin.mlg.$addInt64#_curry_4000"(ptr null, i64 %p_0, i64 %1)
@@ -223,7 +338,7 @@ define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.sum"(ptr %0, ptr 
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2990", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2994", ptr %let_func_0, align 8
   %24 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 0
   %25 = load ptr, ptr %24, align 8
   %26 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 1
@@ -244,97 +359,6 @@ switch_default_1:                                 ; preds = %"switch_branch_runt
 
 switch_default_2:                                 ; preds = %1
   unreachable
-}
-
-define internal i64 @"runtime/malgo/Builtin.mlg.$malgo_add_int64_t_curry_1834"(ptr %0, i64 %"runtime/malgo/Builtin.mlg.$p_1835_0", i64 %"runtime/malgo/Builtin.mlg.$p_1836_0") {
-  %2 = call i64 @malgo_add_int64_t(i64 %"runtime/malgo/Builtin.mlg.$p_1835_0", i64 %"runtime/malgo/Builtin.mlg.$p_1836_0")
-  ret i64 %2
-}
-
-define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2991"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_2992"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestPatSynRecon.mlg.$raw_fun_2989"(ptr null, ptr %1)
-  ret ptr %3
-}
-
-define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TestPatSynRecon.mlg.$$__114_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i64 } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  %4 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 1, i32 0
-  store i64 1, ptr %4, align 4
-  %5 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i64 } }, ptr null, i32 1) to i64))
-  %6 = getelementptr { i8, { i64 } }, ptr %5, i32 0, i32 0
-  store i8 0, ptr %6, align 1
-  %7 = getelementptr { i8, { i64 } }, ptr %5, i32 0, i32 1, i32 0
-  store i64 2, ptr %7, align 4
-  %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %9 = getelementptr { i8, {} }, ptr %8, i32 0, i32 0
-  store i8 0, ptr %9, align 1
-  %10 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
-  %11 = getelementptr { i8, { ptr, ptr } }, ptr %10, i32 0, i32 0
-  store i8 1, ptr %11, align 1
-  %12 = getelementptr { i8, { ptr, ptr } }, ptr %10, i32 0, i32 1, i32 0
-  store ptr %5, ptr %12, align 8
-  %13 = getelementptr { i8, { ptr, ptr } }, ptr %10, i32 0, i32 1, i32 1
-  store ptr %8, ptr %13, align 8
-  %14 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
-  %15 = getelementptr { i8, { ptr, ptr } }, ptr %14, i32 0, i32 0
-  store i8 1, ptr %15, align 1
-  %16 = getelementptr { i8, { ptr, ptr } }, ptr %14, i32 0, i32 1, i32 0
-  store ptr %2, ptr %16, align 8
-  %17 = getelementptr { i8, { ptr, ptr } }, ptr %14, i32 0, i32 1, i32 1
-  store ptr %10, ptr %17, align 8
-  %18 = call ptr @"test/testcases/malgo/TestPatSynRecon.mlg.sum"(ptr null, ptr %14)
-  %19 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %18, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2991", ptr %let_func_0, align 8
-  %20 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
-  %fun_capture_1 = getelementptr { ptr, ptr }, ptr %20, i32 0, i32 0
-  store ptr %fun_capture_0, ptr %fun_capture_1, align 8
-  %fun_func_0 = getelementptr { ptr, ptr }, ptr %20, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_2992", ptr %fun_func_0, align 8
-  %21 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 0
-  %22 = load ptr, ptr %21, align 8
-  %23 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 1
-  %24 = load ptr, ptr %23, align 8
-  %25 = call ptr %24(ptr %22, ptr %20)
-  ret ptr %25
-}
-
-define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2993"(ptr %0, i64 %1) {
-  %x_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
-  %x_0 = load i64, ptr %x_addr_0, align 4
-  %3 = call i64 @"test/testcases/malgo/TestPatSynRecon.mlg.$raw_let_2988"(ptr null, i64 %x_0, i64 %1)
-  ret i64 %3
-}
-
-define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.+#"(ptr %0, i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$x_83_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i64 }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { i64 }, ptr %let_capture_0, i32 0, i32 0
-  store i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$x_83_0", ptr %x_0, align 4
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2993", ptr %let_func_0, align 8
-  ret ptr %2
 }
 
 define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.$raw_fun_2989"(ptr %0, ptr %"test/testcases/malgo/TestPatSynRecon.mlg.$i_132_0") {
@@ -372,30 +396,6 @@ switch_default_0:                                 ; preds = %"switch_branch_runt
 
 switch_default_1:                                 ; preds = %1
   unreachable
-}
-
-define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2994"(ptr %0, i64 %1) {
-  %x_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
-  %x_0 = load i64, ptr %x_addr_0, align 4
-  %3 = call i64 @"runtime/malgo/Builtin.mlg.$malgo_add_int64_t_curry_1834"(ptr null, i64 %x_0, i64 %1)
-  ret i64 %3
-}
-
-define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.$raw_let_2988"(ptr %0, i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$x_83_0", i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$y_84_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i64 }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { i64 }, ptr %let_capture_0, i32 0, i32 0
-  store i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$x_83_0", ptr %x_0, align 4
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2994", ptr %let_func_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i64 %6(ptr %4, i64 %"test/testcases/malgo/TestPatSynRecon.mlg.$y_84_0")
-  ret i64 %7
 }
 
 define i32 @main(ptr %0) {

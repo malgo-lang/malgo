@@ -10,8 +10,9 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @"test/testcases/malgo/Test1.mlg.#let_closure_97"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @"test/testcases/malgo/Test1.mlg.#let_closure_97"(ptr nocapture nofree readonly align 8 %0, ptr nocapture nofree readonly %1) {
+  %d_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %d_0 = load ptr, ptr %d_addr_0, align 8
   %3 = load i8, ptr %d_0, align 1
   %switch = icmp eq i8 %3, 0
   br i1 %switch, label %"switch_branch_test/testcases/malgo/Test1.mlg.True_0", label %common.ret
@@ -27,8 +28,7 @@ common.ret:                                       ; preds = %2, %"switch_branch_
   ret ptr %8
 
 "switch_branch_test/testcases/malgo/Test1.mlg.True_0": ; preds = %2
-  %t_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %t_0 = load ptr, ptr %t_addr_0, align 8
+  %t_0 = load ptr, ptr %0, align 8
   br label %common.ret
 }
 
@@ -36,9 +36,9 @@ define internal ptr @"test/testcases/malgo/Test1.mlg.#let_closure_96"(ptr nocapt
   %d_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr %d_0, ptr %let_capture_0, align 8
-  %t_0 = getelementptr { ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
-  store ptr %1, ptr %t_0, align 8
+  store ptr %1, ptr %let_capture_0, align 8
+  %d_1 = getelementptr { ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
+  store ptr %d_0, ptr %d_1, align 8
   store ptr %let_capture_0, ptr %3, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
   store ptr @"test/testcases/malgo/Test1.mlg.#let_closure_97", ptr %let_func_0, align 8

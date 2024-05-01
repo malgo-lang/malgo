@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/DeferLaw.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+            , relPath = "test/testcases/malgo/DeferLaw.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+            }
+        )
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -10,8 +16,14 @@ Module
                             ( TyVar
                                 ( Id
                                     { name = "t"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                            , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                            }
+                                        )
                                     , sort = Internal 10
                                     }
                                 )
@@ -19,8 +31,14 @@ Module
                             ( TyVar
                                 ( Id
                                     { name = "t"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                            , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                            }
+                                        )
                                     , sort = Internal 10
                                     }
                                 )
@@ -40,8 +58,14 @@ Module
                         }
                     , Id
                         { name = "f"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -50,8 +74,14 @@ Module
                                 ( TyVar
                                     ( Id
                                         { name = "t"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                }
+                                            )
                                         , sort = Internal 10
                                         }
                                     )
@@ -59,8 +89,14 @@ Module
                                 ( TyVar
                                     ( Id
                                         { name = "t"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                }
+                                            )
                                         , sort = Internal 10
                                         }
                                     )
@@ -85,8 +121,14 @@ Module
                                     ( TyVar
                                         ( Id
                                             { name = "t"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                    , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                    }
+                                                )
                                             , sort = Internal 10
                                             }
                                         )
@@ -94,8 +136,14 @@ Module
                                     ( TyVar
                                         ( Id
                                             { name = "t"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                    , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                    }
+                                                )
                                             , sort = Internal 10
                                             }
                                         )
@@ -119,8 +167,14 @@ Module
                                     { annotated = TyVar
                                         ( Id
                                             { name = "t"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                    , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                    }
+                                                )
                                             , sort = Internal 10
                                             }
                                         )
@@ -140,8 +194,14 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                            , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                            }
+                                        )
                                     , sort = Internal 1
                                     }
                                 )
@@ -151,8 +211,14 @@ Module
                                     { annotated = TyVar
                                         ( Id
                                             { name = "t"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                    , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                    }
+                                                )
                                             , sort = Internal 10
                                             }
                                         )
@@ -189,8 +255,14 @@ Module
                                             { annotated = TyVar
                                                 ( Id
                                                     { name = "t"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                            , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                            }
+                                                        )
                                                     , sort = Internal 10
                                                     }
                                                 )
@@ -215,8 +287,14 @@ Module
                                                     ( TyVar
                                                         ( Id
                                                             { name = "t"
-                                                            , moduleName = ModuleName
-                                                                { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                                    , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                                    }
+                                                                )
                                                             , sort = Internal 10
                                                             }
                                                         )
@@ -242,8 +320,14 @@ Module
                                                         ( TyVar
                                                             ( Id
                                                                 { name = "t"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                                        , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = Internal 10
                                                                 }
                                                             )
@@ -281,8 +365,14 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "$_"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                                , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                                }
+                                                            )
                                                         , sort = Internal 8
                                                         }
                                                     )
@@ -292,8 +382,14 @@ Module
                                                         { annotated = TyVar
                                                             ( Id
                                                                 { name = "t"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                                        , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = Internal 10
                                                                 }
                                                             )
@@ -330,8 +426,14 @@ Module
                                                                 { annotated = TyVar
                                                                     ( Id
                                                                         { name = "t"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                                                , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = Internal 10
                                                                         }
                                                                     )
@@ -351,8 +453,14 @@ Module
                                                             )
                                                             ( Id
                                                                 { name = "x"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                                        , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = Internal 1
                                                                 }
                                                             )
@@ -406,8 +514,14 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -467,8 +581,14 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                            , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                            }
+                                        )
                                     , sort = Internal 21
                                     }
                                 )
@@ -527,8 +647,14 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "String"
-                                                            , moduleName = ModuleName
-                                                                { raw = "runtime/malgo/Builtin.mlg" }
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                    , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                    , relPath = "runtime/malgo/Builtin.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                    }
+                                                                )
                                                             , sort = External
                                                             }
                                                         )
@@ -550,8 +676,14 @@ Module
                                             )
                                             ( Id
                                                 { name = "putStrLn"
-                                                , moduleName = ModuleName
-                                                    { raw = "runtime/malgo/Prelude.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./runtime/malgo/Prelude.mlg"
+                                                        , originPath = "/workspaces/malgo/runtime/malgo/Prelude.mlg"
+                                                        , relPath = "runtime/malgo/Prelude.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Prelude.mlg"
+                                                        }
+                                                    )
                                                 , sort = External
                                                 }
                                             )
@@ -561,8 +693,14 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "String"
-                                                        , moduleName = ModuleName
-                                                            { raw = "runtime/malgo/Builtin.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                , relPath = "runtime/malgo/Builtin.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                }
+                                                            )
                                                         , sort = External
                                                         }
                                                     )
@@ -599,8 +737,14 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "String"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = External
                                                                 }
                                                             )
@@ -624,8 +768,14 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "String"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "runtime/malgo/Builtin.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -633,8 +783,14 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "String"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "runtime/malgo/Builtin.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -655,8 +811,14 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "f"
-                                                            , moduleName = ModuleName
-                                                                { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                                                    , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                                                    }
+                                                                )
                                                             , sort = External
                                                             }
                                                         )
@@ -666,8 +828,14 @@ Module
                                                             { annotated = TyCon
                                                                 ( Id
                                                                     { name = "String"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "runtime/malgo/Builtin.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                            , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                            , relPath = "runtime/malgo/Builtin.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -691,8 +859,14 @@ Module
                                                                     ( TyCon
                                                                         ( Id
                                                                             { name = "String"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "runtime/malgo/Builtin.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                    , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                    , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -713,8 +887,14 @@ Module
                                                             )
                                                             ( Id
                                                                 { name = "String#"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = External
                                                                 }
                                                             )
@@ -765,8 +945,14 @@ Module
                     }
                 , Id
                     { name = "f"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                            , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -799,8 +985,14 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                    , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                    }
+                                )
                             , sort = Internal 0
                             }
                         )
@@ -821,8 +1013,14 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/DeferLaw.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/DeferLaw.mlg"
+                                    , relPath = "test/testcases/malgo/DeferLaw.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.mlg"
+                                    }
+                                )
                             , sort = Internal 0
                             }
                         )
@@ -846,8 +1044,7 @@ Module
                         , sourceColumn = Pos 1
                         }
                     }
-                , ModuleName
-                    { raw = "Builtin" }
+                , ModuleName "Builtin"
                 , All
                 )
             ,
@@ -863,8 +1060,7 @@ Module
                         , sourceColumn = Pos 1
                         }
                     }
-                , ModuleName
-                    { raw = "Prelude" }
+                , ModuleName "Prelude"
                 , All
                 )
             ]

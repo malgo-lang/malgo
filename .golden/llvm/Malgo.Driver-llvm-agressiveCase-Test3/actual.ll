@@ -132,22 +132,15 @@ define internal ptr @"test/testcases/malgo/Test3.mlg.$raw_let_133"(ptr %0, ptr %
   ret ptr %2
 }
 
+define internal ptr @"test/testcases/malgo/Test3.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/Test3.mlg.$p_77_0") {
+  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/Test3.mlg.$p_77_0")
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/Test3.mlg.A"(ptr %0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/Test3.mlg.Nil"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/Test3.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/Test3.mlg.$p_77_0") {
-  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/Test3.mlg.$p_77_0")
   ret ptr %2
 }
 
@@ -244,6 +237,13 @@ switch_default_3:                                 ; preds = %"switch_branch_test
 
 switch_default_4:                                 ; preds = %1
   unreachable
+}
+
+define internal ptr @"test/testcases/malgo/Test3.mlg.Nil"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  ret ptr %2
 }
 
 define i32 @main(ptr %0) {

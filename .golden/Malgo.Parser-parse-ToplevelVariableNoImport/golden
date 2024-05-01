@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/ToplevelVariableNoImport.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg"
+            , relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg"
+            }
+        )
     , moduleDefinition = ParsedDefinitions
         [ DataDef
             ( Range

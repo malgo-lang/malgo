@@ -3,8 +3,8 @@ source_filename = "test/testcases/malgo/ZeroArgs.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
 @"test/testcases/malgo/ZeroArgs.mlg.one" = local_unnamed_addr global ptr undef
-@str89 = unnamed_addr constant [1 x i8] zeroinitializer
-@str169 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str91 = unnamed_addr constant [1 x i8] zeroinitializer
+@str268 = unnamed_addr constant [10 x i8] c"no branch\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -16,20 +16,14 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
-define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_103"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #0 {
-  %x_0 = load ptr, ptr %0, align 8
-  ret ptr %x_0
-}
-
-define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_157"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_234"(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = load ptr, ptr @"test/testcases/malgo/ZeroArgs.mlg.one", align 8
   %4 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 8)
   store ptr %3, ptr %fun_capture_0.i.i, align 8
   store ptr %fun_capture_0.i.i, ptr %4, align 8
   %fun_func_0.i.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_103", ptr %fun_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_279", ptr %fun_func_0.i.i, align 8
   %5 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %5, align 1
   %6 = load ptr, ptr %4, align 8
@@ -44,6 +38,12 @@ define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_157"(ptr no
   store ptr %10, ptr %12, align 8
   %13 = tail call ptr @malgo_print_string(ptr %10)
   ret ptr %13
+}
+
+; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
+define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_279"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #0 {
+  %x_0 = load ptr, ptr %0, align 8
+  ret ptr %x_0
 }
 
 define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
@@ -71,14 +71,14 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_0.i.i, ptr %11, align 8
   %fun_func_0.i.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_157", ptr %fun_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_234", ptr %fun_func_0.i.i, align 8
   %12 = load ptr, ptr @"test/testcases/malgo/ZeroArgs.mlg.one", align 8
   %13 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i.i.i.i = tail call ptr @malgo_malloc(i64 noundef 8)
   store ptr %12, ptr %fun_capture_0.i.i.i.i, align 8
   store ptr %fun_capture_0.i.i.i.i, ptr %13, align 8
   %fun_func_0.i.i.i.i = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_103", ptr %fun_func_0.i.i.i.i, align 8
+  store ptr @"test/testcases/malgo/ZeroArgs.mlg.#fun_closure_279", ptr %fun_func_0.i.i.i.i, align 8
   %14 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %14, align 1
   %15 = load ptr, ptr %13, align 8

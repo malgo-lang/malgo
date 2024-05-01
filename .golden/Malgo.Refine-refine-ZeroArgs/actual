@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+            , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+            }
+        )
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -9,8 +15,14 @@ Module
                         { annotated = TyCon
                             ( Id
                                 { name = "Int32"
-                                , moduleName = ModuleName
-                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                        }
+                                    )
                                 , sort = External
                                 }
                             )
@@ -29,8 +41,14 @@ Module
                         }
                     , Id
                         { name = "one"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Apply
@@ -38,8 +56,14 @@ Module
                             { annotated = TyCon
                                 ( Id
                                     { name = "Int32"
-                                    , moduleName = ModuleName
-                                        { raw = "runtime/malgo/Builtin.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./runtime/malgo/Builtin.mlg"
+                                            , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                            , relPath = "runtime/malgo/Builtin.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                            }
+                                        )
                                     , sort = External
                                     }
                                 )
@@ -64,8 +88,14 @@ Module
                                     ( TyCon
                                         ( Id
                                             { name = "Int32"
-                                            , moduleName = ModuleName
-                                                { raw = "runtime/malgo/Builtin.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                    , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                    , relPath = "runtime/malgo/Builtin.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                    }
+                                                )
                                             , sort = External
                                             }
                                         )
@@ -91,8 +121,14 @@ Module
                                         ( TyCon
                                             ( Id
                                                 { name = "Int32"
-                                                , moduleName = ModuleName
-                                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                        }
+                                                    )
                                                 , sort = External
                                                 }
                                             )
@@ -130,8 +166,14 @@ Module
                                     )
                                     ( Id
                                         { name = "$_"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                }
+                                            )
                                         , sort = Internal 6
                                         }
                                     )
@@ -141,8 +183,14 @@ Module
                                         { annotated = TyCon
                                             ( Id
                                                 { name = "Int32"
-                                                , moduleName = ModuleName
-                                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                        }
+                                                    )
                                                 , sort = External
                                                 }
                                             )
@@ -179,8 +227,14 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "Int32"
-                                                        , moduleName = ModuleName
-                                                            { raw = "runtime/malgo/Builtin.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                , relPath = "runtime/malgo/Builtin.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                }
+                                                            )
                                                         , sort = External
                                                         }
                                                     )
@@ -204,8 +258,14 @@ Module
                                                         ( TyCon
                                                             ( Id
                                                                 { name = "Int32"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = External
                                                                 }
                                                             )
@@ -226,8 +286,14 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "Int32#"
-                                                    , moduleName = ModuleName
-                                                        { raw = "runtime/malgo/Builtin.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                            , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                            , relPath = "runtime/malgo/Builtin.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                            }
+                                                        )
                                                     , sort = External
                                                     }
                                                 )
@@ -283,8 +349,14 @@ Module
                             ( TyVar
                                 ( Id
                                     { name = "t"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                            , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                            }
+                                        )
                                     , sort = Internal 13
                                     }
                                 )
@@ -292,8 +364,14 @@ Module
                             ( TyVar
                                 ( Id
                                     { name = "t"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                            , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                            }
+                                        )
                                     , sort = Internal 13
                                     }
                                 )
@@ -313,8 +391,14 @@ Module
                         }
                     , Id
                         { name = "id"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -323,8 +407,14 @@ Module
                                 ( TyVar
                                     ( Id
                                         { name = "t"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                }
+                                            )
                                         , sort = Internal 13
                                         }
                                     )
@@ -332,8 +422,14 @@ Module
                                 ( TyVar
                                     ( Id
                                         { name = "t"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                }
+                                            )
                                         , sort = Internal 13
                                         }
                                     )
@@ -358,8 +454,14 @@ Module
                                     ( TyVar
                                         ( Id
                                             { name = "t"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                    }
+                                                )
                                             , sort = Internal 13
                                             }
                                         )
@@ -367,8 +469,14 @@ Module
                                     ( TyVar
                                         ( Id
                                             { name = "t"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                    }
+                                                )
                                             , sort = Internal 13
                                             }
                                         )
@@ -392,8 +500,14 @@ Module
                                     { annotated = TyVar
                                         ( Id
                                             { name = "t"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                    }
+                                                )
                                             , sort = Internal 13
                                             }
                                         )
@@ -413,8 +527,14 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                            , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                            }
+                                        )
                                     , sort = Internal 1
                                     }
                                 )
@@ -424,8 +544,14 @@ Module
                                     { annotated = TyVar
                                         ( Id
                                             { name = "t"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                    }
+                                                )
                                             , sort = Internal 13
                                             }
                                         )
@@ -462,8 +588,14 @@ Module
                                             { annotated = TyVar
                                                 ( Id
                                                     { name = "t"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                            , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                            }
+                                                        )
                                                     , sort = Internal 13
                                                     }
                                                 )
@@ -488,8 +620,14 @@ Module
                                                     ( TyVar
                                                         ( Id
                                                             { name = "t"
-                                                            , moduleName = ModuleName
-                                                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                    }
+                                                                )
                                                             , sort = Internal 13
                                                             }
                                                         )
@@ -515,8 +653,14 @@ Module
                                                         ( TyVar
                                                             ( Id
                                                                 { name = "t"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = Internal 13
                                                                 }
                                                             )
@@ -554,8 +698,14 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "$_"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                }
+                                                            )
                                                         , sort = Internal 11
                                                         }
                                                     )
@@ -565,8 +715,14 @@ Module
                                                         { annotated = TyVar
                                                             ( Id
                                                                 { name = "t"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = Internal 13
                                                                 }
                                                             )
@@ -603,8 +759,14 @@ Module
                                                                 { annotated = TyVar
                                                                     ( Id
                                                                         { name = "t"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = Internal 13
                                                                         }
                                                                     )
@@ -624,8 +786,14 @@ Module
                                                             )
                                                             ( Id
                                                                 { name = "x"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = Internal 1
                                                                 }
                                                             )
@@ -679,8 +847,14 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Apply
@@ -765,8 +939,14 @@ Module
                                     )
                                     ( Id
                                         { name = "$_"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                }
+                                            )
                                         , sort = Internal 25
                                         }
                                     )
@@ -861,8 +1041,14 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "$_"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                }
+                                                            )
                                                         , sort = Internal 24
                                                         }
                                                     )
@@ -921,8 +1107,14 @@ Module
                                                                         ( TyCon
                                                                             ( Id
                                                                                 { name = "String"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -944,8 +1136,14 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "printString"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "runtime/malgo/Builtin.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                            , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                            , relPath = "runtime/malgo/Builtin.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -955,8 +1153,14 @@ Module
                                                                     { annotated = TyCon
                                                                         ( Id
                                                                             { name = "String"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "runtime/malgo/Builtin.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                    , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                    , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -993,8 +1197,14 @@ Module
                                                                             { annotated = TyCon
                                                                                 ( Id
                                                                                     { name = "String"
-                                                                                    , moduleName = ModuleName
-                                                                                        { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                    , moduleName = Artifact
+                                                                                        ( ArtifactPath
+                                                                                            { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                            , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                            , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                            , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                            }
+                                                                                        )
                                                                                     , sort = External
                                                                                     }
                                                                                 )
@@ -1018,8 +1228,14 @@ Module
                                                                                     ( TyCon
                                                                                         ( Id
                                                                                             { name = "Int32"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                                    , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1027,8 +1243,14 @@ Module
                                                                                     ( TyCon
                                                                                         ( Id
                                                                                             { name = "String"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                                    , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1049,8 +1271,14 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "toStringInt32"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -1060,8 +1288,14 @@ Module
                                                                                 { annotated = TyCon
                                                                                     ( Id
                                                                                         { name = "Int32"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                        , moduleName = Artifact
+                                                                                            ( ArtifactPath
+                                                                                                { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                                , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                                }
+                                                                                            )
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -1098,8 +1332,14 @@ Module
                                                                                         { annotated = TyCon
                                                                                             ( Id
                                                                                                 { name = "Int32"
-                                                                                                , moduleName = ModuleName
-                                                                                                    { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                                , moduleName = Artifact
+                                                                                                    ( ArtifactPath
+                                                                                                        { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                                        , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                                        }
+                                                                                                    )
                                                                                                 , sort = External
                                                                                                 }
                                                                                             )
@@ -1123,8 +1363,14 @@ Module
                                                                                                 ( TyCon
                                                                                                     ( Id
                                                                                                         { name = "Int32"
-                                                                                                        , moduleName = ModuleName
-                                                                                                            { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                                        , moduleName = Artifact
+                                                                                                            ( ArtifactPath
+                                                                                                                { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                                                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                                                , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                                                }
+                                                                                                            )
                                                                                                         , sort = External
                                                                                                         }
                                                                                                     )
@@ -1132,8 +1378,14 @@ Module
                                                                                                 ( TyCon
                                                                                                     ( Id
                                                                                                         { name = "Int32"
-                                                                                                        , moduleName = ModuleName
-                                                                                                            { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                                        , moduleName = Artifact
+                                                                                                            ( ArtifactPath
+                                                                                                                { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                                                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                                                , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                                                }
+                                                                                                            )
                                                                                                         , sort = External
                                                                                                         }
                                                                                                     )
@@ -1154,8 +1406,14 @@ Module
                                                                                         )
                                                                                         ( Id
                                                                                             { name = "id"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1165,8 +1423,14 @@ Module
                                                                                             { annotated = TyCon
                                                                                                 ( Id
                                                                                                     { name = "Int32"
-                                                                                                    , moduleName = ModuleName
-                                                                                                        { raw = "runtime/malgo/Builtin.mlg" }
+                                                                                                    , moduleName = Artifact
+                                                                                                        ( ArtifactPath
+                                                                                                            { rawPath = "./runtime/malgo/Builtin.mlg"
+                                                                                                            , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                                                                                            , relPath = "runtime/malgo/Builtin.mlg"
+                                                                                                            , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                                                                                            }
+                                                                                                        )
                                                                                                     , sort = External
                                                                                                     }
                                                                                                 )
@@ -1186,8 +1450,14 @@ Module
                                                                                         )
                                                                                         ( Id
                                                                                             { name = "one"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                                                                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1244,8 +1514,14 @@ Module
                     }
                 , Id
                     { name = "one"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                            , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyCon
@@ -1264,8 +1540,14 @@ Module
                     )
                     ( Id
                         { name = "Int32"
-                        , moduleName = ModuleName
-                            { raw = "runtime/malgo/Builtin.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./runtime/malgo/Builtin.mlg"
+                                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                                , relPath = "runtime/malgo/Builtin.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     )
@@ -1285,8 +1567,14 @@ Module
                     }
                 , Id
                     { name = "id"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                            , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -1319,8 +1607,14 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                    }
+                                )
                             , sort = Internal 0
                             }
                         )
@@ -1341,8 +1635,14 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                                    , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                                    }
+                                )
                             , sort = Internal 0
                             }
                         )
@@ -1363,8 +1663,14 @@ Module
                     }
                 , Id
                     { name = "main"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/ZeroArgs.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/ZeroArgs.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/ZeroArgs.mlg"
+                            , relPath = "test/testcases/malgo/ZeroArgs.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ZeroArgs.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -1430,8 +1736,7 @@ Module
                         , sourceColumn = Pos 1
                         }
                     }
-                , ModuleName
-                    { raw = "Builtin" }
+                , ModuleName "Builtin"
                 , All
                 )
             ,
@@ -1447,8 +1752,7 @@ Module
                         , sourceColumn = Pos 1
                         }
                     }
-                , ModuleName
-                    { raw = "Prelude" }
+                , ModuleName "Prelude"
                 , All
                 )
             ]

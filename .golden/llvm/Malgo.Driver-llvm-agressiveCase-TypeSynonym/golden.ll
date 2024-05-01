@@ -2,7 +2,7 @@
 source_filename = "test/testcases/malgo/TypeSynonym.mlg"
 
 @"test/testcases/malgo/TypeSynonym.mlg.hello" = global ptr undef
-@str3490 = unnamed_addr constant [2 x i8] c" \00"
+@str3492 = unnamed_addr constant [2 x i8] c" \00"
 @str3497 = unnamed_addr constant [6 x i8] c"hello\00"
 @str3498 = unnamed_addr constant [6 x i8] c"world\00"
 
@@ -166,6 +166,53 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
+define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.#let_closure_3490"(ptr %0, ptr %1) {
+  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %cast_0 = load ptr, ptr %cast_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %cast_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.#fun_closure_3491"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TypeSynonym.mlg.$raw_fun_3489"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TypeSynonym.mlg.$$__38_0") {
+  %2 = load ptr, ptr @"test/testcases/malgo/TypeSynonym.mlg.hello", align 8
+  %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %cast_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %2, ptr %cast_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TypeSynonym.mlg.#let_closure_3490", ptr %let_func_0, align 8
+  %4 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
+  %fun_capture_1 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 0
+  store ptr %fun_capture_0, ptr %fun_capture_1, align 8
+  %fun_func_0 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TypeSynonym.mlg.#fun_closure_3491", ptr %fun_func_0, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
+  %8 = load ptr, ptr %7, align 8
+  %9 = call ptr %8(ptr %6, ptr %4)
+  ret ptr %9
+}
+
+define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.TCon"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.$raw_fun_3489"(ptr %0, ptr %"test/testcases/malgo/TypeSynonym.mlg.$tuple_42_0") {
   %2 = getelementptr { i8, <16 x i8> }, ptr %"test/testcases/malgo/TypeSynonym.mlg.$tuple_42_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
@@ -194,7 +241,7 @@ define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.$raw_fun_3489"(ptr %0
   %16 = getelementptr { i8, { ptr } }, ptr %15, i32 0, i32 0
   store i8 0, ptr %16, align 1
   %17 = getelementptr { i8, { ptr } }, ptr %15, i32 0, i32 1, i32 0
-  store ptr @str3490, ptr %17, align 8
+  store ptr @str3492, ptr %17, align 8
   %18 = getelementptr { i8, <8 x i8> }, ptr %15, i32 0, i32 0
   %19 = load i8, ptr %18, align 1
   switch i8 %19, label %switch_default_1 [
@@ -241,53 +288,6 @@ switch_default_3:                                 ; preds = %1
 
 define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.idOverS"(ptr %0, ptr %"test/testcases/malgo/TypeSynonym.mlg.$x_31_0") {
   ret ptr %"test/testcases/malgo/TypeSynonym.mlg.$x_31_0"
-}
-
-define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.#let_closure_3491"(ptr %0, ptr %1) {
-  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %cast_0 = load ptr, ptr %cast_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %cast_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.#fun_closure_3492"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TypeSynonym.mlg.$raw_fun_3489"(ptr null, ptr %1)
-  ret ptr %3
-}
-
-define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TypeSynonym.mlg.$$__38_0") {
-  %2 = load ptr, ptr @"test/testcases/malgo/TypeSynonym.mlg.hello", align 8
-  %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %cast_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %2, ptr %cast_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TypeSynonym.mlg.#let_closure_3491", ptr %let_func_0, align 8
-  %4 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
-  %fun_capture_1 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 0
-  store ptr %fun_capture_0, ptr %fun_capture_1, align 8
-  %fun_func_0 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TypeSynonym.mlg.#fun_closure_3492", ptr %fun_func_0, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
-  %8 = load ptr, ptr %7, align 8
-  %9 = call ptr %8(ptr %6, ptr %4)
-  ret ptr %9
-}
-
-define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.TCon"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  ret ptr %2
 }
 
 define i32 @main(ptr %0) {

@@ -1,8 +1,8 @@
 ; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/EvenOdd.ll'
 source_filename = "test/testcases/malgo/EvenOdd.mlg"
 
-@str4787 = unnamed_addr constant [6 x i8] c"False\00"
-@str4788 = unnamed_addr constant [5 x i8] c"True\00"
+@str4781 = unnamed_addr constant [6 x i8] c"False\00"
+@str4782 = unnamed_addr constant [5 x i8] c"True\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -15,31 +15,37 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
 define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4774"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+  %x_0 = load i32, ptr %0, align 4
+  %3 = tail call i32 @malgo_sub_int32_t(i32 %x_0, i32 %1)
+  ret i32 %3
+}
+
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4775"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call i32 @malgo_sub_int32_t(i32 %p_0, i32 %1)
   ret i32 %3
 }
 
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4775"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4776"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
   store i32 %p_0, ptr %let_capture_0.i.i, align 4
   store ptr %let_capture_0.i.i, ptr %3, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4774", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4775", ptr %let_func_0.i.i, align 8
   %p_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
   %4 = tail call i32 @malgo_sub_int32_t(i32 %p_0.i.i, i32 %1)
   ret i32 %4
 }
 
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4776"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4777"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call i32 @malgo_sub_int32_t(i32 %p_0, i32 %1)
   ret i32 %3
 }
 
-define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4777"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
+define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4778"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
   %d_0 = load ptr, ptr %0, align 8
   %3 = getelementptr i8, ptr %d_0, i64 4
   %d_0.val = load i32, ptr %3, align 4
@@ -50,7 +56,7 @@ define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4777
   store i32 %d_0.val, ptr %let_capture_0.i.i, align 4
   store ptr %let_capture_0.i.i, ptr %5, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4779", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4774", ptr %let_func_0.i.i, align 8
   %x_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
   %6 = tail call i32 @malgo_sub_int32_t(i32 %x_0.i.i, i32 %.val)
   %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
@@ -60,7 +66,7 @@ define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4777
   ret ptr %7
 }
 
-define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4778"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
+define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4779"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
   %d_0 = load ptr, ptr %0, align 8
   %3 = getelementptr i8, ptr %d_0, i64 4
   %d_0.val = load i32, ptr %3, align 4
@@ -71,7 +77,7 @@ define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4778
   store i32 %d_0.val, ptr %let_capture_0.i, align 4
   store ptr %let_capture_0.i, ptr %5, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4781", ptr %let_func_0.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4780", ptr %let_func_0.i, align 8
   %6 = tail call i32 @malgo_sub_int32_t(i32 %d_0.val, i32 %.val)
   %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %7, align 1
@@ -80,25 +86,66 @@ define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4778
   ret ptr %7
 }
 
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4779"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
-  %x_0 = load i32, ptr %0, align 4
-  %3 = tail call i32 @malgo_sub_int32_t(i32 %x_0, i32 %1)
-  ret i32 %3
-}
-
 define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4780"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call i32 @malgo_sub_int32_t(i32 %p_0, i32 %1)
   ret i32 %3
 }
 
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4781"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4783"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call i32 @malgo_sub_int32_t(i32 %p_0, i32 %1)
   ret i32 %3
 }
 
-define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4782"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
+define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4784"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
+  %d_0 = load ptr, ptr %0, align 8
+  %3 = getelementptr i8, ptr %d_0, i64 4
+  %d_0.val = load i32, ptr %3, align 4
+  %4 = getelementptr i8, ptr %1, i64 4
+  %.val = load i32, ptr %4, align 4
+  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
+  store i32 %d_0.val, ptr %let_capture_0.i.i, align 4
+  store ptr %let_capture_0.i.i, ptr %5, align 8
+  %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4774", ptr %let_func_0.i.i, align 8
+  %x_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
+  %6 = tail call i32 @malgo_sub_int32_t(i32 %x_0.i.i, i32 %.val)
+  %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
+  store i8 0, ptr %7, align 1
+  %8 = getelementptr { i8, { i32 } }, ptr %7, i64 0, i32 1, i32 0
+  store i32 %6, ptr %8, align 4
+  ret ptr %7
+}
+
+define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4785"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
+  %d_0 = load ptr, ptr %0, align 8
+  %3 = getelementptr i8, ptr %d_0, i64 4
+  %d_0.val = load i32, ptr %3, align 4
+  %4 = getelementptr i8, ptr %1, i64 4
+  %.val = load i32, ptr %4, align 4
+  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 4)
+  store i32 %d_0.val, ptr %let_capture_0.i, align 4
+  store ptr %let_capture_0.i, ptr %5, align 8
+  %let_func_0.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4780", ptr %let_func_0.i, align 8
+  %6 = tail call i32 @malgo_sub_int32_t(i32 %d_0.val, i32 %.val)
+  %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
+  store i8 0, ptr %7, align 1
+  %8 = getelementptr { i8, { i32 } }, ptr %7, i64 0, i32 1, i32 0
+  store i32 %6, ptr %8, align 4
+  ret ptr %7
+}
+
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4786"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+  %p_0 = load i32, ptr %0, align 4
+  %3 = tail call i32 @malgo_sub_int32_t(i32 %p_0, i32 %1)
+  ret i32 %3
+}
+
+define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4787"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
   %"int32#_0" = load ptr, ptr %0, align 8
   %3 = getelementptr i8, ptr %"int32#_0", i64 4
   %"int32#_0.val" = load i32, ptr %3, align 4
@@ -109,56 +156,9 @@ define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4782
   store i32 %"int32#_0.val", ptr %let_capture_0.i, align 4
   store ptr %let_capture_0.i, ptr %5, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4780", ptr %let_func_0.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4786", ptr %let_func_0.i, align 8
   %p_0.i.i = load i32, ptr %let_capture_0.i, align 4
   %6 = tail call i32 @malgo_sub_int32_t(i32 %p_0.i.i, i32 %.val)
-  %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
-  store i8 0, ptr %7, align 1
-  %8 = getelementptr { i8, { i32 } }, ptr %7, i64 0, i32 1, i32 0
-  store i32 %6, ptr %8, align 4
-  ret ptr %7
-}
-
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4789"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
-  %p_0 = load i32, ptr %0, align 4
-  %3 = tail call i32 @malgo_sub_int32_t(i32 %p_0, i32 %1)
-  ret i32 %3
-}
-
-define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4790"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
-  %d_0 = load ptr, ptr %0, align 8
-  %3 = getelementptr i8, ptr %d_0, i64 4
-  %d_0.val = load i32, ptr %3, align 4
-  %4 = getelementptr i8, ptr %1, i64 4
-  %.val = load i32, ptr %4, align 4
-  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
-  store i32 %d_0.val, ptr %let_capture_0.i.i, align 4
-  store ptr %let_capture_0.i.i, ptr %5, align 8
-  %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4779", ptr %let_func_0.i.i, align 8
-  %x_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
-  %6 = tail call i32 @malgo_sub_int32_t(i32 %x_0.i.i, i32 %.val)
-  %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
-  store i8 0, ptr %7, align 1
-  %8 = getelementptr { i8, { i32 } }, ptr %7, i64 0, i32 1, i32 0
-  store i32 %6, ptr %8, align 4
-  ret ptr %7
-}
-
-define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4791"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
-  %d_0 = load ptr, ptr %0, align 8
-  %3 = getelementptr i8, ptr %d_0, i64 4
-  %d_0.val = load i32, ptr %3, align 4
-  %4 = getelementptr i8, ptr %1, i64 4
-  %.val = load i32, ptr %4, align 4
-  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 4)
-  store i32 %d_0.val, ptr %let_capture_0.i, align 4
-  store ptr %let_capture_0.i, ptr %5, align 8
-  %let_func_0.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4781", ptr %let_func_0.i, align 8
-  %6 = tail call i32 @malgo_sub_int32_t(i32 %d_0.val, i32 %.val)
   %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %7, align 1
   %8 = getelementptr { i8, { i32 } }, ptr %7, i64 0, i32 1, i32 0
@@ -184,7 +184,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store i32 %7, ptr %let_capture_0.i, align 4
   store ptr %let_capture_0.i, ptr %8, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4789", ptr %let_func_0.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4783", ptr %let_func_0.i, align 8
   %p_0.i.i = load i32, ptr %let_capture_0.i, align 4
   %9 = tail call i32 @malgo_sub_int32_t(i32 %p_0.i.i, i32 noundef 1)
   %10 = tail call ptr @malgo_malloc(i64 noundef 8)
@@ -205,7 +205,7 @@ switch-unboxed_default_1.i:                       ; preds = %1
   store i32 %14, ptr %let_capture_0.i.i, align 4
   store ptr %let_capture_0.i.i, ptr %15, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4779", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4774", ptr %let_func_0.i.i, align 8
   %x_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
   %16 = tail call i32 @malgo_sub_int32_t(i32 %x_0.i.i, i32 noundef 1)
   %17 = tail call ptr @malgo_malloc(i64 noundef 8)
@@ -221,7 +221,7 @@ switch-unboxed_default_2.i:                       ; preds = %switch-unboxed_defa
   store ptr %17, ptr %let_capture_2.i, align 8
   store ptr %let_capture_2.i, ptr %19, align 8
   %let_func_1.i = getelementptr { ptr, ptr }, ptr %19, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4790", ptr %let_func_1.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4784", ptr %let_func_1.i, align 8
   %20 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %20, align 1
   %21 = getelementptr { i8, { i32 } }, ptr %20, i64 0, i32 1, i32 0
@@ -232,7 +232,7 @@ switch-unboxed_default_2.i:                       ; preds = %switch-unboxed_defa
   store i32 %.val.i, ptr %let_capture_0.i3.i, align 4
   store ptr %let_capture_0.i3.i, ptr %22, align 8
   %let_func_0.i4.i = getelementptr { ptr, ptr }, ptr %22, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4781", ptr %let_func_0.i4.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4780", ptr %let_func_0.i4.i, align 8
   %23 = tail call i32 @malgo_sub_int32_t(i32 %.val.i, i32 noundef 1)
   %24 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %24, align 1
@@ -247,7 +247,7 @@ switch-unboxed_default_3.i:                       ; preds = %switch-unboxed_defa
   store ptr %24, ptr %let_capture_4.i, align 8
   store ptr %let_capture_4.i, ptr %26, align 8
   %let_func_2.i = getelementptr { ptr, ptr }, ptr %26, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4791", ptr %let_func_2.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4785", ptr %let_func_2.i, align 8
   %27 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %27, align 1
   %28 = getelementptr { i8, { i32 } }, ptr %27, i64 0, i32 1, i32 0
@@ -266,7 +266,7 @@ switch-unboxed_default_4.i:                       ; preds = %switch-unboxed_defa
   store ptr %31, ptr %let_capture_0.i5.i, align 8
   store ptr %let_capture_0.i5.i, ptr %34, align 8
   %let_func_0.i6.i = getelementptr { ptr, ptr }, ptr %34, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4782", ptr %let_func_0.i6.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4787", ptr %let_func_0.i6.i, align 8
   %35 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %35, align 1
   %36 = getelementptr { i8, { i32 } }, ptr %35, i64 0, i32 1, i32 0
@@ -291,7 +291,7 @@ switch-unboxed_default_0.i.i:                     ; preds = %switch-unboxed_defa
   store i32 %45, ptr %let_capture_0.i7.i, align 4
   store ptr %let_capture_0.i7.i, ptr %46, align 8
   %let_func_0.i8.i = getelementptr { ptr, ptr }, ptr %46, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4775", ptr %let_func_0.i8.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4776", ptr %let_func_0.i8.i, align 8
   %47 = tail call i32 @malgo_sub_int32_t(i32 %45, i32 noundef 1)
   %48 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %48, align 1
@@ -311,7 +311,7 @@ switch-unboxed_default_1.i.i:                     ; preds = %switch-unboxed_defa
   store i32 %52, ptr %let_capture_2.i.i, align 4
   store ptr %let_capture_2.i.i, ptr %53, align 8
   %let_func_1.i.i = getelementptr { ptr, ptr }, ptr %53, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4776", ptr %let_func_1.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4777", ptr %let_func_1.i.i, align 8
   %p_0.i.i.i = load i32, ptr %let_capture_2.i.i, align 4
   %54 = tail call i32 @malgo_sub_int32_t(i32 %p_0.i.i.i, i32 noundef 1)
   %55 = tail call ptr @malgo_malloc(i64 noundef 8)
@@ -332,7 +332,7 @@ switch-unboxed_default_2.i.i:                     ; preds = %switch-unboxed_defa
   store i32 %59, ptr %let_capture_0.i.i.i, align 4
   store ptr %let_capture_0.i.i.i, ptr %60, align 8
   %let_func_0.i.i.i = getelementptr { ptr, ptr }, ptr %60, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4779", ptr %let_func_0.i.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4774", ptr %let_func_0.i.i.i, align 8
   %x_0.i.i.i = load i32, ptr %let_capture_0.i.i.i, align 4
   %61 = tail call i32 @malgo_sub_int32_t(i32 %x_0.i.i.i, i32 noundef 1)
   %62 = tail call ptr @malgo_malloc(i64 noundef 8)
@@ -348,7 +348,7 @@ switch-unboxed_default_3.i.i:                     ; preds = %switch-unboxed_defa
   store ptr %62, ptr %let_capture_4.i.i, align 8
   store ptr %let_capture_4.i.i, ptr %64, align 8
   %let_func_2.i.i = getelementptr { ptr, ptr }, ptr %64, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4777", ptr %let_func_2.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4778", ptr %let_func_2.i.i, align 8
   %65 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %65, align 1
   %66 = getelementptr { i8, { i32 } }, ptr %65, i64 0, i32 1, i32 0
@@ -359,7 +359,7 @@ switch-unboxed_default_3.i.i:                     ; preds = %switch-unboxed_defa
   store i32 %.val.i.i, ptr %let_capture_0.i2.i.i, align 4
   store ptr %let_capture_0.i2.i.i, ptr %67, align 8
   %let_func_0.i3.i.i = getelementptr { ptr, ptr }, ptr %67, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4781", ptr %let_func_0.i3.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4780", ptr %let_func_0.i3.i.i, align 8
   %68 = tail call i32 @malgo_sub_int32_t(i32 %.val.i.i, i32 noundef 1)
   %69 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %69, align 1
@@ -374,7 +374,7 @@ switch-unboxed_default_4.i.i:                     ; preds = %switch-unboxed_defa
   store ptr %69, ptr %let_capture_6.i.i, align 8
   store ptr %let_capture_6.i.i, ptr %71, align 8
   %let_func_3.i.i = getelementptr { ptr, ptr }, ptr %71, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4778", ptr %let_func_3.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4779", ptr %let_func_3.i.i, align 8
   %72 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %72, align 1
   %73 = getelementptr { i8, { i32 } }, ptr %72, i64 0, i32 1, i32 0
@@ -393,7 +393,7 @@ switch-unboxed_default_5.i.i:                     ; preds = %switch-unboxed_defa
   store ptr %76, ptr %let_capture_0.i4.i.i, align 8
   store ptr %let_capture_0.i4.i.i, ptr %79, align 8
   %let_func_0.i5.i.i = getelementptr { ptr, ptr }, ptr %79, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4782", ptr %let_func_0.i5.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_4787", ptr %let_func_0.i5.i.i, align 8
   %80 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %80, align 1
   %81 = getelementptr { i8, { i32 } }, ptr %80, i64 0, i32 1, i32 0
@@ -408,14 +408,14 @@ switch-unboxed_default_5.i.i:                     ; preds = %switch-unboxed_defa
 
 "test/testcases/malgo/EvenOdd.mlg.main.exit":     ; preds = %switch-unboxed_default_0.i.i, %switch-unboxed_default_1.i.i, %switch-unboxed_default_2.i.i, %switch-unboxed_default_3.i.i, %switch-unboxed_default_4.i.i, %switch-unboxed_default_5.i.i, %1, %switch-unboxed_default_1.i, %switch-unboxed_default_2.i, %switch-unboxed_default_3.i, %switch-unboxed_default_4.i
   %.sink.i = phi i8 [ 0, %1 ], [ 1, %switch-unboxed_default_1.i ], [ 0, %switch-unboxed_default_2.i ], [ 1, %switch-unboxed_default_3.i ], [ 0, %switch-unboxed_default_4.i ], [ 0, %switch-unboxed_default_3.i.i ], [ 0, %switch-unboxed_default_1.i.i ], [ 0, %switch-unboxed_default_5.i.i ], [ 1, %switch-unboxed_default_4.i.i ], [ 1, %switch-unboxed_default_2.i.i ], [ 1, %switch-unboxed_default_0.i.i ]
-  %str4788.sink14.i = phi ptr [ @str4787, %1 ], [ @str4788, %switch-unboxed_default_1.i ], [ @str4787, %switch-unboxed_default_2.i ], [ @str4788, %switch-unboxed_default_3.i ], [ @str4787, %switch-unboxed_default_4.i ], [ @str4787, %switch-unboxed_default_3.i.i ], [ @str4787, %switch-unboxed_default_1.i.i ], [ @str4787, %switch-unboxed_default_5.i.i ], [ @str4788, %switch-unboxed_default_4.i.i ], [ @str4788, %switch-unboxed_default_2.i.i ], [ @str4788, %switch-unboxed_default_0.i.i ]
+  %str4782.sink14.i = phi ptr [ @str4781, %1 ], [ @str4782, %switch-unboxed_default_1.i ], [ @str4781, %switch-unboxed_default_2.i ], [ @str4782, %switch-unboxed_default_3.i ], [ @str4781, %switch-unboxed_default_4.i ], [ @str4781, %switch-unboxed_default_3.i.i ], [ @str4781, %switch-unboxed_default_1.i.i ], [ @str4781, %switch-unboxed_default_5.i.i ], [ @str4782, %switch-unboxed_default_4.i.i ], [ @str4782, %switch-unboxed_default_2.i.i ], [ @str4782, %switch-unboxed_default_0.i.i ]
   %87 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 %.sink.i, ptr %87, align 1
   %88 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %88, align 1
   %89 = getelementptr { i8, { ptr } }, ptr %88, i64 0, i32 1, i32 0
-  store ptr %str4788.sink14.i, ptr %89, align 8
-  %90 = tail call ptr @malgo_print_string(ptr noundef nonnull %str4788.sink14.i)
+  store ptr %str4782.sink14.i, ptr %89, align 8
+  %90 = tail call ptr @malgo_print_string(ptr noundef nonnull %str4782.sink14.i)
   %91 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %91, align 1
   %92 = tail call ptr @malgo_malloc(i64 noundef 1)

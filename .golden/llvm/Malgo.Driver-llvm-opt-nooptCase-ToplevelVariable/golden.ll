@@ -4,9 +4,9 @@ source_filename = "test/testcases/malgo/ToplevelVariable.mlg"
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
 @"test/testcases/malgo/ToplevelVariable.mlg.one" = local_unnamed_addr global ptr undef
 @"test/testcases/malgo/ToplevelVariable.mlg.comp" = local_unnamed_addr global ptr undef
-@str153 = unnamed_addr constant [1 x i8] zeroinitializer
-@str230 = unnamed_addr constant [10 x i8] c"no branch\00"
-@str265 = unnamed_addr constant [3 x i8] c"OK\00"
+@str169 = unnamed_addr constant [1 x i8] zeroinitializer
+@str306 = unnamed_addr constant [3 x i8] c"OK\00"
+@str329 = unnamed_addr constant [10 x i8] c"no branch\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -25,36 +25,7 @@ define internal ptr @"runtime/malgo/Prelude.mlg.identity"(ptr nocapture nofree r
   ret ptr %"runtime/malgo/Prelude.mlg.$x_890_0"
 }
 
-define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_209"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
-  %x_0 = load i32, ptr %0, align 4
-  %3 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
-  store i32 %x_0, ptr %let_capture_0.i.i, align 4
-  store ptr %let_capture_0.i.i, ptr %3, align 8
-  %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_297", ptr %let_func_0.i.i, align 8
-  %p_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
-  %4 = tail call i32 @malgo_add_int32_t(i32 %p_0.i.i, i32 %1)
-  ret i32 %4
-}
-
-; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_234"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
-  %a_0 = load ptr, ptr %0, align 8
-  ret ptr %a_0
-}
-
-define internal ptr @"runtime/malgo/Prelude.mlg.const"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Prelude.mlg.$a_956_0") {
-  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %"runtime/malgo/Prelude.mlg.$a_956_0", ptr %let_capture_0, align 8
-  store ptr %let_capture_0, ptr %2, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_234", ptr %let_func_0, align 8
-  ret ptr %2
-}
-
-define internal noundef ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_291"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
+define internal noundef ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_260"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
   %"int32#_0" = load ptr, ptr %0, align 8
   %3 = getelementptr i8, ptr %"int32#_0", i64 4
   %"int32#_0.val" = load i32, ptr %3, align 4
@@ -65,14 +36,14 @@ define internal noundef ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_clo
   store i32 %"int32#_0.val", ptr %let_capture_0.i.i, align 4
   store ptr %let_capture_0.i.i, ptr %5, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_209", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_282", ptr %let_func_0.i.i, align 8
   %x_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
   %6 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i.i.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
   store i32 %x_0.i.i, ptr %let_capture_0.i.i.i.i, align 4
   store ptr %let_capture_0.i.i.i.i, ptr %6, align 8
   %let_func_0.i.i.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_297", ptr %let_func_0.i.i.i.i, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_270", ptr %let_func_0.i.i.i.i, align 8
   %p_0.i.i.i.i = load i32, ptr %let_capture_0.i.i.i.i, align 4
   %7 = tail call i32 @malgo_add_int32_t(i32 %p_0.i.i.i.i, i32 %.val)
   %8 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
@@ -82,10 +53,39 @@ define internal noundef ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_clo
   ret ptr %8
 }
 
-define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_297"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_270"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call i32 @malgo_add_int32_t(i32 %p_0, i32 %1)
   ret i32 %3
+}
+
+define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_282"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+  %x_0 = load i32, ptr %0, align 4
+  %3 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
+  store i32 %x_0, ptr %let_capture_0.i.i, align 4
+  store ptr %let_capture_0.i.i, ptr %3, align 8
+  %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_270", ptr %let_func_0.i.i, align 8
+  %p_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
+  %4 = tail call i32 @malgo_add_int32_t(i32 %p_0.i.i, i32 %1)
+  ret i32 %4
+}
+
+; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_330"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
+  %a_0 = load ptr, ptr %0, align 8
+  ret ptr %a_0
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.const"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Prelude.mlg.$a_956_0") {
+  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %"runtime/malgo/Prelude.mlg.$a_956_0", ptr %let_capture_0, align 8
+  store ptr %let_capture_0, ptr %2, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_330", ptr %let_func_0, align 8
+  ret ptr %2
 }
 
 define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
@@ -125,8 +125,8 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %15 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %15, align 1
   %16 = getelementptr { i8, { ptr } }, ptr %15, i64 0, i32 1, i32 0
-  store ptr @str265, ptr %16, align 8
-  %17 = tail call ptr @malgo_print_string(ptr noundef nonnull @str265)
+  store ptr @str306, ptr %16, align 8
+  %17 = tail call ptr @malgo_print_string(ptr noundef nonnull @str306)
   br label %"test/testcases/malgo/ToplevelVariable.mlg.main.exit"
 
 "switch_branch_runtime/malgo/Prelude.mlg.Just_0.i.i": ; preds = %1
@@ -148,7 +148,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %20, ptr %let_capture_0.i.i.i, align 8
   store ptr %let_capture_0.i.i.i, ptr %21, align 8
   %let_func_0.i.i.i = getelementptr { ptr, ptr }, ptr %21, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_234", ptr %let_func_0.i.i.i, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_330", ptr %let_func_0.i.i.i, align 8
   %a_0.i.i.i = load ptr, ptr %let_capture_0.i.i.i, align 8
   %22 = load ptr, ptr @"test/testcases/malgo/ToplevelVariable.mlg.one", align 8
   %23 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -156,7 +156,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %22, ptr %let_capture_0.i.i2.i, align 8
   store ptr %let_capture_0.i.i2.i, ptr %23, align 8
   %let_func_0.i.i3.i = getelementptr { ptr, ptr }, ptr %23, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_291", ptr %let_func_0.i.i3.i, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_260", ptr %let_func_0.i.i3.i, align 8
   %"int32#_0.i.i.i" = load ptr, ptr %let_capture_0.i.i2.i, align 8
   %24 = getelementptr i8, ptr %"int32#_0.i.i.i", i64 4
   %"int32#_0.val.i.i.i" = load i32, ptr %24, align 4
@@ -167,14 +167,14 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store i32 %"int32#_0.val.i.i.i", ptr %let_capture_0.i.i.i.i.i, align 4
   store ptr %let_capture_0.i.i.i.i.i, ptr %26, align 8
   %let_func_0.i.i.i.i.i = getelementptr { ptr, ptr }, ptr %26, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_209", ptr %let_func_0.i.i.i.i.i, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_282", ptr %let_func_0.i.i.i.i.i, align 8
   %x_0.i.i.i.i.i = load i32, ptr %let_capture_0.i.i.i.i.i, align 4
   %27 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i.i.i.i.i.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
   store i32 %x_0.i.i.i.i.i, ptr %let_capture_0.i.i.i.i.i.i.i, align 4
   store ptr %let_capture_0.i.i.i.i.i.i.i, ptr %27, align 8
   %let_func_0.i.i.i.i.i.i.i = getelementptr { ptr, ptr }, ptr %27, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_297", ptr %let_func_0.i.i.i.i.i.i.i, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_270", ptr %let_func_0.i.i.i.i.i.i.i, align 8
   %p_0.i.i.i.i.i.i.i = load i32, ptr %let_capture_0.i.i.i.i.i.i.i, align 4
   %28 = tail call i32 @malgo_add_int32_t(i32 %p_0.i.i.i.i.i.i.i, i32 %.val.i.i.i)
   %29 = tail call ptr @malgo_malloc(i64 noundef 8)

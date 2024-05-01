@@ -270,11 +270,11 @@ define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.+#"(ptr nocapture
 
 define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_342"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(24) %0, ptr nocapture nofree readonly align 4 %1) {
 "switch_branch_runtime/malgo/Builtin.mlg.Int64#_0":
-  %"Int64#_0" = load ptr, ptr %0, align 8
-  %"+#_addr_0" = getelementptr { ptr, ptr, i64 }, ptr %0, i64 0, i32 1
-  %"+#_0" = load ptr, ptr %"+#_addr_0", align 8
-  %p_addr_0 = getelementptr { ptr, ptr, i64 }, ptr %0, i64 0, i32 2
+  %"+#_0" = load ptr, ptr %0, align 8
+  %p_addr_0 = getelementptr { ptr, i64, ptr }, ptr %0, i64 0, i32 1
   %p_0 = load i64, ptr %p_addr_0, align 4
+  %"Int64#_addr_0" = getelementptr { ptr, i64, ptr }, ptr %0, i64 0, i32 2
+  %"Int64#_0" = load ptr, ptr %"Int64#_addr_0", align 8
   %2 = getelementptr { i8, { i64 } }, ptr %1, i64 0, i32 1
   %3 = load i64, ptr %2, align 4
   %4 = load ptr, ptr %"+#_0", align 8
@@ -338,17 +338,17 @@ common.ret:                                       ; preds = %"switch_branch_runt
   %fun_capture_0 = tail call ptr @malgo_malloc(i64 noundef 24)
   %17 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %17, align 8
-  %"Int64#_func_1" = getelementptr { ptr, ptr }, ptr %17, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.Int64#", ptr %"Int64#_func_1", align 8
+  %"+#_func_0" = getelementptr { ptr, ptr }, ptr %17, i64 0, i32 1
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.+#", ptr %"+#_func_0", align 8
   store ptr %17, ptr %fun_capture_0, align 8
+  %p_0 = getelementptr { ptr, i64, ptr }, ptr %fun_capture_0, i64 0, i32 1
+  store i64 %11, ptr %p_0, align 4
   %18 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %18, align 8
-  %"+#_func_0" = getelementptr { ptr, ptr }, ptr %18, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.+#", ptr %"+#_func_0", align 8
-  %"+#_0" = getelementptr { ptr, ptr, i64 }, ptr %fun_capture_0, i64 0, i32 1
-  store ptr %18, ptr %"+#_0", align 8
-  %p_0 = getelementptr { ptr, ptr, i64 }, ptr %fun_capture_0, i64 0, i32 2
-  store i64 %11, ptr %p_0, align 4
+  %"Int64#_func_1" = getelementptr { ptr, ptr }, ptr %18, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.Int64#", ptr %"Int64#_func_1", align 8
+  %"Int64#_0" = getelementptr { ptr, i64, ptr }, ptr %fun_capture_0, i64 0, i32 2
+  store ptr %18, ptr %"Int64#_0", align 8
   store ptr %fun_capture_0, ptr %16, align 8
   %fun_func_0 = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
   store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_342", ptr %fun_func_0, align 8

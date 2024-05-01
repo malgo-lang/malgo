@@ -29,9 +29,9 @@ define internal ptr @"test/testcases/malgo/DataDef.mlg.malgo_print_string"(ptr n
 
 define internal ptr @"test/testcases/malgo/DataDef.mlg.#fun_closure_44"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr nocapture nofree readonly align 4 %1) {
 "switch_branch_test/testcases/malgo/DataDef.mlg.Int#_0":
-  %malgo_int64_t_to_string_0 = load ptr, ptr %0, align 8
-  %malgo_print_string_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %malgo_print_string_0 = load ptr, ptr %malgo_print_string_addr_0, align 8
+  %malgo_print_string_0 = load ptr, ptr %0, align 8
+  %malgo_int64_t_to_string_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %malgo_int64_t_to_string_0 = load ptr, ptr %malgo_int64_t_to_string_addr_0, align 8
   %2 = getelementptr { i8, { i64 } }, ptr %1, i64 0, i32 1
   %3 = load i64, ptr %2, align 4
   %4 = load ptr, ptr %malgo_int64_t_to_string_0, align 8
@@ -53,15 +53,15 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 16)
   %4 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %4, align 8
-  %malgo_int64_t_to_string_func_0.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
-  store ptr @"test/testcases/malgo/DataDef.mlg.malgo_int64_t_to_string", ptr %malgo_int64_t_to_string_func_0.i, align 8
+  %malgo_print_string_func_0.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
+  store ptr @"test/testcases/malgo/DataDef.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i, align 8
   store ptr %4, ptr %fun_capture_0.i, align 8
   %5 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %5, align 8
-  %malgo_print_string_func_0.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/DataDef.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i, align 8
-  %malgo_print_string_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
-  store ptr %5, ptr %malgo_print_string_0.i, align 8
+  %malgo_int64_t_to_string_func_0.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
+  store ptr @"test/testcases/malgo/DataDef.mlg.malgo_int64_t_to_string", ptr %malgo_int64_t_to_string_func_0.i, align 8
+  %malgo_int64_t_to_string_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
+  store ptr %5, ptr %malgo_int64_t_to_string_0.i, align 8
   store ptr %fun_capture_0.i, ptr %3, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
   store ptr @"test/testcases/malgo/DataDef.mlg.#fun_closure_44", ptr %fun_func_0.i, align 8

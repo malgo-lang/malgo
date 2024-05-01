@@ -435,10 +435,10 @@ define internal ptr @"test/testcases/malgo/Punctuate.mlg.SList"(ptr %0, ptr %"te
 }
 
 define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3171"(ptr %0, ptr %1) {
-  %malgo_string_append_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 0
-  %malgo_string_append_0 = load ptr, ptr %malgo_string_append_addr_0, align 8
-  %eta_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 1
+  %eta_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 0
   %eta_0 = load ptr, ptr %eta_addr_0, align 8
+  %malgo_string_append_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 1
+  %malgo_string_append_0 = load ptr, ptr %malgo_string_append_addr_0, align 8
   %3 = getelementptr { i8, <8 x i8> }, ptr %eta_0, i32 0, i32 0
   %4 = load i8, ptr %3, align 1
   switch i8 %4, label %switch_default_1 [
@@ -486,15 +486,15 @@ switch_default_1:                                 ; preds = %2
 define internal ptr @"test/testcases/malgo/Punctuate.mlg.<>"(ptr %0, ptr %"test/testcases/malgo/Punctuate.mlg.$eta_119_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %eta_0 = getelementptr { ptr, ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %"test/testcases/malgo/Punctuate.mlg.$eta_119_0", ptr %eta_0, align 8
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %malgo_string_append_capture_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
   store ptr null, ptr %malgo_string_append_capture_0, align 8
   %malgo_string_append_func_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
   store ptr @"runtime/malgo/Builtin.mlg.malgo_string_append", ptr %malgo_string_append_func_0, align 8
-  %malgo_string_append_0 = getelementptr { ptr, ptr }, ptr %let_capture_0, i32 0, i32 0
+  %malgo_string_append_0 = getelementptr { ptr, ptr }, ptr %let_capture_0, i32 0, i32 1
   store ptr %3, ptr %malgo_string_append_0, align 8
-  %eta_0 = getelementptr { ptr, ptr }, ptr %let_capture_0, i32 0, i32 1
-  store ptr %"test/testcases/malgo/Punctuate.mlg.$eta_119_0", ptr %eta_0, align 8
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1

@@ -162,21 +162,6 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @"test/testcases/malgo/Undefined.mlg.g"(ptr %0, ptr %"test/testcases/malgo/Undefined.mlg.$x_20_0") {
-  %2 = load ptr, ptr @"runtime/malgo/Builtin.mlg.undefined", align 8
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/Undefined.mlg.f"(ptr %0, ptr %"test/testcases/malgo/Undefined.mlg.$eta_29_0") {
-  %2 = load ptr, ptr @"runtime/malgo/Builtin.mlg.undefined", align 8
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %"test/testcases/malgo/Undefined.mlg.$eta_29_0")
-  ret ptr %7
-}
-
 declare ptr @malgo_malloc(i64)
 
 define internal ptr @"test/testcases/malgo/Undefined.mlg.main"(ptr %0, ptr %"test/testcases/malgo/Undefined.mlg.$$__21_0") {
@@ -200,6 +185,21 @@ define internal ptr @"test/testcases/malgo/Undefined.mlg.main"(ptr %0, ptr %"tes
 
 switch_default_0:                                 ; preds = %1
   unreachable
+}
+
+define internal ptr @"test/testcases/malgo/Undefined.mlg.f"(ptr %0, ptr %"test/testcases/malgo/Undefined.mlg.$eta_29_0") {
+  %2 = load ptr, ptr @"runtime/malgo/Builtin.mlg.undefined", align 8
+  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %"test/testcases/malgo/Undefined.mlg.$eta_29_0")
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/Undefined.mlg.g"(ptr %0, ptr %"test/testcases/malgo/Undefined.mlg.$x_20_0") {
+  %2 = load ptr, ptr @"runtime/malgo/Builtin.mlg.undefined", align 8
+  ret ptr %2
 }
 
 define i32 @main(ptr %0) {

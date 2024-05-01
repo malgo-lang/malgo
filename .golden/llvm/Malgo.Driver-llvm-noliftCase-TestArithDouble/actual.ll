@@ -452,10 +452,10 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3
 }
 
 define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3140"(ptr %0, double %1) {
-  %d_addr_0 = getelementptr { double, ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load double, ptr %d_addr_0, align 8
-  %malgo_mul_double_addr_0 = getelementptr { double, ptr }, ptr %0, i32 0, i32 1
+  %malgo_mul_double_addr_0 = getelementptr { ptr, double }, ptr %0, i32 0, i32 0
   %malgo_mul_double_0 = load ptr, ptr %malgo_mul_double_addr_0, align 8
+  %d_addr_0 = getelementptr { ptr, double }, ptr %0, i32 0, i32 1
+  %d_0 = load double, ptr %d_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %malgo_mul_double_0, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %malgo_mul_double_0, i32 0, i32 1
@@ -487,16 +487,16 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.f"(ptr %0, dou
   store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3139", ptr %let_func_0, align 8
   %4 = call double @"runtime/malgo/Builtin.mlg.$addDouble#_curry_4096"(ptr null, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0", double 0.000000e+00)
   %5 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double, ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { double, ptr }, ptr %let_capture_2, i32 0, i32 0
-  store double %4, ptr %d_0, align 8
+  %let_capture_2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, double }, ptr null, i32 1) to i64))
   %6 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %malgo_mul_double_capture_0 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 0
   store ptr null, ptr %malgo_mul_double_capture_0, align 8
   %malgo_mul_double_func_0 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 1
   store ptr @"runtime/malgo/Builtin.mlg.malgo_mul_double", ptr %malgo_mul_double_func_0, align 8
-  %malgo_mul_double_0 = getelementptr { double, ptr }, ptr %let_capture_2, i32 0, i32 1
+  %malgo_mul_double_0 = getelementptr { ptr, double }, ptr %let_capture_2, i32 0, i32 0
   store ptr %6, ptr %malgo_mul_double_0, align 8
+  %d_0 = getelementptr { ptr, double }, ptr %let_capture_2, i32 0, i32 1
+  store double %4, ptr %d_0, align 8
   %let_capture_3 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 0
   store ptr %let_capture_2, ptr %let_capture_3, align 8
   %let_func_1 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 1

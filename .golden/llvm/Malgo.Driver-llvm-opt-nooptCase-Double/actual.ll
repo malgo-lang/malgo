@@ -2,8 +2,8 @@
 source_filename = "test/testcases/malgo/Double.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
-@str43 = unnamed_addr constant [1 x i8] zeroinitializer
-@str121 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str63 = unnamed_addr constant [1 x i8] zeroinitializer
+@str221 = unnamed_addr constant [10 x i8] c"no branch\00"
 
 declare void @GC_init() local_unnamed_addr
 

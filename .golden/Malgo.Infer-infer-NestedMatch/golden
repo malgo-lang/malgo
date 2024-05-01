@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+            }
+        )
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -24,8 +30,14 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -85,8 +97,14 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                            }
+                                        )
                                     , sort = Internal 29
                                     }
                                 )
@@ -145,8 +163,14 @@ Module
                                                     ( TyCon
                                                         ( Id
                                                             { name = "Bool"
-                                                            , moduleName = ModuleName
-                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                    }
+                                                                )
                                                             , sort = External
                                                             }
                                                         )
@@ -172,8 +196,14 @@ Module
                                                         ( TyCon
                                                             ( Id
                                                                 { name = "Bool"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = External
                                                                 }
                                                             )
@@ -198,8 +228,14 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "Bool"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = External
                                                                 }
                                                             )
@@ -219,8 +255,14 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "True"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                }
+                                                            )
                                                         , sort = External
                                                         }
                                                     ) []
@@ -293,8 +335,14 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "malgo_print_string"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -327,8 +375,14 @@ Module
                                                             ( TyCon
                                                                 ( Id
                                                                     { name = "Bool"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -353,8 +407,14 @@ Module
                                                             { annotated = TyCon
                                                                 ( Id
                                                                     { name = "Bool"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -374,8 +434,14 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "False"
-                                                            , moduleName = ModuleName
-                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                    }
+                                                                )
                                                             , sort = External
                                                             }
                                                         ) []
@@ -449,8 +515,14 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "malgo_exit_failure"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -484,8 +556,14 @@ Module
                                                 { annotated = TyCon
                                                     ( Id
                                                         { name = "Bool"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                }
+                                                            )
                                                         , sort = External
                                                         }
                                                     )
@@ -522,8 +600,14 @@ Module
                                                         { annotated = TyCon
                                                             ( Id
                                                                 { name = "Bool"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = External
                                                                 }
                                                             )
@@ -547,8 +631,14 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "Bool1"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -556,8 +646,14 @@ Module
                                                                 ( TyCon
                                                                     ( Id
                                                                         { name = "Bool"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -582,8 +678,14 @@ Module
                                                                     ( TyCon
                                                                         ( Id
                                                                             { name = "Bool1"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -591,8 +693,14 @@ Module
                                                                     ( TyCon
                                                                         ( Id
                                                                             { name = "Bool"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -616,8 +724,14 @@ Module
                                                                     { annotated = TyCon
                                                                         ( Id
                                                                             { name = "Bool1"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -637,8 +751,14 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "True1"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 ) []
@@ -648,8 +768,14 @@ Module
                                                                     { annotated = TyCon
                                                                         ( Id
                                                                             { name = "Bool"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -686,8 +812,14 @@ Module
                                                                             { annotated = TyCon
                                                                                 ( Id
                                                                                     { name = "Bool"
-                                                                                    , moduleName = ModuleName
-                                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                    , moduleName = Artifact
+                                                                                        ( ArtifactPath
+                                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            }
+                                                                                        )
                                                                                     , sort = External
                                                                                     }
                                                                                 )
@@ -707,8 +839,14 @@ Module
                                                                         )
                                                                         ( Id
                                                                             { name = "False"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -721,8 +859,14 @@ Module
                                                                         ( TyCon
                                                                             ( Id
                                                                                 { name = "Bool1"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -730,8 +874,14 @@ Module
                                                                         ( TyCon
                                                                             ( Id
                                                                                 { name = "Bool"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -755,8 +905,14 @@ Module
                                                                         { annotated = TyCon
                                                                             ( Id
                                                                                 { name = "Bool1"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -776,8 +932,14 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "False1"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     ) []
@@ -787,8 +949,14 @@ Module
                                                                         { annotated = TyCon
                                                                             ( Id
                                                                                 { name = "Bool"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -825,8 +993,14 @@ Module
                                                                                 { annotated = TyCon
                                                                                     ( Id
                                                                                         { name = "Bool"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                        , moduleName = Artifact
+                                                                                            ( ArtifactPath
+                                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                }
+                                                                                            )
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -846,8 +1020,14 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "True"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -862,8 +1042,14 @@ Module
                                                             { annotated = TyCon
                                                                 ( Id
                                                                     { name = "Bool1"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -900,8 +1086,14 @@ Module
                                                                     { annotated = TyCon
                                                                         ( Id
                                                                             { name = "Bool1"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -925,8 +1117,14 @@ Module
                                                                             ( TyCon
                                                                                 ( Id
                                                                                     { name = "Bool2"
-                                                                                    , moduleName = ModuleName
-                                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                    , moduleName = Artifact
+                                                                                        ( ArtifactPath
+                                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            }
+                                                                                        )
                                                                                     , sort = External
                                                                                     }
                                                                                 )
@@ -934,8 +1132,14 @@ Module
                                                                             ( TyCon
                                                                                 ( Id
                                                                                     { name = "Bool1"
-                                                                                    , moduleName = ModuleName
-                                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                    , moduleName = Artifact
+                                                                                        ( ArtifactPath
+                                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            }
+                                                                                        )
                                                                                     , sort = External
                                                                                     }
                                                                                 )
@@ -960,8 +1164,14 @@ Module
                                                                                 ( TyCon
                                                                                     ( Id
                                                                                         { name = "Bool2"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                        , moduleName = Artifact
+                                                                                            ( ArtifactPath
+                                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                }
+                                                                                            )
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -969,8 +1179,14 @@ Module
                                                                                 ( TyCon
                                                                                     ( Id
                                                                                         { name = "Bool1"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                        , moduleName = Artifact
+                                                                                            ( ArtifactPath
+                                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                }
+                                                                                            )
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -994,8 +1210,14 @@ Module
                                                                                 { annotated = TyCon
                                                                                     ( Id
                                                                                         { name = "Bool2"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                        , moduleName = Artifact
+                                                                                            ( ArtifactPath
+                                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                }
+                                                                                            )
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -1015,8 +1237,14 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "True2"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             ) []
@@ -1026,8 +1254,14 @@ Module
                                                                                 { annotated = TyCon
                                                                                     ( Id
                                                                                         { name = "Bool1"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                        , moduleName = Artifact
+                                                                                            ( ArtifactPath
+                                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                }
+                                                                                            )
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -1064,8 +1298,14 @@ Module
                                                                                         { annotated = TyCon
                                                                                             ( Id
                                                                                                 { name = "Bool1"
-                                                                                                , moduleName = ModuleName
-                                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                                , moduleName = Artifact
+                                                                                                    ( ArtifactPath
+                                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                        }
+                                                                                                    )
                                                                                                 , sort = External
                                                                                                 }
                                                                                             )
@@ -1085,8 +1325,14 @@ Module
                                                                                     )
                                                                                     ( Id
                                                                                         { name = "False1"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                        , moduleName = Artifact
+                                                                                            ( ArtifactPath
+                                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                }
+                                                                                            )
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -1099,8 +1345,14 @@ Module
                                                                                     ( TyCon
                                                                                         ( Id
                                                                                             { name = "Bool2"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1108,8 +1360,14 @@ Module
                                                                                     ( TyCon
                                                                                         ( Id
                                                                                             { name = "Bool1"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1133,8 +1391,14 @@ Module
                                                                                     { annotated = TyCon
                                                                                         ( Id
                                                                                             { name = "Bool2"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1154,8 +1418,14 @@ Module
                                                                                 )
                                                                                 ( Id
                                                                                     { name = "False2"
-                                                                                    , moduleName = ModuleName
-                                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                    , moduleName = Artifact
+                                                                                        ( ArtifactPath
+                                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            }
+                                                                                        )
                                                                                     , sort = External
                                                                                     }
                                                                                 ) []
@@ -1165,8 +1435,14 @@ Module
                                                                                     { annotated = TyCon
                                                                                         ( Id
                                                                                             { name = "Bool1"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1203,8 +1479,14 @@ Module
                                                                                             { annotated = TyCon
                                                                                                 ( Id
                                                                                                     { name = "Bool1"
-                                                                                                    , moduleName = ModuleName
-                                                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                                    , moduleName = Artifact
+                                                                                                        ( ArtifactPath
+                                                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                            }
+                                                                                                        )
                                                                                                     , sort = External
                                                                                                     }
                                                                                                 )
@@ -1224,8 +1506,14 @@ Module
                                                                                         )
                                                                                         ( Id
                                                                                             { name = "True1"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -1240,8 +1528,14 @@ Module
                                                                         { annotated = TyCon
                                                                             ( Id
                                                                                 { name = "Bool2"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -1261,8 +1555,14 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "True2"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -1297,8 +1597,14 @@ Module
                     }
                 , Id
                     { name = "Bool"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , []
@@ -1318,8 +1624,14 @@ Module
                             }
                         , Id
                             { name = "False"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -1339,8 +1651,14 @@ Module
                             }
                         , Id
                             { name = "True"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -1362,8 +1680,14 @@ Module
                     }
                 , Id
                     { name = "Bool1"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , []
@@ -1383,8 +1707,14 @@ Module
                             }
                         , Id
                             { name = "False1"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -1404,8 +1734,14 @@ Module
                             }
                         , Id
                             { name = "True1"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -1427,8 +1763,14 @@ Module
                     }
                 , Id
                     { name = "Bool2"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , []
@@ -1448,8 +1790,14 @@ Module
                             }
                         , Id
                             { name = "False2"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -1469,8 +1817,14 @@ Module
                             }
                         , Id
                             { name = "True2"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -1502,8 +1856,14 @@ Module
                     }
                 , Id
                     { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -1536,8 +1896,7 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
+                            , moduleName = ModuleName "Builtin"
                             , sort = External
                             }
                         )
@@ -1565,8 +1924,14 @@ Module
                         ( TyVar
                             ( Id
                                 { name = "a"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                        }
+                                    )
                                 , sort = Internal 2
                                 }
                             )
@@ -1589,8 +1954,14 @@ Module
                     }
                 , Id
                     { name = "malgo_exit_failure"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -1638,8 +2009,14 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = Internal 0
                             }
                         )
@@ -1653,84 +2030,45 @@ TcEnv
     { _signatureMap = fromList
         [
             ( Id
-                { name = "True"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "Bool"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                        , sort = External
+                { name = "$_"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
                         }
                     )
-                )
-            )
-        ,
-            ( Id
-                { name = "main"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = External
+                , sort = Internal 29
                 }
             , Forall []
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "True1"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "Bool1"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                        , sort = External
-                        }
-                    )
-                )
+                ( TyTuple 0 )
             )
         ,
             ( Id
                 { name = "True2"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Forall []
                 ( TyCon
                     ( Id
                         { name = "Bool2"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "False1"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "Bool1"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     )
@@ -1739,8 +2077,14 @@ TcEnv
         ,
             ( Id
                 { name = "malgo_print_string"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Forall []
@@ -1751,15 +2095,27 @@ TcEnv
         ,
             ( Id
                 { name = "malgo_exit_failure"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Forall
                 [ Id
                     { name = "a"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = Internal 2
                     }
                 ]
@@ -1768,8 +2124,14 @@ TcEnv
                     ( TyVar
                         ( Id
                             { name = "a"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = Internal 2
                             }
                         )
@@ -1778,27 +2140,29 @@ TcEnv
             )
         ,
             ( Id
-                { name = "$_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 29
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
                 { name = "False2"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Forall []
                 ( TyCon
                     ( Id
                         { name = "Bool2"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     )
@@ -1807,16 +2171,137 @@ TcEnv
         ,
             ( Id
                 { name = "False"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Forall []
                 ( TyCon
                     ( Id
                         { name = "Bool"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "True"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "Bool"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "True1"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "Bool1"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "False1"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "Bool1"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     )
@@ -1826,22 +2311,101 @@ TcEnv
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "Int64#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                { name = "Bool1"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , TypeDef
-                { _typeConstructor = TyPrim Int64T
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "Bool1"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
                 , _typeParameters = []
-                , _valueConstructors = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "False1"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "Bool1"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                            }
+                                        )
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "True1"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "Bool1"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                            }
+                                        )
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ]
                 }
             )
         ,
             ( Id
                 { name = "Double#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -1853,8 +2417,7 @@ TcEnv
         ,
             ( Id
                 { name = "Int32#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -1866,8 +2429,7 @@ TcEnv
         ,
             ( Id
                 { name = "Ptr#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -1878,17 +2440,41 @@ TcEnv
             )
         ,
             ( Id
-                { name = "Bool1"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                { name = "Char#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Bool"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , TypeDef
                 { _typeConstructor = TyCon
                     ( Id
-                        { name = "Bool1"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                        { name = "Bool"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     )
@@ -1896,17 +2482,29 @@ TcEnv
                 , _valueConstructors =
                     [
                         ( Id
-                            { name = "False1"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            { name = "False"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , Forall []
                             ( TyCon
                                 ( Id
-                                    { name = "Bool1"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                    { name = "Bool"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                            }
+                                        )
                                     , sort = External
                                     }
                                 )
@@ -1914,17 +2512,29 @@ TcEnv
                         )
                     ,
                         ( Id
-                            { name = "True1"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            { name = "True"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , Forall []
                             ( TyCon
                                 ( Id
-                                    { name = "Bool1"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                    { name = "Bool"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                            }
+                                        )
                                     , sort = External
                                     }
                                 )
@@ -1935,17 +2545,61 @@ TcEnv
             )
         ,
             ( Id
+                { name = "a"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 0
+                }
+            , TypeDef
+                { _typeConstructor = TyVar
+                    ( Id
+                        { name = "a"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
+                        , sort = Internal 2
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
                 { name = "Bool2"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , TypeDef
                 { _typeConstructor = TyCon
                     ( Id
                         { name = "Bool2"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     )
@@ -1954,16 +2608,28 @@ TcEnv
                     [
                         ( Id
                             { name = "False2"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , Forall []
                             ( TyCon
                                 ( Id
                                     { name = "Bool2"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                            }
+                                        )
                                     , sort = External
                                     }
                                 )
@@ -1972,16 +2638,28 @@ TcEnv
                     ,
                         ( Id
                             { name = "True2"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , Forall []
                             ( TyCon
                                 ( Id
                                     { name = "Bool2"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                            }
+                                        )
                                     , sort = External
                                     }
                                 )
@@ -1992,9 +2670,20 @@ TcEnv
             )
         ,
             ( Id
+                { name = "Int64#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
                 { name = "String#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -2006,102 +2695,11 @@ TcEnv
         ,
             ( Id
                 { name = "Float#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
                 { _typeConstructor = TyPrim FloatT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "a"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 0
-                }
-            , TypeDef
-                { _typeConstructor = TyVar
-                    ( Id
-                        { name = "a"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                        , sort = Internal 2
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Bool"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyCon
-                    ( Id
-                        { name = "Bool"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                        , sort = External
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors =
-                    [
-                        ( Id
-                            { name = "False"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "Bool"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ,
-                        ( Id
-                            { name = "True"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "Bool"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ]
-                }
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim CharT
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -2116,8 +2714,7 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "String#"
-                        , moduleName = ModuleName
-                            { raw = "Builtin" }
+                        , moduleName = ModuleName "Builtin"
                         , sort = External
                         }
                     }
@@ -2130,8 +2727,7 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Ptr#"
-                        , moduleName = ModuleName
-                            { raw = "Builtin" }
+                        , moduleName = ModuleName "Builtin"
                         , sort = External
                         }
                     }
@@ -2144,8 +2740,7 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Char#"
-                        , moduleName = ModuleName
-                            { raw = "Builtin" }
+                        , moduleName = ModuleName "Builtin"
                         , sort = External
                         }
                     }
@@ -2158,8 +2753,7 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Float#"
-                        , moduleName = ModuleName
-                            { raw = "Builtin" }
+                        , moduleName = ModuleName "Builtin"
                         , sort = External
                         }
                     }
@@ -2172,8 +2766,7 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Int64#"
-                        , moduleName = ModuleName
-                            { raw = "Builtin" }
+                        , moduleName = ModuleName "Builtin"
                         , sort = External
                         }
                     }
@@ -2186,8 +2779,7 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Double#"
-                        , moduleName = ModuleName
-                            { raw = "Builtin" }
+                        , moduleName = ModuleName "Builtin"
                         , sort = External
                         }
                     }
@@ -2200,8 +2792,7 @@ TcEnv
                     { visibility = Implicit
                     , value = Id
                         { name = "Int32#"
-                        , moduleName = ModuleName
-                            { raw = "Builtin" }
+                        , moduleName = ModuleName "Builtin"
                         , sort = External
                         }
                     }
@@ -2211,189 +2802,84 @@ TcEnv
     , _kindCtx = fromList
         [
             ( Id
-                { name = "Int64#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 18
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 10
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 17
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 9
                     }
                 )
             )
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 16
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 8
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 15
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 22
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 21
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 20
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 19
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 26
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 25
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 24
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 23
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TyArr TYPE TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 28
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 27
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 6
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 5
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 7
                     }
                 )
             )
         ,
             ( Id
                 { name = "a"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = Internal 12
                 }
             , TyMeta
                 ( Id
                     { name = "ka"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = Temporal 11
                     }
                 )
@@ -2401,56 +2887,307 @@ TcEnv
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 4
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 14
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 3
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 13
                     }
                 )
             )
         ,
             ( Id
+                { name = "Double#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 6
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 5
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
                 { name = "a"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
                 , sort = Internal 2
                 }
             , TyMeta
                 ( Id
                     { name = "ka"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = Temporal 1
                     }
                 )
             )
         ,
             ( Id
+                { name = "Char#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 10
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 4
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 9
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 3
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 26
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 25
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 24
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 23
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 28
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 27
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 18
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 17
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 16
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 15
                     }
                 )
             )
         ,
             ( Id
                 { name = "Float#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TYPE
@@ -2458,41 +3195,56 @@ TcEnv
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 8
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 22
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 7
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 21
                     }
                 )
             )
         ,
             ( Id
-                { name = "Char#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                , sort = Internal 14
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                        }
+                    )
+                , sort = Internal 20
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
-                    , sort = Temporal 13
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
+                    , sort = Temporal 19
                     }
                 )
             )

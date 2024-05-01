@@ -161,10 +161,6 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.id"(ptr %0, ptr %"test/testcases/malgo/ZeroArgs.mlg.$x_36_0") {
-  ret ptr %"test/testcases/malgo/ZeroArgs.mlg.$x_36_0"
-}
-
 declare ptr @malgo_malloc(i64)
 
 define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.main"(ptr %0, ptr %"test/testcases/malgo/ZeroArgs.mlg.$eta_57_0") {
@@ -203,6 +199,10 @@ switch_default_0:                                 ; preds = %"switch_branch_runt
 
 switch_default_1:                                 ; preds = %1
   unreachable
+}
+
+define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.id"(ptr %0, ptr %"test/testcases/malgo/ZeroArgs.mlg.$x_36_0") {
+  ret ptr %"test/testcases/malgo/ZeroArgs.mlg.$x_36_0"
 }
 
 define i32 @main(ptr %0) {

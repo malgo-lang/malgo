@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/UseModule.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/UseModule.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/UseModule.mlg"
+            , relPath = "test/testcases/malgo/UseModule.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/UseModule.mlg"
+            }
+        )
     , moduleDefinition = ParsedDefinitions
         [ Import
             ( Range
@@ -16,9 +22,7 @@ Module
                     }
                 }
             )
-            ( ModuleName
-                { raw = "Builtin" }
-            ) All
+            ( ModuleName "Builtin" ) All
         , Import
             ( Range
                 { _start = SourcePos
@@ -33,13 +37,9 @@ Module
                     }
                 }
             )
-            ( ModuleName
-                { raw = "Prelude" }
-            )
+            ( ModuleName "Prelude" )
             ( As
-                ( ModuleName
-                    { raw = "Prelude" }
-                )
+                ( ModuleName "Prelude" )
             )
         , Import
             ( Range
@@ -55,9 +55,7 @@ Module
                     }
                 }
             )
-            ( ModuleName
-                { raw = "Prelude" }
-            )
+            ( ModuleName "Prelude" )
             ( Selected
                 [ "addInt32"
                 , "<|"
@@ -322,9 +320,7 @@ Module
                                 ( Var
                                     ( Qualified
                                         { visibility = Explicit
-                                            ( ModuleName
-                                                { raw = "Prelude" }
-                                            )
+                                            ( ModuleName "Prelude" )
                                         , value = Range
                                             { _start = SourcePos
                                                 { sourceName = "./test/testcases/malgo/UseModule.mlg"
@@ -388,9 +384,7 @@ Module
                                     ( Var
                                         ( Qualified
                                             { visibility = Explicit
-                                                ( ModuleName
-                                                    { raw = "Prelude" }
-                                                )
+                                                ( ModuleName "Prelude" )
                                             , value = Range
                                                 { _start = SourcePos
                                                     { sourceName = "./test/testcases/malgo/UseModule.mlg"

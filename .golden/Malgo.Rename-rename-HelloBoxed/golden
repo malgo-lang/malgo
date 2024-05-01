@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+            }
+        )
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -19,8 +25,14 @@ Module
                         }
                     , Id
                         { name = "string#"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -67,8 +79,14 @@ Module
                                 )
                                 ( Id
                                     { name = "x"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                            }
+                                        )
                                     , sort = Internal 1
                                     }
                                 )
@@ -131,8 +149,14 @@ Module
                                             )
                                             ( Id
                                                 { name = "String#"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                        }
+                                                    )
                                                 , sort = External
                                                 }
                                             )
@@ -153,8 +177,14 @@ Module
                                             )
                                             ( Id
                                                 { name = "x"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                        }
+                                                    )
                                                 , sort = Internal 1
                                                 }
                                             )
@@ -181,8 +211,14 @@ Module
                         }
                     , Id
                         { name = "putStrLn"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -229,8 +265,14 @@ Module
                                 )
                                 ( Id
                                     { name = "String#"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                            }
+                                        )
                                     , sort = External
                                     }
                                 )
@@ -250,8 +292,14 @@ Module
                                     )
                                     ( Id
                                         { name = "str"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                }
+                                            )
                                         , sort = Internal 0
                                         }
                                     )
@@ -315,8 +363,14 @@ Module
                                             )
                                             ( Id
                                                 { name = "malgo_print_string"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                        }
+                                                    )
                                                 , sort = External
                                                 }
                                             )
@@ -337,8 +391,14 @@ Module
                                             )
                                             ( Id
                                                 { name = "str"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                        }
+                                                    )
                                                 , sort = Internal 0
                                                 }
                                             )
@@ -388,8 +448,14 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "malgo_newline"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                            }
+                                                        )
                                                     , sort = External
                                                     }
                                                 )
@@ -432,8 +498,14 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -522,8 +594,14 @@ Module
                                             )
                                             ( Id
                                                 { name = "putStrLn"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                        }
+                                                    )
                                                 , sort = External
                                                 }
                                             )
@@ -558,8 +636,14 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "String#"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                            }
+                                                        )
                                                     , sort = External
                                                     }
                                                 )
@@ -604,8 +688,14 @@ Module
                     }
                 , Id
                     { name = "putStrLn"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -638,8 +728,14 @@ Module
                         )
                         ( Id
                             { name = "String"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         )
@@ -675,8 +771,14 @@ Module
                     }
                 , Id
                     { name = "string#"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -709,8 +811,7 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
+                            , moduleName = ModuleName "Builtin"
                             , sort = External
                             }
                         )
@@ -731,8 +832,14 @@ Module
                         )
                         ( Id
                             { name = "String"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         )
@@ -755,8 +862,14 @@ Module
                     }
                 , Id
                     { name = "String"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , []
@@ -776,8 +889,14 @@ Module
                             }
                         , Id
                             { name = "String#"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         ,
@@ -797,8 +916,7 @@ Module
                                 )
                                 ( Id
                                     { name = "String#"
-                                    , moduleName = ModuleName
-                                        { raw = "Builtin" }
+                                    , moduleName = ModuleName "Builtin"
                                     , sort = External
                                     }
                                 )
@@ -827,8 +945,14 @@ Module
                     )
                 , Id
                     { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -861,8 +985,7 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
+                            , moduleName = ModuleName "Builtin"
                             , sort = External
                             }
                         )
@@ -901,8 +1024,14 @@ Module
                     )
                 , Id
                     { name = "malgo_newline"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/HelloBoxed.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr

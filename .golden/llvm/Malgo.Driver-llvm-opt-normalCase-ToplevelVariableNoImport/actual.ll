@@ -3,7 +3,7 @@ source_filename = "test/testcases/malgo/ToplevelVariableNoImport.mlg"
 
 @"test/testcases/malgo/ToplevelVariableNoImport.mlg.one" = local_unnamed_addr global ptr undef
 @"test/testcases/malgo/ToplevelVariableNoImport.mlg.comp" = local_unnamed_addr global ptr undef
-@str544 = unnamed_addr constant [3 x i8] c"OK\00"
+@str542 = unnamed_addr constant [3 x i8] c"OK\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -22,18 +22,14 @@ declare ptr @malgo_malloc(i64) local_unnamed_addr
 
 ; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
 define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_543"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
-  %a_0 = load ptr, ptr %0, align 8
-  ret ptr %a_0
+  %cast_0 = load ptr, ptr %0, align 8
+  ret ptr %cast_0
 }
 
-define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.const"(ptr nocapture nofree readnone %0, ptr nofree %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$a_201_0") {
-  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$a_201_0", ptr %let_capture_0, align 8
-  store ptr %let_capture_0, ptr %2, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_543", ptr %let_func_0, align 8
-  ret ptr %2
+define internal i32 @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_544"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+  %p_0 = load i32, ptr %0, align 4
+  %3 = tail call i32 @malgo_add_int32_t(i32 %p_0, i32 %1)
+  ret i32 %3
 }
 
 ; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
@@ -49,15 +45,19 @@ define internal i32 @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_clo
 }
 
 ; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
-define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_547"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
-  %cast_0 = load ptr, ptr %0, align 8
-  ret ptr %cast_0
+define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_550"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
+  %a_0 = load ptr, ptr %0, align 8
+  ret ptr %a_0
 }
 
-define internal i32 @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_548"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
-  %p_0 = load i32, ptr %0, align 4
-  %3 = tail call i32 @malgo_add_int32_t(i32 %p_0, i32 %1)
-  ret i32 %3
+define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.const"(ptr nocapture nofree readnone %0, ptr nofree %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$a_201_0") {
+  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$a_201_0", ptr %let_capture_0, align 8
+  store ptr %let_capture_0, ptr %2, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
+  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_550", ptr %let_func_0, align 8
+  ret ptr %2
 }
 
 define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
@@ -87,8 +87,8 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
 "switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i": ; preds = %1
   store i8 0, ptr %11, align 1
   %12 = getelementptr { i8, { ptr } }, ptr %11, i64 0, i32 1, i32 0
-  store ptr @str544, ptr %12, align 8
-  %13 = tail call ptr @malgo_print_string(ptr noundef nonnull @str544)
+  store ptr @str542, ptr %12, align 8
+  %13 = tail call ptr @malgo_print_string(ptr noundef nonnull @str542)
   %14 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %14, align 8
   %const_func_0.i = getelementptr { ptr, ptr }, ptr %14, i64 0, i32 1
@@ -102,7 +102,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %15, ptr %let_capture_0.i, align 8
   store ptr %let_capture_0.i, ptr %16, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_545", ptr %let_func_0.i, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_543", ptr %let_func_0.i, align 8
   %cast_0.i.i = load ptr, ptr %let_capture_0.i, align 8
   %17 = load ptr, ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.one", align 8
   %18 = getelementptr { i8, { i32 } }, ptr %17, i64 0, i32 1
@@ -126,7 +126,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %21, ptr %let_capture_4.i, align 8
   store ptr %let_capture_4.i, ptr %22, align 8
   %let_func_2.i = getelementptr { ptr, ptr }, ptr %22, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_547", ptr %let_func_2.i, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_545", ptr %let_func_2.i, align 8
   %cast_0.i1.i = load ptr, ptr %let_capture_4.i, align 8
   %23 = load ptr, ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.one", align 8
   %24 = getelementptr { i8, { i32 } }, ptr %23, i64 0, i32 1
@@ -139,12 +139,12 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
 
 "test/testcases/malgo/ToplevelVariableNoImport.mlg.main.exit": ; preds = %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i", %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Just_0.i"
   %.sink.i = phi ptr [ %26, %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Just_0.i" ], [ %20, %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i" ]
-  %"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_548.sink.i" = phi ptr [ @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_548", %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Just_0.i" ], [ @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_546", %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i" ]
+  %"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_546.sink.i" = phi ptr [ @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_546", %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Just_0.i" ], [ @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_544", %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i" ]
   %let_capture_6.sink.i = phi ptr [ %let_capture_6.i, %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Just_0.i" ], [ %let_capture_2.i, %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i" ]
   %.sink15.i = phi i32 [ %25, %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Just_0.i" ], [ %19, %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i" ]
   %cast_0.i1.sink11.i = phi ptr [ %cast_0.i1.i, %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Just_0.i" ], [ %cast_0.i.i, %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i" ]
   %let_func_3.i = getelementptr { ptr, ptr }, ptr %.sink.i, i64 0, i32 1
-  store ptr %"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_548.sink.i", ptr %let_func_3.i, align 8
+  store ptr %"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_546.sink.i", ptr %let_func_3.i, align 8
   %p_0.i2.i = load i32, ptr %let_capture_6.sink.i, align 4
   %27 = tail call i32 @malgo_add_int32_t(i32 %p_0.i2.i, i32 %.sink15.i)
   %28 = tail call ptr @malgo_malloc(i64 noundef 8)

@@ -162,6 +162,11 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
+define internal i32 @"runtime/malgo/Builtin.mlg.$subInt32#_curry_2292"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$x_2293_0", i32 %"runtime/malgo/Builtin.mlg.$y_2294_0") {
+  %2 = call i32 @malgo_sub_int32_t(i32 %"runtime/malgo/Builtin.mlg.$x_2293_0", i32 %"runtime/malgo/Builtin.mlg.$y_2294_0")
+  ret i32 %2
+}
+
 declare ptr @malgo_malloc(i64)
 
 define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2947"(ptr %0, i32 %1) {
@@ -181,11 +186,6 @@ define internal ptr @"runtime/malgo/Builtin.mlg.malgo_sub_int32_t"(ptr %0, i32 %
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2947", ptr %let_func_0, align 8
   ret ptr %2
-}
-
-define internal i32 @"runtime/malgo/Builtin.mlg.$subInt32#_curry_2292"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$x_2293_0", i32 %"runtime/malgo/Builtin.mlg.$y_2294_0") {
-  %2 = call i32 @malgo_sub_int32_t(i32 %"runtime/malgo/Builtin.mlg.$x_2293_0", i32 %"runtime/malgo/Builtin.mlg.$y_2294_0")
-  ret i32 %2
 }
 
 define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2948"(ptr %0, i32 %1) {
@@ -269,14 +269,15 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.$raw_let_2945"(ptr %0, i32 %"test/testcases/malgo/EvenOdd.mlg.$p_2878_0", i32 %"test/testcases/malgo/EvenOdd.mlg.$y_2887_0") {
-  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_sub_int32_t"(ptr null, i32 %"test/testcases/malgo/EvenOdd.mlg.$p_2878_0")
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i32 %6(ptr %4, i32 %"test/testcases/malgo/EvenOdd.mlg.$y_2887_0")
-  ret i32 %7
+define internal ptr @"test/testcases/malgo/EvenOdd.mlg.main"(ptr %0, ptr %"test/testcases/malgo/EvenOdd.mlg.$$__71_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  %4 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 1, i32 0
+  store i32 10, ptr %4, align 4
+  %5 = call ptr @"test/testcases/malgo/EvenOdd.mlg.even"(ptr null, ptr %2)
+  %6 = call ptr @"test/testcases/malgo/EvenOdd.mlg.$fun_79"(ptr null, ptr %5)
+  ret ptr %6
 }
 
 define internal i32 @"test/testcases/malgo/EvenOdd.mlg.$raw_let_2946"(ptr %0, i32 %"test/testcases/malgo/EvenOdd.mlg.$p_2906_0", i32 %"test/testcases/malgo/EvenOdd.mlg.$y_2915_0") {
@@ -359,6 +360,16 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.$raw_let_2945"(ptr %0, i32 %"test/testcases/malgo/EvenOdd.mlg.$p_2878_0", i32 %"test/testcases/malgo/EvenOdd.mlg.$y_2887_0") {
+  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_sub_int32_t"(ptr null, i32 %"test/testcases/malgo/EvenOdd.mlg.$p_2878_0")
+  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call i32 %6(ptr %4, i32 %"test/testcases/malgo/EvenOdd.mlg.$y_2887_0")
+  ret i32 %7
+}
+
 define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2951"(ptr %0, i32 %1) {
   %p_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
   %p_0 = load i32, ptr %p_addr_0, align 4
@@ -438,17 +449,6 @@ switch_default_1:                                 ; preds = %switch-unboxed_defa
 
 switch_default_2:                                 ; preds = %1
   unreachable
-}
-
-define internal ptr @"test/testcases/malgo/EvenOdd.mlg.main"(ptr %0, ptr %"test/testcases/malgo/EvenOdd.mlg.$$__71_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  %4 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 1, i32 0
-  store i32 10, ptr %4, align 4
-  %5 = call ptr @"test/testcases/malgo/EvenOdd.mlg.even"(ptr null, ptr %2)
-  %6 = call ptr @"test/testcases/malgo/EvenOdd.mlg.$fun_79"(ptr null, ptr %5)
-  ret ptr %6
 }
 
 define i32 @main(ptr %0) {

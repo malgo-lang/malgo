@@ -200,10 +200,10 @@ define internal ptr @"test/testcases/malgo/Null.mlg.null"(ptr %0, ptr %"test/tes
 }
 
 define internal ptr @"test/testcases/malgo/Null.mlg.#fun_closure_182"(ptr %0, ptr %1) {
-  %malgo_exit_failure_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 0
-  %malgo_exit_failure_0 = load ptr, ptr %malgo_exit_failure_addr_0, align 8
-  %malgo_print_string_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 1
+  %malgo_print_string_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 0
   %malgo_print_string_0 = load ptr, ptr %malgo_print_string_addr_0, align 8
+  %malgo_exit_failure_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 1
+  %malgo_exit_failure_0 = load ptr, ptr %malgo_exit_failure_addr_0, align 8
   %3 = getelementptr { i8, {} }, ptr %1, i32 0, i32 0
   %4 = load i8, ptr %3, align 1
   switch i8 %4, label %switch_default_0 [
@@ -293,19 +293,19 @@ define internal ptr @"test/testcases/malgo/Null.mlg.main"(ptr %0, ptr %"test/tes
   %39 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %40 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %malgo_exit_failure_capture_0 = getelementptr { ptr, ptr }, ptr %40, i32 0, i32 0
-  store ptr null, ptr %malgo_exit_failure_capture_0, align 8
-  %malgo_exit_failure_func_0 = getelementptr { ptr, ptr }, ptr %40, i32 0, i32 1
-  store ptr @"test/testcases/malgo/Null.mlg.malgo_exit_failure", ptr %malgo_exit_failure_func_0, align 8
-  %malgo_exit_failure_0 = getelementptr { ptr, ptr }, ptr %fun_capture_0, i32 0, i32 0
-  store ptr %40, ptr %malgo_exit_failure_0, align 8
-  %41 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %malgo_print_string_capture_0 = getelementptr { ptr, ptr }, ptr %41, i32 0, i32 0
+  %malgo_print_string_capture_0 = getelementptr { ptr, ptr }, ptr %40, i32 0, i32 0
   store ptr null, ptr %malgo_print_string_capture_0, align 8
-  %malgo_print_string_func_0 = getelementptr { ptr, ptr }, ptr %41, i32 0, i32 1
+  %malgo_print_string_func_0 = getelementptr { ptr, ptr }, ptr %40, i32 0, i32 1
   store ptr @"test/testcases/malgo/Null.mlg.malgo_print_string", ptr %malgo_print_string_func_0, align 8
-  %malgo_print_string_0 = getelementptr { ptr, ptr }, ptr %fun_capture_0, i32 0, i32 1
-  store ptr %41, ptr %malgo_print_string_0, align 8
+  %malgo_print_string_0 = getelementptr { ptr, ptr }, ptr %fun_capture_0, i32 0, i32 0
+  store ptr %40, ptr %malgo_print_string_0, align 8
+  %41 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %malgo_exit_failure_capture_0 = getelementptr { ptr, ptr }, ptr %41, i32 0, i32 0
+  store ptr null, ptr %malgo_exit_failure_capture_0, align 8
+  %malgo_exit_failure_func_0 = getelementptr { ptr, ptr }, ptr %41, i32 0, i32 1
+  store ptr @"test/testcases/malgo/Null.mlg.malgo_exit_failure", ptr %malgo_exit_failure_func_0, align 8
+  %malgo_exit_failure_0 = getelementptr { ptr, ptr }, ptr %fun_capture_0, i32 0, i32 1
+  store ptr %41, ptr %malgo_exit_failure_0, align 8
   %fun_capture_1 = getelementptr { ptr, ptr }, ptr %39, i32 0, i32 0
   store ptr %fun_capture_0, ptr %fun_capture_1, align 8
   %fun_func_0 = getelementptr { ptr, ptr }, ptr %39, i32 0, i32 1

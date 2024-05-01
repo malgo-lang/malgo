@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+            }
+        )
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -24,8 +30,14 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -85,8 +97,14 @@ Module
                                 )
                                 ( Id
                                     { name = "$_"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            }
+                                        )
                                     , sort = Internal 12
                                     }
                                 )
@@ -124,8 +142,14 @@ Module
                                     )
                                     ( Id
                                         { name = "f"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                }
+                                            )
                                         , sort = Internal 2
                                         }
                                     )
@@ -186,8 +210,14 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "$_"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
                                                     , sort = Internal 9
                                                     }
                                                 )
@@ -225,8 +255,14 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "y"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                }
+                                                            )
                                                         , sort = Internal 1
                                                         }
                                                     )
@@ -304,8 +340,14 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "a"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = Internal 0
                                                                         }
                                                                     )
@@ -437,8 +479,14 @@ Module
                                                 )
                                                 ( Id
                                                     { name = "malgo_print_string"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
                                                     , sort = External
                                                     }
                                                 )
@@ -496,8 +544,14 @@ Module
                     }
                 , Id
                     { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -530,8 +584,7 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
+                            , moduleName = ModuleName "Builtin"
                             , sort = External
                             }
                         )

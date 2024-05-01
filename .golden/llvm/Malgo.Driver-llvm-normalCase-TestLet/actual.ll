@@ -159,6 +159,11 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
+define internal i32 @"runtime/malgo/Builtin.mlg.$malgo_add_int32_t_curry_1810"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_1811_0", i32 %"runtime/malgo/Builtin.mlg.$p_1812_0") {
+  %2 = call i32 @malgo_add_int32_t(i32 %"runtime/malgo/Builtin.mlg.$p_1811_0", i32 %"runtime/malgo/Builtin.mlg.$p_1812_0")
+  ret i32 %2
+}
+
 declare ptr @malgo_malloc(i64)
 
 define internal ptr @"test/testcases/malgo/TestLet.mlg.#let_closure_2366"(ptr %0, ptr %1) {
@@ -182,11 +187,6 @@ define internal ptr @"test/testcases/malgo/TestLet.mlg.|>"(ptr %0, ptr %"test/te
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   store ptr @"test/testcases/malgo/TestLet.mlg.#let_closure_2366", ptr %let_func_0, align 8
   ret ptr %2
-}
-
-define internal i32 @"runtime/malgo/Builtin.mlg.$malgo_add_int32_t_curry_1810"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_1811_0", i32 %"runtime/malgo/Builtin.mlg.$p_1812_0") {
-  %2 = call i32 @malgo_add_int32_t(i32 %"runtime/malgo/Builtin.mlg.$p_1811_0", i32 %"runtime/malgo/Builtin.mlg.$p_1812_0")
-  ret i32 %2
 }
 
 define internal i32 @"test/testcases/malgo/TestLet.mlg.#let_closure_2367"(ptr %0, i32 %1) {

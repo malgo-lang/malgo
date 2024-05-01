@@ -164,30 +164,11 @@ declare ptr @malgo_malloc(i64)
 define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3764"(ptr %0, double %1) {
   %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
   %x_0 = load double, ptr %x_addr_0, align 8
-  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3758"(ptr null, double %x_0, double %1)
+  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3760"(ptr null, double %x_0, double %1)
   ret double %3
 }
 
-define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.add"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_116_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
-  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_116_0", ptr %x_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3764", ptr %let_func_0, align 8
-  ret ptr %2
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3765"(ptr %0, double %1) {
-  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
-  %x_0 = load double, ptr %x_addr_0, align 8
-  %3 = call double @"runtime/malgo/Builtin.mlg.$malgo_mul_double_curry_1894"(ptr null, double %x_0, double %1)
-  ret double %3
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3760"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_140_0", double %"test/testcases/malgo/TestArithDouble.mlg.$y_141_0") {
+define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.*"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_140_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
   %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
@@ -195,38 +176,8 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3760"
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3765", ptr %let_func_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_141_0")
-  ret double %7
-}
-
-define internal double @"runtime/malgo/Builtin.mlg.$malgo_mul_double_curry_1894"(ptr %0, double %"runtime/malgo/Builtin.mlg.$p_1895_0", double %"runtime/malgo/Builtin.mlg.$p_1896_0") {
-  %2 = call double @malgo_mul_double(double %"runtime/malgo/Builtin.mlg.$p_1895_0", double %"runtime/malgo/Builtin.mlg.$p_1896_0")
-  ret double %2
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3763"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$d_3700_0", double %"test/testcases/malgo/TestArithDouble.mlg.$y_3707_0") {
-  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_mul_double"(ptr null, double %"test/testcases/malgo/TestArithDouble.mlg.$d_3700_0")
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_3707_0")
-  ret double %7
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3762"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0", double %"test/testcases/malgo/TestArithDouble.mlg.$y_3705_0") {
-  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_add_double"(ptr null, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0")
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_3705_0")
-  ret double %7
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3764", ptr %let_func_0, align 8
+  ret ptr %2
 }
 
 define internal double @"runtime/malgo/Builtin.mlg.$malgo_add_double_curry_1882"(ptr %0, double %"runtime/malgo/Builtin.mlg.$p_1883_0", double %"runtime/malgo/Builtin.mlg.$p_1884_0") {
@@ -234,43 +185,12 @@ define internal double @"runtime/malgo/Builtin.mlg.$malgo_add_double_curry_1882"
   ret double %2
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.traceShowId"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_95_0") {
-  %2 = call ptr @malgo_double_to_string(double %"test/testcases/malgo/TestArithDouble.mlg.$x_95_0")
-  %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %4 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 0
-  store i8 0, ptr %4, align 1
-  %5 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 1, i32 0
-  store ptr %2, ptr %5, align 8
-  %6 = getelementptr { i8, <8 x i8> }, ptr %3, i32 0, i32 0
-  %7 = load i8, ptr %6, align 1
-  switch i8 %7, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
-  %8 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 1
-  %9 = getelementptr { ptr }, ptr %8, i32 0, i32 0
-  %10 = load ptr, ptr %9, align 8
-  %11 = call ptr @malgo_print_string(ptr %10)
-  %12 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %13 = getelementptr { i8, {} }, ptr %12, i32 0, i32 0
-  store i8 0, ptr %13, align 1
-  %14 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %15 = getelementptr { i8, {} }, ptr %14, i32 0, i32 0
-  store i8 0, ptr %15, align 1
-  %16 = call ptr @malgo_newline(ptr %14)
-  ret double %"test/testcases/malgo/TestArithDouble.mlg.$x_95_0"
-
-switch_default_0:                                 ; preds = %1
-  unreachable
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3766"(ptr %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3765"(ptr %0, double %1) {
   %3 = call double @"runtime/malgo/Builtin.mlg.$addDouble#_curry_4096"(ptr null, double 5.000000e-01, double %1)
   ret double %3
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3767"(ptr %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3766"(ptr %0, double %1) {
   %d_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
   %d_0 = load double, ptr %d_addr_0, align 8
   %3 = call double @"runtime/malgo/Builtin.mlg.$mulDouble#_curry_2597"(ptr null, double %d_0, double %1)
@@ -283,7 +203,7 @@ define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.main"(ptr %0, ptr
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3766", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3765", ptr %let_func_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
@@ -296,7 +216,7 @@ define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.main"(ptr %0, ptr
   %let_capture_3 = getelementptr { ptr, ptr }, ptr %8, i32 0, i32 0
   store ptr %let_capture_2, ptr %let_capture_3, align 8
   %let_func_1 = getelementptr { ptr, ptr }, ptr %8, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3767", ptr %let_func_1, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3766", ptr %let_func_1, align 8
   %9 = getelementptr { ptr, ptr }, ptr %8, i32 0, i32 0
   %10 = load ptr, ptr %9, align 8
   %11 = getelementptr { ptr, ptr }, ptr %8, i32 0, i32 1
@@ -332,48 +252,48 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal double @"runtime/malgo/Builtin.mlg.$malgo_sub_double_curry_1888"(ptr %0, double %"runtime/malgo/Builtin.mlg.$p_1889_0", double %"runtime/malgo/Builtin.mlg.$p_1890_0") {
-  %2 = call double @malgo_sub_double(double %"runtime/malgo/Builtin.mlg.$p_1889_0", double %"runtime/malgo/Builtin.mlg.$p_1890_0")
-  ret double %2
+define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.show"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_91_0") {
+  %2 = call ptr @malgo_double_to_string(double %"test/testcases/malgo/TestArithDouble.mlg.$x_91_0")
+  %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %4 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 0
+  store i8 0, ptr %4, align 1
+  %5 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 1, i32 0
+  store ptr %2, ptr %5, align 8
+  ret ptr %3
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3768"(ptr %0, double %1) {
-  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
-  %x_0 = load double, ptr %x_addr_0, align 8
-  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3762"(ptr null, double %x_0, double %1)
-  ret double %3
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.traceShowId"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_95_0") {
+  %2 = call ptr @malgo_double_to_string(double %"test/testcases/malgo/TestArithDouble.mlg.$x_95_0")
+  %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %4 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 0
+  store i8 0, ptr %4, align 1
+  %5 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 1, i32 0
+  store ptr %2, ptr %5, align 8
+  %6 = getelementptr { i8, <8 x i8> }, ptr %3, i32 0, i32 0
+  %7 = load i8, ptr %6, align 1
+  switch i8 %7, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
+  %8 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 1
+  %9 = getelementptr { ptr }, ptr %8, i32 0, i32 0
+  %10 = load ptr, ptr %9, align 8
+  %11 = call ptr @malgo_print_string(ptr %10)
+  %12 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %13 = getelementptr { i8, {} }, ptr %12, i32 0, i32 0
+  store i8 0, ptr %13, align 1
+  %14 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %15 = getelementptr { i8, {} }, ptr %14, i32 0, i32 0
+  store i8 0, ptr %15, align 1
+  %16 = call ptr @malgo_newline(ptr %14)
+  ret double %"test/testcases/malgo/TestArithDouble.mlg.$x_95_0"
+
+switch_default_0:                                 ; preds = %1
+  unreachable
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3769"(ptr %0, double %1) {
-  %d_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
-  %d_0 = load double, ptr %d_addr_0, align 8
-  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3763"(ptr null, double %d_0, double %1)
-  ret double %3
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.f"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
-  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0", ptr %x_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3768", ptr %let_func_0, align 8
-  %3 = call double @"runtime/malgo/Builtin.mlg.$addDouble#_curry_4096"(ptr null, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0", double 0.000000e+00)
-  %4 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { double }, ptr %let_capture_2, i32 0, i32 0
-  store double %3, ptr %d_0, align 8
-  %let_capture_3 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 0
-  store ptr %let_capture_2, ptr %let_capture_3, align 8
-  %let_func_1 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3769", ptr %let_func_1, align 8
-  %5 = call double @"runtime/malgo/Builtin.mlg.$mulDouble#_curry_2597"(ptr null, double %3, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0")
-  ret double %5
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3770"(ptr %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3767"(ptr %0, double %1) {
   %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
   %x_0 = load double, ptr %x_addr_0, align 8
   %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3757"(ptr null, double %x_0, double %1)
@@ -388,113 +308,11 @@ define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.mul"(ptr %0, doub
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3770", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3767", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3771"(ptr %0, double %1) {
-  %3 = call double @malgo_sub_double(double 0.000000e+00, double %1)
-  ret double %3
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.neg"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_100_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3771", ptr %let_func_0, align 8
-  %3 = call double @"runtime/malgo/Builtin.mlg.$malgo_sub_double_curry_1888"(ptr null, double 0.000000e+00, double %"test/testcases/malgo/TestArithDouble.mlg.$x_100_0")
-  ret double %3
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3772"(ptr %0, double %1) {
-  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
-  %x_0 = load double, ptr %x_addr_0, align 8
-  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3759"(ptr null, double %x_0, double %1)
-  ret double %3
-}
-
-define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.+"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_128_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
-  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_128_0", ptr %x_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3772", ptr %let_func_0, align 8
-  ret ptr %2
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3773"(ptr %0, double %1) {
-  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
-  %x_0 = load double, ptr %x_addr_0, align 8
-  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3760"(ptr null, double %x_0, double %1)
-  ret double %3
-}
-
-define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.*"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_140_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
-  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_140_0", ptr %x_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3773", ptr %let_func_0, align 8
-  ret ptr %2
-}
-
-define internal double @"runtime/malgo/Builtin.mlg.$mulDouble#_curry_2597"(ptr %0, double %"runtime/malgo/Builtin.mlg.$x_2598_0", double %"runtime/malgo/Builtin.mlg.$y_2599_0") {
-  %2 = call double @malgo_mul_double(double %"runtime/malgo/Builtin.mlg.$x_2598_0", double %"runtime/malgo/Builtin.mlg.$y_2599_0")
-  ret double %2
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3774"(ptr %0, double %1) {
-  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
-  %x_0 = load double, ptr %x_addr_0, align 8
-  %3 = call double @"runtime/malgo/Builtin.mlg.$malgo_mul_double_curry_1894"(ptr null, double %x_0, double %1)
-  ret double %3
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3757"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_104_0", double %"test/testcases/malgo/TestArithDouble.mlg.$y_105_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
-  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_104_0", ptr %x_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3774", ptr %let_func_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_105_0")
-  ret double %7
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3775"(ptr %0, double %1) {
-  %p_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
-  %p_0 = load double, ptr %p_addr_0, align 8
-  %3 = call double @malgo_add_double(double %p_0, double %1)
-  ret double %3
-}
-
-define internal ptr @"runtime/malgo/Builtin.mlg.malgo_add_double"(ptr %0, double %"runtime/malgo/Builtin.mlg.$p_1880_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
-  %p_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
-  store double %"runtime/malgo/Builtin.mlg.$p_1880_0", ptr %p_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3775", ptr %let_func_0, align 8
-  ret ptr %2
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3776"(ptr %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3768"(ptr %0, double %1) {
   %p_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
   %p_0 = load double, ptr %p_addr_0, align 8
   %3 = call double @malgo_mul_double(double %p_0, double %1)
@@ -509,16 +327,54 @@ define internal ptr @"runtime/malgo/Builtin.mlg.malgo_mul_double"(ptr %0, double
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3776", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3768", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal double @"runtime/malgo/Builtin.mlg.$addDouble#_curry_4096"(ptr %0, double %"runtime/malgo/Builtin.mlg.$x_4097_0", double %"runtime/malgo/Builtin.mlg.$y_4098_0") {
-  %2 = call double @malgo_add_double(double %"runtime/malgo/Builtin.mlg.$x_4097_0", double %"runtime/malgo/Builtin.mlg.$y_4098_0")
-  ret double %2
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3769"(ptr %0, double %1) {
+  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
+  %x_0 = load double, ptr %x_addr_0, align 8
+  %3 = call double @"runtime/malgo/Builtin.mlg.$malgo_mul_double_curry_1894"(ptr null, double %x_0, double %1)
+  ret double %3
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3777"(ptr %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3757"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_104_0", double %"test/testcases/malgo/TestArithDouble.mlg.$y_105_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
+  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
+  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_104_0", ptr %x_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3769", ptr %let_func_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_105_0")
+  ret double %7
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3770"(ptr %0, double %1) {
+  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
+  %x_0 = load double, ptr %x_addr_0, align 8
+  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3758"(ptr null, double %x_0, double %1)
+  ret double %3
+}
+
+define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.add"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_116_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
+  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
+  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_116_0", ptr %x_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3770", ptr %let_func_0, align 8
+  ret ptr %2
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3771"(ptr %0, double %1) {
   %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
   %x_0 = load double, ptr %x_addr_0, align 8
   %3 = call double @"runtime/malgo/Builtin.mlg.$malgo_add_double_curry_1882"(ptr null, double %x_0, double %1)
@@ -533,7 +389,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3759"
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3777", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3771", ptr %let_func_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
@@ -542,17 +398,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3759"
   ret double %7
 }
 
-define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.show"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_91_0") {
-  %2 = call ptr @malgo_double_to_string(double %"test/testcases/malgo/TestArithDouble.mlg.$x_91_0")
-  %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %4 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 0
-  store i8 0, ptr %4, align 1
-  %5 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 1, i32 0
-  store ptr %2, ptr %5, align 8
-  ret ptr %3
-}
-
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3778"(ptr %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3772"(ptr %0, double %1) {
   %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
   %x_0 = load double, ptr %x_addr_0, align 8
   %3 = call double @"runtime/malgo/Builtin.mlg.$malgo_add_double_curry_1882"(ptr null, double %x_0, double %1)
@@ -567,13 +413,167 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3758"
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3778", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3772", ptr %let_func_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
   %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_117_0")
   ret double %7
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3773"(ptr %0, double %1) {
+  %3 = call double @malgo_sub_double(double 0.000000e+00, double %1)
+  ret double %3
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.neg"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_100_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3773", ptr %let_func_0, align 8
+  %3 = call double @"runtime/malgo/Builtin.mlg.$malgo_sub_double_curry_1888"(ptr null, double 0.000000e+00, double %"test/testcases/malgo/TestArithDouble.mlg.$x_100_0")
+  ret double %3
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3774"(ptr %0, double %1) {
+  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
+  %x_0 = load double, ptr %x_addr_0, align 8
+  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3759"(ptr null, double %x_0, double %1)
+  ret double %3
+}
+
+define internal ptr @"test/testcases/malgo/TestArithDouble.mlg.+"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_128_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
+  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
+  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_128_0", ptr %x_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3774", ptr %let_func_0, align 8
+  ret ptr %2
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3775"(ptr %0, double %1) {
+  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
+  %x_0 = load double, ptr %x_addr_0, align 8
+  %3 = call double @"runtime/malgo/Builtin.mlg.$malgo_mul_double_curry_1894"(ptr null, double %x_0, double %1)
+  ret double %3
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3760"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_140_0", double %"test/testcases/malgo/TestArithDouble.mlg.$y_141_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
+  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
+  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_140_0", ptr %x_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3775", ptr %let_func_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_141_0")
+  ret double %7
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3763"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$d_3700_0", double %"test/testcases/malgo/TestArithDouble.mlg.$y_3707_0") {
+  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_mul_double"(ptr null, double %"test/testcases/malgo/TestArithDouble.mlg.$d_3700_0")
+  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_3707_0")
+  ret double %7
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3776"(ptr %0, double %1) {
+  %x_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
+  %x_0 = load double, ptr %x_addr_0, align 8
+  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3762"(ptr null, double %x_0, double %1)
+  ret double %3
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3777"(ptr %0, double %1) {
+  %d_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
+  %d_0 = load double, ptr %d_addr_0, align 8
+  %3 = call double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3763"(ptr null, double %d_0, double %1)
+  ret double %3
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.f"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
+  %x_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
+  store double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0", ptr %x_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3776", ptr %let_func_0, align 8
+  %3 = call double @"runtime/malgo/Builtin.mlg.$addDouble#_curry_4096"(ptr null, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0", double 0.000000e+00)
+  %4 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { double }, ptr %let_capture_2, i32 0, i32 0
+  store double %3, ptr %d_0, align 8
+  %let_capture_3 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 0
+  store ptr %let_capture_2, ptr %let_capture_3, align 8
+  %let_func_1 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3777", ptr %let_func_1, align 8
+  %5 = call double @"runtime/malgo/Builtin.mlg.$mulDouble#_curry_2597"(ptr null, double %3, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0")
+  ret double %5
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.$raw_let_3762"(ptr %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0", double %"test/testcases/malgo/TestArithDouble.mlg.$y_3705_0") {
+  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_add_double"(ptr null, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0")
+  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call double %6(ptr %4, double %"test/testcases/malgo/TestArithDouble.mlg.$y_3705_0")
+  ret double %7
+}
+
+define internal double @"runtime/malgo/Builtin.mlg.$addDouble#_curry_4096"(ptr %0, double %"runtime/malgo/Builtin.mlg.$x_4097_0", double %"runtime/malgo/Builtin.mlg.$y_4098_0") {
+  %2 = call double @malgo_add_double(double %"runtime/malgo/Builtin.mlg.$x_4097_0", double %"runtime/malgo/Builtin.mlg.$y_4098_0")
+  ret double %2
+}
+
+define internal double @"runtime/malgo/Builtin.mlg.$malgo_sub_double_curry_1888"(ptr %0, double %"runtime/malgo/Builtin.mlg.$p_1889_0", double %"runtime/malgo/Builtin.mlg.$p_1890_0") {
+  %2 = call double @malgo_sub_double(double %"runtime/malgo/Builtin.mlg.$p_1889_0", double %"runtime/malgo/Builtin.mlg.$p_1890_0")
+  ret double %2
+}
+
+define internal double @"runtime/malgo/Builtin.mlg.$malgo_mul_double_curry_1894"(ptr %0, double %"runtime/malgo/Builtin.mlg.$p_1895_0", double %"runtime/malgo/Builtin.mlg.$p_1896_0") {
+  %2 = call double @malgo_mul_double(double %"runtime/malgo/Builtin.mlg.$p_1895_0", double %"runtime/malgo/Builtin.mlg.$p_1896_0")
+  ret double %2
+}
+
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3778"(ptr %0, double %1) {
+  %p_addr_0 = getelementptr { double }, ptr %0, i32 0, i32 0
+  %p_0 = load double, ptr %p_addr_0, align 8
+  %3 = call double @malgo_add_double(double %p_0, double %1)
+  ret double %3
+}
+
+define internal ptr @"runtime/malgo/Builtin.mlg.malgo_add_double"(ptr %0, double %"runtime/malgo/Builtin.mlg.$p_1880_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ double }, ptr null, i32 1) to i64))
+  %p_0 = getelementptr { double }, ptr %let_capture_0, i32 0, i32 0
+  store double %"runtime/malgo/Builtin.mlg.$p_1880_0", ptr %p_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3778", ptr %let_func_0, align 8
+  ret ptr %2
+}
+
+define internal double @"runtime/malgo/Builtin.mlg.$mulDouble#_curry_2597"(ptr %0, double %"runtime/malgo/Builtin.mlg.$x_2598_0", double %"runtime/malgo/Builtin.mlg.$y_2599_0") {
+  %2 = call double @malgo_mul_double(double %"runtime/malgo/Builtin.mlg.$x_2598_0", double %"runtime/malgo/Builtin.mlg.$y_2599_0")
+  ret double %2
 }
 
 define i32 @main(ptr %0) {

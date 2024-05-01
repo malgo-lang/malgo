@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+            }
+        )
     , moduleDefinition = BindGroup
         { _scDefs =
             [
@@ -19,8 +25,14 @@ Module
                         }
                     , Id
                         { name = "main"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     , Fn
@@ -137,8 +149,14 @@ Module
                                                     )
                                                     ( Id
                                                         { name = "True"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                }
+                                                            )
                                                         , sort = External
                                                         }
                                                     ) []
@@ -201,8 +219,14 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "malgo_print_string"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 )
@@ -256,8 +280,14 @@ Module
                                                         )
                                                         ( Id
                                                             { name = "False"
-                                                            , moduleName = ModuleName
-                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                    }
+                                                                )
                                                             , sort = External
                                                             }
                                                         ) []
@@ -320,8 +350,14 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "malgo_exit_failure"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -433,8 +469,14 @@ Module
                                                                 )
                                                                 ( Id
                                                                     { name = "True1"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                    , moduleName = Artifact
+                                                                        ( ArtifactPath
+                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                            }
+                                                                        )
                                                                     , sort = External
                                                                     }
                                                                 ) []
@@ -483,8 +525,14 @@ Module
                                                                         )
                                                                         ( Id
                                                                             { name = "False"
-                                                                            , moduleName = ModuleName
-                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                            , moduleName = Artifact
+                                                                                ( ArtifactPath
+                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                    }
+                                                                                )
                                                                             , sort = External
                                                                             }
                                                                         )
@@ -521,8 +569,14 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "False1"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     ) []
@@ -571,8 +625,14 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "True"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             )
@@ -668,8 +728,14 @@ Module
                                                                             )
                                                                             ( Id
                                                                                 { name = "True2"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                , moduleName = Artifact
+                                                                                    ( ArtifactPath
+                                                                                        { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                        }
+                                                                                    )
                                                                                 , sort = External
                                                                                 }
                                                                             ) []
@@ -718,8 +784,14 @@ Module
                                                                                     )
                                                                                     ( Id
                                                                                         { name = "False1"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                        , moduleName = Artifact
+                                                                                            ( ArtifactPath
+                                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                }
+                                                                                            )
                                                                                         , sort = External
                                                                                         }
                                                                                     )
@@ -756,8 +828,14 @@ Module
                                                                                 )
                                                                                 ( Id
                                                                                     { name = "False2"
-                                                                                    , moduleName = ModuleName
-                                                                                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                    , moduleName = Artifact
+                                                                                        ( ArtifactPath
+                                                                                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                            }
+                                                                                        )
                                                                                     , sort = External
                                                                                     }
                                                                                 ) []
@@ -806,8 +884,14 @@ Module
                                                                                         )
                                                                                         ( Id
                                                                                             { name = "True1"
-                                                                                            , moduleName = ModuleName
-                                                                                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                                            , moduleName = Artifact
+                                                                                                ( ArtifactPath
+                                                                                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                                    }
+                                                                                                )
                                                                                             , sort = External
                                                                                             }
                                                                                         )
@@ -833,8 +917,14 @@ Module
                                                                     )
                                                                     ( Id
                                                                         { name = "True2"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                                                                        , moduleName = Artifact
+                                                                            ( ArtifactPath
+                                                                                { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                                                                , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                                                                }
+                                                                            )
                                                                         , sort = External
                                                                         }
                                                                     )
@@ -869,8 +959,14 @@ Module
                     }
                 , Id
                     { name = "Bool"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , []
@@ -890,8 +986,14 @@ Module
                             }
                         , Id
                             { name = "False"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -911,8 +1013,14 @@ Module
                             }
                         , Id
                             { name = "True"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -934,8 +1042,14 @@ Module
                     }
                 , Id
                     { name = "Bool1"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , []
@@ -955,8 +1069,14 @@ Module
                             }
                         , Id
                             { name = "False1"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -976,8 +1096,14 @@ Module
                             }
                         , Id
                             { name = "True1"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -999,8 +1125,14 @@ Module
                     }
                 , Id
                     { name = "Bool2"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , []
@@ -1020,8 +1152,14 @@ Module
                             }
                         , Id
                             { name = "False2"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -1041,8 +1179,14 @@ Module
                             }
                         , Id
                             { name = "True2"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = External
                             }
                         , []
@@ -1070,8 +1214,14 @@ Module
                     )
                 , Id
                     { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -1104,8 +1254,7 @@ Module
                         )
                         ( Id
                             { name = "String#"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
+                            , moduleName = ModuleName "Builtin"
                             , sort = External
                             }
                         )
@@ -1144,8 +1293,14 @@ Module
                     )
                 , Id
                     { name = "malgo_exit_failure"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                            , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 , TyArr
@@ -1193,8 +1348,14 @@ Module
                         )
                         ( Id
                             { name = "a"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/NestedMatch.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/NestedMatch.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/NestedMatch.mlg"
+                                    , relPath = "test/testcases/malgo/NestedMatch.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/NestedMatch.mlg"
+                                    }
+                                )
                             , sort = Internal 0
                             }
                         )

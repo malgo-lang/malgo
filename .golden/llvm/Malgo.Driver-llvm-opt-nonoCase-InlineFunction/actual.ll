@@ -75,9 +75,9 @@ define internal ptr @"runtime/malgo/Prelude.mlg.putStrLn"(ptr nocapture nofree r
 }
 
 define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_275"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr nocapture nofree readonly %1) {
-  %t_0 = load ptr, ptr %0, align 8
-  %true_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %true_0 = load ptr, ptr %true_addr_0, align 8
+  %true_0 = load ptr, ptr %0, align 8
+  %t_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %t_0 = load ptr, ptr %t_addr_0, align 8
   %true_0.val = load i8, ptr %true_0, align 1
   %switch.i = icmp eq i8 %true_0.val, 0
   %3 = tail call ptr @malgo_malloc(i64 noundef 1)
@@ -94,9 +94,9 @@ define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_274"(
   %true_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr %1, ptr %let_capture_0, align 8
-  %true_1 = getelementptr { ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
-  store ptr %true_0, ptr %true_1, align 8
+  store ptr %true_0, ptr %let_capture_0, align 8
+  %t_0 = getelementptr { ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
+  store ptr %1, ptr %t_0, align 8
   store ptr %let_capture_0, ptr %3, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
   store ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_275", ptr %let_func_0, align 8
@@ -627,15 +627,15 @@ define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#fun_closure_469"(
 }
 
 define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#fun_closure_470"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(40) %0, ptr nocapture nofree readnone %1) {
-  %f_0 = load ptr, ptr %0, align 8
-  %n_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
-  %n_0 = load ptr, ptr %n_addr_0, align 8
+  %"+_0" = load ptr, ptr %0, align 8
+  %-_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
+  %-_0 = load ptr, ptr %-_addr_0, align 8
   %"Int32#_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 2
   %"Int32#_0" = load ptr, ptr %"Int32#_addr_0", align 8
-  %-_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
-  %-_0 = load ptr, ptr %-_addr_0, align 8
-  %"+_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 4
-  %"+_0" = load ptr, ptr %"+_addr_0", align 8
+  %f_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
+  %f_0 = load ptr, ptr %f_addr_0, align 8
+  %n_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 4
+  %n_0 = load ptr, ptr %n_addr_0, align 8
   %3 = load ptr, ptr %-_0, align 8
   %4 = getelementptr { ptr, ptr }, ptr %-_0, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
@@ -677,15 +677,15 @@ define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#fun_closure_470"(
 }
 
 define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#inner_curry_closure_468"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(40) %0, ptr nofree %1, ptr %2) {
-  %"Int32#_0" = load ptr, ptr %0, align 8
-  %"<=_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
-  %"<=_0" = load ptr, ptr %"<=_addr_0", align 8
-  %if_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 2
-  %if_0 = load ptr, ptr %if_addr_0, align 8
-  %-_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
+  %"+_0" = load ptr, ptr %0, align 8
+  %-_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
   %-_0 = load ptr, ptr %-_addr_0, align 8
-  %"+_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 4
-  %"+_0" = load ptr, ptr %"+_addr_0", align 8
+  %"Int32#_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 2
+  %"Int32#_0" = load ptr, ptr %"Int32#_addr_0", align 8
+  %"<=_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
+  %"<=_0" = load ptr, ptr %"<=_addr_0", align 8
+  %if_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 4
+  %if_0 = load ptr, ptr %if_addr_0, align 8
   %4 = load ptr, ptr %"<=_0", align 8
   %5 = getelementptr { ptr, ptr }, ptr %"<=_0", i64 0, i32 1
   %6 = load ptr, ptr %5, align 8
@@ -714,15 +714,15 @@ define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#inner_curry_closu
   %24 = tail call ptr %23(ptr %21, ptr nonnull %20)
   %25 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_2 = tail call ptr @malgo_malloc(i64 noundef 40)
-  store ptr %1, ptr %fun_capture_2, align 8
-  %n_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2, i64 0, i32 1
-  store ptr %2, ptr %n_0, align 8
+  store ptr %"+_0", ptr %fun_capture_2, align 8
+  %-_1 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2, i64 0, i32 1
+  store ptr %-_0, ptr %-_1, align 8
   %"Int32#_2" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2, i64 0, i32 2
   store ptr %"Int32#_0", ptr %"Int32#_2", align 8
-  %-_1 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2, i64 0, i32 3
-  store ptr %-_0, ptr %-_1, align 8
-  %"+_1" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2, i64 0, i32 4
-  store ptr %"+_0", ptr %"+_1", align 8
+  %f_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2, i64 0, i32 3
+  store ptr %1, ptr %f_0, align 8
+  %n_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2, i64 0, i32 4
+  store ptr %2, ptr %n_0, align 8
   store ptr %fun_capture_2, ptr %25, align 8
   %fun_func_1 = getelementptr { ptr, ptr }, ptr %25, i64 0, i32 1
   store ptr @"test/testcases/malgo/InlineFunction.mlg.#fun_closure_470", ptr %fun_func_1, align 8
@@ -734,36 +734,36 @@ define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#inner_curry_closu
 }
 
 define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_467"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(48) %0, ptr %1) {
-  %f_0 = load ptr, ptr %0, align 8
-  %"Int32#_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
-  %"Int32#_0" = load ptr, ptr %"Int32#_addr_0", align 8
-  %"<=_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 2
-  %"<=_0" = load ptr, ptr %"<=_addr_0", align 8
-  %if_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
-  %if_0 = load ptr, ptr %if_addr_0, align 8
-  %-_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 4
+  %"+_0" = load ptr, ptr %0, align 8
+  %-_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
   %-_0 = load ptr, ptr %-_addr_0, align 8
-  %"+_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 5
-  %"+_0" = load ptr, ptr %"+_addr_0", align 8
+  %"Int32#_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 2
+  %"Int32#_0" = load ptr, ptr %"Int32#_addr_0", align 8
+  %"<=_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
+  %"<=_0" = load ptr, ptr %"<=_addr_0", align 8
+  %f_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 4
+  %f_0 = load ptr, ptr %f_addr_0, align 8
+  %if_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 5
+  %if_0 = load ptr, ptr %if_addr_0, align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %inner_curry_capture_0 = tail call ptr @malgo_malloc(i64 noundef 40)
-  store ptr %"Int32#_0", ptr %inner_curry_capture_0, align 8
-  %"<=_1" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %inner_curry_capture_0, i64 0, i32 1
-  store ptr %"<=_0", ptr %"<=_1", align 8
-  %if_1 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %inner_curry_capture_0, i64 0, i32 2
-  store ptr %if_0, ptr %if_1, align 8
-  %-_1 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %inner_curry_capture_0, i64 0, i32 3
+  store ptr %"+_0", ptr %inner_curry_capture_0, align 8
+  %-_1 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %inner_curry_capture_0, i64 0, i32 1
   store ptr %-_0, ptr %-_1, align 8
-  %"+_1" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %inner_curry_capture_0, i64 0, i32 4
-  store ptr %"+_0", ptr %"+_1", align 8
+  %"Int32#_1" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %inner_curry_capture_0, i64 0, i32 2
+  store ptr %"Int32#_0", ptr %"Int32#_1", align 8
+  %"<=_1" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %inner_curry_capture_0, i64 0, i32 3
+  store ptr %"<=_0", ptr %"<=_1", align 8
+  %if_1 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %inner_curry_capture_0, i64 0, i32 4
+  store ptr %if_0, ptr %if_1, align 8
   store ptr %inner_curry_capture_0, ptr %3, align 8
   %inner_curry_func_0 = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
   store ptr @"test/testcases/malgo/InlineFunction.mlg.#inner_curry_closure_468", ptr %inner_curry_func_0, align 8
-  %"Int32#_0.i" = load ptr, ptr %inner_curry_capture_0, align 8
+  %"+_0.i" = load ptr, ptr %inner_curry_capture_0, align 8
+  %-_0.i = load ptr, ptr %-_1, align 8
+  %"Int32#_0.i" = load ptr, ptr %"Int32#_1", align 8
   %"<=_0.i" = load ptr, ptr %"<=_1", align 8
   %if_0.i = load ptr, ptr %if_1, align 8
-  %-_0.i = load ptr, ptr %-_1, align 8
-  %"+_0.i" = load ptr, ptr %"+_1", align 8
   %4 = load ptr, ptr %"<=_0.i", align 8
   %5 = getelementptr { ptr, ptr }, ptr %"<=_0.i", i64 0, i32 1
   %6 = load ptr, ptr %5, align 8
@@ -792,15 +792,15 @@ define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_467"(
   %24 = tail call ptr %23(ptr %21, ptr nonnull %20)
   %25 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_2.i = tail call ptr @malgo_malloc(i64 noundef 40)
-  store ptr %f_0, ptr %fun_capture_2.i, align 8
-  %n_0.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2.i, i64 0, i32 1
-  store ptr %1, ptr %n_0.i, align 8
+  store ptr %"+_0.i", ptr %fun_capture_2.i, align 8
+  %-_1.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2.i, i64 0, i32 1
+  store ptr %-_0.i, ptr %-_1.i, align 8
   %"Int32#_2.i" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2.i, i64 0, i32 2
   store ptr %"Int32#_0.i", ptr %"Int32#_2.i", align 8
-  %-_1.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2.i, i64 0, i32 3
-  store ptr %-_0.i, ptr %-_1.i, align 8
-  %"+_1.i" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2.i, i64 0, i32 4
-  store ptr %"+_0.i", ptr %"+_1.i", align 8
+  %f_0.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2.i, i64 0, i32 3
+  store ptr %f_0, ptr %f_0.i, align 8
+  %n_0.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_2.i, i64 0, i32 4
+  store ptr %1, ptr %n_0.i, align 8
   store ptr %fun_capture_2.i, ptr %25, align 8
   %fun_func_1.i = getelementptr { ptr, ptr }, ptr %25, i64 0, i32 1
   store ptr @"test/testcases/malgo/InlineFunction.mlg.#fun_closure_470", ptr %fun_func_1.i, align 8
@@ -812,28 +812,28 @@ define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_467"(
 }
 
 define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#fun_closure_466"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(40) %0, ptr nofree %1) {
-  %"Int32#_0" = load ptr, ptr %0, align 8
-  %"<=_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
-  %"<=_0" = load ptr, ptr %"<=_addr_0", align 8
-  %if_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 2
-  %if_0 = load ptr, ptr %if_addr_0, align 8
-  %-_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
+  %"+_0" = load ptr, ptr %0, align 8
+  %-_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
   %-_0 = load ptr, ptr %-_addr_0, align 8
-  %"+_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 4
-  %"+_0" = load ptr, ptr %"+_addr_0", align 8
+  %"Int32#_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 2
+  %"Int32#_0" = load ptr, ptr %"Int32#_addr_0", align 8
+  %"<=_addr_0" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
+  %"<=_0" = load ptr, ptr %"<=_addr_0", align 8
+  %if_addr_0 = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 4
+  %if_0 = load ptr, ptr %if_addr_0, align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 48)
-  store ptr %1, ptr %let_capture_0, align 8
-  %"Int32#_1" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
-  store ptr %"Int32#_0", ptr %"Int32#_1", align 8
-  %"<=_1" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 2
-  store ptr %"<=_0", ptr %"<=_1", align 8
-  %if_1 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 3
-  store ptr %if_0, ptr %if_1, align 8
-  %-_1 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 4
+  store ptr %"+_0", ptr %let_capture_0, align 8
+  %-_1 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
   store ptr %-_0, ptr %-_1, align 8
-  %"+_1" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 5
-  store ptr %"+_0", ptr %"+_1", align 8
+  %"Int32#_1" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 2
+  store ptr %"Int32#_0", ptr %"Int32#_1", align 8
+  %"<=_1" = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 3
+  store ptr %"<=_0", ptr %"<=_1", align 8
+  %f_0 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 4
+  store ptr %1, ptr %f_0, align 8
+  %if_1 = getelementptr { ptr, ptr, ptr, ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 5
+  store ptr %if_0, ptr %if_1, align 8
   store ptr %let_capture_0, ptr %3, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
   store ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_467", ptr %let_func_0, align 8
@@ -856,33 +856,33 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 40)
   %7 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %7, align 8
-  %"Int32#_func_0.i" = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.Int32#", ptr %"Int32#_func_0.i", align 8
+  %"+_func_0.i" = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
+  store ptr @"test/testcases/malgo/InlineFunction.mlg.+", ptr %"+_func_0.i", align 8
   store ptr %7, ptr %fun_capture_0.i, align 8
   %8 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %8, align 8
-  %"<=_func_0.i" = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
-  store ptr @"test/testcases/malgo/InlineFunction.mlg.<=", ptr %"<=_func_0.i", align 8
-  %"<=_0.i" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
-  store ptr %8, ptr %"<=_0.i", align 8
+  %-_func_0.i = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
+  store ptr @"test/testcases/malgo/InlineFunction.mlg.-", ptr %-_func_0.i, align 8
+  %-_0.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
+  store ptr %8, ptr %-_0.i, align 8
   %9 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %9, align 8
-  %if_func_0.i = getelementptr { ptr, ptr }, ptr %9, i64 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.if", ptr %if_func_0.i, align 8
-  %if_0.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 2
-  store ptr %9, ptr %if_0.i, align 8
+  %"Int32#_func_0.i" = getelementptr { ptr, ptr }, ptr %9, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.Int32#", ptr %"Int32#_func_0.i", align 8
+  %"Int32#_0.i" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 2
+  store ptr %9, ptr %"Int32#_0.i", align 8
   %10 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %10, align 8
-  %-_func_0.i = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
-  store ptr @"test/testcases/malgo/InlineFunction.mlg.-", ptr %-_func_0.i, align 8
-  %-_0.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 3
-  store ptr %10, ptr %-_0.i, align 8
+  %"<=_func_0.i" = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
+  store ptr @"test/testcases/malgo/InlineFunction.mlg.<=", ptr %"<=_func_0.i", align 8
+  %"<=_0.i" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 3
+  store ptr %10, ptr %"<=_0.i", align 8
   %11 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %11, align 8
-  %"+_func_0.i" = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
-  store ptr @"test/testcases/malgo/InlineFunction.mlg.+", ptr %"+_func_0.i", align 8
-  %"+_0.i" = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 4
-  store ptr %11, ptr %"+_0.i", align 8
+  %if_func_0.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.if", ptr %if_func_0.i, align 8
+  %if_0.i = getelementptr { ptr, ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 4
+  store ptr %11, ptr %if_0.i, align 8
   store ptr %fun_capture_0.i, ptr %6, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
   store ptr @"test/testcases/malgo/InlineFunction.mlg.#fun_closure_466", ptr %fun_func_0.i, align 8

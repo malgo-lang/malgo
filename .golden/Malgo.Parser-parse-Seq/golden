@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/Seq.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/Seq.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/Seq.mlg"
+            , relPath = "test/testcases/malgo/Seq.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Seq.mlg"
+            }
+        )
     , moduleDefinition = ParsedDefinitions
         [ Import
             ( Range
@@ -16,9 +22,7 @@ Module
                     }
                 }
             )
-            ( ModuleName
-                { raw = "Builtin" }
-            ) All
+            ( ModuleName "Builtin" ) All
         , Import
             ( Range
                 { _start = SourcePos
@@ -33,9 +37,7 @@ Module
                     }
                 }
             )
-            ( ModuleName
-                { raw = "Prelude" }
-            ) All
+            ( ModuleName "Prelude" ) All
         , ScDef
             ( Range
                 { _start = SourcePos

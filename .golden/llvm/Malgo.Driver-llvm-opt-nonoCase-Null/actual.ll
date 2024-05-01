@@ -163,12 +163,12 @@ common.ret:                                       ; preds = %"switch_branch_test
   ret ptr %7
 
 "switch_branch_test/testcases/malgo/Null.mlg.False_0": ; preds = %2
-  %malgo_print_string_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %malgo_print_string_0 = load ptr, ptr %malgo_print_string_addr_0, align 8
+  %malgo_print_string_0 = load ptr, ptr %0, align 8
   br label %common.ret
 
 "switch_branch_test/testcases/malgo/Null.mlg.True_0": ; preds = %2
-  %malgo_exit_failure_0 = load ptr, ptr %0, align 8
+  %malgo_exit_failure_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %malgo_exit_failure_0 = load ptr, ptr %malgo_exit_failure_addr_0, align 8
   %8 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %8, align 1
   br label %common.ret
@@ -229,15 +229,15 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 16)
   %21 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %21, align 8
-  %malgo_exit_failure_func_0.i = getelementptr { ptr, ptr }, ptr %21, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Null.mlg.malgo_exit_failure", ptr %malgo_exit_failure_func_0.i, align 8
+  %malgo_print_string_func_0.i = getelementptr { ptr, ptr }, ptr %21, i64 0, i32 1
+  store ptr @"test/testcases/malgo/Null.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i, align 8
   store ptr %21, ptr %fun_capture_0.i, align 8
   %22 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %22, align 8
-  %malgo_print_string_func_0.i = getelementptr { ptr, ptr }, ptr %22, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Null.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i, align 8
-  %malgo_print_string_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
-  store ptr %22, ptr %malgo_print_string_0.i, align 8
+  %malgo_exit_failure_func_0.i = getelementptr { ptr, ptr }, ptr %22, i64 0, i32 1
+  store ptr @"test/testcases/malgo/Null.mlg.malgo_exit_failure", ptr %malgo_exit_failure_func_0.i, align 8
+  %malgo_exit_failure_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
+  store ptr %22, ptr %malgo_exit_failure_0.i, align 8
   store ptr %fun_capture_0.i, ptr %20, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %20, i64 0, i32 1
   store ptr @"test/testcases/malgo/Null.mlg.#fun_closure_182", ptr %fun_func_0.i, align 8

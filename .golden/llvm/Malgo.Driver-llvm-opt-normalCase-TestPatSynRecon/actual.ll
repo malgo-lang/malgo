@@ -11,7 +11,28 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2990"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(8) %0, i64 %1) {
+define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2992"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %d_0 = load ptr, ptr %0, align 8
+  %3 = load ptr, ptr %1, align 8
+  %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
+  %5 = load ptr, ptr %4, align 8
+  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  ret ptr %6
+}
+
+define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_2993"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %1) {
+  %3 = getelementptr i8, ptr %1, i64 4
+  %.val = load i64, ptr %3, align 4
+  %4 = tail call ptr @malgo_int64_t_to_string(i64 %.val)
+  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store i8 0, ptr %5, align 1
+  %6 = getelementptr { i8, { ptr } }, ptr %5, i64 0, i32 1, i32 0
+  store ptr %4, ptr %6, align 8
+  %7 = tail call ptr @malgo_print_string(ptr %4)
+  ret ptr %7
+}
+
+define internal i64 @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2994"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(8) %0, i64 %1) {
   %p_0 = load i64, ptr %0, align 4
   %3 = tail call i64 @malgo_add_int64_t(i64 %p_0, i64 %1)
   ret i64 %3
@@ -45,31 +66,10 @@ common.ret1:                                      ; preds = %0, %"switch_branch_
   store i64 %9, ptr %let_capture_0, align 4
   store ptr %let_capture_0, ptr %13, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2990", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2994", ptr %let_func_0, align 8
   %p_0.i = load i64, ptr %let_capture_0, align 4
   %14 = tail call i64 @malgo_add_int64_t(i64 %p_0.i, i64 %12)
   br label %common.ret1
-}
-
-define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2991"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
-  %3 = load ptr, ptr %1, align 8
-  %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
-  %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
-  ret ptr %6
-}
-
-define internal ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_2992"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %1) {
-  %3 = getelementptr i8, ptr %1, i64 4
-  %.val = load i64, ptr %3, align 4
-  %4 = tail call ptr @malgo_int64_t_to_string(i64 %.val)
-  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store i8 0, ptr %5, align 1
-  %6 = getelementptr { i8, { ptr } }, ptr %5, i64 0, i32 1, i32 0
-  store ptr %4, ptr %6, align 8
-  %7 = tail call ptr @malgo_print_string(ptr %4)
-  ret ptr %7
 }
 
 define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
@@ -104,12 +104,12 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %14, ptr %let_capture_0.i, align 8
   store ptr %let_capture_0.i, ptr %15, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2991", ptr %let_func_0.i, align 8
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#let_closure_2992", ptr %let_func_0.i, align 8
   %16 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_0.i, ptr %16, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_2992", ptr %fun_func_0.i, align 8
+  store ptr @"test/testcases/malgo/TestPatSynRecon.mlg.#fun_closure_2993", ptr %fun_func_0.i, align 8
   %17 = load ptr, ptr %15, align 8
   %18 = load ptr, ptr %let_func_0.i, align 8
   %19 = tail call ptr %18(ptr %17, ptr nonnull %16)

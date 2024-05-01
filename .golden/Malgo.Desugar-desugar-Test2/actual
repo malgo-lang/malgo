@@ -6,8 +6,14 @@ Program
                 { meta = [] :-> AnyT
                 , id = Id
                     { name = "R"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -26,8 +32,14 @@ Program
                             ]
                         , id = Id
                             { name = "let"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
                             , sort = Temporal 23
                             }
                         }
@@ -67,8 +79,14 @@ Program
                                 ]
                             , id = Id
                                 { name = "let"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 23
                                 }
                             }
@@ -81,8 +99,14 @@ Program
                 { meta = [] :-> AnyT
                 , id = Id
                     { name = "G"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -101,8 +125,14 @@ Program
                             ]
                         , id = Id
                             { name = "let"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
                             , sort = Temporal 24
                             }
                         }
@@ -142,8 +172,14 @@ Program
                                 ]
                             , id = Id
                                 { name = "let"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 24
                                 }
                             }
@@ -156,8 +192,14 @@ Program
                 { meta = [] :-> AnyT
                 , id = Id
                     { name = "B"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -176,8 +218,14 @@ Program
                             ]
                         , id = Id
                             { name = "let"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
                             , sort = Temporal 25
                             }
                         }
@@ -217,8 +265,14 @@ Program
                                 ]
                             , id = Id
                                 { name = "let"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 25
                                 }
                             }
@@ -232,8 +286,14 @@ Program
                     [ Con Tuple [] ]
                 , id = Id
                     { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -242,8 +302,14 @@ Program
                     { meta = StringT
                     , id = Id
                         { name = "p"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
                         , sort = Temporal 26
                         }
                     }
@@ -259,8 +325,14 @@ Program
                         { meta = StringT
                         , id = Id
                             { name = "p"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
                             , sort = Temporal 26
                             }
                         }
@@ -272,8 +344,14 @@ Program
                 { meta = [ AnyT ] :-> AnyT
                 , id = Id
                     { name = "rtob"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -282,8 +360,14 @@ Program
                     { meta = AnyT
                     , id = Id
                         { name = "r"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
                         , sort = Temporal 27
                         }
                     }
@@ -305,8 +389,14 @@ Program
                             { meta = AnyT
                             , id = Id
                                 { name = "r"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 27
                                 }
                             }
@@ -322,8 +412,14 @@ Program
                             { meta = [] :-> AnyT
                             , id = Id
                                 { name = "B"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                        }
+                                    )
                                 , sort = External
                                 }
                             }
@@ -339,8 +435,14 @@ Program
                                 { meta = AnyT
                                 , id = Id
                                     { name = "r"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
                                     , sort = Temporal 27
                                     }
                                 }
@@ -357,8 +459,14 @@ Program
                                 { meta = AnyT
                                 , id = Id
                                     { name = "r"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
                                     , sort = Temporal 27
                                     }
                                 }
@@ -376,8 +484,14 @@ Program
                     [ Con Tuple [] ]
                 , id = Id
                     { name = "main"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -387,8 +501,14 @@ Program
                         [ Con Tuple [] ]
                     , id = Id
                         { name = "$_"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
                         , sort = Temporal 28
                         }
                     }
@@ -404,8 +524,14 @@ Program
                         [ Con Tuple [] ]
                     , id = Id
                         { name = "d"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
                         , sort = Temporal 33
                         }
                     }
@@ -417,8 +543,14 @@ Program
                                 [ Con Tuple [] ]
                             , id = Id
                                 { name = "fun"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 32
                                 }
                             }
@@ -429,8 +561,14 @@ Program
                                 { meta = AnyT
                                 , id = Id
                                     { name = "b"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
                                     , sort = Temporal 29
                                     }
                                 }
@@ -451,8 +589,14 @@ Program
                                             { meta = AnyT
                                             , id = Id
                                                 { name = "b"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                        }
+                                                    )
                                                 , sort = Temporal 29
                                                 }
                                             }
@@ -469,8 +613,14 @@ Program
                                                 [ Con Tuple [] ]
                                             , id = Id
                                                 { name = "d"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                        }
+                                                    )
                                                 , sort = Temporal 30
                                                 }
                                             }
@@ -482,8 +632,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "malgo_print_string"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                                }
+                                                            )
                                                         , sort = External
                                                         }
                                                     }
@@ -503,8 +659,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "d"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                                }
+                                                            )
                                                         , sort = Temporal 30
                                                         }
                                                     }
@@ -522,8 +684,14 @@ Program
                                                 [ Con Tuple [] ]
                                             , id = Id
                                                 { name = "d"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                        }
+                                                    )
                                                 , sort = Temporal 30
                                                 }
                                             }
@@ -535,8 +703,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "malgo_print_string"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                                }
+                                                            )
                                                         , sort = External
                                                         }
                                                     }
@@ -556,8 +730,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "d"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                                }
+                                                            )
                                                         , sort = Temporal 30
                                                         }
                                                     }
@@ -575,8 +755,14 @@ Program
                                                 [ Con Tuple [] ]
                                             , id = Id
                                                 { name = "d"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                        }
+                                                    )
                                                 , sort = Temporal 31
                                                 }
                                             }
@@ -588,8 +774,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "malgo_print_string"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                                }
+                                                            )
                                                         , sort = External
                                                         }
                                                     }
@@ -609,8 +801,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "d"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                                }
+                                                            )
                                                         , sort = Temporal 31
                                                         }
                                                     }
@@ -629,8 +827,14 @@ Program
                                     [ Con Tuple [] ]
                                 , id = Id
                                     { name = "fun"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
                                     , sort = Temporal 32
                                     }
                                 }
@@ -643,8 +847,14 @@ Program
                         { meta = AnyT
                         , id = Id
                             { name = "d"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
                             , sort = Temporal 36
                             }
                         }
@@ -654,8 +864,14 @@ Program
                             { meta = AnyT
                             , id = Id
                                 { name = "d"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 34
                                 }
                             }
@@ -665,8 +881,14 @@ Program
                                 { meta = [] :-> AnyT
                                 , id = Id
                                     { name = "R"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
                                     , sort = External
                                     }
                                 }
@@ -677,8 +899,14 @@ Program
                                 { meta = AnyT
                                 , id = Id
                                     { name = "d"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
                                     , sort = Temporal 35
                                     }
                                 }
@@ -689,8 +917,14 @@ Program
                                         { meta = [ AnyT ] :-> AnyT
                                         , id = Id
                                             { name = "rtob"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/Test2.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                    }
+                                                )
                                             , sort = External
                                             }
                                         }
@@ -701,8 +935,14 @@ Program
                                         { meta = AnyT
                                         , id = Id
                                             { name = "d"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/Test2.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                    }
+                                                )
                                             , sort = Temporal 34
                                             }
                                         }
@@ -715,8 +955,14 @@ Program
                                         { meta = AnyT
                                         , id = Id
                                             { name = "d"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/Test2.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                    }
+                                                )
                                             , sort = Temporal 35
                                             }
                                         }
@@ -731,8 +977,14 @@ Program
                                 [ Con Tuple [] ]
                             , id = Id
                                 { name = "d"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/Test2.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                        , relPath = "test/testcases/malgo/Test2.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 37
                                 }
                             }
@@ -744,8 +996,14 @@ Program
                                         [ Con Tuple [] ]
                                     , id = Id
                                         { name = "d"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                }
+                                            )
                                         , sort = Temporal 33
                                         }
                                     }
@@ -756,8 +1014,14 @@ Program
                                     { meta = AnyT
                                     , id = Id
                                         { name = "d"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                }
+                                            )
                                         , sort = Temporal 36
                                         }
                                     }
@@ -774,8 +1038,14 @@ Program
                                         [ Con Tuple [] ]
                                     , id = Id
                                         { name = "d"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/Test2.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                                }
+                                            )
                                         , sort = Temporal 37
                                         }
                                     }
@@ -798,77 +1068,133 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
-                { name = "_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 1
+                { name = "malgo_print_string"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = External
                 }
             , Meta
-                { meta = AnyT
+                { meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
                 , id = Id
-                    { name = "b"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 29
+                    { name = "malgo_print_string"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = External
                     }
                 }
             )
         ,
             ( Id
                 { name = "B"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Meta
                 { meta = [] :-> AnyT
                 , id = Id
                     { name = "B"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
             )
         ,
             ( Id
-                { name = "rtob"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = External
+                { name = "a"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 0
                 }
             , Meta
-                { meta = [ AnyT ] :-> AnyT
+                { meta = AnyT
                 , id = Id
-                    { name = "rtob"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = External
+                    { name = "r"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 27
                     }
                 }
             )
         ,
             ( Id
-                { name = "G"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = External
+                { name = "$_"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 22
                 }
             , Meta
-                { meta = [] :-> AnyT
+                { meta = SumT
+                    [ Con Tuple [] ]
                 , id = Id
-                    { name = "G"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = External
+                    { name = "$_"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 28
                     }
                 }
             )
         ,
             ( Id
                 { name = "main"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Meta
@@ -879,79 +1205,131 @@ DsState
                     [ Con Tuple [] ]
                 , id = Id
                     { name = "main"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
             )
         ,
             ( Id
-                { name = "$_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 22
+                { name = "_"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 1
                 }
             , Meta
-                { meta = SumT
-                    [ Con Tuple [] ]
+                { meta = AnyT
                 , id = Id
-                    { name = "$_"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 28
+                    { name = "b"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 29
                     }
                 }
             )
         ,
             ( Id
                 { name = "R"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Meta
                 { meta = [] :-> AnyT
                 , id = Id
                     { name = "R"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
             )
         ,
             ( Id
-                { name = "malgo_print_string"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
+                { name = "rtob"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Meta
-                { meta = [ StringT ] :-> SumT
-                    [ Con Tuple [] ]
+                { meta = [ AnyT ] :-> AnyT
                 , id = Id
-                    { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    { name = "rtob"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
             )
         ,
             ( Id
-                { name = "a"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 0
+                { name = "G"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = External
                 }
             , Meta
-                { meta = AnyT
+                { meta = [] :-> AnyT
                 , id = Id
-                    { name = "r"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 27
+                    { name = "G"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = External
                     }
                 }
             )
@@ -959,133 +1337,15 @@ DsState
     , _signatureMap = fromList
         [
             ( Id
-                { name = "_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 1
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "B"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "rtob"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr
-                    ( TyCon
-                        ( Id
-                            { name = "RGB"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
-                            , sort = External
-                            }
-                        )
-                    )
-                    ( TyCon
-                        ( Id
-                            { name = "RGB"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
-                            , sort = External
-                            }
-                        )
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "G"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
-                { name = "main"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
-                { name = "$_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 22
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "R"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyCon
-                    ( Id
-                        { name = "RGB"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
-                        , sort = External
-                        }
-                    )
-                )
-            )
-        ,
-            ( Id
                 { name = "malgo_print_string"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Forall []
@@ -1095,17 +1355,231 @@ DsState
             )
         ,
             ( Id
+                { name = "B"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
                 { name = "a"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
                 , sort = Internal 0
                 }
             , Forall []
                 ( TyCon
                     ( Id
                         { name = "RGB"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 22
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "main"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
+            )
+        ,
+            ( Id
+                { name = "_"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 1
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "R"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "rtob"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyArr
+                    ( TyCon
+                        ( Id
+                            { name = "RGB"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
+                            , sort = External
+                            }
+                        )
+                    )
+                    ( TyCon
+                        ( Id
+                            { name = "RGB"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
+                            , sort = External
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Id
+                { name = "G"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Forall []
+                ( TyCon
+                    ( Id
+                        { name = "RGB"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
                         , sort = External
                         }
                     )
@@ -1115,97 +1589,8 @@ DsState
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "Int64#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "RGB"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyCon
-                    ( Id
-                        { name = "RGB"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/Test2.mlg" }
-                        , sort = External
-                        }
-                    )
-                , _typeParameters = []
-                , _valueConstructors =
-                    [
-                        ( Id
-                            { name = "R"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "RGB"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ,
-                        ( Id
-                            { name = "G"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "RGB"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ,
-                        ( Id
-                            { name = "B"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/Test2.mlg" }
-                            , sort = External
-                            }
-                        , Forall []
-                            ( TyCon
-                                ( Id
-                                    { name = "RGB"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/Test2.mlg" }
-                                    , sort = External
-                                    }
-                                )
-                            )
-                        )
-                    ]
-                }
-            )
-        ,
-            ( Id
                 { name = "Double#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -1217,8 +1602,7 @@ DsState
         ,
             ( Id
                 { name = "Int32#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -1230,8 +1614,7 @@ DsState
         ,
             ( Id
                 { name = "Ptr#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -1242,9 +1625,155 @@ DsState
             )
         ,
             ( Id
+                { name = "Char#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "RGB"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyCon
+                    ( Id
+                        { name = "RGB"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                , relPath = "test/testcases/malgo/Test2.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                }
+                            )
+                        , sort = External
+                        }
+                    )
+                , _typeParameters = []
+                , _valueConstructors =
+                    [
+                        ( Id
+                            { name = "R"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "G"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ,
+                        ( Id
+                            { name = "B"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                    , relPath = "test/testcases/malgo/Test2.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                    }
+                                )
+                            , sort = External
+                            }
+                        , Forall []
+                            ( TyCon
+                                ( Id
+                                    { name = "RGB"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                                            , relPath = "test/testcases/malgo/Test2.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                                            }
+                                        )
+                                    , sort = External
+                                    }
+                                )
+                            )
+                        )
+                    ]
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
                 { name = "String#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -1256,25 +1785,11 @@ DsState
         ,
             ( Id
                 { name = "Float#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
                 { _typeConstructor = TyPrim FloatT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim CharT
                 , _typeParameters = []
                 , _valueConstructors = []
                 }
@@ -1284,156 +1799,83 @@ DsState
         [
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 19
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 15
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 18
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Int64#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 17
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 16
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 14
                     }
                 )
             )
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 21
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 13
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 20
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Ptr#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TyArr TYPE TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 3
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 2
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 12
                     }
                 )
             )
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 7
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 6
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "String#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 5
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 4
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
                 , sort = Internal 11
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = Temporal 10
                     }
                 )
@@ -1441,24 +1883,43 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
                 , sort = Internal 9
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
                     , sort = Temporal 8
                     }
                 )
             )
         ,
             ( Id
-                { name = "Float#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                { name = "Double#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TYPE
@@ -1466,24 +1927,71 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 15
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 7
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 14
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 6
                     }
                 )
             )
         ,
             ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 5
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 4
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Ptr#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TyArr TYPE TYPE
+            )
+        ,
+            ( Id
                 { name = "Char#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TYPE
@@ -1491,16 +1999,136 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/Test2.mlg" }
-                , sort = Internal 13
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 3
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/Test2.mlg" }
-                    , sort = Temporal 12
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 2
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "String#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Float#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 21
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 20
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 19
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 18
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/Test2.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                        , relPath = "test/testcases/malgo/Test2.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                        }
+                    )
+                , sort = Internal 17
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/Test2.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test2.mlg"
+                            , relPath = "test/testcases/malgo/Test2.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test2.mlg"
+                            }
+                        )
+                    , sort = Temporal 16
                     }
                 )
             )

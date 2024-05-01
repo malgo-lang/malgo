@@ -1,8 +1,8 @@
 ; ModuleID = 'test/testcases/malgo/TestEither.mlg'
 source_filename = "test/testcases/malgo/TestEither.mlg"
 
-@str5032 = unnamed_addr constant [6 x i8] c"error\00"
-@str5065 = unnamed_addr constant [12 x i8] c"unreachable\00"
+@str4995 = unnamed_addr constant [12 x i8] c"unreachable\00"
+@str5076 = unnamed_addr constant [6 x i8] c"error\00"
 
 declare void @GC_init()
 
@@ -175,7 +175,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4898"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4690"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4749"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -268,7 +268,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4899"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4722"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4781"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -361,7 +361,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4900"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4818"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4813"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -454,7 +454,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4901"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4850"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4845"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -547,7 +547,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4902"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4754"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4685"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -640,7 +640,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4903"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4786"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4717"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -733,7 +733,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4904"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4882"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4877"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -826,7 +826,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4905"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4691"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4748"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -919,7 +919,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4906"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4723"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4780"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1012,7 +1012,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4907"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4819"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4812"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1105,7 +1105,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4908"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4851"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4844"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1198,7 +1198,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4909"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4755"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4684"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1280,40 +1280,6 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_let_4446"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$__254_0", ptr %"test/testcases/malgo/TestEither.mlg.$left_255_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_255_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_0 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_255_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %8 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 0
-  store i8 0, ptr %8, align 1
-  %9 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1, i32 0
-  store ptr %6, ptr %9, align 8
-  ret ptr %7
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %10 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_255_0", i32 0, i32 1
-  %11 = getelementptr { ptr }, ptr %10, i32 0, i32 0
-  %12 = load ptr, ptr %11, align 8
-  %13 = getelementptr { ptr, ptr }, ptr %"test/testcases/malgo/TestEither.mlg.$__254_0", i32 0, i32 0
-  %14 = load ptr, ptr %13, align 8
-  %15 = getelementptr { ptr, ptr }, ptr %"test/testcases/malgo/TestEither.mlg.$__254_0", i32 0, i32 1
-  %16 = load ptr, ptr %15, align 8
-  %17 = call ptr %16(ptr %14, ptr %12)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %1
-  unreachable
-}
-
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4910"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -1325,7 +1291,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4910"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4787"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4716"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1418,7 +1384,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4911"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4883"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4876"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1500,23 +1466,101 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4912"(ptr %0, ptr %1) {
-  %__addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %__0 = load ptr, ptr %__addr_0, align 8
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_let_4446"(ptr null, ptr %__0, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.id"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$x_253_0") {
+  ret ptr %"test/testcases/malgo/TestEither.mlg.$x_253_0"
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.andThen"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$__254_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4912"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4751"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %__0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %"test/testcases/malgo/TestEither.mlg.$__254_0", ptr %__0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
   store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4912", ptr %let_func_0, align 8
-  ret ptr %2
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4913"(ptr %0, ptr %1) {
@@ -1530,7 +1574,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4913"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4688"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4783"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1623,7 +1667,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4914"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4720"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4815"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1716,7 +1760,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4915"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4816"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4847"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1809,7 +1853,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4916"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4848"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4687"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1902,7 +1946,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4917"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4752"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4719"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -1995,7 +2039,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4918"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4784"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4879"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2088,7 +2132,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4919"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4880"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4750"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2170,11 +2214,6 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_2155_0") {
-  %2 = call ptr @malgo_int32_t_to_string(i32 %"runtime/malgo/Builtin.mlg.$p_2155_0")
-  ret ptr %2
-}
-
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4920"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -2186,7 +2225,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4920"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4689"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4782"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2279,7 +2318,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4921"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4721"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4814"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2372,7 +2411,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4922"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4817"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4846"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2465,7 +2504,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4923"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4849"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4686"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2558,7 +2597,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4924"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4753"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4718"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2651,7 +2690,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4925"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4785"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4878"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2744,7 +2783,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4926"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4881"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4745"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2837,7 +2876,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4927"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4694"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4777"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -2930,7 +2969,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4928"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4726"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4809"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3023,7 +3062,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4929"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4822"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4841"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3116,7 +3155,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4930"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4854"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4681"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3209,7 +3248,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4931"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4758"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4713"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3302,7 +3341,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4932"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4790"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4873"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3395,7 +3434,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4933"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4886"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4744"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3488,7 +3527,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4934"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4695"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4776"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3581,7 +3620,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4935"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4727"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4808"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3674,7 +3713,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4936"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4823"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4840"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3756,15 +3795,6 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.Left"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$p_249_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %"test/testcases/malgo/TestEither.mlg.$p_249_0", ptr %4, align 8
-  ret ptr %2
-}
-
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4937"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -3776,7 +3806,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4937"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4855"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4680"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3869,7 +3899,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4938"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4759"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4712"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -3962,7 +3992,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4939"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4791"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4872"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4055,7 +4085,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4940"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4887"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4747"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4148,7 +4178,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4941"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4692"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4779"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4241,7 +4271,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4942"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4724"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4811"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4334,7 +4364,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4943"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4820"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4843"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4427,7 +4457,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4944"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4852"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4683"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4520,7 +4550,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4945"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4756"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4715"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4613,7 +4643,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4946"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4788"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4875"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4706,7 +4736,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4947"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4884"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4746"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4799,7 +4829,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4948"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4693"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4778"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4892,7 +4922,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4949"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4725"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4810"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -4985,7 +5015,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4950"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4821"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4842"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5078,7 +5108,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4951"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4853"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4682"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5171,7 +5201,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4952"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4757"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4714"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5264,7 +5294,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4953"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4789"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4874"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5346,6 +5376,63 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
+define internal ptr @"runtime/malgo/Builtin.mlg.toStringInt32"(ptr %0, ptr %"runtime/malgo/Builtin.mlg.$int32#_2181_0") {
+  %2 = getelementptr { i8, <4 x i8> }, ptr %"runtime/malgo/Builtin.mlg.$int32#_2181_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
+  %4 = getelementptr { i8, { i32 } }, ptr %"runtime/malgo/Builtin.mlg.$int32#_2181_0", i32 0, i32 1
+  %5 = getelementptr { i32 }, ptr %4, i32 0, i32 0
+  %6 = load i32, ptr %5, align 4
+  %7 = call ptr @malgo_int32_t_to_string(i32 %6)
+  %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %9 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 0
+  store i8 0, ptr %9, align 1
+  %10 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1, i32 0
+  store ptr %7, ptr %10, align 8
+  ret ptr %8
+
+switch_default_0:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_let_4446"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$__254_0", ptr %"test/testcases/malgo/TestEither.mlg.$left_255_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_255_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_0 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_255_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %8 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 0
+  store i8 0, ptr %8, align 1
+  %9 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1, i32 0
+  store ptr %6, ptr %9, align 8
+  ret ptr %7
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %10 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_255_0", i32 0, i32 1
+  %11 = getelementptr { ptr }, ptr %10, i32 0, i32 0
+  %12 = load ptr, ptr %11, align 8
+  %13 = getelementptr { ptr, ptr }, ptr %"test/testcases/malgo/TestEither.mlg.$__254_0", i32 0, i32 0
+  %14 = load ptr, ptr %13, align 8
+  %15 = getelementptr { ptr, ptr }, ptr %"test/testcases/malgo/TestEither.mlg.$__254_0", i32 0, i32 1
+  %16 = load ptr, ptr %15, align 8
+  %17 = call ptr %16(ptr %14, ptr %12)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %1
+  unreachable
+}
+
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4954"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -5357,7 +5444,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4954"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4885"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4741"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5439,15 +5526,6 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.Right"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$p_251_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
-  store i8 1, ptr %3, align 1
-  %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %"test/testcases/malgo/TestEither.mlg.$p_251_0", ptr %4, align 8
-  ret ptr %2
-}
-
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4955"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -5459,7 +5537,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4955"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4698"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4773"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5552,7 +5630,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4956"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4730"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4805"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5645,7 +5723,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4957"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4826"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4837"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5738,7 +5816,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4958"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4858"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4677"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -5821,96 +5899,22 @@ switch_default_2:                                 ; preds = %1
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4959"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
+  %__addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %__0 = load ptr, ptr %__addr_0, align 8
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_let_4446"(ptr null, ptr %__0, ptr %1)
+  ret ptr %3
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4762"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+define internal ptr @"test/testcases/malgo/TestEither.mlg.andThen"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$__254_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %__0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %"test/testcases/malgo/TestEither.mlg.$__254_0", ptr %__0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4959", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
+  ret ptr %2
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4960"(ptr %0, ptr %1) {
@@ -5924,7 +5928,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4960"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4794"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4709"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6017,7 +6021,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4961"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4890"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4869"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6110,7 +6114,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4962"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4699"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4740"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6203,7 +6207,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4963"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4731"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4772"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6296,7 +6300,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4964"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4827"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4804"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6389,7 +6393,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4965"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4859"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4836"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6482,7 +6486,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4966"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4763"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4676"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6575,7 +6579,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4967"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4795"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4708"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6668,7 +6672,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4968"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4891"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4868"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6750,23 +6754,97 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal i32 @"test/testcases/malgo/TestEither.mlg.#let_closure_4969"(ptr %0, i32 %1) {
-  %x_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
-  %x_0 = load i32, ptr %x_addr_0, align 4
-  %3 = call i32 @malgo_add_int32_t(i32 %x_0, i32 %1)
-  ret i32 %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4969"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
 }
 
-define internal ptr @"runtime/malgo/Builtin.mlg.addInt32#"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$x_4027_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i32 }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { i32 }, ptr %let_capture_0, i32 0, i32 0
-  store i32 %"runtime/malgo/Builtin.mlg.$x_4027_0", ptr %x_0, align 4
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4743"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
   store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4969", ptr %let_func_0, align 8
-  ret ptr %2
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4970"(ptr %0, ptr %1) {
@@ -6780,7 +6858,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4970"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4696"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4775"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6873,7 +6951,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4971"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4728"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4807"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -6966,7 +7044,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4972"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4824"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4839"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7048,6 +7126,31 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
+define internal ptr @"runtime/malgo/Prelude.mlg.putStrLn"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$str_716_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr @malgo_print_string(ptr %6)
+  %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %9 = getelementptr { i8, {} }, ptr %8, i32 0, i32 0
+  store i8 0, ptr %9, align 1
+  %10 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %11 = getelementptr { i8, {} }, ptr %10, i32 0, i32 0
+  store i8 0, ptr %11, align 1
+  %12 = call ptr @malgo_newline(ptr %10)
+  ret ptr %12
+
+switch_default_0:                                 ; preds = %1
+  unreachable
+}
+
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4973"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -7059,7 +7162,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4973"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4856"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4679"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7152,7 +7255,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4974"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4760"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4711"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7245,7 +7348,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4975"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4792"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4871"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7327,6 +7430,15 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
+define internal ptr @"test/testcases/malgo/TestEither.mlg.Right"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$p_251_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
+  store i8 1, ptr %3, align 1
+  %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
+  store ptr %"test/testcases/malgo/TestEither.mlg.$p_251_0", ptr %4, align 8
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4976"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -7338,7 +7450,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4976"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4888"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4742"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7431,7 +7543,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4977"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4697"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4774"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7524,7 +7636,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4978"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4729"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4806"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7617,7 +7729,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4979"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4825"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4838"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7710,7 +7822,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4980"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4857"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4678"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7803,7 +7915,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4981"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4761"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4710"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7896,7 +8008,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4982"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4793"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4870"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -7978,29 +8090,13 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"runtime/malgo/Prelude.mlg.putStrLn"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$str_716_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr @malgo_print_string(ptr %6)
-  %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %9 = getelementptr { i8, {} }, ptr %8, i32 0, i32 0
-  store i8 0, ptr %9, align 1
-  %10 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %11 = getelementptr { i8, {} }, ptr %10, i32 0, i32 0
-  store i8 0, ptr %11, align 1
-  %12 = call ptr @malgo_newline(ptr %10)
-  ret ptr %12
-
-switch_default_0:                                 ; preds = %1
-  unreachable
+define internal ptr @"runtime/malgo/Builtin.mlg.Int32#"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_1792_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  %4 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 1, i32 0
+  store i32 %"runtime/malgo/Builtin.mlg.$p_1792_0", ptr %4, align 4
+  ret ptr %2
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4983"(ptr %0, ptr %1) {
@@ -8014,7 +8110,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4983"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4889"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4737"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8107,7 +8203,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4984"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4702"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4769"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8200,7 +8296,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4985"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4734"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4801"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8293,7 +8389,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4986"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4830"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4833"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8386,7 +8482,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4987"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4862"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4673"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8479,7 +8575,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4988"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4766"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4705"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8572,7 +8668,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4989"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4798"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4865"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8665,7 +8761,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4990"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4894"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4897"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8758,7 +8854,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4991"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4703"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4736"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8851,7 +8947,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4992"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4735"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4768"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -8944,7 +9040,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4993"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4831"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4800"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9037,7 +9133,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4994"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4863"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4832"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9119,96 +9215,86 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4995"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4767"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4672"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$right_275_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$right_275_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
+  switch i8 %3, label %switch_default_3 [
     i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
     i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
   ]
 
 "switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$right_275_0", i32 0, i32 1
   %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
   %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
+  %7 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %8 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 0
+  store i8 0, ptr %8, align 1
+  %9 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1, i32 0
+  store ptr @str4995, ptr %9, align 8
+  %10 = getelementptr { i8, <8 x i8> }, ptr %7, i32 0, i32 0
+  %11 = load i8, ptr %10, align 1
+  switch i8 %11, label %switch_default_0 [
     i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
 "switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
+  %12 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1
+  %13 = getelementptr { ptr }, ptr %12, i32 0, i32 0
+  %14 = load ptr, ptr %13, align 8
+  %15 = call ptr @malgo_print_string(ptr %14)
+  %16 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %17 = getelementptr { i8, {} }, ptr %16, i32 0, i32 0
+  store i8 0, ptr %17, align 1
+  %18 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %19 = getelementptr { i8, {} }, ptr %18, i32 0, i32 0
+  store i8 0, ptr %19, align 1
+  %20 = call ptr @malgo_newline(ptr %18)
+  ret ptr %20
 
 switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
   unreachable
 
 "switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
+  %21 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$right_275_0", i32 0, i32 1
+  %22 = getelementptr { ptr }, ptr %21, i32 0, i32 0
+  %23 = load ptr, ptr %22, align 8
+  %24 = getelementptr { i8, <4 x i8> }, ptr %23, i32 0, i32 0
+  %25 = load i8, ptr %24, align 1
+  switch i8 %25, label %switch_default_2 [
     i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   ]
 
 "switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4995", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
+  %26 = getelementptr { i8, { i32 } }, ptr %23, i32 0, i32 1
+  %27 = getelementptr { i32 }, ptr %26, i32 0, i32 0
+  %28 = load i32, ptr %27, align 4
+  %29 = call ptr @malgo_int32_t_to_string(i32 %28)
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %31 = getelementptr { i8, { ptr } }, ptr %30, i32 0, i32 0
+  store i8 0, ptr %31, align 1
+  %32 = getelementptr { i8, { ptr } }, ptr %30, i32 0, i32 1, i32 0
+  store ptr %29, ptr %32, align 8
+  %33 = getelementptr { i8, <8 x i8> }, ptr %30, i32 0, i32 0
+  %34 = load i8, ptr %33, align 1
+  switch i8 %34, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_1"
+  ]
 
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+"switch_branch_runtime/malgo/Builtin.mlg.String#_1": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  %35 = getelementptr { i8, { ptr } }, ptr %30, i32 0, i32 1
+  %36 = getelementptr { ptr }, ptr %35, i32 0, i32 0
+  %37 = load ptr, ptr %36, align 8
+  %38 = call ptr @malgo_print_string(ptr %37)
+  ret ptr %38
+
+switch_default_1:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   unreachable
 
-switch_default_2:                                 ; preds = %1
+switch_default_2:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_3:                                 ; preds = %1
   unreachable
 }
 
@@ -9223,7 +9309,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4996"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4799"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4704"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9316,7 +9402,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4997"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4895"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4864"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9409,7 +9495,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4998"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4700"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4896"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9491,6 +9577,24 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
+define internal ptr @"runtime/malgo/Prelude.mlg.putStr"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$str_723_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$str_723_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_723_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr @malgo_print_string(ptr %6)
+  ret ptr %7
+
+switch_default_0:                                 ; preds = %1
+  unreachable
+}
+
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4999"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -9502,7 +9606,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_4999"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4732"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4739"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9595,7 +9699,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5000"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4828"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4771"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9688,7 +9792,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5001"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4860"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4803"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9781,7 +9885,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5002"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4764"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4835"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9874,7 +9978,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5003"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4796"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4675"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -9967,7 +10071,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5004"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4892"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4707"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10060,7 +10164,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5005"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4701"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4867"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10153,7 +10257,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5006"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4733"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4738"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10246,7 +10350,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5007"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4829"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4770"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10339,7 +10443,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5008"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4861"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4802"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10432,7 +10536,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5009"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4765"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4834"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10514,15 +10618,6 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"runtime/malgo/Builtin.mlg.Int32#"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_1792_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  %4 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 1, i32 0
-  store i32 %"runtime/malgo/Builtin.mlg.$p_1792_0", ptr %4, align 4
-  ret ptr %2
-}
-
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5010"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -10534,7 +10629,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5010"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4797"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4674"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10627,7 +10722,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5011"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4893"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4706"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10709,6 +10804,11 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
+define internal ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_2155_0") {
+  %2 = call ptr @malgo_int32_t_to_string(i32 %"runtime/malgo/Builtin.mlg.$p_2155_0")
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5012"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -10720,7 +10820,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5012"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4674"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4866"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10813,7 +10913,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5013"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4706"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4765"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10906,7 +11006,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5014"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4802"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4797"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -10999,7 +11099,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5015"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4834"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4829"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11092,7 +11192,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5016"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4738"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4861"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11185,7 +11285,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5017"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4770"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4701"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11278,7 +11378,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5018"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4866"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4733"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11371,7 +11471,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5019"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4675"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4893"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11464,7 +11564,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5020"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4707"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4764"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11557,7 +11657,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5021"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4803"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4796"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11650,7 +11750,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5022"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4835"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4828"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11743,7 +11843,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5023"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4739"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4860"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11836,7 +11936,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5024"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4771"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4700"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -11929,7 +12029,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5025"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4867"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4732"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -12022,9 +12122,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5026"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5027"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4672"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4892"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5026", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5027"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4767"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5027", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5028"(ptr %0, ptr %1) {
@@ -12038,9 +12308,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5028"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5029"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4673"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4799"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5028", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5029"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4831"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5029", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5030"(ptr %0, ptr %1) {
@@ -12054,9 +12494,272 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5030"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5031"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4674"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4863"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5030", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5031"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4703"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5031", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5032"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4735"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5032", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5033"(ptr %0, ptr %1) {
@@ -12070,9 +12773,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5033"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5034"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4678"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4895"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5033", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5034"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4766"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5034", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5035"(ptr %0, ptr %1) {
@@ -12086,9 +12959,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5035"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5036"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4679"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4798"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5035", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5036"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4830"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5036", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5037"(ptr %0, ptr %1) {
@@ -12102,15 +13145,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5037"(ptr
   ret ptr %7
 }
 
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4862"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5037", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5038"(ptr %0, ptr %1) {
-  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %cast_0 = load ptr, ptr %cast_addr_0, align 8
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %cast_0)
+  %7 = call ptr %6(ptr %4, ptr %d_0)
   ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4702"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5038", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5039"(ptr %0, ptr %1) {
@@ -12124,9 +13331,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5039"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5040"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4688"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4734"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5039", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5040"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4894"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5040", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5041"(ptr %0, ptr %1) {
@@ -12140,9 +13517,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5041"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5042"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4689"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4761"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5041", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5042"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4793"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5042", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5043"(ptr %0, ptr %1) {
@@ -12156,9 +13703,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5043"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5044"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4693"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4825"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5043", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5044"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4857"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5044", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5045"(ptr %0, ptr %1) {
@@ -12172,9 +13889,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5045"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5046"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4694"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4697"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5045", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5046"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4729"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5046", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5047"(ptr %0, ptr %1) {
@@ -12188,9 +14075,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5047"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5048"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4718"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4889"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5047", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5048"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4760"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5048", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5049"(ptr %0, ptr %1) {
@@ -12204,9 +14261,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5049"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5050"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4719"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4792"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5049", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5050"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4824"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5050", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5051"(ptr %0, ptr %1) {
@@ -12220,9 +14447,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5051"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5052"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4723"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4856"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5051", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5052"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4696"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5052", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5053"(ptr %0, ptr %1) {
@@ -12236,12 +14633,89 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5053"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5054"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4724"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4728"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5053", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5055"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5054"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -12252,15 +14726,198 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5055"(ptr
   ret ptr %7
 }
 
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4888"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5054", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal i32 @"test/testcases/malgo/TestEither.mlg.#let_closure_5055"(ptr %0, i32 %1) {
+  %x_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
+  %x_0 = load i32, ptr %x_addr_0, align 4
+  %3 = call i32 @malgo_add_int32_t(i32 %x_0, i32 %1)
+  ret i32 %3
+}
+
+define internal ptr @"runtime/malgo/Builtin.mlg.addInt32#"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$x_4027_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i32 }, ptr null, i32 1) to i64))
+  %x_0 = getelementptr { i32 }, ptr %let_capture_0, i32 0, i32 0
+  store i32 %"runtime/malgo/Builtin.mlg.$x_4027_0", ptr %x_0, align 4
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5055", ptr %let_func_0, align 8
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5056"(ptr %0, ptr %1) {
-  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %cast_0 = load ptr, ptr %cast_addr_0, align 8
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %cast_0)
+  %7 = call ptr %6(ptr %4, ptr %d_0)
   ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4763"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5056", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5057"(ptr %0, ptr %1) {
@@ -12274,9 +14931,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5057"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5058"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4733"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4795"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5057", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5058"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4827"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5058", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5059"(ptr %0, ptr %1) {
@@ -12290,9 +15117,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5059"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5060"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4734"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4859"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5059", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5060"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4699"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5060", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5061"(ptr %0, ptr %1) {
@@ -12306,9 +15303,179 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5061"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5062"(ptr %0, ptr %1) {
-  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4738"(ptr null, ptr %1)
-  ret ptr %3
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4731"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5061", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5062"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4891"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5062", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5063"(ptr %0, ptr %1) {
@@ -12322,7 +15489,958 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5063"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5064"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4762"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5063", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5064"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4794"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5064", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5065"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4826"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5065", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5066"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4858"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5066", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5067"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4698"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5067", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5068"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4730"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5068", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5069"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4890"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_2 [
+    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  ]
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
+  %6 = load ptr, ptr %5, align 8
+  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
+  %8 = load i8, ptr %7, align 1
+  switch i8 %8, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
+  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
+  %11 = load ptr, ptr %10, align 8
+  %12 = call ptr @malgo_print_string(ptr %11)
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
+  store i8 0, ptr %14, align 1
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = call ptr @malgo_newline(ptr %15)
+  ret ptr %17
+
+switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
+  unreachable
+
+"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
+  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
+  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
+  %20 = load ptr, ptr %19, align 8
+  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
+  %22 = load i8, ptr %21, align 1
+  switch i8 %22, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
+  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
+  %25 = load i32, ptr %24, align 4
+  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
+  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
+  store i8 0, ptr %28, align 1
+  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
+  store ptr %26, ptr %29, align 8
+  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %27, ptr %d_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5069", ptr %let_func_0, align 8
+  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
+  %32 = load ptr, ptr %31, align 8
+  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
+  %34 = load ptr, ptr %33, align 8
+  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
+  store ptr null, ptr %putStrLn_capture_0, align 8
+  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
+  %36 = call ptr %34(ptr %32, ptr %35)
+  ret ptr %36
+
+switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
+  unreachable
+
+switch_default_2:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5070"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5071"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4672"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5072"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5073"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4673"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5074"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5075"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4674"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5077"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5078"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4678"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5079"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5080"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4679"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5081"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5082"(ptr %0, ptr %1) {
+  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %cast_0 = load ptr, ptr %cast_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %cast_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5083"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5084"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4688"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5085"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5086"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4689"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5087"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5088"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4693"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5089"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5090"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4694"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5091"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5092"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4718"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5093"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5094"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4719"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5095"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5096"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4723"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5097"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5098"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4724"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5099"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5100"(ptr %0, ptr %1) {
+  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %cast_0 = load ptr, ptr %cast_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %cast_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5101"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5102"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4733"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5103"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5104"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4734"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5105"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5106"(ptr %0, ptr %1) {
+  %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4738"(ptr null, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5107"(ptr %0, ptr %1) {
+  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %d_0 = load ptr, ptr %d_addr_0, align 8
+  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call ptr %6(ptr %4, ptr %d_0)
+  ret ptr %7
+}
+
+define internal ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5108"(ptr %0, ptr %1) {
   %3 = call ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4739"(ptr null, ptr %1)
   ret ptr %3
 }
@@ -12345,13 +16463,13 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.main"(ptr %0, ptr %"te
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %8, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %8, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5026", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5070", ptr %let_func_0, align 8
   %9 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_1 = getelementptr { ptr, ptr }, ptr %9, i32 0, i32 0
   store ptr %fun_capture_0, ptr %fun_capture_1, align 8
   %fun_func_0 = getelementptr { ptr, ptr }, ptr %9, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5027", ptr %fun_func_0, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5071", ptr %fun_func_0, align 8
   %10 = getelementptr { ptr, ptr }, ptr %8, i32 0, i32 0
   %11 = load ptr, ptr %10, align 8
   %12 = getelementptr { ptr, ptr }, ptr %8, i32 0, i32 1
@@ -12438,13 +16556,13 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.main"(ptr %0, ptr %"te
   %let_capture_3 = getelementptr { ptr, ptr }, ptr %53, i32 0, i32 0
   store ptr %let_capture_2, ptr %let_capture_3, align 8
   %let_func_1 = getelementptr { ptr, ptr }, ptr %53, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5028", ptr %let_func_1, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5072", ptr %let_func_1, align 8
   %54 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_3 = getelementptr { ptr, ptr }, ptr %54, i32 0, i32 0
   store ptr %fun_capture_2, ptr %fun_capture_3, align 8
   %fun_func_1 = getelementptr { ptr, ptr }, ptr %54, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5029", ptr %fun_func_1, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5073", ptr %fun_func_1, align 8
   %55 = getelementptr { ptr, ptr }, ptr %53, i32 0, i32 0
   %56 = load ptr, ptr %55, align 8
   %57 = getelementptr { ptr, ptr }, ptr %53, i32 0, i32 1
@@ -12500,13 +16618,13 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.main"(ptr %0, ptr %"te
   %let_capture_5 = getelementptr { ptr, ptr }, ptr %86, i32 0, i32 0
   store ptr %let_capture_4, ptr %let_capture_5, align 8
   %let_func_2 = getelementptr { ptr, ptr }, ptr %86, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5030", ptr %let_func_2, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5074", ptr %let_func_2, align 8
   %87 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_4 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_5 = getelementptr { ptr, ptr }, ptr %87, i32 0, i32 0
   store ptr %fun_capture_4, ptr %fun_capture_5, align 8
   %fun_func_2 = getelementptr { ptr, ptr }, ptr %87, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5031", ptr %fun_func_2, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5075", ptr %fun_func_2, align 8
   %88 = getelementptr { ptr, ptr }, ptr %86, i32 0, i32 0
   %89 = load ptr, ptr %88, align 8
   %90 = getelementptr { ptr, ptr }, ptr %86, i32 0, i32 1
@@ -12531,7 +16649,7 @@ switch_default_2:                                 ; preds = %"switch_branch_test
   %97 = getelementptr { i8, { ptr } }, ptr %96, i32 0, i32 0
   store i8 0, ptr %97, align 1
   %98 = getelementptr { i8, { ptr } }, ptr %96, i32 0, i32 1, i32 0
-  store ptr @str5032, ptr %98, align 8
+  store ptr @str5076, ptr %98, align 8
   %99 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %100 = getelementptr { i8, { ptr } }, ptr %99, i32 0, i32 0
   store i8 0, ptr %100, align 1
@@ -12560,13 +16678,13 @@ switch_default_2:                                 ; preds = %"switch_branch_test
   %let_capture_7 = getelementptr { ptr, ptr }, ptr %110, i32 0, i32 0
   store ptr %let_capture_6, ptr %let_capture_7, align 8
   %let_func_3 = getelementptr { ptr, ptr }, ptr %110, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5033", ptr %let_func_3, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5077", ptr %let_func_3, align 8
   %111 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_6 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_7 = getelementptr { ptr, ptr }, ptr %111, i32 0, i32 0
   store ptr %fun_capture_6, ptr %fun_capture_7, align 8
   %fun_func_3 = getelementptr { ptr, ptr }, ptr %111, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5034", ptr %fun_func_3, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5078", ptr %fun_func_3, align 8
   %112 = getelementptr { ptr, ptr }, ptr %110, i32 0, i32 0
   %113 = load ptr, ptr %112, align 8
   %114 = getelementptr { ptr, ptr }, ptr %110, i32 0, i32 1
@@ -12622,13 +16740,13 @@ switch_default_2:                                 ; preds = %"switch_branch_test
   %let_capture_9 = getelementptr { ptr, ptr }, ptr %143, i32 0, i32 0
   store ptr %let_capture_8, ptr %let_capture_9, align 8
   %let_func_4 = getelementptr { ptr, ptr }, ptr %143, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5035", ptr %let_func_4, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5079", ptr %let_func_4, align 8
   %144 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_9 = getelementptr { ptr, ptr }, ptr %144, i32 0, i32 0
   store ptr %fun_capture_8, ptr %fun_capture_9, align 8
   %fun_func_4 = getelementptr { ptr, ptr }, ptr %144, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5036", ptr %fun_func_4, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5080", ptr %fun_func_4, align 8
   %145 = getelementptr { ptr, ptr }, ptr %143, i32 0, i32 0
   %146 = load ptr, ptr %145, align 8
   %147 = getelementptr { ptr, ptr }, ptr %143, i32 0, i32 1
@@ -12660,7 +16778,7 @@ switch_default_6:                                 ; preds = %"switch_branch_test
   %let_capture_11 = getelementptr { ptr, ptr }, ptr %154, i32 0, i32 0
   store ptr %let_capture_10, ptr %let_capture_11, align 8
   %let_func_5 = getelementptr { ptr, ptr }, ptr %154, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5037", ptr %let_func_5, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5081", ptr %let_func_5, align 8
   %155 = getelementptr { ptr, ptr }, ptr %154, i32 0, i32 0
   %156 = load ptr, ptr %155, align 8
   %157 = getelementptr { ptr, ptr }, ptr %154, i32 0, i32 1
@@ -12678,7 +16796,7 @@ switch_default_6:                                 ; preds = %"switch_branch_test
   %let_capture_13 = getelementptr { ptr, ptr }, ptr %161, i32 0, i32 0
   store ptr %let_capture_12, ptr %let_capture_13, align 8
   %let_func_6 = getelementptr { ptr, ptr }, ptr %161, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5038", ptr %let_func_6, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5082", ptr %let_func_6, align 8
   %162 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %Right_capture_0 = getelementptr { ptr, ptr }, ptr %162, i32 0, i32 0
   store ptr null, ptr %Right_capture_0, align 8
@@ -12728,13 +16846,13 @@ switch_default_6:                                 ; preds = %"switch_branch_test
   %let_capture_15 = getelementptr { ptr, ptr }, ptr %184, i32 0, i32 0
   store ptr %let_capture_14, ptr %let_capture_15, align 8
   %let_func_7 = getelementptr { ptr, ptr }, ptr %184, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5039", ptr %let_func_7, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5083", ptr %let_func_7, align 8
   %185 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_10 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_11 = getelementptr { ptr, ptr }, ptr %185, i32 0, i32 0
   store ptr %fun_capture_10, ptr %fun_capture_11, align 8
   %fun_func_5 = getelementptr { ptr, ptr }, ptr %185, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5040", ptr %fun_func_5, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5084", ptr %fun_func_5, align 8
   %186 = getelementptr { ptr, ptr }, ptr %184, i32 0, i32 0
   %187 = load ptr, ptr %186, align 8
   %188 = getelementptr { ptr, ptr }, ptr %184, i32 0, i32 1
@@ -12790,13 +16908,13 @@ switch_default_6:                                 ; preds = %"switch_branch_test
   %let_capture_17 = getelementptr { ptr, ptr }, ptr %217, i32 0, i32 0
   store ptr %let_capture_16, ptr %let_capture_17, align 8
   %let_func_8 = getelementptr { ptr, ptr }, ptr %217, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5041", ptr %let_func_8, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5085", ptr %let_func_8, align 8
   %218 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_12 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_13 = getelementptr { ptr, ptr }, ptr %218, i32 0, i32 0
   store ptr %fun_capture_12, ptr %fun_capture_13, align 8
   %fun_func_6 = getelementptr { ptr, ptr }, ptr %218, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5042", ptr %fun_func_6, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5086", ptr %fun_func_6, align 8
   %219 = getelementptr { ptr, ptr }, ptr %217, i32 0, i32 0
   %220 = load ptr, ptr %219, align 8
   %221 = getelementptr { ptr, ptr }, ptr %217, i32 0, i32 1
@@ -12821,7 +16939,7 @@ switch_default_9:                                 ; preds = %"switch_branch_test
   %228 = getelementptr { i8, { ptr } }, ptr %227, i32 0, i32 0
   store i8 0, ptr %228, align 1
   %229 = getelementptr { i8, { ptr } }, ptr %227, i32 0, i32 1, i32 0
-  store ptr @str5032, ptr %229, align 8
+  store ptr @str5076, ptr %229, align 8
   %230 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %231 = getelementptr { i8, { ptr } }, ptr %230, i32 0, i32 0
   store i8 0, ptr %231, align 1
@@ -12850,13 +16968,13 @@ switch_default_9:                                 ; preds = %"switch_branch_test
   %let_capture_19 = getelementptr { ptr, ptr }, ptr %241, i32 0, i32 0
   store ptr %let_capture_18, ptr %let_capture_19, align 8
   %let_func_9 = getelementptr { ptr, ptr }, ptr %241, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5043", ptr %let_func_9, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5087", ptr %let_func_9, align 8
   %242 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_14 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_15 = getelementptr { ptr, ptr }, ptr %242, i32 0, i32 0
   store ptr %fun_capture_14, ptr %fun_capture_15, align 8
   %fun_func_7 = getelementptr { ptr, ptr }, ptr %242, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5044", ptr %fun_func_7, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5088", ptr %fun_func_7, align 8
   %243 = getelementptr { ptr, ptr }, ptr %241, i32 0, i32 0
   %244 = load ptr, ptr %243, align 8
   %245 = getelementptr { ptr, ptr }, ptr %241, i32 0, i32 1
@@ -12912,13 +17030,13 @@ switch_default_9:                                 ; preds = %"switch_branch_test
   %let_capture_21 = getelementptr { ptr, ptr }, ptr %274, i32 0, i32 0
   store ptr %let_capture_20, ptr %let_capture_21, align 8
   %let_func_10 = getelementptr { ptr, ptr }, ptr %274, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5045", ptr %let_func_10, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5089", ptr %let_func_10, align 8
   %275 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_16 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_17 = getelementptr { ptr, ptr }, ptr %275, i32 0, i32 0
   store ptr %fun_capture_16, ptr %fun_capture_17, align 8
   %fun_func_8 = getelementptr { ptr, ptr }, ptr %275, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5046", ptr %fun_func_8, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5090", ptr %fun_func_8, align 8
   %276 = getelementptr { ptr, ptr }, ptr %274, i32 0, i32 0
   %277 = load ptr, ptr %276, align 8
   %278 = getelementptr { ptr, ptr }, ptr %274, i32 0, i32 1
@@ -13037,13 +17155,13 @@ switch_default_14:                                ; preds = %"switch_branch_test
   %let_capture_23 = getelementptr { ptr, ptr }, ptr %331, i32 0, i32 0
   store ptr %let_capture_22, ptr %let_capture_23, align 8
   %let_func_11 = getelementptr { ptr, ptr }, ptr %331, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5047", ptr %let_func_11, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5091", ptr %let_func_11, align 8
   %332 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_18 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_19 = getelementptr { ptr, ptr }, ptr %332, i32 0, i32 0
   store ptr %fun_capture_18, ptr %fun_capture_19, align 8
   %fun_func_9 = getelementptr { ptr, ptr }, ptr %332, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5048", ptr %fun_func_9, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5092", ptr %fun_func_9, align 8
   %333 = getelementptr { ptr, ptr }, ptr %331, i32 0, i32 0
   %334 = load ptr, ptr %333, align 8
   %335 = getelementptr { ptr, ptr }, ptr %331, i32 0, i32 1
@@ -13099,13 +17217,13 @@ switch_default_14:                                ; preds = %"switch_branch_test
   %let_capture_25 = getelementptr { ptr, ptr }, ptr %364, i32 0, i32 0
   store ptr %let_capture_24, ptr %let_capture_25, align 8
   %let_func_12 = getelementptr { ptr, ptr }, ptr %364, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5049", ptr %let_func_12, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5093", ptr %let_func_12, align 8
   %365 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_20 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_21 = getelementptr { ptr, ptr }, ptr %365, i32 0, i32 0
   store ptr %fun_capture_20, ptr %fun_capture_21, align 8
   %fun_func_10 = getelementptr { ptr, ptr }, ptr %365, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5050", ptr %fun_func_10, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5094", ptr %fun_func_10, align 8
   %366 = getelementptr { ptr, ptr }, ptr %364, i32 0, i32 0
   %367 = load ptr, ptr %366, align 8
   %368 = getelementptr { ptr, ptr }, ptr %364, i32 0, i32 1
@@ -13130,7 +17248,7 @@ switch_default_17:                                ; preds = %"switch_branch_test
   %375 = getelementptr { i8, { ptr } }, ptr %374, i32 0, i32 0
   store i8 0, ptr %375, align 1
   %376 = getelementptr { i8, { ptr } }, ptr %374, i32 0, i32 1, i32 0
-  store ptr @str5032, ptr %376, align 8
+  store ptr @str5076, ptr %376, align 8
   %377 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %378 = getelementptr { i8, { ptr } }, ptr %377, i32 0, i32 0
   store i8 0, ptr %378, align 1
@@ -13159,13 +17277,13 @@ switch_default_17:                                ; preds = %"switch_branch_test
   %let_capture_27 = getelementptr { ptr, ptr }, ptr %388, i32 0, i32 0
   store ptr %let_capture_26, ptr %let_capture_27, align 8
   %let_func_13 = getelementptr { ptr, ptr }, ptr %388, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5051", ptr %let_func_13, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5095", ptr %let_func_13, align 8
   %389 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_22 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_23 = getelementptr { ptr, ptr }, ptr %389, i32 0, i32 0
   store ptr %fun_capture_22, ptr %fun_capture_23, align 8
   %fun_func_11 = getelementptr { ptr, ptr }, ptr %389, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5052", ptr %fun_func_11, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5096", ptr %fun_func_11, align 8
   %390 = getelementptr { ptr, ptr }, ptr %388, i32 0, i32 0
   %391 = load ptr, ptr %390, align 8
   %392 = getelementptr { ptr, ptr }, ptr %388, i32 0, i32 1
@@ -13221,13 +17339,13 @@ switch_default_17:                                ; preds = %"switch_branch_test
   %let_capture_29 = getelementptr { ptr, ptr }, ptr %421, i32 0, i32 0
   store ptr %let_capture_28, ptr %let_capture_29, align 8
   %let_func_14 = getelementptr { ptr, ptr }, ptr %421, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5053", ptr %let_func_14, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5097", ptr %let_func_14, align 8
   %422 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_24 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_25 = getelementptr { ptr, ptr }, ptr %422, i32 0, i32 0
   store ptr %fun_capture_24, ptr %fun_capture_25, align 8
   %fun_func_12 = getelementptr { ptr, ptr }, ptr %422, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5054", ptr %fun_func_12, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5098", ptr %fun_func_12, align 8
   %423 = getelementptr { ptr, ptr }, ptr %421, i32 0, i32 0
   %424 = load ptr, ptr %423, align 8
   %425 = getelementptr { ptr, ptr }, ptr %421, i32 0, i32 1
@@ -13259,7 +17377,7 @@ switch_default_21:                                ; preds = %"switch_branch_test
   %let_capture_31 = getelementptr { ptr, ptr }, ptr %432, i32 0, i32 0
   store ptr %let_capture_30, ptr %let_capture_31, align 8
   %let_func_15 = getelementptr { ptr, ptr }, ptr %432, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5055", ptr %let_func_15, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5099", ptr %let_func_15, align 8
   %433 = getelementptr { ptr, ptr }, ptr %432, i32 0, i32 0
   %434 = load ptr, ptr %433, align 8
   %435 = getelementptr { ptr, ptr }, ptr %432, i32 0, i32 1
@@ -13277,7 +17395,7 @@ switch_default_21:                                ; preds = %"switch_branch_test
   %let_capture_33 = getelementptr { ptr, ptr }, ptr %439, i32 0, i32 0
   store ptr %let_capture_32, ptr %let_capture_33, align 8
   %let_func_16 = getelementptr { ptr, ptr }, ptr %439, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5056", ptr %let_func_16, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5100", ptr %let_func_16, align 8
   %440 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %Right_capture_1 = getelementptr { ptr, ptr }, ptr %440, i32 0, i32 0
   store ptr null, ptr %Right_capture_1, align 8
@@ -13327,13 +17445,13 @@ switch_default_21:                                ; preds = %"switch_branch_test
   %let_capture_35 = getelementptr { ptr, ptr }, ptr %462, i32 0, i32 0
   store ptr %let_capture_34, ptr %let_capture_35, align 8
   %let_func_17 = getelementptr { ptr, ptr }, ptr %462, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5057", ptr %let_func_17, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5101", ptr %let_func_17, align 8
   %463 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_26 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_27 = getelementptr { ptr, ptr }, ptr %463, i32 0, i32 0
   store ptr %fun_capture_26, ptr %fun_capture_27, align 8
   %fun_func_13 = getelementptr { ptr, ptr }, ptr %463, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5058", ptr %fun_func_13, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5102", ptr %fun_func_13, align 8
   %464 = getelementptr { ptr, ptr }, ptr %462, i32 0, i32 0
   %465 = load ptr, ptr %464, align 8
   %466 = getelementptr { ptr, ptr }, ptr %462, i32 0, i32 1
@@ -13389,13 +17507,13 @@ switch_default_21:                                ; preds = %"switch_branch_test
   %let_capture_37 = getelementptr { ptr, ptr }, ptr %495, i32 0, i32 0
   store ptr %let_capture_36, ptr %let_capture_37, align 8
   %let_func_18 = getelementptr { ptr, ptr }, ptr %495, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5059", ptr %let_func_18, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5103", ptr %let_func_18, align 8
   %496 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_28 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_29 = getelementptr { ptr, ptr }, ptr %496, i32 0, i32 0
   store ptr %fun_capture_28, ptr %fun_capture_29, align 8
   %fun_func_14 = getelementptr { ptr, ptr }, ptr %496, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5060", ptr %fun_func_14, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5104", ptr %fun_func_14, align 8
   %497 = getelementptr { ptr, ptr }, ptr %495, i32 0, i32 0
   %498 = load ptr, ptr %497, align 8
   %499 = getelementptr { ptr, ptr }, ptr %495, i32 0, i32 1
@@ -13420,7 +17538,7 @@ switch_default_24:                                ; preds = %"switch_branch_test
   %506 = getelementptr { i8, { ptr } }, ptr %505, i32 0, i32 0
   store i8 0, ptr %506, align 1
   %507 = getelementptr { i8, { ptr } }, ptr %505, i32 0, i32 1, i32 0
-  store ptr @str5032, ptr %507, align 8
+  store ptr @str5076, ptr %507, align 8
   %508 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %509 = getelementptr { i8, { ptr } }, ptr %508, i32 0, i32 0
   store i8 0, ptr %509, align 1
@@ -13449,13 +17567,13 @@ switch_default_24:                                ; preds = %"switch_branch_test
   %let_capture_39 = getelementptr { ptr, ptr }, ptr %519, i32 0, i32 0
   store ptr %let_capture_38, ptr %let_capture_39, align 8
   %let_func_19 = getelementptr { ptr, ptr }, ptr %519, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5061", ptr %let_func_19, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5105", ptr %let_func_19, align 8
   %520 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_31 = getelementptr { ptr, ptr }, ptr %520, i32 0, i32 0
   store ptr %fun_capture_30, ptr %fun_capture_31, align 8
   %fun_func_15 = getelementptr { ptr, ptr }, ptr %520, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5062", ptr %fun_func_15, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5106", ptr %fun_func_15, align 8
   %521 = getelementptr { ptr, ptr }, ptr %519, i32 0, i32 0
   %522 = load ptr, ptr %521, align 8
   %523 = getelementptr { ptr, ptr }, ptr %519, i32 0, i32 1
@@ -13511,13 +17629,13 @@ switch_default_24:                                ; preds = %"switch_branch_test
   %let_capture_41 = getelementptr { ptr, ptr }, ptr %552, i32 0, i32 0
   store ptr %let_capture_40, ptr %let_capture_41, align 8
   %let_func_20 = getelementptr { ptr, ptr }, ptr %552, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5063", ptr %let_func_20, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5107", ptr %let_func_20, align 8
   %553 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_32 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_33 = getelementptr { ptr, ptr }, ptr %553, i32 0, i32 0
   store ptr %fun_capture_32, ptr %fun_capture_33, align 8
   %fun_func_16 = getelementptr { ptr, ptr }, ptr %553, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5064", ptr %fun_func_16, align 8
+  store ptr @"test/testcases/malgo/TestEither.mlg.#fun_closure_5108", ptr %fun_func_16, align 8
   %554 = getelementptr { ptr, ptr }, ptr %552, i32 0, i32 0
   %555 = load ptr, ptr %554, align 8
   %556 = getelementptr { ptr, ptr }, ptr %552, i32 0, i32 1
@@ -13550,4106 +17668,6 @@ switch_default_32:                                ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4672"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$right_275_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$right_275_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_3 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$right_275_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %8 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 0
-  store i8 0, ptr %8, align 1
-  %9 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1, i32 0
-  store ptr @str5065, ptr %9, align 8
-  %10 = getelementptr { i8, <8 x i8> }, ptr %7, i32 0, i32 0
-  %11 = load i8, ptr %10, align 1
-  switch i8 %11, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %12 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1
-  %13 = getelementptr { ptr }, ptr %12, i32 0, i32 0
-  %14 = load ptr, ptr %13, align 8
-  %15 = call ptr @malgo_print_string(ptr %14)
-  %16 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %17 = getelementptr { i8, {} }, ptr %16, i32 0, i32 0
-  store i8 0, ptr %17, align 1
-  %18 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %19 = getelementptr { i8, {} }, ptr %18, i32 0, i32 0
-  store i8 0, ptr %19, align 1
-  %20 = call ptr @malgo_newline(ptr %18)
-  ret ptr %20
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %21 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$right_275_0", i32 0, i32 1
-  %22 = getelementptr { ptr }, ptr %21, i32 0, i32 0
-  %23 = load ptr, ptr %22, align 8
-  %24 = getelementptr { i8, <4 x i8> }, ptr %23, i32 0, i32 0
-  %25 = load i8, ptr %24, align 1
-  switch i8 %25, label %switch_default_2 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %26 = getelementptr { i8, { i32 } }, ptr %23, i32 0, i32 1
-  %27 = getelementptr { i32 }, ptr %26, i32 0, i32 0
-  %28 = load i32, ptr %27, align 4
-  %29 = call ptr @malgo_int32_t_to_string(i32 %28)
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %31 = getelementptr { i8, { ptr } }, ptr %30, i32 0, i32 0
-  store i8 0, ptr %31, align 1
-  %32 = getelementptr { i8, { ptr } }, ptr %30, i32 0, i32 1, i32 0
-  store ptr %29, ptr %32, align 8
-  %33 = getelementptr { i8, <8 x i8> }, ptr %30, i32 0, i32 0
-  %34 = load i8, ptr %33, align 1
-  switch i8 %34, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_1"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_1": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  %35 = getelementptr { i8, { ptr } }, ptr %30, i32 0, i32 1
-  %36 = getelementptr { ptr }, ptr %35, i32 0, i32 0
-  %37 = load ptr, ptr %36, align 8
-  %38 = call ptr @malgo_print_string(ptr %37)
-  ret ptr %38
-
-switch_default_1:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_3:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5066"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4704"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5066", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5067"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4800"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5067", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5068"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4832"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5068", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5069"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4736"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5069", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5070"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4768"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5070", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5071"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4864"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5071", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5072"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4896"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5072", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5073"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4673"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5073", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5074"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4705"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5074", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5075"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4801"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5075", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5076"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4833"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5076", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5077"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4737"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5077", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5078"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4769"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5078", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5079"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4865"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5079", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5080"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4897"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5080", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5081"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4678"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5081", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5082"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4710"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5082", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5083"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4806"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5083", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5084"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4838"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5084", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5085"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4742"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5085", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5086"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4774"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5086", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5087"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4870"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5087", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5088"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4679"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5088", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5089"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4711"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5089", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5090"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4807"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5090", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5091"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4839"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5091", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5092"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4743"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5092", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5093"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4775"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5093", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5094"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4871"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5094", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5095"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4676"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5095", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5096"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4708"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5096", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5097"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4804"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5097", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5098"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4836"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5098", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5099"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4740"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5099", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5100"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4772"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5100", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5101"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4868"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5101", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5102"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4677"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5102", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5103"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4709"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5103", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5104"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4805"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5104", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5105"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4837"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5105", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5106"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4741"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5106", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5107"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4773"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5107", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5108"(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
-  ret ptr %7
-}
-
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4869"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_2 [
-    i8 0, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  ]
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = getelementptr { i8, <8 x i8> }, ptr %6, i32 0, i32 0
-  %8 = load i8, ptr %7, align 1
-  switch i8 %8, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  %9 = getelementptr { i8, { ptr } }, ptr %6, i32 0, i32 1
-  %10 = getelementptr { ptr }, ptr %9, i32 0, i32 0
-  %11 = load ptr, ptr %10, align 8
-  %12 = call ptr @malgo_print_string(ptr %11)
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %14 = getelementptr { i8, {} }, ptr %13, i32 0, i32 0
-  store i8 0, ptr %14, align 1
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, {} }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = call ptr @malgo_newline(ptr %15)
-  ret ptr %17
-
-switch_default_0:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Left_0"
-  unreachable
-
-"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0": ; preds = %1
-  %18 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 1
-  %19 = getelementptr { ptr }, ptr %18, i32 0, i32 0
-  %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr { i8, <4 x i8> }, ptr %20, i32 0, i32 0
-  %22 = load i8, ptr %21, align 1
-  switch i8 %22, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  %23 = getelementptr { i8, { i32 } }, ptr %20, i32 0, i32 1
-  %24 = getelementptr { i32 }, ptr %23, i32 0, i32 0
-  %25 = load i32, ptr %24, align 4
-  %26 = call ptr @"runtime/malgo/Builtin.mlg.malgo_int32_t_to_string"(ptr null, i32 %25)
-  %27 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %28 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 0
-  store i8 0, ptr %28, align 1
-  %29 = getelementptr { i8, { ptr } }, ptr %27, i32 0, i32 1, i32 0
-  store ptr %26, ptr %29, align 8
-  %30 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %27, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5108", ptr %let_func_0, align 8
-  %31 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 0
-  %32 = load ptr, ptr %31, align 8
-  %33 = getelementptr { ptr, ptr }, ptr %30, i32 0, i32 1
-  %34 = load ptr, ptr %33, align 8
-  %35 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 0
-  store ptr null, ptr %putStrLn_capture_0, align 8
-  %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %35, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
-  %36 = call ptr %34(ptr %32, ptr %35)
-  ret ptr %36
-
-switch_default_1:                                 ; preds = %"switch_branch_test/testcases/malgo/TestEither.mlg.Right_0"
-  unreachable
-
-switch_default_2:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"runtime/malgo/Prelude.mlg.putStr"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$str_723_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$str_723_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_723_0", i32 0, i32 1
-  %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
-  %6 = load ptr, ptr %5, align 8
-  %7 = call ptr @malgo_print_string(ptr %6)
-  ret ptr %7
-
-switch_default_0:                                 ; preds = %1
-  unreachable
-}
-
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5109"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -17661,7 +17679,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5109"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4682"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4757"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -17754,7 +17772,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5110"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4714"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4789"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -17847,7 +17865,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5111"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4810"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4821"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -17940,7 +17958,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5112"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4842"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4853"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18033,7 +18051,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5113"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4746"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4693"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18126,7 +18144,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5114"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4778"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4725"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18219,7 +18237,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5115"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4874"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4885"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18312,7 +18330,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5116"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4683"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4756"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18405,7 +18423,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5117"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4715"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4788"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18498,7 +18516,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5118"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4811"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4820"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18591,7 +18609,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5119"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4843"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4852"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18684,7 +18702,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5120"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4747"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4692"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18777,7 +18795,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5121"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4779"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4724"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18870,7 +18888,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5122"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4875"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4884"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -18963,7 +18981,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5123"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4680"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4759"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19056,7 +19074,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5124"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4712"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4791"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19149,7 +19167,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5125"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4808"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4823"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19242,7 +19260,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5126"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4840"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4855"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19335,7 +19353,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5127"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4744"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4695"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19428,7 +19446,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5128"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4776"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4727"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19521,7 +19539,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5129"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4872"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4887"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19614,7 +19632,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5130"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4681"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4758"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19707,7 +19725,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5131"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4713"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4790"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19800,7 +19818,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5132"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4809"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4822"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19893,7 +19911,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5133"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4841"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4854"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -19986,7 +20004,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5134"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4745"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4694"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20079,7 +20097,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5135"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4777"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4726"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20172,7 +20190,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5136"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4873"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4886"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20254,27 +20272,13 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"runtime/malgo/Builtin.mlg.toStringInt32"(ptr %0, ptr %"runtime/malgo/Builtin.mlg.$int32#_2181_0") {
-  %2 = getelementptr { i8, <4 x i8> }, ptr %"runtime/malgo/Builtin.mlg.$int32#_2181_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
-  %4 = getelementptr { i8, { i32 } }, ptr %"runtime/malgo/Builtin.mlg.$int32#_2181_0", i32 0, i32 1
-  %5 = getelementptr { i32 }, ptr %4, i32 0, i32 0
-  %6 = load i32, ptr %5, align 4
-  %7 = call ptr @malgo_int32_t_to_string(i32 %6)
-  %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %9 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 0
-  store i8 0, ptr %9, align 1
-  %10 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1, i32 0
-  store ptr %7, ptr %10, align 8
-  ret ptr %8
-
-switch_default_0:                                 ; preds = %1
-  unreachable
+define internal ptr @"test/testcases/malgo/TestEither.mlg.Left"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$p_249_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
+  store ptr %"test/testcases/malgo/TestEither.mlg.$p_249_0", ptr %4, align 8
+  ret ptr %2
 }
 
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5137"(ptr %0, ptr %1) {
@@ -20288,7 +20292,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5137"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4686"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4753"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20381,7 +20385,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5138"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4718"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4785"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20474,7 +20478,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5139"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4814"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4817"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20567,7 +20571,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5140"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4846"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4849"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20660,7 +20664,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5141"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4750"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4689"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20753,7 +20757,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5142"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4782"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4721"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20846,7 +20850,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5143"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4878"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4881"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -20939,7 +20943,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5144"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4687"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4752"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21032,7 +21036,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5145"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4719"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4784"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21125,7 +21129,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5146"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4815"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4816"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21218,7 +21222,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5147"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4847"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4848"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21311,7 +21315,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5148"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4751"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4688"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21404,7 +21408,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5149"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4783"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4720"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21497,7 +21501,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5150"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4879"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4880"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21590,7 +21594,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5151"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4684"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4755"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21683,7 +21687,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5152"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4716"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4787"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21776,7 +21780,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5153"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4812"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4819"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21869,7 +21873,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5154"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4844"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4851"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -21962,7 +21966,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5155"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4748"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4691"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22055,7 +22059,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5156"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4780"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4723"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22148,7 +22152,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5157"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4876"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4883"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22241,7 +22245,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5158"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4685"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4754"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22334,7 +22338,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5159"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4717"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4786"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22416,10 +22420,6 @@ switch_default_2:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.id"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$x_253_0") {
-  ret ptr %"test/testcases/malgo/TestEither.mlg.$x_253_0"
-}
-
 define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5160"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
@@ -22431,7 +22431,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5160"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4813"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4818"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22524,7 +22524,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5161"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4845"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4850"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22617,7 +22617,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5162"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4749"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4690"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22710,7 +22710,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5163"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4781"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4722"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -22803,7 +22803,7 @@ define internal ptr @"test/testcases/malgo/TestEither.mlg.#let_closure_5164"(ptr
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4877"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
+define internal ptr @"test/testcases/malgo/TestEither.mlg.$raw_fun_4882"(ptr %0, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0") {
   %2 = getelementptr { i8, <8 x i8> }, ptr %"test/testcases/malgo/TestEither.mlg.$left_360_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [

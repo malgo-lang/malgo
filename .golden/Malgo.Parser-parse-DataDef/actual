@@ -1,6 +1,12 @@
 Module
-    { moduleName = ModuleName
-        { raw = "test/testcases/malgo/DataDef.mlg" }
+    { moduleName = Artifact
+        ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/DataDef.mlg"
+            , originPath = "/workspaces/malgo/test/testcases/malgo/DataDef.mlg"
+            , relPath = "test/testcases/malgo/DataDef.mlg"
+            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/DataDef.mlg"
+            }
+        )
     , moduleDefinition = ParsedDefinitions
         [ DataDef
             ( Range

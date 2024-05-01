@@ -75,9 +75,9 @@ define internal ptr @"test/testcases/malgo/Test0.mlg.|>"(ptr nocapture nofree re
 
 define internal ptr @"test/testcases/malgo/Test0.mlg.#fun_closure_256"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr nocapture nofree readonly align 4 %1) {
 "switch_branch_runtime/malgo/Builtin.mlg.Int64#_0":
-  %"printString#_0" = load ptr, ptr %0, align 8
-  %"toStringInt64#_addr_0" = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %"toStringInt64#_0" = load ptr, ptr %"toStringInt64#_addr_0", align 8
+  %"toStringInt64#_0" = load ptr, ptr %0, align 8
+  %"printString#_addr_0" = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %"printString#_0" = load ptr, ptr %"printString#_addr_0", align 8
   %2 = getelementptr { i8, { i64 } }, ptr %1, i64 0, i32 1
   %3 = load i64, ptr %2, align 4
   %4 = load ptr, ptr %"toStringInt64#_0", align 8
@@ -125,15 +125,15 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 16)
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %12, align 8
-  %"printString#_func_0.i" = getelementptr { ptr, ptr }, ptr %12, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.printString#", ptr %"printString#_func_0.i", align 8
+  %"toStringInt64#_func_0.i" = getelementptr { ptr, ptr }, ptr %12, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.toStringInt64#", ptr %"toStringInt64#_func_0.i", align 8
   store ptr %12, ptr %fun_capture_0.i, align 8
   %13 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %13, align 8
-  %"toStringInt64#_func_0.i" = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.toStringInt64#", ptr %"toStringInt64#_func_0.i", align 8
-  %"toStringInt64#_0.i" = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
-  store ptr %13, ptr %"toStringInt64#_0.i", align 8
+  %"printString#_func_0.i" = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.printString#", ptr %"printString#_func_0.i", align 8
+  %"printString#_0.i" = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
+  store ptr %13, ptr %"printString#_0.i", align 8
   store ptr %fun_capture_0.i, ptr %11, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
   store ptr @"test/testcases/malgo/Test0.mlg.#fun_closure_256", ptr %fun_func_0.i, align 8

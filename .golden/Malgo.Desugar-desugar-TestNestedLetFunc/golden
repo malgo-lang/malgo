@@ -7,8 +7,14 @@ Program
                     [ Con Tuple [] ]
                 , id = Id
                     { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -17,8 +23,14 @@ Program
                     { meta = StringT
                     , id = Id
                         { name = "p"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                }
+                            )
                         , sort = Temporal 13
                         }
                     }
@@ -34,8 +46,14 @@ Program
                         { meta = StringT
                         , id = Id
                             { name = "p"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    }
+                                )
                             , sort = Temporal 13
                             }
                         }
@@ -51,8 +69,14 @@ Program
                     [ Con Tuple [] ]
                 , id = Id
                     { name = "main"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -62,8 +86,14 @@ Program
                         [ Con Tuple [] ]
                     , id = Id
                         { name = "$_"
-                        , moduleName = ModuleName
-                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                }
+                            )
                         , sort = Temporal 14
                         }
                     }
@@ -84,8 +114,14 @@ Program
                                 [ Con Tuple [] ]
                             , id = Id
                                 { name = "fun"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 23
                                 }
                             }
@@ -100,8 +136,14 @@ Program
                                     [ Con Tuple [] ]
                                 , id = Id
                                     { name = "$_"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            }
+                                        )
                                     , sort = Temporal 15
                                     }
                                 }
@@ -115,8 +157,14 @@ Program
                                         [ Con Tuple [] ]
                                     , id = Id
                                         { name = "d"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                }
+                                            )
                                         , sort = Temporal 19
                                         }
                                     }
@@ -131,8 +179,14 @@ Program
                                                 [ Con Tuple [] ]
                                             , id = Id
                                                 { name = "fun"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        }
+                                                    )
                                                 , sort = Temporal 18
                                                 }
                                             }
@@ -147,8 +201,14 @@ Program
                                                     [ Con Tuple [] ]
                                                 , id = Id
                                                     { name = "a"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
                                                     , sort = Temporal 16
                                                     }
                                                 }
@@ -160,8 +220,14 @@ Program
                                                             [ Con Tuple [] ]
                                                         , id = Id
                                                             { name = "let"
-                                                            , moduleName = ModuleName
-                                                                { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                    }
+                                                                )
                                                             , sort = Temporal 17
                                                             }
                                                         }
@@ -181,8 +247,14 @@ Program
                                                                 [ Con Tuple [] ]
                                                             , id = Id
                                                                 { name = "let"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath
+                                                                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                        }
+                                                                    )
                                                                 , sort = Temporal 17
                                                                 }
                                                             }
@@ -202,8 +274,14 @@ Program
                                                     [ Con Tuple [] ]
                                                 , id = Id
                                                     { name = "fun"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
                                                     , sort = Temporal 18
                                                     }
                                                 }
@@ -217,8 +295,14 @@ Program
                                             [ Con Tuple [] ]
                                         , id = Id
                                             { name = "d"
-                                            , moduleName = ModuleName
-                                                { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    }
+                                                )
                                             , sort = Temporal 21
                                             }
                                         }
@@ -230,8 +314,14 @@ Program
                                                     [ Con Tuple [] ]
                                                 , id = Id
                                                     { name = "let"
-                                                    , moduleName = ModuleName
-                                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
                                                     , sort = Temporal 20
                                                     }
                                                 }
@@ -251,8 +341,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "let"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                }
+                                                            )
                                                         , sort = Temporal 20
                                                         }
                                                     }
@@ -266,8 +362,14 @@ Program
                                                 [ Con Tuple [] ]
                                             , id = Id
                                                 { name = "d"
-                                                , moduleName = ModuleName
-                                                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                        }
+                                                    )
                                                 , sort = Temporal 22
                                                 }
                                             }
@@ -282,8 +384,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "d"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                }
+                                                            )
                                                         , sort = Temporal 19
                                                         }
                                                     }
@@ -295,8 +403,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "d"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                }
+                                                            )
                                                         , sort = Temporal 21
                                                         }
                                                     }
@@ -313,8 +427,14 @@ Program
                                                         [ Con Tuple [] ]
                                                     , id = Id
                                                         { name = "d"
-                                                        , moduleName = ModuleName
-                                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                }
+                                                            )
                                                         , sort = Temporal 22
                                                         }
                                                     }
@@ -336,8 +456,14 @@ Program
                                     [ Con Tuple [] ]
                                 , id = Id
                                     { name = "fun"
-                                    , moduleName = ModuleName
-                                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            }
+                                        )
                                     , sort = Temporal 23
                                     }
                                 }
@@ -354,8 +480,14 @@ Program
                             [ Con Tuple [] ]
                         , id = Id
                             { name = "let_test/testcases/malgo/TestNestedLetFunc.mlg.#f_2"
-                            , moduleName = ModuleName
-                                { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    }
+                                )
                             , sort = Temporal 24
                             }
                         }
@@ -372,8 +504,14 @@ Program
                                 [ Con Tuple [] ]
                             , id = Id
                                 { name = "d"
-                                , moduleName = ModuleName
-                                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        }
+                                    )
                                 , sort = Temporal 25
                                 }
                             }
@@ -385,8 +523,14 @@ Program
                                         [ Con Tuple [] ]
                                     , id = Id
                                         { name = "malgo_print_string"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                }
+                                            )
                                         , sort = External
                                         }
                                     }
@@ -406,8 +550,14 @@ Program
                                         [ Con Tuple [] ]
                                     , id = Id
                                         { name = "d"
-                                        , moduleName = ModuleName
-                                            { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                }
+                                            )
                                         , sort = Temporal 25
                                         }
                                     }
@@ -430,27 +580,75 @@ DsState
     { _nameEnv = fromList
         [
             ( Id
-                { name = "$_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = Internal 12
+                { name = "malgo_print_string"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = External
+                }
+            , Meta
+                { meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "malgo_print_string"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            )
+        ,
+            ( Id
+                { name = "a"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = Internal 0
                 }
             , Meta
                 { meta = SumT
                     [ Con Tuple [] ]
                 , id = Id
-                    { name = "$_"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                    , sort = Temporal 14
+                    { name = "a"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
+                    , sort = Temporal 16
                     }
                 }
             )
         ,
             ( Id
                 { name = "main"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Meta
@@ -461,26 +659,14 @@ DsState
                     [ Con Tuple [] ]
                 , id = Id
                     { name = "main"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                    , sort = External
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "malgo_print_string"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = External
-                }
-            , Meta
-                { meta = [ StringT ] :-> SumT
-                    [ Con Tuple [] ]
-                , id = Id
-                    { name = "malgo_print_string"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
                     , sort = External
                     }
                 }
@@ -488,8 +674,14 @@ DsState
         ,
             ( Id
                 { name = "$_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
                 , sort = Internal 9
                 }
             , Meta
@@ -497,17 +689,59 @@ DsState
                     [ Con Tuple [] ]
                 , id = Id
                     { name = "$_"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
                     , sort = Temporal 15
                     }
                 }
             )
         ,
             ( Id
+                { name = "$_"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = Internal 12
+                }
+            , Meta
+                { meta = SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "$_"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
+                    , sort = Temporal 14
+                    }
+                }
+            )
+        ,
+            ( Id
                 { name = "f"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
                 , sort = Internal 2
                 }
             , Meta
@@ -518,27 +752,15 @@ DsState
                     [ Con Tuple [] ]
                 , id = Id
                     { name = "let_test/testcases/malgo/TestNestedLetFunc.mlg.#f_2"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
                     , sort = Temporal 24
-                    }
-                }
-            )
-        ,
-            ( Id
-                { name = "a"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = Internal 0
-                }
-            , Meta
-                { meta = SumT
-                    [ Con Tuple [] ]
-                , id = Id
-                    { name = "a"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                    , sort = Temporal 16
                     }
                 }
             )
@@ -546,32 +768,15 @@ DsState
     , _signatureMap = fromList
         [
             ( Id
-                { name = "$_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = Internal 12
-                }
-            , Forall []
-                ( TyTuple 0 )
-            )
-        ,
-            ( Id
-                { name = "main"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = External
-                }
-            , Forall []
-                ( TyArr
-                    ( TyTuple 0 )
-                    ( TyTuple 0 )
-                )
-            )
-        ,
-            ( Id
                 { name = "malgo_print_string"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
                 , sort = External
                 }
             , Forall []
@@ -581,20 +786,32 @@ DsState
             )
         ,
             ( Id
-                { name = "$_"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = Internal 9
+                { name = "a"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = Internal 0
                 }
             , Forall []
                 ( TyTuple 0 )
             )
         ,
             ( Id
-                { name = "f"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = Internal 2
+                { name = "main"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = External
                 }
             , Forall []
                 ( TyArr
@@ -605,8 +822,14 @@ DsState
         ,
             ( Id
                 { name = "y"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
                 , sort = Internal 1
                 }
             , Forall []
@@ -614,34 +837,61 @@ DsState
             )
         ,
             ( Id
-                { name = "a"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = Internal 0
+                { name = "$_"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = Internal 9
                 }
             , Forall []
                 ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "$_"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = Internal 12
+                }
+            , Forall []
+                ( TyTuple 0 )
+            )
+        ,
+            ( Id
+                { name = "f"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = Internal 2
+                }
+            , Forall []
+                ( TyArr
+                    ( TyTuple 0 )
+                    ( TyTuple 0 )
+                )
             )
         ]
     , _typeDefMap = fromList
         [
             ( Id
-                { name = "Int64#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim Int64T
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
-        ,
-            ( Id
                 { name = "Double#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -653,8 +903,7 @@ DsState
         ,
             ( Id
                 { name = "Int32#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -666,8 +915,7 @@ DsState
         ,
             ( Id
                 { name = "Ptr#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -678,9 +926,32 @@ DsState
             )
         ,
             ( Id
+                { name = "Char#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim CharT
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TypeDef
+                { _typeConstructor = TyPrim Int64T
+                , _typeParameters = []
+                , _valueConstructors = []
+                }
+            )
+        ,
+            ( Id
                 { name = "String#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -692,8 +963,7 @@ DsState
         ,
             ( Id
                 { name = "Float#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TypeDef
@@ -702,92 +972,32 @@ DsState
                 , _valueConstructors = []
                 }
             )
-        ,
-            ( Id
-                { name = "Char#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TypeDef
-                { _typeConstructor = TyPrim CharT
-                , _typeParameters = []
-                , _valueConstructors = []
-                }
-            )
         ]
     , _kindCtx = fromList
         [
             ( Id
-                { name = "Int64#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = Internal 6
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                    , sort = Temporal 5
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                , sort = Internal 4
-                }
-            , TyMeta
-                ( Id
-                    { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
-                    , sort = Temporal 3
-                    }
-                )
-            )
-        ,
-            ( Id
-                { name = "Double#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Int32#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
                 , sort = Internal 11
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
                     , sort = Temporal 10
                     }
                 )
@@ -795,33 +1005,131 @@ DsState
         ,
             ( Id
                 { name = "t"
-                , moduleName = ModuleName
-                    { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
                 , sort = Internal 8
                 }
             , TyMeta
                 ( Id
                     { name = "kt"
-                    , moduleName = ModuleName
-                        { raw = "test/testcases/malgo/TestNestedLetFunc.mlg" }
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
                     , sort = Temporal 7
                     }
                 )
             )
         ,
             ( Id
+                { name = "Double#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int32#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = Internal 6
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
+                    , sort = Temporal 5
+                    }
+                )
+            )
+        ,
+            ( Id
+                { name = "t"
+                , moduleName = Artifact
+                    ( ArtifactPath
+                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                        }
+                    )
+                , sort = Internal 4
+                }
+            , TyMeta
+                ( Id
+                    { name = "kt"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
+                    , sort = Temporal 3
+                    }
+                )
+            )
+        ,
+            ( Id
                 { name = "Ptr#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TyArr TYPE TYPE
             )
         ,
             ( Id
+                { name = "Char#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
+                { name = "Int64#"
+                , moduleName = ModuleName "Builtin"
+                , sort = External
+                }
+            , TYPE
+            )
+        ,
+            ( Id
                 { name = "String#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TYPE
@@ -829,17 +1137,7 @@ DsState
         ,
             ( Id
                 { name = "Float#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
-                , sort = External
-                }
-            , TYPE
-            )
-        ,
-            ( Id
-                { name = "Char#"
-                , moduleName = ModuleName
-                    { raw = "Builtin" }
+                , moduleName = ModuleName "Builtin"
                 , sort = External
                 }
             , TYPE

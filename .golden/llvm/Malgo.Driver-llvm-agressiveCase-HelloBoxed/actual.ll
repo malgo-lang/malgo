@@ -38,6 +38,29 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
+define internal ptr @"test/testcases/malgo/HelloBoxed.mlg.string#"(ptr %0, ptr %"test/testcases/malgo/HelloBoxed.mlg.$x_25_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
+  store ptr %"test/testcases/malgo/HelloBoxed.mlg.$x_25_0", ptr %4, align 8
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/HelloBoxed.mlg.String#"(ptr %0, ptr %"test/testcases/malgo/HelloBoxed.mlg.$p_21_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
+  store ptr %"test/testcases/malgo/HelloBoxed.mlg.$p_21_0", ptr %4, align 8
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/HelloBoxed.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/HelloBoxed.mlg.$p_23_0") {
+  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/HelloBoxed.mlg.$p_23_0")
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/HelloBoxed.mlg.main"(ptr %0, ptr %"test/testcases/malgo/HelloBoxed.mlg.$$__34_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
@@ -63,29 +86,6 @@ define internal ptr @"test/testcases/malgo/HelloBoxed.mlg.main"(ptr %0, ptr %"te
 
 switch_default_0:                                 ; preds = %1
   unreachable
-}
-
-define internal ptr @"test/testcases/malgo/HelloBoxed.mlg.string#"(ptr %0, ptr %"test/testcases/malgo/HelloBoxed.mlg.$x_25_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %"test/testcases/malgo/HelloBoxed.mlg.$x_25_0", ptr %4, align 8
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/HelloBoxed.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/HelloBoxed.mlg.$p_23_0") {
-  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/HelloBoxed.mlg.$p_23_0")
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/HelloBoxed.mlg.String#"(ptr %0, ptr %"test/testcases/malgo/HelloBoxed.mlg.$p_21_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %"test/testcases/malgo/HelloBoxed.mlg.$p_21_0", ptr %4, align 8
-  ret ptr %2
 }
 
 define i32 @main(ptr %0) {
