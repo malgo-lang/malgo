@@ -32,7 +32,7 @@ driveRefine srcPath = do
   let parsed = case parseMalgo srcPath src of
         Left err -> error $ show err
         Right parsed -> parsed
-  runMalgoM srcPath LLVM flag option do
+  runMalgoM LLVM flag option do
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
@@ -44,12 +44,12 @@ testcaseDir = "./test/testcases/malgo"
 
 setupBuiltin :: IO ()
 setupBuiltin =
-  runMalgoM "./runtime/malgo/Builtin.mlg" LLVM flag option do
+  runMalgoM LLVM flag option do
     Driver.compile "./runtime/malgo/Builtin.mlg"
 
 setupPrelude :: IO ()
 setupPrelude =
-  runMalgoM "./runtime/malgo/Prelude.mlg" LLVM flag option do
+  runMalgoM LLVM flag option do
     Driver.compile "./runtime/malgo/Prelude.mlg"
 
 flag :: Flag

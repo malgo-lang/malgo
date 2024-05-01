@@ -116,7 +116,6 @@ compile src lambdaLift noOptimize option compileMode =
   do
     Driver.compile src
     & runMalgoM
-      src
       compileMode
       Flag
         { noOptimize,

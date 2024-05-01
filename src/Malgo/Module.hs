@@ -13,8 +13,6 @@ module Malgo.Module
     Resource (..),
     pwdPath,
     parseArtifactPath,
-    targetRelPath,
-    originRelPath,
     ViaStore (..),
   )
 where
@@ -127,34 +125,28 @@ instance Exception WorkspaceError where
 data ArtifactPath = ArtifactPath
   { rawPath :: FilePath,
     originPath :: Path Abs File,
+    relPath :: Path Rel File,
     targetPath :: Path Abs File
   }
   deriving stock (Show)
+
+instance Pretty ArtifactPath where
+  pretty path = pretty $ toFilePath path.relPath
 
 pwdPath :: (Workspace :> es) => Eff es ArtifactPath
 pwdPath = do
   workspace <- getWorkspaceAbs
   let pwd = parent workspace
-  let dummyOriginPath = pwd </> [relfile|dummy|]
-  let dummyTargetPath = workspace </> [relfile|dummy|]
+  let originPath = pwd </> [relfile|dummy|]
+  let relPath = [relfile|dummy|]
+  let targetPath = workspace </> [relfile|dummy|]
   pure
     $ ArtifactPath
       { rawPath = ".",
-        originPath = dummyOriginPath,
-        targetPath = dummyTargetPath
+        originPath,
+        relPath,
+        targetPath
       }
-
-originRelPath :: (Workspace :> es) => ArtifactPath -> Eff es (Path Rel File)
-originRelPath ArtifactPath {originPath} = do
-  workspace <- getWorkspaceAbs
-  let originBasePath = parent workspace
-  stripProperPrefix originBasePath originPath
-
-targetRelPath :: (Workspace :> es) => ArtifactPath -> Eff es (Path Rel File)
-targetRelPath ArtifactPath {targetPath} = do
-  workspace <- getWorkspaceAbs
-  let targetBasePath = workspace
-  stripProperPrefix targetBasePath targetPath
 
 parseArtifactPath :: (IOE :> es, Workspace :> es) => ArtifactPath -> FilePath -> Eff es ArtifactPath
 parseArtifactPath from path = do
@@ -168,7 +160,7 @@ parseArtifactPath from path = do
   relPath <- stripProperPrefix originBasePath originPath
 
   let targetPath = workspace </> relPath
-  pure $ ArtifactPath {rawPath = rawPath', originPath, targetPath}
+  pure $ ArtifactPath {rawPath = rawPath', originPath, relPath, targetPath}
 
 class Resource a where
   toByteString :: a -> ByteString

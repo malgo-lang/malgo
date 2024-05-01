@@ -149,7 +149,7 @@ compileFromAST srcPath parsedAst = do
       --   liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pretty coreLLOpt
       -- lint True coreLLOpt
       Uniq i <- get @Uniq
-      srcRelPath <- toFilePath <$> originRelPath srcPath
+      let srcRelPath = toFilePath srcPath.relPath
       LLVM.codeGen srcRelPath (toFilePath dstPath) moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) i coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id, Meta b)] -> Maybe (Meta b)
