@@ -1,0 +1,438 @@
+Program
+    { topVars = []
+    , topFuns =
+        [
+            ( Meta
+                { meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "malgo_print_string"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = StringT
+                    , id = Id
+                        { name = "p"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                }
+                            )
+                        , sort = Temporal 13
+                        }
+                    }
+                ]
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            , RawCall "malgo_print_string"
+                ( [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                )
+                [ Var
+                    ( Meta
+                        { meta = StringT
+                        , id = Id
+                            { name = "p"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    }
+                                )
+                            , sort = Temporal 13
+                            }
+                        }
+                    )
+                ]
+            )
+        ,
+            ( Meta
+                { meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "main"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = SumT
+                        [ Con Tuple [] ]
+                    , id = Id
+                        { name = "$_"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                }
+                            )
+                        , sort = Temporal 14
+                        }
+                    }
+                ]
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            , Let
+                [ LocalDef
+                    { _variable = Meta
+                        { meta =
+                            [ SumT
+                                [ Con Tuple [] ]
+                            ] :-> SumT
+                            [ Con Tuple [] ]
+                        , id = Id
+                            { name = "fun"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    }
+                                )
+                            , sort = Temporal 23
+                            }
+                        }
+                    , typ =
+                        [ SumT
+                            [ Con Tuple [] ]
+                        ] :-> SumT
+                        [ Con Tuple [] ]
+                    , _object = Fun
+                        [ Meta
+                            { meta = SumT
+                                [ Con Tuple [] ]
+                            , id = Id
+                                { name = "$_"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        }
+                                    )
+                                , sort = Temporal 15
+                                }
+                            }
+                        ]
+                        ( Let
+                            [ LocalDef
+                                { _variable = Meta
+                                    { meta =
+                                        [ SumT
+                                            [ Con Tuple [] ]
+                                        ] :-> SumT
+                                        [ Con Tuple [] ]
+                                    , id = Id
+                                        { name = "fun"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                }
+                                            )
+                                        , sort = Temporal 18
+                                        }
+                                    }
+                                , typ =
+                                    [ SumT
+                                        [ Con Tuple [] ]
+                                    ] :-> SumT
+                                    [ Con Tuple [] ]
+                                , _object = Fun
+                                    [ Meta
+                                        { meta = SumT
+                                            [ Con Tuple [] ]
+                                        , id = Id
+                                            { name = "a"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    }
+                                                )
+                                            , sort = Temporal 16
+                                            }
+                                        }
+                                    ]
+                                    ( Let
+                                        [ LocalDef
+                                            { _variable = Meta
+                                                { meta = SumT
+                                                    [ Con Tuple [] ]
+                                                , id = Id
+                                                    { name = "let"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
+                                                    , sort = Temporal 17
+                                                    }
+                                                }
+                                            , typ = SumT
+                                                [ Con Tuple [] ]
+                                            , _object = Pack
+                                                ( SumT
+                                                    [ Con Tuple [] ]
+                                                )
+                                                ( Con Tuple [] ) []
+                                            }
+                                        ]
+                                        ( Atom
+                                            ( Var
+                                                ( Meta
+                                                    { meta = SumT
+                                                        [ Con Tuple [] ]
+                                                    , id = Id
+                                                        { name = "let"
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath
+                                                                { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                                }
+                                                            )
+                                                        , sort = Temporal 17
+                                                        }
+                                                    }
+                                                )
+                                            )
+                                        )
+                                    )
+                                }
+                            ]
+                            ( Let
+                                [ LocalDef
+                                    { _variable = Meta
+                                        { meta = SumT
+                                            [ Con Tuple [] ]
+                                        , id = Id
+                                            { name = "let"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    }
+                                                )
+                                            , sort = Temporal 20
+                                            }
+                                        }
+                                    , typ = SumT
+                                        [ Con Tuple [] ]
+                                    , _object = Pack
+                                        ( SumT
+                                            [ Con Tuple [] ]
+                                        )
+                                        ( Con Tuple [] ) []
+                                    }
+                                ]
+                                ( Assign
+                                    ( Meta
+                                        { meta = SumT
+                                            [ Con Tuple [] ]
+                                        , id = Id
+                                            { name = "d"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                    }
+                                                )
+                                            , sort = Temporal 22
+                                            }
+                                        }
+                                    )
+                                    ( Call
+                                        ( Var
+                                            ( Meta
+                                                { meta =
+                                                    [ SumT
+                                                        [ Con Tuple [] ]
+                                                    ] :-> SumT
+                                                    [ Con Tuple [] ]
+                                                , id = Id
+                                                    { name = "fun"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
+                                                    , sort = Temporal 18
+                                                    }
+                                                }
+                                            )
+                                        )
+                                        [ Var
+                                            ( Meta
+                                                { meta = SumT
+                                                    [ Con Tuple [] ]
+                                                , id = Id
+                                                    { name = "let"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
+                                                    , sort = Temporal 20
+                                                    }
+                                                }
+                                            )
+                                        ]
+                                    )
+                                    ( Cast
+                                        ( SumT
+                                            [ Con Tuple [] ]
+                                        )
+                                        ( Var
+                                            ( Meta
+                                                { meta = SumT
+                                                    [ Con Tuple [] ]
+                                                , id = Id
+                                                    { name = "d"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                                            }
+                                                        )
+                                                    , sort = Temporal 22
+                                                    }
+                                                }
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    }
+                ]
+                ( Assign
+                    ( Meta
+                        { meta = SumT
+                            [ Con Tuple [] ]
+                        , id = Id
+                            { name = "d"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                    }
+                                )
+                            , sort = Temporal 25
+                            }
+                        }
+                    )
+                    ( Call
+                        ( Var
+                            ( Meta
+                                { meta = [ StringT ] :-> SumT
+                                    [ Con Tuple [] ]
+                                , id = Id
+                                    { name = "malgo_print_string"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            }
+                                        )
+                                    , sort = External
+                                    }
+                                }
+                            )
+                        )
+                        [ Unboxed
+                            ( String "PASS" )
+                        ]
+                    )
+                    ( Cast
+                        ( SumT
+                            [ Con Tuple [] ]
+                        )
+                        ( Var
+                            ( Meta
+                                { meta = SumT
+                                    [ Con Tuple [] ]
+                                , id = Id
+                                    { name = "d"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , relPath = "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.mlg"
+                                            }
+                                        )
+                                    , sort = Temporal 25
+                                    }
+                                }
+                            )
+                        )
+                    )
+                )
+            )
+        ]
+    , extFuns =
+        [
+            ( "malgo_print_string"
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            )
+        ]
+    }

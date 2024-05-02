@@ -1,0 +1,944 @@
+Program
+    { topVars = []
+    , topFuns =
+        [
+            ( Meta
+                { meta = [ StringT ] :-> AnyT
+                , id = Id
+                    { name = "String#"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = StringT
+                    , id = Id
+                        { name = "p"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 21
+                        }
+                    }
+                ]
+            , [ StringT ] :-> AnyT
+            , Let
+                [ LocalDef
+                    { _variable = Meta
+                        { meta = SumT
+                            [ Con
+                                ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                            ]
+                        , id = Id
+                            { name = "let"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                    }
+                                )
+                            , sort = Temporal 22
+                            }
+                        }
+                    , typ = SumT
+                        [ Con
+                            ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                        ]
+                    , _object = Pack
+                        ( SumT
+                            [ Con
+                                ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                            ]
+                        )
+                        ( Con
+                            ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                        )
+                        [ Var
+                            ( Meta
+                                { meta = StringT
+                                , id = Id
+                                    { name = "p"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                            }
+                                        )
+                                    , sort = Temporal 21
+                                    }
+                                }
+                            )
+                        ]
+                    }
+                ]
+                ( Cast AnyT
+                    ( Var
+                        ( Meta
+                            { meta = SumT
+                                [ Con
+                                    ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                                ]
+                            , id = Id
+                                { name = "let"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                        }
+                                    )
+                                , sort = Temporal 22
+                                }
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Meta
+                { meta = [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "malgo_print_string"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = StringT
+                    , id = Id
+                        { name = "p"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 23
+                        }
+                    }
+                ]
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            , RawCall "malgo_print_string"
+                ( [ StringT ] :-> SumT
+                    [ Con Tuple [] ]
+                )
+                [ Var
+                    ( Meta
+                        { meta = StringT
+                        , id = Id
+                            { name = "p"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                    }
+                                )
+                            , sort = Temporal 23
+                            }
+                        }
+                    )
+                ]
+            )
+        ,
+            ( Meta
+                { meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "malgo_newline"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = SumT
+                        [ Con Tuple [] ]
+                    , id = Id
+                        { name = "p"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 24
+                        }
+                    }
+                ]
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            , RawCall "malgo_newline"
+                (
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                )
+                [ Var
+                    ( Meta
+                        { meta = SumT
+                            [ Con Tuple [] ]
+                        , id = Id
+                            { name = "p"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                    }
+                                )
+                            , sort = Temporal 24
+                            }
+                        }
+                    )
+                ]
+            )
+        ,
+            ( Meta
+                { meta = [ StringT ] :-> AnyT
+                , id = Id
+                    { name = "string#"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = StringT
+                    , id = Id
+                        { name = "x"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 25
+                        }
+                    }
+                ]
+            , [ StringT ] :-> AnyT
+            , Assign
+                ( Meta
+                    { meta = AnyT
+                    , id = Id
+                        { name = "d"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 26
+                        }
+                    }
+                )
+                ( Call
+                    ( Var
+                        ( Meta
+                            { meta = [ StringT ] :-> AnyT
+                            , id = Id
+                                { name = "String#"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                        }
+                                    )
+                                , sort = External
+                                }
+                            }
+                        )
+                    )
+                    [ Var
+                        ( Meta
+                            { meta = StringT
+                            , id = Id
+                                { name = "x"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                        }
+                                    )
+                                , sort = Temporal 25
+                                }
+                            }
+                        )
+                    ]
+                )
+                ( Cast AnyT
+                    ( Var
+                        ( Meta
+                            { meta = AnyT
+                            , id = Id
+                                { name = "d"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                        }
+                                    )
+                                , sort = Temporal 26
+                                }
+                            }
+                        )
+                    )
+                )
+            )
+        ,
+            ( Meta
+                { meta = [ AnyT ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "putStrLn"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = AnyT
+                    , id = Id
+                        { name = "string#"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 27
+                        }
+                    }
+                ]
+            , [ AnyT ] :-> SumT
+                [ Con Tuple [] ]
+            , Assign
+                ( Meta
+                    { meta = SumT
+                        [ Con
+                            ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                        ]
+                    , id = Id
+                        { name = "scrutinee"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 38
+                        }
+                    }
+                )
+                ( Cast
+                    ( SumT
+                        [ Con
+                            ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                        ]
+                    )
+                    ( Var
+                        ( Meta
+                            { meta = AnyT
+                            , id = Id
+                                { name = "string#"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                        }
+                                    )
+                                , sort = Temporal 27
+                                }
+                            }
+                        )
+                    )
+                )
+                ( Switch
+                    ( Var
+                        ( Meta
+                            { meta = SumT
+                                [ Con
+                                    ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                                ]
+                            , id = Id
+                                { name = "scrutinee"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                        }
+                                    )
+                                , sort = Temporal 38
+                                }
+                            }
+                        )
+                    )
+                    [
+                        ( Data "test/testcases/malgo/HelloBoxed.mlg.String#"
+                        , Destruct
+                            ( Var
+                                ( Meta
+                                    { meta = SumT
+                                        [ Con
+                                            ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                                        ]
+                                    , id = Id
+                                        { name = "scrutinee"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                }
+                                            )
+                                        , sort = Temporal 38
+                                        }
+                                    }
+                                )
+                            )
+                            ( Con
+                                ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ]
+                            )
+                            [ Meta
+                                { meta = StringT
+                                , id = Id
+                                    { name = "p"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                            }
+                                        )
+                                    , sort = Temporal 28
+                                    }
+                                }
+                            ]
+                            ( Assign
+                                ( Meta
+                                    { meta = SumT
+                                        [ Con Tuple [] ]
+                                    , id = Id
+                                        { name = "d"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                }
+                                            )
+                                        , sort = Temporal 29
+                                        }
+                                    }
+                                )
+                                ( Call
+                                    ( Var
+                                        ( Meta
+                                            { meta = [ StringT ] :-> SumT
+                                                [ Con Tuple [] ]
+                                            , id = Id
+                                                { name = "malgo_print_string"
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                        }
+                                                    )
+                                                , sort = External
+                                                }
+                                            }
+                                        )
+                                    )
+                                    [ Var
+                                        ( Meta
+                                            { meta = StringT
+                                            , id = Id
+                                                { name = "p"
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath
+                                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                        }
+                                                    )
+                                                , sort = Temporal 28
+                                                }
+                                            }
+                                        )
+                                    ]
+                                )
+                                ( Assign
+                                    ( Meta
+                                        { meta = SumT
+                                            [ Con Tuple [] ]
+                                        , id = Id
+                                            { name = "d"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath
+                                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                    }
+                                                )
+                                            , sort = Temporal 30
+                                            }
+                                        }
+                                    )
+                                    ( Cast
+                                        ( SumT
+                                            [ Con Tuple [] ]
+                                        )
+                                        ( Var
+                                            ( Meta
+                                                { meta = SumT
+                                                    [ Con Tuple [] ]
+                                                , id = Id
+                                                    { name = "d"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                            }
+                                                        )
+                                                    , sort = Temporal 29
+                                                    }
+                                                }
+                                            )
+                                        )
+                                    )
+                                    ( Let
+                                        [ LocalDef
+                                            { _variable = Meta
+                                                { meta = SumT
+                                                    [ Con Tuple [] ]
+                                                , id = Id
+                                                    { name = "let"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                            }
+                                                        )
+                                                    , sort = Temporal 31
+                                                    }
+                                                }
+                                            , typ = SumT
+                                                [ Con Tuple [] ]
+                                            , _object = Pack
+                                                ( SumT
+                                                    [ Con Tuple [] ]
+                                                )
+                                                ( Con Tuple [] ) []
+                                            }
+                                        ]
+                                        ( Assign
+                                            ( Meta
+                                                { meta = SumT
+                                                    [ Con Tuple [] ]
+                                                , id = Id
+                                                    { name = "d"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath
+                                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                            }
+                                                        )
+                                                    , sort = Temporal 33
+                                                    }
+                                                }
+                                            )
+                                            ( Call
+                                                ( Var
+                                                    ( Meta
+                                                        { meta =
+                                                            [ SumT
+                                                                [ Con Tuple [] ]
+                                                            ] :-> SumT
+                                                            [ Con Tuple [] ]
+                                                        , id = Id
+                                                            { name = "malgo_newline"
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                                    }
+                                                                )
+                                                            , sort = External
+                                                            }
+                                                        }
+                                                    )
+                                                )
+                                                [ Var
+                                                    ( Meta
+                                                        { meta = SumT
+                                                            [ Con Tuple [] ]
+                                                        , id = Id
+                                                            { name = "let"
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                                    }
+                                                                )
+                                                            , sort = Temporal 31
+                                                            }
+                                                        }
+                                                    )
+                                                ]
+                                            )
+                                            ( Cast
+                                                ( SumT
+                                                    [ Con Tuple [] ]
+                                                )
+                                                ( Var
+                                                    ( Meta
+                                                        { meta = SumT
+                                                            [ Con Tuple [] ]
+                                                        , id = Id
+                                                            { name = "d"
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath
+                                                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                                    }
+                                                                )
+                                                            , sort = Temporal 33
+                                                            }
+                                                        }
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ]
+                    ( Error
+                        ( SumT
+                            [ Con Tuple [] ]
+                        )
+                    )
+                )
+            )
+        ,
+            ( Meta
+                { meta =
+                    [ SumT
+                        [ Con Tuple [] ]
+                    ] :-> SumT
+                    [ Con Tuple [] ]
+                , id = Id
+                    { name = "main"
+                    , moduleName = Artifact
+                        ( ArtifactPath
+                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                            }
+                        )
+                    , sort = External
+                    }
+                }
+            ,
+                [ Meta
+                    { meta = SumT
+                        [ Con Tuple [] ]
+                    , id = Id
+                        { name = "$_"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 34
+                        }
+                    }
+                ]
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            , Assign
+                ( Meta
+                    { meta = AnyT
+                    , id = Id
+                        { name = "d"
+                        , moduleName = Artifact
+                            ( ArtifactPath
+                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                }
+                            )
+                        , sort = Temporal 35
+                        }
+                    }
+                )
+                ( Call
+                    ( Var
+                        ( Meta
+                            { meta = [ StringT ] :-> AnyT
+                            , id = Id
+                                { name = "String#"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                        }
+                                    )
+                                , sort = External
+                                }
+                            }
+                        )
+                    )
+                    [ Unboxed
+                        ( String "Hello, world" )
+                    ]
+                )
+                ( Assign
+                    ( Meta
+                        { meta = AnyT
+                        , id = Id
+                            { name = "d"
+                            , moduleName = Artifact
+                                ( ArtifactPath
+                                    { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                    , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                    , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                    }
+                                )
+                            , sort = Temporal 36
+                            }
+                        }
+                    )
+                    ( Cast AnyT
+                        ( Var
+                            ( Meta
+                                { meta = AnyT
+                                , id = Id
+                                    { name = "d"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath
+                                            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                            , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                            , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                            }
+                                        )
+                                    , sort = Temporal 35
+                                    }
+                                }
+                            )
+                        )
+                    )
+                    ( Assign
+                        ( Meta
+                            { meta = SumT
+                                [ Con Tuple [] ]
+                            , id = Id
+                                { name = "d"
+                                , moduleName = Artifact
+                                    ( ArtifactPath
+                                        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                        , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                        , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                        }
+                                    )
+                                , sort = Temporal 37
+                                }
+                            }
+                        )
+                        ( Call
+                            ( Var
+                                ( Meta
+                                    { meta = [ AnyT ] :-> SumT
+                                        [ Con Tuple [] ]
+                                    , id = Id
+                                        { name = "putStrLn"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                }
+                                            )
+                                        , sort = External
+                                        }
+                                    }
+                                )
+                            )
+                            [ Var
+                                ( Meta
+                                    { meta = AnyT
+                                    , id = Id
+                                        { name = "d"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                }
+                                            )
+                                        , sort = Temporal 36
+                                        }
+                                    }
+                                )
+                            ]
+                        )
+                        ( Cast
+                            ( SumT
+                                [ Con Tuple [] ]
+                            )
+                            ( Var
+                                ( Meta
+                                    { meta = SumT
+                                        [ Con Tuple [] ]
+                                    , id = Id
+                                        { name = "d"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath
+                                                { rawPath = "./test/testcases/malgo/HelloBoxed.mlg"
+                                                , originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg"
+                                                , relPath = "test/testcases/malgo/HelloBoxed.mlg"
+                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg"
+                                                }
+                                            )
+                                        , sort = Temporal 37
+                                        }
+                                    }
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ]
+    , extFuns =
+        [
+            ( "malgo_print_string"
+            , [ StringT ] :-> SumT
+                [ Con Tuple [] ]
+            )
+        ,
+            ( "malgo_newline"
+            ,
+                [ SumT
+                    [ Con Tuple [] ]
+                ] :-> SumT
+                [ Con Tuple [] ]
+            )
+        ]
+    }
