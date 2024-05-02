@@ -13,15 +13,15 @@ declare ptr @malgo_int32_t_to_string(i32) local_unnamed_addr
 
 declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
+declare ptr @malgo_malloc(i64) local_unnamed_addr
+
 ; Function Attrs: mustprogress nofree norecurse nosync nounwind readnone willreturn
 define internal ptr @"runtime/malgo/Prelude.mlg.identity"(ptr nocapture nofree readnone %0, ptr nofree readnone returned %"runtime/malgo/Prelude.mlg.$x_890_0") #0 {
   ret ptr %"runtime/malgo/Prelude.mlg.$x_890_0"
 }
 
-declare ptr @malgo_malloc(i64) local_unnamed_addr
-
 ; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3093"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3094"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
   %a_0 = load ptr, ptr %0, align 8
   ret ptr %a_0
 }
@@ -32,7 +32,7 @@ define internal ptr @"runtime/malgo/Prelude.mlg.const"(ptr nocapture nofree read
   store ptr %"runtime/malgo/Prelude.mlg.$a_956_0", ptr %let_capture_0, align 8
   store ptr %let_capture_0, ptr %2, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3093", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3094", ptr %let_func_0, align 8
   ret ptr %2
 }
 

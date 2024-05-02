@@ -869,13 +869,13 @@ define internal ptr @"test/testcases/malgo/Punctuate.mlg.SList"(ptr %0, ptr %"te
   ret ptr %2
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3168"(ptr %0, ptr %"test/testcases/malgo/Punctuate.mlg.$p_709_0", ptr %"test/testcases/malgo/Punctuate.mlg.$y_718_0") {
-  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_string_append"(ptr null, ptr %"test/testcases/malgo/Punctuate.mlg.$p_709_0")
+define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3168"(ptr %0, ptr %"test/testcases/malgo/Punctuate.mlg.$p_2958_0", ptr %"test/testcases/malgo/Punctuate.mlg.$y_2967_0") {
+  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_string_append"(ptr null, ptr %"test/testcases/malgo/Punctuate.mlg.$p_2958_0")
   %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %"test/testcases/malgo/Punctuate.mlg.$y_718_0")
+  %7 = call ptr %6(ptr %4, ptr %"test/testcases/malgo/Punctuate.mlg.$y_2967_0")
   ret ptr %7
 }
 

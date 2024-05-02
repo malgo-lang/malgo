@@ -1,5 +1,5 @@
-module {..} = import Builtin
-module P = import Prelude
+module {..} = import "../../../../runtime/malgo/Builtin.mlg"
+module P = import "../../../../runtime/malgo/Prelude.mlg"
 
 def main = {
   putStrLn "Hello, world!"

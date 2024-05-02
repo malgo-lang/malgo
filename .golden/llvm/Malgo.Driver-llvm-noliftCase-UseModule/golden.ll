@@ -161,45 +161,6 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-declare ptr @malgo_malloc(i64)
-
-define internal ptr @"runtime/malgo/Prelude.mlg.printInt32"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$i_773_0") {
-  %2 = getelementptr { i8, <4 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$i_773_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
-  %4 = getelementptr { i8, { i32 } }, ptr %"runtime/malgo/Prelude.mlg.$i_773_0", i32 0, i32 1
-  %5 = getelementptr { i32 }, ptr %4, i32 0, i32 0
-  %6 = load i32, ptr %5, align 4
-  %7 = call ptr @malgo_int32_t_to_string(i32 %6)
-  %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
-  %9 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 0
-  store i8 0, ptr %9, align 1
-  %10 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1, i32 0
-  store ptr %7, ptr %10, align 8
-  %11 = getelementptr { i8, <8 x i8> }, ptr %8, i32 0, i32 0
-  %12 = load i8, ptr %11, align 1
-  switch i8 %12, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  %13 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1
-  %14 = getelementptr { ptr }, ptr %13, i32 0, i32 0
-  %15 = load ptr, ptr %14, align 8
-  %16 = call ptr @malgo_print_string(ptr %15)
-  ret ptr %16
-
-switch_default_0:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  unreachable
-
-switch_default_1:                                 ; preds = %1
-  unreachable
-}
-
 define internal i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$x_4033_0", i32 %"runtime/malgo/Builtin.mlg.$y_4034_0") {
   %2 = call i32 @malgo_add_int32_t(i32 %"runtime/malgo/Builtin.mlg.$x_4033_0", i32 %"runtime/malgo/Builtin.mlg.$y_4034_0")
   ret i32 %2
@@ -209,6 +170,8 @@ define internal i32 @"runtime/malgo/Builtin.mlg.$malgo_add_int32_t_curry_1810"(p
   %2 = call i32 @malgo_add_int32_t(i32 %"runtime/malgo/Builtin.mlg.$p_1811_0", i32 %"runtime/malgo/Builtin.mlg.$p_1812_0")
   ret i32 %2
 }
+
+declare ptr @malgo_malloc(i64)
 
 define internal ptr @"runtime/malgo/Builtin.mlg.Int32#"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_1792_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
@@ -305,6 +268,43 @@ define internal ptr @"runtime/malgo/Builtin.mlg.addInt32"(ptr %0, ptr %"runtime/
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   store ptr @"test/testcases/malgo/UseModule.mlg.#let_closure_2935", ptr %let_func_0, align 8
   ret ptr %2
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.printInt32"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$i_773_0") {
+  %2 = getelementptr { i8, <4 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$i_773_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
+  %4 = getelementptr { i8, { i32 } }, ptr %"runtime/malgo/Prelude.mlg.$i_773_0", i32 0, i32 1
+  %5 = getelementptr { i32 }, ptr %4, i32 0, i32 0
+  %6 = load i32, ptr %5, align 4
+  %7 = call ptr @malgo_int32_t_to_string(i32 %6)
+  %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
+  %9 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 0
+  store i8 0, ptr %9, align 1
+  %10 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1, i32 0
+  store ptr %7, ptr %10, align 8
+  %11 = getelementptr { i8, <8 x i8> }, ptr %8, i32 0, i32 0
+  %12 = load i8, ptr %11, align 1
+  switch i8 %12, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  %13 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1
+  %14 = getelementptr { ptr }, ptr %13, i32 0, i32 0
+  %15 = load ptr, ptr %14, align 8
+  %16 = call ptr @malgo_print_string(ptr %15)
+  ret ptr %16
+
+switch_default_0:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  unreachable
+
+switch_default_1:                                 ; preds = %1
+  unreachable
 }
 
 define internal i32 @"test/testcases/malgo/UseModule.mlg.#let_closure_2937"(ptr %0, i32 %1) {

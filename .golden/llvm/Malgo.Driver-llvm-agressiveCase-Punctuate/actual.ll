@@ -424,14 +424,14 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3900"(ptr %0, ptr %"test/testcases/malgo/Punctuate.mlg.$d_651_0", ptr %"test/testcases/malgo/Punctuate.mlg.$p_663_0") {
+define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3900"(ptr %0, ptr %"test/testcases/malgo/Punctuate.mlg.$d_2935_0", ptr %"test/testcases/malgo/Punctuate.mlg.$p_2947_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 0
   store i8 1, ptr %3, align 1
   %4 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %"test/testcases/malgo/Punctuate.mlg.$d_651_0", ptr %4, align 8
+  store ptr %"test/testcases/malgo/Punctuate.mlg.$d_2935_0", ptr %4, align 8
   %5 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 1, i32 1
-  store ptr %"test/testcases/malgo/Punctuate.mlg.$p_663_0", ptr %5, align 8
+  store ptr %"test/testcases/malgo/Punctuate.mlg.$p_2947_0", ptr %5, align 8
   ret ptr %2
 }
 
@@ -1316,8 +1316,8 @@ define internal ptr @"runtime/malgo/Prelude.mlg.Cons"(ptr %0, ptr %"runtime/malg
   ret ptr %2
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3901"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$__791_0", ptr %"test/testcases/malgo/Punctuate.mlg.$nil_665_0") {
-  %2 = getelementptr { i8, <16 x i8> }, ptr %"test/testcases/malgo/Punctuate.mlg.$nil_665_0", i32 0, i32 0
+define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3901"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$__791_0", ptr %"test/testcases/malgo/Punctuate.mlg.$nil_2949_0") {
+  %2 = getelementptr { i8, <16 x i8> }, ptr %"test/testcases/malgo/Punctuate.mlg.$nil_2949_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_0 [
     i8 0, label %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0"
@@ -1329,7 +1329,7 @@ define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3901"(ptr %0, 
   ret ptr %4
 
 "switch_branch_runtime/malgo/Prelude.mlg.Cons_0": ; preds = %1
-  %5 = getelementptr { i8, { ptr, ptr } }, ptr %"test/testcases/malgo/Punctuate.mlg.$nil_665_0", i32 0, i32 1
+  %5 = getelementptr { i8, { ptr, ptr } }, ptr %"test/testcases/malgo/Punctuate.mlg.$nil_2949_0", i32 0, i32 1
   %6 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 0
   %7 = load ptr, ptr %6, align 8
   %8 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 1
@@ -1357,13 +1357,13 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3904"(ptr %0, ptr %"test/testcases/malgo/Punctuate.mlg.$p_1303_0", ptr %"test/testcases/malgo/Punctuate.mlg.$y_1312_0") {
-  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_string_append"(ptr null, ptr %"test/testcases/malgo/Punctuate.mlg.$p_1303_0")
+define internal ptr @"test/testcases/malgo/Punctuate.mlg.$raw_let_3904"(ptr %0, ptr %"test/testcases/malgo/Punctuate.mlg.$p_3587_0", ptr %"test/testcases/malgo/Punctuate.mlg.$y_3596_0") {
+  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_string_append"(ptr null, ptr %"test/testcases/malgo/Punctuate.mlg.$p_3587_0")
   %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %"test/testcases/malgo/Punctuate.mlg.$y_1312_0")
+  %7 = call ptr %6(ptr %4, ptr %"test/testcases/malgo/Punctuate.mlg.$y_3596_0")
   ret ptr %7
 }
 

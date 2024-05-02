@@ -1,5 +1,5 @@
-module {..} = import Builtin
-module {..} = import Prelude
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
 def succ = {(Int64# x) -> (Int64# (addInt64# x 1L#))}
 

@@ -1,4 +1,4 @@
-module { toStringInt64#, printString# } = import Builtin
+module { toStringInt64#, printString# } = import "../../../runtime/malgo/Builtin.mlg"
 
 def f =
   { 0L# -> printString# (toStringInt64# 1L#),

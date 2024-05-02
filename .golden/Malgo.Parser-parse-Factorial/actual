@@ -22,7 +22,15 @@ Module
                     }
                 }
             )
-            ( ModuleName "Builtin" ) All
+            ( Artifact
+                ( ArtifactPath
+                    { rawPath = "../../../runtime/malgo/Builtin.mlg"
+                    , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                    , relPath = "runtime/malgo/Builtin.mlg"
+                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                    }
+                )
+            ) All
         , Import
             ( Range
                 { _start = SourcePos
@@ -37,7 +45,15 @@ Module
                     }
                 }
             )
-            ( ModuleName "Prelude" ) All
+            ( Artifact
+                ( ArtifactPath
+                    { rawPath = "../../../runtime/malgo/Prelude.mlg"
+                    , originPath = "/workspaces/malgo/runtime/malgo/Prelude.mlg"
+                    , relPath = "runtime/malgo/Prelude.mlg"
+                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Prelude.mlg"
+                    }
+                )
+            ) All
         , Infix
             ( Range
                 { _start = SourcePos

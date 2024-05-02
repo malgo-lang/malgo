@@ -2,8 +2,8 @@
 source_filename = "test/testcases/malgo/TestArithDouble.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
-@str170 = unnamed_addr constant [1 x i8] zeroinitializer
-@str190 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str341 = unnamed_addr constant [1 x i8] zeroinitializer
+@str361 = unnamed_addr constant [10 x i8] c"no branch\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -21,38 +21,6 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @"runtime/malgo/Prelude.mlg.putStrLn"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly %"runtime/malgo/Prelude.mlg.$str_716_0") {
-  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr null, ptr %2, align 8
-  %printString_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.printString", ptr %printString_func_0, align 8
-  %3 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i64 0, i32 1
-  %4 = load ptr, ptr %3, align 8
-  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr null, ptr %5, align 8
-  %"printString#_func_0.i" = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.printString#", ptr %"printString#_func_0.i", align 8
-  %6 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr null, ptr %6, align 8
-  %malgo_print_string_func_0.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i.i, align 8
-  %7 = tail call ptr @malgo_print_string(ptr %4)
-  %8 = tail call ptr @malgo_malloc(i64 noundef 1)
-  store i8 0, ptr %8, align 1
-  %9 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr null, ptr %9, align 8
-  %newline_func_0 = getelementptr { ptr, ptr }, ptr %9, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.newline", ptr %newline_func_0, align 8
-  %10 = tail call ptr @malgo_malloc(i64 noundef 1)
-  store i8 0, ptr %10, align 1
-  %11 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr null, ptr %11, align 8
-  %malgo_newline_func_0.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.malgo_newline", ptr %malgo_newline_func_0.i, align 8
-  %12 = tail call ptr @malgo_newline(ptr noundef nonnull %10)
-  ret ptr %12
-}
-
 define internal noundef ptr @"runtime/malgo/Builtin.mlg.String#"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Builtin.mlg.$p_1802_0") {
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %2, align 1
@@ -66,7 +34,7 @@ define internal ptr @"runtime/malgo/Builtin.mlg.malgo_unsafe_cast"(ptr nocapture
   ret ptr %2
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_208"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_178"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, double %1) {
   %p_0 = load double, ptr %0, align 8
   %3 = tail call double @malgo_add_double(double %p_0, double %1)
   ret double %3
@@ -78,11 +46,11 @@ define internal ptr @"runtime/malgo/Builtin.mlg.malgo_add_double"(ptr nocapture 
   store double %"runtime/malgo/Builtin.mlg.$p_1880_0", ptr %let_capture_0, align 8
   store ptr %let_capture_0, ptr %2, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_208", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_178", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_210"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_180"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, double %1) {
   %p_0 = load double, ptr %0, align 8
   %3 = tail call double @malgo_mul_double(double %p_0, double %1)
   ret double %3
@@ -94,7 +62,7 @@ define internal ptr @"runtime/malgo/Builtin.mlg.malgo_mul_double"(ptr nocapture 
   store double %"runtime/malgo/Builtin.mlg.$p_1892_0", ptr %let_capture_0, align 8
   store ptr %let_capture_0, ptr %2, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_210", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_180", ptr %let_func_0, align 8
   ret ptr %2
 }
 
@@ -158,7 +126,7 @@ define internal ptr @"runtime/malgo/Builtin.mlg.newline"(ptr nocapture nofree re
   ret ptr %4
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_277"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_247"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, double %1) {
   %x_0 = load double, ptr %0, align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %3, align 8
@@ -169,7 +137,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_2
   store double %x_0, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %4, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_210", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_180", ptr %let_func_0.i.i, align 8
   %p_0.i.i = load double, ptr %let_capture_0.i.i, align 8
   %5 = tail call double @malgo_mul_double(double %p_0.i.i, double %1)
   ret double %5
@@ -181,11 +149,11 @@ define internal ptr @"runtime/malgo/Builtin.mlg.mulDouble#"(ptr nocapture nofree
   store double %"runtime/malgo/Builtin.mlg.$x_2592_0", ptr %let_capture_0, align 8
   store ptr %let_capture_0, ptr %2, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_277", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_247", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_365"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, double %1) {
+define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_335"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, double %1) {
   %x_0 = load double, ptr %0, align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %3, align 8
@@ -196,7 +164,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3
   store double %x_0, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %4, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_208", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_178", ptr %let_func_0.i.i, align 8
   %p_0.i.i = load double, ptr %let_capture_0.i.i, align 8
   %5 = tail call double @malgo_add_double(double %p_0.i.i, double %1)
   ret double %5
@@ -208,8 +176,40 @@ define internal ptr @"runtime/malgo/Builtin.mlg.addDouble#"(ptr nocapture nofree
   store double %"runtime/malgo/Builtin.mlg.$x_4091_0", ptr %let_capture_0, align 8
   store ptr %let_capture_0, ptr %2, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_365", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_335", ptr %let_func_0, align 8
   ret ptr %2
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.putStrLn"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly %"runtime/malgo/Prelude.mlg.$str_716_0") {
+  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr null, ptr %2, align 8
+  %printString_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.printString", ptr %printString_func_0, align 8
+  %3 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i64 0, i32 1
+  %4 = load ptr, ptr %3, align 8
+  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr null, ptr %5, align 8
+  %"printString#_func_0.i" = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.printString#", ptr %"printString#_func_0.i", align 8
+  %6 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr null, ptr %6, align 8
+  %malgo_print_string_func_0.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i.i, align 8
+  %7 = tail call ptr @malgo_print_string(ptr %4)
+  %8 = tail call ptr @malgo_malloc(i64 noundef 1)
+  store i8 0, ptr %8, align 1
+  %9 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr null, ptr %9, align 8
+  %newline_func_0 = getelementptr { ptr, ptr }, ptr %9, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.newline", ptr %newline_func_0, align 8
+  %10 = tail call ptr @malgo_malloc(i64 noundef 1)
+  store i8 0, ptr %10, align 1
+  %11 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr null, ptr %11, align 8
+  %malgo_newline_func_0.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.malgo_newline", ptr %malgo_newline_func_0.i, align 8
+  %12 = tail call ptr @malgo_newline(ptr noundef nonnull %10)
+  ret ptr %12
 }
 
 define internal noundef ptr @"test/testcases/malgo/TestArithDouble.mlg.show"(ptr nocapture nofree readnone %0, double %"test/testcases/malgo/TestArithDouble.mlg.$x_91_0") {
@@ -244,7 +244,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3
   store double %x_0, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %4, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_365", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_335", ptr %let_func_0.i.i, align 8
   %x_0.i.i = load double, ptr %let_capture_0.i.i, align 8
   %5 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %5, align 8
@@ -255,7 +255,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3
   store double %x_0.i.i, ptr %let_capture_0.i.i.i.i, align 8
   store ptr %let_capture_0.i.i.i.i, ptr %6, align 8
   %let_func_0.i.i.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_208", ptr %let_func_0.i.i.i.i, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_178", ptr %let_func_0.i.i.i.i, align 8
   %p_0.i.i.i.i = load double, ptr %let_capture_0.i.i.i.i, align 8
   %7 = tail call double @malgo_add_double(double %p_0.i.i.i.i, double %1)
   ret double %7
@@ -282,7 +282,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3
   store double %x_0, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %4, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_277", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_247", ptr %let_func_0.i.i, align 8
   %x_0.i.i = load double, ptr %let_capture_0.i.i, align 8
   %5 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %5, align 8
@@ -293,7 +293,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_3
   store double %x_0.i.i, ptr %let_capture_0.i.i.i.i, align 8
   store ptr %let_capture_0.i.i.i.i, ptr %6, align 8
   %let_func_0.i.i.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_210", ptr %let_func_0.i.i.i.i, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_180", ptr %let_func_0.i.i.i.i, align 8
   %p_0.i.i.i.i = load double, ptr %let_capture_0.i.i.i.i, align 8
   %7 = tail call double @malgo_mul_double(double %p_0.i.i.i.i, double %1)
   ret double %7
@@ -330,7 +330,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.f"(ptr nocaptu
   store double %x_0.i, ptr %let_capture_0.i.i.i, align 8
   store ptr %let_capture_0.i.i.i, ptr %5, align 8
   %let_func_0.i.i.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_365", ptr %let_func_0.i.i.i, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_335", ptr %let_func_0.i.i.i, align 8
   %x_0.i.i.i = load double, ptr %let_capture_0.i.i.i, align 8
   %6 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %6, align 8
@@ -341,7 +341,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.f"(ptr nocaptu
   store double %x_0.i.i.i, ptr %let_capture_0.i.i.i.i.i, align 8
   store ptr %let_capture_0.i.i.i.i.i, ptr %7, align 8
   %let_func_0.i.i.i.i.i = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_208", ptr %let_func_0.i.i.i.i.i, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_178", ptr %let_func_0.i.i.i.i.i, align 8
   %p_0.i.i.i.i.i = load double, ptr %let_capture_0.i.i.i.i.i, align 8
   %8 = tail call double @malgo_add_double(double %p_0.i.i.i.i.i, double noundef 0.000000e+00)
   %9 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -364,7 +364,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.f"(ptr nocaptu
   store double %x_0.i3, ptr %let_capture_0.i.i.i4, align 8
   store ptr %let_capture_0.i.i.i4, ptr %12, align 8
   %let_func_0.i.i.i5 = getelementptr { ptr, ptr }, ptr %12, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_277", ptr %let_func_0.i.i.i5, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_247", ptr %let_func_0.i.i.i5, align 8
   %x_0.i.i.i6 = load double, ptr %let_capture_0.i.i.i4, align 8
   %13 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %13, align 8
@@ -375,7 +375,7 @@ define internal double @"test/testcases/malgo/TestArithDouble.mlg.f"(ptr nocaptu
   store double %x_0.i.i.i6, ptr %let_capture_0.i.i.i.i.i7, align 8
   store ptr %let_capture_0.i.i.i.i.i7, ptr %14, align 8
   %let_func_0.i.i.i.i.i8 = getelementptr { ptr, ptr }, ptr %14, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_210", ptr %let_func_0.i.i.i.i.i8, align 8
+  store ptr @"test/testcases/malgo/TestArithDouble.mlg.#let_closure_180", ptr %let_func_0.i.i.i.i.i8, align 8
   %p_0.i.i.i.i.i9 = load double, ptr %let_capture_0.i.i.i.i.i7, align 8
   %15 = tail call double @malgo_mul_double(double %p_0.i.i.i.i.i9, double %"test/testcases/malgo/TestArithDouble.mlg.$x_152_0")
   ret double %15

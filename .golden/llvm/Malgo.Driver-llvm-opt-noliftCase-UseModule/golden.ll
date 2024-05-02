@@ -15,19 +15,6 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @"runtime/malgo/Prelude.mlg.printInt32"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %"runtime/malgo/Prelude.mlg.$i_773_0") {
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0":
-  %1 = getelementptr { i8, { i32 } }, ptr %"runtime/malgo/Prelude.mlg.$i_773_0", i64 0, i32 1
-  %2 = load i32, ptr %1, align 4
-  %3 = tail call ptr @malgo_int32_t_to_string(i32 %2)
-  %4 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store i8 0, ptr %4, align 1
-  %5 = getelementptr { i8, { ptr } }, ptr %4, i64 0, i32 1, i32 0
-  store ptr %3, ptr %5, align 8
-  %6 = tail call ptr @malgo_print_string(ptr %3)
-  ret ptr %6
-}
-
 define internal noundef ptr @"runtime/malgo/Builtin.mlg.Int32#"(ptr nocapture nofree readnone %0, i32 %"runtime/malgo/Builtin.mlg.$p_1792_0") {
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %2, align 1
@@ -72,6 +59,19 @@ define internal ptr @"runtime/malgo/Builtin.mlg.addInt32"(ptr nocapture nofree r
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
   store ptr @"test/testcases/malgo/UseModule.mlg.#let_closure_2935", ptr %let_func_0, align 8
   ret ptr %2
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.printInt32"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %"runtime/malgo/Prelude.mlg.$i_773_0") {
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0":
+  %1 = getelementptr { i8, { i32 } }, ptr %"runtime/malgo/Prelude.mlg.$i_773_0", i64 0, i32 1
+  %2 = load i32, ptr %1, align 4
+  %3 = tail call ptr @malgo_int32_t_to_string(i32 %2)
+  %4 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store i8 0, ptr %4, align 1
+  %5 = getelementptr { i8, { ptr } }, ptr %4, i64 0, i32 1, i32 0
+  store ptr %3, ptr %5, align 8
+  %6 = tail call ptr @malgo_print_string(ptr %3)
+  ret ptr %6
 }
 
 define internal ptr @"test/testcases/malgo/UseModule.mlg.#let_closure_2939"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {

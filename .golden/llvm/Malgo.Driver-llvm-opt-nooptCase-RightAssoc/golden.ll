@@ -2,7 +2,7 @@
 source_filename = "test/testcases/malgo/RightAssoc.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
-@str497 = unnamed_addr constant [1 x i8] zeroinitializer
+@str500 = unnamed_addr constant [1 x i8] zeroinitializer
 @str633 = unnamed_addr constant [3 x i8] c"OK\00"
 @str660 = unnamed_addr constant [10 x i8] c"no branch\00"
 

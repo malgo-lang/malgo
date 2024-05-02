@@ -351,7 +351,14 @@ Module
                         , sourceColumn = Pos 1
                         }
                     }
-                , ModuleName "Builtin"
+                , Artifact
+                    ( ArtifactPath
+                        { rawPath = "../../../runtime/malgo/Builtin.mlg"
+                        , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                        , relPath = "runtime/malgo/Builtin.mlg"
+                        , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                        }
+                    )
                 , All
                 )
             ]
@@ -360,5 +367,13 @@ Module
 RnState
     { infixInfo = fromList []
     , dependencies = fromList
-        [ ModuleName "Builtin" ]
+        [ Artifact
+            ( ArtifactPath
+                { rawPath = "../../../runtime/malgo/Builtin.mlg"
+                , originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg"
+                , relPath = "runtime/malgo/Builtin.mlg"
+                , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg"
+                }
+            )
+        ]
     }

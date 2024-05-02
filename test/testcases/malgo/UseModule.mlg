@@ -1,6 +1,6 @@
-module {..} = import Builtin
-module Prelude = import Prelude
-module {addInt32, (<|), (.)} = import Prelude
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module Prelude = import "../../../runtime/malgo/Prelude.mlg"
+module {addInt32, (<|), (.)} = import "../../../runtime/malgo/Prelude.mlg"
 
 def succ = { x -> addInt32 x 1 }
 

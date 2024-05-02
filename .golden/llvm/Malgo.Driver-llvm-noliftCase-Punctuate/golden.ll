@@ -1,7 +1,7 @@
 ; ModuleID = 'test/testcases/malgo/Punctuate.mlg'
 source_filename = "test/testcases/malgo/Punctuate.mlg"
 
-@str3168 = unnamed_addr constant [1 x i8] zeroinitializer
+@str3169 = unnamed_addr constant [1 x i8] zeroinitializer
 @str3172 = unnamed_addr constant [8 x i8] c"Symbol \00"
 @str3174 = unnamed_addr constant [6 x i8] c"SInt \00"
 @str3176 = unnamed_addr constant [8 x i8] c"SList [\00"
@@ -169,7 +169,31 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
+define internal ptr @"runtime/malgo/Builtin.mlg.$appendString#_curry_3968"(ptr %0, ptr %"runtime/malgo/Builtin.mlg.$x_3969_0", ptr %"runtime/malgo/Builtin.mlg.$y_3970_0") {
+  %2 = call ptr @malgo_string_append(ptr %"runtime/malgo/Builtin.mlg.$x_3969_0", ptr %"runtime/malgo/Builtin.mlg.$y_3970_0")
+  ret ptr %2
+}
+
 declare ptr @malgo_malloc(i64)
+
+define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3168"(ptr %0, ptr %1) {
+  %p_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %p_0 = load ptr, ptr %p_addr_0, align 8
+  %3 = call ptr @malgo_string_append(ptr %p_0, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"runtime/malgo/Builtin.mlg.malgo_string_append"(ptr %0, ptr %"runtime/malgo/Builtin.mlg.$p_2140_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %p_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %"runtime/malgo/Builtin.mlg.$p_2140_0", ptr %p_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3168", ptr %let_func_0, align 8
+  ret ptr %2
+}
 
 define internal ptr @"runtime/malgo/Prelude.mlg.$mapList_curry_790"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$__791_0", ptr %"runtime/malgo/Prelude.mlg.$nil_792_0") {
   %2 = getelementptr { i8, <16 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$nil_792_0", i32 0, i32 0
@@ -280,7 +304,7 @@ switch_default_1:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3169"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170"(ptr %0, ptr %1) {
   %malgo_string_append_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 0
   %malgo_string_append_0 = load ptr, ptr %malgo_string_append_addr_0, align 8
   %p_addr_0 = getelementptr { ptr, ptr }, ptr %0, i32 0, i32 1
@@ -311,7 +335,7 @@ define internal ptr @"runtime/malgo/Prelude.mlg.concatString"(ptr %0, ptr %"runt
   %5 = getelementptr { i8, { ptr } }, ptr %4, i32 0, i32 0
   store i8 0, ptr %5, align 1
   %6 = getelementptr { i8, { ptr } }, ptr %4, i32 0, i32 1, i32 0
-  store ptr @str3168, ptr %6, align 8
+  store ptr @str3169, ptr %6, align 8
   ret ptr %4
 
 "switch_branch_runtime/malgo/Prelude.mlg.Cons_0": ; preds = %1
@@ -364,7 +388,7 @@ define internal ptr @"runtime/malgo/Prelude.mlg.concatString"(ptr %0, ptr %"runt
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %28, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %28, i32 0, i32 1
-  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3169", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170", ptr %let_func_0, align 8
   %30 = call ptr @"runtime/malgo/Builtin.mlg.$appendString#_curry_3968"(ptr null, ptr %22, ptr %27)
   %31 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %32 = getelementptr { i8, { ptr } }, ptr %31, i32 0, i32 0
@@ -381,30 +405,6 @@ switch_default_1:                                 ; preds = %"switch_branch_runt
 
 switch_default_2:                                 ; preds = %1
   unreachable
-}
-
-define internal ptr @"runtime/malgo/Builtin.mlg.$appendString#_curry_3968"(ptr %0, ptr %"runtime/malgo/Builtin.mlg.$x_3969_0", ptr %"runtime/malgo/Builtin.mlg.$y_3970_0") {
-  %2 = call ptr @malgo_string_append(ptr %"runtime/malgo/Builtin.mlg.$x_3969_0", ptr %"runtime/malgo/Builtin.mlg.$y_3970_0")
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170"(ptr %0, ptr %1) {
-  %p_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %p_0 = load ptr, ptr %p_addr_0, align 8
-  %3 = call ptr @malgo_string_append(ptr %p_0, ptr %1)
-  ret ptr %3
-}
-
-define internal ptr @"runtime/malgo/Builtin.mlg.malgo_string_append"(ptr %0, ptr %"runtime/malgo/Builtin.mlg.$p_2140_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %p_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %"runtime/malgo/Builtin.mlg.$p_2140_0", ptr %p_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170", ptr %let_func_0, align 8
-  ret ptr %2
 }
 
 define internal ptr @"test/testcases/malgo/Punctuate.mlg.Symbol"(ptr %0, ptr %"test/testcases/malgo/Punctuate.mlg.$p_113_0") {

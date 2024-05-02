@@ -45,7 +45,15 @@ Module
                     }
                 }
             )
-            ( ModuleName "Prelude" ) All
+            ( Artifact
+                ( ArtifactPath
+                    { rawPath = "../../../runtime/malgo/Prelude.mlg"
+                    , originPath = "/workspaces/malgo/runtime/malgo/Prelude.mlg"
+                    , relPath = "runtime/malgo/Prelude.mlg"
+                    , targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Prelude.mlg"
+                    }
+                )
+            ) All
         , ScDef
             ( Range
                 { _start = SourcePos

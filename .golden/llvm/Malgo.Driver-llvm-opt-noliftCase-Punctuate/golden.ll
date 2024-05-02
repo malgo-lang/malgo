@@ -1,7 +1,7 @@
 ; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Punctuate.ll'
 source_filename = "test/testcases/malgo/Punctuate.mlg"
 
-@str3168 = unnamed_addr constant [1 x i8] zeroinitializer
+@str3169 = unnamed_addr constant [1 x i8] zeroinitializer
 @str3172 = unnamed_addr constant [8 x i8] c"Symbol \00"
 @str3174 = unnamed_addr constant [6 x i8] c"SInt \00"
 @str3176 = unnamed_addr constant [8 x i8] c"SList [\00"
@@ -22,6 +22,22 @@ declare ptr @malgo_newline(ptr) local_unnamed_addr
 declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
+
+define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3168"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
+  %p_0 = load ptr, ptr %0, align 8
+  %3 = tail call ptr @malgo_string_append(ptr %p_0, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"runtime/malgo/Builtin.mlg.malgo_string_append"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Builtin.mlg.$p_2140_0") {
+  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %"runtime/malgo/Builtin.mlg.$p_2140_0", ptr %let_capture_0, align 8
+  store ptr %let_capture_0, ptr %2, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
+  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3168", ptr %let_func_0, align 8
+  ret ptr %2
+}
 
 define internal fastcc noundef ptr @"runtime/malgo/Prelude.mlg.$mapList_curry_790"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %"runtime/malgo/Prelude.mlg.$__791_0", ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %"runtime/malgo/Prelude.mlg.$nil_792_0") unnamed_addr {
   %1 = load i8, ptr %"runtime/malgo/Prelude.mlg.$nil_792_0", align 1
@@ -107,7 +123,7 @@ common.ret:                                       ; preds = %"switch_branch_runt
   br label %common.ret
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3169"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr %1) {
   %malgo_string_append_0 = load ptr, ptr %0, align 8
   %p_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
   %p_0 = load ptr, ptr %p_addr_0, align 8
@@ -128,7 +144,7 @@ define internal noundef ptr @"runtime/malgo/Prelude.mlg.concatString"(ptr nocapt
   br i1 %switch, label %common.ret1, label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
 
 common.ret1:                                      ; preds = %1, %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
-  %.sink = phi ptr [ %17, %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0" ], [ @str3168, %1 ]
+  %.sink = phi ptr [ %17, %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0" ], [ @str3169, %1 ]
   %3 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { ptr } }, ptr %3, i64 0, i32 1, i32 0
@@ -160,25 +176,9 @@ common.ret1:                                      ; preds = %1, %"switch_branch_
   store ptr %12, ptr %p_0, align 8
   store ptr %let_capture_0, ptr %15, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3169", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170", ptr %let_func_0, align 8
   %17 = tail call ptr @malgo_string_append(ptr %12, ptr %14)
   br label %common.ret1
-}
-
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
-  %p_0 = load ptr, ptr %0, align 8
-  %3 = tail call ptr @malgo_string_append(ptr %p_0, ptr %1)
-  ret ptr %3
-}
-
-define internal ptr @"runtime/malgo/Builtin.mlg.malgo_string_append"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Builtin.mlg.$p_2140_0") {
-  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %"runtime/malgo/Builtin.mlg.$p_2140_0", ptr %let_capture_0, align 8
-  store ptr %let_capture_0, ptr %2, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170", ptr %let_func_0, align 8
-  ret ptr %2
 }
 
 define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3173"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {

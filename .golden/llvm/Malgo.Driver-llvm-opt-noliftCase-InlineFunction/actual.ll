@@ -17,19 +17,6 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @"runtime/malgo/Prelude.mlg.putStrLn"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %"runtime/malgo/Prelude.mlg.$str_716_0") {
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0":
-  %1 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i64 0, i32 1
-  %2 = load ptr, ptr %1, align 8
-  %3 = tail call ptr @malgo_print_string(ptr %2)
-  %4 = tail call ptr @malgo_malloc(i64 noundef 1)
-  store i8 0, ptr %4, align 1
-  %5 = tail call ptr @malgo_malloc(i64 noundef 1)
-  store i8 0, ptr %5, align 1
-  %6 = tail call ptr @malgo_newline(ptr noundef nonnull %5)
-  ret ptr %6
-}
-
 define internal i32 @"test/testcases/malgo/InlineFunction.mlg.#let_closure_3412"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call i32 @malgo_add_int32_t(i32 %p_0, i32 %1)
@@ -116,6 +103,19 @@ define internal ptr @"runtime/malgo/Builtin.mlg.addInt32#"(ptr nocapture nofree 
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
   store ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_3417", ptr %let_func_0, align 8
   ret ptr %2
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.putStrLn"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %"runtime/malgo/Prelude.mlg.$str_716_0") {
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0":
+  %1 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i64 0, i32 1
+  %2 = load ptr, ptr %1, align 8
+  %3 = tail call ptr @malgo_print_string(ptr %2)
+  %4 = tail call ptr @malgo_malloc(i64 noundef 1)
+  store i8 0, ptr %4, align 1
+  %5 = tail call ptr @malgo_malloc(i64 noundef 1)
+  store i8 0, ptr %5, align 1
+  %6 = tail call ptr @malgo_newline(ptr noundef nonnull %5)
+  ret ptr %6
 }
 
 define internal ptr @"test/testcases/malgo/InlineFunction.mlg.#let_closure_3420"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr %1) {

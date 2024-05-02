@@ -2,8 +2,8 @@
 source_filename = "test/testcases/malgo/TuplePattern.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
-@str54 = unnamed_addr constant [1 x i8] zeroinitializer
-@str74 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str225 = unnamed_addr constant [1 x i8] zeroinitializer
+@str245 = unnamed_addr constant [10 x i8] c"no branch\00"
 @str252 = unnamed_addr constant [2 x i8] c"A\00"
 
 declare void @GC_init() local_unnamed_addr
@@ -13,25 +13,6 @@ declare ptr @malgo_unsafe_cast(ptr) local_unnamed_addr
 declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
-
-define internal ptr @"test/testcases/malgo/TuplePattern.mlg.#let_closure_60"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %x_0 = load ptr, ptr %0, align 8
-  %.val = load ptr, ptr %1, align 8
-  %3 = getelementptr i8, ptr %1, i64 8
-  %.val1 = load ptr, ptr %3, align 8
-  %4 = tail call ptr %.val1(ptr %.val, ptr %x_0)
-  ret ptr %4
-}
-
-define internal ptr @"runtime/malgo/Prelude.mlg.|>"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Prelude.mlg.$x_699_0") {
-  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %"runtime/malgo/Prelude.mlg.$x_699_0", ptr %let_capture_0, align 8
-  store ptr %let_capture_0, ptr %2, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TuplePattern.mlg.#let_closure_60", ptr %let_func_0, align 8
-  ret ptr %2
-}
 
 define internal noundef ptr @"runtime/malgo/Builtin.mlg.String#"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Builtin.mlg.$p_1802_0") {
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
@@ -74,6 +55,25 @@ define internal ptr @"runtime/malgo/Builtin.mlg.printString"(ptr nocapture nofre
   store ptr @"runtime/malgo/Builtin.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i, align 8
   %5 = tail call ptr @malgo_print_string(ptr %2)
   ret ptr %5
+}
+
+define internal ptr @"test/testcases/malgo/TuplePattern.mlg.#let_closure_231"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %x_0 = load ptr, ptr %0, align 8
+  %.val = load ptr, ptr %1, align 8
+  %3 = getelementptr i8, ptr %1, i64 8
+  %.val1 = load ptr, ptr %3, align 8
+  %4 = tail call ptr %.val1(ptr %.val, ptr %x_0)
+  ret ptr %4
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.|>"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Prelude.mlg.$x_699_0") {
+  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %"runtime/malgo/Prelude.mlg.$x_699_0", ptr %let_capture_0, align 8
+  store ptr %let_capture_0, ptr %2, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
+  store ptr @"test/testcases/malgo/TuplePattern.mlg.#let_closure_231", ptr %let_func_0, align 8
+  ret ptr %2
 }
 
 define internal ptr @"test/testcases/malgo/TuplePattern.mlg.#fun_closure_251"(ptr nocapture nofree readonly %0, ptr nocapture nofree readonly align 8 %1) {
@@ -150,7 +150,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %8, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %12, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %12, i64 0, i32 1
-  store ptr @"test/testcases/malgo/TuplePattern.mlg.#let_closure_60", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/TuplePattern.mlg.#let_closure_231", ptr %let_func_0.i.i, align 8
   %13 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 16)
   %14 = tail call ptr @malgo_malloc(i64 noundef 16)

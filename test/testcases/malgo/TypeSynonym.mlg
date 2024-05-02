@@ -1,5 +1,5 @@
-module {..} = import Builtin
-module {..} = import Prelude
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
 type MyTuple a = (a, a)
 

@@ -2,8 +2,8 @@
 source_filename = "test/testcases/malgo/RightAssoc.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
-@str201 = unnamed_addr constant [1 x i8] zeroinitializer
-@str221 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str372 = unnamed_addr constant [1 x i8] zeroinitializer
+@str392 = unnamed_addr constant [10 x i8] c"no branch\00"
 @str406 = unnamed_addr constant [3 x i8] c"OK\00"
 
 declare void @GC_init() local_unnamed_addr
@@ -13,27 +13,6 @@ declare ptr @malgo_unsafe_cast(ptr) local_unnamed_addr
 declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
-
-define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nofree %1) {
-  %p_0 = load ptr, ptr %0, align 8
-  %3 = tail call noundef ptr @malgo_malloc(i64 noundef 24)
-  store i8 1, ptr %3, align 1
-  %4 = getelementptr { i8, { ptr, ptr } }, ptr %3, i64 0, i32 1, i32 0
-  store ptr %p_0, ptr %4, align 8
-  %5 = getelementptr { i8, { ptr, ptr } }, ptr %3, i64 0, i32 1, i32 1
-  store ptr %1, ptr %5, align 8
-  ret ptr %3
-}
-
-define internal ptr @"runtime/malgo/Prelude.mlg.Cons"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Prelude.mlg.$p_691_0") {
-  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %"runtime/malgo/Prelude.mlg.$p_691_0", ptr %let_capture_0, align 8
-  store ptr %let_capture_0, ptr %2, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0, align 8
-  ret ptr %2
-}
 
 define internal noundef ptr @"runtime/malgo/Builtin.mlg.Int32#"(ptr nocapture nofree readnone %0, i32 %"runtime/malgo/Builtin.mlg.$p_1792_0") {
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
@@ -86,6 +65,27 @@ define internal ptr @"runtime/malgo/Builtin.mlg.printString"(ptr nocapture nofre
   ret ptr %5
 }
 
+define internal noundef ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nofree %1) {
+  %p_0 = load ptr, ptr %0, align 8
+  %3 = tail call noundef ptr @malgo_malloc(i64 noundef 24)
+  store i8 1, ptr %3, align 1
+  %4 = getelementptr { i8, { ptr, ptr } }, ptr %3, i64 0, i32 1, i32 0
+  store ptr %p_0, ptr %4, align 8
+  %5 = getelementptr { i8, { ptr, ptr } }, ptr %3, i64 0, i32 1, i32 1
+  store ptr %1, ptr %5, align 8
+  ret ptr %3
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.Cons"(ptr nocapture nofree readnone %0, ptr nofree %"runtime/malgo/Prelude.mlg.$p_691_0") {
+  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %"runtime/malgo/Prelude.mlg.$p_691_0", ptr %let_capture_0, align 8
+  store ptr %let_capture_0, ptr %2, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0, align 8
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/RightAssoc.mlg.<|>"(ptr nocapture nofree readnone %0, ptr nofree %"test/testcases/malgo/RightAssoc.mlg.$eta_86_0") {
   %2 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %2, align 8
@@ -96,7 +96,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.<|>"(ptr nocapture nof
   store ptr %"test/testcases/malgo/RightAssoc.mlg.$eta_86_0", ptr %let_capture_0.i, align 8
   store ptr %let_capture_0.i, ptr %3, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i, align 8
   ret ptr %3
 }
 
@@ -204,7 +204,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr nocapture nofre
   store ptr %5, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %10, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i.i, align 8
   %11 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 1, ptr %11, align 1
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -236,7 +236,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr nocapture nofre
   store ptr %14, ptr %let_capture_0.i.i2, align 8
   store ptr %let_capture_0.i.i2, ptr %19, align 8
   %let_func_0.i.i3 = getelementptr { ptr, ptr }, ptr %19, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i.i3, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i.i3, align 8
   %20 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 1, ptr %20, align 1
   %21 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -268,7 +268,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr nocapture nofre
   store ptr %23, ptr %let_capture_0.i.i5, align 8
   store ptr %let_capture_0.i.i5, ptr %28, align 8
   %let_func_0.i.i6 = getelementptr { ptr, ptr }, ptr %28, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i.i6, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i.i6, align 8
   %29 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 1, ptr %29, align 1
   %30 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -300,7 +300,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr nocapture nofre
   store ptr %32, ptr %let_capture_0.i.i8, align 8
   store ptr %let_capture_0.i.i8, ptr %37, align 8
   %let_func_0.i.i9 = getelementptr { ptr, ptr }, ptr %37, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i.i9, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i.i9, align 8
   %38 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %38, align 1
   %39 = load ptr, ptr %37, align 8
@@ -346,7 +346,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr nocapture nofre
   store ptr %54, ptr %let_capture_0.i.i11, align 8
   store ptr %let_capture_0.i.i11, ptr %59, align 8
   %let_func_0.i.i12 = getelementptr { ptr, ptr }, ptr %59, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i.i12, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i.i12, align 8
   %60 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 1, ptr %60, align 1
   %61 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -378,7 +378,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr nocapture nofre
   store ptr %63, ptr %let_capture_0.i.i14, align 8
   store ptr %let_capture_0.i.i14, ptr %68, align 8
   %let_func_0.i.i15 = getelementptr { ptr, ptr }, ptr %68, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i.i15, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i.i15, align 8
   %69 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 1, ptr %69, align 1
   %70 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -410,7 +410,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr nocapture nofre
   store ptr %72, ptr %let_capture_0.i.i17, align 8
   store ptr %let_capture_0.i.i17, ptr %77, align 8
   %let_func_0.i.i18 = getelementptr { ptr, ptr }, ptr %77, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i.i18, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i.i18, align 8
   %78 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 1, ptr %78, align 1
   %79 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -442,7 +442,7 @@ define internal ptr @"test/testcases/malgo/RightAssoc.mlg.f"(ptr nocapture nofre
   store ptr %81, ptr %let_capture_0.i.i20, align 8
   store ptr %let_capture_0.i.i20, ptr %86, align 8
   %let_func_0.i.i21 = getelementptr { ptr, ptr }, ptr %86, i64 0, i32 1
-  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_206", ptr %let_func_0.i.i21, align 8
+  store ptr @"test/testcases/malgo/RightAssoc.mlg.#let_closure_377", ptr %let_func_0.i.i21, align 8
   %87 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %87, align 1
   %88 = load ptr, ptr %86, align 8

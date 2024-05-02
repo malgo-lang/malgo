@@ -2,8 +2,8 @@
 source_filename = "test/testcases/malgo/Double.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
-@str19 = unnamed_addr constant [1 x i8] zeroinitializer
-@str39 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str190 = unnamed_addr constant [1 x i8] zeroinitializer
+@str210 = unnamed_addr constant [10 x i8] c"no branch\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -14,25 +14,6 @@ declare ptr @malgo_double_to_string(double) local_unnamed_addr
 declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
-
-define internal ptr @"runtime/malgo/Prelude.mlg.putStr"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly %"runtime/malgo/Prelude.mlg.$str_723_0") {
-  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr null, ptr %2, align 8
-  %printString_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.printString", ptr %printString_func_0, align 8
-  %3 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_723_0", i64 0, i32 1
-  %4 = load ptr, ptr %3, align 8
-  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr null, ptr %5, align 8
-  %"printString#_func_0.i" = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.printString#", ptr %"printString#_func_0.i", align 8
-  %6 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr null, ptr %6, align 8
-  %malgo_print_string_func_0.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i.i, align 8
-  %7 = tail call ptr @malgo_print_string(ptr %4)
-  ret ptr %7
-}
 
 define internal noundef ptr @"runtime/malgo/Builtin.mlg.Double#"(ptr nocapture nofree readnone %0, double %"runtime/malgo/Builtin.mlg.$p_1798_0") {
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
@@ -121,6 +102,25 @@ define internal ptr @"runtime/malgo/Builtin.mlg.printString"(ptr nocapture nofre
   store ptr @"runtime/malgo/Builtin.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i, align 8
   %5 = tail call ptr @malgo_print_string(ptr %2)
   ret ptr %5
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.putStr"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly %"runtime/malgo/Prelude.mlg.$str_723_0") {
+  %2 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr null, ptr %2, align 8
+  %printString_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.printString", ptr %printString_func_0, align 8
+  %3 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_723_0", i64 0, i32 1
+  %4 = load ptr, ptr %3, align 8
+  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr null, ptr %5, align 8
+  %"printString#_func_0.i" = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.printString#", ptr %"printString#_func_0.i", align 8
+  %6 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr null, ptr %6, align 8
+  %malgo_print_string_func_0.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.malgo_print_string", ptr %malgo_print_string_func_0.i.i, align 8
+  %7 = tail call ptr @malgo_print_string(ptr %4)
+  ret ptr %7
 }
 
 define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {

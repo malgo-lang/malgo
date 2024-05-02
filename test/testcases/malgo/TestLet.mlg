@@ -1,4 +1,4 @@
-module {..} = import Builtin
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
 
 infixl 0 (|>)
 def (|>) : a -> (a -> b) -> b

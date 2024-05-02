@@ -2,8 +2,8 @@
 source_filename = "test/testcases/malgo/With.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
-@str149 = unnamed_addr constant [1 x i8] zeroinitializer
-@str169 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str320 = unnamed_addr constant [1 x i8] zeroinitializer
+@str340 = unnamed_addr constant [10 x i8] c"no branch\00"
 @str349 = unnamed_addr constant [4 x i8] c"end\00"
 @str352 = unnamed_addr constant [4 x i8] c"foo\00"
 

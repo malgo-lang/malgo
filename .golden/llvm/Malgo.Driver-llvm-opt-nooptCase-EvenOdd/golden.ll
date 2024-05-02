@@ -5,7 +5,7 @@ source_filename = "test/testcases/malgo/EvenOdd.mlg"
 @str135 = unnamed_addr constant [1 x i8] zeroinitializer
 @str275 = unnamed_addr constant [6 x i8] c"False\00"
 @str276 = unnamed_addr constant [5 x i8] c"True\00"
-@str300 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str298 = unnamed_addr constant [10 x i8] c"no branch\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -19,20 +19,20 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_192"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_191"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %x_0 = load i32, ptr %0, align 4
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
   store i32 %x_0, ptr %let_capture_0.i.i, align 4
   store ptr %let_capture_0.i.i, ptr %3, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_213", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_212", ptr %let_func_0.i.i, align 8
   %p_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
   %4 = tail call i32 @malgo_sub_int32_t(i32 %p_0.i.i, i32 %1)
   ret i32 %4
 }
 
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_213"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_212"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call i32 @malgo_sub_int32_t(i32 %p_0, i32 %1)
   ret i32 %3
@@ -49,14 +49,14 @@ define internal noundef ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_317"
   store i32 %"int32#_0.val", ptr %let_capture_0.i.i, align 4
   store ptr %let_capture_0.i.i, ptr %5, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_192", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_191", ptr %let_func_0.i.i, align 8
   %x_0.i.i = load i32, ptr %let_capture_0.i.i, align 4
   %6 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i.i.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
   store i32 %x_0.i.i, ptr %let_capture_0.i.i.i.i, align 4
   store ptr %let_capture_0.i.i.i.i, ptr %6, align 8
   %let_func_0.i.i.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_213", ptr %let_func_0.i.i.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_212", ptr %let_func_0.i.i.i.i, align 8
   %p_0.i.i.i.i = load i32, ptr %let_capture_0.i.i.i.i, align 4
   %7 = tail call i32 @malgo_sub_int32_t(i32 %p_0.i.i.i.i, i32 %.val)
   %8 = tail call noundef ptr @malgo_malloc(i64 noundef 8)

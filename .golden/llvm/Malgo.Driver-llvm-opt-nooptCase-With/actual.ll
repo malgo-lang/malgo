@@ -3,8 +3,8 @@ source_filename = "test/testcases/malgo/With.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
 @str192 = unnamed_addr constant [4 x i8] c"foo\00"
-@str207 = unnamed_addr constant [1 x i8] zeroinitializer
-@str248 = unnamed_addr constant [4 x i8] c"end\00"
+@str208 = unnamed_addr constant [1 x i8] zeroinitializer
+@str246 = unnamed_addr constant [4 x i8] c"end\00"
 @str373 = unnamed_addr constant [10 x i8] c"no branch\00"
 
 declare void @GC_init() local_unnamed_addr
@@ -32,7 +32,7 @@ define internal ptr @"test/testcases/malgo/With.mlg.#fun_closure_201"(ptr nocapt
   store ptr %3, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %5, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @"test/testcases/malgo/With.mlg.#let_closure_229", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/With.mlg.#let_closure_231", ptr %let_func_0.i.i, align 8
   %6 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_0.i, ptr %6, align 8
@@ -44,7 +44,7 @@ define internal ptr @"test/testcases/malgo/With.mlg.#fun_closure_201"(ptr nocapt
   ret ptr %9
 }
 
-define internal ptr @"test/testcases/malgo/With.mlg.#let_closure_229"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly %1) {
+define internal ptr @"test/testcases/malgo/With.mlg.#let_closure_231"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly %1) {
   %str_0 = load ptr, ptr %0, align 8
   %3 = getelementptr i8, ptr %str_0, i64 8
   %"test/testcases/malgo/With.mlg.$str_93_0.val.i" = load ptr, ptr %3, align 8
@@ -75,8 +75,8 @@ define internal ptr @"test/testcases/malgo/With.mlg.#fun_closure_375"(ptr nocapt
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { ptr } }, ptr %3, i64 0, i32 1, i32 0
-  store ptr @str248, ptr %4, align 8
-  %5 = tail call ptr @malgo_print_string(ptr noundef nonnull @str248)
+  store ptr @str246, ptr %4, align 8
+  %5 = tail call ptr @malgo_print_string(ptr noundef nonnull @str246)
   ret ptr %5
 }
 
