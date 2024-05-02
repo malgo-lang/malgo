@@ -7,13 +7,21 @@ import Malgo.Core.Syntax
 import Malgo.Interface
 import Malgo.Module
 import Malgo.Prelude
+import Path (toFilePath)
+import System.FilePath (takeBaseName)
+import Witherable (hashNubOn)
 
 -- | Linking a program with its dependencies.
 link :: (IOE :> es, Store a, Workspace :> es) => Interface -> Program a -> Eff es (Program a)
 link (interface :: Interface) mainCoreIR = do
-  -- FIXME: Sort dependencies by topological order
-  depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)
+  -- Ignore duplicates in dependencies.
+  -- This is necessary because the same module can be imported multiple times and the module name is not unique (ModuleName or Artifact).
+  let deps = hashNubOn viewBaseName (HashSet.toList interface.dependencies)
+  depCoreIRs <- traverse loadCore deps
   pure $ mconcat (depCoreIRs <> [mainCoreIR])
+  where
+    viewBaseName (ModuleName x) = x
+    viewBaseName (Artifact path) = convertString $ takeBaseName $ toFilePath path.relPath
 
 loadCore :: (IOE :> es, Store b, Workspace :> es) => ModuleName -> Eff es b
 loadCore modName = do
