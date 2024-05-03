@@ -49,6 +49,4 @@ jobs:
           cabal build
       - name: Run tests
         run: |
-          mkdir -p $HOME/.local/share/malgo/base
-          ./scripts/install_malgo_internal.sh
-          cabal test --test-options="--match normal"
+          cabal test
