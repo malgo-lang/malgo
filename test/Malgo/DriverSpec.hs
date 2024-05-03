@@ -14,6 +14,7 @@ import Malgo.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
+import Malgo.TestUtils
 import System.Directory (copyFile, createDirectory, createDirectoryIfMissing, getCurrentDirectory, listDirectory, removeDirectoryRecursive)
 import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
 import System.Process.Typed
@@ -32,9 +33,6 @@ import System.Process.Typed
 import Test.Hspec (Spec, anyException, it, parallel, runIO, sequential, shouldBe, shouldThrow)
 import Test.Hspec.Core.Spec (getSpecDescriptionPath)
 import Test.Hspec.Golden (Golden (..), golden)
-
-testcaseDir :: FilePath
-testcaseDir = "./test/testcases/malgo"
 
 getWorkspaceDir :: (MonadIO m) => m FilePath
 getWorkspaceDir = liftIO do
@@ -93,16 +91,6 @@ setupTestDir = do
 
   createDirectory workspaceDir
   createDirectory (workspaceDir </> "libs")
-
--- | Compile Builtin.mlg and copy it to /tmp/malgo-test/libs
-setupBuiltin :: IO ()
-setupBuiltin = do
-  compile "./runtime/malgo/Builtin.mlg" False False defaultOptimizeOption LLVM
-
--- | Compile Prelude.mlg and copy it to /tmp/malgo-test/libs
-setupPrelude :: IO ()
-setupPrelude = do
-  compile "./runtime/malgo/Prelude.mlg" False False defaultOptimizeOption LLVM
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()

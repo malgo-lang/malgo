@@ -1,1762 +1,595 @@
 Module
-    { moduleName = Artifact
-        ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/Test1.mlg"
-            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-            , relPath = "test/testcases/malgo/Test1.mlg"
-            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-            }
-        )
-    , moduleDefinition = BindGroup
-        { _scDefs =
-            [
-                [
-                    ( Typed
-                        { annotated = TyArr
-                            ( TyCon
-                                ( Id
-                                    { name = "Bool"
-                                    , moduleName = Artifact
-                                        ( ArtifactPath
-                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                            }
-                                        )
-                                    , sort = External
-                                    }
-                                )
-                            )
-                            ( TyArr
-                                ( TyArr
-                                    ( TyTuple 0 )
-                                    ( TyVar
-                                        ( Id
-                                            { name = "t"
-                                            , moduleName = Artifact
-                                                ( ArtifactPath
-                                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                    }
-                                                )
-                                            , sort = Internal 23
-                                            }
-                                        )
-                                    )
-                                )
-                                ( TyArr
-                                    ( TyArr
-                                        ( TyTuple 0 )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "t"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = Internal 23
-                                                }
-                                            )
-                                        )
-                                    )
-                                    ( TyVar
-                                        ( Id
-                                            { name = "t"
-                                            , moduleName = Artifact
-                                                ( ArtifactPath
-                                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                    }
-                                                )
-                                            , sort = Internal 23
-                                            }
-                                        )
-                                    )
-                                )
-                            )
-                        , value = Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 3
-                                , sourceColumn = Pos 1
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 1
-                                }
-                            }
-                        }
-                    , Id
-                        { name = "if"
-                        , moduleName = Artifact
-                            ( ArtifactPath
-                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                }
-                            )
-                        , sort = External
-                        }
-                    , Fn
-                        ( Typed
-                            { annotated = TyArr
-                                ( TyCon
-                                    ( Id
-                                        { name = "Bool"
-                                        , moduleName = Artifact
-                                            ( ArtifactPath
-                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                }
-                                            )
-                                        , sort = External
-                                        }
-                                    )
-                                )
-                                ( TyArr
-                                    ( TyArr
-                                        ( TyTuple 0 )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "t"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = Internal 23
-                                                }
-                                            )
-                                        )
-                                    )
-                                    ( TyArr
-                                        ( TyArr
-                                            ( TyTuple 0 )
-                                            ( TyVar
-                                                ( Id
-                                                    { name = "t"
-                                                    , moduleName = Artifact
-                                                        ( ArtifactPath
-                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                            }
-                                                        )
-                                                    , sort = Internal 23
-                                                    }
-                                                )
-                                            )
-                                        )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "t"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = Internal 23
-                                                }
-                                            )
-                                        )
-                                    )
-                                )
-                            , value = Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                    , sourceLine = Pos 3
-                                    , sourceColumn = Pos 11
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                    , sourceLine = Pos 3
-                                    , sourceColumn = Pos 46
-                                    }
-                                }
-                            }
-                        )
-                        ( Clause
-                            ( Typed
-                                { annotated = TyArr
-                                    ( TyCon
-                                        ( Id
-                                            { name = "Bool"
-                                            , moduleName = Artifact
-                                                ( ArtifactPath
-                                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                    }
-                                                )
-                                            , sort = External
-                                            }
-                                        )
-                                    )
-                                    ( TyArr
-                                        ( TyArr
-                                            ( TyTuple 0 )
-                                            ( TyVar
-                                                ( Id
-                                                    { name = "t"
-                                                    , moduleName = Artifact
-                                                        ( ArtifactPath
-                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                            }
-                                                        )
-                                                    , sort = Internal 23
-                                                    }
-                                                )
-                                            )
-                                        )
-                                        ( TyArr
-                                            ( TyArr
-                                                ( TyTuple 0 )
-                                                ( TyVar
-                                                    ( Id
-                                                        { name = "t"
-                                                        , moduleName = Artifact
-                                                            ( ArtifactPath
-                                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                }
-                                                            )
-                                                        , sort = Internal 23
-                                                        }
-                                                    )
-                                                )
-                                            )
-                                            ( TyVar
-                                                ( Id
-                                                    { name = "t"
-                                                    , moduleName = Artifact
-                                                        ( ArtifactPath
-                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                            }
-                                                        )
-                                                    , sort = Internal 23
-                                                    }
-                                                )
-                                            )
-                                        )
-                                    )
-                                , value = Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                        , sourceLine = Pos 3
-                                        , sourceColumn = Pos 11
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                        , sourceLine = Pos 3
-                                        , sourceColumn = Pos 27
-                                        }
-                                    }
-                                }
-                            )
-                            [ ConP
-                                ( Typed
-                                    { annotated = TyCon
-                                        ( Id
-                                            { name = "Bool"
-                                            , moduleName = Artifact
-                                                ( ArtifactPath
-                                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                    }
-                                                )
-                                            , sort = External
-                                            }
-                                        )
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 11
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 16
-                                            }
-                                        }
-                                    }
-                                )
-                                ( Id
-                                    { name = "True"
-                                    , moduleName = Artifact
-                                        ( ArtifactPath
-                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                            }
-                                        )
-                                    , sort = External
-                                    }
-                                ) []
-                            , VarP
-                                ( Typed
-                                    { annotated = TyArr
-                                        ( TyTuple 0 )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "t"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = Internal 23
-                                                }
-                                            )
-                                        )
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 16
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 18
-                                            }
-                                        }
-                                    }
-                                )
-                                ( Id
-                                    { name = "t"
-                                    , moduleName = Artifact
-                                        ( ArtifactPath
-                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                            }
-                                        )
-                                    , sort = Internal 0
-                                    }
-                                )
-                            , VarP
-                                ( Typed
-                                    { annotated = TyArr
-                                        ( TyTuple 0 )
-                                        ( TyVar
-                                            ( Id
-                                                { name = "t"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = Internal 23
-                                                }
-                                            )
-                                        )
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 18
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 20
-                                            }
-                                        }
-                                    }
-                                )
-                                ( Id
-                                    { name = "_"
-                                    , moduleName = Artifact
-                                        ( ArtifactPath
-                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                            }
-                                        )
-                                    , sort = Internal 1
-                                    }
-                                )
-                            ]
-                            ( Seq
-                                ( Typed
-                                    { annotated = TyVar
-                                        ( Id
-                                            { name = "t"
-                                            , moduleName = Artifact
-                                                ( ArtifactPath
-                                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                    }
-                                                )
-                                            , sort = Internal 23
-                                            }
-                                        )
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 23
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 27
-                                            }
-                                        }
-                                    }
-                                )
-                                ( NoBind
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 23
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 27
-                                            }
-                                        }
-                                    )
-                                    ( Apply
-                                        ( Typed
-                                            { annotated = TyVar
-                                                ( Id
-                                                    { name = "t"
-                                                    , moduleName = Artifact
-                                                        ( ArtifactPath
-                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                            }
-                                                        )
-                                                    , sort = Internal 23
-                                                    }
-                                                )
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                    , sourceLine = Pos 3
-                                                    , sourceColumn = Pos 23
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                    , sourceLine = Pos 3
-                                                    , sourceColumn = Pos 27
-                                                    }
-                                                }
-                                            }
-                                        )
-                                        ( Var
-                                            ( Typed
-                                                { annotated = TyArr
-                                                    ( TyTuple 0 )
-                                                    ( TyVar
-                                                        ( Id
-                                                            { name = "t"
-                                                            , moduleName = Artifact
-                                                                ( ArtifactPath
-                                                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                    }
-                                                                )
-                                                            , sort = Internal 23
-                                                            }
-                                                        )
-                                                    )
-                                                , value = Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 3
-                                                        , sourceColumn = Pos 23
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 3
-                                                        , sourceColumn = Pos 25
-                                                        }
-                                                    }
-                                                }
-                                            )
-                                            ( Id
-                                                { name = "t"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = Internal 0
-                                                }
-                                            )
-                                        )
-                                        ( Tuple
-                                            ( Typed
-                                                { annotated = TyTuple 0
-                                                , value = Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 3
-                                                        , sourceColumn = Pos 25
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 3
-                                                        , sourceColumn = Pos 27
-                                                        }
-                                                    }
-                                                }
-                                            ) []
-                                        )
-                                    ) :| []
-                                )
-                            ) :|
-                            [ Clause
-                                ( Typed
-                                    { annotated = TyArr
-                                        ( TyCon
-                                            ( Id
-                                                { name = "Bool"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = External
-                                                }
-                                            )
-                                        )
-                                        ( TyArr
-                                            ( TyArr
-                                                ( TyTuple 0 )
-                                                ( TyVar
-                                                    ( Id
-                                                        { name = "t"
-                                                        , moduleName = Artifact
-                                                            ( ArtifactPath
-                                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                }
-                                                            )
-                                                        , sort = Internal 23
-                                                        }
-                                                    )
-                                                )
-                                            )
-                                            ( TyArr
-                                                ( TyArr
-                                                    ( TyTuple 0 )
-                                                    ( TyVar
-                                                        ( Id
-                                                            { name = "t"
-                                                            , moduleName = Artifact
-                                                                ( ArtifactPath
-                                                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                    }
-                                                                )
-                                                            , sort = Internal 23
-                                                            }
-                                                        )
-                                                    )
-                                                )
-                                                ( TyVar
-                                                    ( Id
-                                                        { name = "t"
-                                                        , moduleName = Artifact
-                                                            ( ArtifactPath
-                                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                }
-                                                            )
-                                                        , sort = Internal 23
-                                                        }
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 29
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 3
-                                            , sourceColumn = Pos 46
-                                            }
-                                        }
-                                    }
-                                )
-                                [ ConP
-                                    ( Typed
-                                        { annotated = TyCon
-                                            ( Id
-                                                { name = "Bool"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = External
-                                                }
-                                            )
-                                        , value = Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 29
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 35
-                                                }
-                                            }
-                                        }
-                                    )
-                                    ( Id
-                                        { name = "False"
-                                        , moduleName = Artifact
-                                            ( ArtifactPath
-                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                }
-                                            )
-                                        , sort = External
-                                        }
-                                    ) []
-                                , VarP
-                                    ( Typed
-                                        { annotated = TyArr
-                                            ( TyTuple 0 )
-                                            ( TyVar
-                                                ( Id
-                                                    { name = "t"
-                                                    , moduleName = Artifact
-                                                        ( ArtifactPath
-                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                            }
-                                                        )
-                                                    , sort = Internal 23
-                                                    }
-                                                )
-                                            )
-                                        , value = Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 35
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 37
-                                                }
-                                            }
-                                        }
-                                    )
-                                    ( Id
-                                        { name = "_"
-                                        , moduleName = Artifact
-                                            ( ArtifactPath
-                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                }
-                                            )
-                                        , sort = Internal 2
-                                        }
-                                    )
-                                , VarP
-                                    ( Typed
-                                        { annotated = TyArr
-                                            ( TyTuple 0 )
-                                            ( TyVar
-                                                ( Id
-                                                    { name = "t"
-                                                    , moduleName = Artifact
-                                                        ( ArtifactPath
-                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                            }
-                                                        )
-                                                    , sort = Internal 23
-                                                    }
-                                                )
-                                            )
-                                        , value = Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 37
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 39
-                                                }
-                                            }
-                                        }
-                                    )
-                                    ( Id
-                                        { name = "f"
-                                        , moduleName = Artifact
-                                            ( ArtifactPath
-                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                }
-                                            )
-                                        , sort = Internal 3
-                                        }
-                                    )
-                                ]
-                                ( Seq
-                                    ( Typed
-                                        { annotated = TyVar
-                                            ( Id
-                                                { name = "t"
-                                                , moduleName = Artifact
-                                                    ( ArtifactPath
-                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                        }
-                                                    )
-                                                , sort = Internal 23
-                                                }
-                                            )
-                                        , value = Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 42
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 46
-                                                }
-                                            }
-                                        }
-                                    )
-                                    ( NoBind
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 42
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                , sourceLine = Pos 3
-                                                , sourceColumn = Pos 46
-                                                }
-                                            }
-                                        )
-                                        ( Apply
-                                            ( Typed
-                                                { annotated = TyVar
-                                                    ( Id
-                                                        { name = "t"
-                                                        , moduleName = Artifact
-                                                            ( ArtifactPath
-                                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                }
-                                                            )
-                                                        , sort = Internal 23
-                                                        }
-                                                    )
-                                                , value = Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 3
-                                                        , sourceColumn = Pos 42
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 3
-                                                        , sourceColumn = Pos 46
-                                                        }
-                                                    }
-                                                }
-                                            )
-                                            ( Var
-                                                ( Typed
-                                                    { annotated = TyArr
-                                                        ( TyTuple 0 )
-                                                        ( TyVar
-                                                            ( Id
-                                                                { name = "t"
-                                                                , moduleName = Artifact
-                                                                    ( ArtifactPath
-                                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                        }
-                                                                    )
-                                                                , sort = Internal 23
-                                                                }
-                                                            )
-                                                        )
-                                                    , value = Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 3
-                                                            , sourceColumn = Pos 42
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 3
-                                                            , sourceColumn = Pos 44
-                                                            }
-                                                        }
-                                                    }
-                                                )
-                                                ( Id
-                                                    { name = "f"
-                                                    , moduleName = Artifact
-                                                        ( ArtifactPath
-                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                            }
-                                                        )
-                                                    , sort = Internal 3
-                                                    }
-                                                )
-                                            )
-                                            ( Tuple
-                                                ( Typed
-                                                    { annotated = TyTuple 0
-                                                    , value = Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 3
-                                                            , sourceColumn = Pos 44
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 3
-                                                            , sourceColumn = Pos 46
-                                                            }
-                                                        }
-                                                    }
-                                                ) []
-                                            )
-                                        ) :| []
-                                    )
-                                )
-                            ]
-                        )
-                    )
-                ]
-            ,
-                [
-                    ( Typed
-                        { annotated = TyArr
-                            ( TyTuple 0 )
-                            ( TyTuple 0 )
-                        , value = Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 7
-                                , sourceColumn = Pos 1
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 7
-                                , sourceColumn = Pos 80
-                                }
-                            }
-                        }
-                    , Id
-                        { name = "main"
-                        , moduleName = Artifact
-                            ( ArtifactPath
-                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                }
-                            )
-                        , sort = External
-                        }
-                    , Fn
-                        ( Typed
-                            { annotated = TyArr
-                                ( TyTuple 0 )
-                                ( TyTuple 0 )
-                            , value = Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                    , sourceLine = Pos 7
-                                    , sourceColumn = Pos 13
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                    , sourceLine = Pos 7
-                                    , sourceColumn = Pos 79
-                                    }
-                                }
-                            }
-                        )
-                        ( Clause
-                            ( Typed
-                                { annotated = TyArr
-                                    ( TyTuple 0 )
-                                    ( TyTuple 0 )
-                                , value = Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                        , sourceLine = Pos 7
-                                        , sourceColumn = Pos 13
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                        , sourceLine = Pos 7
-                                        , sourceColumn = Pos 79
-                                        }
-                                    }
-                                }
-                            )
-                            [ VarP
-                                ( Typed
-                                    { annotated = TyTuple 0
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 13
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 79
-                                            }
-                                        }
-                                    }
-                                )
-                                ( Id
-                                    { name = "$_"
-                                    , moduleName = Artifact
-                                        ( ArtifactPath
-                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                            }
-                                        )
-                                    , sort = Internal 38
-                                    }
-                                )
-                            ]
-                            ( Seq
-                                ( Typed
-                                    { annotated = TyTuple 0
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 13
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 79
-                                            }
-                                        }
-                                    }
-                                )
-                                ( NoBind
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 13
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 79
-                                            }
-                                        }
-                                    )
-                                    ( Apply
-                                        ( Typed
-                                            { annotated = TyTuple 0
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                    , sourceLine = Pos 7
-                                                    , sourceColumn = Pos 13
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                    , sourceLine = Pos 7
-                                                    , sourceColumn = Pos 79
-                                                    }
-                                                }
-                                            }
-                                        )
-                                        ( Apply
-                                            ( Typed
-                                                { annotated = TyArr
-                                                    ( TyArr
-                                                        ( TyTuple 0 )
-                                                        ( TyTuple 0 )
-                                                    )
-                                                    ( TyTuple 0 )
-                                                , value = Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 13
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 79
-                                                        }
-                                                    }
-                                                }
-                                            )
-                                            ( Apply
-                                                ( Typed
-                                                    { annotated = TyArr
-                                                        ( TyArr
-                                                            ( TyTuple 0 )
-                                                            ( TyTuple 0 )
-                                                        )
-                                                        ( TyArr
-                                                            ( TyArr
-                                                                ( TyTuple 0 )
-                                                                ( TyTuple 0 )
-                                                            )
-                                                            ( TyTuple 0 )
-                                                        )
-                                                    , value = Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 7
-                                                            , sourceColumn = Pos 13
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 7
-                                                            , sourceColumn = Pos 79
-                                                            }
-                                                        }
-                                                    }
-                                                )
-                                                ( Var
-                                                    ( Typed
-                                                        { annotated = TyArr
-                                                            ( TyCon
-                                                                ( Id
-                                                                    { name = "Bool"
-                                                                    , moduleName = Artifact
-                                                                        ( ArtifactPath
-                                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                            }
-                                                                        )
-                                                                    , sort = External
-                                                                    }
-                                                                )
-                                                            )
-                                                            ( TyArr
-                                                                ( TyArr
-                                                                    ( TyTuple 0 )
-                                                                    ( TyTuple 0 )
-                                                                )
-                                                                ( TyArr
-                                                                    ( TyArr
-                                                                        ( TyTuple 0 )
-                                                                        ( TyTuple 0 )
-                                                                    )
-                                                                    ( TyTuple 0 )
-                                                                )
-                                                            )
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 13
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 16
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Id
-                                                        { name = "if"
-                                                        , moduleName = Artifact
-                                                            ( ArtifactPath
-                                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                }
-                                                            )
-                                                        , sort = External
-                                                        }
-                                                    )
-                                                )
-                                                ( Var
-                                                    ( Typed
-                                                        { annotated = TyCon
-                                                            ( Id
-                                                                { name = "Bool"
-                                                                , moduleName = Artifact
-                                                                    ( ArtifactPath
-                                                                        { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                        , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                        , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                        , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                        }
-                                                                    )
-                                                                , sort = External
-                                                                }
-                                                            )
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 16
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 21
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Id
-                                                        { name = "True"
-                                                        , moduleName = Artifact
-                                                            ( ArtifactPath
-                                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                }
-                                                            )
-                                                        , sort = External
-                                                        }
-                                                    )
-                                                )
-                                            )
-                                            ( Fn
-                                                ( Typed
-                                                    { annotated = TyArr
-                                                        ( TyTuple 0 )
-                                                        ( TyTuple 0 )
-                                                    , value = Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 7
-                                                            , sourceColumn = Pos 22
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 7
-                                                            , sourceColumn = Pos 48
-                                                            }
-                                                        }
-                                                    }
-                                                )
-                                                ( Clause
-                                                    ( Typed
-                                                        { annotated = TyArr
-                                                            ( TyTuple 0 )
-                                                            ( TyTuple 0 )
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 22
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 48
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    [ VarP
-                                                        ( Typed
-                                                            { annotated = TyTuple 0
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 22
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 48
-                                                                    }
-                                                                }
-                                                            }
-                                                        )
-                                                        ( Id
-                                                            { name = "$_"
-                                                            , moduleName = Artifact
-                                                                ( ArtifactPath
-                                                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                    }
-                                                                )
-                                                            , sort = Internal 30
-                                                            }
-                                                        )
-                                                    ]
-                                                    ( Seq
-                                                        ( Typed
-                                                            { annotated = TyTuple 0
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 22
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 48
-                                                                    }
-                                                                }
-                                                            }
-                                                        )
-                                                        ( NoBind
-                                                            ( Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 22
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 48
-                                                                    }
-                                                                }
-                                                            )
-                                                            ( Apply
-                                                                ( Typed
-                                                                    { annotated = TyTuple 0
-                                                                    , value = Range
-                                                                        { _start = SourcePos
-                                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                            , sourceLine = Pos 7
-                                                                            , sourceColumn = Pos 22
-                                                                            }
-                                                                        , _end = SourcePos
-                                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                            , sourceLine = Pos 7
-                                                                            , sourceColumn = Pos 48
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                )
-                                                                ( Var
-                                                                    ( Typed
-                                                                        { annotated = TyArr ( TyPrim StringT )
-                                                                            ( TyTuple 0 )
-                                                                        , value = Range
-                                                                            { _start = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                                , sourceLine = Pos 7
-                                                                                , sourceColumn = Pos 22
-                                                                                }
-                                                                            , _end = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                                , sourceLine = Pos 7
-                                                                                , sourceColumn = Pos 41
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    )
-                                                                    ( Id
-                                                                        { name = "malgo_print_string"
-                                                                        , moduleName = Artifact
-                                                                            ( ArtifactPath
-                                                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                                }
-                                                                            )
-                                                                        , sort = External
-                                                                        }
-                                                                    )
-                                                                )
-                                                                ( Unboxed
-                                                                    ( Typed
-                                                                        { annotated = TyPrim StringT
-                                                                        , value = Range
-                                                                            { _start = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                                , sourceLine = Pos 7
-                                                                                , sourceColumn = Pos 41
-                                                                                }
-                                                                            , _end = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                                , sourceLine = Pos 7
-                                                                                , sourceColumn = Pos 48
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    )
-                                                                    ( String "True" )
-                                                                )
-                                                            ) :| []
-                                                        )
-                                                    ) :| []
-                                                )
-                                            )
-                                        )
-                                        ( Fn
-                                            ( Typed
-                                                { annotated = TyArr
-                                                    ( TyTuple 0 )
-                                                    ( TyTuple 0 )
-                                                , value = Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 51
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 78
-                                                        }
-                                                    }
-                                                }
-                                            )
-                                            ( Clause
-                                                ( Typed
-                                                    { annotated = TyArr
-                                                        ( TyTuple 0 )
-                                                        ( TyTuple 0 )
-                                                    , value = Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 7
-                                                            , sourceColumn = Pos 51
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                            , sourceLine = Pos 7
-                                                            , sourceColumn = Pos 78
-                                                            }
-                                                        }
-                                                    }
-                                                )
-                                                [ VarP
-                                                    ( Typed
-                                                        { annotated = TyTuple 0
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 51
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 78
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Id
-                                                        { name = "$_"
-                                                        , moduleName = Artifact
-                                                            ( ArtifactPath
-                                                                { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                }
-                                                            )
-                                                        , sort = Internal 35
-                                                        }
-                                                    )
-                                                ]
-                                                ( Seq
-                                                    ( Typed
-                                                        { annotated = TyTuple 0
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 51
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 78
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    ( NoBind
-                                                        ( Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 51
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 78
-                                                                }
-                                                            }
-                                                        )
-                                                        ( Apply
-                                                            ( Typed
-                                                                { annotated = TyTuple 0
-                                                                , value = Range
-                                                                    { _start = SourcePos
-                                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                        , sourceLine = Pos 7
-                                                                        , sourceColumn = Pos 51
-                                                                        }
-                                                                    , _end = SourcePos
-                                                                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                        , sourceLine = Pos 7
-                                                                        , sourceColumn = Pos 78
-                                                                        }
-                                                                    }
-                                                                }
-                                                            )
-                                                            ( Var
-                                                                ( Typed
-                                                                    { annotated = TyArr ( TyPrim StringT )
-                                                                        ( TyTuple 0 )
-                                                                    , value = Range
-                                                                        { _start = SourcePos
-                                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                            , sourceLine = Pos 7
-                                                                            , sourceColumn = Pos 51
-                                                                            }
-                                                                        , _end = SourcePos
-                                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                            , sourceLine = Pos 7
-                                                                            , sourceColumn = Pos 70
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                )
-                                                                ( Id
-                                                                    { name = "malgo_print_string"
-                                                                    , moduleName = Artifact
-                                                                        ( ArtifactPath
-                                                                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                                                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                                                            , relPath = "test/testcases/malgo/Test1.mlg"
-                                                                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                                                            }
-                                                                        )
-                                                                    , sort = External
-                                                                    }
-                                                                )
-                                                            )
-                                                            ( Unboxed
-                                                                ( Typed
-                                                                    { annotated = TyPrim StringT
-                                                                    , value = Range
-                                                                        { _start = SourcePos
-                                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                            , sourceLine = Pos 7
-                                                                            , sourceColumn = Pos 70
-                                                                            }
-                                                                        , _end = SourcePos
-                                                                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                                                            , sourceLine = Pos 7
-                                                                            , sourceColumn = Pos 78
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                )
-                                                                ( String "False" )
-                                                            )
-                                                        ) :| []
-                                                    )
-                                                ) :| []
-                                            )
-                                        )
-                                    ) :| []
-                                )
-                            ) :| []
-                        )
-                    )
-                ]
-            ]
-        , _scSigs = []
-        , _dataDefs =
-            [
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                        , sourceLine = Pos 1
-                        , sourceColumn = Pos 6
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/Test1.mlg"
-                        , sourceLine = Pos 3
-                        , sourceColumn = Pos 1
-                        }
-                    }
-                , Id
-                    { name = "Bool"
-                    , moduleName = Artifact
-                        ( ArtifactPath
-                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                            , relPath = "test/testcases/malgo/Test1.mlg"
-                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                            }
-                        )
-                    , sort = External
-                    }
-                , []
-                ,
-                    [
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 1
-                                , sourceColumn = Pos 13
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 1
-                                , sourceColumn = Pos 18
-                                }
-                            }
-                        , Id
-                            { name = "True"
-                            , moduleName = Artifact
-                                ( ArtifactPath
-                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                    }
-                                )
-                            , sort = External
-                            }
-                        , []
-                        )
-                    ,
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 1
-                                , sourceColumn = Pos 20
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 3
-                                , sourceColumn = Pos 1
-                                }
-                            }
-                        , Id
-                            { name = "False"
-                            , moduleName = Artifact
-                                ( ArtifactPath
-                                    { rawPath = "./test/testcases/malgo/Test1.mlg"
-                                    , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                                    , relPath = "test/testcases/malgo/Test1.mlg"
-                                    , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                                    }
-                                )
-                            , sort = External
-                            }
-                        , []
-                        )
-                    ]
-                )
-            ]
-        , _typeSynonyms = []
-        , _foreigns =
-            [
+ { moduleName = Artifact
+  ( ArtifactPath
+   { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), moduleDefinition = BindGroup
+  { _scDefs =
+   [
+    [
+     ( Typed
+      { annotated = TyArr
+       ( TyCon
+        ( Id
+         { name = "Bool", moduleName = Artifact
+          ( ArtifactPath
+           { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) )
+       ( TyArr
+        ( TyArr
+         ( TyTuple 0 )
+         ( TyVar
+          ( Id
+           { name = "t", moduleName = Artifact
+            ( ArtifactPath
+             { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) )
+        ( TyArr
+         ( TyArr
+          ( TyTuple 0 )
+          ( TyVar
+           ( Id
+            { name = "t", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) )
+         ( TyVar
+          ( Id
+           { name = "t", moduleName = Artifact
+            ( ArtifactPath
+             { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) ) ), value = Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } }, Id
+      { name = "if", moduleName = Artifact
+       ( ArtifactPath
+        { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External }, Fn
+      ( Typed
+       { annotated = TyArr
+        ( TyCon
+         ( Id
+          { name = "Bool", moduleName = Artifact
+           ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) )
+        ( TyArr
+         ( TyArr
+          ( TyTuple 0 )
+          ( TyVar
+           ( Id
+            { name = "t", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) )
+         ( TyArr
+          ( TyArr
+           ( TyTuple 0 )
+           ( TyVar
+            ( Id
+             { name = "t", moduleName = Artifact
+              ( ArtifactPath
+               { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) )
+          ( TyVar
+           ( Id
+            { name = "t", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) ) ), value = Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 11 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 46 } } } )
+      ( Clause
+       ( Typed
+        { annotated = TyArr
+         ( TyCon
+          ( Id
+           { name = "Bool", moduleName = Artifact
+            ( ArtifactPath
+             { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) )
+         ( TyArr
+          ( TyArr
+           ( TyTuple 0 )
+           ( TyVar
+            ( Id
+             { name = "t", moduleName = Artifact
+              ( ArtifactPath
+               { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) )
+          ( TyArr
+           ( TyArr
+            ( TyTuple 0 )
+            ( TyVar
+             ( Id
+              { name = "t", moduleName = Artifact
+               ( ArtifactPath
+                { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) )
+           ( TyVar
+            ( Id
+             { name = "t", moduleName = Artifact
+              ( ArtifactPath
+               { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) ) ), value = Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 11 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 27 } } } )
+       [ ConP
+        ( Typed
+         { annotated = TyCon
+          ( Id
+           { name = "Bool", moduleName = Artifact
+            ( ArtifactPath
+             { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ), value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 11 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 16 } } } )
+        ( Id
+         { name = "True", moduleName = Artifact
+          ( ArtifactPath
+           { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) [], VarP
+        ( Typed
+         { annotated = TyArr
+          ( TyTuple 0 )
+          ( TyVar
+           ( Id
+            { name = "t", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ), value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 16 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 18 } } } )
+        ( Id
+         { name = "t", moduleName = Artifact
+          ( ArtifactPath
+           { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 0 } ), VarP
+        ( Typed
+         { annotated = TyArr
+          ( TyTuple 0 )
+          ( TyVar
+           ( Id
+            { name = "t", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ), value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 18 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 20 } } } )
+        ( Id
+         { name = "_", moduleName = Artifact
+          ( ArtifactPath
+           { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 1 } ) ]
+       ( Seq
+        ( Typed
+         { annotated = TyVar
+          ( Id
+           { name = "t", moduleName = Artifact
+            ( ArtifactPath
+             { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ), value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 23 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 27 } } } )
+        ( NoBind
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 23 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 27 } } )
+         ( Apply
+          ( Typed
+           { annotated = TyVar
+            ( Id
+             { name = "t", moduleName = Artifact
+              ( ArtifactPath
+               { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ), value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 23 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 27 } } } )
+          ( Var
+           ( Typed
+            { annotated = TyArr
+             ( TyTuple 0 )
+             ( TyVar
+              ( Id
+               { name = "t", moduleName = Artifact
+                ( ArtifactPath
+                 { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ), value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 23 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 25 } } } )
+           ( Id
+            { name = "t", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 0 } ) )
+          ( Tuple
+           ( Typed
+            { annotated = TyTuple 0, value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 25 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 27 } } } ) [] ) ) :| [] ) ) :|
+       [ Clause
+        ( Typed
+         { annotated = TyArr
+          ( TyCon
+           ( Id
+            { name = "Bool", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) )
+          ( TyArr
+           ( TyArr
+            ( TyTuple 0 )
+            ( TyVar
+             ( Id
+              { name = "t", moduleName = Artifact
+               ( ArtifactPath
+                { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) )
+           ( TyArr
+            ( TyArr
+             ( TyTuple 0 )
+             ( TyVar
+              ( Id
+               { name = "t", moduleName = Artifact
+                ( ArtifactPath
+                 { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) )
+            ( TyVar
+             ( Id
+              { name = "t", moduleName = Artifact
+               ( ArtifactPath
+                { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ) ) ), value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 29 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 46 } } } )
+        [ ConP
+         ( Typed
+          { annotated = TyCon
+           ( Id
+            { name = "Bool", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ), value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 29 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 35 } } } )
+         ( Id
+          { name = "False", moduleName = Artifact
+           ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) [], VarP
+         ( Typed
+          { annotated = TyArr
+           ( TyTuple 0 )
+           ( TyVar
+            ( Id
+             { name = "t", moduleName = Artifact
+              ( ArtifactPath
+               { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ), value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 35 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 37 } } } )
+         ( Id
+          { name = "_", moduleName = Artifact
+           ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 2 } ), VarP
+         ( Typed
+          { annotated = TyArr
+           ( TyTuple 0 )
+           ( TyVar
+            ( Id
+             { name = "t", moduleName = Artifact
+              ( ArtifactPath
+               { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ), value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 37 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 39 } } } )
+         ( Id
+          { name = "f", moduleName = Artifact
+           ( ArtifactPath
+            { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 3 } ) ]
+        ( Seq
+         ( Typed
+          { annotated = TyVar
+           ( Id
+            { name = "t", moduleName = Artifact
+             ( ArtifactPath
+              { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ), value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 42 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 46 } } } )
+         ( NoBind
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 42 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 46 } } )
+          ( Apply
+           ( Typed
+            { annotated = TyVar
+             ( Id
+              { name = "t", moduleName = Artifact
+               ( ArtifactPath
+                { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ), value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 42 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 46 } } } )
+           ( Var
+            ( Typed
+             { annotated = TyArr
+              ( TyTuple 0 )
+              ( TyVar
+               ( Id
+                { name = "t", moduleName = Artifact
+                 ( ArtifactPath
+                  { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 23 } ) ), value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 42 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 44 } } } )
+            ( Id
+             { name = "f", moduleName = Artifact
+              ( ArtifactPath
+               { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 3 } ) )
+           ( Tuple
+            ( Typed
+             { annotated = TyTuple 0, value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 44 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 46 } } } ) [] ) ) :| [] ) ) ] ) ) ],
+    [
+     ( Typed
+      { annotated = TyArr
+       ( TyTuple 0 )
+       ( TyTuple 0 ), value = Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 80 } } }, Id
+      { name = "main", moduleName = Artifact
+       ( ArtifactPath
+        { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External }, Fn
+      ( Typed
+       { annotated = TyArr
+        ( TyTuple 0 )
+        ( TyTuple 0 ), value = Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 79 } } } )
+      ( Clause
+       ( Typed
+        { annotated = TyArr
+         ( TyTuple 0 )
+         ( TyTuple 0 ), value = Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 79 } } } )
+       [ VarP
+        ( Typed
+         { annotated = TyTuple 0, value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 79 } } } )
+        ( Id
+         { name = "$_", moduleName = Artifact
+          ( ArtifactPath
+           { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 38 } ) ]
+       ( Seq
+        ( Typed
+         { annotated = TyTuple 0, value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 79 } } } )
+        ( NoBind
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 79 } } )
+         ( Apply
+          ( Typed
+           { annotated = TyTuple 0, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 79 } } } )
+          ( Apply
+           ( Typed
+            { annotated = TyArr
+             ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) )
+             ( TyTuple 0 ), value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 79 } } } )
+           ( Apply
+            ( Typed
+             { annotated = TyArr
+              ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) )
+              ( TyArr
+               ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) )
+               ( TyTuple 0 ) ), value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 79 } } } )
+            ( Var
+             ( Typed
+              { annotated = TyArr
+               ( TyCon
+                ( Id
+                 { name = "Bool", moduleName = Artifact
+                  ( ArtifactPath
+                   { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) )
+               ( TyArr
+                ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) )
+                ( TyArr
+                 ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) )
+                 ( TyTuple 0 ) ) ), value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 13 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 16 } } } )
+             ( Id
+              { name = "if", moduleName = Artifact
+               ( ArtifactPath
+                { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) )
+            ( Var
+             ( Typed
+              { annotated = TyCon
+               ( Id
+                { name = "Bool", moduleName = Artifact
+                 ( ArtifactPath
+                  { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ), value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 16 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 21 } } } )
+             ( Id
+              { name = "True", moduleName = Artifact
+               ( ArtifactPath
+                { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) ) )
+           ( Fn
+            ( Typed
+             { annotated = TyArr
+              ( TyTuple 0 )
+              ( TyTuple 0 ), value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 48 } } } )
+            ( Clause
+             ( Typed
+              { annotated = TyArr
+               ( TyTuple 0 )
+               ( TyTuple 0 ), value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 48 } } } )
+             [ VarP
+              ( Typed
+               { annotated = TyTuple 0, value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 48 } } } )
+              ( Id
+               { name = "$_", moduleName = Artifact
+                ( ArtifactPath
+                 { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 30 } ) ]
+             ( Seq
+              ( Typed
+               { annotated = TyTuple 0, value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 48 } } } )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 48 } } )
+               ( Apply
                 ( Typed
-                    { annotated = TyArr ( TyPrim StringT )
-                        ( TyTuple 0 )
-                    , value =
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 1
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 7
-                                , sourceColumn = Pos 1
-                                }
-                            }
-                        , "malgo_print_string"
-                        )
-                    }
-                , Id
-                    { name = "malgo_print_string"
-                    , moduleName = Artifact
-                        ( ArtifactPath
-                            { rawPath = "./test/testcases/malgo/Test1.mlg"
-                            , originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg"
-                            , relPath = "test/testcases/malgo/Test1.mlg"
-                            , targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg"
-                            }
-                        )
-                    , sort = External
-                    }
-                , TyArr
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 45
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/Test1.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 48
-                            }
-                        }
-                    )
-                    ( TyCon
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 37
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 45
-                                }
-                            }
-                        )
-                        ( Id
-                            { name = "String#"
-                            , moduleName = ModuleName "Builtin"
-                            , sort = External
-                            }
-                        )
-                    )
-                    ( TyTuple
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 48
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Test1.mlg"
-                                , sourceLine = Pos 7
-                                , sourceColumn = Pos 1
-                                }
-                            }
-                        ) []
-                    )
-                )
-            ]
-        , _imports = []
-        }
-    }
+                 { annotated = TyTuple 0, value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 48 } } } )
+                ( Var
+                 ( Typed
+                  { annotated = TyArr ( TyPrim StringT )
+                   ( TyTuple 0 ), value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 41 } } } )
+                 ( Id
+                  { name = "malgo_print_string", moduleName = Artifact
+                   ( ArtifactPath
+                    { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) )
+                ( Unboxed
+                 ( Typed
+                  { annotated = TyPrim StringT, value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 41 }, _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 48 } } } )
+                 ( String "True" ) ) ) :| [] ) ) :| [] ) ) )
+          ( Fn
+           ( Typed
+            { annotated = TyArr
+             ( TyTuple 0 )
+             ( TyTuple 0 ), value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 51 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 78 } } } )
+           ( Clause
+            ( Typed
+             { annotated = TyArr
+              ( TyTuple 0 )
+              ( TyTuple 0 ), value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 51 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 78 } } } )
+            [ VarP
+             ( Typed
+              { annotated = TyTuple 0, value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 51 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 78 } } } )
+             ( Id
+              { name = "$_", moduleName = Artifact
+               ( ArtifactPath
+                { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = Internal 35 } ) ]
+            ( Seq
+             ( Typed
+              { annotated = TyTuple 0, value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 51 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 78 } } } )
+             ( NoBind
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 51 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 78 } } )
+              ( Apply
+               ( Typed
+                { annotated = TyTuple 0, value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 51 }, _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 78 } } } )
+               ( Var
+                ( Typed
+                 { annotated = TyArr ( TyPrim StringT )
+                  ( TyTuple 0 ), value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 51 }, _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 70 } } } )
+                ( Id
+                 { name = "malgo_print_string", moduleName = Artifact
+                  ( ArtifactPath
+                   { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External } ) )
+               ( Unboxed
+                ( Typed
+                 { annotated = TyPrim StringT, value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 70 }, _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 78 } } } )
+                ( String "False" ) ) ) :| [] ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ] ], _scSigs = [], _dataDefs =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 1, sourceColumn = Pos 6 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 } }, Id
+     { name = "Bool", moduleName = Artifact
+      ( ArtifactPath
+       { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External }, [],
+     [
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 1, sourceColumn = Pos 13 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 1, sourceColumn = Pos 18 } }, Id
+       { name = "True", moduleName = Artifact
+        ( ArtifactPath
+         { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External }, [] ),
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 1, sourceColumn = Pos 20 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 } }, Id
+       { name = "False", moduleName = Artifact
+        ( ArtifactPath
+         { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External }, [] ) ] ) ], _typeSynonyms = [], _foreigns =
+   [
+    ( Typed
+     { annotated = TyArr ( TyPrim StringT )
+      ( TyTuple 0 ), value =
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } }, "malgo_print_string" ) }, Id
+     { name = "malgo_print_string", moduleName = Artifact
+      ( ArtifactPath
+       { rawPath = "./test/testcases/malgo/Test1.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Test1.mlg", relPath = "test/testcases/malgo/Test1.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Test1.mlg" } ), sort = External }, TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 5, sourceColumn = Pos 45 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 5, sourceColumn = Pos 48 } } )
+     ( TyCon
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 5, sourceColumn = Pos 37 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 5, sourceColumn = Pos 45 } } )
+      ( Id
+       { name = "String#", moduleName = ModuleName "Builtin", sort = External } ) )
+     ( TyTuple
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 5, sourceColumn = Pos 48 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } } ) [] ) ) ], _imports = [] } }
