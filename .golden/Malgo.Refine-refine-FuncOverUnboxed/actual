@@ -1,7 +1,6 @@
 Module
  { moduleName = Artifact
-  ( ArtifactPath
-   { rawPath = "./test/testcases/malgo/FuncOverUnboxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/FuncOverUnboxed.mlg", relPath = "test/testcases/malgo/FuncOverUnboxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/FuncOverUnboxed.mlg" } ), moduleDefinition = BindGroup
+  ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), moduleDefinition = BindGroup
   { _scDefs =
    [
     [
@@ -12,8 +11,7 @@ Module
         { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 9, sourceColumn = Pos 1 } } }, Id
       { name = "f", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/FuncOverUnboxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/FuncOverUnboxed.mlg", relPath = "test/testcases/malgo/FuncOverUnboxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/FuncOverUnboxed.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr ( TyPrim Int64T )
         ( TyTuple 0 ), value = Range
@@ -60,8 +58,7 @@ Module
               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 4, sourceColumn = Pos 25 } } } )
            ( Id
             { name = "printString#", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
           ( Seq
            ( Typed
             { annotated = TyPrim StringT, value = Range
@@ -87,8 +84,7 @@ Module
                  { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 4, sourceColumn = Pos 41 } } } )
               ( Id
                { name = "toStringInt64#", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
              ( Unboxed
               ( Typed
                { annotated = TyPrim Int64T, value = Range
@@ -136,8 +132,7 @@ Module
                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 5, sourceColumn = Pos 25 } } } )
             ( Id
              { name = "printString#", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
            ( Seq
             ( Typed
              { annotated = TyPrim StringT, value = Range
@@ -163,8 +158,7 @@ Module
                   { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 5, sourceColumn = Pos 41 } } } )
                ( Id
                 { name = "toStringInt64#", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
               ( Unboxed
                ( Typed
                 { annotated = TyPrim Int64T, value = Range
@@ -186,8 +180,7 @@ Module
             { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 6, sourceColumn = Pos 7 } } } )
          ( Id
           { name = "_", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/FuncOverUnboxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/FuncOverUnboxed.mlg", relPath = "test/testcases/malgo/FuncOverUnboxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/FuncOverUnboxed.mlg" } ), sort = Internal 0 } ) ]
+           ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Internal 0 } ) ]
         ( Seq
          ( Typed
           { annotated = TyTuple 0, value = Range
@@ -214,8 +207,7 @@ Module
                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 6, sourceColumn = Pos 23 } } } )
             ( Id
              { name = "printString#", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
            ( Seq
             ( Typed
              { annotated = TyPrim StringT, value = Range
@@ -241,8 +233,7 @@ Module
                   { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 6, sourceColumn = Pos 39 } } } )
                ( Id
                 { name = "toStringInt64#", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
               ( Unboxed
                ( Typed
                 { annotated = TyPrim Int64T, value = Range
@@ -259,8 +250,7 @@ Module
         { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 9, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 11, sourceColumn = Pos 2 } } }, Id
       { name = "main", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/FuncOverUnboxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/FuncOverUnboxed.mlg", relPath = "test/testcases/malgo/FuncOverUnboxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/FuncOverUnboxed.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyTuple 0 )
@@ -284,8 +274,7 @@ Module
            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 11, sourceColumn = Pos 1 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/FuncOverUnboxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/FuncOverUnboxed.mlg", relPath = "test/testcases/malgo/FuncOverUnboxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/FuncOverUnboxed.mlg" } ), sort = Internal 21 } ) ]
+          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Internal 21 } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -312,8 +301,7 @@ Module
               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 10, sourceColumn = Pos 5 } } } )
            ( Id
             { name = "f", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/FuncOverUnboxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/FuncOverUnboxed.mlg", relPath = "test/testcases/malgo/FuncOverUnboxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/FuncOverUnboxed.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = External } ) )
           ( Unboxed
            ( Typed
             { annotated = TyPrim Int64T, value = Range
@@ -326,6 +314,5 @@ Module
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 } }, Artifact
-     ( ArtifactPath
-      { rawPath = "../../../runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), Selected
+     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), Selected
      [ "toStringInt64#", "printString#" ] ) ] } }

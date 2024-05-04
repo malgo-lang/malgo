@@ -138,8 +138,13 @@ data ArtifactPath = ArtifactPath
     relPath :: Path Rel File,
     targetPath :: Path Abs File
   }
-  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, FromJSON, Store)
+
+instance Show ArtifactPath where
+  -- Do not show rawPath, originPath, targetPath.
+  -- Because they include absolute path, which is not portable and may leak information.
+  showsPrec d (ArtifactPath {relPath}) = showParen (d > 10) $ showString "ArtifactPath " . showsPrec 11 (toFilePath relPath)
 
 deriving anyclass instance Store (Path Abs File)
 

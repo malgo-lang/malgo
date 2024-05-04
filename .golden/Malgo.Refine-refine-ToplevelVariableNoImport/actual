@@ -1,7 +1,6 @@
 Module
  { moduleName = Artifact
-  ( ArtifactPath
-   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), moduleDefinition = BindGroup
+  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), moduleDefinition = BindGroup
   { _scDefs =
    [
     [
@@ -11,8 +10,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 22, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 23, sourceColumn = Pos 1 } } }, Id
       { name = "toStringInt32#", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr ( TyPrim Int32T ) ( TyPrim StringT ), value = Range
         { _start = SourcePos
@@ -32,8 +30,7 @@ Module
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 22, sourceColumn = Pos 26 } } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 14 } ) ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 14 } ) ]
        ( Seq
         ( Typed
          { annotated = TyPrim StringT, value = Range
@@ -59,8 +56,7 @@ Module
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 22, sourceColumn = Pos 53 } } } )
            ( Id
             { name = "malgo_int32_t_to_string", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( Var
            ( Typed
             { annotated = TyPrim Int32T, value = Range
@@ -69,39 +65,33 @@ Module
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 22, sourceColumn = Pos 55 } } } )
            ( Id
             { name = "x", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 14 } ) ) ) :| [] ) ) :| [] ) ) ],
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 14 } ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
        ( TyCon
         ( Id
          { name = "Int32", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
        ( TyCon
         ( Id
          { name = "String", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 26, sourceColumn = Pos 1 } } }, Id
       { name = "toStringInt32", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyCon
          ( Id
           { name = "Int32", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
         ( TyCon
          ( Id
           { name = "String", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 23 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 62 } } } )
@@ -111,13 +101,11 @@ Module
          ( TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
          ( TyCon
           ( Id
            { name = "String", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 23 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 62 } } } )
@@ -126,15 +114,13 @@ Module
          { annotated = TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 23 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 30 } } } )
         ( Id
          { name = "Int32#", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } )
         [ VarP
          ( Typed
           { annotated = TyPrim Int32T, value = Range
@@ -143,15 +129,13 @@ Module
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 32 } } } )
          ( Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 15 } ) ] ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 15 } ) ] ]
        ( Seq
         ( Typed
          { annotated = TyCon
           ( Id
            { name = "String", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 35 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 62 } } } )
@@ -165,8 +149,7 @@ Module
            { annotated = TyCon
             ( Id
              { name = "String", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 35 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 62 } } } )
@@ -176,15 +159,13 @@ Module
              ( TyCon
               ( Id
                { name = "String", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 35 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 43 } } } )
            ( Id
             { name = "String#", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( Seq
            ( Typed
             { annotated = TyPrim StringT, value = Range
@@ -210,8 +191,7 @@ Module
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 59 } } } )
               ( Id
                { name = "toStringInt32#", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
              ( Var
               ( Typed
                { annotated = TyPrim Int32T, value = Range
@@ -220,8 +200,7 @@ Module
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 60 } } } )
               ( Id
                { name = "x", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 15 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ],
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 15 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr ( TyPrim StringT )
@@ -230,8 +209,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } } }, Id
       { name = "printString#", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr ( TyPrim StringT )
         ( TyTuple 0 ), value = Range
@@ -253,8 +231,7 @@ Module
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 24 } } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 4 } ) ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 4 } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -281,8 +258,7 @@ Module
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 46 } } } )
            ( Id
             { name = "malgo_print_string", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( Var
            ( Typed
             { annotated = TyPrim StringT, value = Range
@@ -291,30 +267,26 @@ Module
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 48 } } } )
            ( Id
             { name = "x", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 4 } ) ) ) :| [] ) ) :| [] ) ) ],
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 4 } ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
        ( TyCon
         ( Id
          { name = "String", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
        ( TyTuple 0 ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 9, sourceColumn = Pos 1 } } }, Id
       { name = "printString", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyCon
          ( Id
           { name = "String", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
         ( TyTuple 0 ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 21 }, _end = SourcePos
@@ -325,8 +297,7 @@ Module
          ( TyCon
           ( Id
            { name = "String", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
          ( TyTuple 0 ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 21 }, _end = SourcePos
@@ -336,15 +307,13 @@ Module
          { annotated = TyCon
           ( Id
            { name = "String", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 21 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 29 } } } )
         ( Id
          { name = "String#", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } )
         [ VarP
          ( Typed
           { annotated = TyPrim StringT, value = Range
@@ -353,8 +322,7 @@ Module
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 31 } } } )
          ( Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 5 } ) ] ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 5 } ) ] ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -381,8 +349,7 @@ Module
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 47 } } } )
            ( Id
             { name = "printString#", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( Var
            ( Typed
             { annotated = TyPrim StringT, value = Range
@@ -391,30 +358,26 @@ Module
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 49 } } } )
            ( Id
             { name = "x", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 5 } ) ) ) :| [] ) ) :| [] ) ) ],
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 5 } ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
        ( TyCon
         ( Id
          { name = "Int32", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
        ( TyTuple 0 ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 20, sourceColumn = Pos 1 } } }, Id
       { name = "printInt32", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyCon
          ( Id
           { name = "Int32", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
         ( TyTuple 0 ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 20 }, _end = SourcePos
@@ -425,8 +388,7 @@ Module
          ( TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
          ( TyTuple 0 ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 20 }, _end = SourcePos
@@ -436,15 +398,13 @@ Module
          { annotated = TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 20 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 22 } } } )
         ( Id
          { name = "i", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 13 } ) ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 13 } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -468,23 +428,20 @@ Module
              ( TyCon
               ( Id
                { name = "String", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
              ( TyTuple 0 ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 25 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 37 } } } )
            ( Id
             { name = "printString", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( Seq
            ( Typed
             { annotated = TyCon
              ( Id
               { name = "String", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 37 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 55 } } } )
@@ -498,8 +455,7 @@ Module
               { annotated = TyCon
                ( Id
                 { name = "String", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 38 }, _end = SourcePos
                 { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 53 } } } )
@@ -509,53 +465,45 @@ Module
                 ( TyCon
                  ( Id
                   { name = "Int32", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                 ( TyCon
                  ( Id
                   { name = "String", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 38 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 52 } } } )
               ( Id
                { name = "toStringInt32", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
              ( Var
               ( Typed
                { annotated = TyCon
                 ( Id
                  { name = "Int32", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 52 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 53 } } } )
               ( Id
                { name = "i", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 13 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ],
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 13 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyCon
        ( Id
         { name = "Int32", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 26, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 28, sourceColumn = Pos 1 } } }, Id
       { name = "one", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Apply
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Apply
       ( Typed
        { annotated = TyCon
         ( Id
          { name = "Int32", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 26, sourceColumn = Pos 11 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 28, sourceColumn = Pos 1 } } } )
@@ -565,15 +513,13 @@ Module
          ( TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 26, sourceColumn = Pos 11 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 28, sourceColumn = Pos 1 } } } )
        ( Id
         { name = "Int32#", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
       ( Unboxed
        ( Typed
         { annotated = TyPrim Int32T, value = Range
@@ -587,31 +533,26 @@ Module
        ( TyVar
         ( Id
          { name = "t", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ) )
        ( TyVar
         ( Id
          { name = "t", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ) ), value = Range
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 12, sourceColumn = Pos 1 } } }, Id
       { name = "identity", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyVar
          ( Id
           { name = "t", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ) )
         ( TyVar
          ( Id
           { name = "t", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ) ), value = Range
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 18 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 25 } } } )
@@ -621,13 +562,11 @@ Module
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ) )
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 18 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 25 } } } )
@@ -636,22 +575,19 @@ Module
          { annotated = TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 18 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 20 } } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 7 } ) ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 7 } ) ]
        ( Seq
         ( Typed
          { annotated = TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 23 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 25 } } } )
@@ -665,58 +601,49 @@ Module
            { annotated = TyVar
             ( Id
              { name = "t", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 67 } ), value = Range
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 23 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 25 } } } )
           ( Id
            { name = "x", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 7 } ) ) :| [] ) ) :| [] ) ) ],
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 7 } ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
        ( TyVar
         ( Id
          { name = "t", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ) )
        ( TyArr
         ( TyVar
          ( Id
           { name = "t", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 73 } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 73 } ) )
         ( TyVar
          ( Id
           { name = "t", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ) ) ), value = Range
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ) ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 15, sourceColumn = Pos 1 } } }, Id
       { name = "const", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyVar
          ( Id
           { name = "t", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ) )
         ( TyArr
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 73 } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 73 } ) )
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ) ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ) ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 15 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 24 } } } )
@@ -726,19 +653,16 @@ Module
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ) )
          ( TyArr
           ( TyVar
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 73 } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 73 } ) )
           ( TyVar
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ) ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 15 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 24 } } } )
@@ -747,35 +671,30 @@ Module
          { annotated = TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 15 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 17 } } } )
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 10 } ), VarP
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 10 } ), VarP
         ( Typed
          { annotated = TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 73 } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 73 } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 17 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 19 } } } )
         ( Id
          { name = "_", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 11 } ) ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 11 } ) ]
        ( Seq
         ( Typed
          { annotated = TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 22 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 24 } } } )
@@ -789,58 +708,49 @@ Module
            { annotated = TyVar
             ( Id
              { name = "t", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 71 } ), value = Range
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 22 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 24 } } } )
           ( Id
            { name = "a", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 10 } ) ) :| [] ) ) :| [] ) ) ],
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 10 } ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
        ( TyVar
         ( Id
          { name = "b", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 79 } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 79 } ) )
        ( TyArr
         ( TyVar
          ( Id
           { name = "a", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) )
         ( TyVar
          ( Id
           { name = "a", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) ) ), value = Range
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 30, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 32, sourceColumn = Pos 1 } } }, Id
       { name = "constId", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Apply
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Apply
       ( Typed
        { annotated = TyArr
         ( TyVar
          ( Id
           { name = "b", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 79 } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 79 } ) )
         ( TyArr
          ( TyVar
           ( Id
            { name = "a", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) )
          ( TyVar
           ( Id
            { name = "a", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 30, sourceColumn = Pos 15 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 32, sourceColumn = Pos 1 } } } )
@@ -851,88 +761,74 @@ Module
           ( TyVar
            ( Id
             { name = "a", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) )
           ( TyVar
            ( Id
             { name = "a", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) ) )
          ( TyArr
           ( TyVar
            ( Id
             { name = "b", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 79 } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 79 } ) )
           ( TyArr
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) )
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) ) ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 30, sourceColumn = Pos 15 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 30, sourceColumn = Pos 21 } } } )
        ( Id
         { name = "const", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
       ( Var
        ( Typed
         { annotated = TyArr
          ( TyVar
           ( Id
            { name = "a", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) )
          ( TyVar
           ( Id
            { name = "a", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 83 } ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 30, sourceColumn = Pos 21 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 32, sourceColumn = Pos 1 } } } )
        ( Id
         { name = "identity", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ) ],
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ) ],
     [
      ( Typed
       { annotated = TyApp
        ( TyCon
         ( Id
          { name = "Maybe", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ), value = Range
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 33, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 38, sourceColumn = Pos 1 } } }, Id
       { name = "comp", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Apply
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Apply
       ( Typed
        { annotated = TyApp
         ( TyCon
          ( Id
           { name = "Maybe", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
         ( TyVar
          ( Id
           { name = "a", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ), value = Range
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 3 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 38, sourceColumn = Pos 1 } } } )
@@ -943,20 +839,17 @@ Module
           ( TyCon
            ( Id
             { name = "Maybe", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( TyTuple 0 ) )
          ( TyApp
           ( TyCon
            ( Id
             { name = "Maybe", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( TyVar
            ( Id
             { name = "a", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 5 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 36, sourceColumn = Pos 3 } } } )
@@ -967,20 +860,17 @@ Module
            ( TyCon
             ( Id
              { name = "Maybe", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
            ( TyTuple 0 ) )
           ( TyApp
            ( TyCon
             ( Id
              { name = "Maybe", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 5 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 23 } } } )
@@ -990,29 +880,25 @@ Module
            ( TyCon
             ( Id
              { name = "Maybe", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
            ( TyTuple 0 ), value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 5 }, _end = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 13 } } } )
          ( Id
           { name = "Nothing", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) [] ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) [] ]
         ( Seq
          ( Typed
           { annotated = TyApp
            ( TyCon
             ( Id
              { name = "Maybe", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ), value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 16 }, _end = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 23 } } } )
@@ -1027,20 +913,17 @@ Module
              ( TyCon
               ( Id
                { name = "Maybe", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 16 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 34, sourceColumn = Pos 23 } } } )
            ( Id
             { name = "Nothing", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) :| [] ) ) :|
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) :| [] ) ) :|
         [ Clause
          ( Typed
           { annotated = TyArr
@@ -1048,20 +931,17 @@ Module
             ( TyCon
              ( Id
               { name = "Maybe", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
             ( TyTuple 0 ) )
            ( TyApp
             ( TyCon
              ( Id
               { name = "Maybe", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ) ), value = Range
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ) ), value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 35, sourceColumn = Pos 5 }, _end = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 36, sourceColumn = Pos 3 } } } )
@@ -1071,16 +951,14 @@ Module
             ( TyCon
              ( Id
               { name = "Maybe", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
             ( TyTuple 0 ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 35, sourceColumn = Pos 5 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 35, sourceColumn = Pos 10 } } } )
           ( Id
            { name = "Just", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } )
           [ VarP
            ( Typed
             { annotated = TyTuple 0, value = Range
@@ -1089,21 +967,18 @@ Module
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 35, sourceColumn = Pos 12 } } } )
            ( Id
             { name = "x", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 17 } ) ] ]
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 17 } ) ] ]
          ( Seq
           ( Typed
            { annotated = TyApp
             ( TyCon
              ( Id
               { name = "Maybe", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ), value = Range
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 35, sourceColumn = Pos 15 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 36, sourceColumn = Pos 3 } } } )
@@ -1118,28 +993,24 @@ Module
               ( TyCon
                ( Id
                 { name = "Maybe", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 107 } ) ), value = Range
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 } ) ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 35, sourceColumn = Pos 15 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 36, sourceColumn = Pos 3 } } } )
             ( Id
              { name = "Nothing", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) :| [] ) ) ] ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) :| [] ) ) ] ) )
       ( Seq
        ( Typed
         { annotated = TyApp
          ( TyCon
           ( Id
            { name = "Maybe", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
          ( TyTuple 0 ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 36, sourceColumn = Pos 5 }, _end = SourcePos
@@ -1155,8 +1026,7 @@ Module
            ( TyCon
             ( Id
              { name = "Maybe", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
            ( TyTuple 0 ), value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 36, sourceColumn = Pos 6 }, _end = SourcePos
@@ -1169,16 +1039,14 @@ Module
              ( TyCon
               ( Id
                { name = "Maybe", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
              ( TyTuple 0 ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 36, sourceColumn = Pos 6 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 36, sourceColumn = Pos 11 } } } )
           ( Id
            { name = "Just", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
          ( Tuple
           ( Typed
            { annotated = TyTuple 0, value = Range
@@ -1193,8 +1061,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 163 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 212 } } }, Id
       { name = "addInt32#", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr ( TyPrim Int32T )
         ( TyArr ( TyPrim Int32T ) ( TyPrim Int32T ) ), value = Range
@@ -1216,8 +1083,7 @@ Module
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 183 } } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 0 } ), VarP
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 0 } ), VarP
         ( Typed
          { annotated = TyPrim Int32T, value = Range
           { _start = SourcePos
@@ -1225,8 +1091,7 @@ Module
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 185 } } } )
         ( Id
          { name = "y", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 1 } ) ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 1 } ) ]
        ( Seq
         ( Typed
          { annotated = TyPrim Int32T, value = Range
@@ -1259,8 +1124,7 @@ Module
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 206 } } } )
             ( Id
              { name = "malgo_add_int32_t", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
            ( Var
             ( Typed
              { annotated = TyPrim Int32T, value = Range
@@ -1269,8 +1133,7 @@ Module
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 208 } } } )
             ( Id
              { name = "x", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 0 } ) ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 0 } ) ) )
           ( Var
            ( Typed
             { annotated = TyPrim Int32T, value = Range
@@ -1279,51 +1142,43 @@ Module
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 210 } } } )
            ( Id
             { name = "y", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 1 } ) ) ) :| [] ) ) :| [] ) ) ],
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 1 } ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
        ( TyCon
         ( Id
          { name = "Int32", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
        ( TyArr
         ( TyCon
          ( Id
           { name = "Int32", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
         ( TyCon
          ( Id
           { name = "Int32", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ), value = Range
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 251 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 } } }, Id
       { name = "addInt32", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyCon
          ( Id
           { name = "Int32", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
         ( TyArr
          ( TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
          ( TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 268 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 316 } } } )
@@ -1333,19 +1188,16 @@ Module
          ( TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
          ( TyArr
           ( TyCon
            ( Id
             { name = "Int32", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( TyCon
            ( Id
             { name = "Int32", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 268 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 316 } } } )
@@ -1354,15 +1206,13 @@ Module
          { annotated = TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 269 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 277 } } } )
         ( Id
          { name = "Int32#", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } )
         [ VarP
          ( Typed
           { annotated = TyPrim Int32T, value = Range
@@ -1371,21 +1221,18 @@ Module
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 277 } } } )
          ( Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 2 } ) ], ConP
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 2 } ) ], ConP
         ( Typed
          { annotated = TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 280 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 288 } } } )
         ( Id
          { name = "Int32#", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } )
         [ VarP
          ( Typed
           { annotated = TyPrim Int32T, value = Range
@@ -1394,15 +1241,13 @@ Module
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 288 } } } )
          ( Id
           { name = "y", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 3 } ) ] ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 3 } ) ] ]
        ( Seq
         ( Typed
          { annotated = TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 293 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 316 } } } )
@@ -1416,8 +1261,7 @@ Module
            { annotated = TyCon
             ( Id
              { name = "Int32", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 293 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 316 } } } )
@@ -1427,15 +1271,13 @@ Module
              ( TyCon
               ( Id
                { name = "Int32", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 293 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 300 } } } )
            ( Id
             { name = "Int32#", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( Seq
            ( Typed
             { annotated = TyPrim Int32T, value = Range
@@ -1468,8 +1310,7 @@ Module
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 311 } } } )
                ( Id
                 { name = "addInt32#", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
               ( Var
                ( Typed
                 { annotated = TyPrim Int32T, value = Range
@@ -1478,8 +1319,7 @@ Module
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 313 } } } )
                ( Id
                 { name = "x", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 2 } ) ) )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 2 } ) ) )
              ( Var
               ( Typed
                { annotated = TyPrim Int32T, value = Range
@@ -1488,39 +1328,33 @@ Module
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 314 } } } )
               ( Id
                { name = "y", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 3 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ],
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 3 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
        ( TyCon
         ( Id
          { name = "Int32", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
        ( TyCon
         ( Id
          { name = "Int32", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 28, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 30, sourceColumn = Pos 1 } } }, Id
       { name = "addOne", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Apply
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Apply
       ( Typed
        { annotated = TyArr
         ( TyCon
          ( Id
           { name = "Int32", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
         ( TyCon
          ( Id
           { name = "Int32", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 28, sourceColumn = Pos 14 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 30, sourceColumn = Pos 1 } } } )
@@ -1530,40 +1364,34 @@ Module
          ( TyCon
           ( Id
            { name = "Int32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
          ( TyArr
           ( TyCon
            ( Id
             { name = "Int32", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
           ( TyCon
            ( Id
             { name = "Int32", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 28, sourceColumn = Pos 14 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 28, sourceColumn = Pos 23 } } } )
        ( Id
         { name = "addInt32", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
       ( Var
        ( Typed
         { annotated = TyCon
          ( Id
           { name = "Int32", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 28, sourceColumn = Pos 23 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 30, sourceColumn = Pos 1 } } } )
        ( Id
         { name = "one", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ) ],
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ) ],
     [
      ( Typed
       { annotated = TyArr
@@ -1573,8 +1401,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 38, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 44, sourceColumn = Pos 1 } } }, Id
       { name = "main", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyTuple 0 )
@@ -1598,8 +1425,7 @@ Module
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 43, sourceColumn = Pos 1 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 166 } ) ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 166 } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -1624,13 +1450,11 @@ Module
               ( TyCon
                ( Id
                 { name = "Maybe", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
               ( TyMeta
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 147 } ) ) )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 } ) ) )
              ( TyTuple 0 ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 5 }, _end = SourcePos
@@ -1642,13 +1466,11 @@ Module
                ( TyCon
                 ( Id
                  { name = "Maybe", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                ( TyMeta
                 ( Id
                  { name = "a", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 147 } ) ) )
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 } ) ) )
               ( TyTuple 0 ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 5 }, _end = SourcePos
@@ -1659,20 +1481,17 @@ Module
                ( TyCon
                 ( Id
                  { name = "Maybe", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                ( TyMeta
                 ( Id
                  { name = "a", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 147 } ) ), value = Range
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 } ) ), value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 5 }, _end = SourcePos
                 { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 13 } } } )
              ( Id
               { name = "Nothing", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) [] ]
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) [] ]
             ( Seq
              ( Typed
               { annotated = TyTuple 0, value = Range
@@ -1696,23 +1515,20 @@ Module
                   ( TyCon
                    ( Id
                     { name = "String", moduleName = Artifact
-                     ( ArtifactPath
-                      { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                   ( TyTuple 0 ), value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 16 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 28 } } } )
                 ( Id
                  { name = "printString", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                ( Apply
                 ( Typed
                  { annotated = TyCon
                   ( Id
                    { name = "String", moduleName = Artifact
-                    ( ArtifactPath
-                     { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+                    ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 28 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 32 } } } )
@@ -1722,15 +1538,13 @@ Module
                    ( TyCon
                     ( Id
                      { name = "String", moduleName = Artifact
-                      ( ArtifactPath
-                       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+                      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 28 }, _end = SourcePos
                     { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 39, sourceColumn = Pos 32 } } } )
                  ( Id
                   { name = "String#", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                 ( Unboxed
                  ( Typed
                   { annotated = TyPrim StringT, value = Range
@@ -1745,13 +1559,11 @@ Module
                 ( TyCon
                  ( Id
                   { name = "Maybe", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                 ( TyMeta
                  ( Id
                   { name = "a", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 147 } ) ) )
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 } ) ) )
                ( TyTuple 0 ), value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 40, sourceColumn = Pos 5 }, _end = SourcePos
@@ -1762,34 +1574,29 @@ Module
                 ( TyCon
                  ( Id
                   { name = "Maybe", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                 ( TyMeta
                  ( Id
                   { name = "a", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 147 } ) ), value = Range
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 } ) ), value = Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 40, sourceColumn = Pos 5 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 40, sourceColumn = Pos 10 } } } )
               ( Id
                { name = "Just", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } )
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } )
               [ VarP
                ( Typed
                 { annotated = TyMeta
                  ( Id
                   { name = "a", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 147 } ), value = Range
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 } ), value = Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 40, sourceColumn = Pos 10 }, _end = SourcePos
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 40, sourceColumn = Pos 12 } } } )
                ( Id
                 { name = "_", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 18 } ) ] ]
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 18 } ) ] ]
              ( Seq
               ( Typed
                { annotated = TyTuple 0, value = Range
@@ -1813,20 +1620,17 @@ Module
              ( TyCon
               ( Id
                { name = "Maybe", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
              ( TyMeta
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 147 } ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 41, sourceColumn = Pos 5 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 41, sourceColumn = Pos 9 } } } )
            ( Id
             { name = "comp", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ) :|
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ) :|
          [ NoBind
           ( Range
            { _start = SourcePos
@@ -1844,23 +1648,20 @@ Module
               ( TyCon
                ( Id
                 { name = "Int32", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
               ( TyTuple 0 ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 3 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 14 } } } )
             ( Id
              { name = "printInt32", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
            ( Seq
             ( Typed
              { annotated = TyCon
               ( Id
                { name = "Int32", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 14 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 43, sourceColumn = Pos 1 } } } )
@@ -1874,8 +1675,7 @@ Module
                { annotated = TyCon
                 ( Id
                  { name = "Int32", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 15 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 41 } } } )
@@ -1885,13 +1685,11 @@ Module
                  ( TyCon
                   ( Id
                    { name = "Int32", moduleName = Artifact
-                    ( ArtifactPath
-                     { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                    ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                  ( TyCon
                   ( Id
                    { name = "Int32", moduleName = Artifact
-                    ( ArtifactPath
-                     { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+                    ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 15 }, _end = SourcePos
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 41 } } } )
@@ -1902,70 +1700,59 @@ Module
                    ( TyMeta
                     ( Id
                      { name = "a", moduleName = Artifact
-                      ( ArtifactPath
-                       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 157 } ) )
+                      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 157 } ) )
                    ( TyArr
                     ( TyMeta
                      ( Id
                       { name = "b", moduleName = Artifact
-                       ( ArtifactPath
-                        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 155 } ) )
+                       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 155 } ) )
                     ( TyMeta
                      ( Id
                       { name = "a", moduleName = Artifact
-                       ( ArtifactPath
-                        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 157 } ) ) ) )
+                       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 157 } ) ) ) )
                   ( TyArr
                    ( TyCon
                     ( Id
                      { name = "Int32", moduleName = Artifact
-                      ( ArtifactPath
-                       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                    ( TyCon
                     ( Id
                      { name = "Int32", moduleName = Artifact
-                      ( ArtifactPath
-                       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ), value = Range
+                      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ), value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 15 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 23 } } } )
                 ( Id
                  { name = "constId", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                ( Var
                 ( Typed
                  { annotated = TyArr
                   ( TyMeta
                    ( Id
                     { name = "a", moduleName = Artifact
-                     ( ArtifactPath
-                      { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 157 } ) )
+                     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 157 } ) )
                   ( TyArr
                    ( TyMeta
                     ( Id
                      { name = "b", moduleName = Artifact
-                      ( ArtifactPath
-                       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 155 } ) )
+                      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 155 } ) )
                    ( TyMeta
                     ( Id
                      { name = "a", moduleName = Artifact
-                      ( ArtifactPath
-                       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 157 } ) ) ), value = Range
+                      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 157 } ) ) ), value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 23 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 29 } } } )
                 ( Id
                  { name = "const", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) )
+                  ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) )
               ( Seq
                ( Typed
                 { annotated = TyCon
                  ( Id
                   { name = "Int32", moduleName = Artifact
-                   ( ArtifactPath
-                    { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+                   ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 29 }, _end = SourcePos
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 41 } } } )
@@ -1979,8 +1766,7 @@ Module
                   { annotated = TyCon
                    ( Id
                     { name = "Int32", moduleName = Artifact
-                     ( ArtifactPath
-                      { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+                     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 30 }, _end = SourcePos
                     { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 40 } } } )
@@ -1990,42 +1776,36 @@ Module
                     ( TyCon
                      ( Id
                       { name = "Int32", moduleName = Artifact
-                       ( ArtifactPath
-                        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                     ( TyCon
                      ( Id
                       { name = "Int32", moduleName = Artifact
-                       ( ArtifactPath
-                        { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ), value = Range
+                       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ), value = Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 30 }, _end = SourcePos
                      { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 37 } } } )
                   ( Id
                    { name = "addOne", moduleName = Artifact
-                    ( ArtifactPath
-                     { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+                    ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
                  ( Var
                   ( Typed
                    { annotated = TyCon
                     ( Id
                      { name = "Int32", moduleName = Artifact
-                      ( ArtifactPath
-                       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ), value = Range
+                      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), value = Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 37 }, _end = SourcePos
                      { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 42, sourceColumn = Pos 40 } } } )
                   ( Id
                    { name = "one", moduleName = Artifact
-                    ( ArtifactPath
-                     { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ) :| [] ) ) ) :| [] ) ) ) ] ) ) :| [] ) ) ] ], _scSigs =
+                    ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ) :| [] ) ) ) :| [] ) ) ) ] ) ) :| [] ) ) ] ], _scSigs =
    [
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 120 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 163 } }, Id
      { name = "addInt32#", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 143 }, _end = SourcePos
@@ -2061,8 +1841,7 @@ Module
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 212 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 251 } }, Id
      { name = "addInt32", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 233 }, _end = SourcePos
@@ -2074,8 +1853,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 233 } } )
       ( Id
        { name = "Int32", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
      ( TyArr
       ( Range
        { _start = SourcePos
@@ -2088,8 +1866,7 @@ Module
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 242 } } )
        ( Id
         { name = "Int32", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
       ( TyCon
        ( Range
         { _start = SourcePos
@@ -2097,15 +1874,13 @@ Module
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 251 } } )
        ( Id
         { name = "Int32", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ) ),
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } }, Id
      { name = "printString#", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 28 }, _end = SourcePos
@@ -2127,8 +1902,7 @@ Module
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } }, Id
      { name = "printString", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 26 }, _end = SourcePos
@@ -2140,8 +1914,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 26 } } )
       ( Id
        { name = "String", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
      ( TyTuple
       ( Range
        { _start = SourcePos
@@ -2152,8 +1925,7 @@ Module
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 9, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 1 } }, Id
      { name = "identity", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 9, sourceColumn = Pos 18 }, _end = SourcePos
@@ -2165,8 +1937,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 9, sourceColumn = Pos 18 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 6 } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 6 } ) )
      ( TyVar
       ( Range
        { _start = SourcePos
@@ -2174,15 +1945,13 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 10, sourceColumn = Pos 1 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 6 } ) ) ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 6 } ) ) ),
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 12, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 } }, Id
      { name = "const", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 12, sourceColumn = Pos 15 }, _end = SourcePos
@@ -2194,8 +1963,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 12, sourceColumn = Pos 15 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 8 } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 8 } ) )
      ( TyArr
       ( Range
        { _start = SourcePos
@@ -2208,8 +1976,7 @@ Module
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 12, sourceColumn = Pos 20 } } )
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 9 } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 9 } ) )
       ( TyVar
        ( Range
         { _start = SourcePos
@@ -2217,15 +1984,13 @@ Module
          { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 } } )
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 8 } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 8 } ) ) ) ),
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 17, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 18, sourceColumn = Pos 1 } }, Id
      { name = "printInt32", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 17, sourceColumn = Pos 24 }, _end = SourcePos
@@ -2237,8 +2002,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 17, sourceColumn = Pos 24 } } )
       ( Id
        { name = "Int32", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
      ( TyTuple
       ( Range
        { _start = SourcePos
@@ -2249,8 +2013,7 @@ Module
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 21, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 22, sourceColumn = Pos 1 } }, Id
      { name = "toStringInt32#", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 21, sourceColumn = Pos 29 }, _end = SourcePos
@@ -2274,8 +2037,7 @@ Module
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 23, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 1 } }, Id
      { name = "toStringInt32", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 23, sourceColumn = Pos 27 }, _end = SourcePos
@@ -2287,8 +2049,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 23, sourceColumn = Pos 27 } } )
       ( Id
        { name = "Int32", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
      ( TyCon
       ( Range
        { _start = SourcePos
@@ -2296,15 +2057,13 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 24, sourceColumn = Pos 1 } } )
       ( Id
        { name = "String", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) ) ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ),
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 32, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 33, sourceColumn = Pos 1 } }, Id
      { name = "comp", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyApp
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyApp
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 32, sourceColumn = Pos 12 }, _end = SourcePos
@@ -2316,8 +2075,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 32, sourceColumn = Pos 18 } } )
       ( Id
        { name = "Maybe", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) )
      [ TyVar
       ( Range
        { _start = SourcePos
@@ -2325,24 +2083,21 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 33, sourceColumn = Pos 1 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 16 } ) ] ) ], _dataDefs =
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 16 } ) ] ) ], _dataDefs =
    [
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 6 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 28 } }, Id
      { name = "Int32", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, [],
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, [],
      [
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 14 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 28 } }, Id
        { name = "Int32#", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External },
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External },
        [ TyCon
         ( Range
          { _start = SourcePos
@@ -2355,16 +2110,14 @@ Module
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 33 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 58 } }, Id
      { name = "String", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, [],
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, [],
      [
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 42 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 58 } }, Id
        { name = "String#", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External },
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External },
        [ TyCon
         ( Range
          { _start = SourcePos
@@ -2377,31 +2130,27 @@ Module
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 15, sourceColumn = Pos 6 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 17, sourceColumn = Pos 1 } }, Id
      { name = "Maybe", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External },
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External },
      [
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 15, sourceColumn = Pos 12 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 15, sourceColumn = Pos 14 } }, Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 12 } ) ],
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 12 } ) ],
      [
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 15, sourceColumn = Pos 16 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 15, sourceColumn = Pos 24 } }, Id
        { name = "Nothing", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, [] ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, [] ),
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 15, sourceColumn = Pos 26 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 17, sourceColumn = Pos 1 } }, Id
        { name = "Just", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External },
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External },
        [ TyVar
         ( Range
          { _start = SourcePos
@@ -2409,8 +2158,7 @@ Module
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 17, sourceColumn = Pos 1 } } )
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = Internal 12 } ) ] ) ] ) ], _typeSynonyms = [], _foreigns =
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 12 } ) ] ) ] ) ], _typeSynonyms = [], _foreigns =
    [
     ( Typed
      { annotated = TyArr ( TyPrim Int32T )
@@ -2420,8 +2168,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 58 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 120 } }, "malgo_add_int32_t" ) }, Id
      { name = "malgo_add_int32_t", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 100 }, _end = SourcePos
@@ -2460,8 +2207,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } }, "malgo_print_string" ) }, Id
      { name = "malgo_print_string", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 3, sourceColumn = Pos 45 }, _end = SourcePos
@@ -2485,8 +2231,7 @@ Module
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 20, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 21, sourceColumn = Pos 1 } }, "malgo_int32_t_to_string" ) }, Id
      { name = "malgo_int32_t_to_string", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/ToplevelVariableNoImport.mlg", relPath = "test/testcases/malgo/ToplevelVariableNoImport.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg", sourceLine = Pos 20, sourceColumn = Pos 49 }, _end = SourcePos

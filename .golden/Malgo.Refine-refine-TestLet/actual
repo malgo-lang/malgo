@@ -1,7 +1,6 @@
 Module
  { moduleName = Artifact
-  ( ArtifactPath
-   { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), moduleDefinition = BindGroup
+  ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), moduleDefinition = BindGroup
   { _scDefs =
    [
     [
@@ -10,55 +9,46 @@ Module
        ( TyVar
         ( Id
          { name = "t", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ) )
+          ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ) )
        ( TyArr
         ( TyArr
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ) )
+            ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ) )
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ) ) )
+            ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ) ) )
         ( TyVar
          ( Id
           { name = "t", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ) ) ), value = Range
+           ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ) ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } } }, Id
       { name = "|>", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyVar
          ( Id
           { name = "t", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ) )
+           ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ) )
         ( TyArr
          ( TyArr
           ( TyVar
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ) )
+             ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ) )
           ( TyVar
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ) ) )
+             ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ) ) )
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ) ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ) ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 13 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } } )
@@ -68,25 +58,21 @@ Module
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ) )
+            ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ) )
          ( TyArr
           ( TyArr
            ( TyVar
             ( Id
              { name = "t", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ) )
+              ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ) )
            ( TyVar
             ( Id
              { name = "t", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ) ) )
+              ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ) ) )
           ( TyVar
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ) ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 13 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } } )
@@ -95,41 +81,35 @@ Module
          { annotated = TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 13 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 15 } } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 2 } ), VarP
+          ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 2 } ), VarP
         ( Typed
          { annotated = TyArr
           ( TyVar
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ) )
+             ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ) )
           ( TyVar
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 15 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 17 } } } )
         ( Id
          { name = "f", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 3 } ) ]
+          ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 3 } ) ]
        ( Seq
         ( Typed
          { annotated = TyVar
           ( Id
            { name = "t", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ), value = Range
+            ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } } )
@@ -143,8 +123,7 @@ Module
            { annotated = TyVar
             ( Id
              { name = "t", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ), value = Range
+              ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } } )
@@ -154,34 +133,29 @@ Module
              ( TyVar
               ( Id
                { name = "t", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ) )
+                ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ) )
              ( TyVar
               ( Id
                { name = "t", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 19 } ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 19 } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 22 } } } )
            ( Id
             { name = "f", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 3 } ) )
+             ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 3 } ) )
           ( Var
            ( Typed
             { annotated = TyVar
              ( Id
               { name = "t", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 15 } ), value = Range
+               ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 15 } ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 22 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } } )
            ( Id
             { name = "x", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 2 } ) ) ) :| [] ) ) :| [] ) ) ],
+             ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 2 } ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
@@ -191,8 +165,7 @@ Module
         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 2 } } }, Id
       { name = "main", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = External }, Fn
       ( Typed
        { annotated = TyArr
         ( TyTuple 0 )
@@ -216,8 +189,7 @@ Module
            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 48 } ) ]
+          ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 48 } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -231,8 +203,7 @@ Module
            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
          ( Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 4 } )
+           ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 4 } )
          ( Apply
           ( Typed
            { annotated = TyPrim Int32T, value = Range
@@ -254,8 +225,7 @@ Module
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 21 } } } )
             ( Id
              { name = "addInt32#", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
            ( Unboxed
             ( Typed
              { annotated = TyPrim Int32T, value = Range
@@ -290,8 +260,7 @@ Module
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 16 } } } )
             ( Id
              { name = "printString#", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
            ( Seq
             ( Typed
              { annotated = TyPrim StringT, value = Range
@@ -317,8 +286,7 @@ Module
                   { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 32 } } } )
                ( Id
                 { name = "toStringInt32#", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
               ( Var
                ( Typed
                 { annotated = TyPrim Int32T, value = Range
@@ -327,23 +295,20 @@ Module
                   { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 33 } } } )
                ( Id
                 { name = "x", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 4 } ) ) ) :| [] ) ) ), Let
+                 ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 4 } ) ) ) :| [] ) ) ), Let
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 3 }, _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 35 } } )
           ( Id
            { name = "x", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 5 } )
+            ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 5 } )
           ( Apply
            ( Typed
             { annotated = TyCon
              ( Id
               { name = "Int32", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ), value = Range
+               ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 11 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 35 } } } )
@@ -353,15 +318,13 @@ Module
               ( TyCon
                ( Id
                 { name = "Int32", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) ), value = Range
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 11 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 18 } } } )
             ( Id
              { name = "Int32#", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
            ( Seq
             ( Typed
              { annotated = TyPrim Int32T, value = Range
@@ -394,8 +357,7 @@ Module
                    { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 29 } } } )
                 ( Id
                  { name = "addInt32#", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
                ( Unboxed
                 ( Typed
                  { annotated = TyPrim Int32T, value = Range
@@ -416,16 +378,14 @@ Module
             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 67 } } )
           ( Id
            { name = "printInt32", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 7 } )
+            ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 7 } )
           ( Fn
            ( Typed
             { annotated = TyArr
              ( TyCon
               ( Id
                { name = "Int32", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
              ( TyTuple 0 ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 21 }, _end = SourcePos
@@ -436,8 +396,7 @@ Module
               ( TyCon
                ( Id
                 { name = "Int32", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
               ( TyTuple 0 ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 21 }, _end = SourcePos
@@ -447,15 +406,13 @@ Module
               { annotated = TyCon
                ( Id
                 { name = "Int32", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ), value = Range
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ), value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 22 }, _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 30 } } } )
              ( Id
               { name = "Int32#", moduleName = Artifact
-               ( ArtifactPath
-                { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } )
+               ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } )
              [ VarP
               ( Typed
                { annotated = TyPrim Int32T, value = Range
@@ -464,8 +421,7 @@ Module
                  { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 30 } } } )
               ( Id
                { name = "x", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 6 } ) ] ]
+                ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 6 } ) ] ]
             ( Seq
              ( Typed
               { annotated = TyTuple 0, value = Range
@@ -492,8 +448,7 @@ Module
                    { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 48 } } } )
                 ( Id
                  { name = "printString#", moduleName = Artifact
-                  ( ArtifactPath
-                   { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
                ( Seq
                 ( Typed
                  { annotated = TyPrim StringT, value = Range
@@ -519,8 +474,7 @@ Module
                       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 64 } } } )
                    ( Id
                     { name = "toStringInt32#", moduleName = Artifact
-                     ( ArtifactPath
-                      { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
                   ( Var
                    ( Typed
                     { annotated = TyPrim Int32T, value = Range
@@ -529,8 +483,7 @@ Module
                       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 65 } } } )
                    ( Id
                     { name = "x", moduleName = Artifact
-                     ( ArtifactPath
-                      { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 6 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ), NoBind
+                     ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 6 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ), NoBind
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
@@ -547,38 +500,33 @@ Module
               ( TyCon
                ( Id
                 { name = "Int32", moduleName = Artifact
-                 ( ArtifactPath
-                  { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ) )
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
               ( TyTuple 0 ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 14 } } } )
             ( Id
              { name = "printInt32", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 7 } ) )
+              ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 7 } ) )
            ( Var
             ( Typed
              { annotated = TyCon
               ( Id
                { name = "Int32", moduleName = Artifact
-                ( ArtifactPath
-                 { rawPath = "./runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), sort = External } ), value = Range
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 14 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } } )
             ( Id
              { name = "x", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 5 } ) ) ) ] ) ) :| [] ) ) ] ], _scSigs =
+              ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 5 } ) ) ) ] ) ) :| [] ) ) ] ], _scSigs =
    [
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } }, Id
      { name = "|>", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 14 }, _end = SourcePos
@@ -590,8 +538,7 @@ Module
         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 14 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 0 } ) )
+        ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 0 } ) )
      ( TyArr
       ( Range
        { _start = SourcePos
@@ -609,8 +556,7 @@ Module
           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 20 } } )
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 0 } ) )
+          ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 0 } ) )
        ( TyVar
         ( Range
          { _start = SourcePos
@@ -618,8 +564,7 @@ Module
           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 24 } } )
         ( Id
          { name = "b", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 1 } ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 1 } ) ) )
       ( TyVar
        ( Range
         { _start = SourcePos
@@ -627,12 +572,10 @@ Module
          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } )
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/TestLet.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/TestLet.mlg", relPath = "test/testcases/malgo/TestLet.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/TestLet.mlg" } ), sort = Internal 1 } ) ) ) ) ], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
+         ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Internal 1 } ) ) ) ) ], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
    [
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 } }, Artifact
-     ( ArtifactPath
-      { rawPath = "../../../runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ), All ) ] } }
+     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), All ) ] } }

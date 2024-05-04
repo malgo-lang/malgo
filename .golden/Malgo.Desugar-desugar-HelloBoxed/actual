@@ -4,21 +4,18 @@ Program
    ( Meta
     { meta = [ StringT ] :-> AnyT, id = Id
      { name = "String#", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } },
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } },
     [ Meta
      { meta = StringT, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 21 } } ], [ StringT ] :-> AnyT, Let
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 21 } } ], [ StringT ] :-> AnyT, Let
     [ LocalDef
      { _variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ] ], id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 22 } }, typ = SumT
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 22 } }, typ = SumT
       [ Con
        ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ] ], _object = Pack
       ( SumT
@@ -30,8 +27,7 @@ Program
        ( Meta
         { meta = StringT, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 21 } } ) ] } ]
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 21 } } ) ] } ]
     ( Cast AnyT
      ( Var
       ( Meta
@@ -39,40 +35,34 @@ Program
         [ Con
          ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ] ], id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 22 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 22 } } ) ) ) ),
    ( Meta
     { meta = [ StringT ] :-> SumT
      [ Con Tuple [] ], id = Id
      { name = "malgo_print_string", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } },
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } },
     [ Meta
      { meta = StringT, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 23 } } ], [ StringT ] :-> SumT
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 23 } } ], [ StringT ] :-> SumT
     [ Con Tuple [] ], RawCall "malgo_print_string"
     ( [ StringT ] :-> SumT [ Con Tuple [] ] )
     [ Var
      ( Meta
       { meta = StringT, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 23 } } ) ] ),
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 23 } } ) ] ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
      [ Con Tuple [] ], id = Id
      { name = "malgo_newline", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } },
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } },
     [ Meta
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 24 } } ],
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 24 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], RawCall "malgo_newline"
     ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
@@ -81,54 +71,45 @@ Program
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 24 } } ) ] ),
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 24 } } ) ] ),
    ( Meta
     { meta = [ StringT ] :-> AnyT, id = Id
      { name = "string#", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } },
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } },
     [ Meta
      { meta = StringT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 25 } } ], [ StringT ] :-> AnyT, Assign
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 25 } } ], [ StringT ] :-> AnyT, Assign
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 26 } } )
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 26 } } )
     ( Call
      ( Var
       ( Meta
        { meta = [ StringT ] :-> AnyT, id = Id
         { name = "String#", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ) )
+         ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ) )
      [ Var
       ( Meta
        { meta = StringT, id = Id
         { name = "x", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 25 } } ) ] )
+         ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 25 } } ) ] )
     ( Cast AnyT
      ( Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 26 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 26 } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :-> SumT
      [ Con Tuple [] ], id = Id
      { name = "putStrLn", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } },
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } },
     [ Meta
      { meta = AnyT, id = Id
       { name = "string#", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 27 } } ], [ AnyT ] :-> SumT
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 27 } } ], [ AnyT ] :-> SumT
     [ Con Tuple [] ], Match
     ( Cast
      ( SumT
@@ -138,43 +119,37 @@ Program
       ( Meta
        { meta = AnyT, id = Id
         { name = "string#", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 27 } } ) ) )
+         ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 27 } } ) ) )
     [ Unpack
      ( Con ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ] )
      [ Meta
       { meta = StringT, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 28 } } ]
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 28 } } ]
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath
-          { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 30 } } )
+         ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 30 } } )
       ( Assign
        ( Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 29 } } )
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 29 } } )
        ( Call
         ( Var
          ( Meta
           { meta = [ StringT ] :-> SumT
            [ Con Tuple [] ], id = Id
            { name = "malgo_print_string", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ) )
+            ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ) )
         [ Var
          ( Meta
           { meta = StringT, id = Id
            { name = "p", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 28 } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 28 } } ) ] )
        ( Cast
         ( SumT [ Con Tuple [] ] )
         ( Var
@@ -182,23 +157,20 @@ Program
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 29 } } ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 29 } } ) ) ) )
       ( Assign
        ( Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 32 } } )
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 32 } } )
        ( Let
         [ LocalDef
          { _variable = Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "let", moduleName = Artifact
-            ( ArtifactPath
-             { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 31 } }, typ = SumT
+            ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 31 } }, typ = SumT
           [ Con Tuple [] ], _object = Pack
           ( SumT [ Con Tuple [] ] )
           ( Con Tuple [] ) [] } ]
@@ -208,15 +180,13 @@ Program
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "let", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 31 } } ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 31 } } ) ) ) )
        ( Assign
         ( Meta
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 33 } } )
+           ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 33 } } )
         ( Call
          ( Var
           ( Meta
@@ -224,15 +194,13 @@ Program
             [ SumT [ Con Tuple [] ] ] :-> SumT
             [ Con Tuple [] ], id = Id
             { name = "malgo_newline", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ) )
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ) )
          [ Var
           ( Meta
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 32 } } ) ] )
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 32 } } ) ] )
         ( Cast
          ( SumT [ Con Tuple [] ] )
          ( Var
@@ -240,70 +208,60 @@ Program
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 33 } } ) ) ) ) ) ) ] ),
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 33 } } ) ) ) ) ) ) ] ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
      [ Con Tuple [] ], id = Id
      { name = "main", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } },
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } },
     [ Meta
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 34 } } ],
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 34 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 36 } } )
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 36 } } )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 35 } } )
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 35 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ StringT ] :-> AnyT, id = Id
          { name = "String#", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ) )
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ) )
       [ Unboxed ( String "Hello, world" ) ] )
      ( Cast AnyT
       ( Var
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 35 } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 35 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 37 } } )
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 37 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ AnyT ] :-> SumT
          [ Con Tuple [] ], id = Id
          { name = "putStrLn", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ) )
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ) )
       [ Var
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 36 } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 36 } } ) ] )
      ( Cast
       ( SumT [ Con Tuple [] ] )
       ( Var
@@ -311,8 +269,7 @@ Program
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 37 } } ) ) ) ) ) ], extFuns =
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 37 } } ) ) ) ) ) ], extFuns =
   [
    ( "malgo_print_string", [ StringT ] :-> SumT [ Con Tuple [] ] ),
    ( "malgo_newline", [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ) ] }
@@ -321,142 +278,112 @@ DsState
   [
    ( Id
     { name = "str", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 0 }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 0 }, Meta
     { meta = StringT, id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 28 } } ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 28 } } ),
    ( Id
     { name = "main", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
      [ Con Tuple [] ], id = Id
      { name = "main", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ),
    ( Id
     { name = "string#", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Meta
     { meta = [ StringT ] :-> AnyT, id = Id
      { name = "string#", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ),
    ( Id
     { name = "String#", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Meta
     { meta = [ StringT ] :-> AnyT, id = Id
      { name = "String#", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ),
    ( Id
     { name = "putStrLn", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Meta
     { meta = [ AnyT ] :-> SumT
      [ Con Tuple [] ], id = Id
      { name = "putStrLn", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 1 }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 1 }, Meta
     { meta = StringT, id = Id
      { name = "x", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 25 } } ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 25 } } ),
    ( Id
     { name = "malgo_newline", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
      [ Con Tuple [] ], id = Id
      { name = "malgo_newline", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ),
    ( Id
     { name = "malgo_print_string", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Meta
     { meta = [ StringT ] :-> SumT
      [ Con Tuple [] ], id = Id
      { name = "malgo_print_string", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } } ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } } ),
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 20 }, Meta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 20 }, Meta
     { meta = SumT
      [ Con Tuple [] ], id = Id
      { name = "$_", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 34 } } ) ], _signatureMap = fromList
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 34 } } ) ], _signatureMap = fromList
   [
    ( Id
     { name = "str", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 0 }, Forall [] ( TyPrim StringT ) ),
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 0 }, Forall [] ( TyPrim StringT ) ),
    ( Id
     { name = "main", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Forall []
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
     ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) ) ),
    ( Id
     { name = "string#", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Forall []
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
     ( TyArr ( TyPrim StringT )
      ( TyCon
       ( Id
        { name = "String", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) ) ) ),
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) ) ) ),
    ( Id
     { name = "String#", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Forall []
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
     ( TyArr ( TyPrim StringT )
      ( TyCon
       ( Id
        { name = "String", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) ) ) ),
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) ) ) ),
    ( Id
     { name = "putStrLn", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Forall []
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
     ( TyArr
      ( TyCon
       ( Id
        { name = "String", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) )
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) )
      ( TyTuple 0 ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 1 }, Forall [] ( TyPrim StringT ) ),
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 1 }, Forall [] ( TyPrim StringT ) ),
    ( Id
     { name = "malgo_newline", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Forall []
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
     ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) ) ),
    ( Id
     { name = "malgo_print_string", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Forall []
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
     ( TyArr ( TyPrim StringT ) ( TyTuple 0 ) ) ),
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 20 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 20 }, Forall []
     ( TyTuple 0 ) ) ], _typeDefMap = fromList
   [
    ( Id
@@ -467,24 +394,20 @@ DsState
     { _typeConstructor = TyPrim Int32T, _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "String", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, TypeDef
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, TypeDef
     { _typeConstructor = TyCon
      ( Id
       { name = "String", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ), _typeParameters = [], _valueConstructors =
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ), _typeParameters = [], _valueConstructors =
      [
       ( Id
        { name = "String#", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Forall []
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
        ( TyArr ( TyPrim StringT )
         ( TyCon
          ( Id
           { name = "String", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) ) ) ) ] } ),
+           ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) ) ) ) ] } ),
    ( Id
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TypeDef
     { _typeConstructor = TyPtr, _typeParameters = [], _valueConstructors = [] } ),
@@ -509,81 +432,63 @@ DsState
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TyArr TYPE TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 19 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 19 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 18 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 18 } ) ),
    ( Id
     { name = "Char#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 17 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 17 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 16 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 16 } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 15 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 15 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 14 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 14 } ) ),
    ( Id
     { name = "Int64#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 13 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 13 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 12 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 12 } ) ),
    ( Id
     { name = "String#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 11 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 11 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 10 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 10 } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 9 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 9 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 8 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 8 } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 7 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 7 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 6 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 6 } ) ),
    ( Id
     { name = "Float#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 5 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 5 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 4 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 4 } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath
-      { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 3 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 3 }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Temporal 2 } ) ) ], _globalDefs = [], globalClosures = fromList [] }
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 2 } ) ) ], _globalDefs = [], globalClosures = fromList [] }

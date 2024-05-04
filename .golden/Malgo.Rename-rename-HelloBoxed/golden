@@ -1,7 +1,6 @@
 Module
  { moduleName = Artifact
-  ( ArtifactPath
-   { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), moduleDefinition = BindGroup
+  ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), moduleDefinition = BindGroup
   { _scDefs =
    [
     [
@@ -10,8 +9,7 @@ Module
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 }, _end = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 15, sourceColumn = Pos 1 } }, Id
       { name = "string#", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Fn
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 17 }, _end = SourcePos
@@ -28,8 +26,7 @@ Module
           { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 19 } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 1 } ) ]
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 1 } ) ]
        ( Seq
         ( Range
          { _start = SourcePos
@@ -52,8 +49,7 @@ Module
              { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 30 } } )
            ( Id
             { name = "String#", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) )
           ( Var
            ( Range
             { _start = SourcePos
@@ -61,16 +57,14 @@ Module
              { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 32 } } )
            ( Id
             { name = "x", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 1 } ) ) ) :| [] ) ) :| [] ) ) ],
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 1 } ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 }, _end = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 12, sourceColumn = Pos 1 } }, Id
       { name = "putStrLn", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Fn
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 7, sourceColumn = Pos 18 }, _end = SourcePos
@@ -87,8 +81,7 @@ Module
           { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 7, sourceColumn = Pos 30 } } )
         ( Id
          { name = "String#", moduleName = Artifact
-          ( ArtifactPath
-           { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } )
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } )
         [ VarP
          ( Range
           { _start = SourcePos
@@ -96,8 +89,7 @@ Module
            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 7, sourceColumn = Pos 30 } } )
          ( Id
           { name = "str", moduleName = Artifact
-           ( ArtifactPath
-            { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 0 } ) ] ]
+           ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 0 } ) ] ]
        ( Seq
         ( Range
          { _start = SourcePos
@@ -120,8 +112,7 @@ Module
              { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 8, sourceColumn = Pos 22 } } )
            ( Id
             { name = "malgo_print_string", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) )
           ( Var
            ( Range
             { _start = SourcePos
@@ -129,8 +120,7 @@ Module
              { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 8, sourceColumn = Pos 25 } } )
            ( Id
             { name = "str", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = Internal 0 } ) ) ) :|
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 0 } ) ) ) :|
          [ NoBind
           ( Range
            { _start = SourcePos
@@ -148,8 +138,7 @@ Module
               { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 9, sourceColumn = Pos 17 } } )
             ( Id
              { name = "malgo_newline", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) )
            ( Tuple
             ( Range
              { _start = SourcePos
@@ -161,8 +150,7 @@ Module
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 15, sourceColumn = Pos 1 }, _end = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 17, sourceColumn = Pos 2 } }, Id
       { name = "main", moduleName = Artifact
-       ( ArtifactPath
-        { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, Fn
+       ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Fn
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 16, sourceColumn = Pos 3 }, _end = SourcePos
@@ -194,8 +182,7 @@ Module
              { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 16, sourceColumn = Pos 12 } } )
            ( Id
             { name = "putStrLn", moduleName = Artifact
-             ( ArtifactPath
-              { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) )
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) )
           ( Apply
            ( Range
             { _start = SourcePos
@@ -208,8 +195,7 @@ Module
               { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 17, sourceColumn = Pos 1 } } )
             ( Id
              { name = "String#", moduleName = Artifact
-              ( ArtifactPath
-               { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) )
+              ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) )
            ( Unboxed
             ( Range
              { _start = SourcePos
@@ -222,8 +208,7 @@ Module
       { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } }, Id
      { name = "putStrLn", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 6, sourceColumn = Pos 23 }, _end = SourcePos
@@ -235,8 +220,7 @@ Module
         { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 6, sourceColumn = Pos 23 } } )
       ( Id
        { name = "String", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) )
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) )
      ( TyTuple
       ( Range
        { _start = SourcePos
@@ -247,8 +231,7 @@ Module
       { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 12, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 } }, Id
      { name = "string#", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 12, sourceColumn = Pos 23 }, _end = SourcePos
@@ -267,24 +250,21 @@ Module
         { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 } } )
       ( Id
        { name = "String", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External } ) ) ) ], _dataDefs =
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External } ) ) ) ], _dataDefs =
    [
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 4, sourceColumn = Pos 6 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } }, Id
      { name = "String", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, [],
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, [],
      [
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 4, sourceColumn = Pos 15 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } }, Id
        { name = "String#", moduleName = Artifact
-        ( ArtifactPath
-         { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External },
+        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External },
        [ TyCon
         ( Range
          { _start = SourcePos
@@ -299,8 +279,7 @@ Module
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 } }, "malgo_print_string" ), Id
      { name = "malgo_print_string", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 1, sourceColumn = Pos 45 }, _end = SourcePos
@@ -323,8 +302,7 @@ Module
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 }, _end = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } }, "malgo_newline" ), Id
      { name = "malgo_newline", moduleName = Artifact
-      ( ArtifactPath
-       { rawPath = "./test/testcases/malgo/HelloBoxed.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/HelloBoxed.mlg", relPath = "test/testcases/malgo/HelloBoxed.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloBoxed.mlg" } ), sort = External }, TyArr
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, TyArr
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 2, sourceColumn = Pos 35 }, _end = SourcePos

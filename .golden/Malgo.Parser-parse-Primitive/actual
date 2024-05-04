@@ -1,15 +1,12 @@
 Module
  { moduleName = Artifact
-  ( ArtifactPath
-   { rawPath = "./test/testcases/malgo/Primitive.mlg", originPath = "/workspaces/malgo/test/testcases/malgo/Primitive.mlg", relPath = "test/testcases/malgo/Primitive.mlg", targetPath = "/workspaces/malgo/.malgo-work/test/testcases/malgo/Primitive.mlg" } ), moduleDefinition = ParsedDefinitions
+  ( ArtifactPath "test/testcases/malgo/Primitive.mlg" ), moduleDefinition = ParsedDefinitions
   [ Import
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/Primitive.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
      { sourceName = "./test/testcases/malgo/Primitive.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 } } )
-   ( Artifact
-    ( ArtifactPath
-     { rawPath = "../../../runtime/malgo/Builtin.mlg", originPath = "/workspaces/malgo/runtime/malgo/Builtin.mlg", relPath = "runtime/malgo/Builtin.mlg", targetPath = "/workspaces/malgo/.malgo-work/runtime/malgo/Builtin.mlg" } ) ) All, ScDef
+   ( Artifact ( ArtifactPath "runtime/malgo/Builtin.mlg" ) ) All, ScDef
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/Primitive.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 }, _end = SourcePos
