@@ -49,4 +49,4 @@ jobs:
           cabal build
       - name: Run tests
         run: |
-          cabal test --test-show-details=direct
+          cabal test --test-show-details=direct --test-option='-m llvm' --test-option='-m driver'
