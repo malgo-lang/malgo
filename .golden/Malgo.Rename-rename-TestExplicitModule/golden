@@ -73,21 +73,3 @@ Module
       { sourceName = "./test/testcases/malgo/TestExplicitModule.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } }, Artifact
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), As
      ( ModuleName "Prelude" ) ) ] } }
-RnState
- { infixInfo = fromList
-  [
-   ( Id
-    { name = "<|", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( RightA, 0 ) ),
-   ( Id
-    { name = "|>", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( LeftA, 0 ) ),
-   ( Id
-    { name = ".", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( RightA, 9 ) ) ], dependencies = fromList
-  [ ModuleName "Builtin", Artifact
-   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), Artifact
-   ( ArtifactPath "runtime/malgo/Prelude.mlg" ) ] }

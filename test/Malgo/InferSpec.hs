@@ -33,5 +33,5 @@ driveInfer srcPath = do
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- rename rnEnv parsed
-    (typedAst, tcEnv) <- infer rnEnv renamed
-    pure $ pShowCompact typedAst <> "\n" <> pShowCompact tcEnv
+    (typedAst, _) <- infer rnEnv renamed
+    pure $ pShowCompact typedAst

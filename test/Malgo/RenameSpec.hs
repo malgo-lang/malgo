@@ -31,5 +31,5 @@ driveRename srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, rnState) <- rename rnEnv parsed
-    pure $ pShowCompact renamed <> "\n" <> pShowCompact rnState
+    (renamed, _) <- rename rnEnv parsed
+    pure $ pShowCompact renamed

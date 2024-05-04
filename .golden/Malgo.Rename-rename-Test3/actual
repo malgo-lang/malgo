@@ -440,10 +440,3 @@ Module
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Test3.mlg", sourceLine = Pos 8, sourceColumn = Pos 48 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/Test3.mlg", sourceLine = Pos 10, sourceColumn = Pos 1 } } ) [] ) ) ], _imports = [] } }
-RnState
- { infixInfo = fromList
-  [
-   ( Id
-    { name = "|>", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test3.mlg" ), sort = External },
-    ( LeftA, 0 ) ) ], dependencies = fromList [] }

@@ -239,21 +239,3 @@ Module
       { sourceName = "./test/testcases/malgo/UseModule.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } }, Artifact
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), Selected
      [ "addInt32", "<|", "." ] ) ] } }
-RnState
- { infixInfo = fromList
-  [
-   ( Id
-    { name = "<|", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( RightA, 0 ) ),
-   ( Id
-    { name = "|>", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( LeftA, 0 ) ),
-   ( Id
-    { name = ".", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( RightA, 9 ) ) ], dependencies = fromList
-  [ ModuleName "Builtin", Artifact
-   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), Artifact
-   ( ArtifactPath "runtime/malgo/Prelude.mlg" ) ] }

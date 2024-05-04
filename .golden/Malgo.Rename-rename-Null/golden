@@ -888,10 +888,3 @@ Module
       ( Id
        { name = "a", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/Null.mlg" ), sort = Internal } ) ) ) ], _imports = [] } }
-RnState
- { infixInfo = fromList
-  [
-   ( Id
-    { name = "|>", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Null.mlg" ), sort = External },
-    ( LeftA, 0 ) ) ], dependencies = fromList [] }

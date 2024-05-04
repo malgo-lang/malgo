@@ -37,5 +37,5 @@ driveDesugar srcPath = do
     (renamed, _) <- rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
-    (dsState, core) <- desugar tcEnv refined
-    pure $ pShowCompact core <> "\n" <> pShowCompact dsState
+    (_, core) <- desugar tcEnv refined
+    pure $ pShowCompact core

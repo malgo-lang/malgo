@@ -404,11 +404,3 @@ Module
       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 } }, Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), All ) ] } }
-RnState
- { infixInfo = fromList
-  [
-   ( Id
-    { name = "|>", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = External },
-    ( LeftA, 0 ) ) ], dependencies = fromList
-  [ Artifact ( ArtifactPath "runtime/malgo/Builtin.mlg" ) ] }

@@ -195,21 +195,3 @@ Module
       { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 }, _end = SourcePos
       { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } }, Artifact
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), All ) ] } }
-RnState
- { infixInfo = fromList
-  [
-   ( Id
-    { name = "<|", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( RightA, 0 ) ),
-   ( Id
-    { name = "|>", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( LeftA, 0 ) ),
-   ( Id
-    { name = ".", moduleName = Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External },
-    ( RightA, 9 ) ) ], dependencies = fromList
-  [ ModuleName "Builtin", Artifact
-   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), Artifact
-   ( ArtifactPath "runtime/malgo/Prelude.mlg" ) ] }
