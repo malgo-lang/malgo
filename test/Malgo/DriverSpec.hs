@@ -5,7 +5,6 @@
 
 module Malgo.DriverSpec (spec) where
 
-import Control.Exception (IOException, catch)
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
 import Data.Text qualified as T
@@ -15,7 +14,7 @@ import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
 import Malgo.TestUtils
-import System.Directory (copyFile, createDirectory, createDirectoryIfMissing, getCurrentDirectory, listDirectory, removeDirectoryRecursive)
+import System.Directory (copyFile, createDirectoryIfMissing, getCurrentDirectory, listDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
@@ -42,8 +41,6 @@ getWorkspaceDir = liftIO do
 
 spec :: Spec
 spec = do
-  -- Setup directory for test
-  runIO setupTestDir
   -- Setup malgo base library
   runIO do
     setupRuntime
@@ -83,14 +80,6 @@ spec = do
     it ("driver errorCase " <> takeBaseName errorcase)
       $ testError (testcaseDir </> "error" </> errorcase)
       `shouldThrow` anyException
-
-setupTestDir :: IO ()
-setupTestDir = do
-  workspaceDir <- getWorkspaceDir
-  removeDirectoryRecursive workspaceDir `catch` \(_ :: IOException) -> pure ()
-
-  createDirectory workspaceDir
-  createDirectory (workspaceDir </> "libs")
 
 -- | Copy runtime.c to /tmp/malgo-test/libs
 setupRuntime :: IO ()
