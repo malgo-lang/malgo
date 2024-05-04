@@ -49,4 +49,4 @@ jobs:
           cabal build
       - name: Run tests
         run: |
-          cabal test --test-show-details=direct --test-options='-m driver'
+          cabal test --test-show-details=direct --test-options='-m parse'
