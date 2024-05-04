@@ -109,7 +109,7 @@ Module
             { sourceName = "./test/testcases/malgo/Test6.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } } )
          ( Id
           { name = "_", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 1 } ) ]
+           ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal } ) ]
         ( Seq
          ( Typed
           { annotated = TyCon
@@ -186,7 +186,7 @@ Module
            { sourceName = "./test/testcases/malgo/Test6.mlg", sourceLine = Pos 9, sourceColumn = Pos 91 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 29 } ) ]
+          ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -294,7 +294,7 @@ Module
                  { sourceName = "./test/testcases/malgo/Test6.mlg", sourceLine = Pos 9, sourceColumn = Pos 49 } } } )
               ( Id
                { name = "_", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 2 } ) ]
+                ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal } ) ]
              ( Seq
               ( Typed
                { annotated = TyTuple 0, value = Range
@@ -414,7 +414,7 @@ Module
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 4 } ) ), value =
+         ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal } ) ), value =
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Test6.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 }, _end = SourcePos
@@ -437,7 +437,7 @@ Module
         { sourceName = "./test/testcases/malgo/Test6.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 0 } ) ) ),
+        ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal } ) ) ),
     ( Typed
      { annotated = TyArr ( TyPrim StringT )
       ( TyTuple 0 ), value =
@@ -468,7 +468,7 @@ TcEnv
   [
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 29 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ),
    ( Id
     { name = "malgo_print_string", moduleName = Artifact
@@ -479,13 +479,13 @@ TcEnv
      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 4 } ]
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyTuple 0 )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 4 } ) ) ) ),
+        ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "B", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = External }, Forall []
@@ -499,14 +499,14 @@ TcEnv
     ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) ) ),
    ( Id
     { name = "_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 1 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, Forall []
     ( TyCon
      ( Id
       { name = "RGB", moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = External } ) ) ),
    ( Id
     { name = "_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 2 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, Forall []
     ( TyCon
      ( Id
       { name = "RGB", moduleName = Artifact
@@ -546,11 +546,11 @@ TcEnv
     { _typeConstructor = TyPrim Int32T, _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 0 }, TypeDef
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TypeDef
     { _typeConstructor = TyVar
      ( Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 4 } ), _typeParameters = [], _valueConstructors = [] } ),
+       ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal } ), _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TypeDef
     { _typeConstructor = TyPtr, _typeParameters = [], _valueConstructors = [] } ),
@@ -627,93 +627,93 @@ TcEnv
   [
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 12 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 11 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 10 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 9 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 14 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 13 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 8 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 7 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Double#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "Int32#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 6 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 5 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TyArr TYPE TYPE ),
    ( Id
     { name = "Char#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 4 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 3 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Int64#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 28 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 27 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 26 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 25 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "String#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 24 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 23 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 22 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 21 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 20 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 19 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Float#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 18 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 17 } ) ),
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal 16 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 15 } ) ) ] }
+      ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal } ) ) ] }

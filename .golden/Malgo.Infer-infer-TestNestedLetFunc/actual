@@ -36,7 +36,7 @@ Module
            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 12 } ) ]
+          ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -50,7 +50,7 @@ Module
            { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg", sourceLine = Pos 3, sourceColumn = Pos 33 } } )
          ( Id
           { name = "f", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 2 } )
+           ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal } )
          ( Fn
           ( Typed
            { annotated = TyArr
@@ -75,7 +75,7 @@ Module
                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg", sourceLine = Pos 3, sourceColumn = Pos 32 } } } )
             ( Id
              { name = "$_", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 9 } ) ]
+              ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal } ) ]
            ( Seq
             ( Typed
              { annotated = TyTuple 0, value = Range
@@ -89,7 +89,7 @@ Module
                { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg", sourceLine = Pos 3, sourceColumn = Pos 32 } } )
              ( Id
               { name = "y", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 1 } )
+               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal } )
              ( Apply
               ( Typed
                { annotated = TyTuple 0, value = Range
@@ -120,7 +120,7 @@ Module
                     { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg", sourceLine = Pos 3, sourceColumn = Pos 23 } } } )
                  ( Id
                   { name = "a", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 0 } ) ]
+                   ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal } ) ]
                 ( Seq
                  ( Typed
                   { annotated = TyTuple 0, value = Range
@@ -207,7 +207,7 @@ TcEnv
     ( TyArr ( TyPrim StringT ) ( TyTuple 0 ) ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 0 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ),
    ( Id
     { name = "main", moduleName = Artifact
@@ -215,19 +215,19 @@ TcEnv
     ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) ) ),
    ( Id
     { name = "y", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 1 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ),
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 9 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ),
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 12 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ),
    ( Id
     { name = "f", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 2 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, Forall []
     ( TyArr ( TyTuple 0 ) ( TyTuple 0 ) ) ) ], _typeDefMap = fromList
   [
    ( Id
@@ -283,32 +283,32 @@ TcEnv
   [
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 11 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 10 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 8 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 7 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Double#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "Int32#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 6 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 5 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal 4 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 3 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TyArr TYPE TYPE ),
    ( Id

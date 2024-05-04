@@ -42,7 +42,7 @@ Module
            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 19 } } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 1 } ) ]
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyCon
@@ -87,7 +87,7 @@ Module
               { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 13, sourceColumn = Pos 32 } } } )
            ( Id
             { name = "x", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 1 } ) ) ) :| [] ) ) :| [] ) ) ],
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal } ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
@@ -142,7 +142,7 @@ Module
             { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 7, sourceColumn = Pos 30 } } } )
          ( Id
           { name = "str", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 0 } ) ] ]
+           ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal } ) ] ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -178,7 +178,7 @@ Module
               { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 8, sourceColumn = Pos 25 } } } )
            ( Id
             { name = "str", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 0 } ) ) ) :|
+             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal } ) ) ) :|
          [ NoBind
           ( Range
            { _start = SourcePos
@@ -240,7 +240,7 @@ Module
            { sourceName = "./test/testcases/malgo/HelloBoxed.mlg", sourceLine = Pos 17, sourceColumn = Pos 1 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 20 } ) ]
+          ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -426,7 +426,7 @@ TcEnv
   [
    ( Id
     { name = "str", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 0 }, Forall [] ( TyPrim StringT ) ),
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, Forall [] ( TyPrim StringT ) ),
    ( Id
     { name = "main", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
@@ -458,7 +458,7 @@ TcEnv
      ( TyTuple 0 ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 1 }, Forall [] ( TyPrim StringT ) ),
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, Forall [] ( TyPrim StringT ) ),
    ( Id
     { name = "malgo_newline", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = External }, Forall []
@@ -469,7 +469,7 @@ TcEnv
     ( TyArr ( TyPrim StringT ) ( TyTuple 0 ) ) ),
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 20 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ) ], _typeDefMap = fromList
   [
    ( Id
@@ -547,63 +547,63 @@ TcEnv
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TyArr TYPE TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 19 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 18 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Char#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 17 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 16 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 15 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 14 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Int64#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 13 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 12 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "String#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 11 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 10 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 9 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 8 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 7 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 6 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Float#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 5 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 4 } ) ),
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal 3 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 2 } ) ) ] }
+      ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal } ) ) ] }

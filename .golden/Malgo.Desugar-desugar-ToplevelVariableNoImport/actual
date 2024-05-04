@@ -8,12 +8,12 @@ Program
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 199 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 198 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Call
       ( Var
        ( Meta
@@ -26,13 +26,13 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 198 } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
     ( Atom
      ( Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 199 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = AnyT, id = Id
      { name = "comp", moduleName = Artifact
@@ -40,22 +40,22 @@ Program
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 222 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 215 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Let
       [ LocalDef
        { _variable = Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 214 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = [ AnyT ] :-> AnyT, _object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "nothing", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 212 } } ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
         ( Match
          ( Cast
           ( SumT
@@ -67,7 +67,7 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "nothing", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 212 } } ) ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
          [ Unpack
           ( Con
            ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [] ) []
@@ -83,7 +83,7 @@ Program
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "p", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 213 } } ]
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
           ( CallDirect
            ( Meta
             { meta = [] :-> AnyT, id = Id
@@ -94,25 +94,25 @@ Program
         ( Meta
          { meta = [ AnyT ] :-> AnyT, id = Id
           { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 214 } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 220 } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
       ( Assign
        ( Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 217 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        ( Let
         [ LocalDef
          { _variable = Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "let", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 216 } }, typ = SumT
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = SumT
           [ Con Tuple [] ], _object = Pack
           ( SumT [ Con Tuple [] ] )
           ( Con Tuple [] ) [] } ]
@@ -122,24 +122,24 @@ Program
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "let", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 216 } } ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "cast", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 218 } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
         ( Cast AnyT
          ( Var
           ( Meta
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 217 } } ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
         ( Assign
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 219 } } )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
          ( Call
           ( Var
            ( Meta
@@ -150,54 +150,54 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "cast", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 218 } } ) ] )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
          ( Cast AnyT
           ( Var
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 219 } } ) ) ) ) ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ) )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 221 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        ( Call
         ( Var
          ( Meta
           { meta = [ AnyT ] :-> AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 215 } } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
         [ Var
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 220 } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
        ( Cast AnyT
         ( Var
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 221 } } ) ) ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ) )
     ( Atom
      ( Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 222 } } ) ) ) ) ], topFuns =
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ], topFuns =
   [
    ( Meta
     { meta =
      [ AnyT, AnyT ] :-> AnyT, id = Id
      { name = "addInt32_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 244 } },
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } },
     [ Meta
      { meta = AnyT, id = Id
       { name = "int32#", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 245 } }, Meta
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, Meta
      { meta = AnyT, id = Id
       { name = "int32#", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 246 } } ],
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ],
     [ AnyT, AnyT ] :-> AnyT, Match
     ( Cast
      ( SumT
@@ -207,14 +207,14 @@ Program
       ( Meta
        { meta = AnyT, id = Id
         { name = "int32#", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 245 } } ) ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
     [ Unpack
      ( Con
       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] )
      [ Meta
       { meta = Int32T, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 247 } } ]
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
      ( Match
       ( Cast
        ( SumT
@@ -224,29 +224,29 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "int32#", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 246 } } ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
       [ Unpack
        ( Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] )
        [ Meta
         { meta = Int32T, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 248 } } ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
        ( Assign
         ( Meta
          { meta = Int32T, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 252 } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
         ( Assign
          ( Meta
           { meta = [ Int32T ] :-> Int32T, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 250 } } )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
          ( Assign
           ( Meta
            { meta = [ Int32T ] :-> Int32T, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 249 } } )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
           ( Call
            ( Var
             ( Meta
@@ -258,41 +258,41 @@ Program
             ( Meta
              { meta = Int32T, id = Id
               { name = "p", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 247 } } ) ] )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
           ( Cast
            ( [ Int32T ] :-> Int32T )
            ( Var
             ( Meta
              { meta = [ Int32T ] :-> Int32T, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 249 } } ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
          ( Assign
           ( Meta
            { meta = Int32T, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 251 } } )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
           ( Call
            ( Var
             ( Meta
              { meta = [ Int32T ] :-> Int32T, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 250 } } ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
            [ Var
             ( Meta
              { meta = Int32T, id = Id
               { name = "p", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 248 } } ) ] )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
           ( Cast Int32T
            ( Var
             ( Meta
              { meta = Int32T, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 251 } } ) ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) )
         ( Assign
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 253 } } )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
          ( Call
           ( Var
            ( Meta
@@ -303,35 +303,35 @@ Program
            ( Meta
             { meta = Int32T, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 252 } } ) ] )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
          ( Cast AnyT
           ( Var
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 253 } } ) ) ) ) ) ] ) ] ),
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ) ] ) ] ),
    ( Meta
     { meta =
      [ Int32T, Int32T ] :-> Int32T, id = Id
      { name = "addInt32#_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 228 } },
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } },
     [ Meta
      { meta = Int32T, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 229 } }, Meta
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, Meta
      { meta = Int32T, id = Id
       { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 230 } } ],
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ],
     [ Int32T, Int32T ] :-> Int32T, Assign
     ( Meta
      { meta = [ Int32T ] :-> Int32T, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 232 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Assign
      ( Meta
       { meta = [ Int32T ] :-> Int32T, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 231 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Call
       ( Var
        ( Meta
@@ -343,77 +343,77 @@ Program
        ( Meta
         { meta = Int32T, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 229 } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
      ( Cast
       ( [ Int32T ] :-> Int32T )
       ( Var
        ( Meta
         { meta = [ Int32T ] :-> Int32T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 231 } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
     ( Assign
      ( Meta
       { meta = Int32T, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 233 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ Int32T ] :-> Int32T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 232 } } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
       [ Var
        ( Meta
         { meta = Int32T, id = Id
          { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 230 } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
      ( Cast Int32T
       ( Var
        ( Meta
         { meta = Int32T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 233 } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ),
    ( Meta
     { meta =
      [ AnyT, AnyT ] :-> AnyT, id = Id
      { name = "const_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 203 } },
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } },
     [ Meta
      { meta = AnyT, id = Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 204 } }, Meta
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, Meta
      { meta = AnyT, id = Id
       { name = "_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 205 } } ],
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ],
     [ AnyT, AnyT ] :-> AnyT, Atom
     ( Var
      ( Meta
       { meta = AnyT, id = Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 204 } } ) ) ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ),
    ( Meta
     { meta =
      [ Int32T, Int32T ] :-> Int32T, id = Id
      { name = "malgo_add_int32_t_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 176 } },
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } },
     [ Meta
      { meta = Int32T, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 177 } }, Meta
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, Meta
      { meta = Int32T, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 178 } } ],
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ],
     [ Int32T, Int32T ] :-> Int32T, RawCall "malgo_add_int32_t"
     ( [ Int32T, Int32T ] :-> Int32T )
     [ Var
      ( Meta
       { meta = Int32T, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 177 } } ), Var
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ), Var
      ( Meta
       { meta = Int32T, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 178 } } ) ] ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ),
    ( Meta
     { meta = [ Int32T ] :-> AnyT, id = Id
      { name = "Int32#", moduleName = Artifact
@@ -421,14 +421,14 @@ Program
     [ Meta
      { meta = Int32T, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 167 } } ], [ Int32T ] :-> AnyT, Let
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ Int32T ] :-> AnyT, Let
     [ LocalDef
      { _variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ], id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 168 } }, typ = SumT
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = SumT
       [ Con
        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ], _object = Pack
       ( SumT
@@ -440,7 +440,7 @@ Program
        ( Meta
         { meta = Int32T, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 167 } } ) ] } ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] } ]
     ( Cast AnyT
      ( Var
       ( Meta
@@ -448,7 +448,7 @@ Program
         [ Con
          ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ], id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 168 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ StringT ] :-> AnyT, id = Id
      { name = "String#", moduleName = Artifact
@@ -456,14 +456,14 @@ Program
     [ Meta
      { meta = StringT, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 169 } } ], [ StringT ] :-> AnyT, Let
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ StringT ] :-> AnyT, Let
     [ LocalDef
      { _variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ], id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 170 } }, typ = SumT
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = SumT
       [ Con
        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ], _object = Pack
       ( SumT
@@ -475,7 +475,7 @@ Program
        ( Meta
         { meta = StringT, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 169 } } ) ] } ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] } ]
     ( Cast AnyT
      ( Var
       ( Meta
@@ -483,7 +483,7 @@ Program
         [ Con
          ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ], id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 170 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [] :-> AnyT, id = Id
      { name = "Nothing", moduleName = Artifact
@@ -495,7 +495,7 @@ Program
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 171 } }, typ = SumT
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = SumT
       [ Con
        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], _object = Pack
@@ -513,7 +513,7 @@ Program
          ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
          ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 171 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :-> AnyT, id = Id
      { name = "Just", moduleName = Artifact
@@ -521,7 +521,7 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 172 } } ], [ AnyT ] :-> AnyT, Let
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :-> AnyT, Let
     [ LocalDef
      { _variable = Meta
       { meta = SumT
@@ -529,7 +529,7 @@ Program
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 173 } }, typ = SumT
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = SumT
       [ Con
        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], _object = Pack
@@ -543,7 +543,7 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 172 } } ) ] } ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] } ]
     ( Cast AnyT
      ( Var
       ( Meta
@@ -552,7 +552,7 @@ Program
          ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
          ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 173 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ Int32T ] :->
      ( [ Int32T ] :-> Int32T ), id = Id
@@ -561,38 +561,38 @@ Program
     [ Meta
      { meta = Int32T, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 174 } } ], [ Int32T ] :->
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ Int32T ] :->
     ( [ Int32T ] :-> Int32T ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ Int32T ] :-> Int32T, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 179 } }, typ = [ Int32T ] :-> Int32T, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = [ Int32T ] :-> Int32T, _object = Fun
       [ Meta
        { meta = Int32T, id = Id
         { name = "p", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 175 } } ]
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ Int32T, Int32T ] :-> Int32T, id = Id
          { name = "malgo_add_int32_t_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 176 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        [ Var
         ( Meta
          { meta = Int32T, id = Id
           { name = "p", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 174 } } ), Var
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ), Var
         ( Meta
          { meta = Int32T, id = Id
           { name = "p", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 175 } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ Int32T ] :-> Int32T, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 179 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ StringT ] :-> SumT
      [ Con Tuple [] ], id = Id
@@ -601,14 +601,14 @@ Program
     [ Meta
      { meta = StringT, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 180 } } ], [ StringT ] :-> SumT
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ StringT ] :-> SumT
     [ Con Tuple [] ], RawCall "malgo_print_string"
     ( [ StringT ] :-> SumT [ Con Tuple [] ] )
     [ Var
      ( Meta
       { meta = StringT, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 180 } } ) ] ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ),
    ( Meta
     { meta = [ Int32T ] :-> StringT, id = Id
      { name = "malgo_int32_t_to_string", moduleName = Artifact
@@ -616,13 +616,13 @@ Program
     [ Meta
      { meta = Int32T, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 181 } } ], [ Int32T ] :-> StringT, RawCall "malgo_int32_t_to_string"
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ Int32T ] :-> StringT, RawCall "malgo_int32_t_to_string"
     ( [ Int32T ] :-> StringT )
     [ Var
      ( Meta
       { meta = Int32T, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 181 } } ) ] ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ),
    ( Meta
     { meta = [ Int32T ] :-> StringT, id = Id
      { name = "toStringInt32#", moduleName = Artifact
@@ -630,11 +630,11 @@ Program
     [ Meta
      { meta = Int32T, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 182 } } ], [ Int32T ] :-> StringT, Assign
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ Int32T ] :-> StringT, Assign
     ( Meta
      { meta = StringT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 183 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Call
      ( Var
       ( Meta
@@ -645,13 +645,13 @@ Program
       ( Meta
        { meta = Int32T, id = Id
         { name = "x", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 182 } } ) ] )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
     ( Cast StringT
      ( Var
       ( Meta
        { meta = StringT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 183 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :-> AnyT, id = Id
      { name = "toStringInt32", moduleName = Artifact
@@ -659,7 +659,7 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "int32#", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 184 } } ], [ AnyT ] :-> AnyT, Match
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :-> AnyT, Match
     ( Cast
      ( SumT
       [ Con
@@ -668,24 +668,24 @@ Program
       ( Meta
        { meta = AnyT, id = Id
         { name = "int32#", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 184 } } ) ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
     [ Unpack
      ( Con
       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] )
      [ Meta
       { meta = Int32T, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 185 } } ]
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
      ( Assign
       ( Meta
        { meta = StringT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 187 } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
       ( Assign
        ( Meta
         { meta = StringT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 186 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        ( Call
         ( Var
          ( Meta
@@ -696,18 +696,18 @@ Program
          ( Meta
           { meta = Int32T, id = Id
            { name = "p", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 185 } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
        ( Cast StringT
         ( Var
          ( Meta
           { meta = StringT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 186 } } ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 188 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        ( Call
         ( Var
          ( Meta
@@ -718,13 +718,13 @@ Program
          ( Meta
           { meta = StringT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 187 } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
        ( Cast AnyT
         ( Var
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 188 } } ) ) ) ) ) ] ),
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ) ] ),
    ( Meta
     { meta = [ StringT ] :-> SumT
      [ Con Tuple [] ], id = Id
@@ -733,13 +733,13 @@ Program
     [ Meta
      { meta = StringT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 189 } } ], [ StringT ] :-> SumT
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ StringT ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 190 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Call
      ( Var
       ( Meta
@@ -751,7 +751,7 @@ Program
       ( Meta
        { meta = StringT, id = Id
         { name = "x", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 189 } } ) ] )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
     ( Cast
      ( SumT [ Con Tuple [] ] )
      ( Var
@@ -759,7 +759,7 @@ Program
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 190 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :-> SumT
      [ Con Tuple [] ], id = Id
@@ -768,7 +768,7 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "string#", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 191 } } ], [ AnyT ] :-> SumT
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :-> SumT
     [ Con Tuple [] ], Match
     ( Cast
      ( SumT
@@ -778,20 +778,20 @@ Program
       ( Meta
        { meta = AnyT, id = Id
         { name = "string#", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 191 } } ) ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
     [ Unpack
      ( Con
       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] )
      [ Meta
       { meta = StringT, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 192 } } ]
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 193 } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
       ( Call
        ( Var
         ( Meta
@@ -803,7 +803,7 @@ Program
         ( Meta
          { meta = StringT, id = Id
           { name = "p", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 192 } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
       ( Cast
        ( SumT [ Con Tuple [] ] )
        ( Var
@@ -811,7 +811,7 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 193 } } ) ) ) ) ] ),
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ] ),
    ( Meta
     { meta = [ AnyT ] :-> SumT
      [ Con Tuple [] ], id = Id
@@ -820,17 +820,17 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "i", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 194 } } ], [ AnyT ] :-> SumT
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 196 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 195 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Call
       ( Var
        ( Meta
@@ -841,19 +841,19 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "i", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 194 } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
      ( Cast AnyT
       ( Var
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 195 } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
     ( Assign
      ( Meta
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 197 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Call
       ( Var
        ( Meta
@@ -865,7 +865,7 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 196 } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
      ( Cast
       ( SumT [ Con Tuple [] ] )
       ( Var
@@ -873,7 +873,7 @@ Program
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 197 } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :-> AnyT, id = Id
      { name = "identity", moduleName = Artifact
@@ -881,12 +881,12 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 200 } } ], [ AnyT ] :-> AnyT, Atom
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :-> AnyT, Atom
     ( Var
      ( Meta
       { meta = AnyT, id = Id
        { name = "x", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 200 } } ) ) ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ),
    ( Meta
     { meta = [ AnyT ] :->
      ( [ AnyT ] :-> AnyT ), id = Id
@@ -895,38 +895,38 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 201 } } ], [ AnyT ] :->
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 206 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = [ AnyT ] :-> AnyT, _object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "_", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 202 } } ]
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ AnyT, AnyT ] :-> AnyT, id = Id
          { name = "const_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 203 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        [ Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "a", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 201 } } ), Var
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ), Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "_", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 202 } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 206 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :->
      ( [ AnyT ] :-> AnyT ), id = Id
@@ -935,24 +935,24 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "eta", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 210 } } ], [ AnyT ] :->
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Assign
     ( Meta
      { meta = [ AnyT ] :->
       ( [ AnyT ] :-> AnyT ), id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 211 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :->
        ( [ AnyT ] :-> AnyT ), id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 209 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "cast", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 207 } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
       ( Cast AnyT
        ( Var
         ( Meta
@@ -963,7 +963,7 @@ Program
        ( Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 208 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        ( Call
         ( Var
          ( Meta
@@ -975,33 +975,33 @@ Program
          ( Meta
           { meta = AnyT, id = Id
            { name = "cast", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 207 } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
        ( Cast
         ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) )
         ( Var
          ( Meta
           { meta = [ AnyT ] :-> AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 208 } } ) ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) )
      ( Atom
       ( Var
        ( Meta
         { meta = [ AnyT ] :->
          ( [ AnyT ] :-> AnyT ), id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 209 } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
     ( Call
      ( Var
       ( Meta
        { meta = [ AnyT ] :->
         ( [ AnyT ] :-> AnyT ), id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 211 } } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
      [ Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "eta", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 210 } } ) ] ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ) ),
    ( Meta
     { meta = [ Int32T ] :->
      ( [ Int32T ] :-> Int32T ), id = Id
@@ -1010,38 +1010,38 @@ Program
     [ Meta
      { meta = Int32T, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 223 } } ], [ Int32T ] :->
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ Int32T ] :->
     ( [ Int32T ] :-> Int32T ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ Int32T ] :-> Int32T, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 234 } }, typ = [ Int32T ] :-> Int32T, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = [ Int32T ] :-> Int32T, _object = Fun
       [ Meta
        { meta = Int32T, id = Id
         { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 224 } } ]
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ Int32T, Int32T ] :-> Int32T, id = Id
          { name = "addInt32#_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 228 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        [ Var
         ( Meta
          { meta = Int32T, id = Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 223 } } ), Var
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ), Var
         ( Meta
          { meta = Int32T, id = Id
           { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 224 } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ Int32T ] :-> Int32T, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 234 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :->
      ( [ AnyT ] :-> AnyT ), id = Id
@@ -1050,38 +1050,38 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "int32#", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 235 } } ], [ AnyT ] :->
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 254 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = [ AnyT ] :-> AnyT, _object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "int32#", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 236 } } ]
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ AnyT, AnyT ] :-> AnyT, id = Id
          { name = "addInt32_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 244 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        [ Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "int32#", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 235 } } ), Var
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ), Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "int32#", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 236 } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 254 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :-> AnyT, id = Id
      { name = "addOne", moduleName = Artifact
@@ -1089,21 +1089,21 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "eta", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 257 } } ], [ AnyT ] :-> AnyT, Assign
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ], [ AnyT ] :-> AnyT, Assign
     ( Meta
      { meta = [ AnyT ] :-> AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 258 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 256 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Assign
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 255 } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
       ( Call
        ( Var
         ( Meta
@@ -1122,24 +1122,24 @@ Program
         ( Meta
          { meta = [ AnyT ] :-> AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 255 } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
      ( Atom
       ( Var
        ( Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 256 } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
     ( Call
      ( Var
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 258 } } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
      [ Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "eta", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 257 } } ) ] ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ) ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -1150,32 +1150,32 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 259 } } ],
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 269 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :-> SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 267 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Let
       [ LocalDef
        { _variable = Meta
         { meta = [ AnyT ] :-> SumT
          [ Con Tuple [] ], id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 266 } }, typ = [ AnyT ] :-> SumT
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = [ AnyT ] :-> SumT
         [ Con Tuple [] ], _object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "nothing", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 260 } } ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
         ( Match
          ( Cast
           ( SumT
@@ -1186,7 +1186,7 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "nothing", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 260 } } ) ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
          [ Unpack
           ( Con
            ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [] ) []
@@ -1194,12 +1194,12 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 262 } } )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
            ( Assign
             ( Meta
              { meta = AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 261 } } )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
             ( Call
              ( Var
               ( Meta
@@ -1212,13 +1212,13 @@ Program
               ( Meta
                { meta = AnyT, id = Id
                 { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 261 } } ) ) ) )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
            ( Assign
             ( Meta
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 263 } } )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
             ( Call
              ( Var
               ( Meta
@@ -1230,7 +1230,7 @@ Program
               ( Meta
                { meta = AnyT, id = Id
                 { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 262 } } ) ] )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
             ( Cast
              ( SumT [ Con Tuple [] ] )
              ( Var
@@ -1238,20 +1238,20 @@ Program
                { meta = SumT
                 [ Con Tuple [] ], id = Id
                 { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 263 } } ) ) ) ) ), Unpack
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ), Unpack
           ( Con
            ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] )
           [ Meta
            { meta = AnyT, id = Id
             { name = "p", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 264 } } ]
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
           ( Let
            [ LocalDef
             { _variable = Meta
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "let", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 265 } }, typ = SumT
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, typ = SumT
              [ Con Tuple [] ], _object = Pack
              ( SumT [ Con Tuple [] ] )
              ( Con Tuple [] ) [] } ]
@@ -1261,27 +1261,27 @@ Program
               { meta = SumT
                [ Con Tuple [] ], id = Id
                { name = "let", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 265 } } ) ) ) ) ] ) } ]
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ] ) } ]
       ( Atom
        ( Var
         ( Meta
          { meta = [ AnyT ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 266 } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 268 } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
       ( Call
        ( Var
         ( Meta
          { meta = [ AnyT ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 267 } } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
        [ Var
         ( Meta
          { meta = AnyT, id = Id
@@ -1294,22 +1294,22 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 268 } } ) ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 276 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Assign
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 272 } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "cast", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 270 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        ( Cast AnyT
         ( Var
          ( Meta
@@ -1321,7 +1321,7 @@ Program
         ( Meta
          { meta = [ AnyT ] :-> AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 271 } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
         ( Call
          ( Var
           ( Meta
@@ -1333,24 +1333,24 @@ Program
           ( Meta
            { meta = AnyT, id = Id
             { name = "cast", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 270 } } ) ] )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
         ( Cast
          ( [ AnyT ] :-> AnyT )
          ( Var
           ( Meta
            { meta = [ AnyT ] :-> AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 271 } } ) ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 274 } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 273 } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
         ( Call
          ( Var
           ( Meta
@@ -1367,35 +1367,35 @@ Program
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 273 } } ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 275 } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
         ( Call
          ( Var
           ( Meta
            { meta = [ AnyT ] :-> AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 272 } } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
          [ Var
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 274 } } ) ] )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
         ( Cast AnyT
          ( Var
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 275 } } ) ) ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ) )
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 277 } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
       ( Call
        ( Var
         ( Meta
@@ -1407,7 +1407,7 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 276 } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
       ( Cast
        ( SumT [ Con Tuple [] ] )
        ( Var
@@ -1415,7 +1415,7 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 277 } } ) ) ) ) ) ) ], extFuns =
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ) ) ], extFuns =
   [
    ( "malgo_add_int32_t", [ Int32T, Int32T ] :-> Int32T ),
    ( "malgo_print_string", [ StringT ] :-> SumT [ Con Tuple [] ] ),
@@ -1425,10 +1425,10 @@ DsState
   [
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 14 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = Int32T, id = Id
      { name = "x", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 182 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "addInt32", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Meta
@@ -1438,16 +1438,16 @@ DsState
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 15 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = Int32T, id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 185 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "i", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 13 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = AnyT, id = Id
      { name = "i", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 194 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "constId", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Meta
@@ -1501,16 +1501,16 @@ DsState
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 7 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = AnyT, id = Id
      { name = "x", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 200 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 4 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = StringT, id = Id
      { name = "x", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 189 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "printString", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Meta
@@ -1520,10 +1520,10 @@ DsState
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ),
    ( Id
     { name = "_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 18 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = AnyT, id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 264 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "toStringInt32", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Meta
@@ -1532,28 +1532,28 @@ DsState
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 5 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = StringT, id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 192 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 2 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = Int32T, id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 237 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 10 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = AnyT, id = Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 201 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 0 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = Int32T, id = Id
      { name = "x", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 223 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "printInt32", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Meta
@@ -1563,17 +1563,17 @@ DsState
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ),
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 166 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = SumT
      [ Con Tuple [] ], id = Id
      { name = "$_", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 259 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 11 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = AnyT, id = Id
      { name = "_", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 202 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "Just", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Meta
@@ -1609,10 +1609,10 @@ DsState
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ),
    ( Id
     { name = "y", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 3 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = Int32T, id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 238 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "main", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Meta
@@ -1629,10 +1629,10 @@ DsState
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ),
    ( Id
     { name = "y", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 1 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = Int32T, id = Id
      { name = "y", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 224 } } ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ),
    ( Id
     { name = "Nothing", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Meta
@@ -1647,15 +1647,15 @@ DsState
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 17 }, Meta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Meta
     { meta = SumT
      [ Con Tuple [] ], id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 213 } } ) ], _signatureMap = fromList
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ], _signatureMap = fromList
   [
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 14 }, Forall [] ( TyPrim Int32T ) ),
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall [] ( TyPrim Int32T ) ),
    ( Id
     { name = "addInt32", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1675,10 +1675,10 @@ DsState
          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 15 }, Forall [] ( TyPrim Int32T ) ),
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall [] ( TyPrim Int32T ) ),
    ( Id
     { name = "i", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 13 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall []
     ( TyCon
      ( Id
       { name = "Int32", moduleName = Artifact
@@ -1688,23 +1688,23 @@ DsState
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 }, Id
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 79 } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "b", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 79 } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) )
      ( TyArr
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) )
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 } ) ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "toStringInt32#", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1750,26 +1750,26 @@ DsState
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 21 } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 21 } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 21 } ) ) ) ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 7 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall []
     ( TyVar
      ( Id
       { name = "t", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 } ) ) ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 4 }, Forall [] ( TyPrim StringT ) ),
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall [] ( TyPrim StringT ) ),
    ( Id
     { name = "printString", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1781,11 +1781,11 @@ DsState
      ( TyTuple 0 ) ) ),
    ( Id
     { name = "_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 18 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall []
     ( TyMeta
      ( Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 } ) ) ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ),
    ( Id
     { name = "toStringInt32", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1800,20 +1800,20 @@ DsState
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 5 }, Forall [] ( TyPrim StringT ) ),
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall [] ( TyPrim StringT ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 2 }, Forall [] ( TyPrim Int32T ) ),
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall [] ( TyPrim Int32T ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 10 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall []
     ( TyVar
      ( Id
       { name = "t", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 } ) ) ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 0 }, Forall [] ( TyPrim Int32T ) ),
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall [] ( TyPrim Int32T ) ),
    ( Id
     { name = "printInt32", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1825,26 +1825,26 @@ DsState
      ( TyTuple 0 ) ) ),
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 166 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ),
    ( Id
     { name = "_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 11 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall []
     ( TyVar
      ( Id
       { name = "t", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 73 } ) ) ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ),
    ( Id
     { name = "Just", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall
     [ Id
      { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) )
      ( TyApp
       ( TyCon
        ( Id
@@ -1853,7 +1853,7 @@ DsState
       ( TyVar
        ( Id
         { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ) ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "addInt32#", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1864,23 +1864,23 @@ DsState
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall
     [ Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 25 }, Id
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 23 } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 23 } ) )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) )
      ( TyArr
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 25 } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) )
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 23 } ) ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "printString#", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1890,7 +1890,7 @@ DsState
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 27 } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ]
     ( TyApp
      ( TyCon
       ( Id
@@ -1899,10 +1899,10 @@ DsState
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 27 } ) ) ) ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "y", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 3 }, Forall [] ( TyPrim Int32T ) ),
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall [] ( TyPrim Int32T ) ),
    ( Id
     { name = "main", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1913,13 +1913,13 @@ DsState
     ( TyArr ( TyPrim Int32T ) ( TyPrim StringT ) ) ),
    ( Id
     { name = "y", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 1 }, Forall [] ( TyPrim Int32T ) ),
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall [] ( TyPrim Int32T ) ),
    ( Id
     { name = "Nothing", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall
     [ Id
      { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ]
     ( TyApp
      ( TyCon
       ( Id
@@ -1928,7 +1928,7 @@ DsState
      ( TyVar
       ( Id
        { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ) ) ) ),
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "String#", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall []
@@ -1939,16 +1939,16 @@ DsState
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ) ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 17 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ) ], _typeDefMap = fromList
   [
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 6 }, TypeDef
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TypeDef
     { _typeConstructor = TyVar
      ( Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 21 } ), _typeParameters = [], _valueConstructors = [] } ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ), _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "Double#", moduleName = ModuleName "Builtin", sort = External }, TypeDef
     { _typeConstructor = TyPrim DoubleT, _typeParameters = [], _valueConstructors = [] } ),
@@ -1957,11 +1957,11 @@ DsState
     { _typeConstructor = TyPrim Int32T, _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 12 }, TypeDef
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TypeDef
     { _typeConstructor = TyVar
      ( Id
       { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ), _typeParameters = [], _valueConstructors = [] } ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ), _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TypeDef
     { _typeConstructor = TyPtr, _typeParameters = [], _valueConstructors = [] } ),
@@ -1970,11 +1970,11 @@ DsState
     { _typeConstructor = TyPrim CharT, _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 8 }, TypeDef
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TypeDef
     { _typeConstructor = TyVar
      ( Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 23 } ), _typeParameters = [], _valueConstructors = [] } ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ), _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "Int64#", moduleName = ModuleName "Builtin", sort = External }, TypeDef
     { _typeConstructor = TyPrim Int64T, _typeParameters = [], _valueConstructors = [] } ),
@@ -1990,14 +1990,14 @@ DsState
        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } ), _typeParameters =
      [ Id
       { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ], _valueConstructors =
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ], _valueConstructors =
      [
       ( Id
        { name = "Nothing", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall
        [ Id
         { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ]
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ]
        ( TyApp
         ( TyCon
          ( Id
@@ -2006,18 +2006,18 @@ DsState
         ( TyVar
          ( Id
           { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ) ) ) ),
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ) ),
       ( Id
        { name = "Just", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, Forall
        [ Id
         { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ]
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ]
        ( TyArr
         ( TyVar
          ( Id
           { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) )
         ( TyApp
          ( TyCon
           ( Id
@@ -2026,14 +2026,14 @@ DsState
          ( TyVar
           ( Id
            { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 19 } ) ) ) ) ) ] } ),
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ) ) ) ) ) ] } ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 16 }, TypeDef
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TypeDef
     { _typeConstructor = TyVar
      ( Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 27 } ), _typeParameters = [], _valueConstructors = [] } ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ), _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "String", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TypeDef
@@ -2055,11 +2055,11 @@ DsState
     { _typeConstructor = TyPrim FloatT, _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "b", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 9 }, TypeDef
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TypeDef
     { _typeConstructor = TyVar
      ( Id
       { name = "b", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 25 } ), _typeParameters = [], _valueConstructors = [] } ),
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal } ), _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "Int32", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TypeDef
@@ -2079,472 +2079,472 @@ DsState
   [
    ( Id
     { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 141 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ktest/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 140 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 131 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 130 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 163 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 162 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 67 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 66 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 35 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 34 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 69 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 68 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 129 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 128 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 161 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 160 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 65 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 64 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 97 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 96 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 33 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 32 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 135 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 134 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 71 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 70 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 103 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 102 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 39 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 38 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 165 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 164 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 37 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 36 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Double#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 101 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ktest/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 100 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 133 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ktest/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 132 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Int32#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 139 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 138 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 43 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 42 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 77 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 76 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 137 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 136 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 73 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 72 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 105 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 104 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 41 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 40 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TyArr TYPE TYPE ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 107 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 106 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 143 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 142 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 111 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 110 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 47 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 46 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Char#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "b", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 25 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kb", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 24 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "b", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 153 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kb", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 152 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 99 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ktest/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 98 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 109 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 108 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 45 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 44 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "b", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 155 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kb", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 154 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 93 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ktest/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 92 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 23 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 22 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 151 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 150 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 115 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 114 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Int64#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 51 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 50 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 21 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 20 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 145 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 144 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 113 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 112 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 49 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 48 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "String#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 83 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 82 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 147 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 146 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 119 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 118 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 55 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 54 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 91 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ktest/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 90 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 81 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 80 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Maybe", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External }, TyArr TYPE TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 149 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 148 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 85 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 84 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 117 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 116 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 53 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 52 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 123 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 122 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 59 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 58 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "test/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 87 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ktest/testcases/malgo/ToplevelVariableNoImport.mlg.#a_12", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 86 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Float#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 157 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 156 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 89 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 88 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 121 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 120 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 57 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 56 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "b", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 79 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 156 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 27 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 26 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 159 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 158 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 95 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 94 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 127 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 126 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 31 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 30 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 63 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 62 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 125 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 124 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 29 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 28 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 61 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 60 } ) ),
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "b", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal 75 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kb", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 74 } ) ) ], _globalDefs =
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } ) ) ], _globalDefs =
   [ FunDef
    ( Meta
     { meta =
      [ AnyT, AnyT ] :-> AnyT, id = Id
      { name = "addInt32_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 244 } } )
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
    [ Meta
     { meta = AnyT, id = Id
      { name = "int32#", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 245 } }, Meta
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, Meta
     { meta = AnyT, id = Id
      { name = "int32#", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 246 } } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
    ( [ AnyT, AnyT ] :-> AnyT )
    ( Match
     ( Cast
@@ -2555,14 +2555,14 @@ DsState
       ( Meta
        { meta = AnyT, id = Id
         { name = "int32#", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 245 } } ) ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
     [ Unpack
      ( Con
       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] )
      [ Meta
       { meta = Int32T, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 247 } } ]
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
      ( Match
       ( Cast
        ( SumT
@@ -2572,29 +2572,29 @@ DsState
         ( Meta
          { meta = AnyT, id = Id
           { name = "int32#", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 246 } } ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) )
       [ Unpack
        ( Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] )
        [ Meta
         { meta = Int32T, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 248 } } ]
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
        ( Assign
         ( Meta
          { meta = Int32T, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 252 } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
         ( Assign
          ( Meta
           { meta = [ Int32T ] :-> Int32T, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 250 } } )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
          ( Assign
           ( Meta
            { meta = [ Int32T ] :-> Int32T, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 249 } } )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
           ( Call
            ( Var
             ( Meta
@@ -2606,41 +2606,41 @@ DsState
             ( Meta
              { meta = Int32T, id = Id
               { name = "p", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 247 } } ) ] )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
           ( Cast
            ( [ Int32T ] :-> Int32T )
            ( Var
             ( Meta
              { meta = [ Int32T ] :-> Int32T, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 249 } } ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
          ( Assign
           ( Meta
            { meta = Int32T, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 251 } } )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
           ( Call
            ( Var
             ( Meta
              { meta = [ Int32T ] :-> Int32T, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 250 } } ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
            [ Var
             ( Meta
              { meta = Int32T, id = Id
               { name = "p", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 248 } } ) ] )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
           ( Cast Int32T
            ( Var
             ( Meta
              { meta = Int32T, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 251 } } ) ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) )
         ( Assign
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 253 } } )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
          ( Call
           ( Var
            ( Meta
@@ -2651,36 +2651,36 @@ DsState
            ( Meta
             { meta = Int32T, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 252 } } ) ] )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
          ( Cast AnyT
           ( Var
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 253 } } ) ) ) ) ) ] ) ] ), FunDef
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ) ] ) ] ), FunDef
    ( Meta
     { meta =
      [ Int32T, Int32T ] :-> Int32T, id = Id
      { name = "addInt32#_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 228 } } )
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
    [ Meta
     { meta = Int32T, id = Id
      { name = "x", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 229 } }, Meta
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, Meta
     { meta = Int32T, id = Id
      { name = "y", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 230 } } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
    ( [ Int32T, Int32T ] :-> Int32T )
    ( Assign
     ( Meta
      { meta = [ Int32T ] :-> Int32T, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 232 } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
     ( Assign
      ( Meta
       { meta = [ Int32T ] :-> Int32T, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 231 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Call
       ( Var
        ( Meta
@@ -2692,67 +2692,67 @@ DsState
        ( Meta
         { meta = Int32T, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 229 } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
      ( Cast
       ( [ Int32T ] :-> Int32T )
       ( Var
        ( Meta
         { meta = [ Int32T ] :-> Int32T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 231 } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) )
     ( Assign
      ( Meta
       { meta = Int32T, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 233 } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ Int32T ] :-> Int32T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 232 } } ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) )
       [ Var
        ( Meta
         { meta = Int32T, id = Id
          { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 230 } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] )
      ( Cast Int32T
       ( Var
        ( Meta
         { meta = Int32T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 233 } } ) ) ) ) ), FunDef
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ) ) ), FunDef
    ( Meta
     { meta =
      [ AnyT, AnyT ] :-> AnyT, id = Id
      { name = "const_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 203 } } )
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
    [ Meta
     { meta = AnyT, id = Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 204 } }, Meta
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, Meta
     { meta = AnyT, id = Id
      { name = "_", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 205 } } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
    ( [ AnyT, AnyT ] :-> AnyT )
    ( Atom
     ( Var
      ( Meta
       { meta = AnyT, id = Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 204 } } ) ) ), FunDef
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ) ), FunDef
    ( Meta
     { meta =
      [ Int32T, Int32T ] :-> Int32T, id = Id
      { name = "malgo_add_int32_t_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 176 } } )
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } )
    [ Meta
     { meta = Int32T, id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 177 } }, Meta
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } }, Meta
     { meta = Int32T, id = Id
      { name = "p", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 178 } } ]
+      ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ]
    ( [ Int32T, Int32T ] :-> Int32T )
    ( RawCall "malgo_add_int32_t"
     ( [ Int32T, Int32T ] :-> Int32T )
@@ -2760,8 +2760,8 @@ DsState
      ( Meta
       { meta = Int32T, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 177 } } ), Var
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ), Var
      ( Meta
       { meta = Int32T, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 178 } } ) ] ) ], globalClosures = fromList [] }
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal } } ) ] ) ], globalClosures = fromList [] }

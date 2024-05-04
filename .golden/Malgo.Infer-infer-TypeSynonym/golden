@@ -57,7 +57,7 @@ Module
            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 15, sourceColumn = Pos 19 } } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 1 } ) ]
+          ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyCon
@@ -83,7 +83,7 @@ Module
              { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 15, sourceColumn = Pos 24 } } } )
           ( Id
            { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 1 } ) ) :| [] ) ) :| [] ) ) ],
+            ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyApp
@@ -207,7 +207,7 @@ Module
            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 20, sourceColumn = Pos 1 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 29 } ) ]
+          ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -312,7 +312,7 @@ Module
                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 16 } } } )
               ( Id
                { name = "h", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 2 } ), VarP
+                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ), VarP
               ( Typed
                { annotated = TyCon
                 ( Id
@@ -323,7 +323,7 @@ Module
                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 19 } } } )
               ( Id
                { name = "w", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 3 } ) ] ]
+                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ] ]
             ( Seq
              ( Typed
               { annotated = TyTuple 0, value = Range
@@ -366,7 +366,7 @@ Module
                    { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 32 } } } )
                 ( Id
                  { name = "h", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 2 } ) ) ) :|
+                  ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) ) :|
               [ NoBind
                ( Range
                 { _start = SourcePos
@@ -456,7 +456,7 @@ Module
                     { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 57 } } } )
                  ( Id
                   { name = "w", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 3 } ) ) ) ] ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ] ], _scSigs =
+                   ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) ) ] ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ] ], _scSigs =
    [
     ( Range
      { _start = SourcePos
@@ -553,7 +553,7 @@ Module
       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = External },
      [ Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 0 } ], TyTuple
+       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ], TyTuple
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 18 }, _end = SourcePos
@@ -565,14 +565,14 @@ Module
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 20 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 0 } ), TyVar
+        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ), TyVar
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 22 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 23 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 0 } ) ] ),
+        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ] ),
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 6, sourceColumn = Pos 6 }, _end = SourcePos
@@ -654,7 +654,7 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyApp
      ( TyCon
       ( Id
@@ -663,7 +663,7 @@ TcEnv
      ( TyVar
       ( Id
        { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "mulInt64#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -785,9 +785,9 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 107 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 109 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyApp
       ( TyApp
@@ -795,15 +795,15 @@ TcEnv
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 109 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 107 } ) ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 109 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "gtDouble#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -868,19 +868,19 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 125 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 123 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyArr
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 125 } ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 123 } ) ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
      ( TyArr
       ( TyApp
        ( TyCon
@@ -890,7 +890,7 @@ TcEnv
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 125 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyApp
        ( TyCon
         ( Id
@@ -899,10 +899,10 @@ TcEnv
        ( TyVar
         ( Id
          { name = "b", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 123 } ) ) ) ) ) ),
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ),
    ( Id
     { name = "$_", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 29 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, Forall []
     ( TyTuple 0 ) ),
    ( Id
     { name = "eqDouble", moduleName = Artifact
@@ -957,12 +957,12 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ) )
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
      ( TyApp
       ( TyCon
        ( Id
@@ -971,7 +971,7 @@ TcEnv
       ( TyVar
        ( Id
         { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ) ) ) ) ),
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "atString#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -1213,7 +1213,7 @@ TcEnv
     ( TyArr ( TyPrim CharT ) ( TyArr ( TyPrim CharT ) ( TyPrim Int32T ) ) ) ),
    ( Id
     { name = "x", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 1 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, Forall []
     ( TyCon
      ( Id
       { name = "T", moduleName = Artifact
@@ -1288,29 +1288,29 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 119 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 121 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyArr
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 119 } ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
       ( TyArr
        ( TyVar
         ( Id
          { name = "b", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 121 } ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 119 } ) ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) )
      ( TyArr
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 119 } ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
       ( TyArr
        ( TyApp
         ( TyCon
@@ -1320,11 +1320,11 @@ TcEnv
         ( TyVar
          ( Id
           { name = "b", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 121 } ) ) )
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 119 } ) ) ) ) ) ),
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ),
    ( Id
     { name = "leInt32#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -1335,9 +1335,9 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 113 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 111 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyApp
       ( TyApp
@@ -1345,15 +1345,15 @@ TcEnv
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 113 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 111 } ) ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
      ( TyVar
       ( Id
        { name = "b", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 111 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "geInt64", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -1472,12 +1472,12 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "t", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 1257 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "t", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 1257 } ) )
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) )
      ( TyCon
       ( Id
        { name = "Char", moduleName = Artifact
@@ -1504,23 +1504,23 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 99 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 101 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 101 } ) )
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
      ( TyArr
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 99 } ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 101 } ) ) ) ) ),
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "printInt64", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall []
@@ -1540,18 +1540,18 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 281 }, Id
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal }, Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 279 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 281 } ) )
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) )
      ( TyVar
       ( Id
        { name = "b", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 279 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "mulFloat", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -1660,28 +1660,28 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 139 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 141 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyArr
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 141 } ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 139 } ) ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
      ( TyArr
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 141 } ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 139 } ) ) ) ) ),
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "eqInt64#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -1813,7 +1813,7 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyApp
      ( TyCon
       ( Id
@@ -1822,7 +1822,7 @@ TcEnv
      ( TyVar
       ( Id
        { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "True", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -1840,28 +1840,28 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 135 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 137 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 137 } ) )
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
      ( TyArr
       ( TyArr
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 137 } ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
        ( TyVar
         ( Id
          { name = "b", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 135 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 135 } ) ) ) ) ),
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "malgo_gt_double", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -1913,12 +1913,12 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "t", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 1251 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "t", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 1251 } ) )
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) )
      ( TyCon
       ( Id
        { name = "String", moduleName = Artifact
@@ -2018,12 +2018,12 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ) )
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
      ( TyArr
       ( TyApp
        ( TyCon
@@ -2033,7 +2033,7 @@ TcEnv
        ( TyVar
         ( Id
          { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyApp
        ( TyCon
         ( Id
@@ -2042,7 +2042,7 @@ TcEnv
        ( TyVar
         ( Id
          { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ) ) ) ) ) ),
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ),
    ( Id
     { name = "tailString", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall []
@@ -2139,7 +2139,7 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 285 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyCon
       ( Id
@@ -2148,7 +2148,7 @@ TcEnv
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 285 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "malgo_gt_char", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2289,7 +2289,7 @@ TcEnv
         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ),
    ( Id
     { name = "h", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 2 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, Forall []
     ( TyCon
      ( Id
       { name = "String", moduleName = Artifact
@@ -2338,12 +2338,12 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 127 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 127 } ) )
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
      ( TyArr
       ( TyApp
        ( TyCon
@@ -2353,7 +2353,7 @@ TcEnv
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 127 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyApp
        ( TyCon
         ( Id
@@ -2362,7 +2362,7 @@ TcEnv
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 127 } ) ) ) ) ) ),
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ),
    ( Id
     { name = "neString#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2373,13 +2373,13 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 283 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyTuple 0 )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 283 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "malgo_string_at", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2390,12 +2390,12 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "t", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 561 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "t", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 561 } ) )
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) )
      ( TyTuple 0 ) ) ),
    ( Id
     { name = "main", moduleName = Artifact
@@ -2449,7 +2449,7 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 147 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyApp
       ( TyCon
@@ -2468,11 +2468,11 @@ TcEnv
         ( TyVar
          ( Id
           { name = "a", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 147 } ) ) ) ) )
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 147 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "mulInt32#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2495,7 +2495,7 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 145 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyCon
       ( Id
@@ -2505,18 +2505,18 @@ TcEnv
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 145 } ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
       ( TyArr
        ( TyArr
         ( TyTuple 0 )
         ( TyVar
          ( Id
           { name = "a", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 145 } ) ) )
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 145 } ) ) ) ) ) ),
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ),
    ( Id
     { name = "malgo_is_upper", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2594,16 +2594,16 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 97 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 97 } ) )
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 97 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "consString", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2635,7 +2635,7 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 117 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyApp
       ( TyCon
@@ -2645,7 +2645,7 @@ TcEnv
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 117 } ) ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
      ( TyApp
       ( TyCon
        ( Id
@@ -2654,13 +2654,13 @@ TcEnv
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 117 } ) ) ) ) ),
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "head", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 115 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyApp
       ( TyCon
@@ -2670,11 +2670,11 @@ TcEnv
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 115 } ) ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 115 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "substring#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2729,51 +2729,51 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 277 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr ( TyPrim StringT )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 277 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = ".", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 133 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "c", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 131 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 129 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyArr
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 133 } ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
       ( TyVar
        ( Id
         { name = "c", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 131 } ) ) )
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
      ( TyArr
       ( TyArr
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 129 } ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
        ( TyVar
         ( Id
          { name = "b", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 133 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyArr
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 129 } ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
        ( TyVar
         ( Id
          { name = "c", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 131 } ) ) ) ) ) ),
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ),
    ( Id
     { name = "neInt64#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2818,12 +2818,12 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "t", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 1395 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "t", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 1395 } ) )
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) )
      ( TyTuple 0 ) ) ),
    ( Id
     { name = "Float#", moduleName = Artifact
@@ -2861,7 +2861,7 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 143 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyCon
       ( Id
@@ -2873,18 +2873,18 @@ TcEnv
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 143 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyArr
        ( TyArr
         ( TyTuple 0 )
         ( TyVar
          ( Id
           { name = "a", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 143 } ) ) )
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 143 } ) ) ) ) ) ),
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ),
    ( Id
     { name = "malgo_le_float", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -2929,7 +2929,7 @@ TcEnv
          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ),
    ( Id
     { name = "w", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 3 }, Forall []
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, Forall []
     ( TyCon
      ( Id
       { name = "String", moduleName = Artifact
@@ -2987,11 +2987,11 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 287 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyVar
      ( Id
       { name = "a", moduleName = Artifact
-       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 287 } ) ) ),
+       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) ) ),
    ( Id
     { name = "sqrtFloat#", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -3013,13 +3013,13 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall
     [ Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 289 } ]
+      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyTuple 0 )
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal 289 } ) ) ) ),
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "addFloat", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -3348,28 +3348,28 @@ TcEnv
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
     [ Id
      { name = "b", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 103 }, Id
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal }, Id
      { name = "a", moduleName = Artifact
-      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 105 } ]
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
     ( TyArr
      ( TyVar
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 105 } ) )
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
      ( TyArr
       ( TyArr
        ( TyVar
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 105 } ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
        ( TyVar
         ( Id
          { name = "b", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 103 } ) ) )
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
       ( TyVar
        ( Id
         { name = "b", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 103 } ) ) ) ) ),
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ),
    ( Id
     { name = "subFloat", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, Forall []
@@ -3490,14 +3490,14 @@ TcEnv
        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ), _typeParameters =
      [ Id
       { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ], _valueConstructors =
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ], _valueConstructors =
      [
       ( Id
        { name = "Nothing", moduleName = Artifact
         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
        [ Id
         { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ]
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
        ( TyApp
         ( TyCon
          ( Id
@@ -3506,18 +3506,18 @@ TcEnv
         ( TyVar
          ( Id
           { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ) ) ) ),
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
       ( Id
        { name = "Just", moduleName = Artifact
         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
        [ Id
         { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ]
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
        ( TyArr
         ( TyVar
          ( Id
           { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ) )
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
         ( TyApp
          ( TyCon
           ( Id
@@ -3526,7 +3526,7 @@ TcEnv
          ( TyVar
           ( Id
            { name = "runtime/malgo/Prelude.mlg.#a_18", moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 94 } ) ) ) ) ) ] } ),
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ] } ),
    ( Id
     { name = "Double#", moduleName = ModuleName "Builtin", sort = External }, TypeDef
     { _typeConstructor = TyPrim DoubleT, _typeParameters = [], _valueConstructors = [] } ),
@@ -3564,11 +3564,11 @@ TcEnv
            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ] } ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 0 }, TypeDef
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TypeDef
     { _typeConstructor = TyVar
      ( Id
       { name = "test/testcases/malgo/TypeSynonym.mlg.#a_0", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 4 } ), _typeParameters = [], _valueConstructors = [] } ),
+       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ), _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "Int64#", moduleName = ModuleName "Builtin", sort = External }, TypeDef
     { _typeConstructor = TyPrim Int64T, _typeParameters = [], _valueConstructors = [] } ),
@@ -3597,14 +3597,14 @@ TcEnv
        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ), _typeParameters =
      [ Id
       { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ], _valueConstructors =
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ], _valueConstructors =
      [
       ( Id
        { name = "Nil", moduleName = Artifact
         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
        [ Id
         { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ]
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
        ( TyApp
         ( TyCon
          ( Id
@@ -3613,18 +3613,18 @@ TcEnv
         ( TyVar
          ( Id
           { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ) ) ) ),
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ),
       ( Id
        { name = "Cons", moduleName = Artifact
         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, Forall
        [ Id
         { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ]
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ]
        ( TyArr
         ( TyVar
          ( Id
           { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ) )
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) )
         ( TyArr
          ( TyApp
           ( TyCon
@@ -3634,7 +3634,7 @@ TcEnv
           ( TyVar
            ( Id
             { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ) ) )
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) )
          ( TyApp
           ( TyCon
            ( Id
@@ -3643,7 +3643,7 @@ TcEnv
           ( TyVar
            ( Id
             { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal 95 } ) ) ) ) ) ) ] } ),
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Internal } ) ) ) ) ) ) ] } ),
    ( Id
     { name = "String#", moduleName = ModuleName "Builtin", sort = External }, TypeDef
     { _typeConstructor = TyPrim StringT, _typeParameters = [], _valueConstructors = [] } ),
@@ -3678,11 +3678,11 @@ TcEnv
       ( TyVar
        ( Id
         { name = "test/testcases/malgo/TypeSynonym.mlg.#a_0", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 4 } ) ) )
+         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) )
      ( TyVar
       ( Id
        { name = "test/testcases/malgo/TypeSynonym.mlg.#a_0", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 4 } ) ), _typeParameters = [], _valueConstructors = [] } ),
+        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ), _typeParameters = [], _valueConstructors = [] } ),
    ( Id
     { name = "Int64", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External }, TypeDef
@@ -3738,17 +3738,17 @@ TcEnv
     (
      [ Id
       { name = "test/testcases/malgo/TypeSynonym.mlg.#a_0", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 4 } ], TyApp
+       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ], TyApp
      ( TyApp
       ( TyTuple 2 )
       ( TyVar
        ( Id
         { name = "test/testcases/malgo/TypeSynonym.mlg.#a_0", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 4 } ) ) )
+         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) )
      ( TyVar
       ( Id
        { name = "test/testcases/malgo/TypeSynonym.mlg.#a_0", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 4 } ) ) ) ),
+        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) ) ),
    ( Id
     { name = "MyString", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = External },
@@ -3788,34 +3788,34 @@ TcEnv
   [
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 10 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 9 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 8 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 7 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "b", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 24 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kb", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 23 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 14 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 13 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 12 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 11 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Maybe", moduleName = Artifact
      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External }, TyArr TYPE TYPE ),
@@ -3827,10 +3827,10 @@ TcEnv
     { name = "Ptr#", moduleName = ModuleName "Builtin", sort = External }, TyArr TYPE TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 6 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 5 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Char#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
@@ -3842,42 +3842,42 @@ TcEnv
     { name = "String#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "a", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 26 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "ka", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 25 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 28 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 27 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 18 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 17 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "MyTuple", moduleName = Artifact
      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = External }, TyArr TYPE TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 16 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 15 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "Float#", moduleName = ModuleName "Builtin", sort = External }, TYPE ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 22 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 21 } ) ),
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ),
    ( Id
     { name = "t", moduleName = Artifact
-     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 20 }, TyMeta
+     ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal }, TyMeta
     ( Id
      { name = "kt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 19 } ) ) ] }
+      ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal } ) ) ] }
