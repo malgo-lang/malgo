@@ -37,6 +37,7 @@ getWorkspaceDir :: (MonadIO m) => m FilePath
 getWorkspaceDir = liftIO do
   pwd <- getCurrentDirectory
   createDirectoryIfMissing True $ pwd </> ".malgo-work"
+  createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "libs"
   return $ pwd </> ".malgo-work"
 
 spec :: Spec
@@ -72,9 +73,6 @@ spec = do
       golden ("driver agressiveCase " <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
       goldenLLVM ("llvm agressiveCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
       goldenLLVM ("llvm opt agressiveCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  -- examples <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory "./examples/malgo"
-  -- parallel $ for_ examples \examplecase -> do
-  --   golden ("driver exampleCase " <> takeBaseName examplecase) $ testNormal ("./examples/malgo" </> examplecase)
   errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
   parallel $ for_ errorcases \errorcase -> do
     it ("driver errorCase " <> takeBaseName errorcase)
