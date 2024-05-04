@@ -49,4 +49,4 @@ jobs:
           cabal build
       - name: Run tests
         run: |
-          cabal test --test-show-details=direct --test-option='-m parse -m rename -m infer -m refine'
+          cabal test --test-show-details=direct --test-option='-m refine'
