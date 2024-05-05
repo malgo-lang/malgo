@@ -1,7 +1,7 @@
 module Malgo.Core.Annotate (annotate) where
 
 import Control.Lens (ifor)
-import Data.HashMap.Strict qualified as HashMap
+import Data.Map.Strict qualified as Map
 import Data.Text qualified as T
 import Data.Traversable (for)
 import Effectful
@@ -19,15 +19,15 @@ annotate moduleName program = runReader (Context moduleName mempty) (annProgram 
 data Context = Context
   { -- | The current module name.
     moduleName :: ModuleName,
-    nameEnv :: HashMap Text (Meta Type)
+    nameEnv :: Map Text (Meta Type)
   }
 
 lookupName :: (HasCallStack) => (Reader Context :> es) => Text -> Eff es (Meta Type)
-lookupName name =
-  HashMap.lookupDefault
-    (error $ "lookupName: " <> show name)
-    name
-    <$> asks @Context (.nameEnv)
+lookupName name = do
+  nameEnv <- asks @Context (.nameEnv)
+  case Map.lookup name nameEnv of
+    Just x -> pure x
+    Nothing -> errorDoc $ "lookupName: " <> pretty name
 
 parseId :: (Reader Context :> es) => Text -> Type -> Eff es (Meta Type)
 parseId name meta
@@ -59,15 +59,15 @@ annProgram Program {..} = do
     topFuns <- traverse annFunDecl topFuns
     pure Program {..}
 
-prepareVarDecl :: (Reader Context :> es) => (Text, Type, Expr Text) -> Eff es (HashMap Text (Meta Type))
+prepareVarDecl :: (Reader Context :> es) => (Text, Type, Expr Text) -> Eff es (Map Text (Meta Type))
 prepareVarDecl (name, ty, _) = do
   id <- parseId name ty
-  pure $ HashMap.singleton name id
+  pure $ Map.singleton name id
 
-prepareFunDecl :: (Reader Context :> es) => (Text, [Text], Type, Expr Text) -> Eff es (HashMap Text (Meta Type))
+prepareFunDecl :: (Reader Context :> es) => (Text, [Text], Type, Expr Text) -> Eff es (Map Text (Meta Type))
 prepareFunDecl (name, _, ty, _) = do
   id <- parseId name ty
-  pure $ HashMap.singleton name id
+  pure $ Map.singleton name id
 
 annVarDecl :: (Reader Context :> es, IOE :> es) => (Text, Type, Expr Text) -> Eff es (Meta Type, Type, Expr (Meta Type))
 annVarDecl (name, ty, body) = do
@@ -79,7 +79,7 @@ annFunDecl (name, params, ty@(paramTypes :-> _), body) = do
   name <- lookupName name
   params' <- zipWithM parseId params paramTypes
   local
-    (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv})
+    (\ctx -> ctx {nameEnv = Map.fromList (zip params params') <> ctx.nameEnv})
     $ (name,params',ty,)
     <$> annExpr body
 annFunDecl (name, _, _, _) = errorDoc $ "annFunDecl: " <> pretty name
@@ -98,30 +98,31 @@ annExpr (Let defs body) = do
   where
     annDef (LocalDef variable typ object) = do
       variable' <- parseId variable typ
-      object <- local (\ctx -> ctx {nameEnv = HashMap.insert variable variable' ctx.nameEnv}) do
+      object <- local (\ctx -> ctx {nameEnv = Map.insert variable variable' ctx.nameEnv}) do
         annObj typ object
-      pure (HashMap.singleton variable variable', [LocalDef variable' typ object])
+      pure (Map.singleton variable variable', [LocalDef variable' typ object])
 annExpr (Match scrutinee alts) = do
   scrutinee <- annExpr scrutinee
   Match scrutinee <$> traverse (annCase $ typeOf scrutinee) alts
   where
     annCase _ (Unpack (Con tag paramTypes) params body) = do
       params' <- zipWithM parseId params paramTypes
-      local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
+      local (\ctx -> ctx {nameEnv = Map.fromList (zip params params') <> ctx.nameEnv}) do
         body <- annExpr body
         pure $ Unpack (Con tag paramTypes) params' body
     annCase (RecordT fieldTypes) (OpenRecord fields body) = do
       fields' <- ifor fields \field variable -> do
-        let ty = HashMap.lookupDefault (error $ "annExp: " <> show field) field fieldTypes
-        parseId variable ty
-      local (\ctx -> ctx {nameEnv = HashMap.fromList (HashMap.elems (HashMap.intersectionWith (,) fields fields')) <> ctx.nameEnv}) do
+        case Map.lookup field fieldTypes of
+          Nothing -> error $ "annExp: " <> show field
+          Just ty -> parseId variable ty
+      local (\ctx -> ctx {nameEnv = Map.fromList (Map.elems (Map.intersectionWith (,) fields fields')) <> ctx.nameEnv}) do
         body <- annExpr body
         pure $ OpenRecord fields' body
     annCase ty OpenRecord {} = error $ "annCase: " <> show ty
     annCase _ (Exact value body) = Exact value <$> annExpr body
     annCase _ (Bind var ty body) = do
       var' <- parseId var ty
-      local (\ctx -> ctx {nameEnv = HashMap.insert var var' ctx.nameEnv}) do
+      local (\ctx -> ctx {nameEnv = Map.insert var var' ctx.nameEnv}) do
         body <- annExpr body
         pure $ Bind var' ty body
 annExpr (Switch v cases def) = Switch <$> annAtom v <*> traverse annCase cases <*> annExpr def
@@ -133,7 +134,7 @@ annExpr (SwitchUnboxed v cases def) = SwitchUnboxed <$> annAtom v <*> traverse a
 annExpr (Destruct v con@(Con _ paramTypes) params body) = do
   v <- annAtom v
   params' <- zipWithM parseId params paramTypes
-  local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
+  local (\ctx -> ctx {nameEnv = Map.fromList (zip params params') <> ctx.nameEnv}) do
     body <- annExpr body
     pure $ Destruct v con params' body
 annExpr (DestructRecord v kvs body) = do
@@ -141,15 +142,17 @@ annExpr (DestructRecord v kvs body) = do
   case typeOf v of
     RecordT kts -> do
       kvs' <-
-        HashMap.fromList <$> for (HashMap.toList kvs) \(k, v) -> do
-          let ty = HashMap.lookupDefault (error $ "annExp[DestructRecord]: " <> show k) k kts
-          v' <- parseId v ty
-          pure (k, v')
+        Map.fromList <$> for (Map.toList kvs) \(k, v) -> do
+          case Map.lookup k kts of
+            Nothing -> error $ "annExp[DestructRecord]: " <> show k
+            Just ty -> do
+              v' <- parseId v ty
+              pure (k, v')
       local
         ( \ctx ->
             ctx
               { nameEnv =
-                  HashMap.fromList (HashMap.elems (HashMap.intersectionWith (,) kvs kvs')) <> ctx.nameEnv
+                  Map.fromList (Map.elems (Map.intersectionWith (,) kvs kvs')) <> ctx.nameEnv
               }
         )
         do
@@ -159,7 +162,7 @@ annExpr (DestructRecord v kvs body) = do
 annExpr (Assign x v e) = do
   v' <- annExpr v
   x' <- parseId x (typeOf v')
-  local (\ctx -> ctx {nameEnv = HashMap.insert x x' ctx.nameEnv}) do
+  local (\ctx -> ctx {nameEnv = Map.insert x x' ctx.nameEnv}) do
     e <- annExpr e
     pure $ Assign x' v' e
 annExpr (Error ty) = pure $ Error ty
@@ -171,7 +174,7 @@ annAtom (Unboxed value) = pure $ Unboxed value
 annObj :: (Reader Context :> es, IOE :> es) => Type -> Obj Text -> Eff es (Obj (Meta Type))
 annObj (paramTypes :-> _) (Fun params body) = do
   params' <- zipWithM parseId params paramTypes
-  local (\ctx -> ctx {nameEnv = HashMap.fromList (zip params params') <> ctx.nameEnv}) do
+  local (\ctx -> ctx {nameEnv = Map.fromList (zip params params') <> ctx.nameEnv}) do
     body <- annExpr body
     pure $ Fun params' body
 annObj ty Fun {} = error $ "annObj Fun: " <> show ty

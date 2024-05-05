@@ -161,10 +161,6 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @"test/testcases/malgo/DeferLaw.mlg.f"(ptr %0, ptr %"test/testcases/malgo/DeferLaw.mlg.$x_22_0") {
-  ret ptr %"test/testcases/malgo/DeferLaw.mlg.$x_22_0"
-}
-
 declare ptr @malgo_malloc(i64)
 
 define internal ptr @"test/testcases/malgo/DeferLaw.mlg.main"(ptr %0, ptr %"test/testcases/malgo/DeferLaw.mlg.$$__29_0") {
@@ -195,6 +191,10 @@ define internal ptr @"test/testcases/malgo/DeferLaw.mlg.main"(ptr %0, ptr %"test
 
 switch_default_0:                                 ; preds = %1
   unreachable
+}
+
+define internal ptr @"test/testcases/malgo/DeferLaw.mlg.f"(ptr %0, ptr %"test/testcases/malgo/DeferLaw.mlg.$x_22_0") {
+  ret ptr %"test/testcases/malgo/DeferLaw.mlg.$x_22_0"
 }
 
 define i32 @main(ptr %0) {

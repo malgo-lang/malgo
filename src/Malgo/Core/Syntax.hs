@@ -22,7 +22,7 @@ where
 import Control.Lens (traverseOf, traversed, _3, _4)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Graph
-import Data.HashSet qualified as HashSet
+import Data.Set qualified as Set
 import Data.Store.TH
 import Data.String.Conversions
 import Effectful (Eff, (:>))
@@ -112,10 +112,10 @@ cast ty e
 --   DefBuilderT $ tell $ Endo $ \e -> Match val (Unpack con vs e :| [])
 --   pure $ map Var vs
 
-callGraph :: (Hashable a, Ord a) => Program a -> (Graph, Vertex -> (a, a, [a]), a -> Maybe Vertex)
+callGraph :: (Ord a) => Program a -> (Graph, Vertex -> (a, a, [a]), a -> Maybe Vertex)
 callGraph Program {..} =
   let edges = map cgTopVar topVars <> map cgTopFun topFuns
    in graphFromEdges edges
   where
-    cgTopVar (a, _, e) = (a, a, HashSet.toList $ callees e <> freevars e) -- Merge @callees@ and @freevars@ to avoid missing callees used as a closure.
-    cgTopFun (a, ps, _, e) = (a, a, HashSet.toList $ HashSet.difference (callees e <> freevars e) (HashSet.fromList ps))
+    cgTopVar (a, _, e) = (a, a, Set.toList $ callees e <> freevars e) -- Merge @callees@ and @freevars@ to avoid missing callees used as a closure.
+    cgTopFun (a, ps, _, e) = (a, a, Set.toList $ Set.difference (callees e <> freevars e) (Set.fromList ps))

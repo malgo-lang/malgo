@@ -166,25 +166,13 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-declare ptr @malgo_hash_table_get(ptr, ptr)
-
-define internal ptr @"test/testcases/malgo/FieldPrefix.mlg.y2D"(ptr %0, ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_61_0") {
-  %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_61_0", ptr @str2924)
-  %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_61_0", ptr @str2925)
-  ret ptr %3
-}
-
 define internal ptr @"test/testcases/malgo/FieldPrefix.mlg.main"(ptr %0, ptr %"test/testcases/malgo/FieldPrefix.mlg.$$__81_0") {
   %2 = load ptr, ptr @"test/testcases/malgo/FieldPrefix.mlg.zero2D", align 8
   %3 = call ptr @"test/testcases/malgo/FieldPrefix.mlg.print2D"(ptr null, ptr %2)
   ret ptr %3
 }
 
-define internal ptr @"test/testcases/malgo/FieldPrefix.mlg.x2D"(ptr %0, ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_64_0") {
-  %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_64_0", ptr @str2924)
-  %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_64_0", ptr @str2925)
-  ret ptr %2
-}
+declare ptr @malgo_hash_table_get(ptr, ptr)
 
 declare ptr @malgo_malloc(i64)
 
@@ -277,6 +265,18 @@ switch_default_3:                                 ; preds = %"switch_branch_runt
 
 switch_default_4:                                 ; preds = %1
   unreachable
+}
+
+define internal ptr @"test/testcases/malgo/FieldPrefix.mlg.x2D"(ptr %0, ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_64_0") {
+  %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_64_0", ptr @str2924)
+  %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_64_0", ptr @str2925)
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/FieldPrefix.mlg.y2D"(ptr %0, ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_61_0") {
+  %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_61_0", ptr @str2924)
+  %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_61_0", ptr @str2925)
+  ret ptr %3
 }
 
 define i32 @main(ptr %0) {

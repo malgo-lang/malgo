@@ -2,10 +2,10 @@
 module Malgo.Rename.Pass (rename) where
 
 import Control.Lens (view, (^.), _2)
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
 import Data.List (intersect)
 import Data.List.Extra (anySame, disjoint)
+import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
 import Effectful (Eff, IOE, (:>))
 import Effectful.Reader.Static (Reader, ask, local, runReader)
 import Effectful.State.Static.Local (State, execState, get, gets, modify, put, runState)
@@ -21,9 +21,9 @@ import Malgo.Syntax
 import Malgo.Syntax.Extension
 
 -- | Entry point of this 'Malgo.Rename.Pass'
-rename :: (State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
+rename :: (State (Map ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
 rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
-  (ds', rnState) <- runState (RnState mempty HashSet.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
+  (ds', rnState) <- runState (RnState mempty Set.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
 -- renamer
@@ -33,7 +33,7 @@ rnDecls ::
   ( Reader ModuleName :> es,
     Reader RnEnv :> es,
     State RnState :> es,
-    State (HashMap ModuleName Interface) :> es,
+    State (Map ModuleName Interface) :> es,
     State Uniq :> es,
     IOE :> es,
     Reader Flag :> es,
@@ -46,7 +46,7 @@ rnDecls ds = do
   rnEnv <- genToplevelEnv ds =<< ask
   local (const rnEnv) $ do
     -- RnStateの生成
-    put =<< RnState <$> infixDecls ds <*> pure HashSet.empty
+    put =<< RnState <$> infixDecls ds <*> pure Set.empty
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     traverse rnDecl ds
 
@@ -55,7 +55,7 @@ rnDecls ds = do
 -- The infix declaration is assumed to have already been interpreted and registered in RnState.
 rnDecl ::
   ( State RnState :> es,
-    State (HashMap ModuleName Interface) :> es,
+    State (Map ModuleName Interface) :> es,
     State Uniq :> es,
     Reader RnEnv :> es,
     Reader ModuleName :> es,
@@ -67,7 +67,7 @@ rnDecl ::
   Eff es (Decl (Malgo Rename))
 rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExpr expr
 rnDecl (ScSig pos name typ) = do
-  let tyVars = HashSet.toList $ getTyVars typ
+  let tyVars = Set.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
   local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars'))
     $ ScSig pos
@@ -89,7 +89,7 @@ rnDecl (TypeSynonym pos name params typ) = do
     <*> rnType typ
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
 rnDecl (Foreign pos name typ) = do
-  let tyVars = HashSet.toList $ getTyVars typ
+  let tyVars = Set.toList $ getTyVars typ
   tyVars' <- traverse resolveName tyVars
   local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars'))
     $ Foreign (pos, name)
@@ -99,8 +99,8 @@ rnDecl (Import pos modName importList) = do
   interface <- loadInterface modName
   modify \s@RnState {..} ->
     s
-      { RnState.infixInfo = s.infixInfo <> HashMap.mapKeys (externalFromInterface interface) interface.infixInfo,
-        RnState.dependencies = HashSet.insert modName dependencies <> interface.dependencies
+      { RnState.infixInfo = s.infixInfo <> Map.mapKeys (externalFromInterface interface) interface.infixInfo,
+        RnState.dependencies = Set.insert modName dependencies <> interface.dependencies
       }
   pure $ Import pos modName importList
 
@@ -127,7 +127,7 @@ rnExpr (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
   e1' <- rnExpr e1
   e2' <- rnExpr e2
-  mfixity <- HashMap.lookup op' <$> gets @RnState (.infixInfo)
+  mfixity <- Map.lookup op' <$> gets @RnState (.infixInfo)
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
@@ -251,12 +251,12 @@ rnStmts (With x Nothing e :| s : ss) = do
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
 -- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
-infixDecls :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => [Decl (Malgo 'Parse)] -> Eff es (HashMap RnId (Assoc, Int))
+infixDecls :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => [Decl (Malgo 'Parse)] -> Eff es (Map RnId (Assoc, Int))
 infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
       name' <- lookupVarName pos name
-      pure $ HashMap.singleton name' (assoc, order)
+      pure $ Map.singleton name' (assoc, order)
     _ -> pure mempty
 
 -- | OpApp recombination.
@@ -310,39 +310,39 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (HashMap ModuleName Interface) :> es, Reader Flag :> es, Workspace :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
+genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (Map ModuleName Interface) :> es, Reader Flag :> es, Workspace :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
 genToplevelEnv (ds :: [Decl (Malgo 'Parse)]) env = do
   execState env (traverse aux ds)
   where
     aux (ScDef pos x _) = do
       env <- gets @RnEnv (._resolvedVarIdentMap)
-      when (x `elem` HashMap.keys env) do
+      when (x `elem` Map.keys env) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
       env <- get @RnEnv
-      when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
+      when (x `elem` Map.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
-      unless (disjoint (map (view _2) cs) (HashMap.keys (env ^. resolvedVarIdentMap))) do
+      unless (disjoint (map (view _2) cs) (Map.keys (env ^. resolvedVarIdentMap))) do
         errorOn pos
           $ "Duplicate name(s):"
           <+> sep
-            (punctuate "," $ map (squotes . pretty) (map (view _2) cs `intersect` HashMap.keys (env ^. resolvedVarIdentMap)))
+            (punctuate "," $ map (squotes . pretty) (map (view _2) cs `intersect` Map.keys (env ^. resolvedVarIdentMap)))
       x' <- resolveGlobalName x
       xs' <- traverse (resolveGlobalName . view _2) cs
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (TypeSynonym pos x _ _) = do
       env <- get @RnEnv
-      when (x `elem` HashMap.keys (env ^. resolvedTypeIdentMap)) do
+      when (x `elem` Map.keys (env ^. resolvedTypeIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (Foreign pos x _) = do
       env <- get @RnEnv
-      when (x `elem` HashMap.keys (env ^. resolvedVarIdentMap)) do
+      when (x `elem` Map.keys (env ^. resolvedVarIdentMap)) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]

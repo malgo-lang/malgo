@@ -15,7 +15,7 @@ module Malgo.Infer.TcEnv
 where
 
 import Control.Lens (At (at), makeFieldsNoPrefix, view, (%~), (^.))
-import Data.HashMap.Strict qualified as HashMap
+import Data.Map.Strict qualified as Map
 import Data.Maybe (fromJust)
 import Malgo.Id
 import Malgo.Infer.TypeRep hiding (insertKind)
@@ -30,10 +30,10 @@ import Malgo.Syntax.Extension
 type RecordTypeName = Text
 
 data TcEnv = TcEnv
-  { _signatureMap :: HashMap RnId (Scheme Type),
-    _typeDefMap :: HashMap RnId (TypeDef Type),
-    _typeSynonymMap :: HashMap TypeVar ([TypeVar], Type),
-    _resolvedTypeIdentMap :: HashMap PsId [Resolved],
+  { _signatureMap :: Map RnId (Scheme Type),
+    _typeDefMap :: Map RnId (TypeDef Type),
+    _typeSynonymMap :: Map TypeVar ([TypeVar], Type),
+    _resolvedTypeIdentMap :: Map PsId [Resolved],
     _kindCtx :: KindCtx
   }
   deriving stock (Show)
@@ -41,16 +41,16 @@ data TcEnv = TcEnv
 makeFieldsNoPrefix ''TcEnv
 
 insertSignature :: RnId -> Scheme Type -> TcEnv -> TcEnv
-insertSignature name scheme = over signatureMap (HashMap.insert name scheme)
+insertSignature name scheme = over signatureMap (Map.insert name scheme)
 
 insertTypeDef :: RnId -> TypeDef Type -> TcEnv -> TcEnv
-insertTypeDef name def = over typeDefMap (HashMap.insert name def)
+insertTypeDef name def = over typeDefMap (Map.insert name def)
 
 updateTypeDef :: RnId -> (TypeDef Type -> TypeDef Type) -> TcEnv -> TcEnv
-updateTypeDef name f = over typeDefMap (HashMap.adjust f name)
+updateTypeDef name f = over typeDefMap (Map.adjust f name)
 
 insertTypeSynonym :: TypeVar -> ([TypeVar], Type) -> TcEnv -> TcEnv
-insertTypeSynonym name def = over typeSynonymMap (HashMap.insert name def)
+insertTypeSynonym name def = over typeSynonymMap (Map.insert name def)
 
 insertKind :: RnId -> Kind -> TcEnv -> TcEnv
 insertKind name kind = over kindCtx (TypeRep.insertKind name kind)
@@ -59,18 +59,18 @@ mergeInterface :: Interface -> TcEnv -> TcEnv
 mergeInterface interface tcEnv =
   tcEnv
     & ( signatureMap
-          %~ HashMap.union
-            ( HashMap.mapKeys
+          %~ Map.union
+            ( Map.mapKeys
                 (externalFromInterface interface)
                 interface.signatureMap
             )
       )
     & ( typeDefMap
-          %~ HashMap.union
-            (HashMap.mapKeys (externalFromInterface interface) interface.typeDefMap)
+          %~ Map.union
+            (Map.mapKeys (externalFromInterface interface) interface.typeDefMap)
       )
-    & (typeSynonymMap %~ HashMap.union interface.typeSynonymMap)
-    & (kindCtx %~ HashMap.union interface.kindCtx)
+    & (typeSynonymMap %~ Map.union interface.typeSynonymMap)
+    & (kindCtx %~ Map.union interface.kindCtx)
 
 genTcEnv :: (Applicative f) => RnEnv -> f TcEnv
 genTcEnv rnEnv = do
@@ -85,7 +85,7 @@ genTcEnv rnEnv = do
     $ TcEnv
       { _signatureMap = mempty,
         _typeDefMap =
-          HashMap.fromList
+          Map.fromList
             [ (int32_t, TypeDef (TyPrim Int32T) [] []),
               (int64_t, TypeDef (TyPrim Int64T) [] []),
               (float_t, TypeDef (TyPrim FloatT) [] []),
@@ -97,7 +97,7 @@ genTcEnv rnEnv = do
         _typeSynonymMap = mempty,
         _resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap,
         _kindCtx =
-          HashMap.fromList
+          Map.fromList
             [ (int32_t, TYPE),
               (int64_t, TYPE),
               (float_t, TYPE),

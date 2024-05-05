@@ -2,7 +2,7 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Data.ByteString qualified as BS
-import Data.HashMap.Strict qualified as HashMap
+import Data.Map.Strict qualified as Map
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text.IO qualified as T
 import Effectful
@@ -60,7 +60,7 @@ compileFromAST ::
   ( Reader OptimizeOption :> es,
     Reader Flag :> es,
     IOE :> es,
-    State (HashMap ModuleName Interface) :> es,
+    State (Map ModuleName Interface) :> es,
     State Uniq :> es,
     Workspace :> es
   ) =>
@@ -150,7 +150,7 @@ compileFromAST srcPath parsedAst = do
       -- lint True coreLLOpt
       Uniq i <- get @Uniq
       let srcRelPath = toFilePath srcPath.relPath
-      LLVM.codeGen srcRelPath (toFilePath dstPath) moduleName (searchMain $ HashMap.toList dsEnv._nameEnv) i coreLL
+      LLVM.codeGen srcRelPath (toFilePath dstPath) moduleName (searchMain $ Map.toList dsEnv._nameEnv) i coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id, Meta b)] -> Maybe (Meta b)
     searchMain ((griffId@Id {sort = External}, coreId) : _)
@@ -167,7 +167,7 @@ compile ::
   ( Reader OptimizeOption :> es,
     Reader Flag :> es,
     IOE :> es,
-    State (HashMap ModuleName Interface) :> es,
+    State (Map ModuleName Interface) :> es,
     State Uniq :> es,
     Workspace :> es
   ) =>

@@ -16,9 +16,9 @@ define internal ptr @"test/testcases/malgo/Test1.mlg.malgo_print_string"(ptr noc
 }
 
 define internal ptr @"test/testcases/malgo/Test1.mlg.#let_closure_80"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr nocapture nofree readonly %1) {
-  %true_0 = load ptr, ptr %0, align 8
-  %t_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %t_0 = load ptr, ptr %t_addr_0, align 8
+  %t_0 = load ptr, ptr %0, align 8
+  %true_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %true_0 = load ptr, ptr %true_addr_0, align 8
   %true_0.val = load i8, ptr %true_0, align 1
   %switch.i = icmp eq i8 %true_0.val, 0
   %3 = tail call ptr @malgo_malloc(i64 noundef 1)
@@ -35,9 +35,9 @@ define internal ptr @"test/testcases/malgo/Test1.mlg.#let_closure_79"(ptr nocapt
   %true_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr %true_0, ptr %let_capture_0, align 8
-  %t_0 = getelementptr { ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
-  store ptr %1, ptr %t_0, align 8
+  store ptr %1, ptr %let_capture_0, align 8
+  %true_1 = getelementptr { ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
+  store ptr %true_0, ptr %true_1, align 8
   store ptr %let_capture_0, ptr %3, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
   store ptr @"test/testcases/malgo/Test1.mlg.#let_closure_80", ptr %let_func_0, align 8

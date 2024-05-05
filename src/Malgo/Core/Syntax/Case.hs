@@ -13,7 +13,7 @@ where
 import Control.Lens (makePrisms, sans, traverseOf)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
-import Data.HashMap.Strict qualified as HashMap
+import Data.Map.Strict qualified as Map
 import Data.Store.TH
 import Malgo.Core.Syntax.Atom (HasAtom (..))
 import Malgo.Core.Syntax.Common
@@ -27,7 +27,7 @@ data Case a
   = -- | constructor pattern
     Unpack Con [a] (Expr a)
   | -- | record pattern
-    OpenRecord (HashMap Text a) (Expr a)
+    OpenRecord (Map Text a) (Expr a)
   | -- | unboxed value pattern
     Exact Unboxed (Expr a)
   | -- | variable pattern
@@ -47,17 +47,17 @@ instance (Pretty a) => Pretty (Case a) where
   pretty (Unpack c xs e) =
     parens $ sep ["unpack" <+> parens (pretty c <+> sep (map pretty xs)), pretty e]
   pretty (OpenRecord pat e) =
-    parens $ sep ["open", parens $ sep $ map (\(k, v) -> pretty k <+> pretty v) $ HashMap.toList pat, pretty e]
+    parens $ sep ["open", parens $ sep $ map (\(k, v) -> pretty k <+> pretty v) $ Map.toList pat, pretty e]
   pretty (Exact u e) = parens $ sep ["exact" <+> pretty u, pretty e]
   pretty (Bind x t e) = parens $ sep ["bind", pretty x, pretty t, pretty e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
-  freevars (OpenRecord pat e) = foldr sans (freevars e) (HashMap.elems pat)
+  freevars (OpenRecord pat e) = foldr sans (freevars e) (Map.elems pat)
   freevars (Exact _ e) = freevars e
   freevars (Bind x _ e) = sans x $ freevars e
   callees (Unpack _ xs e) = foldr sans (callees e) xs
-  callees (OpenRecord pat e) = foldr sans (callees e) (HashMap.elems pat)
+  callees (OpenRecord pat e) = foldr sans (callees e) (Map.elems pat)
   callees (Exact _ e) = callees e
   callees (Bind x _ e) = sans x $ callees e
 

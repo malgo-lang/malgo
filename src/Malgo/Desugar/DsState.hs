@@ -16,8 +16,8 @@ where
 
 import Control.Lens (mapped, traversed, (^.), _2)
 import Control.Lens.TH
-import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
+import Data.Map.Strict qualified as Map
 import Effectful (Eff, (:>))
 import Effectful.State.Static.Local (State, gets)
 import Malgo.Core.Syntax qualified as C
@@ -41,17 +41,17 @@ makePrisms ''Def
 -- | 'DsState' tracks the state of desugaring.
 data DsState = DsState
   { -- | Name mapping from Malgo's 'RnId' to Core's 'Id'.
-    _nameEnv :: HashMap RnId (Meta C.Type),
+    _nameEnv :: Map RnId (Meta C.Type),
     -- | Type signatures.
-    _signatureMap :: HashMap RnId (GT.Scheme GT.Type),
+    _signatureMap :: Map RnId (GT.Scheme GT.Type),
     -- | Type definitions.
-    _typeDefMap :: HashMap RnId (GT.TypeDef GT.Type),
+    _typeDefMap :: Map RnId (GT.TypeDef GT.Type),
     -- | Kind context.
     _kindCtx :: KindCtx,
     -- | Top-level definitions.
     _globalDefs :: [Def],
     -- | Closure Ids for global functions.
-    globalClosures :: HashMap (Meta C.Type) (Meta C.Type)
+    globalClosures :: Map (Meta C.Type) (Meta C.Type)
   }
   deriving stock (Show)
 
@@ -59,7 +59,10 @@ makeFieldsNoPrefix ''DsState
 
 -- | 'makeDsStore' only takes 'TcEnv', but importing 'RnEnv' causes cyclic dependency.
 makeDsState ::
-  (HasSignatureMap env (HashMap RnId (Scheme Type)), HasTypeDefMap env (HashMap Id (TypeDef Type)), HasKindCtx env KindCtx) =>
+  ( HasSignatureMap env (Map RnId (Scheme Type)),
+    HasTypeDefMap env (Map Id (TypeDef Type)),
+    HasKindCtx env KindCtx
+  ) =>
   env ->
   DsState
 makeDsState tcEnv =
@@ -80,7 +83,7 @@ lookupValueConstructors ::
 lookupValueConstructors con ts = do
   typeEnv <- gets @DsState (._typeDefMap)
   -- _valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
-  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (HashMap.elems typeEnv) of
+  case List.find (\TypeDef {..} -> _typeConstructor == GT.TyCon con && not (List.null _valueConstructors)) (Map.elems typeEnv) of
     Just TypeDef {..} ->
-      pure $ over (mapped . _2 . traversed) (GT.applySubst $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
+      pure $ over (mapped . _2 . traversed) (GT.applySubst $ Map.fromList $ zip _typeParameters ts) _valueConstructors
     Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty con)

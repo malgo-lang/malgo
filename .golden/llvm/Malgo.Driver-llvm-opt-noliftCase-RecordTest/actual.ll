@@ -36,10 +36,10 @@ declare ptr @malgo_hash_table_new() local_unnamed_addr
 
 declare void @malgo_hash_table_insert(ptr, ptr, ptr) local_unnamed_addr
 
-define internal i32 @"test/testcases/malgo/RecordTest.mlg.#let_closure_2907"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(4) %0, i32 %1) {
-  %p_0 = load i32, ptr %0, align 8
-  %malgo_add_int32_t_addr_0 = getelementptr { i32, ptr }, ptr %0, i64 0, i32 1
-  %malgo_add_int32_t_0 = load ptr, ptr %malgo_add_int32_t_addr_0, align 8
+define internal i32 @"test/testcases/malgo/RecordTest.mlg.#let_closure_2907"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(12) %0, i32 %1) {
+  %malgo_add_int32_t_0 = load ptr, ptr %0, align 8
+  %p_addr_0 = getelementptr { ptr, i32 }, ptr %0, i64 0, i32 1
+  %p_0 = load i32, ptr %p_addr_0, align 4
   %3 = load ptr, ptr %malgo_add_int32_t_0, align 8
   %4 = getelementptr { ptr, ptr }, ptr %malgo_add_int32_t_0, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
@@ -76,13 +76,13 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %15 = load i32, ptr %14, align 4
   %16 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 16)
-  store i32 %13, ptr %let_capture_0.i, align 4
   %17 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %17, align 8
   %malgo_add_int32_t_func_0.i = getelementptr { ptr, ptr }, ptr %17, i64 0, i32 1
   store ptr @"runtime/malgo/Builtin.mlg.malgo_add_int32_t", ptr %malgo_add_int32_t_func_0.i, align 8
-  %malgo_add_int32_t_0.i = getelementptr { i32, ptr }, ptr %let_capture_0.i, i64 0, i32 1
-  store ptr %17, ptr %malgo_add_int32_t_0.i, align 8
+  store ptr %17, ptr %let_capture_0.i, align 8
+  %p_0.i = getelementptr { ptr, i32 }, ptr %let_capture_0.i, i64 0, i32 1
+  store i32 %13, ptr %p_0.i, align 4
   store ptr %let_capture_0.i, ptr %16, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
   store ptr @"test/testcases/malgo/RecordTest.mlg.#let_closure_2907", ptr %let_func_0.i, align 8

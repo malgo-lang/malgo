@@ -31,10 +31,10 @@ module Malgo.Infer.TypeRep
   )
 where
 
-import Control.Lens (At (at), Traversal', makeLenses, mapped, (^.), _1, _2)
+import Control.Lens (At (at), Traversal', makeLenses, mapped, (?~), (^.), _1, _2)
 import Data.Data (Data)
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
+import Data.Map.Strict qualified as Map (fromList, toList)
+import Data.Set qualified as Set (singleton)
 import Data.Store (Store)
 import Effectful (Eff)
 import Effectful.State.Static.Local (State, evalState)
@@ -66,15 +66,15 @@ type Kind = Type
 
 type TypeVar = Id
 
-type KindCtx = HashMap TypeVar Kind
+type KindCtx = Map TypeVar Kind
 
 insertKind :: TypeVar -> Kind -> KindCtx -> KindCtx
 insertKind tv k ctx
   | k == TYPE = ctx
-  | otherwise = HashMap.insert tv k ctx
+  | otherwise = ctx & at tv ?~ k
 
 askKind :: TypeVar -> KindCtx -> Kind
-askKind tv ctx = fromMaybe TYPE (HashMap.lookup tv ctx)
+askKind tv ctx = fromMaybe TYPE (ctx ^. at tv)
 
 -- | Definition of `Type`
 data Type
@@ -95,7 +95,7 @@ data Type
   | -- | tuple type
     TyTuple Int
   | -- record type
-    TyRecord (HashMap Text Type)
+    TyRecord (Map Text Type)
   | -- | pointer type
     TyPtr
   | -- kind constructor
@@ -124,7 +124,7 @@ instance Pretty Type where
       prettyPrec d (TyArr t1 t2) =
         maybeParens (d > 10) $ prettyPrec 11 t1 <+> "->" <+> prettyPrec 10 t2
       prettyPrec _ (TyTuple n) = parens $ sep $ replicate (max 0 (n - 1)) ","
-      prettyPrec _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) $ HashMap.toList kvs
+      prettyPrec _ (TyRecord kvs) = braces $ sep $ punctuate "," $ map (\(k, v) -> pretty k <> ":" <+> pretty v) $ Map.toList kvs
       prettyPrec _ TyPtr = "Ptr#"
       prettyPrec _ TYPE = "TYPE"
       prettyPrec _ (TyMeta tv) = pretty tv
@@ -245,7 +245,7 @@ makeLenses ''TypeDef
 -- Unification monad --
 -----------------------
 
-type TypeMap = HashMap MetaVar Type
+type TypeMap = Map MetaVar Type
 
 runTypeUnify :: Eff (State TypeMap : es) a -> Eff es a
 runTypeUnify = evalState mempty
@@ -255,7 +255,7 @@ runTypeUnify = evalState mempty
 ---------------
 
 -- | apply substitution to a type
-applySubst :: HashMap TypeVar Type -> Type -> Type
+applySubst :: Map TypeVar Type -> Type -> Type
 applySubst subst = \case
   TyApp ty ty' -> TyApp (applySubst subst ty) (applySubst subst ty')
   TyVar id -> fromMaybe (TyVar id) $ subst ^. at id
@@ -269,20 +269,20 @@ applySubst subst = \case
   TyMeta tv -> TyMeta tv
 
 -- | expand type synonyms
-expandTypeSynonym :: HashMap TypeVar ([TypeVar], Type) -> Type -> Maybe Type
+expandTypeSynonym :: Map TypeVar ([TypeVar], Type) -> Type -> Maybe Type
 expandTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
   case abbrEnv ^. at con of
     Nothing -> Nothing
-    Just (ps, orig) -> Just (applySubst (HashMap.fromList $ zip ps ts) orig)
+    Just (ps, orig) -> Just (applySubst (Map.fromList $ zip ps ts) orig)
 expandTypeSynonym _ _ = Nothing
 
-expandAllTypeSynonym :: HashMap TypeVar ([TypeVar], Type) -> Type -> Type
+expandAllTypeSynonym :: Map TypeVar ([TypeVar], Type) -> Type -> Type
 expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
   case abbrEnv ^. at con of
     Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
     Just (ps, orig) ->
       -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
-      expandAllTypeSynonym abbrEnv $ applySubst (HashMap.fromList $ zip ps ts) $ expandAllTypeSynonym abbrEnv orig
+      expandAllTypeSynonym abbrEnv $ applySubst (Map.fromList $ zip ps ts) $ expandAllTypeSynonym abbrEnv orig
 expandAllTypeSynonym abbrEnv (TyApp t1 t2) = TyApp (expandAllTypeSynonym abbrEnv t1) (expandAllTypeSynonym abbrEnv t2)
 expandAllTypeSynonym _ t@TyVar {} = t
 expandAllTypeSynonym _ t@TyCon {} = t
@@ -295,7 +295,7 @@ expandAllTypeSynonym _ TYPE = TYPE
 expandAllTypeSynonym _ (TyMeta tv) = TyMeta tv
 
 -- | get all meta type variables in a type
-freevars :: Type -> HashSet MetaVar
+freevars :: Type -> Set MetaVar
 freevars (TyApp t1 t2) = freevars t1 <> freevars t2
 freevars TyVar {} = mempty
 freevars TyCon {} = mempty
@@ -305,4 +305,4 @@ freevars TyTuple {} = mempty
 freevars (TyRecord kts) = foldMap freevars kts
 freevars TyPtr = mempty
 freevars TYPE = mempty
-freevars (TyMeta tv) = HashSet.singleton tv
+freevars (TyMeta tv) = Set.singleton tv

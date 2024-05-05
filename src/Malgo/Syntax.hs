@@ -39,7 +39,7 @@ where
 
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Graph (flattenSCC, stronglyConnComp)
-import Data.HashSet qualified as HashSet
+import Data.Set qualified as Set
 import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 import Malgo.Module
 import Malgo.Prelude hiding (All)
@@ -96,9 +96,9 @@ instance (Pretty (XId x)) => Pretty (Type x) where
   pretty (TyRecord _ kvs) = sexpr $ "record" : map (\(k, v) -> sexpr [pretty k, pretty v]) kvs
   pretty (TyBlock _ t) = sexpr ["block", pretty t]
 
-getTyVars :: (Hashable (XId x)) => Type x -> HashSet (XId x)
+getTyVars :: (Ord (XId x)) => Type x -> Set (XId x)
 getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = HashSet.singleton v
+getTyVars (TyVar _ v) = Set.singleton v
 getTyVars TyCon {} = mempty
 getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
 getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
@@ -170,17 +170,17 @@ instance
     Seq x ss -> Seq <$> types f x <*> traverse (types f) ss
     Parens x e -> Parens <$> types f x <*> types f e
 
-freevars :: (Hashable (XId x)) => Expr x -> HashSet (XId x)
-freevars (Var _ v) = HashSet.singleton v
+freevars :: (Ord (XId x)) => Expr x -> Set (XId x)
+freevars (Var _ v) = Set.singleton v
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
-freevars (OpApp _ op e1 e2) = HashSet.insert op $ freevars e1 <> freevars e2
+freevars (OpApp _ op e1 e2) = Set.insert op $ freevars e1 <> freevars e2
 freevars (Fn _ cs) = foldMap freevarsClause cs
   where
-    freevarsClause :: (Hashable (XId x)) => Clause x -> HashSet (XId x)
-    freevarsClause (Clause _ pats e) = HashSet.difference (freevars e) (mconcat (map bindVars pats))
-    bindVars (VarP _ x) = HashSet.singleton x
+    freevarsClause :: (Ord (XId x)) => Clause x -> Set (XId x)
+    freevarsClause (Clause _ pats e) = Set.difference (freevars e) (mconcat (map bindVars pats))
+    bindVars (VarP _ x) = Set.singleton x
     bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
     bindVars (TupleP _ ps) = mconcat $ map bindVars ps
     bindVars (RecordP _ kps) = mconcat $ map (bindVars . snd) kps
@@ -193,9 +193,9 @@ freevars (List _ es) = mconcat $ map freevars es
 freevars (Ann _ e _) = freevars e
 freevars (Seq _ ss) = freevarsStmts ss
   where
-    freevarsStmts (Let _ x e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
+    freevarsStmts (Let _ x e :| ss) = freevars e <> Set.delete x (freevarsStmts' ss)
     freevarsStmts (With _ Nothing e :| ss) = freevars e <> freevarsStmts' ss
-    freevarsStmts (With _ (Just x) e :| ss) = freevars e <> HashSet.delete x (freevarsStmts' ss)
+    freevarsStmts (With _ (Just x) e :| ss) = freevars e <> Set.delete x (freevarsStmts' ss)
     freevarsStmts (NoBind _ e :| ss) = freevars e <> freevarsStmts' ss
     freevarsStmts' [] = mempty
     freevarsStmts' (s : ss) = freevarsStmts (s :| ss)
@@ -428,7 +428,7 @@ instance (Pretty (XId x)) => Pretty (BindGroup x) where
     where
       prettyScDefs = sexpr . map prettyScDef
 
-makeBindGroup :: (Hashable (XId x), Ord (XId x)) => [Decl x] -> BindGroup x
+makeBindGroup :: (Ord (XId x)) => [Decl x] -> BindGroup x
 makeBindGroup ds =
   BindGroup
     { _scDefs = splitScDef (makeSCC $ mapMaybe scDef ds) (mapMaybe scDef ds),
@@ -453,11 +453,11 @@ makeBindGroup ds =
     importDef _ = Nothing
     splitScDef sccs ds = map (mapMaybe (\n -> find (\d -> n == d ^. _2) ds)) sccs
 
-adjacents :: (Hashable (XId x)) => (a, XId x, Expr x) -> (XId x, XId x, [XId x])
+adjacents :: (Ord (XId x)) => (a, XId x, Expr x) -> (XId x, XId x, [XId x])
 adjacents (_, f, e) =
-  (f, f, toList $ HashSet.delete f (freevars e))
+  (f, f, toList $ Set.delete f (freevars e))
 
-makeSCC :: (Hashable (XId x), Ord (XId x)) => [(a, XId x, Expr x)] -> [[XId x]]
+makeSCC :: (Ord (XId x)) => [(a, XId x, Expr x)] -> [[XId x]]
 makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'
   where
     vertices = map (view _2 . adjacents) ds

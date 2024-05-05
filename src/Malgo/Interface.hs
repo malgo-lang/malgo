@@ -15,7 +15,7 @@ where
 
 import Control.Lens (ifor_, (^.))
 import Control.Lens.TH
-import Data.HashMap.Strict qualified as HashMap
+import Data.Map.Strict qualified as Map
 import Data.Store (Store)
 import Effectful (Eff, IOE, runPureEff, (:>))
 import Effectful.State.Static.Local (State, execState, get, modify)
@@ -36,18 +36,18 @@ import System.FilePath (replaceExtension)
 data Interface = Interface
   { moduleName :: ModuleName,
     -- | Used in Infer
-    signatureMap :: HashMap PsId (GT.Scheme GT.Type),
+    signatureMap :: Map PsId (GT.Scheme GT.Type),
     -- | Used in Infer
-    typeDefMap :: HashMap PsId (GT.TypeDef GT.Type),
+    typeDefMap :: Map PsId (GT.TypeDef GT.Type),
     -- | Used in Infer
-    typeSynonymMap :: HashMap GT.TypeVar ([GT.TypeVar], GT.Type),
+    typeSynonymMap :: Map GT.TypeVar ([GT.TypeVar], GT.Type),
     kindCtx :: KindCtx,
     -- | Used in Desugar
-    coreIdentMap :: HashMap PsId (Meta C.Type),
+    coreIdentMap :: Map PsId (Meta C.Type),
     -- | Used in Rename
-    infixInfo :: HashMap PsId (Assoc, Int),
+    infixInfo :: Map PsId (Assoc, Int),
     -- | Used in Rename
-    dependencies :: HashSet ModuleName
+    dependencies :: Set ModuleName
   }
   deriving stock (Show, Generic)
 
@@ -63,7 +63,7 @@ externalFromInterface Interface {moduleName} psId =
   Id {name = psId, sort = External, moduleName}
 
 buildInterface ::
-  (HasTypeSynonymMap tcEnv (HashMap GT.TypeVar ([GT.TypeVar], GT.Type))) =>
+  (HasTypeSynonymMap tcEnv (Map GT.TypeVar ([GT.TypeVar], GT.Type))) =>
   ModuleName ->
   RnState ->
   tcEnv ->
@@ -79,57 +79,57 @@ buildInterface moduleName rnState tcEnv dsState =
             typeSynonymMap = mempty,
             kindCtx = mempty,
             coreIdentMap = mempty,
-            infixInfo = HashMap.mapKeys (\id -> id.name) rnState.infixInfo,
+            infixInfo = Map.mapKeys (\id -> id.name) rnState.infixInfo,
             dependencies = rnState.dependencies
           }
    in runPureEff $ execState inf do
         ifor_ (dsState ^. nameEnv) $ \tcId coreId ->
           when (tcId.sort == External && tcId.moduleName == moduleName) do
             modify \inf@Interface {..} ->
-              inf {coreIdentMap = HashMap.insert tcId.name coreId coreIdentMap}
+              inf {coreIdentMap = Map.insert tcId.name coreId coreIdentMap}
         ifor_ (dsState ^. signatureMap) $ \tcId scheme ->
           when (tcId.sort == External && tcId.moduleName == moduleName) do
             modify \inf@Interface {..} ->
-              inf {signatureMap = HashMap.insert tcId.name scheme signatureMap}
+              inf {signatureMap = Map.insert tcId.name scheme signatureMap}
         ifor_ (dsState ^. typeDefMap) $ \rnId typeDef -> do
           when (rnId.sort == External && rnId.moduleName == moduleName) do
             modify \inf@Interface {..} ->
-              inf {typeDefMap = HashMap.insert rnId.name typeDef typeDefMap}
+              inf {typeDefMap = Map.insert rnId.name typeDef typeDefMap}
         ifor_ (tcEnv ^. typeSynonymMap) $ \tv (tvs, ty) -> do
           when (tv.sort == External && tv.moduleName == moduleName) do
             modify \inf@Interface {..} ->
-              inf {typeSynonymMap = HashMap.insert tv (tvs, ty) typeSynonymMap}
+              inf {typeSynonymMap = Map.insert tv (tvs, ty) typeSynonymMap}
         ifor_ (dsState ^. kindCtx) $ \tv kind -> do
           when (tv.sort == External && tv.moduleName == moduleName) do
             modify \inf@Interface {..} ->
               inf {kindCtx = insertKind tv kind kindCtx}
 
-exportedIdentList :: (HasField "signatureMap" r (HashMap k v)) => r -> [k]
-exportedIdentList inf = HashMap.keys inf.signatureMap
+exportedIdentList :: (HasField "signatureMap" r (Map k v)) => r -> [k]
+exportedIdentList inf = Map.keys inf.signatureMap
 
 exportedTypeIdentList ::
-  ( HasField "typeDefMap" inf (HashMap name a),
-    HasField "typeSynonymMap" inf (HashMap id b),
+  ( HasField "typeDefMap" inf (Map name a),
+    HasField "typeSynonymMap" inf (Map id b),
     HasField "name" id name
   ) =>
   inf ->
   [name]
-exportedTypeIdentList inf = HashMap.keys inf.typeDefMap <> map (\id -> id.name) (HashMap.keys inf.typeSynonymMap)
+exportedTypeIdentList inf = Map.keys inf.typeDefMap <> map (\id -> id.name) (Map.keys inf.typeSynonymMap)
 
 toInterfacePath :: String -> FilePath
 toInterfacePath x = replaceExtension x "mlgi"
 
 loadInterface ::
   (HasCallStack) =>
-  (IOE :> es, Workspace :> es, State (HashMap ModuleName Interface) :> es) =>
+  (IOE :> es, Workspace :> es, State (Map ModuleName Interface) :> es) =>
   ModuleName ->
   Eff es Interface
 loadInterface modName = do
   interfaces <- get
-  case HashMap.lookup modName interfaces of
+  case Map.lookup modName interfaces of
     Just interface -> pure interface
     Nothing -> do
       modPath <- getModulePath modName
       ViaStore interface <- load modPath ".mlgi"
-      modify $ HashMap.insert modName interface
+      modify $ Map.insert modName interface
       pure interface

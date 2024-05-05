@@ -8,7 +8,7 @@ import Malgo.Prelude
 class HasFreeVar f where
   -- | Free variables.
   -- It does not include callees of `call-direct`.
-  freevars :: (Hashable a) => f a -> HashSet a
+  freevars :: (Ord a) => f a -> Set a
 
   -- | Callees.
-  callees :: (Hashable a) => f a -> HashSet a
+  callees :: (Ord a) => f a -> Set a

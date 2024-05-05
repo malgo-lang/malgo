@@ -1,6 +1,6 @@
 module Malgo.Link (link) where
 
-import Data.HashSet qualified as HashSet
+import Data.Set qualified as Set
 import Data.Store (Store)
 import Effectful (Eff, IOE, (:>))
 import Malgo.Core.Syntax
@@ -16,7 +16,7 @@ link :: (IOE :> es, Store a, Workspace :> es) => Interface -> Program a -> Eff e
 link (interface :: Interface) mainCoreIR = do
   -- Ignore duplicates in dependencies.
   -- This is necessary because the same module can be imported multiple times and the module name is not unique (ModuleName or Artifact).
-  let deps = hashNubOn viewBaseName (HashSet.toList interface.dependencies)
+  let deps = hashNubOn viewBaseName (Set.toList interface.dependencies)
   depCoreIRs <- traverse loadCore deps
   pure $ mconcat (depCoreIRs <> [mainCoreIR])
   where

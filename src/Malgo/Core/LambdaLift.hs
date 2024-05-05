@@ -7,8 +7,8 @@ module Malgo.Core.LambdaLift
 where
 
 import Control.Lens (traverseOf, traversed, view, _1, _2)
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
+import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
@@ -21,27 +21,27 @@ import Malgo.MonadUniq
 import Malgo.Prelude
 
 data LambdaLiftState = LambdaLiftState
-  { funcs :: HashMap (Meta Type) ([Meta Type], Type, Expr (Meta Type)),
+  { funcs :: Map (Meta Type) ([Meta Type], Type, Expr (Meta Type)),
     -- | Known functions. If a function is known, that function can be called directly.
-    knowns :: HashSet (Meta Type),
+    knowns :: Set (Meta Type),
     -- | Variables that defined in global scope.
-    defined :: HashSet (Meta Type)
+    defined :: Set (Meta Type)
   }
 
 -- | Add a function to the state.
 -- It does not use lens.
 addFunc :: (State LambdaLiftState :> es) => Meta Type -> ([Meta Type], Type, Expr (Meta Type)) -> Eff es ()
-addFunc f x = modify $ \state@LambdaLiftState {funcs} -> state {funcs = HashMap.insert f x funcs}
+addFunc f x = modify $ \state@LambdaLiftState {funcs} -> state {funcs = Map.insert f x funcs}
 
 -- | Add a known function to the state.
 -- It does not use lens.
 addKnown :: (State LambdaLiftState :> es) => Meta Type -> Eff es ()
-addKnown f = modify $ \state@LambdaLiftState {knowns} -> state {knowns = HashSet.insert f knowns}
+addKnown f = modify $ \state@LambdaLiftState {knowns} -> state {knowns = Set.insert f knowns}
 
 isKnown :: (State LambdaLiftState :> es) => Meta Type -> Eff es Bool
 isKnown f = do
   ks <- gets @LambdaLiftState (.knowns)
-  pure $ f `HashSet.member` ks
+  pure $ f `Set.member` ks
 
 def :: (State LambdaLiftState :> es, Reader ModuleName :> es, State Uniq :> es) => Meta Type -> [Meta Type] -> Expr (Meta Type) -> Eff es (Meta Type)
 def name xs e = do
@@ -57,7 +57,7 @@ lambdalift ::
   Eff es (Program (Meta Type))
 lambdalift Program {..} =
   evalState
-    LambdaLiftState {funcs = mempty, knowns = HashSet.fromList $ map (view _1) topFuns, defined = HashSet.fromList $ map (view _1) topFuns <> map (view _1) topVars}
+    LambdaLiftState {funcs = mempty, knowns = Set.fromList $ map (view _1) topFuns, defined = Set.fromList $ map (view _1) topFuns <> map (view _1) topVars}
     $ do
       topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
       for_ topFuns \(f, ps, t, e) -> do
@@ -70,7 +70,7 @@ lambdalift Program {..} =
           $ Program
             topVars
             ( map (\(f, (ps, t, e)) -> (f, ps, t, e))
-                $ HashMap.toList funcs
+                $ Map.toList funcs
             )
             extFuns
       traverseOf expr toDirect prog
@@ -110,8 +110,8 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
   -- (Fun as body')の自由変数がknownsを除いてなく、e'の自由変数にnが含まれないならnはknown
   -- (Call n _)は(CallDirect n _)に変換されているので、nが値として使われているときのみ自由変数になる
   defined <- gets @LambdaLiftState (.defined)
-  let fvs = HashSet.difference (freevars body') (ks <> defined <> HashSet.fromList as)
-  if null fvs && not (n `HashSet.member` freevars e')
+  let fvs = Set.difference (freevars body') (ks <> defined <> Set.fromList as)
+  if null fvs && not (n `Set.member` freevars e')
     then do
       put state
       pure e'
@@ -119,7 +119,7 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       put backup
       body' <- llift body
       defined <- gets @LambdaLiftState (.defined)
-      let fvs = HashSet.difference (freevars body') (ks <> defined <> HashSet.fromList as)
+      let fvs = Set.difference (freevars body') (ks <> defined <> Set.fromList as)
       newFun <- def n (toList fvs <> as) body'
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
@@ -138,7 +138,7 @@ toDirect :: (State LambdaLiftState :> es) => Expr (Meta Type) -> Eff es (Expr (M
 toDirect (Atom a) = pure $ Atom a
 toDirect (Call (Var f) xs) = do
   ks <- gets @LambdaLiftState (.knowns)
-  if f `HashSet.member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
+  if f `Set.member` ks then pure $ CallDirect f xs else pure $ Call (Var f) xs
 toDirect (Call f xs) = pure $ Call f xs
 toDirect (CallDirect f xs) = pure $ CallDirect f xs
 toDirect (RawCall f t xs) = pure $ RawCall f t xs

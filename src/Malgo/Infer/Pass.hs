@@ -1,12 +1,11 @@
 module Malgo.Infer.Pass (infer) where
 
 import Control.Lens (forOf, mapped, to, traverseOf, traversed, view, (^.), _1, _2, _3)
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
 import Data.List qualified as List
 import Data.List.Extra (anySame)
 import Data.List.NonEmpty qualified as NonEmpty
-import Data.Map qualified as Map
+import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
 import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
@@ -36,17 +35,17 @@ lookupVar ::
   Id ->
   Eff es (Scheme Type)
 lookupVar pos name =
-  gets @TcEnv (view signatureMap >>> HashMap.lookup name) >>= \case
+  gets @TcEnv (view signatureMap >>> Map.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just scheme -> pure scheme
 
 lookupType :: (State TcEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Id -> Eff es Type
 lookupType pos name =
-  gets @TcEnv (view typeDefMap >>> HashMap.lookup name) >>= \case
+  gets @TcEnv (view typeDefMap >>> Map.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure _typeConstructor
 
-infer :: (State (HashMap ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
+infer :: (State (Map ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
 infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
   tcEnv <- genTcEnv rnEnv
   evalState tcEnv
@@ -66,7 +65,7 @@ infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
       pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
-  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Reader Flag :> es, Workspace :> es) =>
+  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (Map ModuleName Interface) :> es, Reader Flag :> es, Workspace :> es) =>
   BindGroup (Malgo Rename) ->
   Eff es (BindGroup (Malgo Infer))
 tcBindGroup bindGroup = do
@@ -78,7 +77,7 @@ tcBindGroup bindGroup = do
   _scDefs <- tcScDefGroup $ bindGroup ^. scDefs
   pure BindGroup {..}
 
-tcImports :: (State TcEnv :> es, IOE :> es, State (HashMap ModuleName Interface) :> es, Workspace :> es) => [Import (Malgo Rename)] -> Eff es [Import (Malgo Infer)]
+tcImports :: (State TcEnv :> es, IOE :> es, State (Map ModuleName Interface) :> es, Workspace :> es) => [Import (Malgo Rename)] -> Eff es [Import (Malgo Infer)]
 tcImports = traverse tcImport
   where
     tcImport (pos, modName, importList) = do
@@ -160,7 +159,7 @@ tcForeigns ::
   Eff es [Foreign (Malgo Infer)]
 tcForeigns ds =
   for ds \((pos, raw), name, ty) -> do
-    for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
+    for_ (Set.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just tyVar.name
       modify $ insertTypeDef tyVar (TypeDef (TyMeta tv) [] [])
     ty' <- transType ty
@@ -171,7 +170,7 @@ tcForeigns ds =
 tcScSigs :: (State TcEnv :> es, Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, IOE :> es, Reader Flag :> es) => [ScSig (Malgo Rename)] -> Eff es [ScSig (Malgo Infer)]
 tcScSigs ds =
   for ds \(pos, name, ty) -> do
-    for_ (HashSet.toList $ getTyVars ty) \tyVar -> do
+    for_ (Set.toList $ getTyVars ty) \tyVar -> do
       tv <- freshVar $ Just tyVar.name
       modify $ insertTypeDef tyVar (TypeDef (TyMeta tv) [] [])
     scheme <- generalize pos =<< transType ty
@@ -180,7 +179,7 @@ tcScSigs ds =
 
 prepareTcScDefs :: (State TcEnv :> es, State Uniq :> es, Reader ModuleName :> es) => [ScDef (Malgo Rename)] -> Eff es ()
 prepareTcScDefs = traverse_ \(_, name, _) -> do
-  mty <- gets @TcEnv $ view signatureMap >>> HashMap.lookup name
+  mty <- gets @TcEnv $ view signatureMap >>> Map.lookup name
   case mty of
     Nothing -> do
       ty <- Forall [] . TyMeta <$> freshVar Nothing
@@ -279,7 +278,7 @@ evidenceOfEquiv (TyCon c1) (TyCon c2) | c1 == c2 = Just mempty
 evidenceOfEquiv (TyPrim p1) (TyPrim p2) | p1 == p2 = Just mempty
 evidenceOfEquiv (TyArr l1 r1) (TyArr l2 r2) = (<>) <$> evidenceOfEquiv l1 l2 <*> evidenceOfEquiv r1 r2
 evidenceOfEquiv (TyTuple n1) (TyTuple n2) | n1 == n2 = Just mempty
-evidenceOfEquiv (TyRecord kts1) (TyRecord kts2) | HashMap.keys kts1 == HashMap.keys kts2 = mconcat <$> zipWithM evidenceOfEquiv (HashMap.elems kts1) (HashMap.elems kts2)
+evidenceOfEquiv (TyRecord kts1) (TyRecord kts2) | Map.keys kts1 == Map.keys kts2 = mconcat <$> zipWithM evidenceOfEquiv (Map.elems kts1) (Map.elems kts2)
 evidenceOfEquiv TyPtr TyPtr = Just mempty
 evidenceOfEquiv TYPE TYPE = Just mempty
 evidenceOfEquiv _ _ = Nothing
@@ -339,7 +338,7 @@ tcExpr (Tuple pos es) = do
 tcExpr (Record pos kvs) = do
   kvs' <- traverse (bitraverse pure tcExpr) kvs
   -- レコードリテラルでは、レコード型をフィールド名から検索する必要はない
-  let kvsType = TyRecord $ HashMap.fromList $ map (bimap identity typeOf) kvs'
+  let kvsType = TyRecord $ Map.fromList $ map (bimap identity typeOf) kvs'
   pure $ Record (Typed kvsType pos) kvs'
 tcExpr (Ann pos e t) = do
   e' <- tcExpr e
@@ -398,7 +397,7 @@ tcPatterns (TupleP pos pats : ps) = do
 tcPatterns (RecordP pos kps : ps) = do
   kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
   ps' <- tcPatterns ps
-  let patternType = TyRecord $ HashMap.fromList $ map (bimap identity typeOf) kps'
+  let patternType = TyRecord $ Map.fromList $ map (bimap identity typeOf) kps'
   pure $ RecordP (Typed patternType pos) kps' : ps'
 tcPatterns (UnboxedP pos unboxed : ps) = do
   ps' <- tcPatterns ps
@@ -430,7 +429,7 @@ transType (S.TyVar pos v) = lookupType pos v
 transType (S.TyCon pos c) = lookupType pos c
 transType (S.TyArr _ t1 t2) = TyArr <$> transType t1 <*> transType t2
 transType (S.TyTuple _ ts) = TyConApp (TyTuple $ length ts) <$> traverse transType ts
-transType (S.TyRecord _ kts) = TyRecord . HashMap.fromList <$> traverseOf (traversed . _2) transType kts
+transType (S.TyRecord _ kts) = TyRecord . Map.fromList <$> traverseOf (traversed . _2) transType kts
 
 tcType :: S.Type (Malgo 'Rename) -> S.Type (Malgo 'Infer)
 tcType (S.TyApp pos t ts) = S.TyApp pos (tcType t) (map tcType ts)

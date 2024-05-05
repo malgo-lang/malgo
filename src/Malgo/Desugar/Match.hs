@@ -2,8 +2,8 @@
 module Malgo.Desugar.Match (match, PatMatrix, patMatrix) where
 
 import Control.Lens (Prism', has, _1)
-import Data.HashMap.Strict qualified as HashMap
 import Data.List qualified as List
+import Data.Map.Strict qualified as Map
 import Data.Traversable (for)
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader)
@@ -78,7 +78,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
         tails
         ( zipWith
             ( \case
-                (VarP _ v) -> \e -> modify (\s@DsState {..} -> s {_nameEnv = HashMap.insert v scrutinee _nameEnv}) >> e
+                (VarP _ v) -> \e -> modify (\s@DsState {..} -> s {_nameEnv = Map.insert v scrutinee _nameEnv}) >> e
                 _ -> error "All elements of heads must be VarP"
             )
             heads
@@ -113,7 +113,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
           params <- traverse (\t -> withMeta t <$> newTemporalId "p") kts
           clause <- do
             (pat', es') <- groupRecord pat es
-            OpenRecord params <$> match (HashMap.elems params <> restScrutinee) pat' es' err
+            OpenRecord params <$> match (Map.elems params <> restScrutinee) pat' es' err
           pure $ Match (Atom $ Core.Var scrutinee) [clause]
         _ -> error "patType must be RecordT"
   -- パターンの先頭がすべてタプルのとき
@@ -220,7 +220,7 @@ groupRecord (PatMatrix pss) es = over _1 patMatrix . unzip <$> zipWithM aux pss 
     aux (p : _) _ = errorDoc $ "Invalid pattern:" <+> pretty p
     aux [] _ = error "ps must be not empty"
     extendRecordP (Typed (Malgo.TyRecord ktsMap) pos) ps = do
-      let kts = HashMap.toList ktsMap
+      let kts = Map.toList ktsMap
       for kts \(key, ty) ->
         case List.lookup key ps of
           Nothing -> VarP (Typed ty pos) <$> newTemporalId "_p"

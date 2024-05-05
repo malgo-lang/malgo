@@ -7,13 +7,13 @@ declare void @GC_init()
 
 declare ptr @malgo_print_string(ptr)
 
-define internal ptr @"test/testcases/malgo/TestNestedLetFunc.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$$__14_0") {
-  %2 = call ptr @malgo_print_string(ptr @str27)
+define internal ptr @"test/testcases/malgo/TestNestedLetFunc.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$p_13_0") {
+  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$p_13_0")
   ret ptr %2
 }
 
-define internal ptr @"test/testcases/malgo/TestNestedLetFunc.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$p_13_0") {
-  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$p_13_0")
+define internal ptr @"test/testcases/malgo/TestNestedLetFunc.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$$__14_0") {
+  %2 = call ptr @malgo_print_string(ptr @str27)
   ret ptr %2
 }
 

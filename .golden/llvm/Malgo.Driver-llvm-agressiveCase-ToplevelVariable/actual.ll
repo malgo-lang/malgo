@@ -3,7 +3,7 @@ source_filename = "test/testcases/malgo/ToplevelVariable.mlg"
 
 @"test/testcases/malgo/ToplevelVariable.mlg.one" = global ptr undef
 @"test/testcases/malgo/ToplevelVariable.mlg.comp" = global ptr undef
-@str3732 = unnamed_addr constant [3 x i8] c"OK\00"
+@str3730 = unnamed_addr constant [3 x i8] c"OK\00"
 
 declare void @GC_init()
 
@@ -163,114 +163,9 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3725"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3586_0") {
-  ret ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0"
-}
-
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3726"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3586_0") {
-  ret ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0"
-}
-
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3727"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3598_0") {
-  ret ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0"
-}
-
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3722"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$a_956_0", ptr %"runtime/malgo/Prelude.mlg.$__957_0") {
-  ret ptr %"runtime/malgo/Prelude.mlg.$a_956_0"
-}
-
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3723"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_84_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3536_0") {
-  ret ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_84_0"
-}
-
 declare ptr @malgo_malloc(i64)
 
 define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3729"(ptr %0, i32 %1) {
-  %p_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
-  %p_0 = load i32, ptr %p_addr_0, align 4
-  %3 = call i32 @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3724"(ptr null, i32 %p_0, i32 %1)
-  ret i32 %3
-}
-
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.addOne"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_102_0") {
-  %2 = load ptr, ptr @"test/testcases/malgo/ToplevelVariable.mlg.one", align 8
-  %3 = getelementptr { i8, <4 x i8> }, ptr %2, i32 0, i32 0
-  %4 = load i8, ptr %3, align 1
-  switch i8 %4, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
-  %5 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 1
-  %6 = getelementptr { i32 }, ptr %5, i32 0, i32 0
-  %7 = load i32, ptr %6, align 4
-  %8 = getelementptr { i8, <4 x i8> }, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_102_0", i32 0, i32 0
-  %9 = load i8, ptr %8, align 1
-  switch i8 %9, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_1"
-  ]
-
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_1": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  %10 = getelementptr { i8, { i32 } }, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_102_0", i32 0, i32 1
-  %11 = getelementptr { i32 }, ptr %10, i32 0, i32 0
-  %12 = load i32, ptr %11, align 4
-  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i32 }, ptr null, i32 1) to i64))
-  %p_0 = getelementptr { i32 }, ptr %let_capture_0, i32 0, i32 0
-  store i32 %7, ptr %p_0, align 4
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %13, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %13, i32 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3729", ptr %let_func_0, align 8
-  %14 = call i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr null, i32 %7, i32 %12)
-  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
-  %16 = getelementptr { i8, { i32 } }, ptr %15, i32 0, i32 0
-  store i8 0, ptr %16, align 1
-  %17 = getelementptr { i8, { i32 } }, ptr %15, i32 0, i32 1, i32 0
-  store i32 %14, ptr %17, align 4
-  ret ptr %15
-
-switch_default_0:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
-  unreachable
-
-switch_default_1:                                 ; preds = %1
-  unreachable
-}
-
-define internal ptr @"runtime/malgo/Prelude.mlg.identity"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$x_890_0") {
-  ret ptr %"runtime/malgo/Prelude.mlg.$x_890_0"
-}
-
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3730"(ptr %0, ptr %1) {
-  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %cast_0 = load ptr, ptr %cast_addr_0, align 8
-  %3 = call ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3723"(ptr null, ptr %cast_0, ptr %1)
-  ret ptr %3
-}
-
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.constId"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_87_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %identity_capture_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr null, ptr %identity_capture_0, align 8
-  %identity_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.identity", ptr %identity_func_0, align 8
-  %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %cast_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %2, ptr %cast_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3730", ptr %let_func_0, align 8
-  %4 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
-  %5 = load ptr, ptr %4, align 8
-  %6 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
-  %7 = load ptr, ptr %6, align 8
-  %8 = call ptr %7(ptr %5, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_87_0")
-  ret ptr %8
-}
-
-define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3731"(ptr %0, i32 %1) {
   %p_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
   %p_0 = load i32, ptr %p_addr_0, align 4
   %3 = call i32 @malgo_add_int32_t(i32 %p_0, i32 %1)
@@ -285,32 +180,47 @@ define internal ptr @"runtime/malgo/Builtin.mlg.malgo_add_int32_t"(ptr %0, i32 %
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3731", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3729", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3733"(ptr %0, ptr %1) {
+define internal i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$x_4033_0", i32 %"runtime/malgo/Builtin.mlg.$y_4034_0") {
+  %2 = call i32 @malgo_add_int32_t(i32 %"runtime/malgo/Builtin.mlg.$x_4033_0", i32 %"runtime/malgo/Builtin.mlg.$y_4034_0")
+  ret i32 %2
+}
+
+define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3724"(ptr %0, i32 %"test/testcases/malgo/ToplevelVariable.mlg.$p_3549_0", i32 %"test/testcases/malgo/ToplevelVariable.mlg.$y_3558_0") {
+  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_add_int32_t"(ptr null, i32 %"test/testcases/malgo/ToplevelVariable.mlg.$p_3549_0")
+  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  %6 = load ptr, ptr %5, align 8
+  %7 = call i32 %6(ptr %4, i32 %"test/testcases/malgo/ToplevelVariable.mlg.$y_3558_0")
+  ret i32 %7
+}
+
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3731"(ptr %0, ptr %1) {
   %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %cast_0 = load ptr, ptr %cast_addr_0, align 8
   %3 = call ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3725"(ptr null, ptr %cast_0, ptr %1)
   ret ptr %3
 }
 
-define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3734"(ptr %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3732"(ptr %0, i32 %1) {
   %p_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
   %p_0 = load i32, ptr %p_addr_0, align 4
   %3 = call i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr null, i32 %p_0, i32 %1)
   ret i32 %3
 }
 
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3735"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3733"(ptr %0, ptr %1) {
   %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %cast_0 = load ptr, ptr %cast_addr_0, align 8
   %3 = call ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3727"(ptr null, ptr %cast_0, ptr %1)
   ret ptr %3
 }
 
-define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3736"(ptr %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3734"(ptr %0, i32 %1) {
   %p_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
   %p_0 = load i32, ptr %p_addr_0, align 4
   %3 = call i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr null, i32 %p_0, i32 %1)
@@ -331,7 +241,7 @@ define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.main"(ptr %0, pt
   %6 = getelementptr { i8, { ptr } }, ptr %5, i32 0, i32 0
   store i8 0, ptr %6, align 1
   %7 = getelementptr { i8, { ptr } }, ptr %5, i32 0, i32 1, i32 0
-  store ptr @str3732, ptr %7, align 8
+  store ptr @str3730, ptr %7, align 8
   %8 = getelementptr { i8, <8 x i8> }, ptr %5, i32 0, i32 0
   %9 = load i8, ptr %8, align 1
   switch i8 %9, label %switch_default_4 [
@@ -360,7 +270,7 @@ define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.main"(ptr %0, pt
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3733", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3731", ptr %let_func_0, align 8
   %17 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 0
   %18 = load ptr, ptr %17, align 8
   %19 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
@@ -395,7 +305,7 @@ define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.main"(ptr %0, pt
   %let_capture_3 = getelementptr { ptr, ptr }, ptr %34, i32 0, i32 0
   store ptr %let_capture_2, ptr %let_capture_3, align 8
   %let_func_1 = getelementptr { ptr, ptr }, ptr %34, i32 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3734", ptr %let_func_1, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3732", ptr %let_func_1, align 8
   %35 = getelementptr { ptr, ptr }, ptr %34, i32 0, i32 0
   %36 = load ptr, ptr %35, align 8
   %37 = getelementptr { ptr, ptr }, ptr %34, i32 0, i32 1
@@ -476,7 +386,7 @@ switch_default_4:                                 ; preds = %"switch_branch_runt
   %let_capture_5 = getelementptr { ptr, ptr }, ptr %68, i32 0, i32 0
   store ptr %let_capture_4, ptr %let_capture_5, align 8
   %let_func_2 = getelementptr { ptr, ptr }, ptr %68, i32 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3735", ptr %let_func_2, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3733", ptr %let_func_2, align 8
   %69 = getelementptr { ptr, ptr }, ptr %68, i32 0, i32 0
   %70 = load ptr, ptr %69, align 8
   %71 = getelementptr { ptr, ptr }, ptr %68, i32 0, i32 1
@@ -511,7 +421,7 @@ switch_default_4:                                 ; preds = %"switch_branch_runt
   %let_capture_7 = getelementptr { ptr, ptr }, ptr %86, i32 0, i32 0
   store ptr %let_capture_6, ptr %let_capture_7, align 8
   %let_func_3 = getelementptr { ptr, ptr }, ptr %86, i32 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3736", ptr %let_func_3, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3734", ptr %let_func_3, align 8
   %87 = getelementptr { ptr, ptr }, ptr %86, i32 0, i32 0
   %88 = load ptr, ptr %87, align 8
   %89 = getelementptr { ptr, ptr }, ptr %86, i32 0, i32 1
@@ -572,17 +482,7 @@ switch_default_9:                                 ; preds = %1
   unreachable
 }
 
-define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3724"(ptr %0, i32 %"test/testcases/malgo/ToplevelVariable.mlg.$p_3549_0", i32 %"test/testcases/malgo/ToplevelVariable.mlg.$y_3558_0") {
-  %2 = call ptr @"runtime/malgo/Builtin.mlg.malgo_add_int32_t"(ptr null, i32 %"test/testcases/malgo/ToplevelVariable.mlg.$p_3549_0")
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i32 %6(ptr %4, i32 %"test/testcases/malgo/ToplevelVariable.mlg.$y_3558_0")
-  ret i32 %7
-}
-
-define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3737"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3735"(ptr %0, ptr %1) {
   %a_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %a_0 = load ptr, ptr %a_addr_0, align 8
   %3 = call ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3722"(ptr null, ptr %a_0, ptr %1)
@@ -597,13 +497,113 @@ define internal ptr @"runtime/malgo/Prelude.mlg.const"(ptr %0, ptr %"runtime/mal
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3737", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3735", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$x_4033_0", i32 %"runtime/malgo/Builtin.mlg.$y_4034_0") {
-  %2 = call i32 @malgo_add_int32_t(i32 %"runtime/malgo/Builtin.mlg.$x_4033_0", i32 %"runtime/malgo/Builtin.mlg.$y_4034_0")
-  ret i32 %2
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3736"(ptr %0, ptr %1) {
+  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %cast_0 = load ptr, ptr %cast_addr_0, align 8
+  %3 = call ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3723"(ptr null, ptr %cast_0, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.constId"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_87_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %identity_capture_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr null, ptr %identity_capture_0, align 8
+  %identity_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.identity", ptr %identity_func_0, align 8
+  %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %cast_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %2, ptr %cast_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3736", ptr %let_func_0, align 8
+  %4 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
+  %5 = load ptr, ptr %4, align 8
+  %6 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
+  %7 = load ptr, ptr %6, align 8
+  %8 = call ptr %7(ptr %5, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_87_0")
+  ret ptr %8
+}
+
+define internal i32 @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3737"(ptr %0, i32 %1) {
+  %p_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
+  %p_0 = load i32, ptr %p_addr_0, align 4
+  %3 = call i32 @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3724"(ptr null, i32 %p_0, i32 %1)
+  ret i32 %3
+}
+
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.addOne"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_102_0") {
+  %2 = load ptr, ptr @"test/testcases/malgo/ToplevelVariable.mlg.one", align 8
+  %3 = getelementptr { i8, <4 x i8> }, ptr %2, i32 0, i32 0
+  %4 = load i8, ptr %3, align 1
+  switch i8 %4, label %switch_default_1 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
+  %5 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 1
+  %6 = getelementptr { i32 }, ptr %5, i32 0, i32 0
+  %7 = load i32, ptr %6, align 4
+  %8 = getelementptr { i8, <4 x i8> }, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_102_0", i32 0, i32 0
+  %9 = load i8, ptr %8, align 1
+  switch i8 %9, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_1"
+  ]
+
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_1": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  %10 = getelementptr { i8, { i32 } }, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$eta_102_0", i32 0, i32 1
+  %11 = getelementptr { i32 }, ptr %10, i32 0, i32 0
+  %12 = load i32, ptr %11, align 4
+  %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i32 }, ptr null, i32 1) to i64))
+  %p_0 = getelementptr { i32 }, ptr %let_capture_0, i32 0, i32 0
+  store i32 %7, ptr %p_0, align 4
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %13, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %13, i32 0, i32 1
+  store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#let_closure_3737", ptr %let_func_0, align 8
+  %14 = call i32 @"runtime/malgo/Builtin.mlg.$addInt32#_curry_4032"(ptr null, i32 %7, i32 %12)
+  %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
+  %16 = getelementptr { i8, { i32 } }, ptr %15, i32 0, i32 0
+  store i8 0, ptr %16, align 1
+  %17 = getelementptr { i8, { i32 } }, ptr %15, i32 0, i32 1, i32 0
+  store i32 %14, ptr %17, align 4
+  ret ptr %15
+
+switch_default_0:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+  unreachable
+
+switch_default_1:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"runtime/malgo/Prelude.mlg.identity"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$x_890_0") {
+  ret ptr %"runtime/malgo/Prelude.mlg.$x_890_0"
+}
+
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3722"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$a_956_0", ptr %"runtime/malgo/Prelude.mlg.$__957_0") {
+  ret ptr %"runtime/malgo/Prelude.mlg.$a_956_0"
+}
+
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3723"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_84_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3536_0") {
+  ret ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_84_0"
+}
+
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3725"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3586_0") {
+  ret ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0"
+}
+
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3726"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3586_0") {
+  ret ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0"
+}
+
+define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3727"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3598_0") {
+  ret ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0"
 }
 
 define internal ptr @"test/testcases/malgo/ToplevelVariable.mlg.$raw_let_3728"(ptr %0, ptr %"test/testcases/malgo/ToplevelVariable.mlg.$cast_3573_0", ptr %"test/testcases/malgo/ToplevelVariable.mlg.$__3610_0") {

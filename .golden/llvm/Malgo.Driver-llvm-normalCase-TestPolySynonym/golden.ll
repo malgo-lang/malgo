@@ -2,8 +2,8 @@
 source_filename = "test/testcases/malgo/TestPolySynonym.mlg"
 
 @str2837 = unnamed_addr constant [5 x i8] c"hoge\00"
-@str2838 = unnamed_addr constant [4 x i8] c"snd\00"
-@str2839 = unnamed_addr constant [4 x i8] c"fst\00"
+@str2838 = unnamed_addr constant [4 x i8] c"fst\00"
+@str2839 = unnamed_addr constant [4 x i8] c"snd\00"
 
 declare void @GC_init()
 
@@ -194,14 +194,14 @@ define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.main"(ptr %0, ptr
   %7 = getelementptr { i8, { ptr } }, ptr %5, i32 0, i32 1, i32 0
   store ptr @str2837, ptr %7, align 8
   %8 = call ptr @malgo_hash_table_new()
-  call void @malgo_hash_table_insert(ptr %8, ptr @str2838, ptr %5)
-  call void @malgo_hash_table_insert(ptr %8, ptr @str2839, ptr %2)
+  call void @malgo_hash_table_insert(ptr %8, ptr @str2838, ptr %2)
+  call void @malgo_hash_table_insert(ptr %8, ptr @str2839, ptr %5)
   %9 = call ptr @malgo_hash_table_get(ptr %8, ptr @str2838)
   %10 = call ptr @malgo_hash_table_get(ptr %8, ptr @str2839)
   %11 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
   %p_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %10, ptr %p_0, align 8
+  store ptr %9, ptr %p_0, align 8
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 1
@@ -217,6 +217,12 @@ define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.main"(ptr %0, ptr
   store ptr @"runtime/malgo/Prelude.mlg.printInt32", ptr %printInt32_func_0, align 8
   %17 = call ptr %15(ptr %13, ptr %16)
   ret ptr %17
+}
+
+define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.first"(ptr %0, ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0") {
+  %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0", ptr @str2838)
+  %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0", ptr @str2839)
+  ret ptr %2
 }
 
 define internal ptr @"runtime/malgo/Prelude.mlg.printInt32"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$i_773_0") {
@@ -254,12 +260,6 @@ switch_default_0:                                 ; preds = %"switch_branch_runt
 
 switch_default_1:                                 ; preds = %1
   unreachable
-}
-
-define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.first"(ptr %0, ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0") {
-  %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0", ptr @str2838)
-  %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0", ptr @str2839)
-  ret ptr %3
 }
 
 define i32 @main(ptr %0) {

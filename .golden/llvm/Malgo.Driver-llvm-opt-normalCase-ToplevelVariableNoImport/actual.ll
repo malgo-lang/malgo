@@ -13,15 +13,10 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_int32_t_to_string(i32) local_unnamed_addr
 
-; Function Attrs: mustprogress nofree norecurse nosync nounwind readnone willreturn
-define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.identity"(ptr nocapture nofree readnone %0, ptr nofree readnone returned %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$x_200_0") #0 {
-  ret ptr %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$x_200_0"
-}
-
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
 ; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
-define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_543"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
+define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_543"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #0 {
   %cast_0 = load ptr, ptr %0, align 8
   ret ptr %cast_0
 }
@@ -33,7 +28,7 @@ define internal i32 @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_clo
 }
 
 ; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
-define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_545"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
+define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_545"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #0 {
   %cast_0 = load ptr, ptr %0, align 8
   ret ptr %cast_0
 }
@@ -45,7 +40,7 @@ define internal i32 @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_clo
 }
 
 ; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
-define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_550"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #1 {
+define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_548"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #0 {
   %a_0 = load ptr, ptr %0, align 8
   ret ptr %a_0
 }
@@ -56,8 +51,13 @@ define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.const"(p
   store ptr %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$a_201_0", ptr %let_capture_0, align 8
   store ptr %let_capture_0, ptr %2, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_550", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#let_closure_548", ptr %let_func_0, align 8
   ret ptr %2
+}
+
+; Function Attrs: mustprogress nofree norecurse nosync nounwind readnone willreturn
+define internal ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.identity"(ptr nocapture nofree readnone %0, ptr nofree readnone returned %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$x_200_0") #1 {
+  ret ptr %"test/testcases/malgo/ToplevelVariableNoImport.mlg.$x_200_0"
 }
 
 define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
@@ -166,5 +166,5 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   ret i32 0
 }
 
-attributes #0 = { mustprogress nofree norecurse nosync nounwind readnone willreturn }
-attributes #1 = { argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn }
+attributes #0 = { argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn }
+attributes #1 = { mustprogress nofree norecurse nosync nounwind readnone willreturn }

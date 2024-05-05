@@ -3,8 +3,8 @@ source_filename = "test/testcases/malgo/Eventually.mlg"
 
 @"test/testcases/malgo/Eventually.mlg.eventually" = global ptr undef
 @"test/testcases/malgo/Eventually.mlg.comp" = global ptr undef
-@str3290 = unnamed_addr constant [7 x i8] c"return\00"
-@str3291 = unnamed_addr constant [5 x i8] c"bind\00"
+@str3290 = unnamed_addr constant [5 x i8] c"bind\00"
+@str3291 = unnamed_addr constant [7 x i8] c"return\00"
 @str3295 = unnamed_addr constant [8 x i8] c"not yet\00"
 @str3331 = unnamed_addr constant [2 x i8] c"1\00"
 @str3334 = unnamed_addr constant [2 x i8] c"2\00"
@@ -290,7 +290,7 @@ declare ptr @malgo_hash_table_get(ptr, ptr)
 define internal ptr @"test/testcases/malgo/Eventually.mlg.return"(ptr %0, ptr %"test/testcases/malgo/Eventually.mlg.$record_269_0") {
   %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/Eventually.mlg.$record_269_0", ptr @str3290)
   %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/Eventually.mlg.$record_269_0", ptr @str3291)
-  ret ptr %2
+  ret ptr %3
 }
 
 define internal ptr @"test/testcases/malgo/Eventually.mlg.#let_closure_3292"(ptr %0, ptr %1) {
@@ -315,7 +315,7 @@ define internal ptr @"test/testcases/malgo/Eventually.mlg.eventuallyBind"(ptr %0
 define internal ptr @"test/testcases/malgo/Eventually.mlg.bind"(ptr %0, ptr %"test/testcases/malgo/Eventually.mlg.$record_308_0") {
   %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/Eventually.mlg.$record_308_0", ptr @str3290)
   %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/Eventually.mlg.$record_308_0", ptr @str3291)
-  ret ptr %3
+  ret ptr %2
 }
 
 define internal ptr @"test/testcases/malgo/Eventually.mlg.#let_closure_3293"(ptr %0, ptr %1) {
@@ -2595,9 +2595,9 @@ define internal ptr @"test/testcases/malgo/Eventually.mlg.#fun_closure_3335"(ptr
   store i8 0, ptr %7, align 1
   %8 = getelementptr { i8, { i32 } }, ptr %6, i32 0, i32 1, i32 0
   store i32 3, ptr %8, align 4
-  %9 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 0
+  %9 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 0
   %10 = load ptr, ptr %9, align 8
-  %11 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 1
+  %11 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 1
   %12 = load ptr, ptr %11, align 8
   %13 = call ptr %12(ptr %10, ptr %6)
   ret ptr %13
@@ -2618,9 +2618,9 @@ define internal ptr @"test/testcases/malgo/Eventually.mlg.#fun_closure_3332"(ptr
   store i8 1, ptr %8, align 1
   %9 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1, i32 0
   store ptr %6, ptr %9, align 8
-  %10 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 0
+  %10 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 0
   %11 = load ptr, ptr %10, align 8
-  %12 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 1
+  %12 = getelementptr { ptr, ptr }, ptr %4, i32 0, i32 1
   %13 = load ptr, ptr %12, align 8
   %14 = call ptr %13(ptr %11, ptr %7)
   %15 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
@@ -2640,16 +2640,16 @@ define internal ptr @"test/testcases/malgo/Eventually.mlg.#fun_closure_3332"(ptr
 define internal void @"malgo_load_test/testcases/malgo/Eventually.mlg"() {
   %1 = call ptr @malgo_hash_table_new()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %Done_capture_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr null, ptr %Done_capture_0, align 8
-  %Done_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/Eventually.mlg.Done", ptr %Done_func_0, align 8
+  %eventuallyBind_capture_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr null, ptr %eventuallyBind_capture_0, align 8
+  %eventuallyBind_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/Eventually.mlg.eventuallyBind", ptr %eventuallyBind_func_0, align 8
   call void @malgo_hash_table_insert(ptr %1, ptr @str3290, ptr %2)
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %eventuallyBind_capture_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
-  store ptr null, ptr %eventuallyBind_capture_0, align 8
-  %eventuallyBind_func_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
-  store ptr @"test/testcases/malgo/Eventually.mlg.eventuallyBind", ptr %eventuallyBind_func_0, align 8
+  %Done_capture_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 0
+  store ptr null, ptr %Done_capture_0, align 8
+  %Done_func_0 = getelementptr { ptr, ptr }, ptr %3, i32 0, i32 1
+  store ptr @"test/testcases/malgo/Eventually.mlg.Done", ptr %Done_func_0, align 8
   call void @malgo_hash_table_insert(ptr %1, ptr @str3291, ptr %3)
   store ptr %1, ptr @"test/testcases/malgo/Eventually.mlg.eventually", align 8
   %4 = load ptr, ptr @"test/testcases/malgo/Eventually.mlg.eventually", align 8
@@ -2666,9 +2666,9 @@ define internal void @"malgo_load_test/testcases/malgo/Eventually.mlg"() {
   store i8 1, ptr %9, align 1
   %10 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1, i32 0
   store ptr %7, ptr %10, align 8
-  %11 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 0
+  %11 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 0
   %12 = load ptr, ptr %11, align 8
-  %13 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 1
+  %13 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 1
   %14 = load ptr, ptr %13, align 8
   %15 = call ptr %14(ptr %12, ptr %8)
   %16 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))

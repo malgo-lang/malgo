@@ -92,9 +92,9 @@ common.ret:                                       ; preds = %"switch_branch_test
   ret ptr %common.ret.op
 
 "switch_branch_test/testcases/malgo/TuplePattern.mlg.A_0": ; preds = %"switch_branch_Tuple#_0"
-  %"String#_addr_0" = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
-  %printString_0 = load ptr, ptr %0, align 8
+  %printString_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %printString_0 = load ptr, ptr %printString_addr_0, align 8
+  %"String#_0" = load ptr, ptr %0, align 8
   %5 = load ptr, ptr %"String#_0", align 8
   %6 = getelementptr { ptr, ptr }, ptr %"String#_0", i64 0, i32 1
   %7 = load ptr, ptr %6, align 8
@@ -155,15 +155,15 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 16)
   %14 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %14, align 8
-  %printString_func_0.i = getelementptr { ptr, ptr }, ptr %14, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.printString", ptr %printString_func_0.i, align 8
+  %"String#_func_0.i" = getelementptr { ptr, ptr }, ptr %14, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i", align 8
   store ptr %14, ptr %fun_capture_0.i, align 8
   %15 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %15, align 8
-  %"String#_func_0.i" = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i", align 8
-  %"String#_0.i" = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
-  store ptr %15, ptr %"String#_0.i", align 8
+  %printString_func_0.i = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.printString", ptr %printString_func_0.i, align 8
+  %printString_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
+  store ptr %15, ptr %printString_0.i, align 8
   store ptr %fun_capture_0.i, ptr %13, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
   store ptr @"test/testcases/malgo/TuplePattern.mlg.#fun_closure_251", ptr %fun_func_0.i, align 8

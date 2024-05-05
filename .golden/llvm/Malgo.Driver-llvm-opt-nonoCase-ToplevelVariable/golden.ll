@@ -317,9 +317,9 @@ common.ret:                                       ; preds = %"switch_branch_runt
   ret ptr %common.ret.op
 
 "switch_branch_runtime/malgo/Prelude.mlg.Nothing_0": ; preds = %2
-  %"String#_addr_0" = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
-  %printString_0 = load ptr, ptr %0, align 8
+  %printString_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %printString_0 = load ptr, ptr %printString_addr_0, align 8
+  %"String#_0" = load ptr, ptr %0, align 8
   %4 = load ptr, ptr %"String#_0", align 8
   %5 = getelementptr { ptr, ptr }, ptr %"String#_0", i64 0, i32 1
   %6 = load ptr, ptr %5, align 8
@@ -380,15 +380,15 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i1 = tail call ptr @malgo_malloc(i64 noundef 16)
   %18 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %18, align 8
-  %printString_func_0.i = getelementptr { ptr, ptr }, ptr %18, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.printString", ptr %printString_func_0.i, align 8
+  %"String#_func_0.i" = getelementptr { ptr, ptr }, ptr %18, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i", align 8
   store ptr %18, ptr %fun_capture_0.i1, align 8
   %19 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %19, align 8
-  %"String#_func_0.i" = getelementptr { ptr, ptr }, ptr %19, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i", align 8
-  %"String#_0.i" = getelementptr { ptr, ptr }, ptr %fun_capture_0.i1, i64 0, i32 1
-  store ptr %19, ptr %"String#_0.i", align 8
+  %printString_func_0.i = getelementptr { ptr, ptr }, ptr %19, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.printString", ptr %printString_func_0.i, align 8
+  %printString_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i1, i64 0, i32 1
+  store ptr %19, ptr %printString_0.i, align 8
   store ptr %fun_capture_0.i1, ptr %17, align 8
   %fun_func_0.i2 = getelementptr { ptr, ptr }, ptr %17, i64 0, i32 1
   store ptr @"test/testcases/malgo/ToplevelVariable.mlg.#fun_closure_326", ptr %fun_func_0.i2, align 8
@@ -398,8 +398,8 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   br i1 %switch.i.i, label %"switch_branch_runtime/malgo/Prelude.mlg.Nothing_0.i.i", label %"switch_branch_runtime/malgo/Prelude.mlg.Just_0.i.i"
 
 "switch_branch_runtime/malgo/Prelude.mlg.Nothing_0.i.i": ; preds = %1
-  %"String#_0.i.i" = load ptr, ptr %"String#_0.i", align 8
-  %printString_0.i.i = load ptr, ptr %fun_capture_0.i1, align 8
+  %printString_0.i.i = load ptr, ptr %printString_0.i, align 8
+  %"String#_0.i.i" = load ptr, ptr %fun_capture_0.i1, align 8
   %22 = load ptr, ptr %"String#_0.i.i", align 8
   %23 = getelementptr { ptr, ptr }, ptr %"String#_0.i.i", i64 0, i32 1
   %24 = load ptr, ptr %23, align 8

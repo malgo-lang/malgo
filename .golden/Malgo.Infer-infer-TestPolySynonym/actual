@@ -9,14 +9,14 @@ Module
        ( TyRecord
         ( fromList
          [
-          ( "snd", TyVar
-           ( Id
-            { name = "t", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 18 } ) ),
           ( "fst", TyVar
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 16 } ) ) ] ) )
+             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 16 } ) ),
+          ( "snd", TyVar
+           ( Id
+            { name = "t", moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 18 } ) ) ] ) )
        ( TyVar
         ( Id
          { name = "t", moduleName = Artifact
@@ -31,14 +31,14 @@ Module
         ( TyRecord
          ( fromList
           [
-           ( "snd", TyVar
-            ( Id
-             { name = "t", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 18 } ) ),
            ( "fst", TyVar
             ( Id
              { name = "t", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 16 } ) ) ] ) )
+              ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 16 } ) ),
+           ( "snd", TyVar
+            ( Id
+             { name = "t", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 18 } ) ) ] ) )
         ( TyVar
          ( Id
           { name = "t", moduleName = Artifact
@@ -52,14 +52,14 @@ Module
          ( TyRecord
           ( fromList
            [
-            ( "snd", TyVar
-             ( Id
-              { name = "t", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 18 } ) ),
             ( "fst", TyVar
              ( Id
               { name = "t", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 16 } ) ) ] ) )
+               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 16 } ) ),
+            ( "snd", TyVar
+             ( Id
+              { name = "t", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 18 } ) ) ] ) )
          ( TyVar
           ( Id
            { name = "t", moduleName = Artifact
@@ -72,14 +72,14 @@ Module
          { annotated = TyRecord
           ( fromList
            [
-            ( "snd", TyVar
-             ( Id
-              { name = "t", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 18 } ) ),
             ( "fst", TyVar
              ( Id
               { name = "t", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 16 } ) ) ] ), value = Range
+               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 16 } ) ),
+            ( "snd", TyVar
+             ( Id
+              { name = "t", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Internal 18 } ) ) ] ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPolySynonym.mlg", sourceLine = Pos 9, sourceColumn = Pos 15 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPolySynonym.mlg", sourceLine = Pos 9, sourceColumn = Pos 36 } } } )
@@ -187,13 +187,13 @@ Module
            { annotated = TyRecord
             ( fromList
              [
-              ( "snd", TyCon
-               ( Id
-                { name = "String", moduleName = Artifact
-                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ),
               ( "fst", TyCon
                ( Id
                 { name = "Int32", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ),
+              ( "snd", TyCon
+               ( Id
+                { name = "String", moduleName = Artifact
                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ] ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestPolySynonym.mlg", sourceLine = Pos 13, sourceColumn = Pos 11 }, _end = SourcePos
@@ -288,13 +288,13 @@ Module
                ( TyRecord
                 ( fromList
                  [
-                  ( "snd", TyCon
-                   ( Id
-                    { name = "String", moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ),
                   ( "fst", TyCon
                    ( Id
                     { name = "Int32", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ),
+                  ( "snd", TyCon
+                   ( Id
+                    { name = "String", moduleName = Artifact
                      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ] ) )
                ( TyCon
                 ( Id
@@ -311,13 +311,13 @@ Module
               { annotated = TyRecord
                ( fromList
                 [
-                 ( "snd", TyCon
-                  ( Id
-                   { name = "String", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ),
                  ( "fst", TyCon
                   ( Id
                    { name = "Int32", moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ),
+                 ( "snd", TyCon
+                  ( Id
+                   { name = "String", moduleName = Artifact
                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ] ), value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPolySynonym.mlg", sourceLine = Pos 14, sourceColumn = Pos 9 }, _end = SourcePos

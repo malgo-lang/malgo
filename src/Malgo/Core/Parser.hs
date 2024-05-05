@@ -1,8 +1,8 @@
 module Malgo.Core.Parser (parse) where
 
 import Data.Char qualified as Char
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
+import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
 import Data.Text qualified as T
 import GHC.Float (castWord32ToFloat, castWord64ToDouble)
 import Malgo.Core.Syntax hiding (atom, expr, object)
@@ -108,7 +108,7 @@ object = between (symbol "(") (symbol ")") do
               v <- atom
               pure (k, v)
           )
-      pure $ Record $ HashMap.fromList kvs
+      pure $ Record $ Map.fromList kvs
 
 -- | Parse an expression.
 expr :: Parser (Expr Text)
@@ -167,7 +167,7 @@ expr =
             void $ try $ symbol "destruct-record"
             DestructRecord
               <$> atom
-              <*> between (symbol "(") (symbol ")") (HashMap.fromList <$> many ((,) <$> rawIdent <*> ident))
+              <*> between (symbol "(") (symbol ")") (Map.fromList <$> many ((,) <$> rawIdent <*> ident))
               <*> expr,
           do
             void $ symbol "destruct"
@@ -205,7 +205,7 @@ case_ = between (symbol "(") (symbol ")") do
           k <- ident
           v <- ident
           pure (k, v)
-        OpenRecord (HashMap.fromList kvs) <$> expr,
+        OpenRecord (Map.fromList kvs) <$> expr,
       do
         void $ symbol "exact"
         Exact <$> unboxed <*> expr,
@@ -253,7 +253,7 @@ type_ = label "type" do
               k <- rawIdent
               v <- type_
               pure (k, v)
-            pure $ RecordT $ HashMap.fromList fs
+            pure $ RecordT $ Map.fromList fs
         ]
 
 -- | Parse a constructor.
@@ -300,10 +300,10 @@ isIdentStartLetter =
     _ -> False
 
 isIdentLetter :: Char -> Bool
-isIdentLetter c = Char.isAlphaNum c || HashSet.member c identLetterSet
+isIdentLetter c = Char.isAlphaNum c || Set.member c identLetterSet
   where
-    identLetterSet :: HashSet Char
-    identLetterSet = HashSet.fromList "_+-*/\\%=><:;|&!#.@$"
+    identLetterSet :: Set Char
+    identLetterSet = Set.fromList "_+-*/\\%=><:;|&!#.@$"
 
 -- | Parse an identifier.
 -- In Core, we always know where an identifier appears,

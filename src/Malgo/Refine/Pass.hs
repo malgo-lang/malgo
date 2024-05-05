@@ -3,8 +3,8 @@
 module Malgo.Refine.Pass (refine) where
 
 import Control.Lens (_3)
-import Data.HashMap.Strict qualified as HashMap
 import Data.List.NonEmpty qualified as NonEmpty
+import Data.Map.Strict qualified as Map
 import Effectful
 import Effectful.Reader.Static
 import Malgo.Infer.TcEnv
@@ -36,7 +36,7 @@ refineScDef (x, name, expr) = (x,name,) <$> refineExpr expr
 
 refineExpr :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => Expr (Malgo Infer) -> Eff es (Expr (Malgo Refine))
 refineExpr (Var x v) = do
-  vScheme <- asks @RefineEnv ((.signatureMap) >>> HashMap.lookup v)
+  vScheme <- asks @RefineEnv ((.signatureMap) >>> Map.lookup v)
   case vScheme of
     Nothing -> pass
     Just (Forall _ originalType) -> do
@@ -48,7 +48,7 @@ refineExpr (Var x v) = do
     checkValidInstantiation (T.TyVar _) _ = pass
     checkValidInstantiation (T.TyApp t1 t2) (T.TyApp t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
     checkValidInstantiation (T.TyArr t1 t2) (T.TyArr t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
-    checkValidInstantiation (T.TyRecord fs) (T.TyRecord fs') = zipWithM_ checkValidInstantiation (HashMap.elems fs) (HashMap.elems fs')
+    checkValidInstantiation (T.TyRecord fs) (T.TyRecord fs') = zipWithM_ checkValidInstantiation (Map.elems fs) (Map.elems fs')
     checkValidInstantiation TyPtr TyPtr = pass
     checkValidInstantiation t1 t2
       | t1 == t2 = pass

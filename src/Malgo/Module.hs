@@ -19,12 +19,12 @@ module Malgo.Module
   )
 where
 
+import Control.Lens (at, (?~), (^.))
 import Control.Monad.Catch
 import Data.Aeson hiding (encode)
 import Data.ByteString (ByteString)
 import Data.ByteString qualified as BS
 import Data.Data
-import Data.HashMap.Strict qualified as HashMap
 import Data.Store
 import Effectful
 import Effectful.Dispatch.Static
@@ -59,7 +59,7 @@ instance HasField "moduleName" ModuleName ModuleName where
 
 data WorkspaceHolder = WorkspaceHolder
   { getWorkspace :: FilePath,
-    modulePathMap :: IORef (HashMap ModuleName ArtifactPath)
+    modulePathMap :: IORef (Map ModuleName ArtifactPath)
   }
 
 data Workspace :: Effect
@@ -90,13 +90,13 @@ getWorkspaceAbs = do
 registerModule :: (Workspace :> es, IOE :> es) => ModuleName -> ArtifactPath -> Eff es ()
 registerModule moduleName path = do
   Workspace WorkspaceHolder {modulePathMap} <- getStaticRep
-  modifyIORef modulePathMap $ HashMap.insert moduleName path
+  modifyIORef modulePathMap $ at moduleName ?~ path
 
 getModulePath :: (HasCallStack) => (Workspace :> es, IOE :> es) => ModuleName -> Eff es ArtifactPath
 getModulePath moduleName = do
   Workspace WorkspaceHolder {modulePathMap} <- getStaticRep
   modulePathMap' <- readIORef modulePathMap
-  case HashMap.lookup moduleName modulePathMap' of
+  case modulePathMap' ^. at moduleName of
     Just path -> pure path
     Nothing -> searchAndRegister moduleName
 

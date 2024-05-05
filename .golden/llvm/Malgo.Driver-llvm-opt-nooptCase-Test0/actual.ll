@@ -13,7 +13,7 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @"test/testcases/malgo/Test0.mlg.#fun_closure_131"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %1) {
+define internal ptr @"test/testcases/malgo/Test0.mlg.#fun_closure_203"(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %1) {
   %3 = getelementptr i8, ptr %1, i64 4
   %.val = load i64, ptr %3, align 4
   %4 = tail call ptr @malgo_int64_t_to_string(i64 %.val)
@@ -21,7 +21,7 @@ define internal ptr @"test/testcases/malgo/Test0.mlg.#fun_closure_131"(ptr nocap
   ret ptr %5
 }
 
-define internal ptr @"test/testcases/malgo/Test0.mlg.#let_closure_195"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+define internal ptr @"test/testcases/malgo/Test0.mlg.#let_closure_204"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
   %x_0 = load ptr, ptr %0, align 8
   %.val = load ptr, ptr %1, align 8
   %3 = getelementptr i8, ptr %1, i64 8
@@ -47,12 +47,12 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %5, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %7, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Test0.mlg.#let_closure_195", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/Test0.mlg.#let_closure_204", ptr %let_func_0.i.i, align 8
   %8 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_0.i, ptr %8, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Test0.mlg.#fun_closure_131", ptr %fun_func_0.i, align 8
+  store ptr @"test/testcases/malgo/Test0.mlg.#fun_closure_203", ptr %fun_func_0.i, align 8
   %9 = load ptr, ptr %7, align 8
   %10 = load ptr, ptr %let_func_0.i.i, align 8
   %11 = tail call ptr %10(ptr %9, ptr nonnull %8)

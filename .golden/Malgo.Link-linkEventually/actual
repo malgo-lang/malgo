@@ -52,41 +52,39 @@ Program
     { meta = RecordT
      ( fromList
       [
-       ( "return", [ AnyT ] :-> AnyT ),
-       ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+       ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+       ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
      { name = "eventually", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } }, RecordT
     ( fromList
      [
-      ( "return", [ AnyT ] :-> AnyT ),
-      ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), Let
+      ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+      ( "return", [ AnyT ] :-> AnyT ) ] ), Let
     [ LocalDef
      { _variable = Meta
       { meta = RecordT
        ( fromList
         [
-         ( "return", [ AnyT ] :-> AnyT ),
-         ( "bind", [ AnyT ] :->
-          ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+         ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+         ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
        { name = "record", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 306 } }, typ = RecordT
       ( fromList
        [
-        ( "return", [ AnyT ] :-> AnyT ),
-        ( "bind", [ AnyT ] :->
-         ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), _object = Record
+        ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+        ( "return", [ AnyT ] :-> AnyT ) ] ), _object = Record
       ( fromList
        [
-        ( "return", Var
-         ( Meta
-          { meta = [ AnyT ] :-> AnyT, id = Id
-           { name = "Done", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) ),
         ( "bind", Var
          ( Meta
           { meta = [ AnyT ] :->
            ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
            { name = "eventuallyBind", moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) ),
+        ( "return", Var
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "Done", moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) ) ] ) } ]
     ( Atom
      ( Var
@@ -94,9 +92,8 @@ Program
        { meta = RecordT
         ( fromList
          [
-          ( "return", [ AnyT ] :-> AnyT ),
-          ( "bind", [ AnyT ] :->
-           ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+          ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+          ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
         { name = "record", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 306 } } ) ) ) ),
    ( Meta
@@ -115,9 +112,8 @@ Program
         [ RecordT
          ( fromList
           [
-           ( "return", [ AnyT ] :-> AnyT ),
-           ( "bind", [ AnyT ] :->
-            ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ) ] :->
+           ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+           ( "return", [ AnyT ] :-> AnyT ) ] ) ] :->
         ( [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ), id = Id
         { name = "bind", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) )
@@ -126,9 +122,8 @@ Program
        { meta = RecordT
         ( fromList
          [
-          ( "return", [ AnyT ] :-> AnyT ),
-          ( "bind", [ AnyT ] :->
-           ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+          ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+          ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
         { name = "eventually", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) ] )
     ( Assign
@@ -334,9 +329,9 @@ Program
                   [ RecordT
                    ( fromList
                     [
-                     ( "return", [ AnyT ] :-> AnyT ),
                      ( "bind", [ AnyT ] :->
-                      ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ) ] :->
+                      ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+                     ( "return", [ AnyT ] :-> AnyT ) ] ) ] :->
                   ( [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ), id = Id
                   { name = "bind", moduleName = Artifact
                    ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) )
@@ -345,9 +340,9 @@ Program
                  { meta = RecordT
                   ( fromList
                    [
-                    ( "return", [ AnyT ] :-> AnyT ),
                     ( "bind", [ AnyT ] :->
-                     ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+                     ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+                    ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
                   { name = "eventually", moduleName = Artifact
                    ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) ] )
               ( Assign
@@ -557,9 +552,9 @@ Program
                             [ RecordT
                              ( fromList
                               [
-                               ( "return", [ AnyT ] :-> AnyT ),
                                ( "bind", [ AnyT ] :->
-                                ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ) ] :->
+                                ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+                               ( "return", [ AnyT ] :-> AnyT ) ] ) ] :->
                             ( [ AnyT ] :-> AnyT ), id = Id
                             { name = "return", moduleName = Artifact
                              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) )
@@ -568,10 +563,9 @@ Program
                            { meta = RecordT
                             ( fromList
                              [
-                              ( "return", [ AnyT ] :-> AnyT ),
                               ( "bind", [ AnyT ] :->
-                               (
-                                [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+                               ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+                              ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
                             { name = "eventually", moduleName = Artifact
                              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } } ) ] )
                         ( Assign
@@ -29613,8 +29607,8 @@ Program
      [ RecordT
       ( fromList
        [
-        ( "return", [ AnyT ] :-> AnyT ),
-        ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ) ] :->
+        ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+        ( "return", [ AnyT ] :-> AnyT ) ] ) ] :->
      ( [ AnyT ] :-> AnyT ), id = Id
      { name = "return", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } },
@@ -29622,36 +29616,34 @@ Program
      { meta = RecordT
       ( fromList
        [
-        ( "return", [ AnyT ] :-> AnyT ),
-        ( "bind", [ AnyT ] :->
-         ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+        ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+        ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
       { name = "record", moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 269 } } ],
     [ RecordT
      ( fromList
       [
-       ( "return", [ AnyT ] :-> AnyT ),
-       ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ) ] :->
+       ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+       ( "return", [ AnyT ] :-> AnyT ) ] ) ] :->
     ( [ AnyT ] :-> AnyT ), DestructRecord
     ( Var
      ( Meta
       { meta = RecordT
        ( fromList
         [
-         ( "return", [ AnyT ] :-> AnyT ),
-         ( "bind", [ AnyT ] :->
-          ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+         ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+         ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
        { name = "record", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 269 } } ) )
     ( fromList
      [
-      ( "return", Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "p", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 270 } } ),
       ( "bind", Meta
        { meta = [ AnyT ] :->
         ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
+        { name = "p", moduleName = Artifact
+         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 270 } } ),
+      ( "return", Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "p", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 271 } } ) ] )
     ( Atom
@@ -29659,7 +29651,7 @@ Program
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "p", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 270 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 271 } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :->
      ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
@@ -29708,8 +29700,8 @@ Program
      [ RecordT
       ( fromList
        [
-        ( "return", [ AnyT ] :-> AnyT ),
-        ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ) ] :->
+        ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+        ( "return", [ AnyT ] :-> AnyT ) ] ) ] :->
      ( [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ), id = Id
      { name = "bind", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } },
@@ -29717,36 +29709,34 @@ Program
      { meta = RecordT
       ( fromList
        [
-        ( "return", [ AnyT ] :-> AnyT ),
-        ( "bind", [ AnyT ] :->
-         ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+        ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+        ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
       { name = "record", moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 308 } } ],
     [ RecordT
      ( fromList
       [
-       ( "return", [ AnyT ] :-> AnyT ),
-       ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ) ] :->
+       ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+       ( "return", [ AnyT ] :-> AnyT ) ] ) ] :->
     ( [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ), DestructRecord
     ( Var
      ( Meta
       { meta = RecordT
        ( fromList
         [
-         ( "return", [ AnyT ] :-> AnyT ),
-         ( "bind", [ AnyT ] :->
-          ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ) ] ), id = Id
+         ( "bind", [ AnyT ] :-> ( [ [ AnyT ] :-> AnyT ] :-> AnyT ) ),
+         ( "return", [ AnyT ] :-> AnyT ) ] ), id = Id
        { name = "record", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 308 } } ) )
     ( fromList
      [
-      ( "return", Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "p", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 309 } } ),
       ( "bind", Meta
        { meta = [ AnyT ] :->
         ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
+        { name = "p", moduleName = Artifact
+         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 309 } } ),
+      ( "return", Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "p", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 310 } } ) ] )
     ( Atom
@@ -29755,7 +29745,7 @@ Program
        { meta = [ AnyT ] :->
         ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
         { name = "p", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 310 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Temporal 309 } } ) ) ) ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT

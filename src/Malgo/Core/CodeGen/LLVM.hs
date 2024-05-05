@@ -19,11 +19,11 @@ import Control.Monad.Trans.State.Lazy qualified as Lazy
 import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
 import Data.ByteString.Short qualified as BS
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
 import Data.List qualified as List
 import Data.List.Extra (mconcatMap)
+import Data.Map.Strict qualified as Map
 import Data.Maybe qualified as Maybe
+import Data.Set qualified as Set
 import Data.String.Conversions
 import Data.Traversable (for)
 import Effectful (Eff, runPureEff)
@@ -61,20 +61,20 @@ import Malgo.Prelude
 data CodeGenState = CodeGenState
   { -- | 'primMap' is a map from primitive function name to its LLVM function.
     _primMap :: Map Name Operand,
-    stringMap :: HashMap Text C.Constant,
+    stringMap :: Map Text C.Constant,
     uniqSupply :: Int
   }
 
 makeFieldsNoPrefix ''CodeGenState
 
--- 変数のHashMapとknown関数のHashMapを分割する
+-- 変数のMapとknown関数のMapを分割する
 -- #7(https://github.com/takoeight0821/malgo/issues/7)のようなバグの早期検出が期待できる
 data CodeGenEnv = CodeGenEnv
   { -- In optimization, some variables are defined multiple times.
     -- So, we need to treat them as as scoped variables.
-    _valueMap :: HashMap (Meta C.Type) Operand,
-    _globalValueMap :: HashMap (Meta C.Type) Operand,
-    _funcMap :: HashMap (Meta C.Type) Operand,
+    _valueMap :: Map (Meta C.Type) Operand,
+    _globalValueMap :: Map (Meta C.Type) Operand,
+    _funcMap :: Map (Meta C.Type) Operand,
     moduleName :: ModuleName
   }
 
@@ -91,10 +91,10 @@ newCodeGenEnv moduleName Program {..} =
   where
     -- topVarsのOprMapを作成
     varMap = mconcatMap ?? topVars $ \(v, _, _) ->
-      HashMap.singleton v (ConstantOperand $ C.GlobalReference $ toName v)
+      Map.singleton v (ConstantOperand $ C.GlobalReference $ toName v)
     -- topFuncsのOprMapを作成
     funcMap = mconcatMap ?? topFuns $ \(f, _, _, _) ->
-      HashMap.singleton f (ConstantOperand $ C.GlobalReference $ toName f)
+      Map.singleton f (ConstantOperand $ C.GlobalReference $ toName f)
 
 type MonadCodeGen m =
   ( MonadModuleBuilder m,
@@ -331,7 +331,7 @@ genFunc name params body = do
           then function
           else internalFunction
   funcBuilder funcName llvmParams retty $ \args ->
-    local (over valueMap (HashMap.fromList (zip params $ drop 1 args) <>)) $ runContT (genExpr body) ret
+    local (over valueMap (Map.fromList (zip params $ drop 1 args) <>)) $ runContT (genExpr body) ret
   where
     funcName = toName name
     llvmParams =
@@ -386,7 +386,7 @@ genExpr (Let xs e) = do
   where
     -- Generate a `malloc(sizeof(<closure type>))` call for a local function definition.
     prepare (LocalDef name _ (Fun _ _)) =
-      HashMap.singleton name
+      Map.singleton name
         <$> mallocType (StructureType False [ptr, ptr])
     prepare _ = pure mempty
 genExpr Match {} = error "unreachable: Match must be normalized before codegen."
@@ -435,19 +435,19 @@ genExpr (Destruct v (Con _ ts) xs e) = do
   v <- genAtom v
   payloadAddr <- gep (StructureType False [i8, StructureType False (map convType ts)]) v [int32 0, int32 1]
   env <-
-    HashMap.fromList <$> ifor xs \i x -> do
+    Map.fromList <$> ifor xs \i x -> do
       (x,) <$> do
         xAddr <- gep (StructureType False (map convType ts)) payloadAddr [int32 0, int32 $ fromIntegral i]
         load (convType $ C.typeOf x) xAddr 0
   local (over valueMap (env <>)) $ genExpr e
 genExpr (DestructRecord scrutinee kvs e) = do
   scrutinee <- genAtom scrutinee
-  kvs' <- for (HashMap.toList kvs) \(k, v) -> do
+  kvs' <- for (Map.toList kvs) \(k, v) -> do
     hashTableGet <- findExt "malgo_hash_table_get" [ptr, ptr] ptr
     key <- ConstantOperand <$> globalStringPtr k
     value <- call (FunctionType ptr [ptr, ptr] False) hashTableGet [(scrutinee, []), (key, [])]
     pure (v, value)
-  local (over valueMap (HashMap.fromList kvs' <>)) $ genExpr e
+  local (over valueMap (Map.fromList kvs' <>)) $ genExpr e
 genExpr (Assign _ v e) | C.typeOf v == VoidT = do
   _ <- genExpr v
   genExpr e
@@ -485,10 +485,10 @@ genLocalDef ::
     MonadIO m
   ) =>
   LocalDef (Meta C.Type) ->
-  m (HashMap (Meta C.Type) Operand)
+  m (Map (Meta C.Type) Operand)
 genLocalDef (LocalDef funName _ (Fun ps e)) = do
-  globalValues <- HashSet.fromList . HashMap.keys <$> view globalValueMap
-  let fvs = toList $ freevars (Fun ps e) `HashSet.difference` globalValues
+  globalValues <- Set.fromList . Map.keys <$> view globalValueMap
+  let fvs = toList $ freevars (Fun ps e) `Set.difference` globalValues
   -- キャプチャされる変数を詰める構造体の型
   let capType = StructureType False (map (convType . C.typeOf) fvs)
   -- クロージャの元になる関数を生成する
@@ -498,11 +498,11 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
     (capture : ps') -> do
       -- キャプチャした変数が詰まっている構造体を展開する
       env <-
-        HashMap.fromList <$> ifor fvs \i fv ->
+        Map.fromList <$> ifor fvs \i fv ->
           (fv,) <$> do
             fvAddr <- gep capType capture [int32 0, int32 $ fromIntegral i] `named` toLabel (fv.id.name <> "_addr")
             load (convType $ C.typeOf fv) fvAddr 0 `named` toLabel fv.id.name
-      local (over valueMap ((env <> HashMap.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
+      local (over valueMap ((env <> Map.fromList (zip ps ps')) <>)) $ runContT (genExpr e) ret
   -- キャプチャされる変数を構造体に詰める
   capture <- mallocType capType `named` toLabel (funName.id.name <> "_capture")
   ifor_ fvs $ \i fv -> do
@@ -511,7 +511,7 @@ genLocalDef (LocalDef funName _ (Fun ps e)) = do
   closAddr <- findVar funName
   gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 0] capture `named` toLabel (funName.id.name <> "_capture")
   gepAndStore (StructureType False [ptr, ptr]) closAddr [int32 0, int32 1] func `named` toLabel (funName.id.name <> "_func")
-  pure $ HashMap.singleton funName closAddr
+  pure $ Map.singleton funName closAddr
   where
     psTypes = ptr : map (convType . C.typeOf) ps
     retType = convType $ C.typeOf e
@@ -523,17 +523,17 @@ genLocalDef (LocalDef name@(C.typeOf -> SumT cs) _ (Pack _ con@(Con _ ts) xs)) =
   ifor_ xs $ \i x ->
     gepAndStore (StructureType False [i8, StructureType False $ map convType ts]) addr [int32 0, int32 1, int32 $ fromIntegral i] =<< genAtom x
   -- nameの型にキャスト
-  pure $ HashMap.singleton name addr
+  pure $ Map.singleton name addr
 genLocalDef (LocalDef (C.typeOf -> t) _ Pack {}) = error $ show t <> " must be SumT"
 genLocalDef (LocalDef name _ (Record kvs)) = do
   newHashTable <- findExt "malgo_hash_table_new" [] ptr
   hashTable <- call (FunctionType ptr [] False) newHashTable []
-  for_ (HashMap.toList kvs) \(k, v) -> do
+  for_ (Map.toList kvs) \(k, v) -> do
     k' <- ConstantOperand <$> globalStringPtr k
     v <- genAtom v
     insert <- findExt "malgo_hash_table_insert" [ptr, ptr, ptr] LT.void
     call (FunctionType LT.void [ptr, ptr, ptr] False) insert (map (,[]) [hashTable, k', v]) `named` toLabel ("hash_insert_" <> k)
-  pure $ HashMap.singleton name hashTable
+  pure $ Map.singleton name hashTable
 
 findIndex :: (Pretty a, Eq a) => a -> [a] -> Integer
 findIndex con cs = case List.elemIndex con cs of
@@ -543,7 +543,7 @@ findIndex con cs = case List.elemIndex con cs of
 globalStringPtr :: (MonadModuleBuilder m, MonadReader CodeGenEnv m, MonadState CodeGenState m) => Text -> m C.Constant
 globalStringPtr str = do
   stringMap <- gets (.stringMap)
-  case HashMap.lookup str stringMap of
+  case Map.lookup str stringMap of
     Just strOpr -> pure strOpr
     Nothing -> do
       name <- mkName . ("str" <>) . show <$> runEffOnCodeGen getUniq
@@ -566,7 +566,7 @@ globalStringPtr str = do
               unnamedAddr = Just GlobalAddr
             }
       let opr = C.GetElementPtr True ty (C.GlobalReference name) [C.Int 32 0, C.Int 32 0]
-      modify \s -> s {stringMap = HashMap.insert str opr s.stringMap}
+      modify \s -> s {stringMap = Map.insert str opr s.stringMap}
       pure opr
 
 gepAndStore ::

@@ -229,10 +229,10 @@ declare ptr @malgo_hash_table_new()
 declare void @malgo_hash_table_insert(ptr, ptr, ptr)
 
 define internal i32 @"test/testcases/malgo/RecordTest.mlg.#let_closure_2907"(ptr %0, i32 %1) {
-  %p_addr_0 = getelementptr { i32, ptr }, ptr %0, i32 0, i32 0
-  %p_0 = load i32, ptr %p_addr_0, align 4
-  %malgo_add_int32_t_addr_0 = getelementptr { i32, ptr }, ptr %0, i32 0, i32 1
+  %malgo_add_int32_t_addr_0 = getelementptr { ptr, i32 }, ptr %0, i32 0, i32 0
   %malgo_add_int32_t_0 = load ptr, ptr %malgo_add_int32_t_addr_0, align 8
+  %p_addr_0 = getelementptr { ptr, i32 }, ptr %0, i32 0, i32 1
+  %p_0 = load i32, ptr %p_addr_0, align 4
   %3 = getelementptr { ptr, ptr }, ptr %malgo_add_int32_t_0, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %malgo_add_int32_t_0, i32 0, i32 1
@@ -285,16 +285,16 @@ define internal ptr @"test/testcases/malgo/RecordTest.mlg.main"(ptr %0, ptr %"te
   %21 = getelementptr { i32 }, ptr %20, i32 0, i32 0
   %22 = load i32, ptr %21, align 4
   %23 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i32, ptr }, ptr null, i32 1) to i64))
-  %p_0 = getelementptr { i32, ptr }, ptr %let_capture_0, i32 0, i32 0
-  store i32 %17, ptr %p_0, align 4
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, i32 }, ptr null, i32 1) to i64))
   %24 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %malgo_add_int32_t_capture_0 = getelementptr { ptr, ptr }, ptr %24, i32 0, i32 0
   store ptr null, ptr %malgo_add_int32_t_capture_0, align 8
   %malgo_add_int32_t_func_0 = getelementptr { ptr, ptr }, ptr %24, i32 0, i32 1
   store ptr @"runtime/malgo/Builtin.mlg.malgo_add_int32_t", ptr %malgo_add_int32_t_func_0, align 8
-  %malgo_add_int32_t_0 = getelementptr { i32, ptr }, ptr %let_capture_0, i32 0, i32 1
+  %malgo_add_int32_t_0 = getelementptr { ptr, i32 }, ptr %let_capture_0, i32 0, i32 0
   store ptr %24, ptr %malgo_add_int32_t_0, align 8
+  %p_0 = getelementptr { ptr, i32 }, ptr %let_capture_0, i32 0, i32 1
+  store i32 %17, ptr %p_0, align 4
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 1

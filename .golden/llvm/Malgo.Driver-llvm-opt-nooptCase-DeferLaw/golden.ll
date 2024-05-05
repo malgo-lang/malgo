@@ -2,9 +2,9 @@
 source_filename = "test/testcases/malgo/DeferLaw.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
-@str81 = unnamed_addr constant [1 x i8] zeroinitializer
-@str86 = unnamed_addr constant [6 x i8] c"Hello\00"
-@str241 = unnamed_addr constant [10 x i8] c"no branch\00"
+@str190 = unnamed_addr constant [6 x i8] c"Hello\00"
+@str191 = unnamed_addr constant [1 x i8] zeroinitializer
+@str255 = unnamed_addr constant [10 x i8] c"no branch\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -17,7 +17,7 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
 ; Function Attrs: argmemonly mustprogress nofree norecurse nosync nounwind readonly willreturn
-define internal ptr @"test/testcases/malgo/DeferLaw.mlg.#fun_closure_79"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #0 {
+define internal ptr @"test/testcases/malgo/DeferLaw.mlg.#fun_closure_256"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readnone %1) #0 {
   %x_0 = load ptr, ptr %0, align 8
   ret ptr %x_0
 }
@@ -33,13 +33,13 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %5 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %5, align 1
   %6 = getelementptr { i8, { ptr } }, ptr %5, i64 0, i32 1, i32 0
-  store ptr @str86, ptr %6, align 8
+  store ptr @str190, ptr %6, align 8
   %7 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 8)
   store ptr %5, ptr %fun_capture_0.i.i, align 8
   store ptr %fun_capture_0.i.i, ptr %7, align 8
   %fun_func_0.i.i = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @"test/testcases/malgo/DeferLaw.mlg.#fun_closure_79", ptr %fun_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/DeferLaw.mlg.#fun_closure_256", ptr %fun_func_0.i.i, align 8
   %8 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %8, align 1
   %9 = load ptr, ptr %7, align 8

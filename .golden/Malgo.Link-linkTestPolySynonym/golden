@@ -28532,30 +28532,30 @@ Program
    ( Meta
     { meta =
      [ RecordT
-      ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ) ] :-> AnyT, id = Id
+      ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ) ] :-> AnyT, id = Id
      { name = "first", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = External } },
     [ Meta
      { meta = RecordT
-      ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
+      ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ), id = Id
       { name = "record", moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 40 } } ],
     [ RecordT
      ( fromList
-      [ ( "snd", AnyT ), ( "fst", AnyT ) ] ) ] :-> AnyT, DestructRecord
+      [ ( "fst", AnyT ), ( "snd", AnyT ) ] ) ] :-> AnyT, DestructRecord
     ( Var
      ( Meta
       { meta = RecordT
-       ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
+       ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ), id = Id
        { name = "record", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 40 } } ) )
     ( fromList
      [
-      ( "snd", Meta
+      ( "fst", Meta
        { meta = AnyT, id = Id
         { name = "p", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 41 } } ),
-      ( "fst", Meta
+      ( "snd", Meta
        { meta = AnyT, id = Id
         { name = "p", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 42 } } ) ] )
@@ -28564,7 +28564,7 @@ Program
       ( Meta
        { meta = AnyT, id = Id
         { name = "p", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 42 } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 41 } } ) ) ) ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -28627,22 +28627,22 @@ Program
         [ LocalDef
          { _variable = Meta
           { meta = RecordT
-           ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
+           ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ), id = Id
            { name = "record", moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 48 } }, typ = RecordT
-          ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), _object = Record
+          ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ), _object = Record
           ( fromList
            [
-            ( "snd", Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 47 } } ) ),
             ( "fst", Var
              ( Meta
               { meta = AnyT, id = Id
                { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 45 } } ) ) ] ) } ]
+                ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 45 } } ) ),
+            ( "snd", Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 47 } } ) ) ] ) } ]
         ( Assign
          ( Meta
           { meta = AnyT, id = Id
@@ -28654,13 +28654,13 @@ Program
             { meta =
              [ RecordT
               ( fromList
-               [ ( "snd", AnyT ), ( "fst", AnyT ) ] ) ] :-> AnyT, id = Id
+               [ ( "fst", AnyT ), ( "snd", AnyT ) ] ) ] :-> AnyT, id = Id
              { name = "first", moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = External } } ) )
           [ Var
            ( Meta
             { meta = RecordT
-             ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
+             ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ), id = Id
              { name = "record", moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 48 } } ) ] )
          ( Assign

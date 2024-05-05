@@ -7,10 +7,10 @@ where
 
 import Control.Lens (lengthOf, transform, transformM, view, _1)
 import Data.Graph qualified as Graph
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
 import Data.List qualified as List
+import Data.Map.Strict qualified as Map
 import Data.Maybe qualified as Maybe
+import Data.Set qualified as Set
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Effectful.State.Static.Local (State, evalState, execState, get, modify)
@@ -125,7 +125,7 @@ foldVariable = transformM
     -- Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
     x -> pure x
 
-type InlineConstructorMap = HashMap (Meta Type) (Con, [Atom (Meta Type)])
+type InlineConstructorMap = Map (Meta Type) (Con, [Atom (Meta Type)])
 
 -- | Inline simple pattern match and pack.
 inlineConstructor :: (Reader InlineConstructorMap :> es) => Expr (Meta Type) -> Eff es (Expr (Meta Type))
@@ -134,28 +134,28 @@ inlineConstructor =
     Let ds e -> do
       local (mconcat (map toPackInlineMap ds) <>) $ pure $ Let ds e
     Match (Atom (Var v)) [Unpack con xs body] -> do
-      asks (HashMap.lookup v) >>= \case
+      asks (Map.lookup v) >>= \case
         Just (con', as) | con == con' -> pure $ build xs as body
         _ -> pure $ Destruct (Var v) con xs body
     Destruct (Var v) con xs body -> do
-      asks (HashMap.lookup v) >>= \case
+      asks (Map.lookup v) >>= \case
         Just (con', as) | con == con' -> pure $ build xs as body
         _ -> pure $ Destruct (Var v) con xs body
     e -> pure e
   where
-    toPackInlineMap (LocalDef v _ (Pack _ con as)) = HashMap.singleton v (con, as)
+    toPackInlineMap (LocalDef v _ (Pack _ con as)) = Map.singleton v (con, as)
     toPackInlineMap _ = mempty
     build (x : xs) (a : as) body = Assign x (Atom a) (build xs as body)
     build _ _ body = body
 
 -- | Remove unused let bindings
 -- Let bindings only bind expressions that allocate memory. So we can remove unused let bindings safely.
-eliminateUnusedLet :: (Monad f, Hashable a) => Expr (Meta a) -> f (Expr (Meta a))
+eliminateUnusedLet :: (Monad f, Ord a) => Expr (Meta a) -> f (Expr (Meta a))
 eliminateUnusedLet =
   transformM \case
     Let ds e -> do
       -- Reachable variables from 'v'
-      let gamma = map (\(LocalDef v _ o) -> (v, HashSet.delete v $ freevars o)) ds
+      let gamma = map (\(LocalDef v _ o) -> (v, Set.delete v $ freevars o)) ds
       if any (\(LocalDef v _ _) -> reachable 100 gamma v $ freevars e) ds
         then pure $ Let ds e
         else pure e
@@ -164,14 +164,14 @@ eliminateUnusedLet =
     reachable limit gamma v fvs
       | limit <= (0 :: Int) = True
       | idIsExternal v.id = True
-      | HashSet.member v fvs = True
+      | Set.member v fvs = True
       | otherwise =
           -- Add gamma[fv] to fvs
-          let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ HashSet.toList fvs)
+          let fvs' = fvs <> mconcat (mapMaybe (List.lookup ?? gamma) $ Set.toList fvs)
            in fvs /= fvs' && reachable limit gamma v fvs'
 
 -- TODO: Merge with OptimizeEnv
-type CallInlineEnv = HashMap (Meta Type) ([Meta Type], Expr (Meta Type))
+type CallInlineEnv = Map (Meta Type) ([Meta Type], Expr (Meta Type))
 
 -- | Inline a function call.
 inlineFunction :: (Reader OptimizeOption :> es, L.State CallInlineEnv :> es, Reader ModuleName :> es, State Uniq :> es) => Expr (Meta Type) -> Eff es (Expr (Meta Type))
@@ -199,10 +199,10 @@ checkInlinable (LocalDef f _ (Fun ps v)) = do
   let isInlinable =
         threshold
           >= lengthOf atom v
-          && not (f `HashSet.member` freevars v)
-          && not (f `HashSet.member` callees v)
+          && not (f `Set.member` freevars v)
+          && not (f `Set.member` callees v)
   when isInlinable $ do
-    modify @CallInlineEnv $ HashMap.insert f (ps, v)
+    modify @CallInlineEnv $ Map.insert f (ps, v)
 checkInlinable _ = pass
 
 -- | Lookup a function in the inlinable map.
@@ -217,12 +217,12 @@ lookupCallInline ::
   Eff es (Expr (Meta Type))
 lookupCallInline call f as = do
   env <- get @CallInlineEnv
-  case HashMap.lookup f env of
+  case Map.lookup f env of
     Just (ps, v) -> do
       -- v[as/ps]
       -- Test failed in Lint : pure $ foldl' (\e (x, a) -> Assign x (Atom a) e) v $ zip ps as
       -- use Alpha.alpha
-      let subst = HashMap.fromList $ zip ps as
+      let subst = Map.fromList $ zip ps as
       alpha subst v
     Nothing -> pure $ call f as
 
@@ -233,7 +233,7 @@ foldRedundantCast =
   transformM \case
     -- (= x (cast t a) (= y (cast t' x)) e) -> (= y (cast t' a) e)
     Assign x (Cast _ a) (Assign y (Cast t' (Var x')) e)
-      | x == x' && not (x `HashSet.member` freevars e) -> pure $ Assign y (Cast t' a) e
+      | x == x' && not (x `Set.member` freevars e) -> pure $ Assign y (Cast t' a) e
     Cast t e
       | typeOf e == t -> pure (Atom e)
       | otherwise -> pure (Cast t e)
@@ -243,7 +243,7 @@ foldRedundantCast =
 foldTrivialCall :: (Reader ModuleName :> es, State Uniq :> es) => Expr (Meta Type) -> Eff es (Expr (Meta Type))
 foldTrivialCall = transformM \case
   Let [LocalDef f _ (Fun ps body)] (Call (Var f') as) | f == f' -> do
-    alpha (HashMap.fromList $ zip ps as) body
+    alpha (Map.fromList $ zip ps as) body
   x -> pure x
 
 -- | Remove `destruct` if it does not bind any variables.

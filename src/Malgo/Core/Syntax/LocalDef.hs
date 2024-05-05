@@ -12,7 +12,7 @@ where
 import Control.Lens (Lens', sans, traverseOf, traversed)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
-import Data.HashMap.Strict qualified as HashMap
+import Data.Map qualified as Map
 import Data.Store.TH
 import Data.String.Conversions
 import Generic.Data
@@ -54,7 +54,7 @@ data Obj a
   | -- | saturated constructor (arity >= 0)
     Pack Type Con [Atom a]
   | -- | record
-    Record (HashMap Text (Atom a))
+    Record (Map Text (Atom a))
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (ToJSON, FromJSON)
 
@@ -67,17 +67,17 @@ instance (Pretty a) => Pretty (Obj a) where
   pretty (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pretty xs), pretty e]
   pretty (Pack ty c xs) = parens $ sep (["pack", pretty ty, pretty c] <> map pretty xs)
   pretty (Record kvs) =
-    parens $
-      sep
+    parens
+      $ sep
         [ "record"
             <+> parens
-              ( sep $
-                  map
+              ( sep
+                  $ map
                     ( \(k, v) ->
                         pretty k
                           <+> pretty v
                     )
-                    (HashMap.toList kvs)
+                    (Map.toList kvs)
               )
         ]
 

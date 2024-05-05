@@ -6,8 +6,8 @@ module Malgo.Core.Syntax.Expr (Expr (..), HasExpr (..)) where
 import Control.Lens (Plated (..), Traversal', sans, traverseOf, traversed, _2)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
+import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
 import Data.Store.TH
 import Data.String.Conversions
 import Generic.Data
@@ -60,7 +60,7 @@ data Expr a
   | -- | destruct a value
     Destruct (Atom a) Con [a] (Expr a)
   | -- | destruct a record
-    DestructRecord (Atom a) (HashMap Text a) (Expr a)
+    DestructRecord (Atom a) (Map Text a) (Expr a)
   | -- | Assign a value to a variable
     Assign
       a
@@ -115,7 +115,7 @@ instance (Pretty a) => Pretty (Expr a) where
       prettyCase (t, e) = parens $ pretty t <+> pretty e
   pretty (Destruct v con xs e) = parens $ vsep ["destruct" <+> pretty v <+> pretty con <+> parens (sep (map pretty xs)), pretty e]
   pretty (DestructRecord v kvs e) =
-    parens $ vsep ["destruct-record" <+> pretty v <+> parens (sep (map (\(k, v) -> pretty k <+> pretty v) $ HashMap.toList kvs)), pretty e]
+    parens $ vsep ["destruct-record" <+> pretty v <+> parens (sep (map (\(k, v) -> pretty k <+> pretty v) $ Map.toList kvs)), pretty e]
   pretty (Assign x v e) = parens $ vsep ["=" <+> pretty x <+> pretty v, pretty e]
   pretty (Error t) = parens $ "ERROR" <+> pretty t
 
@@ -131,19 +131,19 @@ instance HasFreeVar Expr where
   freevars (SwitchUnboxed v cs e) = freevars v <> foldMap (freevars . snd) cs <> freevars e
   freevars (Destruct v _ xs e) =
     freevars v
-      <> HashSet.difference
+      <> Set.difference
         (freevars e)
-        (HashSet.fromList xs)
+        (Set.fromList xs)
   freevars (DestructRecord v kvs e) =
     freevars v
-      <> HashSet.difference
+      <> Set.difference
         (freevars e)
-        (HashSet.fromList $ HashMap.elems kvs)
+        (Set.fromList $ Map.elems kvs)
   freevars (Assign x v e) = freevars v <> sans x (freevars e)
   freevars (Error _) = mempty
   callees Atom {} = mempty
   callees (Call f _) = freevars f
-  callees (CallDirect f _) = HashSet.singleton f
+  callees (CallDirect f _) = Set.singleton f
   callees RawCall {} = mempty
   callees Cast {} = mempty
   callees (Let xs e) = foldr (sans . (._variable)) (callees e <> foldMap (callees . (._object)) xs) xs
@@ -151,13 +151,13 @@ instance HasFreeVar Expr where
   callees (Switch _ cs e) = foldMap (callees . snd) cs <> callees e
   callees (SwitchUnboxed _ cs e) = foldMap (callees . snd) cs <> callees e
   callees (Destruct _ _ xs e) =
-    HashSet.difference
+    Set.difference
       (callees e)
-      (HashSet.fromList xs)
+      (Set.fromList xs)
   callees (DestructRecord _ kvs e) =
-    HashSet.difference
+    Set.difference
       (callees e)
-      (HashSet.fromList $ HashMap.elems kvs)
+      (Set.fromList $ Map.elems kvs)
   callees (Assign x v e) = callees v <> sans x (callees e)
   callees (Error _) = mempty
 

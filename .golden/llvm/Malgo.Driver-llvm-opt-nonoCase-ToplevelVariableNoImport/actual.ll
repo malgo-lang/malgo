@@ -307,9 +307,9 @@ common.ret:                                       ; preds = %"switch_branch_test
   ret ptr %common.ret.op
 
 "switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0": ; preds = %2
-  %"String#_addr_0" = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
-  %printString_0 = load ptr, ptr %0, align 8
+  %printString_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %printString_0 = load ptr, ptr %printString_addr_0, align 8
+  %"String#_0" = load ptr, ptr %0, align 8
   %4 = load ptr, ptr %"String#_0", align 8
   %5 = getelementptr { ptr, ptr }, ptr %"String#_0", i64 0, i32 1
   %6 = load ptr, ptr %5, align 8
@@ -362,15 +362,15 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i1 = tail call ptr @malgo_malloc(i64 noundef 16)
   %15 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %15, align 8
-  %printString_func_0.i = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.printString", ptr %printString_func_0.i, align 8
+  %"String#_func_0.i" = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
+  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.String#", ptr %"String#_func_0.i", align 8
   store ptr %15, ptr %fun_capture_0.i1, align 8
   %16 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %16, align 8
-  %"String#_func_0.i" = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.String#", ptr %"String#_func_0.i", align 8
-  %"String#_0.i" = getelementptr { ptr, ptr }, ptr %fun_capture_0.i1, i64 0, i32 1
-  store ptr %16, ptr %"String#_0.i", align 8
+  %printString_func_0.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
+  store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.printString", ptr %printString_func_0.i, align 8
+  %printString_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i1, i64 0, i32 1
+  store ptr %16, ptr %printString_0.i, align 8
   store ptr %fun_capture_0.i1, ptr %14, align 8
   %fun_func_0.i2 = getelementptr { ptr, ptr }, ptr %14, i64 0, i32 1
   store ptr @"test/testcases/malgo/ToplevelVariableNoImport.mlg.#fun_closure_288", ptr %fun_func_0.i2, align 8
@@ -380,8 +380,8 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   br i1 %switch.i.i, label %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i.i", label %"switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Just_0.i.i"
 
 "switch_branch_test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing_0.i.i": ; preds = %1
-  %"String#_0.i.i" = load ptr, ptr %"String#_0.i", align 8
-  %printString_0.i.i = load ptr, ptr %fun_capture_0.i1, align 8
+  %printString_0.i.i = load ptr, ptr %printString_0.i, align 8
+  %"String#_0.i.i" = load ptr, ptr %fun_capture_0.i1, align 8
   %19 = load ptr, ptr %"String#_0.i.i", align 8
   %20 = getelementptr { ptr, ptr }, ptr %"String#_0.i.i", i64 0, i32 1
   %21 = load ptr, ptr %20, align 8

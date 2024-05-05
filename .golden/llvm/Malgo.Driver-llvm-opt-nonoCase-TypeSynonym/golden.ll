@@ -150,11 +150,11 @@ define internal ptr @"runtime/malgo/Prelude.mlg.putStr"(ptr nocapture nofree rea
 
 define internal ptr @"test/testcases/malgo/TypeSynonym.mlg.#fun_closure_257"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(24) %0, ptr nocapture nofree readonly align 8 %1) {
 "switch_branch_Tuple#_0":
-  %putStrLn_0 = load ptr, ptr %0, align 8
-  %"String#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
-  %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
-  %putStr_addr_0 = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 2
+  %"String#_0" = load ptr, ptr %0, align 8
+  %putStr_addr_0 = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
   %putStr_0 = load ptr, ptr %putStr_addr_0, align 8
+  %putStrLn_addr_0 = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 2
+  %putStrLn_0 = load ptr, ptr %putStrLn_addr_0, align 8
   %2 = getelementptr { i8, { ptr, ptr } }, ptr %1, i64 0, i32 1
   %3 = load ptr, ptr %2, align 8
   %4 = getelementptr { i8, { ptr, ptr } }, ptr %1, i64 0, i32 1, i32 1
@@ -227,21 +227,21 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 24)
   %19 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %19, align 8
-  %putStrLn_func_0.i = getelementptr { ptr, ptr }, ptr %19, i64 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0.i, align 8
+  %"String#_func_0.i1" = getelementptr { ptr, ptr }, ptr %19, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i1", align 8
   store ptr %19, ptr %fun_capture_0.i, align 8
   %20 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %20, align 8
-  %"String#_func_0.i1" = getelementptr { ptr, ptr }, ptr %20, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i1", align 8
-  %"String#_0.i" = getelementptr { ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
-  store ptr %20, ptr %"String#_0.i", align 8
+  %putStr_func_0.i = getelementptr { ptr, ptr }, ptr %20, i64 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStr", ptr %putStr_func_0.i, align 8
+  %putStr_0.i = getelementptr { ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
+  store ptr %20, ptr %putStr_0.i, align 8
   %21 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %21, align 8
-  %putStr_func_0.i = getelementptr { ptr, ptr }, ptr %21, i64 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStr", ptr %putStr_func_0.i, align 8
-  %putStr_0.i = getelementptr { ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 2
-  store ptr %21, ptr %putStr_0.i, align 8
+  %putStrLn_func_0.i = getelementptr { ptr, ptr }, ptr %21, i64 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0.i, align 8
+  %putStrLn_0.i = getelementptr { ptr, ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 2
+  store ptr %21, ptr %putStrLn_0.i, align 8
   store ptr %fun_capture_0.i, ptr %18, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %18, i64 0, i32 1
   store ptr @"test/testcases/malgo/TypeSynonym.mlg.#fun_closure_257", ptr %fun_func_0.i, align 8

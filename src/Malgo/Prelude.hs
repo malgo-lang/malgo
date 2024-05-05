@@ -24,8 +24,6 @@ module Malgo.Prelude
     module Data.Foldable.Extra,
     module Data.Function,
     module Data.Functor,
-    module Data.HashMap.Strict,
-    module Data.HashSet,
     module Data.Hashable,
     module Data.Int,
     module Data.Kind,
@@ -34,6 +32,7 @@ module Malgo.Prelude
     module Data.Map.Strict,
     module Data.Maybe,
     module Data.Semigroup,
+    module Data.Set,
     module Data.String,
     module Data.String.Conversions,
     module Data.Text,
@@ -113,8 +112,6 @@ import Data.Foldable
 import Data.Foldable.Extra
 import Data.Function (applyWhen, fix, on, (&))
 import Data.Functor
-import Data.HashMap.Strict (HashMap)
-import Data.HashSet (HashSet)
 import Data.Hashable (Hashable)
 import Data.IORef (IORef)
 import Data.IORef qualified as IORef
@@ -126,6 +123,7 @@ import Data.Map.Strict (Map)
 import Data.Maybe (fromMaybe, mapMaybe)
 import Data.Monoid (Alt (..))
 import Data.Semigroup
+import Data.Set (Set)
 import Data.Store ()
 import Data.Store.TH (makeStore)
 import Data.String

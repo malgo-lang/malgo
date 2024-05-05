@@ -10,26 +10,33 @@ declare ptr @malgo_print_string(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @"test/testcases/malgo/Test3.mlg.#let_closure_135"(ptr %0, ptr %1) {
-  %p_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %p_0 = load ptr, ptr %p_addr_0, align 8
-  %3 = call ptr @"test/testcases/malgo/Test3.mlg.$raw_let_133"(ptr null, ptr %p_0, ptr %1)
-  ret ptr %3
-}
-
-define internal ptr @"test/testcases/malgo/Test3.mlg.Cons"(ptr %0, ptr %"test/testcases/malgo/Test3.mlg.$p_69_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %p_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %"test/testcases/malgo/Test3.mlg.$p_69_0", ptr %p_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"test/testcases/malgo/Test3.mlg.#let_closure_135", ptr %let_func_0, align 8
+define internal ptr @"test/testcases/malgo/Test3.mlg.A"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
   ret ptr %2
 }
 
-define internal ptr @"test/testcases/malgo/Test3.mlg.#let_closure_136"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/Test3.mlg.B"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 1, ptr %3, align 1
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/Test3.mlg.Nil"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/Test3.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/Test3.mlg.$p_77_0") {
+  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/Test3.mlg.$p_77_0")
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/Test3.mlg.#let_closure_135"(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -40,7 +47,7 @@ define internal ptr @"test/testcases/malgo/Test3.mlg.#let_closure_136"(ptr %0, p
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/Test3.mlg.#fun_closure_137"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/Test3.mlg.#fun_closure_136"(ptr %0, ptr %1) {
   %3 = call ptr @"test/testcases/malgo/Test3.mlg.$raw_fun_134"(ptr null, ptr %1)
   ret ptr %3
 }
@@ -76,13 +83,13 @@ define internal ptr @"test/testcases/malgo/Test3.mlg.main"(ptr %0, ptr %"test/te
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
-  store ptr @"test/testcases/malgo/Test3.mlg.#let_closure_136", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/Test3.mlg.#let_closure_135", ptr %let_func_0, align 8
   %17 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_1 = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 0
   store ptr %fun_capture_0, ptr %fun_capture_1, align 8
   %fun_func_0 = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 1
-  store ptr @"test/testcases/malgo/Test3.mlg.#fun_closure_137", ptr %fun_func_0, align 8
+  store ptr @"test/testcases/malgo/Test3.mlg.#fun_closure_136", ptr %fun_func_0, align 8
   %18 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 0
   %19 = load ptr, ptr %18, align 8
   %20 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
@@ -91,14 +98,7 @@ define internal ptr @"test/testcases/malgo/Test3.mlg.main"(ptr %0, ptr %"test/te
   ret ptr %22
 }
 
-define internal ptr @"test/testcases/malgo/Test3.mlg.B"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 1, ptr %3, align 1
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/Test3.mlg.#let_closure_138"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/Test3.mlg.#let_closure_137"(ptr %0, ptr %1) {
   %x_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %x_0 = load ptr, ptr %x_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -117,30 +117,26 @@ define internal ptr @"test/testcases/malgo/Test3.mlg.|>"(ptr %0, ptr %"test/test
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/Test3.mlg.#let_closure_137", ptr %let_func_0, align 8
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/Test3.mlg.#let_closure_138"(ptr %0, ptr %1) {
+  %p_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %p_0 = load ptr, ptr %p_addr_0, align 8
+  %3 = call ptr @"test/testcases/malgo/Test3.mlg.$raw_let_133"(ptr null, ptr %p_0, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/Test3.mlg.Cons"(ptr %0, ptr %"test/testcases/malgo/Test3.mlg.$p_69_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %p_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
+  store ptr %"test/testcases/malgo/Test3.mlg.$p_69_0", ptr %p_0, align 8
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   store ptr @"test/testcases/malgo/Test3.mlg.#let_closure_138", ptr %let_func_0, align 8
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/Test3.mlg.$raw_let_133"(ptr %0, ptr %"test/testcases/malgo/Test3.mlg.$p_69_0", ptr %"test/testcases/malgo/Test3.mlg.$p_70_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 0
-  store i8 1, ptr %3, align 1
-  %4 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %"test/testcases/malgo/Test3.mlg.$p_69_0", ptr %4, align 8
-  %5 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 1, i32 1
-  store ptr %"test/testcases/malgo/Test3.mlg.$p_70_0", ptr %5, align 8
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/Test3.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/Test3.mlg.$p_77_0") {
-  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/Test3.mlg.$p_77_0")
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/Test3.mlg.A"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
   ret ptr %2
 }
 
@@ -239,10 +235,14 @@ switch_default_4:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/Test3.mlg.Nil"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
+define internal ptr @"test/testcases/malgo/Test3.mlg.$raw_let_133"(ptr %0, ptr %"test/testcases/malgo/Test3.mlg.$p_69_0", ptr %"test/testcases/malgo/Test3.mlg.$p_70_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 0
+  store i8 1, ptr %3, align 1
+  %4 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 1, i32 0
+  store ptr %"test/testcases/malgo/Test3.mlg.$p_69_0", ptr %4, align 8
+  %5 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 1, i32 1
+  store ptr %"test/testcases/malgo/Test3.mlg.$p_70_0", ptr %5, align 8
   ret ptr %2
 }
 

@@ -315,20 +315,6 @@ Module
        ( TyRecord
         ( fromList
          [
-          ( "return", TyArr
-           ( TyVar
-            ( Id
-             { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
-           ( TyApp
-            ( TyCon
-             ( Id
-              { name = "Eventually", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-            ( TyVar
-             ( Id
-              { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ),
           ( "bind", TyArr
            ( TyApp
             ( TyCon
@@ -338,13 +324,13 @@ Module
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) )
            ( TyArr
             ( TyArr
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
              ( TyApp
               ( TyCon
                ( Id
@@ -353,7 +339,7 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -362,12 +348,26 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ) ) ] ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ) ),
+          ( "return", TyArr
+           ( TyVar
+            ( Id
+             { name = "a", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
+           ( TyApp
+            ( TyCon
+             ( Id
+              { name = "Eventually", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+            ( TyVar
+             ( Id
+              { name = "a", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ) ] ) )
        ( TyArr
         ( TyVar
          ( Id
           { name = "a", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
         ( TyApp
          ( TyCon
           ( Id
@@ -376,7 +376,7 @@ Module
          ( TyVar
           ( Id
            { name = "a", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 35, sourceColumn = Pos 1 } } }, Id
@@ -387,20 +387,6 @@ Module
         ( TyRecord
          ( fromList
           [
-           ( "return", TyArr
-            ( TyVar
-             ( Id
-              { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
-            ( TyApp
-             ( TyCon
-              ( Id
-               { name = "Eventually", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-             ( TyVar
-              ( Id
-               { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ),
            ( "bind", TyArr
             ( TyApp
              ( TyCon
@@ -410,13 +396,13 @@ Module
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) )
             ( TyArr
              ( TyArr
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -425,7 +411,7 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) )
              ( TyApp
               ( TyCon
                ( Id
@@ -434,12 +420,26 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ) ) ] ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ) ),
+           ( "return", TyArr
+            ( TyVar
+             ( Id
+              { name = "a", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
+            ( TyApp
+             ( TyCon
+              ( Id
+               { name = "Eventually", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+             ( TyVar
+              ( Id
+               { name = "a", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ) ] ) )
         ( TyArr
          ( TyVar
           ( Id
            { name = "a", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
          ( TyApp
           ( TyCon
            ( Id
@@ -448,7 +448,7 @@ Module
           ( TyVar
            ( Id
             { name = "a", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 16 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 46 } } } )
@@ -458,20 +458,6 @@ Module
          ( TyRecord
           ( fromList
            [
-            ( "return", TyArr
-             ( TyVar
-              ( Id
-               { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
-             ( TyApp
-              ( TyCon
-               ( Id
-                { name = "Eventually", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-              ( TyVar
-               ( Id
-                { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ),
             ( "bind", TyArr
              ( TyApp
               ( TyCon
@@ -481,13 +467,13 @@ Module
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) )
              ( TyArr
               ( TyArr
                ( TyVar
                 ( Id
                  { name = "a", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
                ( TyApp
                 ( TyCon
                  ( Id
@@ -496,7 +482,7 @@ Module
                 ( TyVar
                  ( Id
                   { name = "b", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) )
+                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -505,12 +491,26 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ) ) ] ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ) ),
+            ( "return", TyArr
+             ( TyVar
+              ( Id
+               { name = "a", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
+             ( TyApp
+              ( TyCon
+               ( Id
+                { name = "Eventually", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+              ( TyVar
+               ( Id
+                { name = "a", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ) ] ) )
          ( TyArr
           ( TyVar
            ( Id
             { name = "a", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
           ( TyApp
            ( TyCon
             ( Id
@@ -519,7 +519,7 @@ Module
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 16 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 46 } } } )
@@ -528,20 +528,6 @@ Module
          { annotated = TyRecord
           ( fromList
            [
-            ( "return", TyArr
-             ( TyVar
-              ( Id
-               { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
-             ( TyApp
-              ( TyCon
-               ( Id
-                { name = "Eventually", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-              ( TyVar
-               ( Id
-                { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ),
             ( "bind", TyArr
              ( TyApp
               ( TyCon
@@ -551,13 +537,13 @@ Module
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) )
              ( TyArr
               ( TyArr
                ( TyVar
                 ( Id
                  { name = "a", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
                ( TyApp
                 ( TyCon
                  ( Id
@@ -566,7 +552,7 @@ Module
                 ( TyVar
                  ( Id
                   { name = "b", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) )
+                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -575,7 +561,21 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ) ) ] ), value = Range
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ) ),
+            ( "return", TyArr
+             ( TyVar
+              ( Id
+               { name = "a", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
+             ( TyApp
+              ( TyCon
+               ( Id
+                { name = "Eventually", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+              ( TyVar
+               ( Id
+                { name = "a", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ) ] ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 16 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 41 } } } )
@@ -591,13 +591,13 @@ Module
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) )
             ( TyArr
              ( TyArr
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -606,7 +606,7 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) )
              ( TyApp
               ( TyCon
                ( Id
@@ -615,7 +615,7 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ) ), value = Range
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 25 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 26 } } } )
@@ -628,7 +628,7 @@ Module
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -637,7 +637,7 @@ Module
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 37 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 39 } } } )
@@ -650,7 +650,7 @@ Module
           ( TyVar
            ( Id
             { name = "a", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
           ( TyApp
            ( TyCon
             ( Id
@@ -659,7 +659,7 @@ Module
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 44 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 46 } } } )
@@ -674,7 +674,7 @@ Module
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -683,7 +683,7 @@ Module
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 71 } ) ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 69 } ) ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 44 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 33, sourceColumn = Pos 46 } } } )
@@ -716,7 +716,7 @@ Module
           ( TyVar
            ( Id
             { name = "b", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) )
         ( TyApp
          ( TyCon
           ( Id
@@ -725,7 +725,7 @@ Module
          ( TyVar
           ( Id
            { name = "b", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) ), value = Range
+            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 19, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 24, sourceColumn = Pos 1 } } }, Id
@@ -756,7 +756,7 @@ Module
            ( TyVar
             ( Id
              { name = "b", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) )
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) )
          ( TyApp
           ( TyCon
            ( Id
@@ -765,7 +765,7 @@ Module
           ( TyVar
            ( Id
             { name = "b", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 5 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 22, sourceColumn = Pos 3 } } } )
@@ -795,7 +795,7 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) )
           ( TyApp
            ( TyCon
             ( Id
@@ -804,7 +804,7 @@ Module
            ( TyVar
             ( Id
              { name = "b", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 5 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 30 } } } )
@@ -851,7 +851,7 @@ Module
            ( TyVar
             ( Id
              { name = "b", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 18 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 20 } } } )
@@ -868,7 +868,7 @@ Module
           ( TyVar
            ( Id
             { name = "b", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 23 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 30 } } } )
@@ -887,7 +887,7 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ), value = Range
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 23 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 30 } } } )
@@ -906,7 +906,7 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ), value = Range
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 23 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 20, sourceColumn = Pos 25 } } } )
@@ -951,7 +951,7 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) )
            ( TyApp
             ( TyCon
              ( Id
@@ -960,7 +960,7 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) ), value = Range
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 5 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 22, sourceColumn = Pos 3 } } } )
@@ -1014,7 +1014,7 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ), value = Range
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ), value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 23 }, _end = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 25 } } } )
@@ -1031,7 +1031,7 @@ Module
            ( TyVar
             ( Id
              { name = "b", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ), value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 28 }, _end = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 22, sourceColumn = Pos 3 } } } )
@@ -1050,7 +1050,7 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 28 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 22, sourceColumn = Pos 3 } } } )
@@ -1067,7 +1067,7 @@ Module
                 ( TyVar
                  ( Id
                   { name = "b", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) )
+                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -1076,7 +1076,7 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ), value = Range
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 28 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 39 } } } )
@@ -1095,7 +1095,7 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ), value = Range
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 68 } } } )
@@ -1111,7 +1111,7 @@ Module
                 ( TyVar
                  ( Id
                   { name = "b", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ), value = Range
+                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ), value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 68 } } } )
@@ -1134,7 +1134,7 @@ Module
                 ( TyVar
                  ( Id
                   { name = "b", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ), value = Range
+                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ), value = Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 68 } } } )
@@ -1153,7 +1153,7 @@ Module
                   ( TyVar
                    ( Id
                     { name = "b", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ), value = Range
+                     ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ), value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 68 } } } )
@@ -1173,7 +1173,7 @@ Module
                      ( TyVar
                       ( Id
                        { name = "b", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) )
+                        ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) )
                    ( TyApp
                     ( TyCon
                      ( Id
@@ -1182,7 +1182,7 @@ Module
                     ( TyVar
                      ( Id
                       { name = "b", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ), value = Range
+                       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ), value = Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 68 } } } )
@@ -1212,7 +1212,7 @@ Module
                        ( TyVar
                         ( Id
                          { name = "b", moduleName = Artifact
-                          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) )
+                          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) )
                      ( TyApp
                       ( TyCon
                        ( Id
@@ -1221,7 +1221,7 @@ Module
                       ( TyVar
                        ( Id
                         { name = "b", moduleName = Artifact
-                         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ) ), value = Range
+                         ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ) ), value = Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 56 } } } )
@@ -1301,7 +1301,7 @@ Module
                     ( TyVar
                      ( Id
                       { name = "b", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 93 } ) ) ), value = Range
+                       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 95 } ) ) ), value = Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 66 }, _end = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 21, sourceColumn = Pos 68 } } } )
@@ -1313,20 +1313,6 @@ Module
       { annotated = TyRecord
        ( fromList
         [
-         ( "return", TyArr
-          ( TyVar
-           ( Id
-            { name = "a", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) )
-          ( TyApp
-           ( TyCon
-            ( Id
-             { name = "Eventually", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-           ( TyVar
-            ( Id
-             { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ) ),
          ( "bind", TyArr
           ( TyApp
            ( TyCon
@@ -1335,14 +1321,14 @@ Module
               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
            ( TyVar
             ( Id
-             { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) )
+             { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) ) )
           ( TyArr
            ( TyArr
             ( TyVar
              ( Id
-              { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) )
+              { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -1351,7 +1337,7 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 110 } ) ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ) )
            ( TyApp
             ( TyCon
              ( Id
@@ -1360,7 +1346,21 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 110 } ) ) ) ) ) ] ), value = Range
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ) ) ),
+         ( "return", TyArr
+          ( TyVar
+           ( Id
+            { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) )
+          ( TyApp
+           ( TyCon
+            ( Id
+             { name = "Eventually", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+           ( TyVar
+            ( Id
+             { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) ) ) ) ] ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 18, sourceColumn = Pos 1 } } }, Id
@@ -1370,20 +1370,6 @@ Module
        { annotated = TyRecord
         ( fromList
          [
-          ( "return", TyArr
-           ( TyVar
-            ( Id
-             { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) )
-           ( TyApp
-            ( TyCon
-             ( Id
-              { name = "Eventually", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-            ( TyVar
-             ( Id
-              { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ) ),
           ( "bind", TyArr
            ( TyApp
             ( TyCon
@@ -1392,14 +1378,14 @@ Module
                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
             ( TyVar
              ( Id
-              { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) )
+              { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) ) )
            ( TyArr
             ( TyArr
              ( TyVar
               ( Id
-               { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) )
+               { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) )
              ( TyApp
               ( TyCon
                ( Id
@@ -1408,7 +1394,7 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 110 } ) ) ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -1417,7 +1403,21 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 110 } ) ) ) ) ) ] ), value = Range
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ) ) ),
+          ( "return", TyArr
+           ( TyVar
+            ( Id
+             { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) )
+           ( TyApp
+            ( TyCon
+             ( Id
+              { name = "Eventually", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+            ( TyVar
+             ( Id
+              { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) ) ) ) ] ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 13, sourceColumn = Pos 18 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 18, sourceColumn = Pos 1 } } } )
@@ -1432,14 +1432,14 @@ Module
               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
            ( TyVar
             ( Id
-             { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) )
+             { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) ) )
           ( TyArr
            ( TyArr
             ( TyVar
              ( Id
-              { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) )
+              { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -1448,7 +1448,7 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 110 } ) ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ) )
            ( TyApp
             ( TyCon
              ( Id
@@ -1457,7 +1457,7 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 110 } ) ) ) ), value = Range
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 14, sourceColumn = Pos 10 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 14, sourceColumn = Pos 24 } } } )
@@ -1469,8 +1469,8 @@ Module
          { annotated = TyArr
           ( TyVar
            ( Id
-            { name = "a", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) )
+            { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) )
           ( TyApp
            ( TyCon
             ( Id
@@ -1478,8 +1478,8 @@ Module
               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
            ( TyVar
             ( Id
-             { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 112 } ) ) ), value = Range
+             { name = "test/testcases/malgo/Eventually.mlg.#a_0", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 114 } ) ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 15, sourceColumn = Pos 12 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 15, sourceColumn = Pos 16 } } } )
@@ -1492,20 +1492,6 @@ Module
        ( TyRecord
         ( fromList
          [
-          ( "return", TyArr
-           ( TyVar
-            ( Id
-             { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
-           ( TyApp
-            ( TyCon
-             ( Id
-              { name = "Eventually", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-            ( TyVar
-             ( Id
-              { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ),
           ( "bind", TyArr
            ( TyApp
             ( TyCon
@@ -1515,13 +1501,13 @@ Module
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
            ( TyArr
             ( TyArr
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
              ( TyApp
               ( TyCon
                ( Id
@@ -1530,7 +1516,7 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -1539,7 +1525,21 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ) ] ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ) ),
+          ( "return", TyArr
+           ( TyVar
+            ( Id
+             { name = "a", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
+           ( TyApp
+            ( TyCon
+             ( Id
+              { name = "Eventually", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+            ( TyVar
+             ( Id
+              { name = "a", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ] ) )
        ( TyArr
         ( TyApp
          ( TyCon
@@ -1549,13 +1549,13 @@ Module
          ( TyVar
           ( Id
            { name = "a", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
         ( TyArr
          ( TyArr
           ( TyVar
            ( Id
             { name = "a", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
           ( TyApp
            ( TyCon
             ( Id
@@ -1564,7 +1564,7 @@ Module
            ( TyVar
             ( Id
              { name = "b", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
          ( TyApp
           ( TyCon
            ( Id
@@ -1573,7 +1573,7 @@ Module
           ( TyVar
            ( Id
             { name = "b", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ), value = Range
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 32, sourceColumn = Pos 1 } } }, Id
@@ -1584,20 +1584,6 @@ Module
         ( TyRecord
          ( fromList
           [
-           ( "return", TyArr
-            ( TyVar
-             ( Id
-              { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
-            ( TyApp
-             ( TyCon
-              ( Id
-               { name = "Eventually", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-             ( TyVar
-              ( Id
-               { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ),
            ( "bind", TyArr
             ( TyApp
              ( TyCon
@@ -1607,13 +1593,13 @@ Module
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
             ( TyArr
              ( TyArr
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -1622,7 +1608,7 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
              ( TyApp
               ( TyCon
                ( Id
@@ -1631,7 +1617,21 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ) ] ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ) ),
+           ( "return", TyArr
+            ( TyVar
+             ( Id
+              { name = "a", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
+            ( TyApp
+             ( TyCon
+              ( Id
+               { name = "Eventually", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+             ( TyVar
+              ( Id
+               { name = "a", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ] ) )
         ( TyArr
          ( TyApp
           ( TyCon
@@ -1641,13 +1641,13 @@ Module
           ( TyVar
            ( Id
             { name = "a", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
          ( TyArr
           ( TyArr
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
            ( TyApp
             ( TyCon
              ( Id
@@ -1656,7 +1656,7 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
           ( TyApp
            ( TyCon
             ( Id
@@ -1665,7 +1665,7 @@ Module
            ( TyVar
             ( Id
              { name = "b", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ), value = Range
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 14 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 44 } } } )
@@ -1675,20 +1675,6 @@ Module
          ( TyRecord
           ( fromList
            [
-            ( "return", TyArr
-             ( TyVar
-              ( Id
-               { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
-             ( TyApp
-              ( TyCon
-               ( Id
-                { name = "Eventually", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-              ( TyVar
-               ( Id
-                { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ),
             ( "bind", TyArr
              ( TyApp
               ( TyCon
@@ -1698,13 +1684,13 @@ Module
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
              ( TyArr
               ( TyArr
                ( TyVar
                 ( Id
                  { name = "a", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
                ( TyApp
                 ( TyCon
                  ( Id
@@ -1713,7 +1699,7 @@ Module
                 ( TyVar
                  ( Id
                   { name = "b", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -1722,7 +1708,21 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ) ] ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ) ),
+            ( "return", TyArr
+             ( TyVar
+              ( Id
+               { name = "a", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
+             ( TyApp
+              ( TyCon
+               ( Id
+                { name = "Eventually", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+              ( TyVar
+               ( Id
+                { name = "a", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ] ) )
          ( TyArr
           ( TyApp
            ( TyCon
@@ -1732,13 +1732,13 @@ Module
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
           ( TyArr
            ( TyArr
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -1747,7 +1747,7 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
            ( TyApp
             ( TyCon
              ( Id
@@ -1756,7 +1756,7 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ), value = Range
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 14 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 44 } } } )
@@ -1765,20 +1765,6 @@ Module
          { annotated = TyRecord
           ( fromList
            [
-            ( "return", TyArr
-             ( TyVar
-              ( Id
-               { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
-             ( TyApp
-              ( TyCon
-               ( Id
-                { name = "Eventually", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-              ( TyVar
-               ( Id
-                { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ),
             ( "bind", TyArr
              ( TyApp
               ( TyCon
@@ -1788,13 +1774,13 @@ Module
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
              ( TyArr
               ( TyArr
                ( TyVar
                 ( Id
                  { name = "a", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
                ( TyApp
                 ( TyCon
                  ( Id
@@ -1803,7 +1789,7 @@ Module
                 ( TyVar
                  ( Id
                   { name = "b", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -1812,7 +1798,21 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ) ] ), value = Range
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ) ),
+            ( "return", TyArr
+             ( TyVar
+              ( Id
+               { name = "a", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
+             ( TyApp
+              ( TyCon
+               ( Id
+                { name = "Eventually", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+              ( TyVar
+               ( Id
+                { name = "a", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ) ] ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 14 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 39 } } } )
@@ -1828,13 +1828,13 @@ Module
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
             ( TyArr
              ( TyArr
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -1843,7 +1843,7 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
              ( TyApp
               ( TyCon
                ( Id
@@ -1852,7 +1852,7 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ), value = Range
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 23 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 24 } } } )
@@ -1865,7 +1865,7 @@ Module
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -1874,7 +1874,7 @@ Module
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 35 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 37 } } } )
@@ -1892,13 +1892,13 @@ Module
            ( TyVar
             ( Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
           ( TyArr
            ( TyArr
             ( TyVar
              ( Id
               { name = "a", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
             ( TyApp
              ( TyCon
               ( Id
@@ -1907,7 +1907,7 @@ Module
              ( TyVar
               ( Id
                { name = "b", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
            ( TyApp
             ( TyCon
              ( Id
@@ -1916,7 +1916,7 @@ Module
             ( TyVar
              ( Id
               { name = "b", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ), value = Range
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 42 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 44 } } } )
@@ -1936,13 +1936,13 @@ Module
              ( TyVar
               ( Id
                { name = "a", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) )
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) )
             ( TyArr
              ( TyArr
               ( TyVar
                ( Id
                 { name = "a", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) )
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) )
               ( TyApp
                ( TyCon
                 ( Id
@@ -1951,7 +1951,7 @@ Module
                ( TyVar
                 ( Id
                  { name = "b", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) )
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) )
              ( TyApp
               ( TyCon
                ( Id
@@ -1960,7 +1960,7 @@ Module
               ( TyVar
                ( Id
                 { name = "b", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 124 } ) ) ) ), value = Range
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 126 } ) ) ) ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 42 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 30, sourceColumn = Pos 44 } } } )
@@ -2061,14 +2061,6 @@ Module
            ( TyRecord
             ( fromList
              [
-              ( "return", TyArr
-               ( TyTuple 0 )
-               ( TyApp
-                ( TyCon
-                 ( Id
-                  { name = "Eventually", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-                ( TyTuple 0 ) ) ),
               ( "bind", TyArr
                ( TyApp
                 ( TyCon
@@ -2096,7 +2088,15 @@ Module
                  ( TyCon
                   ( Id
                    { name = "Int32", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ) ] ) )
+                    ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ),
+              ( "return", TyArr
+               ( TyTuple 0 )
+               ( TyApp
+                ( TyCon
+                 ( Id
+                  { name = "Eventually", moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+                ( TyTuple 0 ) ) ) ] ) )
            ( TyArr
             ( TyApp
              ( TyCon
@@ -2136,14 +2136,6 @@ Module
           { annotated = TyRecord
            ( fromList
             [
-             ( "return", TyArr
-              ( TyTuple 0 )
-              ( TyApp
-               ( TyCon
-                ( Id
-                 { name = "Eventually", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-               ( TyTuple 0 ) ) ),
              ( "bind", TyArr
               ( TyApp
                ( TyCon
@@ -2171,7 +2163,15 @@ Module
                 ( TyCon
                  ( Id
                   { name = "Int32", moduleName = Artifact
-                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ) ] ), value = Range
+                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ),
+             ( "return", TyArr
+              ( TyTuple 0 )
+              ( TyApp
+               ( TyCon
+                ( Id
+                 { name = "Eventually", moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+               ( TyTuple 0 ) ) ) ] ), value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 37, sourceColumn = Pos 8 }, _end = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 37, sourceColumn = Pos 19 } } } )
@@ -2505,14 +2505,6 @@ Module
                 ( TyRecord
                  ( fromList
                   [
-                   ( "return", TyArr
-                    ( TyTuple 0 )
-                    ( TyApp
-                     ( TyCon
-                      ( Id
-                       { name = "Eventually", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-                     ( TyTuple 0 ) ) ),
                    ( "bind", TyArr
                     ( TyApp
                      ( TyCon
@@ -2540,7 +2532,15 @@ Module
                       ( TyCon
                        ( Id
                         { name = "Int32", moduleName = Artifact
-                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ) ] ) )
+                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ),
+                   ( "return", TyArr
+                    ( TyTuple 0 )
+                    ( TyApp
+                     ( TyCon
+                      ( Id
+                       { name = "Eventually", moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+                     ( TyTuple 0 ) ) ) ] ) )
                 ( TyArr
                  ( TyApp
                   ( TyCon
@@ -2580,14 +2580,6 @@ Module
                { annotated = TyRecord
                 ( fromList
                  [
-                  ( "return", TyArr
-                   ( TyTuple 0 )
-                   ( TyApp
-                    ( TyCon
-                     ( Id
-                      { name = "Eventually", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-                    ( TyTuple 0 ) ) ),
                   ( "bind", TyArr
                    ( TyApp
                     ( TyCon
@@ -2615,7 +2607,15 @@ Module
                      ( TyCon
                       ( Id
                        { name = "Int32", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ) ] ), value = Range
+                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ),
+                  ( "return", TyArr
+                   ( TyTuple 0 )
+                   ( TyApp
+                    ( TyCon
+                     ( Id
+                      { name = "Eventually", moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+                    ( TyTuple 0 ) ) ) ] ), value = Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 38, sourceColumn = Pos 10 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 38, sourceColumn = Pos 21 } } } )
@@ -2909,20 +2909,6 @@ Module
                     ( TyRecord
                      ( fromList
                       [
-                       ( "return", TyArr
-                        ( TyCon
-                         ( Id
-                          { name = "Int32", moduleName = Artifact
-                           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
-                        ( TyApp
-                         ( TyCon
-                          ( Id
-                           { name = "Eventually", moduleName = Artifact
-                            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-                         ( TyCon
-                          ( Id
-                           { name = "Int32", moduleName = Artifact
-                            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ),
                        ( "bind", TyArr
                         ( TyApp
                          ( TyCon
@@ -2956,7 +2942,21 @@ Module
                           ( TyMeta
                            ( Id
                             { name = "b", moduleName = Artifact
-                             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 188 } ) ) ) ) ) ] ) )
+                             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 188 } ) ) ) ) ),
+                       ( "return", TyArr
+                        ( TyCon
+                         ( Id
+                          { name = "Int32", moduleName = Artifact
+                           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                        ( TyApp
+                         ( TyCon
+                          ( Id
+                           { name = "Eventually", moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+                         ( TyCon
+                          ( Id
+                           { name = "Int32", moduleName = Artifact
+                            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ] ) )
                     ( TyArr
                      ( TyCon
                       ( Id
@@ -2982,20 +2982,6 @@ Module
                    { annotated = TyRecord
                     ( fromList
                      [
-                      ( "return", TyArr
-                       ( TyCon
-                        ( Id
-                         { name = "Int32", moduleName = Artifact
-                          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
-                       ( TyApp
-                        ( TyCon
-                         ( Id
-                          { name = "Eventually", moduleName = Artifact
-                           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
-                        ( TyCon
-                         ( Id
-                          { name = "Int32", moduleName = Artifact
-                           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ),
                       ( "bind", TyArr
                        ( TyApp
                         ( TyCon
@@ -3029,7 +3015,21 @@ Module
                          ( TyMeta
                           ( Id
                            { name = "b", moduleName = Artifact
-                            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 188 } ) ) ) ) ) ] ), value = Range
+                            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = Internal 188 } ) ) ) ) ),
+                      ( "return", TyArr
+                       ( TyCon
+                        ( Id
+                         { name = "Int32", moduleName = Artifact
+                          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                       ( TyApp
+                        ( TyCon
+                         ( Id
+                          { name = "Eventually", moduleName = Artifact
+                           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" ), sort = External } ) )
+                        ( TyCon
+                         ( Id
+                          { name = "Int32", moduleName = Artifact
+                           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ] ), value = Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 39, sourceColumn = Pos 14 }, _end = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg", sourceLine = Pos 39, sourceColumn = Pos 25 } } } )

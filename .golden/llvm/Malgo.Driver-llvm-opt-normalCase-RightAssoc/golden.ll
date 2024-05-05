@@ -1,7 +1,7 @@
 ; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/RightAssoc.ll'
 source_filename = "test/testcases/malgo/RightAssoc.mlg"
 
-@str3286 = unnamed_addr constant [3 x i8] c"OK\00"
+@str3285 = unnamed_addr constant [3 x i8] c"OK\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -240,7 +240,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %71 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %71, align 1
   %72 = getelementptr { i8, { ptr } }, ptr %71, i64 0, i32 1, i32 0
-  store ptr @str3286, ptr %72, align 8
-  %73 = tail call ptr @malgo_print_string(ptr noundef nonnull @str3286)
+  store ptr @str3285, ptr %72, align 8
+  %73 = tail call ptr @malgo_print_string(ptr noundef nonnull @str3285)
   ret i32 0
 }

@@ -51,11 +51,11 @@ declare ptr @malgo_hash_table_get(ptr, ptr) local_unnamed_addr
 
 define internal ptr @"test/testcases/malgo/Show.mlg.#let_closure_3193"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(24) %0, ptr nocapture nofree readonly align 8 %1) {
 "switch_branch_runtime/malgo/Builtin.mlg.String#_0":
-  %d_0 = load ptr, ptr %0, align 8
+  %"appendString#_0" = load ptr, ptr %0, align 8
   %"String#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
   %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
-  %"appendString#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 2
-  %"appendString#_0" = load ptr, ptr %"appendString#_addr_0", align 8
+  %d_addr_0 = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 2
+  %d_0 = load ptr, ptr %d_addr_0, align 8
   %2 = getelementptr { i8, { ptr } }, ptr %d_0, i64 0, i32 1
   %3 = load ptr, ptr %2, align 8
   %4 = getelementptr { i8, { ptr } }, ptr %1, i64 0, i32 1
@@ -77,11 +77,11 @@ define internal ptr @"test/testcases/malgo/Show.mlg.#let_closure_3193"(ptr nocap
 
 define internal ptr @"test/testcases/malgo/Show.mlg.#let_closure_3194"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(24) %0, ptr nocapture nofree readonly align 8 %1) {
 "switch_branch_runtime/malgo/Builtin.mlg.String#_0":
-  %"String#_0" = load ptr, ptr %0, align 8
-  %d_addr_0 = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
+  %"appendString#_0" = load ptr, ptr %0, align 8
+  %"String#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
+  %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
+  %d_addr_0 = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 2
   %d_0 = load ptr, ptr %d_addr_0, align 8
-  %"appendString#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 2
-  %"appendString#_0" = load ptr, ptr %"appendString#_addr_0", align 8
   %2 = getelementptr { i8, { ptr } }, ptr %d_0, i64 0, i32 1
   %3 = load ptr, ptr %2, align 8
   %4 = getelementptr { i8, { ptr } }, ptr %1, i64 0, i32 1
@@ -103,9 +103,9 @@ define internal ptr @"test/testcases/malgo/Show.mlg.#let_closure_3194"(ptr nocap
 
 define internal ptr @"test/testcases/malgo/Show.mlg.#let_closure_3195"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(24) %0, ptr nocapture nofree readonly align 8 %1) {
 "switch_branch_runtime/malgo/Builtin.mlg.String#_0":
-  %"String#_0" = load ptr, ptr %0, align 8
-  %"appendString#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
-  %"appendString#_0" = load ptr, ptr %"appendString#_addr_0", align 8
+  %"appendString#_0" = load ptr, ptr %0, align 8
+  %"String#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
+  %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
   %d_addr_0 = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 2
   %d_0 = load ptr, ptr %d_addr_0, align 8
   %2 = getelementptr { i8, { ptr } }, ptr %d_0, i64 0, i32 1
@@ -129,9 +129,9 @@ define internal ptr @"test/testcases/malgo/Show.mlg.#let_closure_3195"(ptr nocap
 
 define internal ptr @"test/testcases/malgo/Show.mlg.#let_closure_3196"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(24) %0, ptr nocapture nofree readonly align 8 %1) {
 "switch_branch_runtime/malgo/Builtin.mlg.String#_0":
-  %"String#_0" = load ptr, ptr %0, align 8
-  %"appendString#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
-  %"appendString#_0" = load ptr, ptr %"appendString#_addr_0", align 8
+  %"appendString#_0" = load ptr, ptr %0, align 8
+  %"String#_addr_0" = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 1
+  %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
   %d_addr_0 = getelementptr { ptr, ptr, ptr }, ptr %0, i64 0, i32 2
   %d_0 = load ptr, ptr %d_addr_0, align 8
   %2 = getelementptr { i8, { ptr } }, ptr %d_0, i64 0, i32 1
@@ -155,13 +155,13 @@ define internal ptr @"test/testcases/malgo/Show.mlg.#let_closure_3196"(ptr nocap
 
 define internal noundef ptr @"test/testcases/malgo/Show.mlg.#fun_closure_3188"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(32) %0, ptr nocapture nofree readonly align 8 %1) {
 "switch_branch_Tuple#_0":
-  %showDictB_0 = load ptr, ptr %0, align 8
+  %"appendString#_0" = load ptr, ptr %0, align 8
   %"String#_addr_0" = getelementptr { ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 1
   %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
   %showDictA_addr_0 = getelementptr { ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 2
   %showDictA_0 = load ptr, ptr %showDictA_addr_0, align 8
-  %"appendString#_addr_0" = getelementptr { ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
-  %"appendString#_0" = load ptr, ptr %"appendString#_addr_0", align 8
+  %showDictB_addr_0 = getelementptr { ptr, ptr, ptr, ptr }, ptr %0, i64 0, i32 3
+  %showDictB_0 = load ptr, ptr %showDictB_addr_0, align 8
   %2 = getelementptr { i8, { ptr, ptr } }, ptr %1, i64 0, i32 1
   %3 = load ptr, ptr %2, align 8
   %4 = getelementptr { i8, { ptr, ptr } }, ptr %1, i64 0, i32 1, i32 1
@@ -190,11 +190,11 @@ define internal noundef ptr @"test/testcases/malgo/Show.mlg.#fun_closure_3188"(p
   store ptr @str3192, ptr %21, align 8
   %22 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 24)
-  store ptr %19, ptr %let_capture_0, align 8
+  store ptr %"appendString#_0", ptr %let_capture_0, align 8
   %"String#_1" = getelementptr { ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 1
   store ptr %"String#_0", ptr %"String#_1", align 8
-  %"appendString#_1" = getelementptr { ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 2
-  store ptr %"appendString#_0", ptr %"appendString#_1", align 8
+  %d_0 = getelementptr { ptr, ptr, ptr }, ptr %let_capture_0, i64 0, i32 2
+  store ptr %19, ptr %d_0, align 8
   store ptr %let_capture_0, ptr %22, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %22, i64 0, i32 1
   store ptr @"test/testcases/malgo/Show.mlg.#let_closure_3193", ptr %let_func_0, align 8
@@ -214,11 +214,11 @@ define internal noundef ptr @"test/testcases/malgo/Show.mlg.#fun_closure_3188"(p
   store ptr %25, ptr %27, align 8
   %28 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_2 = tail call ptr @malgo_malloc(i64 noundef 24)
-  store ptr %"String#_0", ptr %let_capture_2, align 8
-  %d_1 = getelementptr { ptr, ptr, ptr }, ptr %let_capture_2, i64 0, i32 1
+  store ptr %"appendString#_0", ptr %let_capture_2, align 8
+  %"String#_2" = getelementptr { ptr, ptr, ptr }, ptr %let_capture_2, i64 0, i32 1
+  store ptr %"String#_0", ptr %"String#_2", align 8
+  %d_1 = getelementptr { ptr, ptr, ptr }, ptr %let_capture_2, i64 0, i32 2
   store ptr %13, ptr %d_1, align 8
-  %"appendString#_2" = getelementptr { ptr, ptr, ptr }, ptr %let_capture_2, i64 0, i32 2
-  store ptr %"appendString#_0", ptr %"appendString#_2", align 8
   store ptr %let_capture_2, ptr %28, align 8
   %let_func_1 = getelementptr { ptr, ptr }, ptr %28, i64 0, i32 1
   store ptr @"test/testcases/malgo/Show.mlg.#let_closure_3194", ptr %let_func_1, align 8
@@ -237,9 +237,9 @@ define internal noundef ptr @"test/testcases/malgo/Show.mlg.#fun_closure_3188"(p
   store ptr %30, ptr %32, align 8
   %33 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_4 = tail call ptr @malgo_malloc(i64 noundef 24)
-  store ptr %"String#_0", ptr %let_capture_4, align 8
-  %"appendString#_3" = getelementptr { ptr, ptr, ptr }, ptr %let_capture_4, i64 0, i32 1
-  store ptr %"appendString#_0", ptr %"appendString#_3", align 8
+  store ptr %"appendString#_0", ptr %let_capture_4, align 8
+  %"String#_3" = getelementptr { ptr, ptr, ptr }, ptr %let_capture_4, i64 0, i32 1
+  store ptr %"String#_0", ptr %"String#_3", align 8
   %d_2 = getelementptr { ptr, ptr, ptr }, ptr %let_capture_4, i64 0, i32 2
   store ptr %12, ptr %d_2, align 8
   store ptr %let_capture_4, ptr %33, align 8
@@ -261,9 +261,9 @@ define internal noundef ptr @"test/testcases/malgo/Show.mlg.#fun_closure_3188"(p
   store ptr %36, ptr %38, align 8
   %39 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_6 = tail call ptr @malgo_malloc(i64 noundef 24)
-  store ptr %"String#_0", ptr %let_capture_6, align 8
-  %"appendString#_4" = getelementptr { ptr, ptr, ptr }, ptr %let_capture_6, i64 0, i32 1
-  store ptr %"appendString#_0", ptr %"appendString#_4", align 8
+  store ptr %"appendString#_0", ptr %let_capture_6, align 8
+  %"String#_4" = getelementptr { ptr, ptr, ptr }, ptr %let_capture_6, i64 0, i32 1
+  store ptr %"String#_0", ptr %"String#_4", align 8
   %d_3 = getelementptr { ptr, ptr, ptr }, ptr %let_capture_6, i64 0, i32 2
   store ptr %6, ptr %d_3, align 8
   store ptr %let_capture_6, ptr %39, align 8
@@ -318,21 +318,21 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %5 = load ptr, ptr @"test/testcases/malgo/Show.mlg.showInt32", align 8
   %6 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 32)
-  store ptr %5, ptr %fun_capture_0.i.i, align 8
   %7 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %7, align 8
-  %"String#_func_0.i.i" = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i.i", align 8
-  %"String#_0.i.i" = getelementptr { ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i.i, i64 0, i32 1
-  store ptr %7, ptr %"String#_0.i.i", align 8
-  %showDictA_0.i.i = getelementptr { ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i.i, i64 0, i32 2
-  store ptr %5, ptr %showDictA_0.i.i, align 8
+  %"appendString#_func_0.i.i" = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.appendString#", ptr %"appendString#_func_0.i.i", align 8
+  store ptr %7, ptr %fun_capture_0.i.i, align 8
   %8 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %8, align 8
-  %"appendString#_func_0.i.i" = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.appendString#", ptr %"appendString#_func_0.i.i", align 8
-  %"appendString#_0.i.i" = getelementptr { ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i.i, i64 0, i32 3
-  store ptr %8, ptr %"appendString#_0.i.i", align 8
+  %"String#_func_0.i.i" = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i.i", align 8
+  %"String#_0.i.i" = getelementptr { ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i.i, i64 0, i32 1
+  store ptr %8, ptr %"String#_0.i.i", align 8
+  %showDictA_0.i.i = getelementptr { ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i.i, i64 0, i32 2
+  store ptr %5, ptr %showDictA_0.i.i, align 8
+  %showDictB_0.i.i = getelementptr { ptr, ptr, ptr, ptr }, ptr %fun_capture_0.i.i, i64 0, i32 3
+  store ptr %5, ptr %showDictB_0.i.i, align 8
   store ptr %fun_capture_0.i.i, ptr %6, align 8
   %fun_func_0.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
   store ptr @"test/testcases/malgo/Show.mlg.#fun_closure_3188", ptr %fun_func_0.i.i, align 8

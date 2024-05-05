@@ -305,9 +305,9 @@ switch-unboxed_default_0:                         ; preds = %"switch_branch_runt
 
 define internal ptr @"test/testcases/malgo/EvenOdd.mlg.#fun_closure_292"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
 common.ret:
-  %putStrLn_0 = load ptr, ptr %0, align 8
-  %"String#_addr_0" = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %"String#_0" = load ptr, ptr %"String#_addr_0", align 8
+  %"String#_0" = load ptr, ptr %0, align 8
+  %putStrLn_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %putStrLn_0 = load ptr, ptr %putStrLn_addr_0, align 8
   %2 = load i8, ptr %1, align 1
   %switch = icmp eq i8 %2, 0
   %3 = load ptr, ptr %"String#_0", align 8
@@ -338,15 +338,15 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 16)
   %7 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %7, align 8
-  %putStrLn_func_0.i = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0.i, align 8
+  %"String#_func_0.i" = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
+  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i", align 8
   store ptr %7, ptr %fun_capture_0.i, align 8
   %8 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %8, align 8
-  %"String#_func_0.i" = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
-  store ptr @"runtime/malgo/Builtin.mlg.String#", ptr %"String#_func_0.i", align 8
-  %"String#_0.i" = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
-  store ptr %8, ptr %"String#_0.i", align 8
+  %putStrLn_func_0.i = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0.i, align 8
+  %putStrLn_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
+  store ptr %8, ptr %putStrLn_0.i, align 8
   store ptr %fun_capture_0.i, ptr %6, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
   store ptr @"test/testcases/malgo/EvenOdd.mlg.#fun_closure_292", ptr %fun_func_0.i, align 8

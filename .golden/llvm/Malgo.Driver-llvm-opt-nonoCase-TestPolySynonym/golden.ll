@@ -4,8 +4,8 @@ source_filename = "test/testcases/malgo/TestPolySynonym.mlg"
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
 @str232 = unnamed_addr constant [1 x i8] zeroinitializer
 @str252 = unnamed_addr constant [10 x i8] c"no branch\00"
-@str258 = unnamed_addr constant [4 x i8] c"snd\00"
-@str259 = unnamed_addr constant [4 x i8] c"fst\00"
+@str258 = unnamed_addr constant [4 x i8] c"fst\00"
+@str259 = unnamed_addr constant [4 x i8] c"snd\00"
 @str260 = unnamed_addr constant [5 x i8] c"hoge\00"
 
 declare void @GC_init() local_unnamed_addr
@@ -172,7 +172,7 @@ declare ptr @malgo_hash_table_get(ptr, ptr) local_unnamed_addr
 define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.first"(ptr nocapture nofree readnone %0, ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0") {
   %2 = tail call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0", ptr noundef nonnull @str258)
   %3 = tail call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0", ptr noundef nonnull @str259)
-  ret ptr %3
+  ret ptr %2
 }
 
 declare ptr @malgo_hash_table_new() local_unnamed_addr
@@ -208,8 +208,8 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %11 = getelementptr { i8, { ptr } }, ptr %10, i64 0, i32 1, i32 0
   store ptr @str260, ptr %11, align 8
   %12 = tail call ptr @malgo_hash_table_new()
-  tail call void @malgo_hash_table_insert(ptr %12, ptr noundef nonnull @str258, ptr noundef nonnull %10)
-  tail call void @malgo_hash_table_insert(ptr %12, ptr noundef nonnull @str259, ptr noundef nonnull %7)
+  tail call void @malgo_hash_table_insert(ptr %12, ptr noundef nonnull @str258, ptr noundef nonnull %7)
+  tail call void @malgo_hash_table_insert(ptr %12, ptr noundef nonnull @str259, ptr noundef nonnull %10)
   %13 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %13, align 8
   %first_func_0.i = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
@@ -222,7 +222,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr @"runtime/malgo/Prelude.mlg.|>", ptr %"|>_func_0.i", align 8
   %17 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %15, ptr %let_capture_0.i.i, align 8
+  store ptr %14, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %17, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %17, i64 0, i32 1
   store ptr @"test/testcases/malgo/TestPolySynonym.mlg.#let_closure_238", ptr %let_func_0.i.i, align 8

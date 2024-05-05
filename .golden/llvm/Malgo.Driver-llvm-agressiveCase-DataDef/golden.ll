@@ -16,6 +16,20 @@ define internal ptr @"test/testcases/malgo/DataDef.mlg.Nil"(ptr %0) {
   ret ptr %2
 }
 
+define internal ptr @"test/testcases/malgo/DataDef.mlg.malgo_int64_t_to_string"(ptr %0, i64 %"test/testcases/malgo/DataDef.mlg.$p_29_0") {
+  %2 = call ptr @malgo_int64_t_to_string(i64 %"test/testcases/malgo/DataDef.mlg.$p_29_0")
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/DataDef.mlg.Int#"(ptr %0, i64 %"test/testcases/malgo/DataDef.mlg.$p_18_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i64 } }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  %4 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 1, i32 0
+  store i64 %"test/testcases/malgo/DataDef.mlg.$p_18_0", ptr %4, align 4
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/DataDef.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/DataDef.mlg.$p_30_0") {
   %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/DataDef.mlg.$p_30_0")
   ret ptr %2
@@ -61,20 +75,6 @@ define internal ptr @"test/testcases/malgo/DataDef.mlg.Cons"(ptr %0, ptr %"test/
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   store ptr @"test/testcases/malgo/DataDef.mlg.#let_closure_51", ptr %let_func_0, align 8
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/DataDef.mlg.malgo_int64_t_to_string"(ptr %0, i64 %"test/testcases/malgo/DataDef.mlg.$p_29_0") {
-  %2 = call ptr @malgo_int64_t_to_string(i64 %"test/testcases/malgo/DataDef.mlg.$p_29_0")
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/DataDef.mlg.Int#"(ptr %0, i64 %"test/testcases/malgo/DataDef.mlg.$p_18_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i64 } }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  %4 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 1, i32 0
-  store i64 %"test/testcases/malgo/DataDef.mlg.$p_18_0", ptr %4, align 4
   ret ptr %2
 }
 

@@ -5,7 +5,7 @@ module Malgo.Core.Type (Tag (..), Con (..), Type (..), HasType (..)) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
-import Data.HashMap.Strict qualified as HashMap
+import Data.Map.Strict qualified as Map
 import Data.Store.TH
 import Malgo.Id
 import Malgo.Prelude
@@ -47,7 +47,7 @@ data Type
   | BoolT
   | SumT [Con]
   | PtrT Type
-  | RecordT (HashMap Text Type)
+  | RecordT (Map Text Type)
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
@@ -64,7 +64,7 @@ instance Pretty Type where
   pretty BoolT = "Bool#"
   pretty (SumT cs) = parens $ sep ("sum" : map pretty cs)
   pretty (PtrT t) = parens $ "Ptr#" <+> pretty t
-  pretty (RecordT fs) = parens $ "Record#" <+> sep (map (\(k, v) -> parens $ sep [pretty k, pretty v]) $ HashMap.toList fs)
+  pretty (RecordT fs) = parens $ "Record#" <+> sep (map (\(k, v) -> parens $ sep [pretty k, pretty v]) $ Map.toList fs)
   pretty AnyT = "Any#"
   pretty VoidT = "Void#"
 

@@ -1,9 +1,9 @@
 -- Based on: Fengyun Liu. 2016. A generic algorithm for checking exhaustivity of pattern matching (short paper). In Proceedings of the 2016 7th ACM SIGPLAN Symposium on Scala (SCALA 2016). Association for Computing Machinery, New York, NY, USA, 61–64. https://doi.org/10.1145/2998392.2998401
 module Malgo.Refine.Space (Space (..), subspace, subtract, normalize, equalEmpty, buildUnion, HasSpace (..)) where
 
-import Data.HashMap.Strict qualified as HashMap
 import Data.List (isSubsequenceOf)
 import Data.List qualified as List
+import Data.Map.Strict qualified as Map
 import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
@@ -72,10 +72,10 @@ decomposable _ = False
 decompose :: (Reader RefineEnv :> es) => Type -> Eff es Space
 decompose t@(TyConApp (TyCon con) ts) = do
   env <- asks @RefineEnv (.typeDefEnv)
-  case HashMap.lookup con env of
+  case Map.lookup con env of
     Nothing -> pure $ Type t
     Just TypeDef {_typeConstructor, _typeParameters, _valueConstructors} -> do
-      spaces <- traverse (constructorSpace $ HashMap.fromList $ zip _typeParameters ts) _valueConstructors
+      spaces <- traverse (constructorSpace $ Map.fromList $ zip _typeParameters ts) _valueConstructors
       pure $ buildUnion spaces
 decompose (TyConApp (TyTuple _) ts) = do
   env <- ask
@@ -89,12 +89,12 @@ decompose (TyRecord kts) = do
     $
     -- sort by key because the order of `toList` results is unspecified.
     sortWith fst
-    $ HashMap.toList kts
+    $ Map.toList kts
 decompose t = pure $ Type t
 
 constructorSpace ::
   (Reader RefineEnv :> es) =>
-  HashMap TypeVar Type ->
+  Map TypeVar Type ->
   (Id, Scheme Type) ->
   Eff es Space
 constructorSpace subst (con, Forall _ (splitTyArr -> (ps, _))) = do

@@ -163,35 +163,6 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @"test/testcases/malgo/Pattern.mlg.isNil"(ptr %0, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0") {
-  %2 = getelementptr { i8, <16 x i8> }, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0", i32 0, i32 0
-  %3 = load i8, ptr %2, align 1
-  switch i8 %3, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0"
-    i8 1, label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
-  ]
-
-"switch_branch_runtime/malgo/Prelude.mlg.Nil_0":  ; preds = %1
-  %4 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %5 = getelementptr { i8, {} }, ptr %4, i32 0, i32 0
-  store i8 1, ptr %5, align 1
-  ret ptr %4
-
-"switch_branch_runtime/malgo/Prelude.mlg.Cons_0": ; preds = %1
-  %6 = getelementptr { i8, { ptr, ptr } }, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0", i32 0, i32 1
-  %7 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 0
-  %8 = load ptr, ptr %7, align 8
-  %9 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 1
-  %10 = load ptr, ptr %9, align 8
-  %11 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %12 = getelementptr { i8, {} }, ptr %11, i32 0, i32 0
-  store i8 0, ptr %12, align 1
-  ret ptr %11
-
-switch_default_0:                                 ; preds = %1
-  unreachable
-}
-
 define internal ptr @"test/testcases/malgo/Pattern.mlg.main"(ptr %0, ptr %"test/testcases/malgo/Pattern.mlg.$$__16_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
@@ -217,6 +188,35 @@ define internal ptr @"test/testcases/malgo/Pattern.mlg.main"(ptr %0, ptr %"test/
   store i8 0, ptr %14, align 1
   %15 = call ptr @malgo_newline(ptr %13)
   ret ptr %15
+
+switch_default_0:                                 ; preds = %1
+  unreachable
+}
+
+define internal ptr @"test/testcases/malgo/Pattern.mlg.isNil"(ptr %0, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0") {
+  %2 = getelementptr { i8, <16 x i8> }, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0", i32 0, i32 0
+  %3 = load i8, ptr %2, align 1
+  switch i8 %3, label %switch_default_0 [
+    i8 0, label %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0"
+    i8 1, label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
+  ]
+
+"switch_branch_runtime/malgo/Prelude.mlg.Nil_0":  ; preds = %1
+  %4 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %5 = getelementptr { i8, {} }, ptr %4, i32 0, i32 0
+  store i8 1, ptr %5, align 1
+  ret ptr %4
+
+"switch_branch_runtime/malgo/Prelude.mlg.Cons_0": ; preds = %1
+  %6 = getelementptr { i8, { ptr, ptr } }, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0", i32 0, i32 1
+  %7 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 0
+  %8 = load ptr, ptr %7, align 8
+  %9 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 1
+  %10 = load ptr, ptr %9, align 8
+  %11 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %12 = getelementptr { i8, {} }, ptr %11, i32 0, i32 0
+  store i8 0, ptr %12, align 1
+  ret ptr %11
 
 switch_default_0:                                 ; preds = %1
   unreachable

@@ -1,8 +1,8 @@
 ; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestPolySynonym.ll'
 source_filename = "test/testcases/malgo/TestPolySynonym.mlg"
 
-@str2837 = unnamed_addr constant [4 x i8] c"snd\00"
-@str2838 = unnamed_addr constant [4 x i8] c"fst\00"
+@str2837 = unnamed_addr constant [4 x i8] c"fst\00"
+@str2838 = unnamed_addr constant [4 x i8] c"snd\00"
 @str2839 = unnamed_addr constant [5 x i8] c"hoge\00"
 
 declare void @GC_init() local_unnamed_addr
@@ -54,13 +54,13 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %6 = getelementptr { i8, { ptr } }, ptr %5, i64 0, i32 1, i32 0
   store ptr @str2839, ptr %6, align 8
   %7 = tail call ptr @malgo_hash_table_new()
-  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str2837, ptr noundef nonnull %5)
-  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str2838, ptr noundef nonnull %3)
+  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str2837, ptr noundef nonnull %3)
+  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str2838, ptr noundef nonnull %5)
   %8 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str2837)
   %9 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str2838)
   %10 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %9, ptr %let_capture_0.i, align 8
+  store ptr %8, ptr %let_capture_0.i, align 8
   store ptr %let_capture_0.i, ptr %10, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
   store ptr @"test/testcases/malgo/TestPolySynonym.mlg.#let_closure_2840", ptr %let_func_0.i, align 8

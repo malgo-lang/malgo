@@ -20,7 +20,7 @@ runMalgoM ::
        Reader Flag,
        Reader CompileMode,
        State Uniq,
-       State (HashMap ModuleName Interface),
+       State (Map ModuleName Interface),
        Workspace,
        IOE
      ]
@@ -31,4 +31,4 @@ runMalgoM compileMode flag opt e = runEff $ runWorkspaceOnPwd do
     & runReader flag
     & runReader compileMode
     & evalState (Uniq 0)
-    & evalState @(HashMap ModuleName Interface) mempty
+    & evalState @(Map ModuleName Interface) mempty

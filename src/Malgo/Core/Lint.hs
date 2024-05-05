@@ -1,8 +1,8 @@
 module Malgo.Core.Lint (lint) where
 
 import Control.Lens (has, traverseOf_, traversed, view, _1, _2)
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
+import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Malgo.Core.Syntax
@@ -16,7 +16,7 @@ lint :: Bool -> Program (Meta Type) -> Eff es ()
 lint normalized = runLint normalized . lintProgram
 
 data LintEnv = LintEnv
-  { defs :: HashSet (Meta Type),
+  { defs :: Set (Meta Type),
     normalized :: Bool,
     isIncludeAssign :: Bool,
     isStatement :: Bool
@@ -41,22 +41,22 @@ defined x
   | idIsExternal x.id = pass
   | otherwise = do
       env <- asks @LintEnv (.defs)
-      unless (HashSet.member x env) $ errorDoc $ pretty x <> " is not defined"
+      unless (Set.member x env) $ errorDoc $ pretty x <> " is not defined"
 
 define :: (Reader LintEnv :> es) => Doc x -> [Meta Type] -> Eff es a -> Eff es a
 define pos xs m = do
   env <- asks @LintEnv (.defs)
   for_ xs \x ->
-    when (HashSet.member x env) $
-      errorDoc $
-        vsep
-          [ pretty x
-              <> " is already defined",
-            "while defining"
-              <+> pos
-              <+> pretty xs
-          ]
-  local (\e -> e {defs = HashSet.fromList xs <> e.defs}) m
+    when (Set.member x env)
+      $ errorDoc
+      $ vsep
+        [ pretty x
+            <> " is already defined",
+          "while defining"
+            <+> pos
+            <+> pretty xs
+        ]
+  local (\e -> e {defs = Set.fromList xs <> e.defs}) m
 
 isMatch :: (HasType a, HasType b) => a -> b -> Bool
 isMatch (typeOf -> ps0 :-> r0) (typeOf -> ps1 :-> r1) =
@@ -70,8 +70,8 @@ match :: (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> 
 match x y
   | isMatch x y = pass
   | otherwise =
-      errorDoc $
-        vsep
+      errorDoc
+        $ vsep
           [ "type mismatch:",
             pretty x,
             nest 2 (":" <> pretty (typeOf x)),
@@ -98,8 +98,8 @@ lintExpr (RawCall _ (ps :-> _) xs) = do
   zipWithM_ match ps xs
 lintExpr RawCall {} = error "primitive must be a function"
 lintExpr (Cast _ x) = lintAtom x
-lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True}) $
-  define "let" (map (._variable) ds) do
+lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True})
+  $ define "let" (map (._variable) ds) do
     traverse_ (lintObj . (._object)) ds
     for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
     asStatement $ lintExpr e
@@ -127,7 +127,7 @@ lintExpr x@(Destruct a _ xs e) = statement x do
   define "destruct" xs $ lintExpr e
 lintExpr x@(DestructRecord a xs e) = statement x do
   lintAtom a
-  define "destruct-record" (HashMap.elems xs) $ lintExpr e
+  define "destruct-record" (Map.elems xs) $ lintExpr e
 lintExpr (Assign x (Atom v) _) = do
   errorDoc $ "reduntant assignment:" <+> pretty x <+> pretty v
 lintExpr (Assign x v e) = statement (Assign x v e) do
@@ -146,7 +146,7 @@ lintObj (Record kvs) = traverse_ lintAtom kvs
 
 lintCase :: (Reader LintEnv :> es, HasType a, Pretty a) => a -> Case (Meta Type) -> Eff es ()
 lintCase _ (Unpack _ vs e) = define "unpack" vs $ lintExpr e
-lintCase _ (OpenRecord kvs e) = define "open-record" (HashMap.elems kvs) $ lintExpr e
+lintCase _ (OpenRecord kvs e) = define "open-record" (Map.elems kvs) $ lintExpr e
 lintCase _ (Exact _ e) = lintExpr e
 lintCase scrutinee (Bind x t e) = define "bind" [x] do
   match x t

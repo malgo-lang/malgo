@@ -11,6 +11,66 @@ declare ptr @malgo_exit_failure(ptr)
 
 declare ptr @malgo_malloc(i64)
 
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.False"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.False1"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.False2"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 0, ptr %3, align 1
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.True"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 1, ptr %3, align 1
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.True1"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 1, ptr %3, align 1
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.True2"(ptr %0) {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
+  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
+  store i8 1, ptr %3, align 1
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/NestedMatch.mlg.$p_36_0") {
+  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/NestedMatch.mlg.$p_36_0")
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.main"(ptr %0, ptr %"test/testcases/malgo/NestedMatch.mlg.$$__38_0") {
+  %2 = call ptr @"test/testcases/malgo/NestedMatch.mlg.True2"(ptr null)
+  %3 = call ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_50"(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_47"(ptr null, ptr %3)
+  %5 = call ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_44"(ptr null, ptr %4)
+  ret ptr %5
+}
+
+define internal ptr @"test/testcases/malgo/NestedMatch.mlg.malgo_exit_failure"(ptr %0, ptr %"test/testcases/malgo/NestedMatch.mlg.$p_37_0") {
+  %2 = call ptr @malgo_exit_failure(ptr %"test/testcases/malgo/NestedMatch.mlg.$p_37_0")
+  ret ptr %2
+}
+
 define internal ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_44"(ptr %0, ptr %"test/testcases/malgo/NestedMatch.mlg.$true_39_0") {
   %2 = getelementptr { i8, {} }, ptr %"test/testcases/malgo/NestedMatch.mlg.$true_39_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
@@ -58,59 +118,6 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.True"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 1, ptr %3, align 1
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.malgo_exit_failure"(ptr %0, ptr %"test/testcases/malgo/NestedMatch.mlg.$p_37_0") {
-  %2 = call ptr @malgo_exit_failure(ptr %"test/testcases/malgo/NestedMatch.mlg.$p_37_0")
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.False2"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.True1"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 1, ptr %3, align 1
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.main"(ptr %0, ptr %"test/testcases/malgo/NestedMatch.mlg.$$__38_0") {
-  %2 = call ptr @"test/testcases/malgo/NestedMatch.mlg.True2"(ptr null)
-  %3 = call ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_50"(ptr null, ptr %2)
-  %4 = call ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_47"(ptr null, ptr %3)
-  %5 = call ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_44"(ptr null, ptr %4)
-  ret ptr %5
-}
-
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/NestedMatch.mlg.$p_36_0") {
-  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/NestedMatch.mlg.$p_36_0")
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.True2"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 1, ptr %3, align 1
-  ret ptr %2
-}
-
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.False1"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  ret ptr %2
-}
-
 define internal ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_50"(ptr %0, ptr %"test/testcases/malgo/NestedMatch.mlg.$true2_49_0") {
   %2 = getelementptr { i8, {} }, ptr %"test/testcases/malgo/NestedMatch.mlg.$true2_49_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
@@ -131,13 +138,6 @@ define internal ptr @"test/testcases/malgo/NestedMatch.mlg.$fun_50"(ptr %0, ptr 
 
 switch_default_0:                                 ; preds = %1
   unreachable
-}
-
-define internal ptr @"test/testcases/malgo/NestedMatch.mlg.False"(ptr %0) {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
-  %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
-  store i8 0, ptr %3, align 1
-  ret ptr %2
 }
 
 define i32 @main(ptr %0) {

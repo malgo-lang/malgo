@@ -6,7 +6,7 @@ module Malgo.Core.Syntax.Atom (Atom (..), HasAtom (..)) where
 import Control.Lens (Traversal')
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
-import Data.HashSet qualified as HashSet
+import Data.Set qualified as Set
 import Data.Store.TH
 import Malgo.Core.Syntax.Common
 import Malgo.Core.Syntax.Unboxed
@@ -33,7 +33,7 @@ instance (Pretty a) => Pretty (Atom a) where
   pretty (Unboxed x) = pretty x
 
 instance HasFreeVar Atom where
-  freevars (Var x) = HashSet.singleton x
+  freevars (Var x) = Set.singleton x
   freevars Unboxed {} = mempty
   callees _ = mempty
 

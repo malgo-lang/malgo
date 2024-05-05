@@ -1,8 +1,8 @@
 ; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/EvenOdd.ll'
 source_filename = "test/testcases/malgo/EvenOdd.mlg"
 
-@str2949 = unnamed_addr constant [6 x i8] c"False\00"
-@str2950 = unnamed_addr constant [5 x i8] c"True\00"
+@str2948 = unnamed_addr constant [6 x i8] c"False\00"
+@str2949 = unnamed_addr constant [5 x i8] c"True\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -20,7 +20,7 @@ define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2947"(ptr no
   ret i32 %3
 }
 
-define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2948"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2950"(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
@@ -68,7 +68,7 @@ switch-unboxed_default_0.i.i:                     ; preds = %switch-unboxed_defa
   store i32 %8, ptr %let_capture_0.i.i, align 4
   store ptr %let_capture_0.i.i, ptr %9, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %9, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2951", ptr %let_func_0.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2950", ptr %let_func_0.i.i, align 8
   %10 = tail call i32 @malgo_sub_int32_t(i32 %8, i32 noundef 1)
   %11 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %11, align 1
@@ -88,7 +88,7 @@ switch-unboxed_default_0.i.i.i:                   ; preds = %switch-unboxed_defa
   store i32 %15, ptr %let_capture_0.i.i.i, align 4
   store ptr %let_capture_0.i.i.i, ptr %16, align 8
   %let_func_0.i.i.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2948", ptr %let_func_0.i.i.i, align 8
+  store ptr @"test/testcases/malgo/EvenOdd.mlg.#let_closure_2951", ptr %let_func_0.i.i.i, align 8
   %17 = tail call i32 @malgo_sub_int32_t(i32 %15, i32 noundef 1)
   %18 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %18, align 1
@@ -99,7 +99,7 @@ switch-unboxed_default_0.i.i.i:                   ; preds = %switch-unboxed_defa
 
 "test/testcases/malgo/EvenOdd.mlg.main.exit":     ; preds = %switch-unboxed_default_0.i.i, %switch-unboxed_default_0.i.i.i
   %.sink.i = phi i8 [ 1, %switch-unboxed_default_0.i.i.i ], [ 0, %switch-unboxed_default_0.i.i ]
-  %spec.select.i.i = phi ptr [ @str2950, %switch-unboxed_default_0.i.i.i ], [ @str2949, %switch-unboxed_default_0.i.i ]
+  %spec.select.i.i = phi ptr [ @str2949, %switch-unboxed_default_0.i.i.i ], [ @str2948, %switch-unboxed_default_0.i.i ]
   %20 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 %.sink.i, ptr %20, align 1
   %21 = tail call ptr @malgo_malloc(i64 noundef 16)

@@ -3,8 +3,8 @@ source_filename = "test/testcases/malgo/Eventually.mlg"
 
 @"test/testcases/malgo/Eventually.mlg.eventually" = local_unnamed_addr global ptr undef
 @"test/testcases/malgo/Eventually.mlg.comp" = local_unnamed_addr global ptr undef
-@str3290 = unnamed_addr constant [7 x i8] c"return\00"
-@str3291 = unnamed_addr constant [5 x i8] c"bind\00"
+@str3290 = unnamed_addr constant [5 x i8] c"bind\00"
+@str3291 = unnamed_addr constant [7 x i8] c"return\00"
 @str3295 = unnamed_addr constant [8 x i8] c"not yet\00"
 @str3331 = unnamed_addr constant [2 x i8] c"1\00"
 @str3334 = unnamed_addr constant [2 x i8] c"2\00"
@@ -440,13 +440,13 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %2 = tail call ptr @malgo_hash_table_new()
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %3, align 8
-  %Done_func_0.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Eventually.mlg.Done", ptr %Done_func_0.i, align 8
+  %eventuallyBind_func_0.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
+  store ptr @"test/testcases/malgo/Eventually.mlg.eventuallyBind", ptr %eventuallyBind_func_0.i, align 8
   tail call void @malgo_hash_table_insert(ptr %2, ptr noundef nonnull @str3290, ptr noundef nonnull %3)
   %4 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %4, align 8
-  %eventuallyBind_func_0.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Eventually.mlg.eventuallyBind", ptr %eventuallyBind_func_0.i, align 8
+  %Done_func_0.i = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
+  store ptr @"test/testcases/malgo/Eventually.mlg.Done", ptr %Done_func_0.i, align 8
   tail call void @malgo_hash_table_insert(ptr %2, ptr noundef nonnull @str3291, ptr noundef nonnull %4)
   store ptr %2, ptr @"test/testcases/malgo/Eventually.mlg.eventually", align 8
   %5 = tail call ptr @malgo_hash_table_get(ptr %2, ptr noundef nonnull @str3290)
@@ -460,8 +460,8 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store i8 1, ptr %8, align 1
   %9 = getelementptr { i8, { ptr } }, ptr %8, i64 0, i32 1, i32 0
   store ptr %7, ptr %9, align 8
-  %10 = load ptr, ptr %6, align 8
-  %11 = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
+  %10 = load ptr, ptr %5, align 8
+  %11 = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
   %12 = load ptr, ptr %11, align 8
   %13 = tail call ptr %12(ptr %10, ptr nonnull %8)
   %14 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -748,8 +748,8 @@ define internal ptr @"test/testcases/malgo/Eventually.mlg.#fun_closure_3335"(ptr
   store i8 0, ptr %6, align 1
   %7 = getelementptr { i8, { i32 } }, ptr %6, i64 0, i32 1, i32 0
   store i32 3, ptr %7, align 4
-  %8 = load ptr, ptr %4, align 8
-  %9 = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
+  %8 = load ptr, ptr %5, align 8
+  %9 = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
   %10 = load ptr, ptr %9, align 8
   %11 = tail call ptr %10(ptr %8, ptr nonnull %6)
   ret ptr %11
@@ -768,8 +768,8 @@ define internal ptr @"test/testcases/malgo/Eventually.mlg.#fun_closure_3332"(ptr
   store i8 1, ptr %7, align 1
   %8 = getelementptr { i8, { ptr } }, ptr %7, i64 0, i32 1, i32 0
   store ptr %6, ptr %8, align 8
-  %9 = load ptr, ptr %5, align 8
-  %10 = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
+  %9 = load ptr, ptr %4, align 8
+  %10 = getelementptr { ptr, ptr }, ptr %4, i64 0, i32 1
   %11 = load ptr, ptr %10, align 8
   %12 = tail call ptr %11(ptr %9, ptr nonnull %7)
   %13 = tail call ptr @malgo_malloc(i64 noundef 16)
