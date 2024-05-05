@@ -48,6 +48,7 @@ jobs:
         run: |
           cabal build
       - name: Run tests
+        id: run-tests
         run: |
           cabal test --test-show-details=direct --test-option='--skip=llvm'
         continue-on-error: true
@@ -56,3 +57,6 @@ jobs:
         with:
           name: golden
           path: .golden/
+      - name: Error handling
+        if: ${{ steps.run-tests.outcome == 'failure' }}
+        run: exit 1
