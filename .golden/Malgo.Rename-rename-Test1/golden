@@ -33,14 +33,14 @@ Module
           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 18 } } )
         ( Id
          { name = "t", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal } ), VarP
+          ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal 0 } ), VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 18 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 20 } } )
         ( Id
          { name = "_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal } ) ]
+          ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal 1 } ) ]
        ( Seq
         ( Range
          { _start = SourcePos
@@ -63,7 +63,7 @@ Module
              { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 25 } } )
            ( Id
             { name = "t", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal } ) )
+             ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal 0 } ) )
           ( Tuple
            ( Range
             { _start = SourcePos
@@ -88,14 +88,14 @@ Module
            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 37 } } )
          ( Id
           { name = "_", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal } ), VarP
+           ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal 2 } ), VarP
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 37 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 39 } } )
          ( Id
           { name = "f", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal } ) ]
+           ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal 3 } ) ]
         ( Seq
          ( Range
           { _start = SourcePos
@@ -118,7 +118,7 @@ Module
               { sourceName = "./test/testcases/malgo/Test1.mlg", sourceLine = Pos 3, sourceColumn = Pos 44 } } )
             ( Id
              { name = "f", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal } ) )
+              ( ArtifactPath "test/testcases/malgo/Test1.mlg" ), sort = Internal 3 } ) )
            ( Tuple
             ( Range
              { _start = SourcePos

@@ -8,51 +8,51 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ], [ AnyT ] :-> AnyT, Assign
+       ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 22 } } ], [ AnyT ] :-> AnyT, Assign
     ( Meta
      { meta =
       [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 25 } } )
     ( Let
      [ LocalDef
       { _variable = Meta
        { meta =
         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
         { name = "fun", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } }, typ =
+         ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 24 } }, typ =
        [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
        [ Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ]
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 23 } } ]
        ( Atom
         ( Var
          ( Meta
           { meta = AnyT, id = Id
            { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ) ) } ]
+            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 22 } } ) ) ) } ]
      ( Atom
       ( Var
        ( Meta
         { meta =
          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 24 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 27 } } )
      ( Let
       [ LocalDef
        { _variable = Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "let", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } }, typ = SumT
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 26 } }, typ = SumT
         [ Con Tuple [] ], _object = Pack
         ( SumT [ Con Tuple [] ] )
         ( Con Tuple [] ) [] } ]
@@ -62,31 +62,31 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "let", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 26 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 28 } } )
       ( Call
        ( Var
         ( Meta
          { meta =
           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) )
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 25 } } ) )
        [ Var
         ( Meta
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 27 } } ) ] )
       ( Cast AnyT
        ( Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ) ) ) ) ),
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 28 } } ) ) ) ) ) ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -97,23 +97,23 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 29 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 33 } } )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 31 } } )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 30 } } )
       ( Call
        ( Var
         ( Meta
@@ -126,12 +126,12 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 30 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 32 } } )
       ( Call
        ( Var
         ( Meta
@@ -142,19 +142,19 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 31 } } ) ] )
       ( Cast AnyT
        ( Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 32 } } ) ) ) ) )
     ( Assign
      ( Meta
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 34 } } )
      ( Call
       ( Var
        ( Meta
@@ -166,7 +166,7 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 33 } } ) ] )
      ( Cast
       ( SumT [ Con Tuple [] ] )
       ( Var
@@ -174,4 +174,4 @@ Program
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal } } ) ) ) ) ) ], extFuns = [] }
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Temporal 34 } } ) ) ) ) ) ], extFuns = [] }

@@ -9,26 +9,26 @@ Program
     [ Meta
      { meta = Int64T, id = Id
       { name = "unboxed", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ], [ Int64T ] :-> SumT
+       ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 22 } } ], [ Int64T ] :-> SumT
     [ Con Tuple [] ], Match
     ( Atom
      ( Var
       ( Meta
        { meta = Int64T, id = Id
         { name = "unboxed", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ) )
+         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 22 } } ) ) )
     [ Exact
      ( Int64 0 )
      ( Assign
       ( Meta
        { meta = StringT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 27 } } )
       ( Assign
        ( Meta
         { meta = StringT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 26 } } )
        ( Call
         ( Var
          ( Meta
@@ -41,13 +41,13 @@ Program
          ( Meta
           { meta = StringT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 26 } } ) ) ) )
       ( Assign
        ( Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 28 } } )
        ( Call
         ( Var
          ( Meta
@@ -59,7 +59,7 @@ Program
          ( Meta
           { meta = StringT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 27 } } ) ] )
        ( Cast
         ( SumT [ Con Tuple [] ] )
         ( Var
@@ -67,18 +67,18 @@ Program
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ) ) ) ), Exact
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 28 } } ) ) ) ) ), Exact
      ( Int64 1 )
      ( Assign
       ( Meta
        { meta = StringT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 30 } } )
       ( Assign
        ( Meta
         { meta = StringT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 29 } } )
        ( Call
         ( Var
          ( Meta
@@ -91,13 +91,13 @@ Program
          ( Meta
           { meta = StringT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 29 } } ) ) ) )
       ( Assign
        ( Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 31 } } )
        ( Call
         ( Var
          ( Meta
@@ -109,7 +109,7 @@ Program
          ( Meta
           { meta = StringT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 30 } } ) ] )
        ( Cast
         ( SumT [ Con Tuple [] ] )
         ( Var
@@ -117,21 +117,21 @@ Program
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ) ) ) ), Bind
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 31 } } ) ) ) ) ), Bind
      ( Meta
       { meta = Int64T, id = Id
        { name = "_", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) Int64T
+        ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 32 } } ) Int64T
      ( Assign
       ( Meta
        { meta = StringT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 24 } } )
       ( Assign
        ( Meta
         { meta = StringT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 23 } } )
        ( Call
         ( Var
          ( Meta
@@ -144,13 +144,13 @@ Program
          ( Meta
           { meta = StringT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 23 } } ) ) ) )
       ( Assign
        ( Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 25 } } )
        ( Call
         ( Var
          ( Meta
@@ -162,7 +162,7 @@ Program
          ( Meta
           { meta = StringT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 24 } } ) ] )
        ( Cast
         ( SumT [ Con Tuple [] ] )
         ( Var
@@ -170,7 +170,7 @@ Program
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ) ) ) ) ] ),
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 25 } } ) ) ) ) ) ] ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -181,14 +181,14 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 33 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 34 } } )
     ( Call
      ( Var
       ( Meta
@@ -204,4 +204,4 @@ Program
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal } } ) ) ) ) ], extFuns = [] }
+         ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" ), sort = Temporal 34 } } ) ) ) ) ], extFuns = [] }

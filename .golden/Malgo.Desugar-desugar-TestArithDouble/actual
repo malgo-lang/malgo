@@ -5,24 +5,24 @@ Program
     { meta =
      [ DoubleT, DoubleT ] :-> DoubleT, id = Id
      { name = "*_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } },
+      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 145 } },
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } }, Meta
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 146 } }, Meta
      { meta = DoubleT, id = Id
       { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 147 } } ],
     [ DoubleT, DoubleT ] :-> DoubleT, Assign
     ( Meta
      { meta = [ DoubleT ] :-> DoubleT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 149 } } )
     ( Assign
      ( Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 148 } } )
      ( Call
       ( Var
        ( Meta
@@ -34,58 +34,58 @@ Program
        ( Meta
         { meta = DoubleT, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 146 } } ) ] )
      ( Cast
       ( [ DoubleT ] :-> DoubleT )
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 148 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 150 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 149 } } ) )
       [ Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 147 } } ) ] )
      ( Cast DoubleT
       ( Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 150 } } ) ) ) ) ),
    ( Meta
     { meta =
      [ DoubleT, DoubleT ] :-> DoubleT, id = Id
      { name = "+_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } },
+      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 133 } },
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } }, Meta
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 134 } }, Meta
      { meta = DoubleT, id = Id
       { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 135 } } ],
     [ DoubleT, DoubleT ] :-> DoubleT, Assign
     ( Meta
      { meta = [ DoubleT ] :-> DoubleT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 137 } } )
     ( Assign
      ( Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 136 } } )
      ( Call
       ( Var
        ( Meta
@@ -97,58 +97,58 @@ Program
        ( Meta
         { meta = DoubleT, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 134 } } ) ] )
      ( Cast
       ( [ DoubleT ] :-> DoubleT )
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 136 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 138 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 137 } } ) )
       [ Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 135 } } ) ] )
      ( Cast DoubleT
       ( Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 138 } } ) ) ) ) ),
    ( Meta
     { meta =
      [ DoubleT, DoubleT ] :-> DoubleT, id = Id
      { name = "add_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } },
+      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 121 } },
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } }, Meta
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 122 } }, Meta
      { meta = DoubleT, id = Id
       { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 123 } } ],
     [ DoubleT, DoubleT ] :-> DoubleT, Assign
     ( Meta
      { meta = [ DoubleT ] :-> DoubleT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 125 } } )
     ( Assign
      ( Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 124 } } )
      ( Call
       ( Var
        ( Meta
@@ -160,58 +160,58 @@ Program
        ( Meta
         { meta = DoubleT, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 122 } } ) ] )
      ( Cast
       ( [ DoubleT ] :-> DoubleT )
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 124 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 126 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 125 } } ) )
       [ Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 123 } } ) ] )
      ( Cast DoubleT
       ( Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 126 } } ) ) ) ) ),
    ( Meta
     { meta =
      [ DoubleT, DoubleT ] :-> DoubleT, id = Id
      { name = "mul_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } },
+      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 109 } },
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } }, Meta
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 110 } }, Meta
      { meta = DoubleT, id = Id
       { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 111 } } ],
     [ DoubleT, DoubleT ] :-> DoubleT, Assign
     ( Meta
      { meta = [ DoubleT ] :-> DoubleT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 113 } } )
     ( Assign
      ( Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 112 } } )
      ( Call
       ( Var
        ( Meta
@@ -223,36 +223,36 @@ Program
        ( Meta
         { meta = DoubleT, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 110 } } ) ] )
      ( Cast
       ( [ DoubleT ] :-> DoubleT )
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 112 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 114 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 113 } } ) )
       [ Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 111 } } ) ] )
      ( Cast DoubleT
       ( Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 114 } } ) ) ) ) ),
    ( Meta
     { meta = [ DoubleT ] :-> AnyT, id = Id
      { name = "show", moduleName = Artifact
@@ -260,16 +260,16 @@ Program
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ], [ DoubleT ] :-> AnyT, Assign
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 91 } } ], [ DoubleT ] :-> AnyT, Assign
     ( Meta
      { meta = StringT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 93 } } )
     ( Assign
      ( Meta
       { meta = StringT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 92 } } )
      ( Call
       ( Var
        ( Meta
@@ -280,18 +280,18 @@ Program
        ( Meta
         { meta = DoubleT, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 91 } } ) ] )
      ( Cast StringT
       ( Var
        ( Meta
         { meta = StringT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 92 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 94 } } )
      ( Call
       ( Var
        ( Meta
@@ -302,13 +302,13 @@ Program
        ( Meta
         { meta = StringT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 93 } } ) ] )
      ( Cast AnyT
       ( Var
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 94 } } ) ) ) ) ),
    ( Meta
     { meta = [ DoubleT ] :-> DoubleT, id = Id
      { name = "traceShowId", moduleName = Artifact
@@ -316,22 +316,22 @@ Program
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ], [ DoubleT ] :-> DoubleT, Assign
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 95 } } ], [ DoubleT ] :-> DoubleT, Assign
     ( Meta
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 99 } } )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 97 } } )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 96 } } )
       ( Call
        ( Var
         ( Meta
@@ -342,19 +342,19 @@ Program
         ( Meta
          { meta = DoubleT, id = Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 95 } } ) ] )
       ( Cast AnyT
        ( Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 96 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 98 } } )
       ( Call
        ( Var
         ( Meta
@@ -366,7 +366,7 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 97 } } ) ] )
       ( Cast
        ( SumT [ Con Tuple [] ] )
        ( Var
@@ -374,13 +374,13 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 98 } } ) ) ) ) )
     ( Atom
      ( Var
       ( Meta
        { meta = DoubleT, id = Id
         { name = "x", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 95 } } ) ) ) ),
    ( Meta
     { meta = [ DoubleT ] :-> DoubleT, id = Id
      { name = "neg", moduleName = Artifact
@@ -388,16 +388,16 @@ Program
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ], [ DoubleT ] :-> DoubleT, Assign
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 100 } } ], [ DoubleT ] :-> DoubleT, Assign
     ( Meta
      { meta = [ DoubleT ] :-> DoubleT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 102 } } )
     ( Assign
      ( Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 101 } } )
      ( Call
       ( Var
        ( Meta
@@ -412,29 +412,29 @@ Program
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 101 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 103 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 102 } } ) )
       [ Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 100 } } ) ] )
      ( Cast DoubleT
       ( Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 103 } } ) ) ) ) ),
    ( Meta
     { meta = [ DoubleT ] :->
      ( [ DoubleT ] :-> DoubleT ), id = Id
@@ -443,38 +443,38 @@ Program
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ], [ DoubleT ] :->
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 104 } } ], [ DoubleT ] :->
     ( [ DoubleT ] :-> DoubleT ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 115 } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
       [ Meta
        { meta = DoubleT, id = Id
         { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ]
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 105 } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ DoubleT, DoubleT ] :-> DoubleT, id = Id
          { name = "mul_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 109 } } )
        [ Var
         ( Meta
          { meta = DoubleT, id = Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ), Var
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 104 } } ), Var
         ( Meta
          { meta = DoubleT, id = Id
           { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 105 } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ DoubleT ] :-> DoubleT, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 115 } } ) ) ) ),
    ( Meta
     { meta = [ DoubleT ] :->
      ( [ DoubleT ] :-> DoubleT ), id = Id
@@ -483,38 +483,38 @@ Program
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ], [ DoubleT ] :->
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 116 } } ], [ DoubleT ] :->
     ( [ DoubleT ] :-> DoubleT ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 127 } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
       [ Meta
        { meta = DoubleT, id = Id
         { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ]
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 117 } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ DoubleT, DoubleT ] :-> DoubleT, id = Id
          { name = "add_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 121 } } )
        [ Var
         ( Meta
          { meta = DoubleT, id = Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ), Var
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 116 } } ), Var
         ( Meta
          { meta = DoubleT, id = Id
           { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 117 } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ DoubleT ] :-> DoubleT, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 127 } } ) ) ) ),
    ( Meta
     { meta = [ DoubleT ] :->
      ( [ DoubleT ] :-> DoubleT ), id = Id
@@ -523,38 +523,38 @@ Program
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ], [ DoubleT ] :->
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 128 } } ], [ DoubleT ] :->
     ( [ DoubleT ] :-> DoubleT ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 139 } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
       [ Meta
        { meta = DoubleT, id = Id
         { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ]
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 129 } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ DoubleT, DoubleT ] :-> DoubleT, id = Id
          { name = "+_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 133 } } )
        [ Var
         ( Meta
          { meta = DoubleT, id = Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ), Var
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 128 } } ), Var
         ( Meta
          { meta = DoubleT, id = Id
           { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 129 } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ DoubleT ] :-> DoubleT, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 139 } } ) ) ) ),
    ( Meta
     { meta = [ DoubleT ] :->
      ( [ DoubleT ] :-> DoubleT ), id = Id
@@ -563,38 +563,38 @@ Program
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ], [ DoubleT ] :->
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 140 } } ], [ DoubleT ] :->
     ( [ DoubleT ] :-> DoubleT ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ DoubleT ] :-> DoubleT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 151 } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
       [ Meta
        { meta = DoubleT, id = Id
         { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ]
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 141 } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ DoubleT, DoubleT ] :-> DoubleT, id = Id
          { name = "*_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 145 } } )
        [ Var
         ( Meta
          { meta = DoubleT, id = Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ), Var
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 140 } } ), Var
         ( Meta
          { meta = DoubleT, id = Id
           { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 141 } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ DoubleT ] :-> DoubleT, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 151 } } ) ) ) ),
    ( Meta
     { meta = [ DoubleT ] :-> DoubleT, id = Id
      { name = "f", moduleName = Artifact
@@ -602,26 +602,26 @@ Program
     [ Meta
      { meta = DoubleT, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ], [ DoubleT ] :-> DoubleT, Assign
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 152 } } ], [ DoubleT ] :-> DoubleT, Assign
     ( Meta
      { meta = [ DoubleT ] :-> DoubleT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 158 } } )
     ( Assign
      ( Meta
       { meta = DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 156 } } )
      ( Assign
       ( Meta
        { meta = [ DoubleT ] :-> DoubleT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 154 } } )
       ( Assign
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 153 } } )
        ( Call
         ( Var
          ( Meta
@@ -633,37 +633,37 @@ Program
          ( Meta
           { meta = DoubleT, id = Id
            { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 152 } } ) ] )
        ( Cast
         ( [ DoubleT ] :-> DoubleT )
         ( Var
          ( Meta
           { meta = [ DoubleT ] :-> DoubleT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 153 } } ) ) ) )
       ( Assign
        ( Meta
         { meta = DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 155 } } )
        ( Call
         ( Var
          ( Meta
           { meta = [ DoubleT ] :-> DoubleT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) )
+            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 154 } } ) )
         [ Unboxed ( Double 0.0 ) ] )
        ( Cast DoubleT
         ( Var
          ( Meta
           { meta = DoubleT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 155 } } ) ) ) ) )
      ( Assign
       ( Meta
        { meta = [ DoubleT ] :-> DoubleT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 157 } } )
       ( Call
        ( Var
         ( Meta
@@ -675,36 +675,36 @@ Program
         ( Meta
          { meta = DoubleT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 156 } } ) ] )
       ( Cast
        ( [ DoubleT ] :-> DoubleT )
        ( Var
         ( Meta
          { meta = [ DoubleT ] :-> DoubleT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 157 } } ) ) ) ) )
     ( Assign
      ( Meta
       { meta = DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 159 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ DoubleT ] :-> DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 158 } } ) )
       [ Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 152 } } ) ] )
      ( Cast DoubleT
       ( Var
        ( Meta
         { meta = DoubleT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 159 } } ) ) ) ) ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -715,23 +715,23 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 160 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 164 } } )
     ( Assign
      ( Meta
       { meta = DoubleT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 162 } } )
      ( Assign
       ( Meta
        { meta = DoubleT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 161 } } )
       ( Call
        ( Var
         ( Meta
@@ -744,12 +744,12 @@ Program
         ( Meta
          { meta = DoubleT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 161 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 163 } } )
       ( Call
        ( Var
         ( Meta
@@ -760,19 +760,19 @@ Program
         ( Meta
          { meta = DoubleT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 162 } } ) ] )
       ( Cast AnyT
        ( Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 163 } } ) ) ) ) )
     ( Assign
      ( Meta
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 165 } } )
      ( Call
       ( Var
        ( Meta
@@ -784,7 +784,7 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 164 } } ) ] )
      ( Cast
       ( SumT [ Con Tuple [] ] )
       ( Var
@@ -792,4 +792,4 @@ Program
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal } } ) ) ) ) ) ], extFuns = [] }
+          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 165 } } ) ) ) ) ) ], extFuns = [] }

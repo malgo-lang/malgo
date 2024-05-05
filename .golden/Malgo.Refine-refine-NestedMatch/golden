@@ -36,7 +36,7 @@ Module
            { sourceName = "./test/testcases/malgo/NestedMatch.mlg", sourceLine = Pos 21, sourceColumn = Pos 1 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Internal } ) ]
+          ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Internal 29 } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -563,7 +563,7 @@ Module
       ( TyVar
        ( Id
         { name = "a", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Internal } ) ), value =
+         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Internal 2 } ) ), value =
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NestedMatch.mlg", sourceLine = Pos 12, sourceColumn = Pos 1 }, _end = SourcePos
@@ -586,4 +586,4 @@ Module
         { sourceName = "./test/testcases/malgo/NestedMatch.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Internal } ) ) ) ], _imports = [] } }
+        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Internal 0 } ) ) ) ], _imports = [] } }

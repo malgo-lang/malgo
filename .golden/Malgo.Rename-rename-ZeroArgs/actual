@@ -81,7 +81,7 @@ Module
           { sourceName = "./test/testcases/malgo/ZeroArgs.mlg", sourceLine = Pos 8, sourceColumn = Pos 14 } } )
         ( Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Internal } ) ]
+          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Internal 1 } ) ]
        ( Seq
         ( Range
          { _start = SourcePos
@@ -124,7 +124,7 @@ Module
                  { sourceName = "./test/testcases/malgo/ZeroArgs.mlg", sourceLine = Pos 8, sourceColumn = Pos 21 } } )
                ( Id
                 { name = "x", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Internal } ) ) :| [] ) ) :| [] ) )
+                 ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Internal 1 } ) ) :| [] ) ) :| [] ) )
           ( Tuple
            ( Range
             { _start = SourcePos
@@ -284,7 +284,7 @@ Module
         { sourceName = "./test/testcases/malgo/ZeroArgs.mlg", sourceLine = Pos 7, sourceColumn = Pos 12 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Internal } ) )
+        ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Internal 0 } ) )
      ( TyVar
       ( Range
        { _start = SourcePos
@@ -292,7 +292,7 @@ Module
         { sourceName = "./test/testcases/malgo/ZeroArgs.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Internal } ) ) ),
+        ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Internal 0 } ) ) ),
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg", sourceLine = Pos 10, sourceColumn = Pos 1 }, _end = SourcePos

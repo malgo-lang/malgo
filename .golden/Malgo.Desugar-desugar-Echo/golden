@@ -11,26 +11,26 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 9 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 14 } } )
     ( Assign
      ( Meta
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 11 } } )
      ( Let
       [ LocalDef
        { _variable = Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "let", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } }, typ = SumT
+          ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 10 } }, typ = SumT
         [ Con Tuple [] ], _object = Pack
         ( SumT [ Con Tuple [] ] )
         ( Con Tuple [] ) [] } ]
@@ -40,24 +40,24 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "let", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 10 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "cast", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 12 } } )
       ( Cast AnyT
        ( Var
         ( Meta
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } ) ) )
+           ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 11 } } ) ) )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 13 } } )
        ( Call
         ( Var
          ( Meta
@@ -68,19 +68,19 @@ Program
          ( Meta
           { meta = AnyT, id = Id
            { name = "cast", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 12 } } ) ] )
        ( Cast AnyT
         ( Var
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } ) ) ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 13 } } ) ) ) ) ) )
     ( Assign
      ( Meta
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 15 } } )
      ( Call
       ( Var
        ( Meta
@@ -92,7 +92,7 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 14 } } ) ] )
      ( Cast
       ( SumT [ Con Tuple [] ] )
       ( Var
@@ -100,4 +100,4 @@ Program
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal } } ) ) ) ) ) ], extFuns = [] }
+          ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 15 } } ) ) ) ) ) ], extFuns = [] }

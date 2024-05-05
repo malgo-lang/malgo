@@ -5,24 +5,24 @@ Program
     { meta =
      [ Int64T, Int64T ] :-> Int64T, id = Id
      { name = "+#_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } },
+      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 88 } },
     [ Meta
      { meta = Int64T, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } }, Meta
+       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 89 } }, Meta
      { meta = Int64T, id = Id
       { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 90 } } ],
     [ Int64T, Int64T ] :-> Int64T, Assign
     ( Meta
      { meta = [ Int64T ] :-> Int64T, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 92 } } )
     ( Assign
      ( Meta
       { meta = [ Int64T ] :-> Int64T, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 91 } } )
      ( Call
       ( Var
        ( Meta
@@ -34,36 +34,36 @@ Program
        ( Meta
         { meta = Int64T, id = Id
          { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 89 } } ) ] )
      ( Cast
       ( [ Int64T ] :-> Int64T )
       ( Var
        ( Meta
         { meta = [ Int64T ] :-> Int64T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 91 } } ) ) ) )
     ( Assign
      ( Meta
       { meta = Int64T, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 93 } } )
      ( Call
       ( Var
        ( Meta
         { meta = [ Int64T ] :-> Int64T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) )
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 92 } } ) )
       [ Var
        ( Meta
         { meta = Int64T, id = Id
          { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 90 } } ) ] )
      ( Cast Int64T
       ( Var
        ( Meta
         { meta = Int64T, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) ),
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 93 } } ) ) ) ) ),
    ( Meta
     { meta = [ Int64T ] :->
      ( [ Int64T ] :-> Int64T ), id = Id
@@ -72,38 +72,38 @@ Program
     [ Meta
      { meta = Int64T, id = Id
       { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ], [ Int64T ] :->
+       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 83 } } ], [ Int64T ] :->
     ( [ Int64T ] :-> Int64T ), Let
     [ LocalDef
      { _variable = Meta
       { meta = [ Int64T ] :-> Int64T, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } }, typ = [ Int64T ] :-> Int64T, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 94 } }, typ = [ Int64T ] :-> Int64T, _object = Fun
       [ Meta
        { meta = Int64T, id = Id
         { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ]
+         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 84 } } ]
       ( CallDirect
        ( Meta
         { meta =
          [ Int64T, Int64T ] :-> Int64T, id = Id
          { name = "+#_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 88 } } )
        [ Var
         ( Meta
          { meta = Int64T, id = Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ), Var
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 83 } } ), Var
         ( Meta
          { meta = Int64T, id = Id
           { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] ) } ]
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 84 } } ) ] ) } ]
     ( Atom
      ( Var
       ( Meta
        { meta = [ Int64T ] :-> Int64T, id = Id
         { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 94 } } ) ) ) ),
    ( Meta
     { meta = [ AnyT ] :-> AnyT, id = Id
      { name = "sum", moduleName = Artifact
@@ -111,7 +111,7 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "cons", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ], [ AnyT ] :-> AnyT, Match
+       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 95 } } ], [ AnyT ] :-> AnyT, Match
     ( Cast
      ( SumT
       [ Con
@@ -122,14 +122,14 @@ Program
       ( Meta
        { meta = AnyT, id = Id
         { name = "cons", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) )
+         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 95 } } ) ) )
     [ Unpack
      ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 96 } } )
       ( Call
        ( Var
         ( Meta
@@ -142,15 +142,15 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ), Unpack
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 96 } } ) ) ) ), Unpack
      ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
      [ Meta
       { meta = AnyT, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } }, Meta
+        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 97 } }, Meta
       { meta = AnyT, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ]
+        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 98 } } ]
      ( Match
       ( Cast
        ( SumT [ Con ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] ] )
@@ -158,29 +158,29 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "p", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 97 } } ) ) )
       [ Unpack
        ( Con ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] )
        [ Meta
         { meta = Int64T, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ]
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 99 } } ]
        ( Assign
         ( Meta
          { meta =
           [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 103 } } )
         ( Assign
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 101 } } )
          ( Assign
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 100 } } )
           ( Call
            ( Var
             ( Meta
@@ -191,19 +191,19 @@ Program
             ( Meta
              { meta = AnyT, id = Id
               { name = "p", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 98 } } ) ] )
           ( Cast AnyT
            ( Var
             ( Meta
              { meta = AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 100 } } ) ) ) )
          ( Assign
           ( Meta
            { meta =
             [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 102 } } )
           ( Call
            ( Var
             ( Meta
@@ -215,7 +215,7 @@ Program
             ( Meta
              { meta = AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 101 } } ) ] )
           ( Cast
            ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
            ( Var
@@ -223,22 +223,22 @@ Program
              { meta =
               [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 102 } } ) ) ) ) )
         ( Assign
          ( Meta
           { meta = [ AnyT ] :-> AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 112 } } )
          ( Let
           [ LocalDef
            { _variable = Meta
             { meta = [ AnyT ] :-> AnyT, id = Id
              { name = "fun", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 111 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
             [ Meta
              { meta = AnyT, id = Id
               { name = "int64#", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ]
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 104 } } ]
             ( Match
              ( Cast
               ( SumT
@@ -247,28 +247,28 @@ Program
                ( Meta
                 { meta = AnyT, id = Id
                  { name = "int64#", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) )
+                  ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 104 } } ) ) )
              [ Unpack
               ( Con ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] )
               [ Meta
                { meta = Int64T, id = Id
                 { name = "p", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ]
+                 ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 105 } } ]
               ( Assign
                ( Meta
                 { meta = Int64T, id = Id
                  { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+                  ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 109 } } )
                ( Assign
                 ( Meta
                  { meta = [ Int64T ] :-> Int64T, id = Id
                   { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+                   ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 107 } } )
                 ( Assign
                  ( Meta
                   { meta = [ Int64T ] :-> Int64T, id = Id
                    { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+                    ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 106 } } )
                  ( Call
                   ( Var
                    ( Meta
@@ -280,41 +280,41 @@ Program
                    ( Meta
                     { meta = Int64T, id = Id
                      { name = "p", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 99 } } ) ] )
                  ( Cast
                   ( [ Int64T ] :-> Int64T )
                   ( Var
                    ( Meta
                     { meta = [ Int64T ] :-> Int64T, id = Id
                      { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) )
+                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 106 } } ) ) ) )
                 ( Assign
                  ( Meta
                   { meta = Int64T, id = Id
                    { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+                    ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 108 } } )
                  ( Call
                   ( Var
                    ( Meta
                     { meta = [ Int64T ] :-> Int64T, id = Id
                      { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) )
+                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 107 } } ) )
                   [ Var
                    ( Meta
                     { meta = Int64T, id = Id
                      { name = "p", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 105 } } ) ] )
                  ( Cast Int64T
                   ( Var
                    ( Meta
                     { meta = Int64T, id = Id
                      { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) )
+                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 108 } } ) ) ) ) )
                ( Assign
                 ( Meta
                  { meta = AnyT, id = Id
                   { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+                   ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 110 } } )
                 ( Call
                  ( Var
                   ( Meta
@@ -325,42 +325,42 @@ Program
                   ( Meta
                    { meta = Int64T, id = Id
                     { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+                     ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 109 } } ) ] )
                 ( Cast AnyT
                  ( Var
                   ( Meta
                    { meta = AnyT, id = Id
                     { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) ) ] ) } ]
+                     ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 110 } } ) ) ) ) ) ] ) } ]
           ( Atom
            ( Var
             ( Meta
              { meta = [ AnyT ] :-> AnyT, id = Id
               { name = "fun", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 111 } } ) ) ) )
          ( Assign
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 113 } } )
           ( Call
            ( Var
             ( Meta
              { meta =
               [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) )
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 103 } } ) )
            [ Var
             ( Meta
              { meta = [ AnyT ] :-> AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 112 } } ) ] )
           ( Cast AnyT
            ( Var
             ( Meta
              { meta = AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) ) ) ] ) ] ),
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 113 } } ) ) ) ) ) ) ] ) ] ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -371,7 +371,7 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 114 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
@@ -379,32 +379,32 @@ Program
       [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
       [ Con Tuple [] ], id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 131 } } )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 129 } } )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 127 } } )
       ( Assign
        ( Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 118 } } )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 116 } } )
         ( Assign
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 115 } } )
          ( Call
           ( Var
            ( Meta
@@ -417,12 +417,12 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 115 } } ) ) ) )
         ( Assign
          ( Meta
           { meta = [ AnyT ] :-> AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 117 } } )
          ( Call
           ( Var
            ( Meta
@@ -434,34 +434,34 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 116 } } ) ] )
          ( Cast
           ( [ AnyT ] :-> AnyT )
           ( Var
            ( Meta
             { meta = [ AnyT ] :-> AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 117 } } ) ) ) ) )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 125 } } )
         ( Assign
          ( Meta
           { meta = [ AnyT ] :-> AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 122 } } )
          ( Assign
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 120 } } )
           ( Assign
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 119 } } )
            ( Call
             ( Var
              ( Meta
@@ -474,12 +474,12 @@ Program
              ( Meta
               { meta = AnyT, id = Id
                { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) )
+                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 119 } } ) ) ) )
           ( Assign
            ( Meta
             { meta = [ AnyT ] :-> AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 121 } } )
            ( Call
             ( Var
              ( Meta
@@ -491,19 +491,19 @@ Program
              ( Meta
               { meta = AnyT, id = Id
                { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 120 } } ) ] )
            ( Cast
             ( [ AnyT ] :-> AnyT )
             ( Var
              ( Meta
               { meta = [ AnyT ] :-> AnyT, id = Id
                { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) )
+                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 121 } } ) ) ) ) )
          ( Assign
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 123 } } )
           ( CallDirect
            ( Meta
             { meta = [] :-> AnyT, id = Id
@@ -513,51 +513,51 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 124 } } )
            ( Call
             ( Var
              ( Meta
               { meta = [ AnyT ] :-> AnyT, id = Id
                { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) )
+                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 122 } } ) )
             [ Var
              ( Meta
               { meta = AnyT, id = Id
                { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 123 } } ) ] )
            ( Cast AnyT
             ( Var
              ( Meta
               { meta = AnyT, id = Id
                { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) ) )
+                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 124 } } ) ) ) ) ) )
         ( Assign
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 126 } } )
          ( Call
           ( Var
            ( Meta
             { meta = [ AnyT ] :-> AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 118 } } ) )
           [ Var
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 125 } } ) ] )
          ( Cast AnyT
           ( Var
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) ) )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 126 } } ) ) ) ) ) )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 128 } } )
        ( Call
         ( Var
          ( Meta
@@ -568,19 +568,19 @@ Program
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 127 } } ) ] )
        ( Cast AnyT
         ( Var
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 128 } } ) ) ) ) )
      ( Assign
       ( Meta
        { meta =
         [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 130 } } )
       ( Call
        ( Var
         ( Meta
@@ -592,7 +592,7 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 129 } } ) ] )
       ( Cast
        ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
        ( Var
@@ -600,31 +600,31 @@ Program
          { meta =
           [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 130 } } ) ) ) ) )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :-> SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 135 } } )
      ( Let
       [ LocalDef
        { _variable = Meta
         { meta = [ AnyT ] :-> SumT
          [ Con Tuple [] ], id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } }, typ = [ AnyT ] :-> SumT
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 134 } }, typ = [ AnyT ] :-> SumT
         [ Con Tuple [] ], _object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "i", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ]
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 132 } } ]
         ( Assign
          ( Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 133 } } )
          ( Call
           ( Var
            ( Meta
@@ -636,7 +636,7 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "i", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 132 } } ) ] )
          ( Cast
           ( SumT [ Con Tuple [] ] )
           ( Var
@@ -644,20 +644,20 @@ Program
             { meta = SumT
              [ Con Tuple [] ], id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) } ]
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 133 } } ) ) ) ) } ]
       ( Atom
        ( Var
         ( Meta
          { meta = [ AnyT ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 134 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 136 } } )
       ( Call
        ( Var
         ( Meta
@@ -665,13 +665,13 @@ Program
           [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 131 } } ) )
        [ Var
         ( Meta
          { meta = [ AnyT ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 135 } } ) ] )
       ( Cast
        ( SumT [ Con Tuple [] ] )
        ( Var
@@ -679,4 +679,4 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal } } ) ) ) ) ) ) ], extFuns = [] }
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Temporal 136 } } ) ) ) ) ) ) ], extFuns = [] }

@@ -11,23 +11,23 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 9 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 13 } } )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 11 } } )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 10 } } )
       ( Call
        ( Var
         ( Meta
@@ -40,12 +40,12 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 10 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 12 } } )
       ( Call
        ( Var
         ( Meta
@@ -56,19 +56,19 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 11 } } ) ] )
       ( Cast AnyT
        ( Var
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } ) ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 12 } } ) ) ) ) )
     ( Assign
      ( Meta
       { meta = SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 14 } } )
      ( Call
       ( Var
        ( Meta
@@ -80,7 +80,7 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 13 } } ) ] )
      ( Cast
       ( SumT [ Con Tuple [] ] )
       ( Var
@@ -88,4 +88,4 @@ Program
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal } } ) ) ) ) ) ], extFuns = [] }
+          ( ArtifactPath "test/testcases/malgo/Double.mlg" ), sort = Temporal 14 } } ) ) ) ) ) ], extFuns = [] }

@@ -11,7 +11,7 @@ Program
      { meta = RecordT
       ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
       { name = "record", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 40 } } ],
     [ RecordT
      ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ) ] :-> AnyT, Match
     ( Atom
@@ -20,24 +20,24 @@ Program
        { meta = RecordT
         ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
         { name = "record", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) )
+         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 40 } } ) ) )
     [ OpenRecord
      ( fromList
       [
        ( "snd", Meta
         { meta = AnyT, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ),
+          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 41 } } ),
        ( "fst", Meta
         { meta = AnyT, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ] )
+          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 42 } } ) ] )
      ( Atom
       ( Var
        ( Meta
         { meta = AnyT, id = Id
          { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) ) ] ),
+          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 42 } } ) ) ) ] ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -48,19 +48,19 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 43 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Match
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 45 } } )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 44 } } )
       ( Call
        ( Var
         ( Meta
@@ -73,17 +73,17 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 44 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 47 } } )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 46 } } )
        ( Call
         ( Var
          ( Meta
@@ -96,14 +96,14 @@ Program
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 46 } } ) ) ) )
       ( Let
        [ LocalDef
         { _variable = Meta
          { meta = RecordT
           ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
           { name = "record", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } }, typ = RecordT
+           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 48 } }, typ = RecordT
          ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), _object = Record
          ( fromList
           [
@@ -111,25 +111,25 @@ Program
             ( Meta
              { meta = AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ),
+               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 47 } } ) ),
            ( "fst", Var
             ( Meta
              { meta = AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) ] ) } ]
+               ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 45 } } ) ) ] ) } ]
        ( Atom
         ( Var
          ( Meta
           { meta = RecordT
            ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
            { name = "record", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 48 } } ) ) ) ) ) )
     [ Bind
      ( Meta
       { meta = RecordT
        ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
        { name = "let_test/testcases/malgo/TestPolySynonym.mlg.#x_7", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 49 } } )
      ( RecordT ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ) )
      ( Assign
       ( Meta
@@ -137,17 +137,17 @@ Program
         [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 53 } } )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 51 } } )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 50 } } )
         ( Call
          ( Var
           ( Meta
@@ -162,19 +162,19 @@ Program
            { meta = RecordT
             ( fromList [ ( "snd", AnyT ), ( "fst", AnyT ) ] ), id = Id
             { name = "let_test/testcases/malgo/TestPolySynonym.mlg.#x_7", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ] )
+             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 49 } } ) ] )
         ( Cast AnyT
          ( Var
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 50 } } ) ) ) )
        ( Assign
         ( Meta
          { meta =
           [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 52 } } )
         ( Call
          ( Var
           ( Meta
@@ -186,7 +186,7 @@ Program
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ] )
+             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 51 } } ) ] )
         ( Cast
          ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
          ( Var
@@ -194,13 +194,13 @@ Program
            { meta =
             [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 52 } } ) ) ) ) )
       ( Assign
        ( Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 54 } } )
        ( Call
         ( Var
          ( Meta
@@ -208,7 +208,7 @@ Program
            [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
            [ Con Tuple [] ], id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) )
+            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 53 } } ) )
         [ Var
          ( Meta
           { meta = [ AnyT ] :-> SumT
@@ -222,4 +222,4 @@ Program
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal } } ) ) ) ) ) ] ) ], extFuns = [] }
+            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 54 } } ) ) ) ) ) ] ) ], extFuns = [] }

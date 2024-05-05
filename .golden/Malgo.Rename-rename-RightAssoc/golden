@@ -40,7 +40,7 @@ Module
           { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 8, sourceColumn = Pos 13 } } )
         ( Id
          { name = "n", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal } ) ]
+          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal 1 } ) ]
        ( Seq
         ( Range
          { _start = SourcePos
@@ -53,7 +53,7 @@ Module
            { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 16, sourceColumn = Pos 38 } } )
          ( Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal } )
+           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal 2 } )
          ( OpApp
           ( Range
            { _start = SourcePos
@@ -339,7 +339,7 @@ Module
             { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 23, sourceColumn = Pos 34 } } )
           ( Id
            { name = "y", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal } )
+            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal 3 } )
           ( OpApp
            ( Range
             { _start = SourcePos
@@ -599,7 +599,7 @@ Module
              { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 32, sourceColumn = Pos 1 } } )
            ( Id
             { name = "y", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal } ) ) ] ) ) :| [] ) ) ],
+             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal 3 } ) ) ] ) ) :| [] ) ) ],
     [
      ( Range
       { _start = SourcePos
@@ -628,7 +628,7 @@ Module
            { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 36, sourceColumn = Pos 14 } } )
          ( Id
           { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal } )
+           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal 4 } )
          ( Apply
           ( Range
            { _start = SourcePos
@@ -716,7 +716,7 @@ Module
         { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 5, sourceColumn = Pos 15 } } )
       ( Id
        { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal } ) )
+        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal 0 } ) )
      ( TyArr
       ( Range
        { _start = SourcePos
@@ -742,7 +742,7 @@ Module
           { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 5, sourceColumn = Pos 25 } } )
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal } ) ] )
+          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal 0 } ) ] )
       ( TyApp
        ( Range
         { _start = SourcePos
@@ -763,7 +763,7 @@ Module
           { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } } )
         ( Id
          { name = "a", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal } ) ] ) ) ),
+          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" ), sort = Internal 0 } ) ] ) ) ),
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/RightAssoc.mlg", sourceLine = Pos 34, sourceColumn = Pos 1 }, _end = SourcePos

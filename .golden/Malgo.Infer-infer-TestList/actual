@@ -36,7 +36,7 @@ Module
            { sourceName = "./test/testcases/malgo/TestList.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } } } )
         ( Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal } ) ]
+          ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal 40 } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -50,7 +50,7 @@ Module
            { sourceName = "./test/testcases/malgo/TestList.mlg", sourceLine = Pos 5, sourceColumn = Pos 21 } } )
          ( Id
           { name = "xs", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal } )
+           ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal 0 } )
          ( Apply
           ( Typed
            { annotated = TyApp
@@ -372,7 +372,7 @@ Module
             { sourceName = "./test/testcases/malgo/TestList.mlg", sourceLine = Pos 6, sourceColumn = Pos 15 } } )
           ( Id
            { name = "nil", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal } )
+            ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal 1 } )
           ( Var
            ( Typed
             { annotated = TyApp
@@ -383,7 +383,7 @@ Module
              ( TyMeta
               ( Id
                { name = "runtime/malgo/Prelude.mlg.#a_19", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal } ) ), value = Range
+                ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal 31 } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestList.mlg", sourceLine = Pos 6, sourceColumn = Pos 13 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestList.mlg", sourceLine = Pos 6, sourceColumn = Pos 15 } } } )
@@ -515,7 +515,7 @@ Module
                      { sourceName = "./test/testcases/malgo/TestList.mlg", sourceLine = Pos 7, sourceColumn = Pos 35 } } } )
                   ( Id
                    { name = "xs", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal } ) ) ) :| [] ) ) ) :| [] ) ) ) ] ) ) :| [] ) ) ] ], _scSigs = [], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
+                    ( ArtifactPath "test/testcases/malgo/TestList.mlg" ), sort = Internal 0 } ) ) ) :| [] ) ) ) :| [] ) ) ) ] ) ) :| [] ) ) ] ], _scSigs = [], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
    [
     ( Range
      { _start = SourcePos

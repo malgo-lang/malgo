@@ -9,14 +9,14 @@ Program
     [ Meta
      { meta = StringT, id = Id
       { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ], [ StringT ] :-> SumT
+       ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 13 } } ], [ StringT ] :-> SumT
     [ Con Tuple [] ], RawCall "malgo_print_string"
     ( [ StringT ] :-> SumT [ Con Tuple [] ] )
     [ Var
      ( Meta
       { meta = StringT, id = Id
        { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) ] ),
+        ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 13 } } ) ] ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -27,7 +27,7 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 14 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Match
     ( Let
@@ -37,21 +37,21 @@ Program
         [ SumT [ Con Tuple [] ] ] :-> SumT
         [ Con Tuple [] ], id = Id
         { name = "fun", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } }, typ =
+         ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 23 } }, typ =
        [ SumT [ Con Tuple [] ] ] :-> SumT
        [ Con Tuple [] ], _object = Fun
        [ Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ]
+          ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 15 } } ]
        ( Assign
         ( Meta
          { meta =
           [ SumT [ Con Tuple [] ] ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 19 } } )
         ( Let
          [ LocalDef
           { _variable = Meta
@@ -59,21 +59,21 @@ Program
             [ SumT [ Con Tuple [] ] ] :-> SumT
             [ Con Tuple [] ], id = Id
             { name = "fun", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } }, typ =
+             ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 18 } }, typ =
            [ SumT [ Con Tuple [] ] ] :-> SumT
            [ Con Tuple [] ], _object = Fun
            [ Meta
             { meta = SumT
              [ Con Tuple [] ], id = Id
              { name = "a", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ]
+              ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 16 } } ]
            ( Let
             [ LocalDef
              { _variable = Meta
               { meta = SumT
                [ Con Tuple [] ], id = Id
                { name = "let", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } }, typ = SumT
+                ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 17 } }, typ = SumT
               [ Con Tuple [] ], _object = Pack
               ( SumT [ Con Tuple [] ] )
               ( Con Tuple [] ) [] } ]
@@ -83,7 +83,7 @@ Program
                { meta = SumT
                 [ Con Tuple [] ], id = Id
                 { name = "let", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) ) ) ) } ]
+                 ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 17 } } ) ) ) ) } ]
          ( Atom
           ( Var
            ( Meta
@@ -91,20 +91,20 @@ Program
              [ SumT [ Con Tuple [] ] ] :-> SumT
              [ Con Tuple [] ], id = Id
              { name = "fun", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) ) ) )
+              ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 18 } } ) ) ) )
         ( Assign
          ( Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 21 } } )
          ( Let
           [ LocalDef
            { _variable = Meta
             { meta = SumT
              [ Con Tuple [] ], id = Id
              { name = "let", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } }, typ = SumT
+              ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 20 } }, typ = SumT
             [ Con Tuple [] ], _object = Pack
             ( SumT [ Con Tuple [] ] )
             ( Con Tuple [] ) [] } ]
@@ -114,13 +114,13 @@ Program
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "let", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) ) ) )
+               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 20 } } ) ) ) )
          ( Assign
           ( Meta
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } )
+             ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 22 } } )
           ( Call
            ( Var
             ( Meta
@@ -128,13 +128,13 @@ Program
               [ SumT [ Con Tuple [] ] ] :-> SumT
               [ Con Tuple [] ], id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) )
+               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 19 } } ) )
            [ Var
             ( Meta
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) ] )
+               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 21 } } ) ] )
           ( Cast
            ( SumT [ Con Tuple [] ] )
            ( Var
@@ -142,7 +142,7 @@ Program
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) ) ) ) ) ) } ]
+               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 22 } } ) ) ) ) ) ) } ]
      ( Atom
       ( Var
        ( Meta
@@ -150,21 +150,21 @@ Program
          [ SumT [ Con Tuple [] ] ] :-> SumT
          [ Con Tuple [] ], id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 23 } } ) ) ) )
     [ Bind
      ( Meta
       { meta =
        [ SumT [ Con Tuple [] ] ] :-> SumT
        [ Con Tuple [] ], id = Id
        { name = "let_test/testcases/malgo/TestNestedLetFunc.mlg.#f_2", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 24 } } )
      ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 25 } } )
       ( Call
        ( Var
         ( Meta
@@ -180,5 +180,5 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal } } ) ) ) ) ] ) ], extFuns =
+           ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" ), sort = Temporal 25 } } ) ) ) ) ] ) ], extFuns =
   [ ( "malgo_print_string", [ StringT ] :-> SumT [ Con Tuple [] ] ) ] }

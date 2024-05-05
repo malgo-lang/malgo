@@ -8,12 +8,12 @@ Program
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 83 } } )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 82 } } )
      ( Call
       ( Var
        ( Meta
@@ -26,13 +26,13 @@ Program
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 82 } } ) ) ) )
     ( Atom
      ( Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 83 } } ) ) ) ),
    ( Meta
     { meta = AnyT, id = Id
      { name = "comp", moduleName = Artifact
@@ -40,22 +40,22 @@ Program
     ( Meta
      { meta = AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 99 } } )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 92 } } )
      ( Let
       [ LocalDef
        { _variable = Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 91 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "nothing", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 89 } } ]
         ( Match
          ( Cast
           ( SumT
@@ -67,7 +67,7 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "nothing", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 89 } } ) ) )
          [ Unpack
           ( Con ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [] ) []
           ( CallDirect
@@ -82,7 +82,7 @@ Program
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "p", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ]
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 90 } } ]
           ( CallDirect
            ( Meta
             { meta = [] :-> AnyT, id = Id
@@ -93,25 +93,25 @@ Program
         ( Meta
          { meta = [ AnyT ] :-> AnyT, id = Id
           { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 91 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 97 } } )
       ( Assign
        ( Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 94 } } )
        ( Let
         [ LocalDef
          { _variable = Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "let", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } }, typ = SumT
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 93 } }, typ = SumT
           [ Con Tuple [] ], _object = Pack
           ( SumT [ Con Tuple [] ] )
           ( Con Tuple [] ) [] } ]
@@ -121,24 +121,24 @@ Program
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "let", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 93 } } ) ) ) )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "cast", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 95 } } )
         ( Cast AnyT
          ( Var
           ( Meta
            { meta = SumT
             [ Con Tuple [] ], id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 94 } } ) ) )
         ( Assign
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 96 } } )
          ( Call
           ( Var
            ( Meta
@@ -149,41 +149,41 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "cast", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 95 } } ) ] )
          ( Cast AnyT
           ( Var
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 96 } } ) ) ) ) ) )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 98 } } )
        ( Call
         ( Var
          ( Meta
           { meta = [ AnyT ] :-> AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 92 } } ) )
         [ Var
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 97 } } ) ] )
        ( Cast AnyT
         ( Var
          ( Meta
           { meta = AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 98 } } ) ) ) ) ) )
     ( Atom
      ( Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) ], topFuns =
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 99 } } ) ) ) ) ], topFuns =
   [
    ( Meta
     { meta = [ AnyT ] :->
@@ -193,24 +193,24 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "eta", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ], [ AnyT ] :->
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 87 } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Assign
     ( Meta
      { meta = [ AnyT ] :->
       ( [ AnyT ] :-> AnyT ), id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 88 } } )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :->
        ( [ AnyT ] :-> AnyT ), id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 86 } } )
      ( Assign
       ( Meta
        { meta = AnyT, id = Id
         { name = "cast", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 84 } } )
       ( Cast AnyT
        ( Var
         ( Meta
@@ -221,7 +221,7 @@ Program
        ( Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 85 } } )
        ( Call
         ( Var
          ( Meta
@@ -233,33 +233,33 @@ Program
          ( Meta
           { meta = AnyT, id = Id
            { name = "cast", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 84 } } ) ] )
        ( Cast
         ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) )
         ( Var
          ( Meta
           { meta = [ AnyT ] :-> AnyT, id = Id
            { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) )
+            ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 85 } } ) ) ) ) )
      ( Atom
       ( Var
        ( Meta
         { meta = [ AnyT ] :->
          ( [ AnyT ] :-> AnyT ), id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 86 } } ) ) ) )
     ( Call
      ( Var
       ( Meta
        { meta = [ AnyT ] :->
         ( [ AnyT ] :-> AnyT ), id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 88 } } ) )
      [ Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "eta", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 87 } } ) ] ) ),
    ( Meta
     { meta = [ AnyT ] :-> AnyT, id = Id
      { name = "addOne", moduleName = Artifact
@@ -267,21 +267,21 @@ Program
     [ Meta
      { meta = AnyT, id = Id
       { name = "eta", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ], [ AnyT ] :-> AnyT, Assign
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 102 } } ], [ AnyT ] :-> AnyT, Assign
     ( Meta
      { meta = [ AnyT ] :-> AnyT, id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 103 } } )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 101 } } )
      ( Assign
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 100 } } )
       ( Call
        ( Var
         ( Meta
@@ -300,24 +300,24 @@ Program
         ( Meta
          { meta = [ AnyT ] :-> AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 100 } } ) ) ) )
      ( Atom
       ( Var
        ( Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 101 } } ) ) ) )
     ( Call
      ( Var
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 103 } } ) )
      [ Var
       ( Meta
        { meta = AnyT, id = Id
         { name = "eta", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] ) ),
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 102 } } ) ] ) ),
    ( Meta
     { meta =
      [ SumT [ Con Tuple [] ] ] :-> SumT
@@ -328,32 +328,32 @@ Program
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ],
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 104 } } ],
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Assign
     ( Meta
      { meta = SumT
       [ Con Tuple [] ], id = Id
       { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+       ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 114 } } )
     ( Assign
      ( Meta
       { meta = [ AnyT ] :-> SumT
        [ Con Tuple [] ], id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 112 } } )
      ( Let
       [ LocalDef
        { _variable = Meta
         { meta = [ AnyT ] :-> SumT
          [ Con Tuple [] ], id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } }, typ = [ AnyT ] :-> SumT
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 111 } }, typ = [ AnyT ] :-> SumT
         [ Con Tuple [] ], _object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "nothing", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ]
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 105 } } ]
         ( Match
          ( Cast
           ( SumT
@@ -364,19 +364,19 @@ Program
            ( Meta
             { meta = AnyT, id = Id
              { name = "nothing", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 105 } } ) ) )
          [ Unpack
           ( Con ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [] ) []
           ( Assign
            ( Meta
             { meta = AnyT, id = Id
              { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 107 } } )
            ( Assign
             ( Meta
              { meta = AnyT, id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 106 } } )
             ( Call
              ( Var
               ( Meta
@@ -389,13 +389,13 @@ Program
               ( Meta
                { meta = AnyT, id = Id
                 { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 106 } } ) ) ) )
            ( Assign
             ( Meta
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 108 } } )
             ( Call
              ( Var
               ( Meta
@@ -407,7 +407,7 @@ Program
               ( Meta
                { meta = AnyT, id = Id
                 { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] )
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 107 } } ) ] )
             ( Cast
              ( SumT [ Con Tuple [] ] )
              ( Var
@@ -415,19 +415,19 @@ Program
                { meta = SumT
                 [ Con Tuple [] ], id = Id
                 { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) ), Unpack
+                 ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 108 } } ) ) ) ) ), Unpack
           ( Con ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] )
           [ Meta
            { meta = AnyT, id = Id
             { name = "p", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ]
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 109 } } ]
           ( Let
            [ LocalDef
             { _variable = Meta
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "let", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } }, typ = SumT
+               ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 110 } }, typ = SumT
              [ Con Tuple [] ], _object = Pack
              ( SumT [ Con Tuple [] ] )
              ( Con Tuple [] ) [] } ]
@@ -437,27 +437,27 @@ Program
               { meta = SumT
                [ Con Tuple [] ], id = Id
                { name = "let", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) ] ) } ]
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 110 } } ) ) ) ) ] ) } ]
       ( Atom
        ( Var
         ( Meta
          { meta = [ AnyT ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 111 } } ) ) ) )
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 113 } } )
       ( Call
        ( Var
         ( Meta
          { meta = [ AnyT ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 112 } } ) )
        [ Var
         ( Meta
          { meta = AnyT, id = Id
@@ -470,22 +470,22 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 113 } } ) ) ) ) )
     ( Assign
      ( Meta
       { meta = AnyT, id = Id
        { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 121 } } )
      ( Assign
       ( Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 117 } } )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "cast", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 115 } } )
        ( Cast AnyT
         ( Var
          ( Meta
@@ -497,7 +497,7 @@ Program
         ( Meta
          { meta = [ AnyT ] :-> AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 116 } } )
         ( Call
          ( Var
           ( Meta
@@ -509,24 +509,24 @@ Program
           ( Meta
            { meta = AnyT, id = Id
             { name = "cast", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 115 } } ) ] )
         ( Cast
          ( [ AnyT ] :-> AnyT )
          ( Var
           ( Meta
            { meta = [ AnyT ] :-> AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 116 } } ) ) ) ) )
       ( Assign
        ( Meta
         { meta = AnyT, id = Id
          { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 119 } } )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 118 } } )
         ( Call
          ( Var
           ( Meta
@@ -543,35 +543,35 @@ Program
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 118 } } ) ) ) )
        ( Assign
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 120 } } )
         ( Call
          ( Var
           ( Meta
            { meta = [ AnyT ] :-> AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 117 } } ) )
          [ Var
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 119 } } ) ] )
         ( Cast AnyT
          ( Var
           ( Meta
            { meta = AnyT, id = Id
             { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) ) )
+             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 120 } } ) ) ) ) ) )
      ( Assign
       ( Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } )
+         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 122 } } )
       ( Call
        ( Var
         ( Meta
@@ -583,7 +583,7 @@ Program
         ( Meta
          { meta = AnyT, id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ] )
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 121 } } ) ] )
       ( Cast
        ( SumT [ Con Tuple [] ] )
        ( Var
@@ -591,4 +591,4 @@ Program
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal } } ) ) ) ) ) ) ], extFuns = [] }
+           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 122 } } ) ) ) ) ) ) ], extFuns = [] }
