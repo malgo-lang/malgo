@@ -50,7 +50,7 @@ jobs:
       - name: Run tests
         id: run-tests
         run: |
-          cabal test --test-show-details=direct --test-option='--skip=llvm'
+          cabal test --test-show-details=direct
         continue-on-error: true
       - name: Upload .golden
         uses: actions/upload-artifact@v4
