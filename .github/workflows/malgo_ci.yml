@@ -26,9 +26,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgc-dev
           sudo apt-get install -y llvm-15-dev clang-15
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Cache .cabal
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cabal/packages
