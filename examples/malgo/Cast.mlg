@@ -1,13 +1,9 @@
-module Cast = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import "../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../runtime/malgo/Prelude.mlg"
 
-  def main = {
-    let x = 1;
-    let x_ = malgo_unsafe_cast x;
-    let x__ = malgo_unsafe_cast x;
-    x__ |> toStringInt32 |> putStrLn
-  }
+def main = {
+  let x = 1;
+  let x_ = malgo_unsafe_cast x;
+  let x__ = malgo_unsafe_cast x;
+  x__ |> toStringInt32 |> putStrLn
 }
-
--- Expected: 1

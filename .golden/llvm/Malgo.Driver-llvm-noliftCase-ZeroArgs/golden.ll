@@ -1,7 +1,7 @@
-; ModuleID = './test/testcases/malgo/ZeroArgs.mlg'
-source_filename = "./test/testcases/malgo/ZeroArgs.mlg"
+; ModuleID = 'test/testcases/malgo/ZeroArgs.mlg'
+source_filename = "test/testcases/malgo/ZeroArgs.mlg"
 
-@ZeroArgs.one = global ptr undef
+@"test/testcases/malgo/ZeroArgs.mlg.one" = global ptr undef
 
 declare void @GC_init()
 
@@ -161,21 +161,21 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @ZeroArgs.id(ptr %0, ptr %"ZeroArgs.$x_36_0") {
-  ret ptr %"ZeroArgs.$x_36_0"
+define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.id"(ptr %0, ptr %"test/testcases/malgo/ZeroArgs.mlg.$x_36_0") {
+  ret ptr %"test/testcases/malgo/ZeroArgs.mlg.$x_36_0"
 }
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @ZeroArgs.main(ptr %0, ptr %"ZeroArgs.$eta_57_0") {
-  %2 = load ptr, ptr @ZeroArgs.one, align 8
+define internal ptr @"test/testcases/malgo/ZeroArgs.mlg.main"(ptr %0, ptr %"test/testcases/malgo/ZeroArgs.mlg.$eta_57_0") {
+  %2 = load ptr, ptr @"test/testcases/malgo/ZeroArgs.mlg.one", align 8
   %3 = getelementptr { i8, <4 x i8> }, ptr %2, i32 0, i32 0
   %4 = load i8, ptr %3, align 1
   switch i8 %4, label %switch_default_1 [
-    i8 0, label %"switch_branch_Builtin.Int32#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   ]
 
-"switch_branch_Builtin.Int32#_0":                 ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
   %5 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 1
   %6 = getelementptr { i32 }, ptr %5, i32 0, i32 0
   %7 = load i32, ptr %6, align 4
@@ -188,17 +188,17 @@ define internal ptr @ZeroArgs.main(ptr %0, ptr %"ZeroArgs.$eta_57_0") {
   %12 = getelementptr { i8, <8 x i8> }, ptr %9, i32 0, i32 0
   %13 = load i8, ptr %12, align 1
   switch i8 %13, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %"switch_branch_Builtin.Int32#_0"
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   %14 = getelementptr { i8, { ptr } }, ptr %9, i32 0, i32 1
   %15 = getelementptr { ptr }, ptr %14, i32 0, i32 0
   %16 = load ptr, ptr %15, align 8
   %17 = call ptr @malgo_print_string(ptr %16)
   ret ptr %17
 
-switch_default_0:                                 ; preds = %"switch_branch_Builtin.Int32#_0"
+switch_default_0:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   unreachable
 
 switch_default_1:                                 ; preds = %1
@@ -207,20 +207,20 @@ switch_default_1:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_ZeroArgs()
+  call void @"malgo_load_test/testcases/malgo/ZeroArgs.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @ZeroArgs.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/ZeroArgs.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @koriel_load_ZeroArgs() {
+define internal void @"malgo_load_test/testcases/malgo/ZeroArgs.mlg"() {
   %1 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %2 = getelementptr { i8, { i32 } }, ptr %1, i32 0, i32 0
   store i8 0, ptr %2, align 1
   %3 = getelementptr { i8, { i32 } }, ptr %1, i32 0, i32 1, i32 0
   store i32 1, ptr %3, align 4
-  store ptr %1, ptr @ZeroArgs.one, align 8
+  store ptr %1, ptr @"test/testcases/malgo/ZeroArgs.mlg.one", align 8
   ret void
 }

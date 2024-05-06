@@ -2,11 +2,10 @@ module Malgo.Desugar.Type (dsType, unfoldType) where
 
 import Effectful (Eff, (:>))
 import Effectful.State.Static.Local (State, gets)
-import Koriel.Core.Type
-import Koriel.Core.Type qualified as C
-import Koriel.Id
-import Koriel.Pretty
+import Malgo.Core.Type
+import Malgo.Core.Type qualified as C
 import Malgo.Desugar.DsState
+import Malgo.Id
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude

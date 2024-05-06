@@ -1,8 +1,8 @@
-; ModuleID = './test/tmp/malgo_test/nolift/FieldPrefix.ll'
-source_filename = "./test/testcases/malgo/FieldPrefix.mlg"
+; ModuleID = '.malgo-work/test/testcases/malgo/FieldPrefix.ll'
+source_filename = "test/testcases/malgo/FieldPrefix.mlg"
 
-@FieldPrefix.zero3D = local_unnamed_addr global ptr undef
-@FieldPrefix.zero2D = local_unnamed_addr global ptr undef
+@"test/testcases/malgo/FieldPrefix.mlg.zero3D" = local_unnamed_addr global ptr undef
+@"test/testcases/malgo/FieldPrefix.mlg.zero2D" = local_unnamed_addr global ptr undef
 @str2924 = unnamed_addr constant [2 x i8] c"x\00"
 @str2925 = unnamed_addr constant [2 x i8] c"y\00"
 @str2926 = unnamed_addr constant [3 x i8] c", \00"
@@ -18,10 +18,10 @@ declare ptr @malgo_hash_table_get(ptr, ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @FieldPrefix.print2D(ptr nocapture nofree readnone %0, ptr %"FieldPrefix.$record_67_0") {
-"switch_branch_Builtin.Int32#_0":
-  %1 = tail call ptr @malgo_hash_table_get(ptr %"FieldPrefix.$record_67_0", ptr noundef nonnull @str2924)
-  %2 = tail call ptr @malgo_hash_table_get(ptr %"FieldPrefix.$record_67_0", ptr noundef nonnull @str2925)
+define internal ptr @"test/testcases/malgo/FieldPrefix.mlg.print2D"(ptr nocapture nofree readnone %0, ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_67_0") {
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0":
+  %1 = tail call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_67_0", ptr noundef nonnull @str2924)
+  %2 = tail call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/FieldPrefix.mlg.$record_67_0", ptr noundef nonnull @str2925)
   %3 = getelementptr { i8, { i32 } }, ptr %1, i64 0, i32 1
   %4 = load i32, ptr %3, align 4
   %5 = tail call ptr @malgo_int32_t_to_string(i32 %4)
@@ -64,7 +64,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str2924, ptr noundef nonnull %2)
   tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str2925, ptr noundef nonnull %4)
   tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str2931, ptr noundef nonnull %6)
-  store ptr %8, ptr @FieldPrefix.zero3D, align 8
+  store ptr %8, ptr @"test/testcases/malgo/FieldPrefix.mlg.zero3D", align 8
   %9 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %9, align 1
   %10 = getelementptr { i8, { i32 } }, ptr %9, i64 0, i32 1, i32 0
@@ -76,14 +76,14 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %13 = tail call ptr @malgo_hash_table_new()
   tail call void @malgo_hash_table_insert(ptr %13, ptr noundef nonnull @str2924, ptr noundef nonnull %9)
   tail call void @malgo_hash_table_insert(ptr %13, ptr noundef nonnull @str2925, ptr noundef nonnull %11)
-  store ptr %13, ptr @FieldPrefix.zero2D, align 8
+  store ptr %13, ptr @"test/testcases/malgo/FieldPrefix.mlg.zero2D", align 8
   %14 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %14, align 1
   %15 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %15, align 8
   %print2D_func_0.i = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
-  store ptr @FieldPrefix.print2D, ptr %print2D_func_0.i, align 8
-  %16 = load ptr, ptr @FieldPrefix.zero2D, align 8
+  store ptr @"test/testcases/malgo/FieldPrefix.mlg.print2D", ptr %print2D_func_0.i, align 8
+  %16 = load ptr, ptr @"test/testcases/malgo/FieldPrefix.mlg.zero2D", align 8
   %17 = tail call ptr @malgo_hash_table_get(ptr %16, ptr noundef nonnull @str2924)
   %18 = tail call ptr @malgo_hash_table_get(ptr %16, ptr noundef nonnull @str2925)
   %19 = getelementptr { i8, { i32 } }, ptr %17, i64 0, i32 1

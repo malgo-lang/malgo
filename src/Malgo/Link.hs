@@ -1,47 +1,30 @@
 module Malgo.Link (link) where
 
-import Data.ByteString qualified as BS
-import Data.HashSet qualified as HashSet
+import Data.Set qualified as Set
 import Data.Store (Store)
-import Data.Store qualified as Store
 import Effectful (Eff, IOE, (:>))
-import Effectful.Reader.Static (Reader, ask)
-import Koriel.Core.Syntax
-import Koriel.Id
-import Koriel.Pretty (errorDoc, pretty, squotes, vsep, (<+>))
+import Malgo.Core.Syntax
 import Malgo.Interface
+import Malgo.Module
 import Malgo.Prelude
-import System.Directory (doesFileExist)
-import System.FilePath ((</>))
+import Path (toFilePath)
+import System.FilePath (takeBaseName)
+import Witherable (hashNubOn)
 
 -- | Linking a program with its dependencies.
-link :: (Reader ModulePathList :> es, IOE :> es, Store a) => Interface -> Program a -> Eff es (Program a)
+link :: (IOE :> es, Store a, Workspace :> es) => Interface -> Program a -> Eff es (Program a)
 link (interface :: Interface) mainCoreIR = do
-  -- FIXME: Sort dependencies by topological order
-  depCoreIRs <- traverse loadCore (HashSet.toList interface.dependencies)
+  -- Ignore duplicates in dependencies.
+  -- This is necessary because the same module can be imported multiple times and the module name is not unique (ModuleName or Artifact).
+  let deps = hashNubOn viewBaseName (Set.toList interface.dependencies)
+  depCoreIRs <- traverse loadCore deps
   pure $ mconcat (depCoreIRs <> [mainCoreIR])
-
-loadCore :: (Reader ModulePathList :> es, IOE :> es, Store b) => ModuleName -> Eff es b
-loadCore (ModuleName modName) = do
-  ModulePathList modPaths <- ask
-  message <- findAndReadFile modPaths (convertString modName <> ".kor.bin")
-  case message of
-    Right x -> pure x
-    Left err -> do
-      hPrint stderr err
-      errorDoc
-        $ vsep
-          [ "Cannot find module:"
-              <+> squotes (pretty modName),
-            "Module paths:"
-              <+> pretty modPaths
-          ]
   where
-    findAndReadFile [] modFile = pure $ Left (pretty modFile <+> "not found")
-    findAndReadFile (path : paths) modFile = do
-      isExistModFile <- liftIO $ doesFileExist (path </> modFile)
-      if isExistModFile
-        then do
-          pgm <- liftIO $ Store.decodeEx <$> BS.readFile (path </> modFile)
-          pure $ Right pgm
-        else findAndReadFile paths modFile
+    viewBaseName (ModuleName x) = x
+    viewBaseName (Artifact path) = convertString $ takeBaseName $ toFilePath path.relPath
+
+loadCore :: (IOE :> es, Store b, Workspace :> es) => ModuleName -> Eff es b
+loadCore modName = do
+  modulePath <- getModulePath modName
+  ViaStore x <- load modulePath ".mo"
+  pure x

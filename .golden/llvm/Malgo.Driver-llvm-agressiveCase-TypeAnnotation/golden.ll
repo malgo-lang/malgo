@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TypeAnnotation.mlg'
-source_filename = "./test/testcases/malgo/TypeAnnotation.mlg"
+; ModuleID = 'test/testcases/malgo/TypeAnnotation.mlg'
+source_filename = "test/testcases/malgo/TypeAnnotation.mlg"
 
 @str3428 = unnamed_addr constant [5 x i8] c"hoge\00"
 
@@ -163,7 +163,7 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @TypeAnnotation.main(ptr %0, ptr %"TypeAnnotation.$$__12_0") {
+define internal ptr @"test/testcases/malgo/TypeAnnotation.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TypeAnnotation.mlg.$$__12_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -172,10 +172,10 @@ define internal ptr @TypeAnnotation.main(ptr %0, ptr %"TypeAnnotation.$$__12_0")
   %5 = getelementptr { i8, <8 x i8> }, ptr %2, i32 0, i32 0
   %6 = load i8, ptr %5, align 1
   switch i8 %6, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
   %7 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1
   %8 = getelementptr { ptr }, ptr %7, i32 0, i32 0
   %9 = load ptr, ptr %8, align 8
@@ -188,14 +188,14 @@ switch_default_0:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_TypeAnnotation()
+  call void @"malgo_load_test/testcases/malgo/TypeAnnotation.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @TypeAnnotation.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/TypeAnnotation.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @koriel_load_TypeAnnotation() {
+define internal void @"malgo_load_test/testcases/malgo/TypeAnnotation.mlg"() {
   ret void
 }

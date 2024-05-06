@@ -1,12 +1,16 @@
+{-# LANGUAGE NoMonomorphismRestriction #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Parser (parseMalgo) where
 
 import Control.Monad.Combinators.Expr
+import Control.Monad.Trans (lift)
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Data.Void
-import Koriel.Id (ModuleName (ModuleName))
+import Effectful
+import Effectful.FileSystem (runFileSystem)
+import Malgo.Module (ModuleName (..), Workspace, parseArtifactPath, pwdPath)
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
@@ -14,33 +18,52 @@ import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
-type Parser = Parsec Void TL.Text
+type Parser es = ParsecT Void TL.Text (Eff es)
 
--- | パーサー
---
--- ファイル1つにつきモジュール1つ
-parseMalgo :: String -> TL.Text -> Either (ParseErrorBundle TL.Text Void) (Module (Malgo 'Parse))
-parseMalgo = parse do
-  sc
-  mod <- pModule
-  eof
-  pure mod
+-- | Parse a module from a file.
+parseMalgo ::
+  (IOE :> es, Workspace :> es) =>
+  String ->
+  TL.Text ->
+  Eff
+    es
+    (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
+parseMalgo srcPath text = runFileSystem $ runParserT parser srcPath text
+  where
+    parser = do
+      sc
+      mod <- pModule
+      eof
+      pure mod
 
 -- entry point
-pModule :: Parser (Module (Malgo 'Parse))
+pModule :: (Workspace :> es, IOE :> es) => Parser es (Module (Malgo 'Parse))
 pModule = do
-  void $ pKeyword "module"
-  x <- pModuleName
-  void $ pOperator "="
-  ds <- between (symbol "{") (symbol "}") $ many pDecl
-  pure $ Module {moduleName = ModuleName x, moduleDefinition = ParsedDefinitions ds}
+  sourcePath <- (.sourceName) <$> getSourcePos
+  pwd <- lift pwdPath
+  sourcePath' <- lift $ parseArtifactPath pwd sourcePath
+  ds <- many pDecl
+  pure
+    Module
+      { moduleName = Artifact sourcePath',
+        moduleDefinition = ParsedDefinitions ds
+      }
 
 -- module name
-pModuleName :: Parser Text
-pModuleName = lexeme $ convertString <$> some identLetter
+pModuleName :: (Workspace :> es, IOE :> es) => Parser es ModuleName
+pModuleName = label "module path" $ asIdent <|> asPath
+  where
+    asIdent = ModuleName <$> lexeme (convertString <$> some identLetter)
+    asPath = do
+      path <- lexeme pString
+      sourcePath <- (.sourceName) <$> getSourcePos
+      pwd <- lift pwdPath
+      sourcePath' <- lift $ parseArtifactPath pwd sourcePath
+      path' <- lift $ parseArtifactPath sourcePath' path
+      pure $ Artifact path'
 
 -- toplevel declaration
-pDecl :: Parser (Decl (Malgo 'Parse))
+pDecl :: (Workspace :> es, IOE :> es) => Parser es (Decl (Malgo 'Parse))
 pDecl =
   pDataDef
     <|> pTypeSynonym
@@ -50,7 +73,7 @@ pDecl =
     <|> try pScSig -- try before 'pScDef'
     <|> pScDef
 
-pDataDef :: Parser (Decl (Malgo 'Parse))
+pDataDef :: Parser es (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" do
   void $ pKeyword "data"
   start <- getSourcePos
@@ -72,7 +95,7 @@ pDataDef = label "toplevel type definition" do
       end <- getSourcePos
       pure (Range start end, x, params)
 
-pTypeSynonym :: Parser (Decl (Malgo 'Parse))
+pTypeSynonym :: Parser es (Decl (Malgo 'Parse))
 pTypeSynonym = label "toplevel type synonym" do
   void $ pKeyword "type"
   start <- getSourcePos
@@ -83,7 +106,7 @@ pTypeSynonym = label "toplevel type synonym" do
   end <- getSourcePos
   pure $ TypeSynonym (Range start end) d xs t
 
-pInfix :: Parser (Decl (Malgo 'Parse))
+pInfix :: Parser es (Decl (Malgo 'Parse))
 pInfix = label "infix declaration" do
   start <- getSourcePos
   a <-
@@ -96,7 +119,7 @@ pInfix = label "infix declaration" do
   end <- getSourcePos
   pure $ Infix (Range start end) a i x
 
-pForeign :: Parser (Decl (Malgo 'Parse))
+pForeign :: Parser es (Decl (Malgo 'Parse))
 pForeign = label "foreign import" do
   start <- getSourcePos
   void $ pKeyword "foreign"
@@ -107,7 +130,7 @@ pForeign = label "foreign import" do
   end <- getSourcePos
   pure $ Foreign (Range start end) x t
 
-pImport :: Parser (Decl (Malgo 'Parse))
+pImport :: (Workspace :> es, IOE :> es) => Parser es (Decl (Malgo 'Parse))
 pImport = label "import" do
   start <- getSourcePos
   void $ pKeyword "module"
@@ -115,18 +138,17 @@ pImport = label "import" do
     try (between (symbol "{") (symbol "}") importAll)
       <|> between (symbol "{") (symbol "}") importSelected
       <|> As
-      . ModuleName
       <$> pModuleName
   void $ pOperator "="
   void $ pKeyword "import"
-  modName <- ModuleName <$> pModuleName
+  modName <- pModuleName
   end <- getSourcePos
   pure $ Import (Range start end) modName importList
   where
     importAll = symbol ".." >> pure All
     importSelected = Selected <$> (lowerIdent <|> upperIdent <|> between (symbol "(") (symbol ")") operator) `sepBy` symbol ","
 
-pScSig :: Parser (Decl (Malgo 'Parse))
+pScSig :: Parser es (Decl (Malgo 'Parse))
 pScSig =
   label "toplevel function signature" do
     start <- getSourcePos
@@ -137,7 +159,7 @@ pScSig =
     end <- getSourcePos
     pure $ ScSig (Range start end) name typ
 
-pScDef :: Parser (Decl (Malgo 'Parse))
+pScDef :: (Workspace :> es, IOE :> es) => Parser es (Decl (Malgo 'Parse))
 pScDef =
   label "toplevel function definition" do
     start <- getSourcePos
@@ -150,7 +172,7 @@ pScDef =
 
 -- Expressions
 
-pExpr :: Parser (Expr (Malgo 'Parse))
+pExpr :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pExpr = do
   start <- getSourcePos
   expr <- pOpApp
@@ -164,7 +186,7 @@ pExpr = do
       end <- getSourcePos
       pure $ Ann (Range start end) expr ty
 
-pBoxed :: Parser (Literal Boxed)
+pBoxed :: Parser es (Literal Boxed)
 pBoxed =
   label "boxed literal"
     $ lexeme
@@ -174,10 +196,10 @@ pBoxed =
         try (Int64 <$> (L.decimal <* string' "L")),
         Int32 <$> L.decimal,
         Char <$> between (char '\'') (char '\'') L.charLiteral,
-        String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"'))
+        String . convertString <$> pString
       ]
 
-pUnboxed :: Parser (Literal Unboxed)
+pUnboxed :: Parser es (Literal Unboxed)
 pUnboxed =
   label
     "unboxed literal"
@@ -188,32 +210,35 @@ pUnboxed =
         try (Int32 <$> (L.decimal <* char '#')),
         Int64 <$> (L.decimal <* string' "L#"),
         Char <$> (between (char '\'') (char '\'') L.charLiteral <* char '#'),
-        String . convertString <$> (char '"' *> manyTill L.charLiteral (char '"') <* char '#')
+        String . convertString <$> (pString <* char '#')
       ]
 
-pVariable :: Parser (Expr (Malgo 'Parse))
+pString :: (Token s ~ Char, MonadParsec e s m) => m [Char]
+pString = label "string literal" do
+  void $ char '"'
+  manyTill L.charLiteral (char '"')
+
+pVariable :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pVariable =
   -- try full path identifier like `Foo.bar`
   -- before simple identifier like `bar`
   try pExplicitVariable <|> pImplicitVariable
   where
-    pExplicitVariable :: Parser (Expr (Malgo 'Parse))
     pExplicitVariable = label "explicit variable" $ do
       start <- getSourcePos
-      qualifier <- Explicit . ModuleName <$> pModuleName
+      qualifier <- Explicit <$> pModuleName
       _ <- char '.'
       name <- lowerIdent <|> upperIdent
       end <- getSourcePos
       pure $ Var (Qualified qualifier (Range start end)) name
 
-    pImplicitVariable :: Parser (Expr (Malgo 'Parse))
     pImplicitVariable = label "implicit variable" $ do
       start <- getSourcePos
       name <- lowerIdent <|> upperIdent
       end <- getSourcePos
       pure $ Var (Qualified Implicit (Range start end)) name
 
-pFun :: Parser (Expr (Malgo 'Parse))
+pFun :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pFun =
   label "function literal" $ between (symbol "{") (symbol "}") do
     start <- getSourcePos
@@ -223,12 +248,12 @@ pFun =
 
 -- pat1 -> exp1 , pat2 -> exp 2 , ...
 -- last `,` is optional
-pClauses :: Parser [Clause (Malgo 'Parse)]
+pClauses :: (Workspace :> es, IOE :> es) => Parser es [Clause (Malgo 'Parse)]
 pClauses = do
   pClause `sepEndBy1` pOperator ","
 
 -- a clause is 'pat -> exp' or 'exp'
-pClause :: Parser (Clause (Malgo 'Parse))
+pClause :: (Workspace :> es, IOE :> es) => Parser es (Clause (Malgo 'Parse))
 pClause = do
   start <- getSourcePos
   pat <- try (some pSinglePat <* pOperator "->") <|> pure []
@@ -240,13 +265,13 @@ pClause = do
   end <- getSourcePos
   pure $ Clause (Range start end) pat stmts
 
-pStmts :: Parser (NonEmpty (Stmt (Malgo 'Parse)))
+pStmts :: (Workspace :> es, IOE :> es) => Parser es (NonEmpty (Stmt (Malgo 'Parse)))
 pStmts = NonEmpty.fromList <$> pStmt `sepBy1` pOperator ";"
 
-pStmt :: Parser (Stmt (Malgo 'Parse))
+pStmt :: (Workspace :> es, IOE :> es) => Parser es (Stmt (Malgo 'Parse))
 pStmt = try pLet <|> pWith <|> pNoBind
 
-pLet :: Parser (Stmt (Malgo 'Parse))
+pLet :: (Workspace :> es, IOE :> es) => Parser es (Stmt (Malgo 'Parse))
 pLet = do
   start <- getSourcePos
   void $ pKeyword "let"
@@ -256,7 +281,7 @@ pLet = do
   end <- getSourcePos
   pure $ Let (Range start end) v exp
 
-pWith :: Parser (Stmt (Malgo 'Parse))
+pWith :: (Workspace :> es, IOE :> es) => Parser es (Stmt (Malgo 'Parse))
 pWith = label "with" do
   start <- getSourcePos
   void $ pKeyword "with"
@@ -273,14 +298,14 @@ pWith = label "with" do
         pure $ With (Range start end) Nothing e
     ]
 
-pNoBind :: Parser (Stmt (Malgo 'Parse))
+pNoBind :: (Workspace :> es, IOE :> es) => Parser es (Stmt (Malgo 'Parse))
 pNoBind = do
   start <- getSourcePos
   e <- pExpr
   end <- getSourcePos
   pure $ NoBind (Range start end) e
 
-pRecordP :: Parser (Pat (Malgo 'Parse))
+pRecordP :: Parser es (Pat (Malgo 'Parse))
 pRecordP = do
   start <- getSourcePos
   kvs <- between (symbol "{") (symbol "}") do
@@ -294,7 +319,7 @@ pRecordP = do
       value <- pPat
       pure (label, value)
 
-pSinglePat :: Parser (Pat (Malgo 'Parse))
+pSinglePat :: Parser es (Pat (Malgo 'Parse))
 pSinglePat =
   pVarP
     <|> pConP
@@ -346,7 +371,7 @@ pSinglePat =
       end <- getSourcePos
       pure $ ListP (Range start end) ps
 
-pPat :: Parser (Pat (Malgo 'Parse))
+pPat :: Parser es (Pat (Malgo 'Parse))
 pPat =
   label "pattern" $ try pConP <|> pSinglePat
   where
@@ -357,7 +382,7 @@ pPat =
       end <- getSourcePos
       pure $ ConP (Range start end) name ps
 
-pTuple :: Parser (Expr (Malgo 'Parse))
+pTuple :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pTuple = label "tuple" do
   start <- getSourcePos
   xs <- between (symbol "(") (symbol ")") do
@@ -368,7 +393,7 @@ pTuple = label "tuple" do
   end <- getSourcePos
   pure $ Tuple (Range start end) xs
 
-pUnit :: Parser (Expr (Malgo 'Parse))
+pUnit :: Parser es (Expr (Malgo 'Parse))
 pUnit = do
   start <- getSourcePos
   _ <- symbol "("
@@ -376,7 +401,7 @@ pUnit = do
   end <- getSourcePos
   pure $ Tuple (Range start end) []
 
-pRecord :: Parser (Expr (Malgo 'Parse))
+pRecord :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pRecord = do
   start <- getSourcePos
   kvs <- between (symbol "{") (symbol "}") do
@@ -390,7 +415,7 @@ pRecord = do
       value <- pExpr
       pure (label, value)
 
-pList :: Parser (Expr (Malgo 'Parse))
+pList :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pList = label "list" do
   start <- getSourcePos
   xs <- between (symbol "[") (symbol "]") do
@@ -398,14 +423,14 @@ pList = label "list" do
   end <- getSourcePos
   pure $ List (Range start end) xs
 
-pSeq :: Parser (Expr (Malgo 'Parse))
+pSeq :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pSeq = do
   start <- getSourcePos
   stmts <- between (symbol "(") (symbol ")") pStmts
   end <- getSourcePos
   pure $ Seq (Range start end) stmts
 
-pSingleExpr :: Parser (Expr (Malgo 'Parse))
+pSingleExpr :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pSingleExpr =
   try pUnboxedExpr
     <|> try pBoxedExpr
@@ -435,7 +460,7 @@ pSingleExpr =
       end <- getSourcePos
       pure $ Parens (Range start end) e
 
-pApply :: Parser (Expr (Malgo 'Parse))
+pApply :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pApply = do
   start <- getSourcePos
   f <- pSingleExpr
@@ -443,10 +468,10 @@ pApply = do
   end <- getSourcePos
   pure $ foldl (Apply (Range start end)) f xs
 
-pTerm :: Parser (Expr (Malgo 'Parse))
+pTerm :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pTerm = try pApply <|> pSingleExpr
 
-pOpApp :: Parser (Expr (Malgo 'Parse))
+pOpApp :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
 pOpApp = makeExprParser pTerm opTable
   where
     opTable =
@@ -460,24 +485,24 @@ pOpApp = makeExprParser pTerm opTable
 
 -- Types
 
-pType :: Parser (Type (Malgo 'Parse))
+pType :: Parser es (Type (Malgo 'Parse))
 pType = try pTyArr <|> pTyTerm
 
-pTyVar :: Parser (Type (Malgo 'Parse))
+pTyVar :: Parser es (Type (Malgo 'Parse))
 pTyVar = label "type variable" do
   start <- getSourcePos
   name <- lowerIdent
   end <- getSourcePos
   pure $ TyVar (Range start end) name
 
-pTyCon :: Parser (Type (Malgo 'Parse))
+pTyCon :: Parser es (Type (Malgo 'Parse))
 pTyCon = label "type constructor" do
   start <- getSourcePos
   name <- upperIdent
   end <- getSourcePos
   pure $ TyCon (Range start end) name
 
-pTyTuple :: Parser (Type (Malgo 'Parse))
+pTyTuple :: Parser es (Type (Malgo 'Parse))
 pTyTuple = do
   start <- getSourcePos
   xs <- between (symbol "(") (symbol ")") do
@@ -488,7 +513,7 @@ pTyTuple = do
   end <- getSourcePos
   pure $ TyTuple (Range start end) xs
 
-pTyUnit :: Parser (Type (Malgo 'Parse))
+pTyUnit :: Parser es (Type (Malgo 'Parse))
 pTyUnit = do
   start <- getSourcePos
   _ <- symbol "("
@@ -496,7 +521,7 @@ pTyUnit = do
   end <- getSourcePos
   pure $ TyTuple (Range start end) []
 
-pTyRecord :: Parser (Type (Malgo 'Parse))
+pTyRecord :: Parser es (Type (Malgo 'Parse))
 pTyRecord = do
   start <- getSourcePos
   kvs <- between (symbol "{") (symbol "}") do
@@ -510,7 +535,7 @@ pTyRecord = do
       value <- pType
       pure (label, value)
 
-pTyBlock :: Parser (Type (Malgo 'Parse))
+pTyBlock :: Parser es (Type (Malgo 'Parse))
 pTyBlock = do
   start <- getSourcePos
   _ <- symbol "{"
@@ -519,7 +544,7 @@ pTyBlock = do
   end <- getSourcePos
   pure $ TyBlock (Range start end) t
 
-pSingleType :: Parser (Type (Malgo 'Parse))
+pSingleType :: Parser es (Type (Malgo 'Parse))
 pSingleType =
   pTyVar
     <|> pTyCon
@@ -529,7 +554,7 @@ pSingleType =
     <|> pTyBlock
     <|> between (symbol "(") (symbol ")") pType
 
-pTyApp :: Parser (Type (Malgo 'Parse))
+pTyApp :: Parser es (Type (Malgo 'Parse))
 pTyApp = do
   start <- getSourcePos
   f <- pSingleType
@@ -537,10 +562,10 @@ pTyApp = do
   end <- getSourcePos
   pure $ TyApp (Range start end) f xs
 
-pTyTerm :: Parser (Type (Malgo 'Parse))
+pTyTerm :: Parser es (Type (Malgo 'Parse))
 pTyTerm = try pTyApp <|> pSingleType
 
-pTyArr :: Parser (Type (Malgo 'Parse))
+pTyArr :: Parser es (Type (Malgo 'Parse))
 pTyArr = makeExprParser pTyTerm opTable
   where
     opTable =
@@ -554,27 +579,27 @@ pTyArr = makeExprParser pTyTerm opTable
 
 -- combinators
 
-sc :: Parser ()
+sc :: Parser es ()
 sc = L.space space1 (L.skipLineComment "--") (L.skipBlockCommentNested "{-" "-}")
 {-# INLINE sc #-}
 
-lexeme :: Parser a -> Parser a
+lexeme :: Parser es a -> Parser es a
 lexeme = L.lexeme sc
 
-symbol :: TL.Text -> Parser ()
+symbol :: TL.Text -> Parser es ()
 symbol = void . L.symbol sc
 {-# INLINE symbol #-}
 
-identLetter :: Parser Char
+identLetter :: Parser es Char
 identLetter = alphaNumChar <|> oneOf ("_#" :: String)
 
-opLetter :: Parser Char
+opLetter :: Parser es Char
 opLetter = oneOf ("+-*/\\%=><:;|&!#." :: String)
 
-pKeyword :: TL.Text -> Parser ()
+pKeyword :: TL.Text -> Parser es ()
 pKeyword keyword = void $ lexeme (string keyword <* notFollowedBy identLetter)
 
-pOperator :: TL.Text -> Parser ()
+pOperator :: TL.Text -> Parser es ()
 pOperator op = void $ lexeme (string op <* notFollowedBy opLetter)
 
 reservedKeywords :: [TL.Text]
@@ -596,30 +621,30 @@ reservedKeywords =
     "with"
   ]
 
-reserved :: Parser ()
-reserved = choice $ map (try . pKeyword) reservedKeywords -- #| and |# are for block comments in Koriel
+reserved :: Parser es ()
+reserved = choice $ map (try . pKeyword) reservedKeywords -- #| and |# are for block comments in Core
 
 reservedOperators :: [TL.Text]
 reservedOperators = ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"]
 
-reservedOp :: Parser ()
+reservedOp :: Parser es ()
 reservedOp = choice $ map (try . pOperator) reservedOperators
 
-lowerIdent :: Parser Text
+lowerIdent :: Parser es Text
 lowerIdent =
   label "lower identifier"
     $ lexeme do
       notFollowedBy reserved
       convertString <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
 
-upperIdent :: Parser Text
+upperIdent :: Parser es Text
 upperIdent =
   label "upper identifier"
     $ lexeme do
       notFollowedBy reserved
       convertString <$> ((:) <$> upperChar <*> many identLetter)
 
-operator :: Parser Text
+operator :: Parser es Text
 operator =
   label "operator"
     $ lexeme do
@@ -627,5 +652,5 @@ operator =
       convertString <$> some opLetter
 
 -- { _ , _ , ... , _ } or { _ , _ , ... , _ , }
-asRecordFields :: Parser a -> Parser [a]
+asRecordFields :: Parser es a -> Parser es [a]
 asRecordFields entry = entry `sepEndBy1` pOperator ","

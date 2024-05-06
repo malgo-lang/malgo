@@ -1,10 +1,6 @@
-module Double = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
-  def main = {
-    putStr (toStringDouble 3.14)
-  }
+def main = {
+  putStr (toStringDouble 3.14)
 }
-
--- Expected: 3.140000

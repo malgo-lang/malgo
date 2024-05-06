@@ -1,13 +1,9 @@
-module DeferLaw = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
-  def f : a -> a
-  def f = { x -> { x } () }
+def f : a -> a
+def f = { x -> { x } () }
 
-  def main = {
-    putStrLn (f "Hello")
-  }
+def main = {
+  putStrLn (f "Hello")
 }
-
--- Expected: Hello

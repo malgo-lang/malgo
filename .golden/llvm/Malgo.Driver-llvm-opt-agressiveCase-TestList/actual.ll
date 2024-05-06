@@ -1,5 +1,5 @@
-; ModuleID = './test/tmp/malgo_test/aggressive/TestList.ll'
-source_filename = "./test/testcases/malgo/TestList.mlg"
+; ModuleID = '.malgo-work/test/testcases/malgo/TestList.ll'
+source_filename = "test/testcases/malgo/TestList.mlg"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -53,20 +53,20 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store i8 0, ptr %19, align 1
   %20 = load i8, ptr %16, align 1
   %switch.i = icmp eq i8 %20, 0
-  br i1 %switch.i, label %switch_branch_Prelude.Nil_0.i, label %switch_branch_Prelude.Cons_0.i
+  br i1 %switch.i, label %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0.i", label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0.i"
 
-switch_branch_Prelude.Nil_0.i:                    ; preds = %1
+"switch_branch_runtime/malgo/Prelude.mlg.Nil_0.i": ; preds = %1
   %21 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %21, align 1
   %22 = tail call ptr @malgo_exit_failure(ptr noundef nonnull %21)
-  br label %TestList.main.exit
+  br label %"test/testcases/malgo/TestList.mlg.main.exit"
 
-switch_branch_Prelude.Cons_0.i:                   ; preds = %1
+"switch_branch_runtime/malgo/Prelude.mlg.Cons_0.i": ; preds = %1
   %23 = load ptr, ptr %17, align 8
-  br label %TestList.main.exit
+  br label %"test/testcases/malgo/TestList.mlg.main.exit"
 
-TestList.main.exit:                               ; preds = %switch_branch_Prelude.Nil_0.i, %switch_branch_Prelude.Cons_0.i
-  %.sink.i = phi ptr [ %23, %switch_branch_Prelude.Cons_0.i ], [ %22, %switch_branch_Prelude.Nil_0.i ]
+"test/testcases/malgo/TestList.mlg.main.exit":    ; preds = %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0.i", %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0.i"
+  %.sink.i = phi ptr [ %23, %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0.i" ], [ %22, %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0.i" ]
   %24 = getelementptr { i8, { i32 } }, ptr %.sink.i, i64 0, i32 1
   %25 = load i32, ptr %24, align 4
   %26 = tail call ptr @malgo_int32_t_to_string(i32 %25)

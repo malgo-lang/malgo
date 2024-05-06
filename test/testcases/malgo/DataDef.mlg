@@ -1,10 +1,7 @@
-module DataDef = {
-  data Int = Int# Int64#
-  data List a = Nil | Cons a (List a)
+data Int = Int# Int64#
+data List a = Nil | Cons a (List a)
 
-  foreign import malgo_int64_t_to_string : Int64# -> String#
-  foreign import malgo_print_string : String# -> ()
+foreign import malgo_int64_t_to_string : Int64# -> String#
+foreign import malgo_print_string : String# -> ()
 
-  def main = { {(Int# x) -> malgo_print_string (malgo_int64_t_to_string x) } (Int# 1L#) }
-}
--- Expected: 1
+def main = { {(Int# x) -> malgo_print_string (malgo_int64_t_to_string x) } (Int# 1L#) }

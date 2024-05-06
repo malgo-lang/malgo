@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/Pattern.mlg'
-source_filename = "./test/testcases/malgo/Pattern.mlg"
+; ModuleID = 'test/testcases/malgo/Pattern.mlg'
+source_filename = "test/testcases/malgo/Pattern.mlg"
 
 @str2811 = unnamed_addr constant [3 x i8] c"OK\00"
 
@@ -163,7 +163,7 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @Pattern.main(ptr %0, ptr %"Pattern.$$__16_0") {
+define internal ptr @"test/testcases/malgo/Pattern.mlg.main"(ptr %0, ptr %"test/testcases/malgo/Pattern.mlg.$$__16_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -172,10 +172,10 @@ define internal ptr @Pattern.main(ptr %0, ptr %"Pattern.$$__16_0") {
   %5 = getelementptr { i8, <8 x i8> }, ptr %2, i32 0, i32 0
   %6 = load i8, ptr %5, align 1
   switch i8 %6, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
   %7 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1
   %8 = getelementptr { ptr }, ptr %7, i32 0, i32 0
   %9 = load ptr, ptr %8, align 8
@@ -193,22 +193,22 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @Pattern.isNil(ptr %0, ptr %"Pattern.$nil_20_0") {
-  %2 = getelementptr { i8, <16 x i8> }, ptr %"Pattern.$nil_20_0", i32 0, i32 0
+define internal ptr @"test/testcases/malgo/Pattern.mlg.isNil"(ptr %0, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0") {
+  %2 = getelementptr { i8, <16 x i8> }, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_0 [
-    i8 0, label %switch_branch_Prelude.Nil_0
-    i8 1, label %switch_branch_Prelude.Cons_0
+    i8 0, label %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0"
+    i8 1, label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
   ]
 
-switch_branch_Prelude.Nil_0:                      ; preds = %1
+"switch_branch_runtime/malgo/Prelude.mlg.Nil_0":  ; preds = %1
   %4 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %5 = getelementptr { i8, {} }, ptr %4, i32 0, i32 0
   store i8 1, ptr %5, align 1
   ret ptr %4
 
-switch_branch_Prelude.Cons_0:                     ; preds = %1
-  %6 = getelementptr { i8, { ptr, ptr } }, ptr %"Pattern.$nil_20_0", i32 0, i32 1
+"switch_branch_runtime/malgo/Prelude.mlg.Cons_0": ; preds = %1
+  %6 = getelementptr { i8, { ptr, ptr } }, ptr %"test/testcases/malgo/Pattern.mlg.$nil_20_0", i32 0, i32 1
   %7 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 0
   %8 = load ptr, ptr %7, align 8
   %9 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 1
@@ -224,14 +224,14 @@ switch_default_0:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_Pattern()
+  call void @"malgo_load_test/testcases/malgo/Pattern.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @Pattern.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/Pattern.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @koriel_load_Pattern() {
+define internal void @"malgo_load_test/testcases/malgo/Pattern.mlg"() {
   ret void
 }

@@ -1,17 +1,13 @@
-module Seq = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
-  def executeWhenLoaded = (
-    let x = 1;
-    let y = 2;
-    printString (toStringInt32 (addInt32 x y));
-    addInt32 x y
-  )
+def executeWhenLoaded = (
+  let x = 1;
+  let y = 2;
+  printString (toStringInt32 (addInt32 x y));
+  addInt32 x y
+)
 
-  def main = {
-    printString (toStringInt32 executeWhenLoaded)
-  }
+def main = {
+  printString (toStringInt32 executeWhenLoaded)
 }
-
--- Expected: 33

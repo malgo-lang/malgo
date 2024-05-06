@@ -5,27 +5,242 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Prelude
-  ( module Koriel.Prelude,
-    module Malgo.Prelude,
+  ( -- * Reexports
+    module Control.Arrow,
+    module Control.Lens,
+    module Control.Monad,
+    module Control.Monad.Extra,
+    module Control.Monad.Error.Class,
+    module Control.Monad.Except,
+    module Control.Monad.IO.Class,
+    module Data.Bifunctor,
+    module Data.Bitraversable,
+    module Data.ByteString.Short,
+    module Data.Char,
+    module Data.Coerce,
+    module Data.Data,
+    module Data.Either,
+    module Data.Foldable,
+    module Data.Foldable.Extra,
+    module Data.Function,
+    module Data.Functor,
+    module Data.Hashable,
+    module Data.Int,
+    module Data.Kind,
+    module Data.List,
+    module Data.List.NonEmpty,
+    module Data.Map.Strict,
+    module Data.Maybe,
+    module Data.Semigroup,
+    module Data.Set,
+    module Data.String,
+    module Data.String.Conversions,
+    module Data.Text,
+    module Data.Void,
+    module GHC.Exts,
+    module GHC.Generics,
+    module GHC.Stack,
+    module Prelude,
+    module System.IO,
+    IORef,
+    module Prettyprinter,
+    errorDoc,
+    render,
+    maybeParens,
+
+    -- * Utilities
+    identity,
+    pass,
+    foldMapM,
+    unzip,
+    replaceOf,
+    chomp,
+    asumMap,
+    PrettyShow (..),
+
+    -- * Lift IO functions
+
+    -- ** Show
+    hPrint,
+
+    -- ** String
+    hPutStr,
+    hPutStrLn,
+
+    -- ** Text
+    hPutText,
+    hPutTextLn,
+    putText,
+
+    -- ** IORef
+    newIORef,
+    readIORef,
+    modifyIORef,
+    writeIORef,
+
+    -- ** Flag
+    Flag (..),
+
+    -- ** Range
+    Range (..),
+    HasStart (..),
+    HasEnd (..),
+    errorOn,
+    rangeToPosition,
+    warningOn,
   )
 where
 
+import Control.Applicative
+import Control.Arrow ((<<<), (>>>))
+import Control.Lens (ASetter, over, (??))
 import Control.Lens.TH
+import Control.Monad
+import Control.Monad.Error.Class
+import Control.Monad.Except (ExceptT, runExceptT)
+import Control.Monad.Extra (ifM)
+import Control.Monad.IO.Class
+import Data.Bifunctor
+import Data.Bitraversable
 import Data.ByteString qualified as BS
+import Data.ByteString.Short (ShortByteString)
+import Data.Char
+import Data.Coerce
+import Data.Data (Typeable)
+import Data.Either
+import Data.Foldable
+import Data.Foldable.Extra
+import Data.Function (applyWhen, fix, on, (&))
+import Data.Functor
+import Data.Hashable (Hashable)
+import Data.IORef (IORef)
+import Data.IORef qualified as IORef
+import Data.Int (Int32, Int64)
+import Data.Kind (Constraint)
+import Data.List (dropWhileEnd, foldl', sort, transpose)
+import Data.List.NonEmpty (NonEmpty (..))
+import Data.Map.Strict (Map)
+import Data.Maybe (fromMaybe, mapMaybe)
+import Data.Monoid (Alt (..))
+import Data.Semigroup
+import Data.Set (Set)
 import Data.Store ()
 import Data.Store.TH (makeStore)
+import Data.String
+import Data.String.Conversions
+import Data.Text (Text)
+import Data.Text.IO qualified as T
+import Data.Void
 import Effectful
 import Effectful.Reader.Static
 import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), TabSize (..), WithUnicode (..), addFile, addReport, defaultStyle, prettyDiagnostic)
-import Koriel.Prelude
-import Koriel.Pretty
-import Language.LSP.Types (Position (..), filePathToUri)
-import Language.LSP.Types qualified as Lsp
-import Language.LSP.Types.Lens (HasEnd (end), HasRange (range), HasStart (start))
-import Prettyprinter.Render.Text (hPutDoc)
+import Error.Diagnose.Compat.Megaparsec (HasHints (hints))
+import GHC.Exts (sortWith)
+import GHC.Generics (Generic)
+import GHC.Stack (HasCallStack)
+import Prettyprinter
+import Prettyprinter.Render.String (renderString)
+import Prettyprinter.Render.Text (hPutDoc, renderStrict)
 import System.Exit (exitFailure)
-import Text.Megaparsec.Pos (SourcePos (..), mkPos, unPos)
+import System.IO (Handle, stderr, stdin, stdout)
+import System.IO qualified
+import Text.Megaparsec.Pos (SourcePos (..), unPos)
 import Text.Megaparsec.Pos qualified as Megaparsec
+import Prelude hiding (id, unzip)
+
+errorDoc :: (HasCallStack) => Doc x -> a
+errorDoc x = Prelude.error $ renderString $ layoutSmart defaultLayoutOptions x
+
+-- Pretty SourcePos
+instance Pretty Megaparsec.SourcePos where
+  pretty = pretty . convertString @_ @Text . Megaparsec.sourcePosPretty
+
+render :: Doc ann -> Text
+render = renderStrict . layoutSmart defaultLayoutOptions
+
+maybeParens :: Bool -> Doc ann -> Doc ann
+maybeParens True = parens
+maybeParens False = identity
+
+identity :: a -> a
+identity x = x
+{-# INLINE identity #-}
+
+pass :: (Applicative f) => f ()
+pass = pure ()
+{-# INLINE pass #-}
+
+-- | @foldMapM@ from rio
+foldMapM :: (Foldable t, Monad m, Monoid w) => (a -> m w) -> t a -> m w
+foldMapM f =
+  foldlM
+    ( \acc a -> do
+        w <- f a
+        pure $! mappend acc w
+    )
+    mempty
+
+-- | Generalization of 'Data.List.unzip' :: [(a, b)] -> ([a], [b])
+unzip :: (Functor f) => f (a, b) -> (f a, f b)
+unzip xs = (fst <$> xs, snd <$> xs)
+{-# INLINE unzip #-}
+
+replaceOf :: (Eq b) => ASetter s t b b -> b -> b -> s -> t
+replaceOf l x x' = over l (\v -> if v == x then x' else v)
+{-# INLINE replaceOf #-}
+
+chomp :: String -> String
+chomp = dropWhileEnd (`elem` ['\r', '\n'])
+{-# INLINE chomp #-}
+
+asumMap :: forall b m f a. (Foldable f, Alternative m) => (a -> m b) -> f a -> m b
+asumMap = coerce (foldMap :: (a -> Alt m b) -> f a -> Alt m b)
+{-# INLINE asumMap #-}
+
+newtype PrettyShow a = PrettyShow a
+
+instance (Show a) => Pretty (PrettyShow a) where
+  pretty (PrettyShow a) = pretty $ convertString @_ @Text $ show a
+
+-- Lift IO funcitons
+
+-- | Lifted version of 'System.IO.hPrint'.
+hPrint :: (MonadIO m, Show a) => Handle -> a -> m ()
+hPrint handle x = liftIO $ System.IO.hPrint handle x
+
+-- | Lifted version of 'System.IO.hPutStr'.
+hPutStr :: (MonadIO m) => Handle -> String -> m ()
+hPutStr handle x = liftIO $ System.IO.hPutStr handle x
+
+-- | Lifted version of 'System.IO.hPutStrLn'.
+hPutStrLn :: (MonadIO m) => Handle -> String -> m ()
+hPutStrLn handle x = liftIO $ System.IO.hPutStrLn handle x
+
+-- | Lifted version of 'T.hPutStr'.
+hPutText :: (MonadIO m) => Handle -> Text -> m ()
+hPutText handle x = liftIO $ T.hPutStr handle x
+
+-- | Lifted version of 'T.hPutStrLn'.
+hPutTextLn :: (MonadIO m) => Handle -> Text -> m ()
+hPutTextLn handle x = liftIO $ T.hPutStrLn handle x
+
+putText :: (MonadIO m) => Text -> m ()
+putText = hPutText stdout
+
+instance HasHints Void Text where
+  hints = const []
+
+newIORef :: (MonadIO m) => a -> m (IORef a)
+newIORef = liftIO . IORef.newIORef
+
+readIORef :: (MonadIO m) => IORef a -> m a
+readIORef ref = liftIO $ IORef.readIORef ref
+
+modifyIORef :: (MonadIO m) => IORef a -> (a -> a) -> m ()
+modifyIORef ref f = liftIO $ IORef.modifyIORef ref f
+
+writeIORef :: (MonadIO m) => IORef a -> a -> m ()
+writeIORef ref a = liftIO $ IORef.writeIORef ref a
 
 data Flag = Flag
   { noOptimize :: Bool,
@@ -69,10 +284,6 @@ instance Pretty Range where
 
 makeFieldsNoPrefix ''Range
 
-instance HasRange Range Range where
-  range = identity
-
--- TODO: Support multiple ranges
 errorOn :: (Reader Flag :> es, IOE :> es) => Range -> Doc x -> Eff es a
 errorOn range x = do
   Flag {testMode} <- ask
@@ -111,26 +322,3 @@ warningOn range x = do
           end = (unPos $ sourceLine end, unPos $ sourceColumn end),
           file = sourceName start
         }
-
--- [No `instance Bifunctor Annotated'`]
--- Bifunctor have two methods: `first` and `second`.
--- How to map these methods to `ann` and `value`?
--- This problem does not have a good answer.
-
-positionToSourcePos :: FilePath -> Lsp.Position -> SourcePos
-positionToSourcePos srcName Lsp.Position {_line, _character} = SourcePos srcName (mkPos $ fromIntegral _line + 1) (mkPos $ fromIntegral _character + 1)
-
-sourcePosToPosition :: SourcePos -> Lsp.Position
-sourcePosToPosition SourcePos {sourceLine, sourceColumn} =
-  Lsp.Position (fromIntegral $ unPos sourceLine - 1) (fromIntegral $ unPos sourceColumn - 1)
-
-malgoRangeToLspRange :: Range -> Lsp.Range
-malgoRangeToLspRange Range {_start, _end} =
-  Lsp.Range (sourcePosToPosition _start) (sourcePosToPosition _end)
-
-malgoRangeToLocation :: Range -> Lsp.Location
-malgoRangeToLocation Range {_start, _end} =
-  Lsp.Location (filePathToUri (sourceName _start)) $ Lsp.Range (sourcePosToPosition _start) (sourcePosToPosition _end)
-
-instance HasRange Void Range where
-  range _ = absurd

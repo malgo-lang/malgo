@@ -1,7 +1,7 @@
-; ModuleID = './test/tmp/malgo_test/aggressive/Undefined.ll'
-source_filename = "./test/testcases/malgo/Undefined.mlg"
+; ModuleID = '.malgo-work/test/testcases/malgo/Undefined.ll'
+source_filename = "test/testcases/malgo/Undefined.mlg"
 
-@Builtin.undefined = local_unnamed_addr global ptr undef
+@"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef
 @str3440 = unnamed_addr constant [3 x i8] c"OK\00"
 
 declare void @GC_init() local_unnamed_addr
@@ -17,7 +17,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %2 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %2, align 1
   %3 = tail call ptr @malgo_unsafe_cast(ptr noundef nonnull %2)
-  store ptr %3, ptr @Builtin.undefined, align 8
+  store ptr %3, ptr @"runtime/malgo/Builtin.mlg.undefined", align 8
   %4 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %4, align 1
   %5 = tail call ptr @malgo_malloc(i64 noundef 16)

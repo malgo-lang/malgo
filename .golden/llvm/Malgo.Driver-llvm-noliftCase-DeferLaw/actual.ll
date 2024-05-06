@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/DeferLaw.mlg'
-source_filename = "./test/testcases/malgo/DeferLaw.mlg"
+; ModuleID = 'test/testcases/malgo/DeferLaw.mlg'
+source_filename = "test/testcases/malgo/DeferLaw.mlg"
 
 @str2824 = unnamed_addr constant [6 x i8] c"Hello\00"
 
@@ -161,13 +161,13 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @DeferLaw.f(ptr %0, ptr %"DeferLaw.$x_22_0") {
-  ret ptr %"DeferLaw.$x_22_0"
+define internal ptr @"test/testcases/malgo/DeferLaw.mlg.f"(ptr %0, ptr %"test/testcases/malgo/DeferLaw.mlg.$x_22_0") {
+  ret ptr %"test/testcases/malgo/DeferLaw.mlg.$x_22_0"
 }
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @DeferLaw.main(ptr %0, ptr %"DeferLaw.$$__29_0") {
+define internal ptr @"test/testcases/malgo/DeferLaw.mlg.main"(ptr %0, ptr %"test/testcases/malgo/DeferLaw.mlg.$$__29_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -176,10 +176,10 @@ define internal ptr @DeferLaw.main(ptr %0, ptr %"DeferLaw.$$__29_0") {
   %5 = getelementptr { i8, <8 x i8> }, ptr %2, i32 0, i32 0
   %6 = load i8, ptr %5, align 1
   switch i8 %6, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
   %7 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1
   %8 = getelementptr { ptr }, ptr %7, i32 0, i32 0
   %9 = load ptr, ptr %8, align 8
@@ -199,14 +199,14 @@ switch_default_0:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_DeferLaw()
+  call void @"malgo_load_test/testcases/malgo/DeferLaw.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @DeferLaw.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/DeferLaw.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @koriel_load_DeferLaw() {
+define internal void @"malgo_load_test/testcases/malgo/DeferLaw.mlg"() {
   ret void
 }

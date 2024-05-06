@@ -22,44 +22,39 @@ source-repository head
 
 library
   exposed-modules:
-      Koriel.Core.Alpha
-      Koriel.Core.Annotate
-      Koriel.Core.CodeGen.LLVM
-      Koriel.Core.Flat
-      Koriel.Core.LambdaLift
-      Koriel.Core.Lint
-      Koriel.Core.Optimize
-      Koriel.Core.Parser
-      Koriel.Core.Syntax
-      Koriel.Core.Syntax.Atom
-      Koriel.Core.Syntax.Case
-      Koriel.Core.Syntax.Common
-      Koriel.Core.Syntax.Expr
-      Koriel.Core.Syntax.LocalDef
-      Koriel.Core.Syntax.Unboxed
-      Koriel.Core.Type
-      Koriel.Id
-      Koriel.Lens
-      Koriel.MonadUniq
-      Koriel.Prelude
-      Koriel.Pretty
-      Malgo.Build
+      Malgo.Core.Alpha
+      Malgo.Core.Annotate
+      Malgo.Core.CodeGen.LLVM
+      Malgo.Core.Flat
+      Malgo.Core.LambdaLift
+      Malgo.Core.Lint
+      Malgo.Core.Optimize
+      Malgo.Core.Parser
+      Malgo.Core.Syntax
+      Malgo.Core.Syntax.Atom
+      Malgo.Core.Syntax.Case
+      Malgo.Core.Syntax.Common
+      Malgo.Core.Syntax.Expr
+      Malgo.Core.Syntax.LocalDef
+      Malgo.Core.Syntax.Unboxed
+      Malgo.Core.Type
       Malgo.Desugar.DsState
       Malgo.Desugar.Match
       Malgo.Desugar.Pass
       Malgo.Desugar.Type
       Malgo.Desugar.Unboxed
       Malgo.Driver
+      Malgo.Id
       Malgo.Infer.Pass
       Malgo.Infer.TcEnv
       Malgo.Infer.TypeRep
       Malgo.Infer.Unify
       Malgo.Interface
+      Malgo.Lens
       Malgo.Link
-      Malgo.Lsp.Index
-      Malgo.Lsp.Pass
-      Malgo.Lsp.Server
+      Malgo.Module
       Malgo.Monad
+      Malgo.MonadUniq
       Malgo.Parser
       Malgo.Prelude
       Malgo.Refine.Pass
@@ -104,6 +99,8 @@ library
     , diagnose ==2.5.1
     , directory
     , effectful
+    , effectful-core
+    , exceptions
     , extra
     , filepath
     , generic-data
@@ -112,12 +109,11 @@ library
     , lens
     , llvm-hs
     , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
     , megaparsec
     , mtl
     , optparse-applicative
     , parser-combinators
+    , path
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
@@ -167,6 +163,8 @@ executable malgo
     , diagnose ==2.5.1
     , directory
     , effectful
+    , effectful-core
+    , exceptions
     , extra
     , filepath
     , generic-data
@@ -175,13 +173,12 @@ executable malgo
     , lens
     , llvm-hs
     , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
     , malgo
     , megaparsec
     , mtl
     , optparse-applicative
     , parser-combinators
+    , path
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
@@ -202,9 +199,11 @@ test-suite malgo-test
       Malgo.DesugarSpec
       Malgo.DriverSpec
       Malgo.InferSpec
+      Malgo.LinkSpec
       Malgo.ParserSpec
       Malgo.RefineSpec
       Malgo.RenameSpec
+      Malgo.TestUtils
       Paths_malgo
   hs-source-dirs:
       test
@@ -238,6 +237,8 @@ test-suite malgo-test
     , diagnose ==2.5.1
     , directory
     , effectful
+    , effectful-core
+    , exceptions
     , extra
     , filepath
     , generic-data
@@ -249,13 +250,12 @@ test-suite malgo-test
     , lens
     , llvm-hs
     , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
     , malgo
     , megaparsec
     , mtl
     , optparse-applicative
     , parser-combinators
+    , path
     , pretty-simple
     , prettyprinter
     , raw-strings-qq
@@ -273,70 +273,3 @@ test-suite malgo-test
     , witherable
   default-language: GHC2021
   build-tool-depends: hspec-discover:hspec-discover == 2.*
-
-benchmark malgo-bench
-  type: exitcode-stdio-1.0
-  main-is: Main.hs
-  other-modules:
-      Paths_malgo
-  hs-source-dirs:
-      benchmarks
-  default-extensions:
-      BlockArguments
-      DataKinds
-      DefaultSignatures
-      DerivingStrategies
-      FunctionalDependencies
-      LambdaCase
-      MultiWayIf
-      NoImplicitPrelude
-      OverloadedStrings
-      RecordWildCards
-      StrictData
-      TypeFamilies
-      ViewPatterns
-      OverloadedRecordDot
-      NoFieldSelectors
-      TypeData
-      Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
-  build-depends:
-      Glob
-    , aeson
-    , base
-    , binary
-    , binary-instances
-    , bytestring
-    , containers
-    , criterion
-    , diagnose ==2.5.1
-    , directory
-    , effectful
-    , extra
-    , filepath
-    , generic-data
-    , hashable
-    , knob
-    , lens
-    , llvm-hs
-    , llvm-hs-pure
-    , lsp
-    , lsp-types ==1.6.0.0
-    , malgo
-    , megaparsec
-    , mtl
-    , optparse-applicative
-    , parser-combinators
-    , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
-    , store
-    , string-conversions
-    , syb
-    , text
-    , transformers
-    , typed-process
-    , unliftio
-    , unordered-containers
-    , witherable
-  default-language: GHC2021

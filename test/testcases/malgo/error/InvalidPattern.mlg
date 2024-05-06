@@ -1,14 +1,10 @@
-module InvalidPattern = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import "../../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../../runtime/malgo/Prelude.mlg"
 
-  def isNil = {
-    [] -> True,
-    _ _ -> False,
+def isNil = {
+  [] -> True,
+  _ _ -> False,
 --    ^ different number of patterns
-  }
-
-  def main = { putStrLn "OK" }
 }
 
--- Expected: OK
+def main = { putStrLn "OK" }

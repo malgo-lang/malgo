@@ -1,15 +1,14 @@
 module Malgo.Rename.RnState (RnState (..)) where
 
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
-import Koriel.Id
-import Koriel.Pretty
+import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
+import Malgo.Module
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 
 data RnState = RnState
-  { infixInfo :: HashMap RnId (Assoc, Int),
-    dependencies :: HashSet ModuleName
+  { infixInfo :: Map RnId (Assoc, Int),
+    dependencies :: Set ModuleName
   }
   deriving stock (Show)
 
@@ -18,7 +17,7 @@ instance Pretty RnState where
     "RnState"
       <+> braces
         ( sep
-            [ sep ["infixInfo", "=", pretty $ HashMap.toList infixInfo],
-              sep ["dependencies", "=", pretty $ HashSet.toList dependencies]
+            [ sep ["infixInfo", "=", pretty $ Map.toList infixInfo],
+              sep ["dependencies", "=", pretty $ Set.toList dependencies]
             ]
         )

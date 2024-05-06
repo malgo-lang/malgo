@@ -17,34 +17,35 @@ dependencies:
   - binary-instances
   - bytestring
   - containers
+  - diagnose == 2.5.1
   - directory
+  - effectful
+  - effectful-core
   - extra
   - filepath
+  - generic-data
   - hashable
+  - knob
   - lens
   - llvm-hs
   - llvm-hs-pure
-  - lsp
-  - lsp-types == 1.6.0.0
   - megaparsec
   - mtl
   - optparse-applicative
   - parser-combinators
+  - path
   - prettyprinter
   - raw-strings-qq
   - regex-tdfa
+  - store
   - string-conversions
+  - syb
   - text
   - transformers
+  - unliftio
   - unordered-containers
   - witherable
-  - diagnose == 2.5.1
-  - generic-data
-  - syb
-  - unliftio
-  - knob
-  - effectful
-  - store
+  - exceptions
 
 ghc-options:
   - -Wall
@@ -110,12 +111,3 @@ tests:
       - hspec-golden >= 0.2.2.0
       - string-conversions
       - pretty-simple
-
-benchmarks:
-  malgo-bench:
-    main: Main.hs
-    source-dirs: benchmarks
-    dependencies:
-      - malgo
-      - typed-process
-      - criterion

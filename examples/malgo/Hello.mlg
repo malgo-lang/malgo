@@ -1,10 +1,6 @@
-module Hello = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import "../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../runtime/malgo/Prelude.mlg"
 
-  def main = {
-    putStrLn "Hello, world!"
-  }
+def main = {
+  putStrLn "Hello, world!"
 }
-
--- Expected: Hello, world!

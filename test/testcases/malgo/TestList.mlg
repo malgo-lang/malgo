@@ -1,12 +1,8 @@
-module TestList = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
-  def main = {
-    let xs = [1, 2, 3];
-    let nil = [];
-    putStrLn (toStringInt32 (head xs))
-  }
+def main = {
+  let xs = [1, 2, 3];
+  let nil = [];
+  putStrLn (toStringInt32 (head xs))
 }
-
--- Expected: 1

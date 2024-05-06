@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/HelloImport.mlg'
-source_filename = "./test/testcases/malgo/HelloImport.mlg"
+; ModuleID = 'test/testcases/malgo/HelloImport.mlg'
+source_filename = "test/testcases/malgo/HelloImport.mlg"
 
 @str2816 = unnamed_addr constant [6 x i8] c"hello\00"
 @str2819 = unnamed_addr constant [7 x i8] c" world\00"
@@ -164,15 +164,15 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @Prelude.putStrLn(ptr %0, ptr %"Prelude.$str_716_0") {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %"Prelude.$str_716_0", i32 0, i32 0
+define internal ptr @"runtime/malgo/Prelude.mlg.putStrLn"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$str_716_0") {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %"Prelude.$str_716_0", i32 0, i32 1
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
+  %4 = getelementptr { i8, { ptr } }, ptr %"runtime/malgo/Prelude.mlg.$str_716_0", i32 0, i32 1
   %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
   %6 = load ptr, ptr %5, align 8
   %7 = call ptr @malgo_print_string(ptr %6)
@@ -189,7 +189,7 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"HelloImport.#let_closure_2817"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/HelloImport.mlg.#let_closure_2817"(ptr %0, ptr %1) {
   %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %cast_0 = load ptr, ptr %cast_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -200,7 +200,7 @@ define internal ptr @"HelloImport.#let_closure_2817"(ptr %0, ptr %1) {
   ret ptr %7
 }
 
-define internal ptr @"HelloImport.#fun_closure_2818"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/HelloImport.mlg.#fun_closure_2818"(ptr %0, ptr %1) {
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -214,7 +214,7 @@ define internal ptr @"HelloImport.#fun_closure_2818"(ptr %0, ptr %1) {
   ret ptr %10
 }
 
-define internal ptr @HelloImport.main(ptr %0, ptr %"HelloImport.$$__18_0") {
+define internal ptr @"test/testcases/malgo/HelloImport.mlg.main"(ptr %0, ptr %"test/testcases/malgo/HelloImport.mlg.$$__18_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -223,10 +223,10 @@ define internal ptr @HelloImport.main(ptr %0, ptr %"HelloImport.$$__18_0") {
   %5 = getelementptr { i8, <8 x i8> }, ptr %2, i32 0, i32 0
   %6 = load i8, ptr %5, align 1
   switch i8 %6, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
   %7 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1
   %8 = getelementptr { ptr }, ptr %7, i32 0, i32 0
   %9 = load ptr, ptr %8, align 8
@@ -235,7 +235,7 @@ define internal ptr @HelloImport.main(ptr %0, ptr %"HelloImport.$$__18_0") {
   %putStrLn_capture_0 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 0
   store ptr null, ptr %putStrLn_capture_0, align 8
   %putStrLn_func_0 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 1
-  store ptr @Prelude.putStrLn, ptr %putStrLn_func_0, align 8
+  store ptr @"runtime/malgo/Prelude.mlg.putStrLn", ptr %putStrLn_func_0, align 8
   %12 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
   %cast_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
@@ -243,13 +243,13 @@ define internal ptr @HelloImport.main(ptr %0, ptr %"HelloImport.$$__18_0") {
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %12, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %12, i32 0, i32 1
-  store ptr @"HelloImport.#let_closure_2817", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/HelloImport.mlg.#let_closure_2817", ptr %let_func_0, align 8
   %13 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_1 = getelementptr { ptr, ptr }, ptr %13, i32 0, i32 0
   store ptr %fun_capture_0, ptr %fun_capture_1, align 8
   %fun_func_0 = getelementptr { ptr, ptr }, ptr %13, i32 0, i32 1
-  store ptr @"HelloImport.#fun_closure_2818", ptr %fun_func_0, align 8
+  store ptr @"test/testcases/malgo/HelloImport.mlg.#fun_closure_2818", ptr %fun_func_0, align 8
   %14 = getelementptr { ptr, ptr }, ptr %12, i32 0, i32 0
   %15 = load ptr, ptr %14, align 8
   %16 = getelementptr { ptr, ptr }, ptr %12, i32 0, i32 1
@@ -263,14 +263,14 @@ switch_default_0:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_HelloImport()
+  call void @"malgo_load_test/testcases/malgo/HelloImport.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @HelloImport.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/HelloImport.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @koriel_load_HelloImport() {
+define internal void @"malgo_load_test/testcases/malgo/HelloImport.mlg"() {
   ret void
 }

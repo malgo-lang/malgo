@@ -1,14 +1,11 @@
-module FuncOverUnboxed = {
-  module { toStringInt64#, printString# } = import Builtin
+module { toStringInt64#, printString# } = import "../../../runtime/malgo/Builtin.mlg"
 
-  def f =
-    { 0L# -> printString# (toStringInt64# 1L#),
-      1L# -> printString# (toStringInt64# 1L#),
-      _ -> printString# (toStringInt64# 0L#),
-    }
-
-  def main = {
-    f 0L#
+def f =
+  { 0L# -> printString# (toStringInt64# 1L#),
+    1L# -> printString# (toStringInt64# 1L#),
+    _ -> printString# (toStringInt64# 0L#),
   }
+
+def main = {
+  f 0L#
 }
--- Expected: 1

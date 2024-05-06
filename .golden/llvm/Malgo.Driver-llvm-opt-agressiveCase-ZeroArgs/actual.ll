@@ -1,7 +1,7 @@
-; ModuleID = './test/tmp/malgo_test/aggressive/ZeroArgs.ll'
-source_filename = "./test/testcases/malgo/ZeroArgs.mlg"
+; ModuleID = '.malgo-work/test/testcases/malgo/ZeroArgs.ll'
+source_filename = "test/testcases/malgo/ZeroArgs.mlg"
 
-@ZeroArgs.one = local_unnamed_addr global ptr undef
+@"test/testcases/malgo/ZeroArgs.mlg.one" = local_unnamed_addr global ptr undef
 
 declare void @GC_init() local_unnamed_addr
 
@@ -17,10 +17,10 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store i8 0, ptr %2, align 1
   %3 = getelementptr { i8, { i32 } }, ptr %2, i64 0, i32 1, i32 0
   store i32 1, ptr %3, align 4
-  store ptr %2, ptr @ZeroArgs.one, align 8
+  store ptr %2, ptr @"test/testcases/malgo/ZeroArgs.mlg.one", align 8
   %4 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %4, align 1
-  %5 = load ptr, ptr @ZeroArgs.one, align 8
+  %5 = load ptr, ptr @"test/testcases/malgo/ZeroArgs.mlg.one", align 8
   %6 = getelementptr { i8, { i32 } }, ptr %5, i64 0, i32 1
   %7 = load i32, ptr %6, align 4
   %8 = tail call ptr @malgo_int32_t_to_string(i32 %7)

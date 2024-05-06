@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TestLet.mlg'
-source_filename = "./test/testcases/malgo/TestLet.mlg"
+; ModuleID = 'test/testcases/malgo/TestLet.mlg'
+source_filename = "test/testcases/malgo/TestLet.mlg"
 
 declare void @GC_init()
 
@@ -159,14 +159,14 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal i32 @"Builtin.$malgo_add_int32_t_curry_1810"(ptr %0, i32 %"Builtin.$p_1811_0", i32 %"Builtin.$p_1812_0") {
-  %2 = call i32 @malgo_add_int32_t(i32 %"Builtin.$p_1811_0", i32 %"Builtin.$p_1812_0")
+define internal i32 @"runtime/malgo/Builtin.mlg.$malgo_add_int32_t_curry_1810"(ptr %0, i32 %"runtime/malgo/Builtin.mlg.$p_1811_0", i32 %"runtime/malgo/Builtin.mlg.$p_1812_0") {
+  %2 = call i32 @malgo_add_int32_t(i32 %"runtime/malgo/Builtin.mlg.$p_1811_0", i32 %"runtime/malgo/Builtin.mlg.$p_1812_0")
   ret i32 %2
 }
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @"TestLet.#let_closure_2366"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/TestLet.mlg.#let_closure_2366"(ptr %0, ptr %1) {
   %x_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %x_0 = load ptr, ptr %x_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -177,36 +177,36 @@ define internal ptr @"TestLet.#let_closure_2366"(ptr %0, ptr %1) {
   ret ptr %7
 }
 
-define internal ptr @"TestLet.|>"(ptr %0, ptr %"TestLet.$x_49_0") {
+define internal ptr @"test/testcases/malgo/TestLet.mlg.|>"(ptr %0, ptr %"test/testcases/malgo/TestLet.mlg.$x_49_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
   %x_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %"TestLet.$x_49_0", ptr %x_0, align 8
+  store ptr %"test/testcases/malgo/TestLet.mlg.$x_49_0", ptr %x_0, align 8
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"TestLet.#let_closure_2366", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestLet.mlg.#let_closure_2366", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal i32 @"TestLet.#let_closure_2367"(ptr %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/TestLet.mlg.#let_closure_2367"(ptr %0, i32 %1) {
   %3 = call i32 @malgo_add_int32_t(i32 1, i32 %1)
   ret i32 %3
 }
 
-define internal i32 @"TestLet.#let_closure_2368"(ptr %0, i32 %1) {
+define internal i32 @"test/testcases/malgo/TestLet.mlg.#let_closure_2368"(ptr %0, i32 %1) {
   %3 = call i32 @malgo_add_int32_t(i32 1, i32 %1)
   ret i32 %3
 }
 
-define internal ptr @TestLet.main(ptr %0, ptr %"TestLet.$$__57_0") {
+define internal ptr @"test/testcases/malgo/TestLet.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TestLet.mlg.$$__57_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"TestLet.#let_closure_2367", ptr %let_func_0, align 8
-  %3 = call i32 @"Builtin.$malgo_add_int32_t_curry_1810"(ptr null, i32 1, i32 2)
+  store ptr @"test/testcases/malgo/TestLet.mlg.#let_closure_2367", ptr %let_func_0, align 8
+  %3 = call i32 @"runtime/malgo/Builtin.mlg.$malgo_add_int32_t_curry_1810"(ptr null, i32 1, i32 2)
   %4 = call ptr @malgo_int32_t_to_string(i32 %3)
   %5 = call ptr @malgo_print_string(ptr %4)
   %6 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
@@ -214,8 +214,8 @@ define internal ptr @TestLet.main(ptr %0, ptr %"TestLet.$$__57_0") {
   %let_capture_3 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 0
   store ptr %let_capture_2, ptr %let_capture_3, align 8
   %let_func_1 = getelementptr { ptr, ptr }, ptr %6, i32 0, i32 1
-  store ptr @"TestLet.#let_closure_2368", ptr %let_func_1, align 8
-  %7 = call i32 @"Builtin.$malgo_add_int32_t_curry_1810"(ptr null, i32 1, i32 2)
+  store ptr @"test/testcases/malgo/TestLet.mlg.#let_closure_2368", ptr %let_func_1, align 8
+  %7 = call i32 @"runtime/malgo/Builtin.mlg.$malgo_add_int32_t_curry_1810"(ptr null, i32 1, i32 2)
   %8 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %9 = getelementptr { i8, { i32 } }, ptr %8, i32 0, i32 0
   store i8 0, ptr %9, align 1
@@ -224,10 +224,10 @@ define internal ptr @TestLet.main(ptr %0, ptr %"TestLet.$$__57_0") {
   %11 = getelementptr { i8, <4 x i8> }, ptr %8, i32 0, i32 0
   %12 = load i8, ptr %11, align 1
   switch i8 %12, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.Int32#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   ]
 
-"switch_branch_Builtin.Int32#_0":                 ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
   %13 = getelementptr { i8, { i32 } }, ptr %8, i32 0, i32 1
   %14 = getelementptr { i32 }, ptr %13, i32 0, i32 0
   %15 = load i32, ptr %14, align 4
@@ -241,14 +241,14 @@ switch_default_0:                                 ; preds = %1
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_TestLet()
+  call void @"malgo_load_test/testcases/malgo/TestLet.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @TestLet.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/TestLet.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @koriel_load_TestLet() {
+define internal void @"malgo_load_test/testcases/malgo/TestLet.mlg"() {
   ret void
 }

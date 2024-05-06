@@ -1,25 +1,21 @@
-module Fib = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import "../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../runtime/malgo/Prelude.mlg"
 
-  infix 4 (<=)
-  def (<=) = { x y -> leInt32 x y }
+infix 4 (<=)
+def (<=) = { x y -> leInt32 x y }
 
-  infixl 6 (+)
-  def (+) = { x y -> addInt32 x y }
+infixl 6 (+)
+def (+) = { x y -> addInt32 x y }
 
-  infixl 6 (-)
-  def (-) = { x y -> subInt32 x y }
+infixl 6 (-)
+def (-) = { x y -> subInt32 x y }
 
-  def fib = { n ->
-    if (n <= 1)
-      { 1 }
-      { fib (n - 1) + fib (n - 2) }
-  }
-
-  def main = {
-    fib 5 |> toStringInt32 |> putStrLn
-  }
+def fib = { n ->
+  if (n <= 1)
+    { 1 }
+    { fib (n - 1) + fib (n - 2) }
 }
 
--- Expected: 8
+def main = {
+  fib 5 |> toStringInt32 |> putStrLn
+}

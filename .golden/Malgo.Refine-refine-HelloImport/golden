@@ -1,866 +1,324 @@
 Module
-    { moduleName = ModuleName
-        { raw = "HelloImport" }
-    , moduleDefinition = BindGroup
-        { _scDefs =
-            [
-                [
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/HelloImport.mlg" ), moduleDefinition = BindGroup
+  { _scDefs =
+   [
+    [
+     ( Typed
+      { annotated = TyArr
+       ( TyTuple 0 )
+       ( TyTuple 0 ), value = Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 8, sourceColumn = Pos 2 } } }, Id
+      { name = "main", moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/HelloImport.mlg" ), sort = External }, Fn
+      ( Typed
+       { annotated = TyArr
+        ( TyTuple 0 )
+        ( TyTuple 0 ), value = Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 3 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } } } )
+      ( Clause
+       ( Typed
+        { annotated = TyArr
+         ( TyTuple 0 )
+         ( TyTuple 0 ), value = Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 3 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } } } )
+       [ VarP
+        ( Typed
+         { annotated = TyTuple 0, value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 3 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } } } )
+        ( Id
+         { name = "$_", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/HelloImport.mlg" ), sort = Internal 17 } ) ]
+       ( Seq
+        ( Typed
+         { annotated = TyTuple 0, value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 3 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } } } )
+        ( NoBind
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 3 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 28 } } )
+         ( Apply
+          ( Typed
+           { annotated = TyTuple 0, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 3 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 28 } } } )
+          ( Var
+           ( Typed
+            { annotated = TyArr
+             ( TyCon
+              ( Id
+               { name = "String", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+             ( TyTuple 0 ), value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 3 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 10 } } } )
+           ( Id
+            { name = "putStr", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ) )
+          ( Seq
+           ( Typed
+            { annotated = TyCon
+             ( Id
+              { name = "String", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ), value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 10 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 28 } } } )
+           ( NoBind
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 11 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 27 } } )
+            ( Apply
+             ( Typed
+              { annotated = TyCon
+               ( Id
+                { name = "String", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ), value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 11 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 27 } } } )
+             ( Var
+              ( Typed
+               { annotated = TyArr ( TyPrim StringT )
+                ( TyCon
+                 ( Id
+                  { name = "String", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ), value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 11 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 19 } } } )
+              ( Id
+               { name = "String#", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+             ( Unboxed
+              ( Typed
+               { annotated = TyPrim StringT, value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 19 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 6, sourceColumn = Pos 27 } } } )
+              ( String "hello" ) ) ) :| [] ) ) ) :|
+         [ NoBind
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 3 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } } )
+          ( Apply
+           ( Typed
+            { annotated = TyTuple 0, value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 12 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 15 } } } )
+           ( Apply
+            ( Typed
+             { annotated = TyArr
+              ( TyArr
+               ( TyArr
+                ( TyCon
+                 ( Id
+                  { name = "String", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                ( TyTuple 0 ) )
+               ( TyTuple 0 ) )
+              ( TyTuple 0 ), value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 12 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 15 } } } )
+            ( Var
+             ( Typed
+              { annotated = TyArr
+               ( TyArr
+                ( TyCon
+                 ( Id
+                  { name = "String", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                ( TyTuple 0 ) )
+               ( TyArr
+                ( TyArr
+                 ( TyArr
+                  ( TyCon
+                   ( Id
+                    { name = "String", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                  ( TyTuple 0 ) )
+                 ( TyTuple 0 ) )
+                ( TyTuple 0 ) ), value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 12 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 15 } } } )
+             ( Id
+              { name = "|>", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ) )
+            ( Var
+             ( Typed
+              { annotated = TyArr
+               ( TyCon
+                ( Id
+                 { name = "String", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+               ( TyTuple 0 ), value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 3 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 12 } } } )
+             ( Id
+              { name = "putStrLn", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ) ) )
+           ( Fn
+            ( Typed
+             { annotated = TyArr
+              ( TyArr
+               ( TyCon
+                ( Id
+                 { name = "String", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+               ( TyTuple 0 ) )
+              ( TyTuple 0 ), value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 17 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 44 } } } )
+            ( Clause
+             ( Typed
+              { annotated = TyArr
+               ( TyArr
+                ( TyCon
+                 ( Id
+                  { name = "String", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                ( TyTuple 0 ) )
+               ( TyTuple 0 ), value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 17 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 44 } } } )
+             [ VarP
+              ( Typed
+               { annotated = TyArr
+                ( TyCon
+                 ( Id
+                  { name = "String", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                ( TyTuple 0 ), value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 17 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 19 } } } )
+              ( Id
+               { name = "f", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/HelloImport.mlg" ), sort = Internal 0 } ) ]
+             ( Seq
+              ( Typed
+               { annotated = TyTuple 0, value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 44 } } } )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 44 } } )
+               ( Apply
+                ( Typed
+                 { annotated = TyTuple 0, value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 44 } } } )
+                ( Var
+                 ( Typed
+                  { annotated = TyArr
+                   ( TyCon
+                    ( Id
+                     { name = "String", moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                   ( TyTuple 0 ), value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 22 }, _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 24 } } } )
+                 ( Id
+                  { name = "f", moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/HelloImport.mlg" ), sort = Internal 0 } ) )
+                ( Seq
+                 ( Typed
+                  { annotated = TyCon
+                   ( Id
+                    { name = "String", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ), value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 24 }, _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 44 } } } )
+                 ( NoBind
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 25 }, _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 42 } } )
+                  ( Apply
+                   ( Typed
+                    { annotated = TyCon
+                     ( Id
+                      { name = "String", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ), value = Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 25 }, _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 42 } } } )
+                   ( Var
                     ( Typed
-                        { annotated = TyArr
-                            ( TyTuple 0 )
-                            ( TyTuple 0 )
-                        , value = Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 3
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                , sourceLine = Pos 10
-                                , sourceColumn = Pos 1
-                                }
-                            }
-                        }
-                    , Id
-                        { name = "main"
-                        , moduleName = ModuleName
-                            { raw = "HelloImport" }
-                        , sort = External
-                        }
-                    , Fn
-                        ( Typed
-                            { annotated = TyArr
-                                ( TyTuple 0 )
-                                ( TyTuple 0 )
-                            , value = Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                    , sourceLine = Pos 7
-                                    , sourceColumn = Pos 5
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                    , sourceLine = Pos 9
-                                    , sourceColumn = Pos 3
-                                    }
-                                }
-                            }
-                        )
-                        ( Clause
-                            ( Typed
-                                { annotated = TyArr
-                                    ( TyTuple 0 )
-                                    ( TyTuple 0 )
-                                , value = Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                        , sourceLine = Pos 7
-                                        , sourceColumn = Pos 5
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                        , sourceLine = Pos 9
-                                        , sourceColumn = Pos 3
-                                        }
-                                    }
-                                }
-                            )
-                            [ VarP
-                                ( Typed
-                                    { annotated = TyTuple 0
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 5
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 3
-                                            }
-                                        }
-                                    }
-                                )
-                                ( Id
-                                    { name = "$_"
-                                    , moduleName = ModuleName
-                                        { raw = "HelloImport" }
-                                    , sort = Internal 17
-                                    }
-                                )
-                            ]
-                            ( Seq
-                                ( Typed
-                                    { annotated = TyTuple 0
-                                    , value = Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 5
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 3
-                                            }
-                                        }
-                                    }
-                                )
-                                ( NoBind
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 5
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                            , sourceLine = Pos 7
-                                            , sourceColumn = Pos 30
-                                            }
-                                        }
-                                    )
-                                    ( Apply
-                                        ( Typed
-                                            { annotated = TyTuple 0
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                    , sourceLine = Pos 7
-                                                    , sourceColumn = Pos 5
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                    , sourceLine = Pos 7
-                                                    , sourceColumn = Pos 30
-                                                    }
-                                                }
-                                            }
-                                        )
-                                        ( Var
-                                            ( Typed
-                                                { annotated = TyArr
-                                                    ( TyCon
-                                                        ( Id
-                                                            { name = "String"
-                                                            , moduleName = ModuleName
-                                                                { raw = "Builtin" }
-                                                            , sort = External
-                                                            }
-                                                        )
-                                                    )
-                                                    ( TyTuple 0 )
-                                                , value = Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 5
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 12
-                                                        }
-                                                    }
-                                                }
-                                            )
-                                            ( Id
-                                                { name = "putStr"
-                                                , moduleName = ModuleName
-                                                    { raw = "Prelude" }
-                                                , sort = External
-                                                }
-                                            )
-                                        )
-                                        ( Seq
-                                            ( Typed
-                                                { annotated = TyCon
-                                                    ( Id
-                                                        { name = "String"
-                                                        , moduleName = ModuleName
-                                                            { raw = "Builtin" }
-                                                        , sort = External
-                                                        }
-                                                    )
-                                                , value = Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 12
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 30
-                                                        }
-                                                    }
-                                                }
-                                            )
-                                            ( NoBind
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 13
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                        , sourceLine = Pos 7
-                                                        , sourceColumn = Pos 29
-                                                        }
-                                                    }
-                                                )
-                                                ( Apply
-                                                    ( Typed
-                                                        { annotated = TyCon
-                                                            ( Id
-                                                                { name = "String"
-                                                                , moduleName = ModuleName
-                                                                    { raw = "Builtin" }
-                                                                , sort = External
-                                                                }
-                                                            )
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 13
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                , sourceLine = Pos 7
-                                                                , sourceColumn = Pos 29
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Var
-                                                        ( Typed
-                                                            { annotated = TyArr ( TyPrim StringT )
-                                                                ( TyCon
-                                                                    ( Id
-                                                                        { name = "String"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "Builtin" }
-                                                                        , sort = External
-                                                                        }
-                                                                    )
-                                                                )
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 13
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 21
-                                                                    }
-                                                                }
-                                                            }
-                                                        )
-                                                        ( Id
-                                                            { name = "String#"
-                                                            , moduleName = ModuleName
-                                                                { raw = "Builtin" }
-                                                            , sort = External
-                                                            }
-                                                        )
-                                                    )
-                                                    ( Unboxed
-                                                        ( Typed
-                                                            { annotated = TyPrim StringT
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 21
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 7
-                                                                    , sourceColumn = Pos 29
-                                                                    }
-                                                                }
-                                                            }
-                                                        )
-                                                        ( String "hello" )
-                                                    )
-                                                ) :| []
-                                            )
-                                        )
-                                    ) :|
-                                    [ NoBind
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                , sourceLine = Pos 8
-                                                , sourceColumn = Pos 5
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                , sourceLine = Pos 9
-                                                , sourceColumn = Pos 3
-                                                }
-                                            }
-                                        )
-                                        ( Apply
-                                            ( Typed
-                                                { annotated = TyTuple 0
-                                                , value = Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                        , sourceLine = Pos 8
-                                                        , sourceColumn = Pos 14
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                        , sourceLine = Pos 8
-                                                        , sourceColumn = Pos 17
-                                                        }
-                                                    }
-                                                }
-                                            )
-                                            ( Apply
-                                                ( Typed
-                                                    { annotated = TyArr
-                                                        ( TyArr
-                                                            ( TyArr
-                                                                ( TyCon
-                                                                    ( Id
-                                                                        { name = "String"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "Builtin" }
-                                                                        , sort = External
-                                                                        }
-                                                                    )
-                                                                )
-                                                                ( TyTuple 0 )
-                                                            )
-                                                            ( TyTuple 0 )
-                                                        )
-                                                        ( TyTuple 0 )
-                                                    , value = Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                            , sourceLine = Pos 8
-                                                            , sourceColumn = Pos 14
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                            , sourceLine = Pos 8
-                                                            , sourceColumn = Pos 17
-                                                            }
-                                                        }
-                                                    }
-                                                )
-                                                ( Var
-                                                    ( Typed
-                                                        { annotated = TyArr
-                                                            ( TyArr
-                                                                ( TyCon
-                                                                    ( Id
-                                                                        { name = "String"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "Builtin" }
-                                                                        , sort = External
-                                                                        }
-                                                                    )
-                                                                )
-                                                                ( TyTuple 0 )
-                                                            )
-                                                            ( TyArr
-                                                                ( TyArr
-                                                                    ( TyArr
-                                                                        ( TyCon
-                                                                            ( Id
-                                                                                { name = "String"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "Builtin" }
-                                                                                , sort = External
-                                                                                }
-                                                                            )
-                                                                        )
-                                                                        ( TyTuple 0 )
-                                                                    )
-                                                                    ( TyTuple 0 )
-                                                                )
-                                                                ( TyTuple 0 )
-                                                            )
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                , sourceLine = Pos 8
-                                                                , sourceColumn = Pos 14
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                , sourceLine = Pos 8
-                                                                , sourceColumn = Pos 17
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Id
-                                                        { name = "|>"
-                                                        , moduleName = ModuleName
-                                                            { raw = "Prelude" }
-                                                        , sort = External
-                                                        }
-                                                    )
-                                                )
-                                                ( Var
-                                                    ( Typed
-                                                        { annotated = TyArr
-                                                            ( TyCon
-                                                                ( Id
-                                                                    { name = "String"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "Builtin" }
-                                                                    , sort = External
-                                                                    }
-                                                                )
-                                                            )
-                                                            ( TyTuple 0 )
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                , sourceLine = Pos 8
-                                                                , sourceColumn = Pos 5
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                , sourceLine = Pos 8
-                                                                , sourceColumn = Pos 14
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Id
-                                                        { name = "putStrLn"
-                                                        , moduleName = ModuleName
-                                                            { raw = "Prelude" }
-                                                        , sort = External
-                                                        }
-                                                    )
-                                                )
-                                            )
-                                            ( Fn
-                                                ( Typed
-                                                    { annotated = TyArr
-                                                        ( TyArr
-                                                            ( TyCon
-                                                                ( Id
-                                                                    { name = "String"
-                                                                    , moduleName = ModuleName
-                                                                        { raw = "Builtin" }
-                                                                    , sort = External
-                                                                    }
-                                                                )
-                                                            )
-                                                            ( TyTuple 0 )
-                                                        )
-                                                        ( TyTuple 0 )
-                                                    , value = Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                            , sourceLine = Pos 8
-                                                            , sourceColumn = Pos 19
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                            , sourceLine = Pos 8
-                                                            , sourceColumn = Pos 46
-                                                            }
-                                                        }
-                                                    }
-                                                )
-                                                ( Clause
-                                                    ( Typed
-                                                        { annotated = TyArr
-                                                            ( TyArr
-                                                                ( TyCon
-                                                                    ( Id
-                                                                        { name = "String"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "Builtin" }
-                                                                        , sort = External
-                                                                        }
-                                                                    )
-                                                                )
-                                                                ( TyTuple 0 )
-                                                            )
-                                                            ( TyTuple 0 )
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                , sourceLine = Pos 8
-                                                                , sourceColumn = Pos 19
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                , sourceLine = Pos 8
-                                                                , sourceColumn = Pos 46
-                                                                }
-                                                            }
-                                                        }
-                                                    )
-                                                    [ VarP
-                                                        ( Typed
-                                                            { annotated = TyArr
-                                                                ( TyCon
-                                                                    ( Id
-                                                                        { name = "String"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "Builtin" }
-                                                                        , sort = External
-                                                                        }
-                                                                    )
-                                                                )
-                                                                ( TyTuple 0 )
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 8
-                                                                    , sourceColumn = Pos 19
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 8
-                                                                    , sourceColumn = Pos 21
-                                                                    }
-                                                                }
-                                                            }
-                                                        )
-                                                        ( Id
-                                                            { name = "f"
-                                                            , moduleName = ModuleName
-                                                                { raw = "HelloImport" }
-                                                            , sort = Internal 0
-                                                            }
-                                                        )
-                                                    ]
-                                                    ( Seq
-                                                        ( Typed
-                                                            { annotated = TyTuple 0
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 8
-                                                                    , sourceColumn = Pos 24
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 8
-                                                                    , sourceColumn = Pos 46
-                                                                    }
-                                                                }
-                                                            }
-                                                        )
-                                                        ( NoBind
-                                                            ( Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 8
-                                                                    , sourceColumn = Pos 24
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                    , sourceLine = Pos 8
-                                                                    , sourceColumn = Pos 46
-                                                                    }
-                                                                }
-                                                            )
-                                                            ( Apply
-                                                                ( Typed
-                                                                    { annotated = TyTuple 0
-                                                                    , value = Range
-                                                                        { _start = SourcePos
-                                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                            , sourceLine = Pos 8
-                                                                            , sourceColumn = Pos 24
-                                                                            }
-                                                                        , _end = SourcePos
-                                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                            , sourceLine = Pos 8
-                                                                            , sourceColumn = Pos 46
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                )
-                                                                ( Var
-                                                                    ( Typed
-                                                                        { annotated = TyArr
-                                                                            ( TyCon
-                                                                                ( Id
-                                                                                    { name = "String"
-                                                                                    , moduleName = ModuleName
-                                                                                        { raw = "Builtin" }
-                                                                                    , sort = External
-                                                                                    }
-                                                                                )
-                                                                            )
-                                                                            ( TyTuple 0 )
-                                                                        , value = Range
-                                                                            { _start = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                , sourceLine = Pos 8
-                                                                                , sourceColumn = Pos 24
-                                                                                }
-                                                                            , _end = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                , sourceLine = Pos 8
-                                                                                , sourceColumn = Pos 26
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    )
-                                                                    ( Id
-                                                                        { name = "f"
-                                                                        , moduleName = ModuleName
-                                                                            { raw = "HelloImport" }
-                                                                        , sort = Internal 0
-                                                                        }
-                                                                    )
-                                                                )
-                                                                ( Seq
-                                                                    ( Typed
-                                                                        { annotated = TyCon
-                                                                            ( Id
-                                                                                { name = "String"
-                                                                                , moduleName = ModuleName
-                                                                                    { raw = "Builtin" }
-                                                                                , sort = External
-                                                                                }
-                                                                            )
-                                                                        , value = Range
-                                                                            { _start = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                , sourceLine = Pos 8
-                                                                                , sourceColumn = Pos 26
-                                                                                }
-                                                                            , _end = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                , sourceLine = Pos 8
-                                                                                , sourceColumn = Pos 46
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    )
-                                                                    ( NoBind
-                                                                        ( Range
-                                                                            { _start = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                , sourceLine = Pos 8
-                                                                                , sourceColumn = Pos 27
-                                                                                }
-                                                                            , _end = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                , sourceLine = Pos 8
-                                                                                , sourceColumn = Pos 44
-                                                                                }
-                                                                            }
-                                                                        )
-                                                                        ( Apply
-                                                                            ( Typed
-                                                                                { annotated = TyCon
-                                                                                    ( Id
-                                                                                        { name = "String"
-                                                                                        , moduleName = ModuleName
-                                                                                            { raw = "Builtin" }
-                                                                                        , sort = External
-                                                                                        }
-                                                                                    )
-                                                                                , value = Range
-                                                                                    { _start = SourcePos
-                                                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                        , sourceLine = Pos 8
-                                                                                        , sourceColumn = Pos 27
-                                                                                        }
-                                                                                    , _end = SourcePos
-                                                                                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                        , sourceLine = Pos 8
-                                                                                        , sourceColumn = Pos 44
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            )
-                                                                            ( Var
-                                                                                ( Typed
-                                                                                    { annotated = TyArr ( TyPrim StringT )
-                                                                                        ( TyCon
-                                                                                            ( Id
-                                                                                                { name = "String"
-                                                                                                , moduleName = ModuleName
-                                                                                                    { raw = "Builtin" }
-                                                                                                , sort = External
-                                                                                                }
-                                                                                            )
-                                                                                        )
-                                                                                    , value = Range
-                                                                                        { _start = SourcePos
-                                                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                            , sourceLine = Pos 8
-                                                                                            , sourceColumn = Pos 27
-                                                                                            }
-                                                                                        , _end = SourcePos
-                                                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                            , sourceLine = Pos 8
-                                                                                            , sourceColumn = Pos 35
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                )
-                                                                                ( Id
-                                                                                    { name = "String#"
-                                                                                    , moduleName = ModuleName
-                                                                                        { raw = "Builtin" }
-                                                                                    , sort = External
-                                                                                    }
-                                                                                )
-                                                                            )
-                                                                            ( Unboxed
-                                                                                ( Typed
-                                                                                    { annotated = TyPrim StringT
-                                                                                    , value = Range
-                                                                                        { _start = SourcePos
-                                                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                            , sourceLine = Pos 8
-                                                                                            , sourceColumn = Pos 35
-                                                                                            }
-                                                                                        , _end = SourcePos
-                                                                                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                                                                            , sourceLine = Pos 8
-                                                                                            , sourceColumn = Pos 44
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                )
-                                                                                ( String " world" )
-                                                                            )
-                                                                        ) :| []
-                                                                    )
-                                                                )
-                                                            ) :| []
-                                                        )
-                                                    ) :| []
-                                                )
-                                            )
-                                        )
-                                    ]
-                                )
-                            ) :| []
-                        )
-                    )
-                ]
-            ]
-        , _scSigs =
-            [
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 3
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                        , sourceLine = Pos 6
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                , Id
-                    { name = "main"
-                    , moduleName = ModuleName
-                        { raw = "HelloImport" }
-                    , sort = External
-                    }
-                , TyArr
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 14
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                            , sourceLine = Pos 6
-                            , sourceColumn = Pos 3
-                            }
-                        }
-                    )
-                    ( TyTuple
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 14
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 3
-                                }
-                            }
-                        ) []
-                    )
-                    ( TyTuple
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 15
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 17
-                                }
-                            }
-                        ) []
-                    )
-                )
-            ]
-        , _dataDefs = []
-        , _typeSynonyms = []
-        , _foreigns = []
-        , _imports =
-            [
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                        , sourceLine = Pos 2
-                        , sourceColumn = Pos 3
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                        , sourceLine = Pos 3
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                , ModuleName
-                    { raw = "Builtin" }
-                , All
-                )
-            ,
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                        , sourceLine = Pos 3
-                        , sourceColumn = Pos 3
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/HelloImport.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                , ModuleName
-                    { raw = "Prelude" }
-                , All
-                )
-            ]
-        }
-    }
+                     { annotated = TyArr ( TyPrim StringT )
+                      ( TyCon
+                       ( Id
+                        { name = "String", moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ), value = Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 25 }, _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 33 } } } )
+                    ( Id
+                     { name = "String#", moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                   ( Unboxed
+                    ( Typed
+                     { annotated = TyPrim StringT, value = Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 33 }, _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 7, sourceColumn = Pos 42 } } } )
+                    ( String " world" ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ) ] ) ) :| [] ) ) ] ], _scSigs =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } }, Id
+     { name = "main", moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/HelloImport.mlg" ), sort = External }, TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 12 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } )
+     ( TyTuple
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 12 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } ) [] )
+     ( TyTuple
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 13 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 15 } } ) [] ) ) ], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 } }, Artifact
+     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), All ),
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/HelloImport.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } }, Artifact
+     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), All ) ] } }

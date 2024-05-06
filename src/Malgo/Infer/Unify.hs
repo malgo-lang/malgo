@@ -16,19 +16,19 @@ module Malgo.Infer.Unify
 where
 
 import Control.Lens (itraverse_, view)
-import Data.HashMap.Strict qualified as HashMap
-import Data.HashSet qualified as HashSet
+import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
 import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import GHC.Records (HasField)
-import Koriel.Id
-import Koriel.Lens (kindCtx, typeSynonymMap)
-import Koriel.MonadUniq
-import Koriel.Pretty
+import Malgo.Id
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
+import Malgo.Lens (kindCtx, typeSynonymMap)
+import Malgo.Module
+import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint)
 
 -- * Constraint
@@ -46,7 +46,7 @@ instance Pretty Constraint where
 -- * Unifiable
 
 lookupVar :: (State TypeMap :> es) => MetaVar -> Eff es (Maybe Type)
-lookupVar v = HashMap.lookup v <$> get @TypeMap
+lookupVar v = Map.lookup v <$> get @TypeMap
 
 freshVar ::
   (State Uniq :> es, Reader ModuleName :> es, State TcEnv :> es) =>
@@ -64,10 +64,10 @@ bindVar x v t = do
   when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
   ctx <- gets @TcEnv (view kindCtx)
   solve [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
-  modify @TypeMap (HashMap.insert v t)
+  modify @TypeMap (Map.insert v t)
   where
     occursCheck :: MetaVar -> Type -> Bool
-    occursCheck v t = HashSet.member v (freevars t)
+    occursCheck v t = Set.member v (freevars t)
 
 zonk :: (State TypeMap :> es, State TcEnv :> es) => Type -> Eff es Type
 zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
@@ -90,15 +90,15 @@ zonk TYPE = pure TYPE
 zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
 
 -- | 'Right' (substituation, new constraints) or 'Left' (position, error message)
-type UnifyResult ann = Either (Range, Doc ann) (HashMap MetaVar Type, [(Range, Constraint)])
+type UnifyResult ann = Either (Range, Doc ann) (Map MetaVar Type, [(Range, Constraint)])
 
 -- | Unify two types
 unify :: Range -> Type -> Type -> UnifyResult ann
 unify _ (TyMeta v1) (TyMeta v2)
   | v1 == v2 = pure (mempty, [])
-  | otherwise = pure (HashMap.singleton v1 (TyMeta v2), [])
-unify _ (TyMeta v) t = pure (HashMap.singleton v t, [])
-unify _ t (TyMeta v) = pure (HashMap.singleton v t, [])
+  | otherwise = pure (Map.singleton v1 (TyMeta v2), [])
+unify _ (TyMeta v) t = pure (Map.singleton v t, [])
+unify _ t (TyMeta v) = pure (Map.singleton v t, [])
 unify x (TyApp t11 t12) (TyApp t21 t22) = pure (mempty, [(x, t11 :~ t21), (x, t12 :~ t22)])
 unify _ (TyVar v1) (TyVar v2) | v1 == v2 = pure (mempty, [])
 unify _ (TyCon c1) (TyCon c2) | c1 == c2 = pure (mempty, [])
@@ -106,7 +106,7 @@ unify _ (TyPrim p1) (TyPrim p2) | p1 == p2 = pure (mempty, [])
 unify x (TyArr l1 r1) (TyArr l2 r2) = pure (mempty, [(x, l1 :~ l2), (x, r1 :~ r2)])
 unify _ (TyTuple n1) (TyTuple n2) | n1 == n2 = pure (mempty, [])
 unify x (TyRecord kts1) (TyRecord kts2)
-  | HashMap.keys kts1 == HashMap.keys kts2 = pure (mempty, zipWith (\t1 t2 -> (x, t1 :~ t2)) (HashMap.elems kts1) (HashMap.elems kts2))
+  | Map.keys kts1 == Map.keys kts2 = pure (mempty, zipWith (\t1 t2 -> (x, t1 :~ t2)) (Map.elems kts1) (Map.elems kts2))
 unify _ TyPtr TyPtr = pure (mempty, [])
 unify _ TYPE TYPE = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
@@ -139,7 +139,7 @@ generalize ::
   Eff es (Scheme Type)
 generalize x term = do
   zonkedTerm <- zonk term
-  let fvs = HashSet.toList $ freevars zonkedTerm
+  let fvs = Set.toList $ freevars zonkedTerm
   let as = map toBound fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
@@ -151,7 +151,7 @@ generalizeMutRecs ::
   Eff es ([TypeVar], [Type])
 generalizeMutRecs x terms = do
   zonkedTerms <- traverse zonk terms
-  let fvs = HashSet.toList $ mconcat $ map freevars zonkedTerms
+  let fvs = Set.toList $ mconcat $ map freevars zonkedTerms
   let as = map toBound fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   (as,) <$> traverse zonk zonkedTerms
@@ -170,4 +170,4 @@ instantiate x (Forall as t) = do
     ctx <- gets @TcEnv (view kindCtx)
     solve [(x, kindOf ctx a :~ kindOf ctx v)]
     pure (a, v)
-  pure $ applySubst (HashMap.fromList avs) t
+  pure $ applySubst (Map.fromList avs) t

@@ -16,14 +16,14 @@ module Malgo.Rename.RnEnv
 where
 
 import Control.Lens (ASetter', makeFieldsNoPrefix)
-import Data.HashMap.Strict qualified as HashMap
+import Data.Map.Strict qualified as Map
 import Effectful (Eff, IOE, (:>))
 import Effectful.Reader.Static (Reader, asks, runReader)
 import Effectful.State.Static.Local (State)
-import Koriel.Id
-import Koriel.Lens
-import Koriel.MonadUniq
-import Koriel.Pretty
+import Malgo.Id
+import Malgo.Lens
+import Malgo.Module
+import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.Syntax.Extension
 
@@ -34,16 +34,16 @@ data RnEnv = RnEnv
   { -- | Environment for resolved variable identifiers.
     -- The key is the raw identifier (e.g. `foo`, `bar`).
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
-    _resolvedVarIdentMap :: HashMap PsId [Resolved],
-    _resolvedTypeIdentMap :: HashMap PsId [Resolved]
+    _resolvedVarIdentMap :: Map PsId [Resolved],
+    _resolvedTypeIdentMap :: Map PsId [Resolved]
   }
 
 makeFieldsNoPrefix ''RnEnv
 
 -- | Append resolved identifiers to the environment.
-appendRnEnv :: ASetter' RnEnv (HashMap PsId [Resolved]) -> [(PsId, Resolved)] -> RnEnv -> RnEnv
+appendRnEnv :: ASetter' RnEnv (Map PsId [Resolved]) -> [(PsId, Resolved)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens
-  $ \e -> foldr (\(k, v) -> HashMap.insertWith (<>) k [v]) e newEnv
+  $ \e -> foldr (\(k, v) -> Map.insertWith (<>) k [v]) e newEnv
 
 -- | Generate RnId of primitive types
 genBuiltinRnEnv :: Eff es RnEnv
@@ -60,7 +60,7 @@ genBuiltinRnEnv = runReader (ModuleName "Builtin") do
     $ RnEnv
       { _resolvedVarIdentMap = mempty,
         _resolvedTypeIdentMap =
-          HashMap.fromList
+          Map.fromList
             [ ("Int32#", [Qualified Implicit int32_t]),
               ("Int64#", [Qualified Implicit int64_t]),
               ("Float#", [Qualified Implicit float_t]),
@@ -85,7 +85,7 @@ resolveGlobalName = newExternalId
 -- | Resolving a variable name that is already resolved
 lookupVarName :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Text -> Eff es Id
 lookupVarName pos name =
-  asks @RnEnv ((._resolvedVarIdentMap) >>> HashMap.lookup name) >>= \case
+  asks @RnEnv ((._resolvedVarIdentMap) >>> Map.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
       Nothing ->
@@ -101,7 +101,7 @@ lookupVarName pos name =
 -- | Resolving a type name that is already resolved
 lookupTypeName :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Text -> Eff es Id
 lookupTypeName pos name =
-  asks @RnEnv ((._resolvedTypeIdentMap) >>> HashMap.lookup name) >>= \case
+  asks @RnEnv ((._resolvedTypeIdentMap) >>> Map.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
       Nothing ->
@@ -122,7 +122,7 @@ lookupQualifiedVarName ::
   Text ->
   Eff es Id
 lookupQualifiedVarName pos modName name =
-  asks @RnEnv ((._resolvedVarIdentMap) >>> HashMap.lookup name) >>= \case
+  asks @RnEnv ((._resolvedVarIdentMap) >>> Map.lookup name) >>= \case
     Just names ->
       case find (\(Qualified visi _) -> visi == Explicit modName) names of
         Just (Qualified _ name) -> pure name

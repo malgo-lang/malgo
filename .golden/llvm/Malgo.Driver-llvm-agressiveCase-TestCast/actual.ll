@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/TestCast.mlg'
-source_filename = "./test/testcases/malgo/TestCast.mlg"
+; ModuleID = 'test/testcases/malgo/TestCast.mlg'
+source_filename = "test/testcases/malgo/TestCast.mlg"
 
 declare void @GC_init()
 
@@ -165,26 +165,45 @@ declare ptr @malgo_read_vector(i64, ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @"TestCast.#let_closure_3477"(ptr %0, ptr %1) {
+define internal ptr @"test/testcases/malgo/TestCast.mlg.#let_closure_3477"(ptr %0, ptr %1) {
   %p_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
   %p_0 = load i64, ptr %p_addr_0, align 4
   %3 = call ptr @malgo_new_vector(i64 %p_0, ptr %1)
   ret ptr %3
 }
 
-define internal ptr @TestCast.malgo_new_vector(ptr %0, i64 %"TestCast.$p_27_0") {
+define internal ptr @"test/testcases/malgo/TestCast.mlg.malgo_new_vector"(ptr %0, i64 %"test/testcases/malgo/TestCast.mlg.$p_27_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i64 }, ptr null, i32 1) to i64))
   %p_0 = getelementptr { i64 }, ptr %let_capture_0, i32 0, i32 0
-  store i64 %"TestCast.$p_27_0", ptr %p_0, align 4
+  store i64 %"test/testcases/malgo/TestCast.mlg.$p_27_0", ptr %p_0, align 4
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"TestCast.#let_closure_3477", ptr %let_func_0, align 8
+  store ptr @"test/testcases/malgo/TestCast.mlg.#let_closure_3477", ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal ptr @TestCast.main(ptr %0, ptr %"TestCast.$$__39_0") {
+define internal ptr @"test/testcases/malgo/TestCast.mlg.#let_closure_3478"(ptr %0, ptr %1) {
+  %p_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
+  %p_0 = load i64, ptr %p_addr_0, align 4
+  %3 = call ptr @malgo_read_vector(i64 %p_0, ptr %1)
+  ret ptr %3
+}
+
+define internal ptr @"test/testcases/malgo/TestCast.mlg.malgo_read_vector"(ptr %0, i64 %"test/testcases/malgo/TestCast.mlg.$p_33_0") {
+  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
+  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i64 }, ptr null, i32 1) to i64))
+  %p_0 = getelementptr { i64 }, ptr %let_capture_0, i32 0, i32 0
+  store i64 %"test/testcases/malgo/TestCast.mlg.$p_33_0", ptr %p_0, align 4
+  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %let_capture_0, ptr %let_capture_1, align 8
+  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @"test/testcases/malgo/TestCast.mlg.#let_closure_3478", ptr %let_func_0, align 8
+  ret ptr %2
+}
+
+define internal ptr @"test/testcases/malgo/TestCast.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TestCast.mlg.$$__39_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -197,10 +216,10 @@ define internal ptr @TestCast.main(ptr %0, ptr %"TestCast.$$__39_0") {
   %9 = getelementptr { i8, <4 x i8> }, ptr %8, i32 0, i32 0
   %10 = load i8, ptr %9, align 1
   switch i8 %10, label %switch_default_1 [
-    i8 0, label %"switch_branch_Builtin.Int32#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   ]
 
-"switch_branch_Builtin.Int32#_0":                 ; preds = %1
+"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
   %11 = getelementptr { i8, { i32 } }, ptr %8, i32 0, i32 1
   %12 = getelementptr { i32 }, ptr %11, i32 0, i32 0
   %13 = load i32, ptr %12, align 4
@@ -213,52 +232,33 @@ define internal ptr @TestCast.main(ptr %0, ptr %"TestCast.$$__39_0") {
   %18 = getelementptr { i8, <8 x i8> }, ptr %15, i32 0, i32 0
   %19 = load i8, ptr %18, align 1
   switch i8 %19, label %switch_default_0 [
-    i8 0, label %"switch_branch_Builtin.String#_0"
+    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
   ]
 
-"switch_branch_Builtin.String#_0":                ; preds = %"switch_branch_Builtin.Int32#_0"
+"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   %20 = getelementptr { i8, { ptr } }, ptr %15, i32 0, i32 1
   %21 = getelementptr { ptr }, ptr %20, i32 0, i32 0
   %22 = load ptr, ptr %21, align 8
   %23 = call ptr @malgo_print_string(ptr %22)
   ret ptr %23
 
-switch_default_0:                                 ; preds = %"switch_branch_Builtin.Int32#_0"
+switch_default_0:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
   unreachable
 
 switch_default_1:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"TestCast.#let_closure_3478"(ptr %0, ptr %1) {
-  %p_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
-  %p_0 = load i64, ptr %p_addr_0, align 4
-  %3 = call ptr @malgo_read_vector(i64 %p_0, ptr %1)
-  ret ptr %3
-}
-
-define internal ptr @TestCast.malgo_read_vector(ptr %0, i64 %"TestCast.$p_33_0") {
-  %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i64 }, ptr null, i32 1) to i64))
-  %p_0 = getelementptr { i64 }, ptr %let_capture_0, i32 0, i32 0
-  store i64 %"TestCast.$p_33_0", ptr %p_0, align 4
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @"TestCast.#let_closure_3478", ptr %let_func_0, align 8
-  ret ptr %2
-}
-
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_TestCast()
+  call void @"malgo_load_test/testcases/malgo/TestCast.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @TestCast.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/TestCast.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @koriel_load_TestCast() {
+define internal void @"malgo_load_test/testcases/malgo/TestCast.mlg"() {
   ret void
 }

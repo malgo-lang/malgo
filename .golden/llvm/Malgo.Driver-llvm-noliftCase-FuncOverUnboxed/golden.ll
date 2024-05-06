@@ -1,5 +1,5 @@
-; ModuleID = './test/testcases/malgo/FuncOverUnboxed.mlg'
-source_filename = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+; ModuleID = 'test/testcases/malgo/FuncOverUnboxed.mlg'
+source_filename = "test/testcases/malgo/FuncOverUnboxed.mlg"
 
 declare void @GC_init()
 
@@ -159,8 +159,8 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @FuncOverUnboxed.f(ptr %0, i64 %"FuncOverUnboxed.$unboxed_22_0") {
-  switch i64 %"FuncOverUnboxed.$unboxed_22_0", label %switch-unboxed_default_0 [
+define internal ptr @"test/testcases/malgo/FuncOverUnboxed.mlg.f"(ptr %0, i64 %"test/testcases/malgo/FuncOverUnboxed.mlg.$unboxed_22_0") {
+  switch i64 %"test/testcases/malgo/FuncOverUnboxed.mlg.$unboxed_22_0", label %switch-unboxed_default_0 [
     i64 0, label %switch-unboxed_branch_0_i64_0
     i64 1, label %switch-unboxed_branch_1_i64_0
   ]
@@ -183,12 +183,12 @@ switch-unboxed_default_0:                         ; preds = %1
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @FuncOverUnboxed.main(ptr %0, ptr %"FuncOverUnboxed.$$__33_0") {
+define internal ptr @"test/testcases/malgo/FuncOverUnboxed.mlg.main"(ptr %0, ptr %"test/testcases/malgo/FuncOverUnboxed.mlg.$$__33_0") {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %f_capture_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr null, ptr %f_capture_0, align 8
   %f_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @FuncOverUnboxed.f, ptr %f_func_0, align 8
+  store ptr @"test/testcases/malgo/FuncOverUnboxed.mlg.f", ptr %f_func_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
@@ -199,14 +199,14 @@ define internal ptr @FuncOverUnboxed.main(ptr %0, ptr %"FuncOverUnboxed.$$__33_0
 
 define i32 @main(ptr %0) {
   call void @GC_init()
-  call void @koriel_load_FuncOverUnboxed()
+  call void @"malgo_load_test/testcases/malgo/FuncOverUnboxed.mlg"()
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @FuncOverUnboxed.main(ptr null, ptr %2)
+  %4 = call ptr @"test/testcases/malgo/FuncOverUnboxed.mlg.main"(ptr null, ptr %2)
   ret i32 0
 }
 
-define internal void @koriel_load_FuncOverUnboxed() {
+define internal void @"malgo_load_test/testcases/malgo/FuncOverUnboxed.mlg"() {
   ret void
 }

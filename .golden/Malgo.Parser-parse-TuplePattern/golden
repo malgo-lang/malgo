@@ -1,646 +1,208 @@
 Module
-    { moduleName = ModuleName
-        { raw = "TuplePattern" }
-    , moduleDefinition = ParsedDefinitions
-        [ Import
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" ), moduleDefinition = ParsedDefinitions
+  [ Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 } } )
+   ( Artifact ( ArtifactPath "runtime/malgo/Builtin.mlg" ) ) All, Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } } )
+   ( Artifact ( ArtifactPath "runtime/malgo/Prelude.mlg" ) ) All, DataDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 4, sourceColumn = Pos 6 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } } ) "T" []
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 4, sourceColumn = Pos 10 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 4, sourceColumn = Pos 12 } }, "A", [] ),
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 4, sourceColumn = Pos 14 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 4, sourceColumn = Pos 16 } }, "B", [] ),
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 4, sourceColumn = Pos 18 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } }, "C", [] ) ], ScSig
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } } ) "main"
+   ( TyBlock
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 6, sourceColumn = Pos 12 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } } )
+    ( TyTuple
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 6, sourceColumn = Pos 14 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 6, sourceColumn = Pos 17 } } ) [] ) ), ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 13, sourceColumn = Pos 2 } } ) "main"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 } } )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 } } ) []
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 } } )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 13, sourceColumn = Pos 1 } } )
+       ( OpApp
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 5 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 8 } } ) "|>"
+        ( Tuple
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 5 } } )
+         [ Var
+          ( Qualified
+           { visibility = Implicit, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 4 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 5 } } } ) "A", Var
+          ( Qualified
+           { visibility = Implicit, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 7 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 8, sourceColumn = Pos 8 } } } ) "B" ] )
+        ( Fn
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 10 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 12, sourceColumn = Pos 8 } } )
+         ( Clause
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 10 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 38 } } )
+          [ TupleP
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 10 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 20 } } )
+           [ ConP
             ( Range
-                { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 2
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 3
-                    , sourceColumn = Pos 3
-                    }
-                }
-            )
-            ( ModuleName
-                { raw = "Builtin" }
-            ) All
-        , Import
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 11 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 12 } } ) "A" [], VarP
             ( Range
-                { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 3
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 5
-                    , sourceColumn = Pos 3
-                    }
-                }
-            )
-            ( ModuleName
-                { raw = "Prelude" }
-            ) All
-        , DataDef
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 14 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 18 } } ) "rest" ] ]
+          ( Seq
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 23 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 38 } } )
+           ( NoBind
             ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 23 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 38 } } )
+            ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 23 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 38 } } )
+             ( Var
+              ( Qualified
+               { visibility = Implicit, value = Range
                 { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 5
-                    , sourceColumn = Pos 8
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 7
-                    , sourceColumn = Pos 3
-                    }
-                }
-            ) "T" []
-            [
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 12
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 14
-                        }
-                    }
-                , "A"
-                , []
-                )
-            ,
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 16
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 18
-                        }
-                    }
-                , "B"
-                , []
-                )
-            ,
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 20
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 7
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                , "C"
-                , []
-                )
-            ]
-        , ScSig
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 23 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 35 } } } ) "printString" )
+             ( Boxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 35 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 9, sourceColumn = Pos 38 } } )
+              ( String "A" ) ) ) :| [] ) ) :|
+          [ Clause
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 10 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 25 } } )
+           [ TupleP
             ( Range
-                { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 7
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 8
-                    , sourceColumn = Pos 3
-                    }
-                }
-            ) "main"
-            ( TyBlock
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 7
-                        , sourceColumn = Pos 14
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 8
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                )
-                ( TyTuple
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                            , sourceLine = Pos 7
-                            , sourceColumn = Pos 16
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                            , sourceLine = Pos 7
-                            , sourceColumn = Pos 19
-                            }
-                        }
-                    ) []
-                )
-            )
-        , ScDef
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 10 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 20 } } )
+            [ ConP
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 11 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 12 } } ) "B" [], VarP
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 14 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 18 } } ) "rest" ] ]
+           ( Seq
             ( Range
-                { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 8
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                    , sourceLine = Pos 15
-                    , sourceColumn = Pos 1
-                    }
-                }
-            ) "main"
-            ( Fn
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 9
-                        , sourceColumn = Pos 5
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                        , sourceLine = Pos 14
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                )
-                ( Clause
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                            , sourceLine = Pos 9
-                            , sourceColumn = Pos 5
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                            , sourceLine = Pos 14
-                            , sourceColumn = Pos 3
-                            }
-                        }
-                    ) []
-                    ( Seq
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                , sourceLine = Pos 9
-                                , sourceColumn = Pos 5
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                , sourceLine = Pos 14
-                                , sourceColumn = Pos 3
-                                }
-                            }
-                        )
-                        ( NoBind
-                            ( Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                    , sourceLine = Pos 9
-                                    , sourceColumn = Pos 5
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                    , sourceLine = Pos 14
-                                    , sourceColumn = Pos 3
-                                    }
-                                }
-                            )
-                            ( OpApp
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                        , sourceLine = Pos 10
-                                        , sourceColumn = Pos 7
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                        , sourceLine = Pos 10
-                                        , sourceColumn = Pos 10
-                                        }
-                                    }
-                                ) "|>"
-                                ( Tuple
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 5
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                            , sourceLine = Pos 10
-                                            , sourceColumn = Pos 7
-                                            }
-                                        }
-                                    )
-                                    [ Var
-                                        ( Qualified
-                                            { visibility = Implicit
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 9
-                                                    , sourceColumn = Pos 6
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 9
-                                                    , sourceColumn = Pos 7
-                                                    }
-                                                }
-                                            }
-                                        ) "A"
-                                    , Var
-                                        ( Qualified
-                                            { visibility = Implicit
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 9
-                                                    , sourceColumn = Pos 9
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 9
-                                                    , sourceColumn = Pos 10
-                                                    }
-                                                }
-                                            }
-                                        ) "B"
-                                    ]
-                                )
-                                ( Fn
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                            , sourceLine = Pos 10
-                                            , sourceColumn = Pos 12
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                            , sourceLine = Pos 13
-                                            , sourceColumn = Pos 10
-                                            }
-                                        }
-                                    )
-                                    ( Clause
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                , sourceLine = Pos 10
-                                                , sourceColumn = Pos 12
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                , sourceLine = Pos 10
-                                                , sourceColumn = Pos 40
-                                                }
-                                            }
-                                        )
-                                        [ TupleP
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 10
-                                                    , sourceColumn = Pos 12
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 10
-                                                    , sourceColumn = Pos 22
-                                                    }
-                                                }
-                                            )
-                                            [ ConP
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 10
-                                                        , sourceColumn = Pos 13
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 10
-                                                        , sourceColumn = Pos 14
-                                                        }
-                                                    }
-                                                ) "A" []
-                                            , VarP
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 10
-                                                        , sourceColumn = Pos 16
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 10
-                                                        , sourceColumn = Pos 20
-                                                        }
-                                                    }
-                                                ) "rest"
-                                            ]
-                                        ]
-                                        ( Seq
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 10
-                                                    , sourceColumn = Pos 25
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 10
-                                                    , sourceColumn = Pos 40
-                                                    }
-                                                }
-                                            )
-                                            ( NoBind
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 10
-                                                        , sourceColumn = Pos 25
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 10
-                                                        , sourceColumn = Pos 40
-                                                        }
-                                                    }
-                                                )
-                                                ( Apply
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 10
-                                                            , sourceColumn = Pos 25
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 10
-                                                            , sourceColumn = Pos 40
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Var
-                                                        ( Qualified
-                                                            { visibility = Implicit
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                                    , sourceLine = Pos 10
-                                                                    , sourceColumn = Pos 25
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                                    , sourceLine = Pos 10
-                                                                    , sourceColumn = Pos 37
-                                                                    }
-                                                                }
-                                                            }
-                                                        ) "printString"
-                                                    )
-                                                    ( Boxed
-                                                        ( Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                                , sourceLine = Pos 10
-                                                                , sourceColumn = Pos 37
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                                , sourceLine = Pos 10
-                                                                , sourceColumn = Pos 40
-                                                                }
-                                                            }
-                                                        )
-                                                        ( String "A" )
-                                                    )
-                                                ) :| []
-                                            )
-                                        ) :|
-                                        [ Clause
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 11
-                                                    , sourceColumn = Pos 12
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 11
-                                                    , sourceColumn = Pos 27
-                                                    }
-                                                }
-                                            )
-                                            [ TupleP
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 11
-                                                        , sourceColumn = Pos 12
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 11
-                                                        , sourceColumn = Pos 22
-                                                        }
-                                                    }
-                                                )
-                                                [ ConP
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 11
-                                                            , sourceColumn = Pos 13
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 11
-                                                            , sourceColumn = Pos 14
-                                                            }
-                                                        }
-                                                    ) "B" []
-                                                , VarP
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 11
-                                                            , sourceColumn = Pos 16
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 11
-                                                            , sourceColumn = Pos 20
-                                                            }
-                                                        }
-                                                    ) "rest"
-                                                ]
-                                            ]
-                                            ( Seq
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 11
-                                                        , sourceColumn = Pos 25
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 11
-                                                        , sourceColumn = Pos 27
-                                                        }
-                                                    }
-                                                )
-                                                ( NoBind
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 11
-                                                            , sourceColumn = Pos 25
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 11
-                                                            , sourceColumn = Pos 27
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Tuple
-                                                        ( Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                                , sourceLine = Pos 11
-                                                                , sourceColumn = Pos 25
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                                , sourceLine = Pos 11
-                                                                , sourceColumn = Pos 27
-                                                                }
-                                                            }
-                                                        ) []
-                                                    ) :| []
-                                                )
-                                            )
-                                        , Clause
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 12
-                                                    , sourceColumn = Pos 12
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                    , sourceLine = Pos 13
-                                                    , sourceColumn = Pos 10
-                                                    }
-                                                }
-                                            )
-                                            [ TupleP
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 12
-                                                        , sourceColumn = Pos 12
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 12
-                                                        , sourceColumn = Pos 22
-                                                        }
-                                                    }
-                                                )
-                                                [ ConP
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 13
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 14
-                                                            }
-                                                        }
-                                                    ) "C" []
-                                                , VarP
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 16
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 20
-                                                            }
-                                                        }
-                                                    ) "rest"
-                                                ]
-                                            ]
-                                            ( Seq
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 12
-                                                        , sourceColumn = Pos 25
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 10
-                                                        }
-                                                    }
-                                                )
-                                                ( NoBind
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 25
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                            , sourceLine = Pos 13
-                                                            , sourceColumn = Pos 10
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Tuple
-                                                        ( Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                                , sourceLine = Pos 12
-                                                                , sourceColumn = Pos 25
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                                                                , sourceLine = Pos 13
-                                                                , sourceColumn = Pos 10
-                                                                }
-                                                            }
-                                                        ) []
-                                                    ) :| []
-                                                )
-                                            )
-                                        ]
-                                    )
-                                )
-                            ) :| []
-                        )
-                    ) :| []
-                )
-            )
-        ]
-    }
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 23 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 25 } } )
+            ( NoBind
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 23 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 25 } } )
+             ( Tuple
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 23 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 10, sourceColumn = Pos 25 } } ) [] ) :| [] ) ), Clause
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 10 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 12, sourceColumn = Pos 8 } } )
+           [ TupleP
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 10 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 20 } } )
+            [ ConP
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 11 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 12 } } ) "C" [], VarP
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 14 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 18 } } ) "rest" ] ]
+           ( Seq
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 23 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 12, sourceColumn = Pos 8 } } )
+            ( NoBind
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 23 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 12, sourceColumn = Pos 8 } } )
+             ( Tuple
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 11, sourceColumn = Pos 23 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg", sourceLine = Pos 12, sourceColumn = Pos 8 } } ) [] ) :| [] ) ) ] ) ) ) :| [] ) ) :| [] ) ) ] }

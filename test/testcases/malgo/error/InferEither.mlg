@@ -1,21 +1,20 @@
 -- Issue: Compiler crashes when defining data Either a b = Left a | Right b
 -- https://github.com/malgo-lang/malgo/issues/59
 
-module InferEither = {
-  module {..} = import Builtin
-  module {..} = import Prelude
+module {..} = import Builtin
+module {..} = import Prelude
 
-  data Either a b = Left a | Right b
+data Either a b = Left a | Right b
 
-  def id1 : Either String Int32 -> Either String Int32
-  def id1 = {x -> x}
+def id1 : Either String Int32 -> Either String Int32
+def id1 = {x -> x}
 
-  def id2 : Either Bool Int32 -> Either Bool Int32
-  def id2 = {x -> x}
+def id2 : Either Bool Int32 -> Either Bool Int32
+def id2 = {x -> x}
 
-  def main = {
-    let x = Right 1;
-    -- type error (String is not Bool)
-    id1 x |> id2 |> { Right y -> printInt32 y }
-  }
+def main = {
+  let x = Right 1;
+  -- type error (String is not Bool)
+  id1 x |> id2 |> { Right y -> printInt32 y }
 }
+

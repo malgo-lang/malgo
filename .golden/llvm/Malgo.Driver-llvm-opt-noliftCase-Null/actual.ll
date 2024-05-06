@@ -1,5 +1,5 @@
-; ModuleID = './test/tmp/malgo_test/nolift/Null.ll'
-source_filename = "./test/testcases/malgo/Null.mlg"
+; ModuleID = '.malgo-work/test/testcases/malgo/Null.ll'
+source_filename = "test/testcases/malgo/Null.mlg"
 
 @str235 = unnamed_addr constant [3 x i8] c"OK\00"
 
@@ -11,7 +11,7 @@ declare ptr @malgo_exit_failure(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @"Null.#let_closure_240"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+define internal ptr @"test/testcases/malgo/Null.mlg.#let_closure_240"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
   %d_0 = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
@@ -20,20 +20,20 @@ define internal ptr @"Null.#let_closure_240"(ptr nocapture nofree noundef nonnul
   ret ptr %6
 }
 
-define internal ptr @"Null.#fun_closure_241"(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @"test/testcases/malgo/Null.mlg.#fun_closure_241"(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch = icmp eq i8 %3, 0
-  br i1 %switch, label %switch_branch_Null.False_0, label %switch_branch_Null.True_0
+  br i1 %switch, label %"switch_branch_test/testcases/malgo/Null.mlg.False_0", label %"switch_branch_test/testcases/malgo/Null.mlg.True_0"
 
-common.ret:                                       ; preds = %switch_branch_Null.True_0, %switch_branch_Null.False_0
-  %common.ret.op = phi ptr [ %4, %switch_branch_Null.False_0 ], [ %6, %switch_branch_Null.True_0 ]
+common.ret:                                       ; preds = %"switch_branch_test/testcases/malgo/Null.mlg.True_0", %"switch_branch_test/testcases/malgo/Null.mlg.False_0"
+  %common.ret.op = phi ptr [ %4, %"switch_branch_test/testcases/malgo/Null.mlg.False_0" ], [ %6, %"switch_branch_test/testcases/malgo/Null.mlg.True_0" ]
   ret ptr %common.ret.op
 
-switch_branch_Null.False_0:                       ; preds = %2
+"switch_branch_test/testcases/malgo/Null.mlg.False_0": ; preds = %2
   %4 = tail call ptr @malgo_print_string(ptr noundef nonnull @str235)
   br label %common.ret
 
-switch_branch_Null.True_0:                        ; preds = %2
+"switch_branch_test/testcases/malgo/Null.mlg.True_0": ; preds = %2
   %5 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %5, align 1
   %6 = tail call ptr @malgo_exit_failure(ptr noundef nonnull %5)
@@ -73,12 +73,12 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %14, ptr %let_capture_6.i, align 8
   store ptr %let_capture_6.i, ptr %15, align 8
   %let_func_3.i = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
-  store ptr @"Null.#let_closure_240", ptr %let_func_3.i, align 8
+  store ptr @"test/testcases/malgo/Null.mlg.#let_closure_240", ptr %let_func_3.i, align 8
   %16 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_6.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_6.i, ptr %16, align 8
   %fun_func_3.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @"Null.#fun_closure_241", ptr %fun_func_3.i, align 8
+  store ptr @"test/testcases/malgo/Null.mlg.#fun_closure_241", ptr %fun_func_3.i, align 8
   %17 = load ptr, ptr %15, align 8
   %18 = load ptr, ptr %let_func_3.i, align 8
   %19 = tail call ptr %18(ptr %17, ptr nonnull %16)

@@ -1,714 +1,227 @@
 Module
-    { moduleName = ModuleName
-        { raw = "Undefined" }
-    , moduleDefinition = BindGroup
-        { _scDefs =
-            [
-                [
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 9
-                            , sourceColumn = Pos 3
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 11
-                            , sourceColumn = Pos 3
-                            }
-                        }
-                    , Id
-                        { name = "g"
-                        , moduleName = ModuleName
-                            { raw = "Undefined" }
-                        , sort = External
-                        }
-                    , Fn
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 9
-                                , sourceColumn = Pos 13
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 9
-                                , sourceColumn = Pos 28
-                                }
-                            }
-                        )
-                        ( Clause
-                            ( Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                    , sourceLine = Pos 9
-                                    , sourceColumn = Pos 13
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                    , sourceLine = Pos 9
-                                    , sourceColumn = Pos 28
-                                    }
-                                }
-                            )
-                            [ VarP
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                        , sourceLine = Pos 9
-                                        , sourceColumn = Pos 13
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                        , sourceLine = Pos 9
-                                        , sourceColumn = Pos 15
-                                        }
-                                    }
-                                )
-                                ( Id
-                                    { name = "x"
-                                    , moduleName = ModuleName
-                                        { raw = "Undefined" }
-                                    , sort = Internal 0
-                                    }
-                                )
-                            ]
-                            ( Seq
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                        , sourceLine = Pos 9
-                                        , sourceColumn = Pos 18
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                        , sourceLine = Pos 9
-                                        , sourceColumn = Pos 28
-                                        }
-                                    }
-                                )
-                                ( NoBind
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 18
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 28
-                                            }
-                                        }
-                                    )
-                                    ( Var
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                , sourceLine = Pos 9
-                                                , sourceColumn = Pos 18
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                , sourceLine = Pos 9
-                                                , sourceColumn = Pos 28
-                                                }
-                                            }
-                                        )
-                                        ( Id
-                                            { name = "undefined"
-                                            , moduleName = ModuleName
-                                                { raw = "Builtin" }
-                                            , sort = External
-                                            }
-                                        )
-                                    ) :| []
-                                )
-                            ) :| []
-                        )
-                    )
-                ]
-            ,
-                [
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 11
-                            , sourceColumn = Pos 3
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 16
-                            , sourceColumn = Pos 1
-                            }
-                        }
-                    , Id
-                        { name = "main"
-                        , moduleName = ModuleName
-                            { raw = "Undefined" }
-                        , sort = External
-                        }
-                    , Fn
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 12
-                                , sourceColumn = Pos 5
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 15
-                                , sourceColumn = Pos 3
-                                }
-                            }
-                        )
-                        ( Clause
-                            ( Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                    , sourceLine = Pos 12
-                                    , sourceColumn = Pos 5
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                    , sourceLine = Pos 15
-                                    , sourceColumn = Pos 3
-                                    }
-                                }
-                            ) []
-                            ( Seq
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                        , sourceLine = Pos 12
-                                        , sourceColumn = Pos 5
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                        , sourceLine = Pos 15
-                                        , sourceColumn = Pos 3
-                                        }
-                                    }
-                                )
-                                ( Let
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                            , sourceLine = Pos 12
-                                            , sourceColumn = Pos 5
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                            , sourceLine = Pos 12
-                                            , sourceColumn = Pos 22
-                                            }
-                                        }
-                                    )
-                                    ( Id
-                                        { name = "x"
-                                        , moduleName = ModuleName
-                                            { raw = "Undefined" }
-                                        , sort = Internal 1
-                                        }
-                                    )
-                                    ( Var
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                , sourceLine = Pos 12
-                                                , sourceColumn = Pos 13
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                , sourceLine = Pos 12
-                                                , sourceColumn = Pos 22
-                                                }
-                                            }
-                                        )
-                                        ( Id
-                                            { name = "undefined"
-                                            , moduleName = ModuleName
-                                                { raw = "Builtin" }
-                                            , sort = External
-                                            }
-                                        )
-                                    ) :|
-                                    [ Let
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                , sourceLine = Pos 13
-                                                , sourceColumn = Pos 5
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                , sourceLine = Pos 13
-                                                , sourceColumn = Pos 16
-                                                }
-                                            }
-                                        )
-                                        ( Id
-                                            { name = "y"
-                                            , moduleName = ModuleName
-                                                { raw = "Undefined" }
-                                            , sort = Internal 2
-                                            }
-                                        )
-                                        ( Apply
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                    , sourceLine = Pos 13
-                                                    , sourceColumn = Pos 13
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                    , sourceLine = Pos 13
-                                                    , sourceColumn = Pos 16
-                                                    }
-                                                }
-                                            )
-                                            ( Var
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 13
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 15
-                                                        }
-                                                    }
-                                                )
-                                                ( Id
-                                                    { name = "g"
-                                                    , moduleName = ModuleName
-                                                        { raw = "Undefined" }
-                                                    , sort = External
-                                                    }
-                                                )
-                                            )
-                                            ( Var
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 15
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 16
-                                                        }
-                                                    }
-                                                )
-                                                ( Id
-                                                    { name = "x"
-                                                    , moduleName = ModuleName
-                                                        { raw = "Undefined" }
-                                                    , sort = Internal 1
-                                                    }
-                                                )
-                                            )
-                                        )
-                                    , NoBind
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                , sourceLine = Pos 14
-                                                , sourceColumn = Pos 5
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                , sourceLine = Pos 15
-                                                , sourceColumn = Pos 3
-                                                }
-                                            }
-                                        )
-                                        ( Apply
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                    , sourceLine = Pos 14
-                                                    , sourceColumn = Pos 5
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                    , sourceLine = Pos 15
-                                                    , sourceColumn = Pos 3
-                                                    }
-                                                }
-                                            )
-                                            ( Var
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                        , sourceLine = Pos 14
-                                                        , sourceColumn = Pos 5
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                        , sourceLine = Pos 14
-                                                        , sourceColumn = Pos 17
-                                                        }
-                                                    }
-                                                )
-                                                ( Id
-                                                    { name = "printString"
-                                                    , moduleName = ModuleName
-                                                        { raw = "Builtin" }
-                                                    , sort = External
-                                                    }
-                                                )
-                                            )
-                                            ( Apply
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                        , sourceLine = Pos 14
-                                                        , sourceColumn = Pos 17
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                        , sourceLine = Pos 15
-                                                        , sourceColumn = Pos 3
-                                                        }
-                                                    }
-                                                )
-                                                ( Var
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                            , sourceLine = Pos 14
-                                                            , sourceColumn = Pos 17
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                            , sourceLine = Pos 15
-                                                            , sourceColumn = Pos 3
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Id
-                                                        { name = "String#"
-                                                        , moduleName = ModuleName
-                                                            { raw = "Builtin" }
-                                                        , sort = External
-                                                        }
-                                                    )
-                                                )
-                                                ( Unboxed
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                            , sourceLine = Pos 14
-                                                            , sourceColumn = Pos 17
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                                            , sourceLine = Pos 15
-                                                            , sourceColumn = Pos 3
-                                                            }
-                                                        }
-                                                    )
-                                                    ( String "OK" )
-                                                )
-                                            )
-                                        )
-                                    ]
-                                )
-                            ) :| []
-                        )
-                    )
-                ]
-            ,
-                [
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 6
-                            , sourceColumn = Pos 3
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 8
-                            , sourceColumn = Pos 3
-                            }
-                        }
-                    , Id
-                        { name = "f"
-                        , moduleName = ModuleName
-                            { raw = "Undefined" }
-                        , sort = External
-                        }
-                    , Var
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 11
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 8
-                                , sourceColumn = Pos 3
-                                }
-                            }
-                        )
-                        ( Id
-                            { name = "undefined"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
-                            , sort = External
-                            }
-                        )
-                    )
-                ]
-            ]
-        , _scSigs =
-            [
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 3
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                        , sourceLine = Pos 6
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                , Id
-                    { name = "f"
-                    , moduleName = ModuleName
-                        { raw = "Undefined" }
-                    , sort = External
-                    }
-                , TyArr
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 17
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 20
-                            }
-                        }
-                    )
-                    ( TyCon
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 11
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 17
-                                }
-                            }
-                        )
-                        ( Id
-                            { name = "Int32"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
-                            , sort = External
-                            }
-                        )
-                    )
-                    ( TyCon
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 20
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 3
-                                }
-                            }
-                        )
-                        ( Id
-                            { name = "Int32"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
-                            , sort = External
-                            }
-                        )
-                    )
-                )
-            ,
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                        , sourceLine = Pos 8
-                        , sourceColumn = Pos 3
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                        , sourceLine = Pos 9
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                , Id
-                    { name = "g"
-                    , moduleName = ModuleName
-                        { raw = "Undefined" }
-                    , sort = External
-                    }
-                , TyArr
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 8
-                            , sourceColumn = Pos 17
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                            , sourceLine = Pos 8
-                            , sourceColumn = Pos 20
-                            }
-                        }
-                    )
-                    ( TyCon
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 8
-                                , sourceColumn = Pos 11
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 8
-                                , sourceColumn = Pos 17
-                                }
-                            }
-                        )
-                        ( Id
-                            { name = "Int32"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
-                            , sort = External
-                            }
-                        )
-                    )
-                    ( TyCon
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 8
-                                , sourceColumn = Pos 20
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                                , sourceLine = Pos 9
-                                , sourceColumn = Pos 3
-                                }
-                            }
-                        )
-                        ( Id
-                            { name = "Int32"
-                            , moduleName = ModuleName
-                                { raw = "Builtin" }
-                            , sort = External
-                            }
-                        )
-                    )
-                )
-            ]
-        , _dataDefs = []
-        , _typeSynonyms = []
-        , _foreigns = []
-        , _imports =
-            [
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                        , sourceLine = Pos 2
-                        , sourceColumn = Pos 3
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                        , sourceLine = Pos 3
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                , ModuleName
-                    { raw = "Builtin" }
-                , All
-                )
-            ,
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                        , sourceLine = Pos 3
-                        , sourceColumn = Pos 3
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/Undefined.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                , ModuleName
-                    { raw = "Prelude" }
-                , All
-                )
-            ]
-        }
-    }
-RnState
-    { infixInfo = fromList
-        [
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), moduleDefinition = BindGroup
+  { _scDefs =
+   [
+    [
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 10, sourceColumn = Pos 1 } }, Id
+      { name = "g", moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = External }, Fn
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 11 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
+      ( Clause
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 11 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
+       [ VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 11 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 13 } } )
+        ( Id
+         { name = "x", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = Internal 0 } ) ]
+       ( Seq
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 16 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
+        ( NoBind
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 16 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 16 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
+          ( Id
+           { name = "undefined", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) :| [] ) ) :| [] ) ) ],
+    [
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 10, sourceColumn = Pos 1 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 15, sourceColumn = Pos 1 } }, Id
+      { name = "main", moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = External }, Fn
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 11, sourceColumn = Pos 3 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+      ( Clause
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 11, sourceColumn = Pos 3 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } ) []
+       ( Seq
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 11, sourceColumn = Pos 3 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+        ( Let
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 11, sourceColumn = Pos 3 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 11, sourceColumn = Pos 20 } } )
+         ( Id
+          { name = "x", moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = Internal 1 } )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 11, sourceColumn = Pos 11 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 11, sourceColumn = Pos 20 } } )
+          ( Id
+           { name = "undefined", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) :|
+         [ Let
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 12, sourceColumn = Pos 3 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 12, sourceColumn = Pos 14 } } )
+          ( Id
+           { name = "y", moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = Internal 2 } )
+          ( Apply
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 12, sourceColumn = Pos 11 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 12, sourceColumn = Pos 14 } } )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 12, sourceColumn = Pos 11 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 12, sourceColumn = Pos 13 } } )
             ( Id
-                { name = "|>"
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , sort = External
-                }
-            ,
-                ( LeftA
-                , 0
-                )
-            )
-        ,
+             { name = "g", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = External } ) )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 12, sourceColumn = Pos 13 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 12, sourceColumn = Pos 14 } } )
             ( Id
-                { name = "."
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , sort = External
-                }
-            ,
-                ( RightA
-                , 9
-                )
-            )
-        ,
+             { name = "x", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = Internal 1 } ) ) ), NoBind
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+          ( Apply
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 13, sourceColumn = Pos 15 } } )
             ( Id
-                { name = "<|"
-                , moduleName = ModuleName
-                    { raw = "Prelude" }
-                , sort = External
-                }
-            ,
-                ( RightA
-                , 0
-                )
-            )
-        ]
-    , dependencies = fromList
-        [ ModuleName
-            { raw = "Prelude" }
-        , ModuleName
-            { raw = "Builtin" }
-        ]
-    }
+             { name = "printString", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+           ( Apply
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 13, sourceColumn = Pos 15 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 13, sourceColumn = Pos 15 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+             ( Id
+              { name = "String#", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+            ( Unboxed
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 13, sourceColumn = Pos 15 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+             ( String "OK" ) ) ) ) ] ) ) :| [] ) ) ],
+    [
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } }, Id
+      { name = "f", moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = External }, Var
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 5, sourceColumn = Pos 9 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } } )
+      ( Id
+       { name = "undefined", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ] ], _scSigs =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } }, Id
+     { name = "f", moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = External }, TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 4, sourceColumn = Pos 15 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 4, sourceColumn = Pos 18 } } )
+     ( TyCon
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 4, sourceColumn = Pos 9 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 4, sourceColumn = Pos 15 } } )
+      ( Id
+       { name = "Int32", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+     ( TyCon
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 4, sourceColumn = Pos 18 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } )
+      ( Id
+       { name = "Int32", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ),
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } }, Id
+     { name = "g", moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/Undefined.mlg" ), sort = External }, TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 7, sourceColumn = Pos 15 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 7, sourceColumn = Pos 18 } } )
+     ( TyCon
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 7, sourceColumn = Pos 9 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 7, sourceColumn = Pos 15 } } )
+      ( Id
+       { name = "Int32", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+     ( TyCon
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 7, sourceColumn = Pos 18 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } } )
+      ( Id
+       { name = "Int32", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 } }, Artifact
+     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), All ),
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Undefined.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } }, Artifact
+     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), All ) ] } }

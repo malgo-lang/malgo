@@ -1,1033 +1,343 @@
 Module
-    { moduleName = ModuleName
-        { raw = "TestLet" }
-    , moduleDefinition = ParsedDefinitions
-        [ Import
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), moduleDefinition = ParsedDefinitions
+  [ Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 } } )
+   ( Artifact ( ArtifactPath "runtime/malgo/Builtin.mlg" ) ) All, Infix
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 3, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } } ) LeftA 0 "|>", ScSig
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } ) "|>"
+   ( TyArr
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 14 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 17 } } )
+    ( TyVar
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 12 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 14 } } ) "a" )
+    ( TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 26 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 29 } } )
+     ( TyArr
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 20 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 23 } } )
+      ( TyVar
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 18 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 20 } } ) "a" )
+      ( TyVar
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 23 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 24 } } ) "b" ) )
+     ( TyVar
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 4, sourceColumn = Pos 29 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } ) "b" ) ) ), ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } } ) "|>"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 13 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 13 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 13 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 15 } } ) "x", VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 15 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 17 } } ) "f" ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } )
+        ( Var
+         ( Qualified
+          { visibility = Implicit, value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 22 } } } ) "f" )
+        ( Var
+         ( Qualified
+          { visibility = Implicit, value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 22 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 5, sourceColumn = Pos 23 } } } ) "x" ) ) :| [] ) ) :| [] ) ), ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 }, _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 2 } } ) "main"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } ) []
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+      ( Let
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } ) "x"
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 11 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 11 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
+         ( Var
+          ( Qualified
+           { visibility = Implicit, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 11 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 21 } } } ) "addInt32#" )
+         ( Unboxed
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 21 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 24 } } )
+          ( Int32 1 ) ) )
+        ( Unboxed
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 24 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 8, sourceColumn = Pos 26 } } )
+         ( Int32 2 ) ) ) :|
+       [ NoBind
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 3 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 34 } } )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 3 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 34 } } )
+         ( Var
+          ( Qualified
+           { visibility = Implicit, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 3 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 16 } } } ) "printString#" )
+         ( Seq
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 16 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 34 } } )
+          ( NoBind
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 17 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 33 } } )
+           ( Apply
             ( Range
-                { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 2
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 4
-                    , sourceColumn = Pos 3
-                    }
-                }
-            )
-            ( ModuleName
-                { raw = "Builtin" }
-            ) All
-        , Infix
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 17 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 33 } } )
+            ( Var
+             ( Qualified
+              { visibility = Implicit, value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 17 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 32 } } } ) "toStringInt32#" )
+            ( Var
+             ( Qualified
+              { visibility = Implicit, value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 32 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 9, sourceColumn = Pos 33 } } } ) "x" ) ) :| [] ) ) ), Let
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 3 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 35 } } ) "x"
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 11 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 35 } } )
+         ( Var
+          ( Qualified
+           { visibility = Implicit, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 11 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 18 } } } ) "Int32#" )
+         ( Seq
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 18 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 35 } } )
+          ( NoBind
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 19 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 34 } } )
+           ( Apply
             ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 19 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 34 } } )
+            ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 19 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 34 } } )
+             ( Var
+              ( Qualified
+               { visibility = Implicit, value = Range
                 { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 4
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 5
-                    , sourceColumn = Pos 3
-                    }
-                }
-            ) LeftA 0 "|>"
-        , ScSig
+                 { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 19 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 29 } } } ) "addInt32#" )
+             ( Unboxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 29 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 32 } } )
+              ( Int32 1 ) ) )
+            ( Unboxed
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 32 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 11, sourceColumn = Pos 34 } } )
+             ( Int32 2 ) ) ) :| [] ) ) ), Let
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 3 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 67 } } ) "printInt32"
+        ( Fn
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 21 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 66 } } )
+         ( Clause
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 21 }, _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 66 } } )
+          [ ConP
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 22 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 30 } } ) "Int32#"
+           [ VarP
             ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 29 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 30 } } ) "x" ] ]
+          ( Seq
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 35 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 66 } } )
+           ( NoBind
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 35 }, _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 66 } } )
+            ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 35 }, _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 66 } } )
+             ( Var
+              ( Qualified
+               { visibility = Implicit, value = Range
                 { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 5
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 6
-                    , sourceColumn = Pos 3
-                    }
-                }
-            ) "|>"
-            ( TyArr
+                 { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 35 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 48 } } } ) "printString#" )
+             ( Seq
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 48 }, _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 66 } } )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 49 }, _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 65 } } )
+               ( Apply
                 ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 16
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                        , sourceLine = Pos 5
-                        , sourceColumn = Pos 19
-                        }
-                    }
-                )
-                ( TyVar
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 14
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 16
-                            }
-                        }
-                    ) "a"
-                )
-                ( TyArr
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 28
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                            , sourceLine = Pos 5
-                            , sourceColumn = Pos 31
-                            }
-                        }
-                    )
-                    ( TyArr
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 22
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 25
-                                }
-                            }
-                        )
-                        ( TyVar
-                            ( Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                    , sourceLine = Pos 5
-                                    , sourceColumn = Pos 20
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                    , sourceLine = Pos 5
-                                    , sourceColumn = Pos 22
-                                    }
-                                }
-                            ) "a"
-                        )
-                        ( TyVar
-                            ( Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                    , sourceLine = Pos 5
-                                    , sourceColumn = Pos 25
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                    , sourceLine = Pos 5
-                                    , sourceColumn = Pos 26
-                                    }
-                                }
-                            ) "b"
-                        )
-                    )
-                    ( TyVar
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 5
-                                , sourceColumn = Pos 31
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 3
-                                }
-                            }
-                        ) "b"
-                    )
-                )
-            )
-        , ScDef
-            ( Range
-                { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 6
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 8
-                    , sourceColumn = Pos 3
-                    }
-                }
-            ) "|>"
-            ( Fn
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                        , sourceLine = Pos 6
-                        , sourceColumn = Pos 15
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                        , sourceLine = Pos 6
-                        , sourceColumn = Pos 25
-                        }
-                    }
-                )
-                ( Clause
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                            , sourceLine = Pos 6
-                            , sourceColumn = Pos 15
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                            , sourceLine = Pos 6
-                            , sourceColumn = Pos 25
-                            }
-                        }
-                    )
-                    [ VarP
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 15
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 17
-                                }
-                            }
-                        ) "x"
-                    , VarP
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 17
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 19
-                                }
-                            }
-                        ) "f"
-                    ]
-                    ( Seq
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 22
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 6
-                                , sourceColumn = Pos 25
-                                }
-                            }
-                        )
-                        ( NoBind
-                            ( Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                    , sourceLine = Pos 6
-                                    , sourceColumn = Pos 22
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                    , sourceLine = Pos 6
-                                    , sourceColumn = Pos 25
-                                    }
-                                }
-                            )
-                            ( Apply
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 6
-                                        , sourceColumn = Pos 22
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 6
-                                        , sourceColumn = Pos 25
-                                        }
-                                    }
-                                )
-                                ( Var
-                                    ( Qualified
-                                        { visibility = Implicit
-                                        , value = Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 6
-                                                , sourceColumn = Pos 22
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 6
-                                                , sourceColumn = Pos 24
-                                                }
-                                            }
-                                        }
-                                    ) "f"
-                                )
-                                ( Var
-                                    ( Qualified
-                                        { visibility = Implicit
-                                        , value = Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 6
-                                                , sourceColumn = Pos 24
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 6
-                                                , sourceColumn = Pos 25
-                                                }
-                                            }
-                                        }
-                                    ) "x"
-                                )
-                            ) :| []
-                        )
-                    ) :| []
-                )
-            )
-        , ScDef
-            ( Range
-                { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 8
-                    , sourceColumn = Pos 3
-                    }
-                , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                    , sourceLine = Pos 16
-                    , sourceColumn = Pos 1
-                    }
-                }
-            ) "main"
-            ( Fn
-                ( Range
-                    { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                        , sourceLine = Pos 9
-                        , sourceColumn = Pos 5
-                        }
-                    , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                        , sourceLine = Pos 15
-                        , sourceColumn = Pos 3
-                        }
-                    }
-                )
-                ( Clause
-                    ( Range
-                        { _start = SourcePos
-                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                            , sourceLine = Pos 9
-                            , sourceColumn = Pos 5
-                            }
-                        , _end = SourcePos
-                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                            , sourceLine = Pos 15
-                            , sourceColumn = Pos 3
-                            }
-                        }
-                    ) []
-                    ( Seq
-                        ( Range
-                            { _start = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 9
-                                , sourceColumn = Pos 5
-                                }
-                            , _end = SourcePos
-                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                , sourceLine = Pos 15
-                                , sourceColumn = Pos 3
-                                }
-                            }
-                        )
-                        ( Let
-                            ( Range
-                                { _start = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                    , sourceLine = Pos 9
-                                    , sourceColumn = Pos 5
-                                    }
-                                , _end = SourcePos
-                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                    , sourceLine = Pos 9
-                                    , sourceColumn = Pos 28
-                                    }
-                                }
-                            ) "x"
-                            ( Apply
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 9
-                                        , sourceColumn = Pos 13
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 9
-                                        , sourceColumn = Pos 28
-                                        }
-                                    }
-                                )
-                                ( Apply
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 13
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 28
-                                            }
-                                        }
-                                    )
-                                    ( Var
-                                        ( Qualified
-                                            { visibility = Implicit
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 9
-                                                    , sourceColumn = Pos 13
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 9
-                                                    , sourceColumn = Pos 23
-                                                    }
-                                                }
-                                            }
-                                        ) "addInt32#"
-                                    )
-                                    ( Unboxed
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 9
-                                                , sourceColumn = Pos 23
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 9
-                                                , sourceColumn = Pos 26
-                                                }
-                                            }
-                                        )
-                                        ( Int32 1 )
-                                    )
-                                )
-                                ( Unboxed
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 26
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 9
-                                            , sourceColumn = Pos 28
-                                            }
-                                        }
-                                    )
-                                    ( Int32 2 )
-                                )
-                            ) :|
-                            [ NoBind
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 10
-                                        , sourceColumn = Pos 5
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 10
-                                        , sourceColumn = Pos 36
-                                        }
-                                    }
-                                )
-                                ( Apply
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 10
-                                            , sourceColumn = Pos 5
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 10
-                                            , sourceColumn = Pos 36
-                                            }
-                                        }
-                                    )
-                                    ( Var
-                                        ( Qualified
-                                            { visibility = Implicit
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 10
-                                                    , sourceColumn = Pos 5
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 10
-                                                    , sourceColumn = Pos 18
-                                                    }
-                                                }
-                                            }
-                                        ) "printString#"
-                                    )
-                                    ( Seq
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 10
-                                                , sourceColumn = Pos 18
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 10
-                                                , sourceColumn = Pos 36
-                                                }
-                                            }
-                                        )
-                                        ( NoBind
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 10
-                                                    , sourceColumn = Pos 19
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 10
-                                                    , sourceColumn = Pos 35
-                                                    }
-                                                }
-                                            )
-                                            ( Apply
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                        , sourceLine = Pos 10
-                                                        , sourceColumn = Pos 19
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                        , sourceLine = Pos 10
-                                                        , sourceColumn = Pos 35
-                                                        }
-                                                    }
-                                                )
-                                                ( Var
-                                                    ( Qualified
-                                                        { visibility = Implicit
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                , sourceLine = Pos 10
-                                                                , sourceColumn = Pos 19
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                , sourceLine = Pos 10
-                                                                , sourceColumn = Pos 34
-                                                                }
-                                                            }
-                                                        }
-                                                    ) "toStringInt32#"
-                                                )
-                                                ( Var
-                                                    ( Qualified
-                                                        { visibility = Implicit
-                                                        , value = Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                , sourceLine = Pos 10
-                                                                , sourceColumn = Pos 34
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                , sourceLine = Pos 10
-                                                                , sourceColumn = Pos 35
-                                                                }
-                                                            }
-                                                        }
-                                                    ) "x"
-                                                )
-                                            ) :| []
-                                        )
-                                    )
-                                )
-                            , Let
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 12
-                                        , sourceColumn = Pos 5
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 12
-                                        , sourceColumn = Pos 37
-                                        }
-                                    }
-                                ) "x"
-                                ( Apply
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 12
-                                            , sourceColumn = Pos 13
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 12
-                                            , sourceColumn = Pos 37
-                                            }
-                                        }
-                                    )
-                                    ( Var
-                                        ( Qualified
-                                            { visibility = Implicit
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 12
-                                                    , sourceColumn = Pos 13
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 12
-                                                    , sourceColumn = Pos 20
-                                                    }
-                                                }
-                                            }
-                                        ) "Int32#"
-                                    )
-                                    ( Seq
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 12
-                                                , sourceColumn = Pos 20
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 12
-                                                , sourceColumn = Pos 37
-                                                }
-                                            }
-                                        )
-                                        ( NoBind
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 12
-                                                    , sourceColumn = Pos 21
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 12
-                                                    , sourceColumn = Pos 36
-                                                    }
-                                                }
-                                            )
-                                            ( Apply
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                        , sourceLine = Pos 12
-                                                        , sourceColumn = Pos 21
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                        , sourceLine = Pos 12
-                                                        , sourceColumn = Pos 36
-                                                        }
-                                                    }
-                                                )
-                                                ( Apply
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 21
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 36
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Var
-                                                        ( Qualified
-                                                            { visibility = Implicit
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                    , sourceLine = Pos 12
-                                                                    , sourceColumn = Pos 21
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                    , sourceLine = Pos 12
-                                                                    , sourceColumn = Pos 31
-                                                                    }
-                                                                }
-                                                            }
-                                                        ) "addInt32#"
-                                                    )
-                                                    ( Unboxed
-                                                        ( Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                , sourceLine = Pos 12
-                                                                , sourceColumn = Pos 31
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                , sourceLine = Pos 12
-                                                                , sourceColumn = Pos 34
-                                                                }
-                                                            }
-                                                        )
-                                                        ( Int32 1 )
-                                                    )
-                                                )
-                                                ( Unboxed
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 34
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                            , sourceLine = Pos 12
-                                                            , sourceColumn = Pos 36
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Int32 2 )
-                                                )
-                                            ) :| []
-                                        )
-                                    )
-                                )
-                            , Let
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 13
-                                        , sourceColumn = Pos 5
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 13
-                                        , sourceColumn = Pos 69
-                                        }
-                                    }
-                                ) "printInt32"
-                                ( Fn
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 13
-                                            , sourceColumn = Pos 23
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 13
-                                            , sourceColumn = Pos 68
-                                            }
-                                        }
-                                    )
-                                    ( Clause
-                                        ( Range
-                                            { _start = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 13
-                                                , sourceColumn = Pos 23
-                                                }
-                                            , _end = SourcePos
-                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                , sourceLine = Pos 13
-                                                , sourceColumn = Pos 68
-                                                }
-                                            }
-                                        )
-                                        [ ConP
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 13
-                                                    , sourceColumn = Pos 24
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 13
-                                                    , sourceColumn = Pos 32
-                                                    }
-                                                }
-                                            ) "Int32#"
-                                            [ VarP
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 31
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 32
-                                                        }
-                                                    }
-                                                ) "x"
-                                            ]
-                                        ]
-                                        ( Seq
-                                            ( Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 13
-                                                    , sourceColumn = Pos 37
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 13
-                                                    , sourceColumn = Pos 68
-                                                    }
-                                                }
-                                            )
-                                            ( NoBind
-                                                ( Range
-                                                    { _start = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 37
-                                                        }
-                                                    , _end = SourcePos
-                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                        , sourceLine = Pos 13
-                                                        , sourceColumn = Pos 68
-                                                        }
-                                                    }
-                                                )
-                                                ( Apply
-                                                    ( Range
-                                                        { _start = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                            , sourceLine = Pos 13
-                                                            , sourceColumn = Pos 37
-                                                            }
-                                                        , _end = SourcePos
-                                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                            , sourceLine = Pos 13
-                                                            , sourceColumn = Pos 68
-                                                            }
-                                                        }
-                                                    )
-                                                    ( Var
-                                                        ( Qualified
-                                                            { visibility = Implicit
-                                                            , value = Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                    , sourceLine = Pos 13
-                                                                    , sourceColumn = Pos 37
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                    , sourceLine = Pos 13
-                                                                    , sourceColumn = Pos 50
-                                                                    }
-                                                                }
-                                                            }
-                                                        ) "printString#"
-                                                    )
-                                                    ( Seq
-                                                        ( Range
-                                                            { _start = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                , sourceLine = Pos 13
-                                                                , sourceColumn = Pos 50
-                                                                }
-                                                            , _end = SourcePos
-                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                , sourceLine = Pos 13
-                                                                , sourceColumn = Pos 68
-                                                                }
-                                                            }
-                                                        )
-                                                        ( NoBind
-                                                            ( Range
-                                                                { _start = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                    , sourceLine = Pos 13
-                                                                    , sourceColumn = Pos 51
-                                                                    }
-                                                                , _end = SourcePos
-                                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                    , sourceLine = Pos 13
-                                                                    , sourceColumn = Pos 67
-                                                                    }
-                                                                }
-                                                            )
-                                                            ( Apply
-                                                                ( Range
-                                                                    { _start = SourcePos
-                                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                        , sourceLine = Pos 13
-                                                                        , sourceColumn = Pos 51
-                                                                        }
-                                                                    , _end = SourcePos
-                                                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                        , sourceLine = Pos 13
-                                                                        , sourceColumn = Pos 67
-                                                                        }
-                                                                    }
-                                                                )
-                                                                ( Var
-                                                                    ( Qualified
-                                                                        { visibility = Implicit
-                                                                        , value = Range
-                                                                            { _start = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                                , sourceLine = Pos 13
-                                                                                , sourceColumn = Pos 51
-                                                                                }
-                                                                            , _end = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                                , sourceLine = Pos 13
-                                                                                , sourceColumn = Pos 66
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    ) "toStringInt32#"
-                                                                )
-                                                                ( Var
-                                                                    ( Qualified
-                                                                        { visibility = Implicit
-                                                                        , value = Range
-                                                                            { _start = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                                , sourceLine = Pos 13
-                                                                                , sourceColumn = Pos 66
-                                                                                }
-                                                                            , _end = SourcePos
-                                                                                { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                                                , sourceLine = Pos 13
-                                                                                , sourceColumn = Pos 67
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    ) "x"
-                                                                )
-                                                            ) :| []
-                                                        )
-                                                    )
-                                                ) :| []
-                                            )
-                                        ) :| []
-                                    )
-                                )
-                            , NoBind
-                                ( Range
-                                    { _start = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 14
-                                        , sourceColumn = Pos 5
-                                        }
-                                    , _end = SourcePos
-                                        { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                        , sourceLine = Pos 15
-                                        , sourceColumn = Pos 3
-                                        }
-                                    }
-                                )
-                                ( Apply
-                                    ( Range
-                                        { _start = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 14
-                                            , sourceColumn = Pos 5
-                                            }
-                                        , _end = SourcePos
-                                            { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                            , sourceLine = Pos 15
-                                            , sourceColumn = Pos 3
-                                            }
-                                        }
-                                    )
-                                    ( Var
-                                        ( Qualified
-                                            { visibility = Implicit
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 14
-                                                    , sourceColumn = Pos 5
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 14
-                                                    , sourceColumn = Pos 16
-                                                    }
-                                                }
-                                            }
-                                        ) "printInt32"
-                                    )
-                                    ( Var
-                                        ( Qualified
-                                            { visibility = Implicit
-                                            , value = Range
-                                                { _start = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 14
-                                                    , sourceColumn = Pos 16
-                                                    }
-                                                , _end = SourcePos
-                                                    { sourceName = "./test/testcases/malgo/TestLet.mlg"
-                                                    , sourceLine = Pos 15
-                                                    , sourceColumn = Pos 3
-                                                    }
-                                                }
-                                            }
-                                        ) "x"
-                                    )
-                                )
-                            ]
-                        )
-                    ) :| []
-                )
-            )
-        ]
-    }
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 49 }, _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 65 } } )
+                ( Var
+                 ( Qualified
+                  { visibility = Implicit, value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 49 }, _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 64 } } } ) "toStringInt32#" )
+                ( Var
+                 ( Qualified
+                  { visibility = Implicit, value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 64 }, _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 12, sourceColumn = Pos 65 } } } ) "x" ) ) :| [] ) ) ) :| [] ) ) :| [] ) ), NoBind
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } )
+         ( Var
+          ( Qualified
+           { visibility = Implicit, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 14 } } } ) "printInt32" )
+         ( Var
+          ( Qualified
+           { visibility = Implicit, value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 13, sourceColumn = Pos 14 }, _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestLet.mlg", sourceLine = Pos 14, sourceColumn = Pos 1 } } } ) "x" ) ) ] ) ) :| [] ) ) ] }

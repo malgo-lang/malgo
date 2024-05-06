@@ -1,10 +1,7 @@
-module Test1 = {
-  data Bool = True | False
-  
-  def if = {True t _ -> t (), False _ f -> f ()}
-  
-  foreign import malgo_print_string : String# -> ()
-  
-  def main = {if True {malgo_print_string "True"#} {malgo_print_string "False"#}}
-}
--- Expected: True
+data Bool = True | False
+
+def if = {True t _ -> t (), False _ f -> f ()}
+
+foreign import malgo_print_string : String# -> ()
+
+def main = {if True {malgo_print_string "True"#} {malgo_print_string "False"#}}
