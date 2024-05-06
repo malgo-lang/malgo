@@ -43,10 +43,13 @@ module Malgo.Prelude
     module Prelude,
     module System.IO,
     IORef,
+
+    -- * Prettyprinter
     module Prettyprinter,
     errorDoc,
     render,
     maybeParens,
+    sexpr,
 
     -- * Utilities
     identity,
@@ -161,6 +164,9 @@ render = renderStrict . layoutSmart defaultLayoutOptions
 maybeParens :: Bool -> Doc ann -> Doc ann
 maybeParens True = parens
 maybeParens False = identity
+
+sexpr :: [Doc ann] -> Doc ann
+sexpr lst = parens $ align (fillSep lst)
 
 identity :: a -> a
 identity x = x

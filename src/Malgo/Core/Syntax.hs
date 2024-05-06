@@ -59,11 +59,26 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
     vcat
       $ concat
         [ ["; variables"],
-          map (\(v, t, e) -> parens $ sep ["define" <+> pretty v, pretty t, pretty e]) topVars,
+          map
+            ( \(v, t, e) ->
+                -- parens $ sep ["define" <+> pretty v, pretty t, pretty e]
+                sexpr ["define", pretty v, pretty t, pretty e]
+            )
+            topVars,
           ["; functions"],
-          map (\(f, ps, t, e) -> parens $ sep [sep ["define" <+> parens (sep $ map pretty $ f : ps), pretty t], pretty e]) topFuns,
+          map
+            ( \(f, ps, t, e) ->
+                -- parens $ sep [sep ["define" <+> parens (sep $ map pretty $ f : ps), pretty t], pretty e]
+                sexpr ["define", sexpr $ map pretty $ f : ps, pretty t, pretty e]
+            )
+            topFuns,
           ["; externals"],
-          map (\(f, t) -> parens $ sep ["extern", "%" <> pretty f, pretty t]) extFuns
+          map
+            ( \(f, t) ->
+                -- parens $ sep ["extern", "%" <> pretty f, pretty t]
+                sexpr ["extern", "%" <> pretty f, pretty t]
+            )
+            extFuns
         ]
 
 instance HasExpr Program where

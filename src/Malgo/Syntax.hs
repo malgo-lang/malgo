@@ -45,9 +45,6 @@ import Malgo.Module
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax.Extension
 
-sexpr :: [Doc ann] -> Doc ann
-sexpr = parens . sep
-
 -- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
   deriving stock (Show, Eq, Ord)
