@@ -29,7 +29,6 @@ library
       Malgo.Core.LambdaLift
       Malgo.Core.Lint
       Malgo.Core.Optimize
-      Malgo.Core.Parser
       Malgo.Core.Syntax
       Malgo.Core.Syntax.Atom
       Malgo.Core.Syntax.Case
@@ -196,7 +195,6 @@ test-suite malgo-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Malgo.CoreSpec
       Malgo.DesugarSpec
       Malgo.DriverSpec
       Malgo.InferSpec
