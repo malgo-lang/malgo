@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestPatSynRecon.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/TestPatSynRecon.ll'
 source_filename = "test/testcases/malgo/TestPatSynRecon.mlg"
 
 declare void @GC_init() local_unnamed_addr

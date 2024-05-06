@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Show.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/Show.ll'
 source_filename = "test/testcases/malgo/Show.mlg"
 
 @"test/testcases/malgo/Show.mlg.showInt32" = local_unnamed_addr global ptr undef

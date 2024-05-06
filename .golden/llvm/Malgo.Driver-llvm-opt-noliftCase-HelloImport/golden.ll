@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/HelloImport.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/HelloImport.ll'
 source_filename = "test/testcases/malgo/HelloImport.mlg"
 
 @str2816 = unnamed_addr constant [6 x i8] c"hello\00"

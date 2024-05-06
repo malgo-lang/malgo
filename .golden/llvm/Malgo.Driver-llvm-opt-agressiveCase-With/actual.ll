@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/With.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/With.ll'
 source_filename = "test/testcases/malgo/With.mlg"
 
 @str3661 = unnamed_addr constant [4 x i8] c"end\00"

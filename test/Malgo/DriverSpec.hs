@@ -14,7 +14,7 @@ import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
 import Malgo.TestUtils
-import System.Directory (copyFile, createDirectoryIfMissing, getCurrentDirectory, listDirectory)
+import System.Directory (copyFile, createDirectoryIfMissing, getCurrentDirectory, listDirectory, makeRelativeToCurrentDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
@@ -131,6 +131,7 @@ test ::
 test testcase _typ lambdaLift noOptimize option compileMode = retry 3 do
   workspaceDir <- getWorkspaceDir
   let llPath = workspaceDir </> "test" </> "testcases" </> "malgo" </> takeBaseName testcase -<.> ".ll"
+  llPath <- makeRelativeToCurrentDirectory llPath
   timeoutWrapper "compile"
     $ compile testcase lambdaLift noOptimize option compileMode
 

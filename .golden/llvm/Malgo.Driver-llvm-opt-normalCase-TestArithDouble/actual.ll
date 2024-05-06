@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestArithDouble.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/TestArithDouble.ll'
 source_filename = "test/testcases/malgo/TestArithDouble.mlg"
 
 declare void @GC_init() local_unnamed_addr

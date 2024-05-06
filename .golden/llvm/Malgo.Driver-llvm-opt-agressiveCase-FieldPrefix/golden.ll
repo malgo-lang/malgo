@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/FieldPrefix.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/FieldPrefix.ll'
 source_filename = "test/testcases/malgo/FieldPrefix.mlg"
 
 @"test/testcases/malgo/FieldPrefix.mlg.zero3D" = local_unnamed_addr global ptr undef

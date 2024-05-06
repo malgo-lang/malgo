@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestPolySynonym.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/TestPolySynonym.ll'
 source_filename = "test/testcases/malgo/TestPolySynonym.mlg"
 
 @str3466 = unnamed_addr constant [5 x i8] c"hoge\00"

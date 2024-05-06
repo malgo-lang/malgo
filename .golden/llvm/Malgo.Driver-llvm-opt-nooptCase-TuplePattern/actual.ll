@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TuplePattern.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/TuplePattern.ll'
 source_filename = "test/testcases/malgo/TuplePattern.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef

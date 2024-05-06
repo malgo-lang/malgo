@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/EvenOdd.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/EvenOdd.ll'
 source_filename = "test/testcases/malgo/EvenOdd.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef

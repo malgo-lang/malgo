@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/Primitive.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/Primitive.ll'
 source_filename = "test/testcases/malgo/Primitive.mlg"
 
 declare void @GC_init() local_unnamed_addr

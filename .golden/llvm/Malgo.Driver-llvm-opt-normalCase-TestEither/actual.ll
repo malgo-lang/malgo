@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestEither.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/TestEither.ll'
 source_filename = "test/testcases/malgo/TestEither.mlg"
 
 @str3705 = unnamed_addr constant [6 x i8] c"error\00"

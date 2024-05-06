@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/DeferLaw.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/DeferLaw.ll'
 source_filename = "test/testcases/malgo/DeferLaw.mlg"
 
 @"runtime/malgo/Builtin.mlg.undefined" = local_unnamed_addr global ptr undef

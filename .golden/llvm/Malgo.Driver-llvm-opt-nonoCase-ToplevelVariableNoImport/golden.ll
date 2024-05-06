@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/ToplevelVariableNoImport.ll'
 source_filename = "test/testcases/malgo/ToplevelVariableNoImport.mlg"
 
 @"test/testcases/malgo/ToplevelVariableNoImport.mlg.one" = local_unnamed_addr global ptr undef

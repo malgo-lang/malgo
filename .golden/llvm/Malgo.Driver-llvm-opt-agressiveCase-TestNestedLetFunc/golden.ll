@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TestNestedLetFunc.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/TestNestedLetFunc.ll'
 source_filename = "test/testcases/malgo/TestNestedLetFunc.mlg"
 
 @str27 = unnamed_addr constant [5 x i8] c"PASS\00"

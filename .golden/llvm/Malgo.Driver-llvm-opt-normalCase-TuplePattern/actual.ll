@@ -1,4 +1,4 @@
-; ModuleID = '/workspaces/malgo/.malgo-work/test/testcases/malgo/TuplePattern.ll'
+; ModuleID = '.malgo-work/test/testcases/malgo/TuplePattern.ll'
 source_filename = "test/testcases/malgo/TuplePattern.mlg"
 
 @str2836 = unnamed_addr constant [2 x i8] c"A\00"
