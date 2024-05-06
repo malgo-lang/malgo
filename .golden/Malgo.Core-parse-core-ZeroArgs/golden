@@ -1,0 +1,107 @@
+Program
+ { topVars =
+  [
+   ( "@one", AnyT, Assign "$test/testcases/malgo/ZeroArgs.mlg d 35"
+    ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 31"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/ZeroArgs.mlg fun 30", typ =
+        [ SumT
+         [ Con Tuple [] ] ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/ZeroArgs.mlg $_ 28" ]
+        ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 29"
+         ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 1 ) ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/ZeroArgs.mlg d 29" ) ) ) } ]
+      ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg fun 30" ) ) )
+     ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 33"
+      ( Let
+       [ LocalDef
+        { _variable = "$test/testcases/malgo/ZeroArgs.mlg let 32", typ = SumT
+         [ Con Tuple [] ], _object = Pack
+         ( SumT [ Con Tuple [] ] )
+         ( Con Tuple [] ) [] } ]
+       ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg let 32" ) ) )
+      ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 34"
+       ( Call
+        ( Var "$test/testcases/malgo/ZeroArgs.mlg d 31" )
+        [ Var "$test/testcases/malgo/ZeroArgs.mlg d 33" ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/ZeroArgs.mlg d 34" ) ) ) ) )
+    ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg d 35" ) ) ) ], topFuns =
+  [
+   ( "@id", [ "$test/testcases/malgo/ZeroArgs.mlg x 36" ], [ AnyT ] :-> AnyT, Assign "$test/testcases/malgo/ZeroArgs.mlg d 39"
+    ( Let
+     [ LocalDef
+      { _variable = "$test/testcases/malgo/ZeroArgs.mlg fun 38", typ =
+       [ SumT
+        [ Con Tuple [] ] ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/ZeroArgs.mlg $_ 37" ]
+       ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg x 36" ) ) } ]
+     ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg fun 38" ) ) )
+    ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 41"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/ZeroArgs.mlg let 40", typ = SumT
+        [ Con Tuple [] ], _object = Pack
+        ( SumT [ Con Tuple [] ] )
+        ( Con Tuple [] ) [] } ]
+      ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg let 40" ) ) )
+     ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 42"
+      ( Call
+       ( Var "$test/testcases/malgo/ZeroArgs.mlg d 39" )
+       [ Var "$test/testcases/malgo/ZeroArgs.mlg d 41" ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/ZeroArgs.mlg d 42" ) ) ) ) ),
+   ( "@main", [ "$test/testcases/malgo/ZeroArgs.mlg eta 57" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/ZeroArgs.mlg d 58"
+    ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 56"
+     ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 52"
+      ( Let
+       [ LocalDef
+        { _variable = "$test/testcases/malgo/ZeroArgs.mlg fun 51", typ =
+         [ SumT [ Con Tuple [] ] ] :->
+         (
+          [ SumT [ Con Tuple [] ] ] :-> SumT
+          [ Con Tuple [] ] ), _object = Fun [ "$test/testcases/malgo/ZeroArgs.mlg $_ 43" ]
+         ( Let
+          [ LocalDef
+           { _variable = "$test/testcases/malgo/ZeroArgs.mlg fun 50", typ =
+            [ SumT [ Con Tuple [] ] ] :-> SumT
+            [ Con Tuple [] ], _object = Fun [ "$test/testcases/malgo/ZeroArgs.mlg $_ 44" ]
+            ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 48"
+             ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 46"
+              ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 45"
+               ( Call ( Var "@id" ) [ Var "@one" ] )
+               ( Cast AnyT
+                ( Var "$test/testcases/malgo/ZeroArgs.mlg d 45" ) ) )
+              ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 47"
+               ( Call
+                ( Var "@toStringInt32" )
+                [ Var "$test/testcases/malgo/ZeroArgs.mlg d 46" ] )
+               ( Cast AnyT
+                ( Var "$test/testcases/malgo/ZeroArgs.mlg d 47" ) ) ) )
+             ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 49"
+              ( Call
+               ( Var "@printString" )
+               [ Var "$test/testcases/malgo/ZeroArgs.mlg d 48" ] )
+              ( Cast
+               ( SumT [ Con Tuple [] ] )
+               ( Var "$test/testcases/malgo/ZeroArgs.mlg d 49" ) ) ) ) } ]
+          ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg fun 50" ) ) ) } ]
+       ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg fun 51" ) ) )
+      ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 54"
+       ( Let
+        [ LocalDef
+         { _variable = "$test/testcases/malgo/ZeroArgs.mlg let 53", typ = SumT
+          [ Con Tuple [] ], _object = Pack
+          ( SumT [ Con Tuple [] ] )
+          ( Con Tuple [] ) [] } ]
+        ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg let 53" ) ) )
+       ( Assign "$test/testcases/malgo/ZeroArgs.mlg d 55"
+        ( Call
+         ( Var "$test/testcases/malgo/ZeroArgs.mlg d 52" )
+         [ Var "$test/testcases/malgo/ZeroArgs.mlg d 54" ] )
+        ( Cast
+         ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
+         ( Var "$test/testcases/malgo/ZeroArgs.mlg d 55" ) ) ) ) )
+     ( Atom ( Var "$test/testcases/malgo/ZeroArgs.mlg d 56" ) ) )
+    ( Call
+     ( Var "$test/testcases/malgo/ZeroArgs.mlg d 58" )
+     [ Var "$test/testcases/malgo/ZeroArgs.mlg eta 57" ] ) ) ], extFuns = [] }

@@ -1,0 +1,184 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "$test/testcases/malgo/TestPatSynRecon.mlg +#_curry 88",
+    [ "$test/testcases/malgo/TestPatSynRecon.mlg x 89", "$test/testcases/malgo/TestPatSynRecon.mlg y 90" ],
+    [ Int64T, Int64T ] :-> Int64T, Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 92"
+    ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 91"
+     ( Call
+      ( Var "@addInt64#" )
+      [ Var "$test/testcases/malgo/TestPatSynRecon.mlg x 89" ] )
+     ( Cast
+      ( [ Int64T ] :-> Int64T )
+      ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 91" ) ) )
+    ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 93"
+     ( Call
+      ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 92" )
+      [ Var "$test/testcases/malgo/TestPatSynRecon.mlg y 90" ] )
+     ( Cast Int64T
+      ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 93" ) ) ) ),
+   ( "@+#", [ "$test/testcases/malgo/TestPatSynRecon.mlg x 83" ], [ Int64T ] :->
+    ( [ Int64T ] :-> Int64T ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/TestPatSynRecon.mlg let 94", typ = [ Int64T ] :-> Int64T, _object = Fun [ "$test/testcases/malgo/TestPatSynRecon.mlg y 84" ]
+      ( CallDirect "$test/testcases/malgo/TestPatSynRecon.mlg +#_curry 88"
+       [ Var "$test/testcases/malgo/TestPatSynRecon.mlg x 83", Var "$test/testcases/malgo/TestPatSynRecon.mlg y 84" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/TestPatSynRecon.mlg let 94" ) ) ),
+   ( "@sum", [ "$test/testcases/malgo/TestPatSynRecon.mlg cons 95" ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var "$test/testcases/malgo/TestPatSynRecon.mlg cons 95" ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 96"
+      ( Call ( Var "@Int64#" ) [ Unboxed ( Int64 0 ) ] )
+      ( Cast AnyT
+       ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 96" ) ) ), Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ "$test/testcases/malgo/TestPatSynRecon.mlg p 97", "$test/testcases/malgo/TestPatSynRecon.mlg p 98" ]
+     ( Match
+      ( Cast
+       ( SumT [ Con ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] ] )
+       ( Var "$test/testcases/malgo/TestPatSynRecon.mlg p 97" ) )
+      [ Unpack
+       ( Con
+        ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] ) [ "$test/testcases/malgo/TestPatSynRecon.mlg p 99" ]
+       ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 103"
+        ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 101"
+         ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 100"
+          ( Call
+           ( Var "@sum" )
+           [ Var "$test/testcases/malgo/TestPatSynRecon.mlg p 98" ] )
+          ( Cast AnyT
+           ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 100" ) ) )
+         ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 102"
+          ( Call
+           ( Var "@|>" )
+           [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 101" ] )
+          ( Cast
+           ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
+           ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 102" ) ) ) )
+        ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 112"
+         ( Let
+          [ LocalDef
+           { _variable = "$test/testcases/malgo/TestPatSynRecon.mlg fun 111", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/TestPatSynRecon.mlg int64# 104" ]
+            ( Match
+             ( Cast
+              ( SumT
+               [ Con ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] ] )
+              ( Var "$test/testcases/malgo/TestPatSynRecon.mlg int64# 104" ) )
+             [ Unpack
+              ( Con
+               ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] ) [ "$test/testcases/malgo/TestPatSynRecon.mlg p 105" ]
+              ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 109"
+               ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 107"
+                ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 106"
+                 ( Call
+                  ( Var "@+#" )
+                  [ Var "$test/testcases/malgo/TestPatSynRecon.mlg p 99" ] )
+                 ( Cast
+                  ( [ Int64T ] :-> Int64T )
+                  ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 106" ) ) )
+                ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 108"
+                 ( Call
+                  ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 107" )
+                  [ Var "$test/testcases/malgo/TestPatSynRecon.mlg p 105" ] )
+                 ( Cast Int64T
+                  ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 108" ) ) ) )
+               ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 110"
+                ( Call
+                 ( Var "@Int64#" )
+                 [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 109" ] )
+                ( Cast AnyT
+                 ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 110" ) ) ) ) ] ) } ]
+          ( Atom
+           ( Var "$test/testcases/malgo/TestPatSynRecon.mlg fun 111" ) ) )
+         ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 113"
+          ( Call
+           ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 103" )
+           [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 112" ] )
+          ( Cast AnyT
+           ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 113" ) ) ) ) ) ] ) ] ),
+   ( "@main", [ "$test/testcases/malgo/TestPatSynRecon.mlg $_ 114" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 131"
+    ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 129"
+     ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 127"
+      ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 118"
+       ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 116"
+        ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 115"
+         ( Call ( Var "@Int64#" ) [ Unboxed ( Int64 1 ) ] )
+         ( Cast AnyT
+          ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 115" ) ) )
+        ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 117"
+         ( Call
+          ( Var "@Cons" )
+          [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 116" ] )
+         ( Cast
+          ( [ AnyT ] :-> AnyT )
+          ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 117" ) ) ) )
+       ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 125"
+        ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 122"
+         ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 120"
+          ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 119"
+           ( Call ( Var "@Int64#" ) [ Unboxed ( Int64 2 ) ] )
+           ( Cast AnyT
+            ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 119" ) ) )
+          ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 121"
+           ( Call
+            ( Var "@Cons" )
+            [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 120" ] )
+           ( Cast
+            ( [ AnyT ] :-> AnyT )
+            ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 121" ) ) ) )
+         ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 123"
+          ( CallDirect "@Nil" [] )
+          ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 124"
+           ( Call
+            ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 122" )
+            [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 123" ] )
+           ( Cast AnyT
+            ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 124" ) ) ) ) )
+        ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 126"
+         ( Call
+          ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 118" )
+          [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 125" ] )
+         ( Cast AnyT
+          ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 126" ) ) ) ) )
+      ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 128"
+       ( Call
+        ( Var "@sum" )
+        [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 127" ] )
+       ( Cast AnyT
+        ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 128" ) ) ) )
+     ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 130"
+      ( Call
+       ( Var "@|>" )
+       [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 129" ] )
+      ( Cast
+       ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 130" ) ) ) )
+    ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 135"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/TestPatSynRecon.mlg fun 134", typ = [ AnyT ] :-> SumT
+        [ Con Tuple [] ], _object = Fun [ "$test/testcases/malgo/TestPatSynRecon.mlg i 132" ]
+        ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 133"
+         ( Call
+          ( Var "@printInt64" )
+          [ Var "$test/testcases/malgo/TestPatSynRecon.mlg i 132" ] )
+         ( Cast
+          ( SumT [ Con Tuple [] ] )
+          ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 133" ) ) ) } ]
+      ( Atom ( Var "$test/testcases/malgo/TestPatSynRecon.mlg fun 134" ) ) )
+     ( Assign "$test/testcases/malgo/TestPatSynRecon.mlg d 136"
+      ( Call
+       ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 131" )
+       [ Var "$test/testcases/malgo/TestPatSynRecon.mlg d 135" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/TestPatSynRecon.mlg d 136" ) ) ) ) ) ], extFuns = [] }

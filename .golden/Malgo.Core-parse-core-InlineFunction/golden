@@ -1,0 +1,312 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "$test/testcases/malgo/InlineFunction.mlg +_curry 157",
+    [ "$test/testcases/malgo/InlineFunction.mlg x 158", "$test/testcases/malgo/InlineFunction.mlg y 159" ],
+    [ AnyT, AnyT ] :-> AnyT, Assign "$test/testcases/malgo/InlineFunction.mlg d 161"
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 160"
+     ( Call
+      ( Var "@addInt32" )
+      [ Var "$test/testcases/malgo/InlineFunction.mlg x 158" ] )
+     ( Cast
+      ( [ AnyT ] :-> AnyT )
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 160" ) ) )
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 162"
+     ( Call
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 161" )
+      [ Var "$test/testcases/malgo/InlineFunction.mlg y 159" ] )
+     ( Cast AnyT
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 162" ) ) ) ),
+   ( "$test/testcases/malgo/InlineFunction.mlg -_curry 145",
+    [ "$test/testcases/malgo/InlineFunction.mlg x 146", "$test/testcases/malgo/InlineFunction.mlg y 147" ],
+    [ AnyT, AnyT ] :-> AnyT, Assign "$test/testcases/malgo/InlineFunction.mlg d 149"
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 148"
+     ( Call
+      ( Var "@subInt32" )
+      [ Var "$test/testcases/malgo/InlineFunction.mlg x 146" ] )
+     ( Cast
+      ( [ AnyT ] :-> AnyT )
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 148" ) ) )
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 150"
+     ( Call
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 149" )
+      [ Var "$test/testcases/malgo/InlineFunction.mlg y 147" ] )
+     ( Cast AnyT
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 150" ) ) ) ),
+   ( "$test/testcases/malgo/InlineFunction.mlg <=_curry 133",
+    [ "$test/testcases/malgo/InlineFunction.mlg x 134", "$test/testcases/malgo/InlineFunction.mlg y 135" ],
+    [ AnyT, AnyT ] :-> AnyT, Assign "$test/testcases/malgo/InlineFunction.mlg d 137"
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 136"
+     ( Call
+      ( Var "@leInt32" )
+      [ Var "$test/testcases/malgo/InlineFunction.mlg x 134" ] )
+     ( Cast
+      ( [ AnyT ] :-> AnyT )
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 136" ) ) )
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 138"
+     ( Call
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 137" )
+      [ Var "$test/testcases/malgo/InlineFunction.mlg y 135" ] )
+     ( Cast AnyT
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 138" ) ) ) ),
+   ( "$test/testcases/malgo/InlineFunction.mlg fix_curry 119",
+    [ "$test/testcases/malgo/InlineFunction.mlg f 120", "$test/testcases/malgo/InlineFunction.mlg x 121" ],
+    [
+     [ [ AnyT ] :-> AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), AnyT ] :-> AnyT, Assign "$test/testcases/malgo/InlineFunction.mlg d 125"
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 123"
+     ( Assign "$test/testcases/malgo/InlineFunction.mlg d 122"
+      ( Call
+       ( Var "@fix" )
+       [ Var "$test/testcases/malgo/InlineFunction.mlg f 120" ] )
+      ( Cast
+       ( [ AnyT ] :-> AnyT )
+       ( Var "$test/testcases/malgo/InlineFunction.mlg d 122" ) ) )
+     ( Assign "$test/testcases/malgo/InlineFunction.mlg d 124"
+      ( Call
+       ( Var "$test/testcases/malgo/InlineFunction.mlg f 120" )
+       [ Var "$test/testcases/malgo/InlineFunction.mlg d 123" ] )
+      ( Cast
+       ( [ AnyT ] :-> AnyT )
+       ( Var "$test/testcases/malgo/InlineFunction.mlg d 124" ) ) ) )
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 126"
+     ( Call
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 125" )
+      [ Var "$test/testcases/malgo/InlineFunction.mlg x 121" ] )
+     ( Cast AnyT
+      ( Var "$test/testcases/malgo/InlineFunction.mlg d 126" ) ) ) ),
+   ( "@fix", [ "$test/testcases/malgo/InlineFunction.mlg f 112" ],
+    [ [ [ AnyT ] :-> AnyT ] :-> ( [ AnyT ] :-> AnyT ) ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/InlineFunction.mlg let 127", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/InlineFunction.mlg x 113" ]
+      ( CallDirect "$test/testcases/malgo/InlineFunction.mlg fix_curry 119"
+       [ Var "$test/testcases/malgo/InlineFunction.mlg f 112", Var "$test/testcases/malgo/InlineFunction.mlg x 113" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/InlineFunction.mlg let 127" ) ) ),
+   ( "@<=", [ "$test/testcases/malgo/InlineFunction.mlg x 128" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/InlineFunction.mlg let 139", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/InlineFunction.mlg y 129" ]
+      ( CallDirect "$test/testcases/malgo/InlineFunction.mlg <=_curry 133"
+       [ Var "$test/testcases/malgo/InlineFunction.mlg x 128", Var "$test/testcases/malgo/InlineFunction.mlg y 129" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/InlineFunction.mlg let 139" ) ) ),
+   ( "@-", [ "$test/testcases/malgo/InlineFunction.mlg x 140" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/InlineFunction.mlg let 151", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/InlineFunction.mlg y 141" ]
+      ( CallDirect "$test/testcases/malgo/InlineFunction.mlg -_curry 145"
+       [ Var "$test/testcases/malgo/InlineFunction.mlg x 140", Var "$test/testcases/malgo/InlineFunction.mlg y 141" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/InlineFunction.mlg let 151" ) ) ),
+   ( "@+", [ "$test/testcases/malgo/InlineFunction.mlg x 152" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/InlineFunction.mlg let 163", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/InlineFunction.mlg y 153" ]
+      ( CallDirect "$test/testcases/malgo/InlineFunction.mlg +_curry 157"
+       [ Var "$test/testcases/malgo/InlineFunction.mlg x 152", Var "$test/testcases/malgo/InlineFunction.mlg y 153" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/InlineFunction.mlg let 163" ) ) ),
+   ( "@main", [ "$test/testcases/malgo/InlineFunction.mlg $_ 164" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Match
+    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 246"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/InlineFunction.mlg fun 245", typ =
+        [ [ AnyT ] :-> AnyT ] :->
+        ( [ AnyT ] :-> AnyT ), _object = Fun [ "$test/testcases/malgo/InlineFunction.mlg f 165" ]
+        ( Let
+         [ LocalDef
+          { _variable = "$test/testcases/malgo/InlineFunction.mlg let 244", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/InlineFunction.mlg n 166" ]
+           ( Let
+            [ LocalDef
+             { _variable = "$test/testcases/malgo/InlineFunction.mlg inner_curry 204", typ =
+              [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, _object = Fun
+              [ "$test/testcases/malgo/InlineFunction.mlg f 205", "$test/testcases/malgo/InlineFunction.mlg n 206" ]
+              ( Assign "$test/testcases/malgo/InlineFunction.mlg d 220"
+               ( Assign "$test/testcases/malgo/InlineFunction.mlg d 214"
+                ( Assign "$test/testcases/malgo/InlineFunction.mlg d 212"
+                 ( Assign "$test/testcases/malgo/InlineFunction.mlg d 208"
+                  ( Assign "$test/testcases/malgo/InlineFunction.mlg d 207"
+                   ( Call
+                    ( Var "@<=" )
+                    [ Var "$test/testcases/malgo/InlineFunction.mlg n 206" ] )
+                   ( Cast
+                    ( [ AnyT ] :-> AnyT )
+                    ( Var "$test/testcases/malgo/InlineFunction.mlg d 207" ) ) )
+                  ( Assign "$test/testcases/malgo/InlineFunction.mlg d 210"
+                   ( Assign "$test/testcases/malgo/InlineFunction.mlg d 209"
+                    ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 1 ) ] )
+                    ( Cast AnyT
+                     ( Var "$test/testcases/malgo/InlineFunction.mlg d 209" ) ) )
+                   ( Assign "$test/testcases/malgo/InlineFunction.mlg d 211"
+                    ( Call
+                     ( Var "$test/testcases/malgo/InlineFunction.mlg d 208" )
+                     [ Var "$test/testcases/malgo/InlineFunction.mlg d 210" ] )
+                    ( Cast AnyT
+                     ( Var "$test/testcases/malgo/InlineFunction.mlg d 211" ) ) ) ) )
+                 ( Assign "$test/testcases/malgo/InlineFunction.mlg d 213"
+                  ( Call
+                   ( Var "@if" )
+                   [ Var "$test/testcases/malgo/InlineFunction.mlg d 212" ] )
+                  ( Cast
+                   (
+                    [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                    ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) )
+                   ( Var "$test/testcases/malgo/InlineFunction.mlg d 213" ) ) ) )
+                ( Assign "$test/testcases/malgo/InlineFunction.mlg d 218"
+                 ( Let
+                  [ LocalDef
+                   { _variable = "$test/testcases/malgo/InlineFunction.mlg fun 215", typ =
+                    [ SumT
+                     [ Con Tuple [] ] ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/InlineFunction.mlg $_ 216" ]
+                    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 217"
+                     ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 1 ) ] )
+                     ( Cast AnyT
+                      ( Var "$test/testcases/malgo/InlineFunction.mlg d 217" ) ) ) } ]
+                  ( Atom
+                   ( Var "$test/testcases/malgo/InlineFunction.mlg fun 215" ) ) )
+                 ( Assign "$test/testcases/malgo/InlineFunction.mlg d 219"
+                  ( Call
+                   ( Var "$test/testcases/malgo/InlineFunction.mlg d 214" )
+                   [ Var "$test/testcases/malgo/InlineFunction.mlg d 218" ] )
+                  ( Cast
+                   ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
+                   ( Var "$test/testcases/malgo/InlineFunction.mlg d 219" ) ) ) ) )
+               ( Assign "$test/testcases/malgo/InlineFunction.mlg d 242"
+                ( Let
+                 [ LocalDef
+                  { _variable = "$test/testcases/malgo/InlineFunction.mlg fun 221", typ =
+                   [ SumT
+                    [ Con Tuple [] ] ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/InlineFunction.mlg $_ 222" ]
+                   ( Assign "$test/testcases/malgo/InlineFunction.mlg d 232"
+                    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 230"
+                     ( Assign "$test/testcases/malgo/InlineFunction.mlg d 228"
+                      ( Assign "$test/testcases/malgo/InlineFunction.mlg d 224"
+                       ( Assign "$test/testcases/malgo/InlineFunction.mlg d 223"
+                        ( Call
+                         ( Var "@-" )
+                         [ Var "$test/testcases/malgo/InlineFunction.mlg n 206" ] )
+                        ( Cast
+                         ( [ AnyT ] :-> AnyT )
+                         ( Var "$test/testcases/malgo/InlineFunction.mlg d 223" ) ) )
+                       ( Assign "$test/testcases/malgo/InlineFunction.mlg d 226"
+                        ( Assign "$test/testcases/malgo/InlineFunction.mlg d 225"
+                         ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 1 ) ] )
+                         ( Cast AnyT
+                          ( Var "$test/testcases/malgo/InlineFunction.mlg d 225" ) ) )
+                        ( Assign "$test/testcases/malgo/InlineFunction.mlg d 227"
+                         ( Call
+                          ( Var "$test/testcases/malgo/InlineFunction.mlg d 224" )
+                          [ Var "$test/testcases/malgo/InlineFunction.mlg d 226" ] )
+                         ( Cast AnyT
+                          ( Var "$test/testcases/malgo/InlineFunction.mlg d 227" ) ) ) ) )
+                      ( Assign "$test/testcases/malgo/InlineFunction.mlg d 229"
+                       ( Call
+                        ( Var "$test/testcases/malgo/InlineFunction.mlg f 205" )
+                        [ Var "$test/testcases/malgo/InlineFunction.mlg d 228" ] )
+                       ( Cast AnyT
+                        ( Var "$test/testcases/malgo/InlineFunction.mlg d 229" ) ) ) )
+                     ( Assign "$test/testcases/malgo/InlineFunction.mlg d 231"
+                      ( Call
+                       ( Var "@+" )
+                       [ Var "$test/testcases/malgo/InlineFunction.mlg d 230" ] )
+                      ( Cast
+                       ( [ AnyT ] :-> AnyT )
+                       ( Var "$test/testcases/malgo/InlineFunction.mlg d 231" ) ) ) )
+                    ( Assign "$test/testcases/malgo/InlineFunction.mlg d 240"
+                     ( Assign "$test/testcases/malgo/InlineFunction.mlg d 238"
+                      ( Assign "$test/testcases/malgo/InlineFunction.mlg d 234"
+                       ( Assign "$test/testcases/malgo/InlineFunction.mlg d 233"
+                        ( Call
+                         ( Var "@-" )
+                         [ Var "$test/testcases/malgo/InlineFunction.mlg n 206" ] )
+                        ( Cast
+                         ( [ AnyT ] :-> AnyT )
+                         ( Var "$test/testcases/malgo/InlineFunction.mlg d 233" ) ) )
+                       ( Assign "$test/testcases/malgo/InlineFunction.mlg d 236"
+                        ( Assign "$test/testcases/malgo/InlineFunction.mlg d 235"
+                         ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 2 ) ] )
+                         ( Cast AnyT
+                          ( Var "$test/testcases/malgo/InlineFunction.mlg d 235" ) ) )
+                        ( Assign "$test/testcases/malgo/InlineFunction.mlg d 237"
+                         ( Call
+                          ( Var "$test/testcases/malgo/InlineFunction.mlg d 234" )
+                          [ Var "$test/testcases/malgo/InlineFunction.mlg d 236" ] )
+                         ( Cast AnyT
+                          ( Var "$test/testcases/malgo/InlineFunction.mlg d 237" ) ) ) ) )
+                      ( Assign "$test/testcases/malgo/InlineFunction.mlg d 239"
+                       ( Call
+                        ( Var "$test/testcases/malgo/InlineFunction.mlg f 205" )
+                        [ Var "$test/testcases/malgo/InlineFunction.mlg d 238" ] )
+                       ( Cast AnyT
+                        ( Var "$test/testcases/malgo/InlineFunction.mlg d 239" ) ) ) )
+                     ( Assign "$test/testcases/malgo/InlineFunction.mlg d 241"
+                      ( Call
+                       ( Var "$test/testcases/malgo/InlineFunction.mlg d 232" )
+                       [ Var "$test/testcases/malgo/InlineFunction.mlg d 240" ] )
+                      ( Cast AnyT
+                       ( Var "$test/testcases/malgo/InlineFunction.mlg d 241" ) ) ) ) ) } ]
+                 ( Atom
+                  ( Var "$test/testcases/malgo/InlineFunction.mlg fun 221" ) ) )
+                ( Assign "$test/testcases/malgo/InlineFunction.mlg d 243"
+                 ( Call
+                  ( Var "$test/testcases/malgo/InlineFunction.mlg d 220" )
+                  [ Var "$test/testcases/malgo/InlineFunction.mlg d 242" ] )
+                 ( Cast AnyT
+                  ( Var "$test/testcases/malgo/InlineFunction.mlg d 243" ) ) ) ) ) } ]
+            ( Call
+             ( Var "$test/testcases/malgo/InlineFunction.mlg inner_curry 204" )
+             [ Var "$test/testcases/malgo/InlineFunction.mlg f 165", Var "$test/testcases/malgo/InlineFunction.mlg n 166" ] ) ) } ]
+         ( Atom
+          ( Var "$test/testcases/malgo/InlineFunction.mlg let 244" ) ) ) } ]
+      ( Atom ( Var "$test/testcases/malgo/InlineFunction.mlg fun 245" ) ) )
+     ( Assign "$test/testcases/malgo/InlineFunction.mlg d 247"
+      ( Call
+       ( Var "@fix" )
+       [ Var "$test/testcases/malgo/InlineFunction.mlg d 246" ] )
+      ( Cast
+       ( [ AnyT ] :-> AnyT )
+       ( Var "$test/testcases/malgo/InlineFunction.mlg d 247" ) ) ) )
+    [ Bind "$test/testcases/malgo/InlineFunction.mlg let_test/testcases/malgo/InlineFunction.mlg.#fib_10 248"
+     ( [ AnyT ] :-> AnyT )
+     ( Assign "$test/testcases/malgo/InlineFunction.mlg d 258"
+      ( Assign "$test/testcases/malgo/InlineFunction.mlg d 256"
+       ( Assign "$test/testcases/malgo/InlineFunction.mlg d 254"
+        ( Assign "$test/testcases/malgo/InlineFunction.mlg d 252"
+         ( Assign "$test/testcases/malgo/InlineFunction.mlg d 250"
+          ( Assign "$test/testcases/malgo/InlineFunction.mlg d 249"
+           ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 5 ) ] )
+           ( Cast AnyT
+            ( Var "$test/testcases/malgo/InlineFunction.mlg d 249" ) ) )
+          ( Assign "$test/testcases/malgo/InlineFunction.mlg d 251"
+           ( Call
+            ( Var "$test/testcases/malgo/InlineFunction.mlg let_test/testcases/malgo/InlineFunction.mlg.#fib_10 248" )
+            [ Var "$test/testcases/malgo/InlineFunction.mlg d 250" ] )
+           ( Cast AnyT
+            ( Var "$test/testcases/malgo/InlineFunction.mlg d 251" ) ) ) )
+         ( Assign "$test/testcases/malgo/InlineFunction.mlg d 253"
+          ( Call
+           ( Var "@|>" )
+           [ Var "$test/testcases/malgo/InlineFunction.mlg d 252" ] )
+          ( Cast
+           ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
+           ( Var "$test/testcases/malgo/InlineFunction.mlg d 253" ) ) ) )
+        ( Assign "$test/testcases/malgo/InlineFunction.mlg d 255"
+         ( Call
+          ( Var "$test/testcases/malgo/InlineFunction.mlg d 254" )
+          [ Var "@toStringInt32" ] )
+         ( Cast AnyT
+          ( Var "$test/testcases/malgo/InlineFunction.mlg d 255" ) ) ) )
+       ( Assign "$test/testcases/malgo/InlineFunction.mlg d 257"
+        ( Call
+         ( Var "@|>" )
+         [ Var "$test/testcases/malgo/InlineFunction.mlg d 256" ] )
+        ( Cast
+         ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
+         ( Var "$test/testcases/malgo/InlineFunction.mlg d 257" ) ) ) )
+      ( Assign "$test/testcases/malgo/InlineFunction.mlg d 259"
+       ( Call
+        ( Var "$test/testcases/malgo/InlineFunction.mlg d 258" )
+        [ Var "@putStrLn" ] )
+       ( Cast
+        ( SumT [ Con Tuple [] ] )
+        ( Var "$test/testcases/malgo/InlineFunction.mlg d 259" ) ) ) ) ] ) ], extFuns = [] }

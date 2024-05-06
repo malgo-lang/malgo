@@ -1,0 +1,243 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "$test/testcases/malgo/Null.mlg |>_curry 138",
+    [ "$test/testcases/malgo/Null.mlg x 139", "$test/testcases/malgo/Null.mlg f 140" ],
+    [ AnyT, [ AnyT ] :-> AnyT ] :-> AnyT, Assign "$test/testcases/malgo/Null.mlg d 141"
+    ( Call
+     ( Var "$test/testcases/malgo/Null.mlg f 140" )
+     [ Var "$test/testcases/malgo/Null.mlg x 139" ] )
+    ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg d 141" ) ) ),
+   ( "$test/testcases/malgo/Null.mlg Cons_curry 128",
+    [ "$test/testcases/malgo/Null.mlg p 129", "$test/testcases/malgo/Null.mlg p 130" ],
+    [ AnyT, AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Null.mlg let 131", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Null.mlg.Nil" ) [], Con
+       ( Data "test/testcases/malgo/Null.mlg.Cons" )
+       [ AnyT, AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Null.mlg.Nil" ) [], Con
+        ( Data "test/testcases/malgo/Null.mlg.Cons" )
+        [ AnyT, AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/Null.mlg.Cons" ) [ AnyT, AnyT ] )
+      [ Var "$test/testcases/malgo/Null.mlg p 129", Var "$test/testcases/malgo/Null.mlg p 130" ] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg let 131" ) ) ),
+   ( "@Nothing", [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Null.mlg let 119", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Null.mlg.Nothing" ) [], Con
+       ( Data "test/testcases/malgo/Null.mlg.Just" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Null.mlg.Nothing" ) [], Con
+        ( Data "test/testcases/malgo/Null.mlg.Just" ) [ AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/Null.mlg.Nothing" ) [] ) [] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg let 119" ) ) ),
+   ( "@Just", [ "$test/testcases/malgo/Null.mlg p 120" ], [ AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Null.mlg let 121", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Null.mlg.Nothing" ) [], Con
+       ( Data "test/testcases/malgo/Null.mlg.Just" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Null.mlg.Nothing" ) [], Con
+        ( Data "test/testcases/malgo/Null.mlg.Just" ) [ AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/Null.mlg.Just" ) [ AnyT ] )
+      [ Var "$test/testcases/malgo/Null.mlg p 120" ] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg let 121" ) ) ),
+   ( "@False", [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Null.mlg let 122", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Null.mlg.False" ) [], Con
+       ( Data "test/testcases/malgo/Null.mlg.True" ) [] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Null.mlg.False" ) [], Con
+        ( Data "test/testcases/malgo/Null.mlg.True" ) [] ] )
+      ( Con ( Data "test/testcases/malgo/Null.mlg.False" ) [] ) [] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg let 122" ) ) ),
+   ( "@True", [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Null.mlg let 123", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Null.mlg.False" ) [], Con
+       ( Data "test/testcases/malgo/Null.mlg.True" ) [] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Null.mlg.False" ) [], Con
+        ( Data "test/testcases/malgo/Null.mlg.True" ) [] ] )
+      ( Con ( Data "test/testcases/malgo/Null.mlg.True" ) [] ) [] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg let 123" ) ) ),
+   ( "@Nil", [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Null.mlg let 124", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Null.mlg.Nil" ) [], Con
+       ( Data "test/testcases/malgo/Null.mlg.Cons" )
+       [ AnyT, AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Null.mlg.Nil" ) [], Con
+        ( Data "test/testcases/malgo/Null.mlg.Cons" )
+        [ AnyT, AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/Null.mlg.Nil" ) [] ) [] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg let 124" ) ) ),
+   ( "@Cons", [ "$test/testcases/malgo/Null.mlg p 125" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Null.mlg let 132", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Null.mlg p 126" ]
+      ( CallDirect "$test/testcases/malgo/Null.mlg Cons_curry 128"
+       [ Var "$test/testcases/malgo/Null.mlg p 125", Var "$test/testcases/malgo/Null.mlg p 126" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/Null.mlg let 132" ) ) ),
+   ( "@malgo_print_string", [ "$test/testcases/malgo/Null.mlg p 133" ], [ StringT ] :-> SumT
+    [ Con Tuple [] ], RawCall "malgo_print_string"
+    ( [ StringT ] :-> SumT [ Con Tuple [] ] )
+    [ Var "$test/testcases/malgo/Null.mlg p 133" ] ),
+   ( "@malgo_exit_failure", [ "$test/testcases/malgo/Null.mlg p 134" ],
+    [ SumT [ Con Tuple [] ] ] :-> AnyT, RawCall "malgo_exit_failure"
+    ( [ SumT [ Con Tuple [] ] ] :-> AnyT )
+    [ Var "$test/testcases/malgo/Null.mlg p 134" ] ),
+   ( "@|>", [ "$test/testcases/malgo/Null.mlg x 135" ], [ AnyT ] :->
+    ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Null.mlg let 142", typ =
+      [ [ AnyT ] :-> AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Null.mlg f 136" ]
+      ( CallDirect "$test/testcases/malgo/Null.mlg |>_curry 138"
+       [ Var "$test/testcases/malgo/Null.mlg x 135", Var "$test/testcases/malgo/Null.mlg f 136" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/Null.mlg let 142" ) ) ),
+   ( "@mHead", [ "$test/testcases/malgo/Null.mlg nil 143" ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "test/testcases/malgo/Null.mlg.Nil" ) [], Con
+       ( Data "test/testcases/malgo/Null.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var "$test/testcases/malgo/Null.mlg nil 143" ) )
+    [ Unpack
+     ( Con ( Data "test/testcases/malgo/Null.mlg.Nil" ) [] ) []
+     ( CallDirect "@Nothing" [] ), Unpack
+     ( Con ( Data "test/testcases/malgo/Null.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ "$test/testcases/malgo/Null.mlg p 144", "$test/testcases/malgo/Null.mlg p 145" ]
+     ( Assign "$test/testcases/malgo/Null.mlg d 146"
+      ( Call ( Var "@Just" ) [ Var "$test/testcases/malgo/Null.mlg p 144" ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg d 146" ) ) ) ] ),
+   ( "@isNothing", [ "$test/testcases/malgo/Null.mlg nothing 147" ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "test/testcases/malgo/Null.mlg.Nothing" ) [], Con
+       ( Data "test/testcases/malgo/Null.mlg.Just" ) [ AnyT ] ] )
+     ( Var "$test/testcases/malgo/Null.mlg nothing 147" ) )
+    [ Unpack
+     ( Con ( Data "test/testcases/malgo/Null.mlg.Nothing" ) [] ) []
+     ( CallDirect "@True" [] ), Unpack
+     ( Con
+      ( Data "test/testcases/malgo/Null.mlg.Just" ) [ AnyT ] ) [ "$test/testcases/malgo/Null.mlg p 148" ]
+     ( CallDirect "@False" [] ) ] ),
+   ( "@null", [ "$test/testcases/malgo/Null.mlg as 149" ], [ AnyT ] :-> AnyT, Assign "$test/testcases/malgo/Null.mlg d 151"
+    ( Assign "$test/testcases/malgo/Null.mlg d 150"
+     ( Call ( Var "@mHead" ) [ Var "$test/testcases/malgo/Null.mlg as 149" ] )
+     ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg d 150" ) ) )
+    ( Assign "$test/testcases/malgo/Null.mlg d 152"
+     ( Call
+      ( Var "@isNothing" )
+      [ Var "$test/testcases/malgo/Null.mlg d 151" ] )
+     ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg d 152" ) ) ) ),
+   ( "@main", [ "$test/testcases/malgo/Null.mlg $_ 153" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/Null.mlg d 168"
+    ( Assign "$test/testcases/malgo/Null.mlg d 166"
+     ( Assign "$test/testcases/malgo/Null.mlg d 164"
+      ( Assign "$test/testcases/malgo/Null.mlg d 156"
+       ( Assign "$test/testcases/malgo/Null.mlg d 154"
+        ( CallDirect "@True" [] )
+        ( Assign "$test/testcases/malgo/Null.mlg d 155"
+         ( Call
+          ( Var "@Cons" )
+          [ Var "$test/testcases/malgo/Null.mlg d 154" ] )
+         ( Cast
+          ( [ AnyT ] :-> AnyT )
+          ( Var "$test/testcases/malgo/Null.mlg d 155" ) ) ) )
+       ( Assign "$test/testcases/malgo/Null.mlg d 162"
+        ( Assign "$test/testcases/malgo/Null.mlg d 159"
+         ( Assign "$test/testcases/malgo/Null.mlg d 157"
+          ( CallDirect "@True" [] )
+          ( Assign "$test/testcases/malgo/Null.mlg d 158"
+           ( Call
+            ( Var "@Cons" )
+            [ Var "$test/testcases/malgo/Null.mlg d 157" ] )
+           ( Cast
+            ( [ AnyT ] :-> AnyT )
+            ( Var "$test/testcases/malgo/Null.mlg d 158" ) ) ) )
+         ( Assign "$test/testcases/malgo/Null.mlg d 160"
+          ( CallDirect "@Nil" [] )
+          ( Assign "$test/testcases/malgo/Null.mlg d 161"
+           ( Call
+            ( Var "$test/testcases/malgo/Null.mlg d 159" )
+            [ Var "$test/testcases/malgo/Null.mlg d 160" ] )
+           ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg d 161" ) ) ) ) )
+        ( Assign "$test/testcases/malgo/Null.mlg d 163"
+         ( Call
+          ( Var "$test/testcases/malgo/Null.mlg d 156" )
+          [ Var "$test/testcases/malgo/Null.mlg d 162" ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg d 163" ) ) ) ) )
+      ( Assign "$test/testcases/malgo/Null.mlg d 165"
+       ( Call ( Var "@null" ) [ Var "$test/testcases/malgo/Null.mlg d 164" ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/Null.mlg d 165" ) ) ) )
+     ( Assign "$test/testcases/malgo/Null.mlg d 167"
+      ( Call ( Var "@|>" ) [ Var "$test/testcases/malgo/Null.mlg d 166" ] )
+      ( Cast
+       ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/Null.mlg d 167" ) ) ) )
+    ( Assign "$test/testcases/malgo/Null.mlg d 175"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/Null.mlg fun 174", typ = [ AnyT ] :-> SumT
+        [ Con Tuple [] ], _object = Fun [ "$test/testcases/malgo/Null.mlg false 169" ]
+        ( Match
+         ( Cast
+          ( SumT
+           [ Con
+            ( Data "test/testcases/malgo/Null.mlg.False" ) [], Con
+            ( Data "test/testcases/malgo/Null.mlg.True" ) [] ] )
+          ( Var "$test/testcases/malgo/Null.mlg false 169" ) )
+         [ Unpack
+          ( Con ( Data "test/testcases/malgo/Null.mlg.False" ) [] ) []
+          ( Assign "$test/testcases/malgo/Null.mlg d 170"
+           ( Call ( Var "@malgo_print_string" ) [ Unboxed ( String "OK" ) ] )
+           ( Cast
+            ( SumT [ Con Tuple [] ] )
+            ( Var "$test/testcases/malgo/Null.mlg d 170" ) ) ), Unpack
+          ( Con ( Data "test/testcases/malgo/Null.mlg.True" ) [] ) []
+          ( Assign "$test/testcases/malgo/Null.mlg d 172"
+           ( Let
+            [ LocalDef
+             { _variable = "$test/testcases/malgo/Null.mlg let 171", typ = SumT
+              [ Con Tuple [] ], _object = Pack
+              ( SumT [ Con Tuple [] ] )
+              ( Con Tuple [] ) [] } ]
+            ( Atom ( Var "$test/testcases/malgo/Null.mlg let 171" ) ) )
+           ( Assign "$test/testcases/malgo/Null.mlg d 173"
+            ( Call
+             ( Var "@malgo_exit_failure" )
+             [ Var "$test/testcases/malgo/Null.mlg d 172" ] )
+            ( Cast
+             ( SumT [ Con Tuple [] ] )
+             ( Var "$test/testcases/malgo/Null.mlg d 173" ) ) ) ) ] ) } ]
+      ( Atom ( Var "$test/testcases/malgo/Null.mlg fun 174" ) ) )
+     ( Assign "$test/testcases/malgo/Null.mlg d 176"
+      ( Call
+       ( Var "$test/testcases/malgo/Null.mlg d 168" )
+       [ Var "$test/testcases/malgo/Null.mlg d 175" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/Null.mlg d 176" ) ) ) ) ) ], extFuns =
+  [
+   ( "%malgo_print_string", [ StringT ] :-> SumT [ Con Tuple [] ] ),
+   ( "%malgo_exit_failure", [ SumT [ Con Tuple [] ] ] :-> AnyT ) ] }

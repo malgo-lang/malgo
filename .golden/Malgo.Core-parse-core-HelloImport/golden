@@ -1,0 +1,56 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "@main", [ "$test/testcases/malgo/HelloImport.mlg $_ 18" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/HelloImport.mlg d 22"
+    ( Assign "$test/testcases/malgo/HelloImport.mlg d 20"
+     ( Assign "$test/testcases/malgo/HelloImport.mlg d 19"
+      ( Call ( Var "@String#" ) [ Unboxed ( String "hello" ) ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/HelloImport.mlg d 19" ) ) )
+     ( Assign "$test/testcases/malgo/HelloImport.mlg d 21"
+      ( Call
+       ( Var "@putStr" )
+       [ Var "$test/testcases/malgo/HelloImport.mlg d 20" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/HelloImport.mlg d 21" ) ) ) )
+    ( Assign "$test/testcases/malgo/HelloImport.mlg d 25"
+     ( Assign "$test/testcases/malgo/HelloImport.mlg cast 23"
+      ( Cast AnyT ( Var "@putStrLn" ) )
+      ( Assign "$test/testcases/malgo/HelloImport.mlg d 24"
+       ( Call
+        ( Var "@|>" )
+        [ Var "$test/testcases/malgo/HelloImport.mlg cast 23" ] )
+       ( Cast
+        (
+         [
+          [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
+          [ Con Tuple [] ] ] :-> SumT
+         [ Con Tuple [] ] )
+        ( Var "$test/testcases/malgo/HelloImport.mlg d 24" ) ) ) )
+     ( Assign "$test/testcases/malgo/HelloImport.mlg d 31"
+      ( Let
+       [ LocalDef
+        { _variable = "$test/testcases/malgo/HelloImport.mlg fun 30", typ =
+         [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
+         [ Con Tuple [] ], _object = Fun [ "$test/testcases/malgo/HelloImport.mlg f 26" ]
+         ( Assign "$test/testcases/malgo/HelloImport.mlg d 28"
+          ( Assign "$test/testcases/malgo/HelloImport.mlg d 27"
+           ( Call ( Var "@String#" ) [ Unboxed ( String " world" ) ] )
+           ( Cast AnyT ( Var "$test/testcases/malgo/HelloImport.mlg d 27" ) ) )
+          ( Assign "$test/testcases/malgo/HelloImport.mlg d 29"
+           ( Call
+            ( Var "$test/testcases/malgo/HelloImport.mlg f 26" )
+            [ Var "$test/testcases/malgo/HelloImport.mlg d 28" ] )
+           ( Cast
+            ( SumT [ Con Tuple [] ] )
+            ( Var "$test/testcases/malgo/HelloImport.mlg d 29" ) ) ) ) } ]
+       ( Atom ( Var "$test/testcases/malgo/HelloImport.mlg fun 30" ) ) )
+      ( Assign "$test/testcases/malgo/HelloImport.mlg d 32"
+       ( Call
+        ( Var "$test/testcases/malgo/HelloImport.mlg d 25" )
+        [ Var "$test/testcases/malgo/HelloImport.mlg d 31" ] )
+       ( Cast
+        ( SumT [ Con Tuple [] ] )
+        ( Var "$test/testcases/malgo/HelloImport.mlg d 32" ) ) ) ) ) ) ], extFuns = [] }

@@ -1,0 +1,16 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "@main", [ "$test/testcases/malgo/TestExplicitModule.mlg $_ 7" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/TestExplicitModule.mlg d 9"
+    ( Assign "$test/testcases/malgo/TestExplicitModule.mlg d 8"
+     ( Call ( Var "@String#" ) [ Unboxed ( String "Hello, world" ) ] )
+     ( Cast AnyT ( Var "$test/testcases/malgo/TestExplicitModule.mlg d 8" ) ) )
+    ( Assign "$test/testcases/malgo/TestExplicitModule.mlg d 10"
+     ( Call
+      ( Var "@putStrLn" )
+      [ Var "$test/testcases/malgo/TestExplicitModule.mlg d 9" ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var "$test/testcases/malgo/TestExplicitModule.mlg d 10" ) ) ) ) ], extFuns = [] }

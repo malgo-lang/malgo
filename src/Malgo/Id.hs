@@ -59,7 +59,7 @@ data Id = Id
   deriving anyclass (Hashable, ToJSON, FromJSON)
 
 instance Pretty Id where
-  pretty Id {name, sort = External} = pretty name
+  pretty Id {name, sort = External} = "@" <> pretty name
   pretty Id {name, moduleName, sort = Internal uniq} = "#" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, moduleName, sort = Temporal uniq} = "$" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, sort = Native} = "%" <> pretty name

@@ -1,0 +1,101 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "$test/testcases/malgo/DataDef.mlg Cons_curry 24",
+    [ "$test/testcases/malgo/DataDef.mlg p 25", "$test/testcases/malgo/DataDef.mlg p 26" ],
+    [ AnyT, AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/DataDef.mlg let 27", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
+       ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
+       [ AnyT, AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
+        ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
+        [ AnyT, AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/DataDef.mlg.Cons" ) [ AnyT, AnyT ] )
+      [ Var "$test/testcases/malgo/DataDef.mlg p 25", Var "$test/testcases/malgo/DataDef.mlg p 26" ] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/DataDef.mlg let 27" ) ) ),
+   ( "@Int#", [ "$test/testcases/malgo/DataDef.mlg p 18" ], [ Int64T ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/DataDef.mlg let 19", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ], _object = Pack
+      ( SumT
+       [ Con ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ] )
+      ( Con ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] )
+      [ Var "$test/testcases/malgo/DataDef.mlg p 18" ] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/DataDef.mlg let 19" ) ) ),
+   ( "@Nil", [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/DataDef.mlg let 20", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
+       ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
+       [ AnyT, AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
+        ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
+        [ AnyT, AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [] ) [] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/DataDef.mlg let 20" ) ) ),
+   ( "@Cons", [ "$test/testcases/malgo/DataDef.mlg p 21" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/DataDef.mlg let 28", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/DataDef.mlg p 22" ]
+      ( CallDirect "$test/testcases/malgo/DataDef.mlg Cons_curry 24"
+       [ Var "$test/testcases/malgo/DataDef.mlg p 21", Var "$test/testcases/malgo/DataDef.mlg p 22" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/DataDef.mlg let 28" ) ) ),
+   ( "@malgo_int64_t_to_string", [ "$test/testcases/malgo/DataDef.mlg p 29" ], [ Int64T ] :-> StringT, RawCall "malgo_int64_t_to_string"
+    ( [ Int64T ] :-> StringT )
+    [ Var "$test/testcases/malgo/DataDef.mlg p 29" ] ),
+   ( "@malgo_print_string", [ "$test/testcases/malgo/DataDef.mlg p 30" ], [ StringT ] :-> SumT
+    [ Con Tuple [] ], RawCall "malgo_print_string"
+    ( [ StringT ] :-> SumT [ Con Tuple [] ] )
+    [ Var "$test/testcases/malgo/DataDef.mlg p 30" ] ),
+   ( "@main", [ "$test/testcases/malgo/DataDef.mlg $_ 31" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/DataDef.mlg d 38"
+    ( Let
+     [ LocalDef
+      { _variable = "$test/testcases/malgo/DataDef.mlg fun 37", typ = [ AnyT ] :-> SumT
+       [ Con Tuple [] ], _object = Fun [ "$test/testcases/malgo/DataDef.mlg int# 32" ]
+       ( Match
+        ( Cast
+         ( SumT
+          [ Con ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ] )
+         ( Var "$test/testcases/malgo/DataDef.mlg int# 32" ) )
+        [ Unpack
+         ( Con
+          ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ) [ "$test/testcases/malgo/DataDef.mlg p 33" ]
+         ( Assign "$test/testcases/malgo/DataDef.mlg d 35"
+          ( Assign "$test/testcases/malgo/DataDef.mlg d 34"
+           ( Call
+            ( Var "@malgo_int64_t_to_string" )
+            [ Var "$test/testcases/malgo/DataDef.mlg p 33" ] )
+           ( Cast StringT ( Var "$test/testcases/malgo/DataDef.mlg d 34" ) ) )
+          ( Assign "$test/testcases/malgo/DataDef.mlg d 36"
+           ( Call
+            ( Var "@malgo_print_string" )
+            [ Var "$test/testcases/malgo/DataDef.mlg d 35" ] )
+           ( Cast
+            ( SumT [ Con Tuple [] ] )
+            ( Var "$test/testcases/malgo/DataDef.mlg d 36" ) ) ) ) ] ) } ]
+     ( Atom ( Var "$test/testcases/malgo/DataDef.mlg fun 37" ) ) )
+    ( Assign "$test/testcases/malgo/DataDef.mlg d 40"
+     ( Assign "$test/testcases/malgo/DataDef.mlg d 39"
+      ( Call ( Var "@Int#" ) [ Unboxed ( Int64 1 ) ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/DataDef.mlg d 39" ) ) )
+     ( Assign "$test/testcases/malgo/DataDef.mlg d 41"
+      ( Call
+       ( Var "$test/testcases/malgo/DataDef.mlg d 38" )
+       [ Var "$test/testcases/malgo/DataDef.mlg d 40" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/DataDef.mlg d 41" ) ) ) ) ) ], extFuns =
+  [
+   ( "%malgo_int64_t_to_string", [ Int64T ] :-> StringT ),
+   ( "%malgo_print_string", [ StringT ] :-> SumT [ Con Tuple [] ] ) ] }

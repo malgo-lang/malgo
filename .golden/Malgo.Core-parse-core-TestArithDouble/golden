@@ -1,0 +1,185 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "$test/testcases/malgo/TestArithDouble.mlg *_curry 145",
+    [ "$test/testcases/malgo/TestArithDouble.mlg x 146", "$test/testcases/malgo/TestArithDouble.mlg y 147" ],
+    [ DoubleT, DoubleT ] :-> DoubleT, Assign "$test/testcases/malgo/TestArithDouble.mlg d 149"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 148"
+     ( Call
+      ( Var "@mulDouble#" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg x 146" ] )
+     ( Cast
+      ( [ DoubleT ] :-> DoubleT )
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 148" ) ) )
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 150"
+     ( Call
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 149" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg y 147" ] )
+     ( Cast DoubleT
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 150" ) ) ) ),
+   ( "$test/testcases/malgo/TestArithDouble.mlg +_curry 133",
+    [ "$test/testcases/malgo/TestArithDouble.mlg x 134", "$test/testcases/malgo/TestArithDouble.mlg y 135" ],
+    [ DoubleT, DoubleT ] :-> DoubleT, Assign "$test/testcases/malgo/TestArithDouble.mlg d 137"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 136"
+     ( Call
+      ( Var "@addDouble#" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg x 134" ] )
+     ( Cast
+      ( [ DoubleT ] :-> DoubleT )
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 136" ) ) )
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 138"
+     ( Call
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 137" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg y 135" ] )
+     ( Cast DoubleT
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 138" ) ) ) ),
+   ( "$test/testcases/malgo/TestArithDouble.mlg add_curry 121",
+    [ "$test/testcases/malgo/TestArithDouble.mlg x 122", "$test/testcases/malgo/TestArithDouble.mlg y 123" ],
+    [ DoubleT, DoubleT ] :-> DoubleT, Assign "$test/testcases/malgo/TestArithDouble.mlg d 125"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 124"
+     ( Call
+      ( Var "@addDouble#" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg x 122" ] )
+     ( Cast
+      ( [ DoubleT ] :-> DoubleT )
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 124" ) ) )
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 126"
+     ( Call
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 125" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg y 123" ] )
+     ( Cast DoubleT
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 126" ) ) ) ),
+   ( "$test/testcases/malgo/TestArithDouble.mlg mul_curry 109",
+    [ "$test/testcases/malgo/TestArithDouble.mlg x 110", "$test/testcases/malgo/TestArithDouble.mlg y 111" ],
+    [ DoubleT, DoubleT ] :-> DoubleT, Assign "$test/testcases/malgo/TestArithDouble.mlg d 113"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 112"
+     ( Call
+      ( Var "@mulDouble#" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg x 110" ] )
+     ( Cast
+      ( [ DoubleT ] :-> DoubleT )
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 112" ) ) )
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 114"
+     ( Call
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 113" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg y 111" ] )
+     ( Cast DoubleT
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 114" ) ) ) ),
+   ( "@show", [ "$test/testcases/malgo/TestArithDouble.mlg x 91" ], [ DoubleT ] :-> AnyT, Assign "$test/testcases/malgo/TestArithDouble.mlg d 93"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 92"
+     ( Call
+      ( Var "@toStringDouble#" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg x 91" ] )
+     ( Cast StringT
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 92" ) ) )
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 94"
+     ( Call
+      ( Var "@String#" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg d 93" ] )
+     ( Cast AnyT
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 94" ) ) ) ),
+   ( "@traceShowId", [ "$test/testcases/malgo/TestArithDouble.mlg x 95" ], [ DoubleT ] :-> DoubleT, Assign "$test/testcases/malgo/TestArithDouble.mlg d 99"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 97"
+     ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 96"
+      ( Call
+       ( Var "@show" )
+       [ Var "$test/testcases/malgo/TestArithDouble.mlg x 95" ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/TestArithDouble.mlg d 96" ) ) )
+     ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 98"
+      ( Call
+       ( Var "@putStrLn" )
+       [ Var "$test/testcases/malgo/TestArithDouble.mlg d 97" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/TestArithDouble.mlg d 98" ) ) ) )
+    ( Atom ( Var "$test/testcases/malgo/TestArithDouble.mlg x 95" ) ) ),
+   ( "@neg", [ "$test/testcases/malgo/TestArithDouble.mlg x 100" ], [ DoubleT ] :-> DoubleT, Assign "$test/testcases/malgo/TestArithDouble.mlg d 102"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 101"
+     ( Call ( Var "@subDouble#" ) [ Unboxed ( Double 0.0 ) ] )
+     ( Cast
+      ( [ DoubleT ] :-> DoubleT )
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 101" ) ) )
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 103"
+     ( Call
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 102" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg x 100" ] )
+     ( Cast DoubleT
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 103" ) ) ) ),
+   ( "@mul", [ "$test/testcases/malgo/TestArithDouble.mlg x 104" ], [ DoubleT ] :->
+    ( [ DoubleT ] :-> DoubleT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/TestArithDouble.mlg let 115", typ = [ DoubleT ] :-> DoubleT, _object = Fun [ "$test/testcases/malgo/TestArithDouble.mlg y 105" ]
+      ( CallDirect "$test/testcases/malgo/TestArithDouble.mlg mul_curry 109"
+       [ Var "$test/testcases/malgo/TestArithDouble.mlg x 104", Var "$test/testcases/malgo/TestArithDouble.mlg y 105" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/TestArithDouble.mlg let 115" ) ) ),
+   ( "@add", [ "$test/testcases/malgo/TestArithDouble.mlg x 116" ], [ DoubleT ] :->
+    ( [ DoubleT ] :-> DoubleT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/TestArithDouble.mlg let 127", typ = [ DoubleT ] :-> DoubleT, _object = Fun [ "$test/testcases/malgo/TestArithDouble.mlg y 117" ]
+      ( CallDirect "$test/testcases/malgo/TestArithDouble.mlg add_curry 121"
+       [ Var "$test/testcases/malgo/TestArithDouble.mlg x 116", Var "$test/testcases/malgo/TestArithDouble.mlg y 117" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/TestArithDouble.mlg let 127" ) ) ),
+   ( "@+", [ "$test/testcases/malgo/TestArithDouble.mlg x 128" ], [ DoubleT ] :->
+    ( [ DoubleT ] :-> DoubleT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/TestArithDouble.mlg let 139", typ = [ DoubleT ] :-> DoubleT, _object = Fun [ "$test/testcases/malgo/TestArithDouble.mlg y 129" ]
+      ( CallDirect "$test/testcases/malgo/TestArithDouble.mlg +_curry 133"
+       [ Var "$test/testcases/malgo/TestArithDouble.mlg x 128", Var "$test/testcases/malgo/TestArithDouble.mlg y 129" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/TestArithDouble.mlg let 139" ) ) ),
+   ( "@*", [ "$test/testcases/malgo/TestArithDouble.mlg x 140" ], [ DoubleT ] :->
+    ( [ DoubleT ] :-> DoubleT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/TestArithDouble.mlg let 151", typ = [ DoubleT ] :-> DoubleT, _object = Fun [ "$test/testcases/malgo/TestArithDouble.mlg y 141" ]
+      ( CallDirect "$test/testcases/malgo/TestArithDouble.mlg *_curry 145"
+       [ Var "$test/testcases/malgo/TestArithDouble.mlg x 140", Var "$test/testcases/malgo/TestArithDouble.mlg y 141" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/TestArithDouble.mlg let 151" ) ) ),
+   ( "@f", [ "$test/testcases/malgo/TestArithDouble.mlg x 152" ], [ DoubleT ] :-> DoubleT, Assign "$test/testcases/malgo/TestArithDouble.mlg d 158"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 156"
+     ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 154"
+      ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 153"
+       ( Call
+        ( Var "@+" )
+        [ Var "$test/testcases/malgo/TestArithDouble.mlg x 152" ] )
+       ( Cast
+        ( [ DoubleT ] :-> DoubleT )
+        ( Var "$test/testcases/malgo/TestArithDouble.mlg d 153" ) ) )
+      ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 155"
+       ( Call
+        ( Var "$test/testcases/malgo/TestArithDouble.mlg d 154" )
+        [ Unboxed ( Double 0.0 ) ] )
+       ( Cast DoubleT
+        ( Var "$test/testcases/malgo/TestArithDouble.mlg d 155" ) ) ) )
+     ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 157"
+      ( Call
+       ( Var "@*" )
+       [ Var "$test/testcases/malgo/TestArithDouble.mlg d 156" ] )
+      ( Cast
+       ( [ DoubleT ] :-> DoubleT )
+       ( Var "$test/testcases/malgo/TestArithDouble.mlg d 157" ) ) ) )
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 159"
+     ( Call
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 158" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg x 152" ] )
+     ( Cast DoubleT
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 159" ) ) ) ),
+   ( "@main", [ "$test/testcases/malgo/TestArithDouble.mlg $_ 160" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/TestArithDouble.mlg d 164"
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 162"
+     ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 161"
+      ( Call ( Var "@f" ) [ Unboxed ( Double 0.5 ) ] )
+      ( Cast DoubleT
+       ( Var "$test/testcases/malgo/TestArithDouble.mlg d 161" ) ) )
+     ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 163"
+      ( Call
+       ( Var "@show" )
+       [ Var "$test/testcases/malgo/TestArithDouble.mlg d 162" ] )
+      ( Cast AnyT
+       ( Var "$test/testcases/malgo/TestArithDouble.mlg d 163" ) ) ) )
+    ( Assign "$test/testcases/malgo/TestArithDouble.mlg d 165"
+     ( Call
+      ( Var "@putStrLn" )
+      [ Var "$test/testcases/malgo/TestArithDouble.mlg d 164" ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var "$test/testcases/malgo/TestArithDouble.mlg d 165" ) ) ) ) ], extFuns = [] }

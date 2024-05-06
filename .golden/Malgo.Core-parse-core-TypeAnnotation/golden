@@ -1,0 +1,29 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "@main", [ "$test/testcases/malgo/TypeAnnotation.mlg $_ 12" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/TypeAnnotation.mlg d 19"
+    ( Assign "$test/testcases/malgo/TypeAnnotation.mlg d 15"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/TypeAnnotation.mlg fun 14", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/TypeAnnotation.mlg x 13" ]
+        ( Atom ( Var "$test/testcases/malgo/TypeAnnotation.mlg x 13" ) ) } ]
+      ( Atom ( Var "$test/testcases/malgo/TypeAnnotation.mlg fun 14" ) ) )
+     ( Assign "$test/testcases/malgo/TypeAnnotation.mlg d 17"
+      ( Assign "$test/testcases/malgo/TypeAnnotation.mlg d 16"
+       ( Call ( Var "@String#" ) [ Unboxed ( String "hoge" ) ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/TypeAnnotation.mlg d 16" ) ) )
+      ( Assign "$test/testcases/malgo/TypeAnnotation.mlg d 18"
+       ( Call
+        ( Var "$test/testcases/malgo/TypeAnnotation.mlg d 15" )
+        [ Var "$test/testcases/malgo/TypeAnnotation.mlg d 17" ] )
+       ( Cast AnyT
+        ( Var "$test/testcases/malgo/TypeAnnotation.mlg d 18" ) ) ) ) )
+    ( Assign "$test/testcases/malgo/TypeAnnotation.mlg d 20"
+     ( Call
+      ( Var "@printString" )
+      [ Var "$test/testcases/malgo/TypeAnnotation.mlg d 19" ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var "$test/testcases/malgo/TypeAnnotation.mlg d 20" ) ) ) ) ], extFuns = [] }

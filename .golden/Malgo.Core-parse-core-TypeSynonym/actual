@@ -1,0 +1,98 @@
+Program
+ { topVars =
+  [
+   ( "@hello", SumT
+    [ Con Tuple
+     [ AnyT, AnyT ] ], Assign "$test/testcases/malgo/TypeSynonym.mlg d 37"
+    ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 33"
+     ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 32"
+      ( Call ( Var "@String#" ) [ Unboxed ( String "hello" ) ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/TypeSynonym.mlg d 32" ) ) )
+     ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 35"
+      ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 34"
+       ( Call ( Var "@String#" ) [ Unboxed ( String "world" ) ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/TypeSynonym.mlg d 34" ) ) )
+      ( Let
+       [ LocalDef
+        { _variable = "$test/testcases/malgo/TypeSynonym.mlg let 36", typ = SumT
+         [ Con Tuple [ AnyT, AnyT ] ], _object = Pack
+         ( SumT [ Con Tuple [ AnyT, AnyT ] ] )
+         ( Con Tuple [ AnyT, AnyT ] )
+         [ Var "$test/testcases/malgo/TypeSynonym.mlg d 33", Var "$test/testcases/malgo/TypeSynonym.mlg d 35" ] } ]
+       ( Atom ( Var "$test/testcases/malgo/TypeSynonym.mlg let 36" ) ) ) ) )
+    ( Atom
+     ( Var "$test/testcases/malgo/TypeSynonym.mlg d 37" ) ) ) ], topFuns =
+  [
+   ( "@TCon", [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/TypeSynonym.mlg let 30", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/TypeSynonym.mlg.TCon" ) [] ], _object = Pack
+      ( SumT [ Con ( Data "test/testcases/malgo/TypeSynonym.mlg.TCon" ) [] ] )
+      ( Con ( Data "test/testcases/malgo/TypeSynonym.mlg.TCon" ) [] ) [] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/TypeSynonym.mlg let 30" ) ) ),
+   ( "@idOverS", [ "$test/testcases/malgo/TypeSynonym.mlg x 31" ], [ AnyT ] :-> AnyT, Atom
+    ( Var "$test/testcases/malgo/TypeSynonym.mlg x 31" ) ),
+   ( "@main", [ "$test/testcases/malgo/TypeSynonym.mlg $_ 38" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/TypeSynonym.mlg d 41"
+    ( Assign "$test/testcases/malgo/TypeSynonym.mlg cast 39"
+     ( Cast AnyT ( Var "@hello" ) )
+     ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 40"
+      ( Call
+       ( Var "@|>" )
+       [ Var "$test/testcases/malgo/TypeSynonym.mlg cast 39" ] )
+      ( Cast
+       (
+        [
+         [ SumT [ Con Tuple [ AnyT, AnyT ] ] ] :-> SumT
+         [ Con Tuple [] ] ] :-> SumT
+        [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/TypeSynonym.mlg d 40" ) ) ) )
+    ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 53"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/TypeSynonym.mlg fun 52", typ =
+        [ SumT [ Con Tuple [ AnyT, AnyT ] ] ] :-> SumT
+        [ Con Tuple [] ], _object = Fun [ "$test/testcases/malgo/TypeSynonym.mlg tuple 42" ]
+        ( Match
+         ( Atom ( Var "$test/testcases/malgo/TypeSynonym.mlg tuple 42" ) )
+         [ Unpack
+          ( Con Tuple [ AnyT, AnyT ] )
+          [ "$test/testcases/malgo/TypeSynonym.mlg p 43", "$test/testcases/malgo/TypeSynonym.mlg p 44" ]
+          ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 46"
+           ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 45"
+            ( Call
+             ( Var "@putStr" )
+             [ Var "$test/testcases/malgo/TypeSynonym.mlg p 43" ] )
+            ( Cast
+             ( SumT [ Con Tuple [] ] )
+             ( Var "$test/testcases/malgo/TypeSynonym.mlg d 45" ) ) )
+           ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 50"
+            ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 48"
+             ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 47"
+              ( Call ( Var "@String#" ) [ Unboxed ( String " " ) ] )
+              ( Cast AnyT
+               ( Var "$test/testcases/malgo/TypeSynonym.mlg d 47" ) ) )
+             ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 49"
+              ( Call
+               ( Var "@putStr" )
+               [ Var "$test/testcases/malgo/TypeSynonym.mlg d 48" ] )
+              ( Cast
+               ( SumT [ Con Tuple [] ] )
+               ( Var "$test/testcases/malgo/TypeSynonym.mlg d 49" ) ) ) )
+            ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 51"
+             ( Call
+              ( Var "@putStrLn" )
+              [ Var "$test/testcases/malgo/TypeSynonym.mlg p 44" ] )
+             ( Cast
+              ( SumT [ Con Tuple [] ] )
+              ( Var "$test/testcases/malgo/TypeSynonym.mlg d 51" ) ) ) ) ) ] ) } ]
+      ( Atom ( Var "$test/testcases/malgo/TypeSynonym.mlg fun 52" ) ) )
+     ( Assign "$test/testcases/malgo/TypeSynonym.mlg d 54"
+      ( Call
+       ( Var "$test/testcases/malgo/TypeSynonym.mlg d 41" )
+       [ Var "$test/testcases/malgo/TypeSynonym.mlg d 53" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/TypeSynonym.mlg d 54" ) ) ) ) ) ], extFuns = [] }

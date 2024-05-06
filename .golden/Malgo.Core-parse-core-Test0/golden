@@ -1,0 +1,87 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "$test/testcases/malgo/Test0.mlg +#_curry 76",
+    [ "$test/testcases/malgo/Test0.mlg x 77", "$test/testcases/malgo/Test0.mlg y 78" ],
+    [ Int64T, Int64T ] :-> Int64T, Assign "$test/testcases/malgo/Test0.mlg d 80"
+    ( Assign "$test/testcases/malgo/Test0.mlg d 79"
+     ( Call
+      ( Var "@addInt64#" )
+      [ Var "$test/testcases/malgo/Test0.mlg x 77" ] )
+     ( Cast
+      ( [ Int64T ] :-> Int64T )
+      ( Var "$test/testcases/malgo/Test0.mlg d 79" ) ) )
+    ( Assign "$test/testcases/malgo/Test0.mlg d 81"
+     ( Call
+      ( Var "$test/testcases/malgo/Test0.mlg d 80" )
+      [ Var "$test/testcases/malgo/Test0.mlg y 78" ] )
+     ( Cast Int64T ( Var "$test/testcases/malgo/Test0.mlg d 81" ) ) ) ),
+   ( "$test/testcases/malgo/Test0.mlg |>_curry 53",
+    [ "$test/testcases/malgo/Test0.mlg x 54", "$test/testcases/malgo/Test0.mlg f 55" ],
+    [ AnyT, [ AnyT ] :-> AnyT ] :-> AnyT, Assign "$test/testcases/malgo/Test0.mlg d 56"
+    ( Call
+     ( Var "$test/testcases/malgo/Test0.mlg f 55" )
+     [ Var "$test/testcases/malgo/Test0.mlg x 54" ] )
+    ( Cast AnyT ( Var "$test/testcases/malgo/Test0.mlg d 56" ) ) ),
+   ( "@|>", [ "$test/testcases/malgo/Test0.mlg x 50" ], [ AnyT ] :->
+    ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Test0.mlg let 57", typ =
+      [ [ AnyT ] :-> AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Test0.mlg f 51" ]
+      ( CallDirect "$test/testcases/malgo/Test0.mlg |>_curry 53"
+       [ Var "$test/testcases/malgo/Test0.mlg x 50", Var "$test/testcases/malgo/Test0.mlg f 51" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/Test0.mlg let 57" ) ) ),
+   ( "@main", [ "$test/testcases/malgo/Test0.mlg $_ 58" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/Test0.mlg d 62"
+    ( Assign "$test/testcases/malgo/Test0.mlg d 60"
+     ( Assign "$test/testcases/malgo/Test0.mlg d 59"
+      ( Call ( Var "@Int64#" ) [ Unboxed ( Int64 1 ) ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/Test0.mlg d 59" ) ) )
+     ( Assign "$test/testcases/malgo/Test0.mlg d 61"
+      ( Call ( Var "@|>" ) [ Var "$test/testcases/malgo/Test0.mlg d 60" ] )
+      ( Cast
+       ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/Test0.mlg d 61" ) ) ) )
+    ( Assign "$test/testcases/malgo/Test0.mlg d 69"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/Test0.mlg fun 68", typ = [ AnyT ] :-> SumT
+        [ Con Tuple [] ], _object = Fun [ "$test/testcases/malgo/Test0.mlg int64# 63" ]
+        ( Match
+         ( Cast
+          ( SumT
+           [ Con ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] ] )
+          ( Var "$test/testcases/malgo/Test0.mlg int64# 63" ) )
+         [ Unpack
+          ( Con
+           ( Data "runtime/malgo/Builtin.mlg.Int64#" ) [ Int64T ] ) [ "$test/testcases/malgo/Test0.mlg p 64" ]
+          ( Assign "$test/testcases/malgo/Test0.mlg d 66"
+           ( Assign "$test/testcases/malgo/Test0.mlg d 65"
+            ( Call
+             ( Var "@toStringInt64#" )
+             [ Var "$test/testcases/malgo/Test0.mlg p 64" ] )
+            ( Cast StringT ( Var "$test/testcases/malgo/Test0.mlg d 65" ) ) )
+           ( Assign "$test/testcases/malgo/Test0.mlg d 67"
+            ( Call
+             ( Var "@printString#" )
+             [ Var "$test/testcases/malgo/Test0.mlg d 66" ] )
+            ( Cast
+             ( SumT [ Con Tuple [] ] )
+             ( Var "$test/testcases/malgo/Test0.mlg d 67" ) ) ) ) ] ) } ]
+      ( Atom ( Var "$test/testcases/malgo/Test0.mlg fun 68" ) ) )
+     ( Assign "$test/testcases/malgo/Test0.mlg d 70"
+      ( Call
+       ( Var "$test/testcases/malgo/Test0.mlg d 62" )
+       [ Var "$test/testcases/malgo/Test0.mlg d 69" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/Test0.mlg d 70" ) ) ) ) ),
+   ( "@+#", [ "$test/testcases/malgo/Test0.mlg x 71" ], [ Int64T ] :->
+    ( [ Int64T ] :-> Int64T ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Test0.mlg let 82", typ = [ Int64T ] :-> Int64T, _object = Fun [ "$test/testcases/malgo/Test0.mlg y 72" ]
+      ( CallDirect "$test/testcases/malgo/Test0.mlg +#_curry 76"
+       [ Var "$test/testcases/malgo/Test0.mlg x 71", Var "$test/testcases/malgo/Test0.mlg y 72" ] ) } ]
+    ( Atom
+     ( Var "$test/testcases/malgo/Test0.mlg let 82" ) ) ) ], extFuns = [] }

@@ -1,0 +1,336 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "@Symbol", [ "$test/testcases/malgo/Punctuate.mlg p 113" ], [ AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Punctuate.mlg let 114", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ] )
+      [ Var "$test/testcases/malgo/Punctuate.mlg p 113" ] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg let 114" ) ) ),
+   ( "@SInt", [ "$test/testcases/malgo/Punctuate.mlg p 115" ], [ AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Punctuate.mlg let 116", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ] )
+      [ Var "$test/testcases/malgo/Punctuate.mlg p 115" ] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg let 116" ) ) ),
+   ( "@SList", [ "$test/testcases/malgo/Punctuate.mlg p 117" ], [ AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Punctuate.mlg let 118", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
+        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ] )
+      ( Con ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] )
+      [ Var "$test/testcases/malgo/Punctuate.mlg p 117" ] } ]
+    ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg let 118" ) ) ),
+   ( "@<>", [ "$test/testcases/malgo/Punctuate.mlg eta 119" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Call
+    ( Var "@appendString" )
+    [ Var "$test/testcases/malgo/Punctuate.mlg eta 119" ] ),
+   ( "@show", [ "$test/testcases/malgo/Punctuate.mlg symbol 120" ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
+       ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ] )
+     ( Var "$test/testcases/malgo/Punctuate.mlg symbol 120" ) )
+    [ Unpack
+     ( Con
+      ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ] ) [ "$test/testcases/malgo/Punctuate.mlg p 121" ]
+     ( Assign "$test/testcases/malgo/Punctuate.mlg d 125"
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 123"
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 122"
+        ( Call ( Var "@String#" ) [ Unboxed ( String "Symbol " ) ] )
+        ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 122" ) ) )
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 124"
+        ( Call
+         ( Var "@<>" )
+         [ Var "$test/testcases/malgo/Punctuate.mlg d 123" ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 124" ) ) ) )
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 126"
+       ( Call
+        ( Var "$test/testcases/malgo/Punctuate.mlg d 125" )
+        [ Var "$test/testcases/malgo/Punctuate.mlg p 121" ] )
+       ( Cast AnyT
+        ( Var "$test/testcases/malgo/Punctuate.mlg d 126" ) ) ) ), Unpack
+     ( Con
+      ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ] ) [ "$test/testcases/malgo/Punctuate.mlg p 127" ]
+     ( Assign "$test/testcases/malgo/Punctuate.mlg d 131"
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 129"
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 128"
+        ( Call ( Var "@String#" ) [ Unboxed ( String "SInt " ) ] )
+        ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 128" ) ) )
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 130"
+        ( Call
+         ( Var "@<>" )
+         [ Var "$test/testcases/malgo/Punctuate.mlg d 129" ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 130" ) ) ) )
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 133"
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 132"
+        ( Call
+         ( Var "@toStringInt32" )
+         [ Var "$test/testcases/malgo/Punctuate.mlg p 127" ] )
+        ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 132" ) ) )
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 134"
+        ( Call
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 131" )
+         [ Var "$test/testcases/malgo/Punctuate.mlg d 133" ] )
+        ( Cast AnyT
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 134" ) ) ) ) ), Unpack
+     ( Con
+      ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ) [ "$test/testcases/malgo/Punctuate.mlg p 135" ]
+     ( Assign "$test/testcases/malgo/Punctuate.mlg d 139"
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 137"
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 136"
+        ( Call ( Var "@String#" ) [ Unboxed ( String "SList [" ) ] )
+        ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 136" ) ) )
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 138"
+        ( Call
+         ( Var "@<>" )
+         [ Var "$test/testcases/malgo/Punctuate.mlg d 137" ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 138" ) ) ) )
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 157"
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 153"
+        ( Assign "$test/testcases/malgo/Punctuate.mlg d 151"
+         ( Assign "$test/testcases/malgo/Punctuate.mlg d 149"
+          ( Assign "$test/testcases/malgo/Punctuate.mlg d 143"
+           ( Assign "$test/testcases/malgo/Punctuate.mlg d 141"
+            ( Assign "$test/testcases/malgo/Punctuate.mlg d 140"
+             ( Call ( Var "@String#" ) [ Unboxed ( String ", " ) ] )
+             ( Cast AnyT
+              ( Var "$test/testcases/malgo/Punctuate.mlg d 140" ) ) )
+            ( Assign "$test/testcases/malgo/Punctuate.mlg d 142"
+             ( Call
+              ( Var "@punctuate" )
+              [ Var "$test/testcases/malgo/Punctuate.mlg d 141" ] )
+             ( Cast
+              ( [ AnyT ] :-> AnyT )
+              ( Var "$test/testcases/malgo/Punctuate.mlg d 142" ) ) ) )
+           ( Assign "$test/testcases/malgo/Punctuate.mlg d 147"
+            ( Assign "$test/testcases/malgo/Punctuate.mlg d 145"
+             ( Assign "$test/testcases/malgo/Punctuate.mlg d 144"
+              ( Call ( Var "@mapList" ) [ Var "@show" ] )
+              ( Cast
+               ( [ AnyT ] :-> AnyT )
+               ( Var "$test/testcases/malgo/Punctuate.mlg d 144" ) ) )
+             ( Assign "$test/testcases/malgo/Punctuate.mlg d 146"
+              ( Call
+               ( Var "$test/testcases/malgo/Punctuate.mlg d 145" )
+               [ Var "$test/testcases/malgo/Punctuate.mlg p 135" ] )
+              ( Cast AnyT
+               ( Var "$test/testcases/malgo/Punctuate.mlg d 146" ) ) ) )
+            ( Assign "$test/testcases/malgo/Punctuate.mlg d 148"
+             ( Call
+              ( Var "$test/testcases/malgo/Punctuate.mlg d 143" )
+              [ Var "$test/testcases/malgo/Punctuate.mlg d 147" ] )
+             ( Cast AnyT
+              ( Var "$test/testcases/malgo/Punctuate.mlg d 148" ) ) ) ) )
+          ( Assign "$test/testcases/malgo/Punctuate.mlg d 150"
+           ( Call
+            ( Var "@concatString" )
+            [ Var "$test/testcases/malgo/Punctuate.mlg d 149" ] )
+           ( Cast AnyT
+            ( Var "$test/testcases/malgo/Punctuate.mlg d 150" ) ) ) )
+         ( Assign "$test/testcases/malgo/Punctuate.mlg d 152"
+          ( Call
+           ( Var "@<>" )
+           [ Var "$test/testcases/malgo/Punctuate.mlg d 151" ] )
+          ( Cast
+           ( [ AnyT ] :-> AnyT )
+           ( Var "$test/testcases/malgo/Punctuate.mlg d 152" ) ) ) )
+        ( Assign "$test/testcases/malgo/Punctuate.mlg d 155"
+         ( Assign "$test/testcases/malgo/Punctuate.mlg d 154"
+          ( Call ( Var "@String#" ) [ Unboxed ( String "]" ) ] )
+          ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 154" ) ) )
+         ( Assign "$test/testcases/malgo/Punctuate.mlg d 156"
+          ( Call
+           ( Var "$test/testcases/malgo/Punctuate.mlg d 153" )
+           [ Var "$test/testcases/malgo/Punctuate.mlg d 155" ] )
+          ( Cast AnyT
+           ( Var "$test/testcases/malgo/Punctuate.mlg d 156" ) ) ) ) )
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 158"
+        ( Call
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 139" )
+         [ Var "$test/testcases/malgo/Punctuate.mlg d 157" ] )
+        ( Cast AnyT
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 158" ) ) ) ) ) ] ),
+   ( "@main", [ "$test/testcases/malgo/Punctuate.mlg $_ 159" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Match
+    ( Assign "$test/testcases/malgo/Punctuate.mlg d 198"
+     ( Assign "$test/testcases/malgo/Punctuate.mlg d 165"
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 163"
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 161"
+        ( Assign "$test/testcases/malgo/Punctuate.mlg d 160"
+         ( Call ( Var "@String#" ) [ Unboxed ( String "x" ) ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 160" ) ) )
+        ( Assign "$test/testcases/malgo/Punctuate.mlg d 162"
+         ( Call
+          ( Var "@Symbol" )
+          [ Var "$test/testcases/malgo/Punctuate.mlg d 161" ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 162" ) ) ) )
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 164"
+        ( Call
+         ( Var "@Cons" )
+         [ Var "$test/testcases/malgo/Punctuate.mlg d 163" ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 164" ) ) ) )
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 196"
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 193"
+        ( Assign "$test/testcases/malgo/Punctuate.mlg d 191"
+         ( Assign "$test/testcases/malgo/Punctuate.mlg d 189"
+          ( Assign "$test/testcases/malgo/Punctuate.mlg d 171"
+           ( Assign "$test/testcases/malgo/Punctuate.mlg d 169"
+            ( Assign "$test/testcases/malgo/Punctuate.mlg d 167"
+             ( Assign "$test/testcases/malgo/Punctuate.mlg d 166"
+              ( Call ( Var "@String#" ) [ Unboxed ( String "y" ) ] )
+              ( Cast AnyT
+               ( Var "$test/testcases/malgo/Punctuate.mlg d 166" ) ) )
+             ( Assign "$test/testcases/malgo/Punctuate.mlg d 168"
+              ( Call
+               ( Var "@Symbol" )
+               [ Var "$test/testcases/malgo/Punctuate.mlg d 167" ] )
+              ( Cast AnyT
+               ( Var "$test/testcases/malgo/Punctuate.mlg d 168" ) ) ) )
+            ( Assign "$test/testcases/malgo/Punctuate.mlg d 170"
+             ( Call
+              ( Var "@Cons" )
+              [ Var "$test/testcases/malgo/Punctuate.mlg d 169" ] )
+             ( Cast
+              ( [ AnyT ] :-> AnyT )
+              ( Var "$test/testcases/malgo/Punctuate.mlg d 170" ) ) ) )
+           ( Assign "$test/testcases/malgo/Punctuate.mlg d 187"
+            ( Assign "$test/testcases/malgo/Punctuate.mlg d 184"
+             ( Assign "$test/testcases/malgo/Punctuate.mlg d 182"
+              ( Assign "$test/testcases/malgo/Punctuate.mlg d 180"
+               ( Assign "$test/testcases/malgo/Punctuate.mlg d 177"
+                ( Assign "$test/testcases/malgo/Punctuate.mlg d 175"
+                 ( Assign "$test/testcases/malgo/Punctuate.mlg d 173"
+                  ( Assign "$test/testcases/malgo/Punctuate.mlg d 172"
+                   ( Call ( Var "@String#" ) [ Unboxed ( String "z" ) ] )
+                   ( Cast AnyT
+                    ( Var "$test/testcases/malgo/Punctuate.mlg d 172" ) ) )
+                  ( Assign "$test/testcases/malgo/Punctuate.mlg d 174"
+                   ( Call
+                    ( Var "@Symbol" )
+                    [ Var "$test/testcases/malgo/Punctuate.mlg d 173" ] )
+                   ( Cast AnyT
+                    ( Var "$test/testcases/malgo/Punctuate.mlg d 174" ) ) ) )
+                 ( Assign "$test/testcases/malgo/Punctuate.mlg d 176"
+                  ( Call
+                   ( Var "@Cons" )
+                   [ Var "$test/testcases/malgo/Punctuate.mlg d 175" ] )
+                  ( Cast
+                   ( [ AnyT ] :-> AnyT )
+                   ( Var "$test/testcases/malgo/Punctuate.mlg d 176" ) ) ) )
+                ( Assign "$test/testcases/malgo/Punctuate.mlg d 178"
+                 ( CallDirect "@Nil" [] )
+                 ( Assign "$test/testcases/malgo/Punctuate.mlg d 179"
+                  ( Call
+                   ( Var "$test/testcases/malgo/Punctuate.mlg d 177" )
+                   [ Var "$test/testcases/malgo/Punctuate.mlg d 178" ] )
+                  ( Cast AnyT
+                   ( Var "$test/testcases/malgo/Punctuate.mlg d 179" ) ) ) ) )
+               ( Assign "$test/testcases/malgo/Punctuate.mlg d 181"
+                ( Call
+                 ( Var "@SList" )
+                 [ Var "$test/testcases/malgo/Punctuate.mlg d 180" ] )
+                ( Cast AnyT
+                 ( Var "$test/testcases/malgo/Punctuate.mlg d 181" ) ) ) )
+              ( Assign "$test/testcases/malgo/Punctuate.mlg d 183"
+               ( Call
+                ( Var "@Cons" )
+                [ Var "$test/testcases/malgo/Punctuate.mlg d 182" ] )
+               ( Cast
+                ( [ AnyT ] :-> AnyT )
+                ( Var "$test/testcases/malgo/Punctuate.mlg d 183" ) ) ) )
+             ( Assign "$test/testcases/malgo/Punctuate.mlg d 185"
+              ( CallDirect "@Nil" [] )
+              ( Assign "$test/testcases/malgo/Punctuate.mlg d 186"
+               ( Call
+                ( Var "$test/testcases/malgo/Punctuate.mlg d 184" )
+                [ Var "$test/testcases/malgo/Punctuate.mlg d 185" ] )
+               ( Cast AnyT
+                ( Var "$test/testcases/malgo/Punctuate.mlg d 186" ) ) ) ) )
+            ( Assign "$test/testcases/malgo/Punctuate.mlg d 188"
+             ( Call
+              ( Var "$test/testcases/malgo/Punctuate.mlg d 171" )
+              [ Var "$test/testcases/malgo/Punctuate.mlg d 187" ] )
+             ( Cast AnyT
+              ( Var "$test/testcases/malgo/Punctuate.mlg d 188" ) ) ) ) )
+          ( Assign "$test/testcases/malgo/Punctuate.mlg d 190"
+           ( Call
+            ( Var "@SList" )
+            [ Var "$test/testcases/malgo/Punctuate.mlg d 189" ] )
+           ( Cast AnyT
+            ( Var "$test/testcases/malgo/Punctuate.mlg d 190" ) ) ) )
+         ( Assign "$test/testcases/malgo/Punctuate.mlg d 192"
+          ( Call
+           ( Var "@Cons" )
+           [ Var "$test/testcases/malgo/Punctuate.mlg d 191" ] )
+          ( Cast
+           ( [ AnyT ] :-> AnyT )
+           ( Var "$test/testcases/malgo/Punctuate.mlg d 192" ) ) ) )
+        ( Assign "$test/testcases/malgo/Punctuate.mlg d 194"
+         ( CallDirect "@Nil" [] )
+         ( Assign "$test/testcases/malgo/Punctuate.mlg d 195"
+          ( Call
+           ( Var "$test/testcases/malgo/Punctuate.mlg d 193" )
+           [ Var "$test/testcases/malgo/Punctuate.mlg d 194" ] )
+          ( Cast AnyT
+           ( Var "$test/testcases/malgo/Punctuate.mlg d 195" ) ) ) ) )
+       ( Assign "$test/testcases/malgo/Punctuate.mlg d 197"
+        ( Call
+         ( Var "$test/testcases/malgo/Punctuate.mlg d 165" )
+         [ Var "$test/testcases/malgo/Punctuate.mlg d 196" ] )
+        ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 197" ) ) ) ) )
+     ( Assign "$test/testcases/malgo/Punctuate.mlg d 199"
+      ( Call
+       ( Var "@SList" )
+       [ Var "$test/testcases/malgo/Punctuate.mlg d 198" ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 199" ) ) ) )
+    [ Bind "$test/testcases/malgo/Punctuate.mlg let_test/testcases/malgo/Punctuate.mlg.#x_3 200" AnyT
+     ( Assign "$test/testcases/malgo/Punctuate.mlg d 202"
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 201"
+       ( Call
+        ( Var "@show" )
+        [ Var "$test/testcases/malgo/Punctuate.mlg let_test/testcases/malgo/Punctuate.mlg.#x_3 200" ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/Punctuate.mlg d 201" ) ) )
+      ( Assign "$test/testcases/malgo/Punctuate.mlg d 203"
+       ( Call
+        ( Var "@putStrLn" )
+        [ Var "$test/testcases/malgo/Punctuate.mlg d 202" ] )
+       ( Cast
+        ( SumT [ Con Tuple [] ] )
+        ( Var "$test/testcases/malgo/Punctuate.mlg d 203" ) ) ) ) ] ) ], extFuns = [] }

@@ -1,0 +1,85 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "@main", [ "$test/testcases/malgo/TestList.mlg $_ 41" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Match
+    ( Assign "$test/testcases/malgo/TestList.mlg d 45"
+     ( Assign "$test/testcases/malgo/TestList.mlg d 43"
+      ( Assign "$test/testcases/malgo/TestList.mlg d 42"
+       ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 1 ) ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/TestList.mlg d 42" ) ) )
+      ( Assign "$test/testcases/malgo/TestList.mlg d 44"
+       ( Call
+        ( Var "@Cons" )
+        [ Var "$test/testcases/malgo/TestList.mlg d 43" ] )
+       ( Cast
+        ( [ AnyT ] :-> AnyT )
+        ( Var "$test/testcases/malgo/TestList.mlg d 44" ) ) ) )
+     ( Assign "$test/testcases/malgo/TestList.mlg d 58"
+      ( Assign "$test/testcases/malgo/TestList.mlg d 49"
+       ( Assign "$test/testcases/malgo/TestList.mlg d 47"
+        ( Assign "$test/testcases/malgo/TestList.mlg d 46"
+         ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 2 ) ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/TestList.mlg d 46" ) ) )
+        ( Assign "$test/testcases/malgo/TestList.mlg d 48"
+         ( Call
+          ( Var "@Cons" )
+          [ Var "$test/testcases/malgo/TestList.mlg d 47" ] )
+         ( Cast
+          ( [ AnyT ] :-> AnyT )
+          ( Var "$test/testcases/malgo/TestList.mlg d 48" ) ) ) )
+       ( Assign "$test/testcases/malgo/TestList.mlg d 56"
+        ( Assign "$test/testcases/malgo/TestList.mlg d 53"
+         ( Assign "$test/testcases/malgo/TestList.mlg d 51"
+          ( Assign "$test/testcases/malgo/TestList.mlg d 50"
+           ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 3 ) ] )
+           ( Cast AnyT ( Var "$test/testcases/malgo/TestList.mlg d 50" ) ) )
+          ( Assign "$test/testcases/malgo/TestList.mlg d 52"
+           ( Call
+            ( Var "@Cons" )
+            [ Var "$test/testcases/malgo/TestList.mlg d 51" ] )
+           ( Cast
+            ( [ AnyT ] :-> AnyT )
+            ( Var "$test/testcases/malgo/TestList.mlg d 52" ) ) ) )
+         ( Assign "$test/testcases/malgo/TestList.mlg d 54"
+          ( CallDirect "@Nil" [] )
+          ( Assign "$test/testcases/malgo/TestList.mlg d 55"
+           ( Call
+            ( Var "$test/testcases/malgo/TestList.mlg d 53" )
+            [ Var "$test/testcases/malgo/TestList.mlg d 54" ] )
+           ( Cast AnyT
+            ( Var "$test/testcases/malgo/TestList.mlg d 55" ) ) ) ) )
+        ( Assign "$test/testcases/malgo/TestList.mlg d 57"
+         ( Call
+          ( Var "$test/testcases/malgo/TestList.mlg d 49" )
+          [ Var "$test/testcases/malgo/TestList.mlg d 56" ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/TestList.mlg d 57" ) ) ) ) )
+      ( Assign "$test/testcases/malgo/TestList.mlg d 59"
+       ( Call
+        ( Var "$test/testcases/malgo/TestList.mlg d 45" )
+        [ Var "$test/testcases/malgo/TestList.mlg d 58" ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/TestList.mlg d 59" ) ) ) ) )
+    [ Bind "$test/testcases/malgo/TestList.mlg let_test/testcases/malgo/TestList.mlg.#xs_0 60" AnyT
+     ( Match
+      ( CallDirect "@Nil" [] )
+      [ Bind "$test/testcases/malgo/TestList.mlg let_test/testcases/malgo/TestList.mlg.#nil_1 61" AnyT
+       ( Assign "$test/testcases/malgo/TestList.mlg d 65"
+        ( Assign "$test/testcases/malgo/TestList.mlg d 63"
+         ( Assign "$test/testcases/malgo/TestList.mlg d 62"
+          ( Call
+           ( Var "@head" )
+           [ Var "$test/testcases/malgo/TestList.mlg let_test/testcases/malgo/TestList.mlg.#xs_0 60" ] )
+          ( Cast AnyT ( Var "$test/testcases/malgo/TestList.mlg d 62" ) ) )
+         ( Assign "$test/testcases/malgo/TestList.mlg d 64"
+          ( Call
+           ( Var "@toStringInt32" )
+           [ Var "$test/testcases/malgo/TestList.mlg d 63" ] )
+          ( Cast AnyT ( Var "$test/testcases/malgo/TestList.mlg d 64" ) ) ) )
+        ( Assign "$test/testcases/malgo/TestList.mlg d 66"
+         ( Call
+          ( Var "@putStrLn" )
+          [ Var "$test/testcases/malgo/TestList.mlg d 65" ] )
+         ( Cast
+          ( SumT [ Con Tuple [] ] )
+          ( Var "$test/testcases/malgo/TestList.mlg d 66" ) ) ) ) ] ) ] ) ], extFuns = [] }

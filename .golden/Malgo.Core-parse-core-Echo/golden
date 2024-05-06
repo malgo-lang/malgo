@@ -1,0 +1,26 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "@main", [ "$test/testcases/malgo/Echo.mlg $_ 9" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/Echo.mlg d 14"
+    ( Assign "$test/testcases/malgo/Echo.mlg d 11"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/Echo.mlg let 10", typ = SumT
+        [ Con Tuple [] ], _object = Pack
+        ( SumT [ Con Tuple [] ] )
+        ( Con Tuple [] ) [] } ]
+      ( Atom ( Var "$test/testcases/malgo/Echo.mlg let 10" ) ) )
+     ( Assign "$test/testcases/malgo/Echo.mlg cast 12"
+      ( Cast AnyT ( Var "$test/testcases/malgo/Echo.mlg d 11" ) )
+      ( Assign "$test/testcases/malgo/Echo.mlg d 13"
+       ( Call
+        ( Var "@getContents" )
+        [ Var "$test/testcases/malgo/Echo.mlg cast 12" ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/Echo.mlg d 13" ) ) ) ) )
+    ( Assign "$test/testcases/malgo/Echo.mlg d 15"
+     ( Call ( Var "@putStr" ) [ Var "$test/testcases/malgo/Echo.mlg d 14" ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var "$test/testcases/malgo/Echo.mlg d 15" ) ) ) ) ], extFuns = [] }

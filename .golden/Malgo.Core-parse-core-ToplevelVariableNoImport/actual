@@ -1,0 +1,403 @@
+Program
+ { topVars =
+  [
+   ( "@one", AnyT, Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 199"
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 198"
+     ( Call ( Var "@Int32#" ) [ Unboxed ( Int32 1 ) ] )
+     ( Cast AnyT
+      ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 198" ) ) )
+    ( Atom
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 199" ) ) ),
+   ( "@comp", AnyT, Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 222"
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 215"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg fun 214", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg nothing 212" ]
+        ( Match
+         ( Cast
+          ( SumT
+           [ Con
+            ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
+            ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" )
+            [ SumT [ Con Tuple [] ] ] ] )
+          ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg nothing 212" ) )
+         [ Unpack
+          ( Con
+           ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [] ) []
+          ( CallDirect "@Nothing" [] ), Unpack
+          ( Con
+           ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" )
+           [ SumT
+            [ Con Tuple [] ] ] ) [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 213" ]
+          ( CallDirect "@Nothing" [] ) ] ) } ]
+      ( Atom
+       ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg fun 214" ) ) )
+     ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 220"
+      ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 217"
+       ( Let
+        [ LocalDef
+         { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 216", typ = SumT
+          [ Con Tuple [] ], _object = Pack
+          ( SumT [ Con Tuple [] ] )
+          ( Con Tuple [] ) [] } ]
+        ( Atom
+         ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 216" ) ) )
+       ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg cast 218"
+        ( Cast AnyT
+         ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 217" ) )
+        ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 219"
+         ( Call
+          ( Var "@Just" )
+          [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg cast 218" ] )
+         ( Cast AnyT
+          ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 219" ) ) ) ) )
+      ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 221"
+       ( Call
+        ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 215" )
+        [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 220" ] )
+       ( Cast AnyT
+        ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 221" ) ) ) ) )
+    ( Atom
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 222" ) ) ) ], topFuns =
+  [
+   ( "$test/testcases/malgo/ToplevelVariableNoImport.mlg addInt32_curry 244",
+    [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 245", "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 246" ],
+    [ AnyT, AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ] )
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 245" ) )
+    [ Unpack
+     ( Con
+      ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ) [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 247" ]
+     ( Match
+      ( Cast
+       ( SumT
+        [ Con
+         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ] )
+       ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 246" ) )
+      [ Unpack
+       ( Con
+        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ) [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 248" ]
+       ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 252"
+        ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 250"
+         ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 249"
+          ( Call
+           ( Var "@addInt32#" )
+           [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 247" ] )
+          ( Cast
+           ( [ Int32T ] :-> Int32T )
+           ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 249" ) ) )
+         ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 251"
+          ( Call
+           ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 250" )
+           [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 248" ] )
+          ( Cast Int32T
+           ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 251" ) ) ) )
+        ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 253"
+         ( Call
+          ( Var "@Int32#" )
+          [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 252" ] )
+         ( Cast AnyT
+          ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 253" ) ) ) ) ] ) ] ),
+   ( "$test/testcases/malgo/ToplevelVariableNoImport.mlg addInt32#_curry 228",
+    [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 229", "$test/testcases/malgo/ToplevelVariableNoImport.mlg y 230" ],
+    [ Int32T, Int32T ] :-> Int32T, Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 232"
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 231"
+     ( Call
+      ( Var "@malgo_add_int32_t" )
+      [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 229" ] )
+     ( Cast
+      ( [ Int32T ] :-> Int32T )
+      ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 231" ) ) )
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 233"
+     ( Call
+      ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 232" )
+      [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg y 230" ] )
+     ( Cast Int32T
+      ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 233" ) ) ) ),
+   ( "$test/testcases/malgo/ToplevelVariableNoImport.mlg const_curry 203",
+    [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg a 204", "$test/testcases/malgo/ToplevelVariableNoImport.mlg _ 205" ],
+    [ AnyT, AnyT ] :-> AnyT, Atom
+    ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg a 204" ) ),
+   ( "$test/testcases/malgo/ToplevelVariableNoImport.mlg malgo_add_int32_t_curry 176",
+    [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 177", "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 178" ],
+    [ Int32T, Int32T ] :-> Int32T, RawCall "malgo_add_int32_t"
+    ( [ Int32T, Int32T ] :-> Int32T )
+    [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 177", Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 178" ] ),
+   ( "@Int32#", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 167" ], [ Int32T ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 168", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ] )
+      ( Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] )
+      [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 167" ] } ]
+    ( Cast AnyT
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 168" ) ) ),
+   ( "@String#", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 169" ], [ StringT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 170", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ] )
+      ( Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] )
+      [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 169" ] } ]
+    ( Cast AnyT
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 170" ) ) ),
+   ( "@Nothing", [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 171", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
+        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ] )
+      ( Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [] ) [] } ]
+    ( Cast AnyT
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 171" ) ) ),
+   ( "@Just", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 172" ], [ AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 173", typ = SumT
+      [ Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
+        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ] )
+      ( Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] )
+      [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 172" ] } ]
+    ( Cast AnyT
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 173" ) ) ),
+   ( "@malgo_add_int32_t", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 174" ], [ Int32T ] :->
+    ( [ Int32T ] :-> Int32T ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 179", typ = [ Int32T ] :-> Int32T, _object = Fun [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 175" ]
+      ( CallDirect "$test/testcases/malgo/ToplevelVariableNoImport.mlg malgo_add_int32_t_curry 176"
+       [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 174", Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 175" ] ) } ]
+    ( Atom
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 179" ) ) ),
+   ( "@malgo_print_string", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 180" ], [ StringT ] :-> SumT
+    [ Con Tuple [] ], RawCall "malgo_print_string"
+    ( [ StringT ] :-> SumT [ Con Tuple [] ] )
+    [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 180" ] ),
+   ( "@malgo_int32_t_to_string", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 181" ], [ Int32T ] :-> StringT, RawCall "malgo_int32_t_to_string"
+    ( [ Int32T ] :-> StringT )
+    [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 181" ] ),
+   ( "@toStringInt32#", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 182" ], [ Int32T ] :-> StringT, Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 183"
+    ( Call
+     ( Var "@malgo_int32_t_to_string" )
+     [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 182" ] )
+    ( Cast StringT
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 183" ) ) ),
+   ( "@toStringInt32", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 184" ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ] )
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 184" ) )
+    [ Unpack
+     ( Con
+      ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ) [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 185" ]
+     ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 187"
+      ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 186"
+       ( Call
+        ( Var "@toStringInt32#" )
+        [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 185" ] )
+       ( Cast StringT
+        ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 186" ) ) )
+      ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 188"
+       ( Call
+        ( Var "@String#" )
+        [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 187" ] )
+       ( Cast AnyT
+        ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 188" ) ) ) ) ] ),
+   ( "@printString#", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 189" ], [ StringT ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 190"
+    ( Call
+     ( Var "@malgo_print_string" )
+     [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 189" ] )
+    ( Cast
+     ( SumT [ Con Tuple [] ] )
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 190" ) ) ),
+   ( "@printString", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg string# 191" ], [ AnyT ] :-> SumT
+    [ Con Tuple [] ], Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ] )
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg string# 191" ) )
+    [ Unpack
+     ( Con
+      ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ) [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 192" ]
+     ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 193"
+      ( Call
+       ( Var "@printString#" )
+       [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 192" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 193" ) ) ) ] ),
+   ( "@printInt32", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg i 194" ], [ AnyT ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 196"
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 195"
+     ( Call
+      ( Var "@toStringInt32" )
+      [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg i 194" ] )
+     ( Cast AnyT
+      ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 195" ) ) )
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 197"
+     ( Call
+      ( Var "@printString" )
+      [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 196" ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 197" ) ) ) ),
+   ( "@identity", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 200" ], [ AnyT ] :-> AnyT, Atom
+    ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 200" ) ),
+   ( "@const", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg a 201" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 206", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg _ 202" ]
+      ( CallDirect "$test/testcases/malgo/ToplevelVariableNoImport.mlg const_curry 203"
+       [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg a 201", Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg _ 202" ] ) } ]
+    ( Atom
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 206" ) ) ),
+   ( "@constId", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg eta 210" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 211"
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 209"
+     ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg cast 207"
+      ( Cast AnyT ( Var "@identity" ) )
+      ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 208"
+       ( Call
+        ( Var "@const" )
+        [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg cast 207" ] )
+       ( Cast
+        ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) )
+        ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 208" ) ) ) )
+     ( Atom
+      ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 209" ) ) )
+    ( Call
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 211" )
+     [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg eta 210" ] ) ),
+   ( "@addInt32#", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 223" ], [ Int32T ] :->
+    ( [ Int32T ] :-> Int32T ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 234", typ = [ Int32T ] :-> Int32T, _object = Fun [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg y 224" ]
+      ( CallDirect "$test/testcases/malgo/ToplevelVariableNoImport.mlg addInt32#_curry 228"
+       [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg x 223", Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg y 224" ] ) } ]
+    ( Atom
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 234" ) ) ),
+   ( "@addInt32", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 235" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 254", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 236" ]
+      ( CallDirect "$test/testcases/malgo/ToplevelVariableNoImport.mlg addInt32_curry 244"
+       [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 235", Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg int32# 236" ] ) } ]
+    ( Atom
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 254" ) ) ),
+   ( "@addOne", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg eta 257" ], [ AnyT ] :-> AnyT, Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 258"
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 256"
+     ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 255"
+      ( Call ( Var "@addInt32" ) [ Var "@one" ] )
+      ( Cast
+       ( [ AnyT ] :-> AnyT )
+       ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 255" ) ) )
+     ( Atom
+      ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 256" ) ) )
+    ( Call
+     ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 258" )
+     [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg eta 257" ] ) ),
+   ( "@main", [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg $_ 259" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 269"
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 267"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg fun 266", typ = [ AnyT ] :-> SumT
+        [ Con Tuple [] ], _object = Fun [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg nothing 260" ]
+        ( Match
+         ( Cast
+          ( SumT
+           [ Con
+            ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
+            ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ] )
+          ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg nothing 260" ) )
+         [ Unpack
+          ( Con
+           ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [] ) []
+          ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 262"
+           ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 261"
+            ( Call ( Var "@String#" ) [ Unboxed ( String "OK" ) ] )
+            ( Cast AnyT
+             ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 261" ) ) )
+           ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 263"
+            ( Call
+             ( Var "@printString" )
+             [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 262" ] )
+            ( Cast
+             ( SumT [ Con Tuple [] ] )
+             ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 263" ) ) ) ), Unpack
+          ( Con
+           ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ) [ "$test/testcases/malgo/ToplevelVariableNoImport.mlg p 264" ]
+          ( Let
+           [ LocalDef
+            { _variable = "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 265", typ = SumT
+             [ Con Tuple [] ], _object = Pack
+             ( SumT [ Con Tuple [] ] )
+             ( Con Tuple [] ) [] } ]
+           ( Atom
+            ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg let 265" ) ) ) ] ) } ]
+      ( Atom
+       ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg fun 266" ) ) )
+     ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 268"
+      ( Call
+       ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 267" )
+       [ Var "@comp" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 268" ) ) ) )
+    ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 276"
+     ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 272"
+      ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg cast 270"
+       ( Cast AnyT ( Var "@const" ) )
+       ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 271"
+        ( Call
+         ( Var "@constId" )
+         [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg cast 270" ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 271" ) ) ) )
+      ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 274"
+       ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 273"
+        ( Call ( Var "@addOne" ) [ Var "@one" ] )
+        ( Cast AnyT
+         ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 273" ) ) )
+       ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 275"
+        ( Call
+         ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 272" )
+         [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 274" ] )
+        ( Cast AnyT
+         ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 275" ) ) ) ) )
+     ( Assign "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 277"
+      ( Call
+       ( Var "@printInt32" )
+       [ Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 276" ] )
+      ( Cast
+       ( SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/ToplevelVariableNoImport.mlg d 277" ) ) ) ) ) ], extFuns =
+  [
+   ( "%malgo_add_int32_t", [ Int32T, Int32T ] :-> Int32T ),
+   ( "%malgo_print_string", [ StringT ] :-> SumT [ Con Tuple [] ] ),
+   ( "%malgo_int32_t_to_string", [ Int32T ] :-> StringT ) ] }

@@ -37,6 +37,6 @@ driveParse srcPath = do
                 $ PP.layoutPretty PP.defaultLayoutOptions
                 $ PP.unAnnotate
                 $ prettyDiagnostic WithUnicode (TabSize 4) diag'
-        pure message
+        error message
       Right parsed ->
         pure $ pShowCompact parsed

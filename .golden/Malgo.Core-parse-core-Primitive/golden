@@ -1,0 +1,30 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "@main", [ "$test/testcases/malgo/Primitive.mlg $_ 11" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/Primitive.mlg d 17"
+    ( Assign "$test/testcases/malgo/Primitive.mlg d 15"
+     ( Assign "$test/testcases/malgo/Primitive.mlg d 13"
+      ( Assign "$test/testcases/malgo/Primitive.mlg d 12"
+       ( Call ( Var "@addInt64#" ) [ Unboxed ( Int64 40 ) ] )
+       ( Cast
+        ( [ Int64T ] :-> Int64T )
+        ( Var "$test/testcases/malgo/Primitive.mlg d 12" ) ) )
+      ( Assign "$test/testcases/malgo/Primitive.mlg d 14"
+       ( Call
+        ( Var "$test/testcases/malgo/Primitive.mlg d 13" )
+        [ Unboxed ( Int64 2 ) ] )
+       ( Cast Int64T ( Var "$test/testcases/malgo/Primitive.mlg d 14" ) ) ) )
+     ( Assign "$test/testcases/malgo/Primitive.mlg d 16"
+      ( Call
+       ( Var "@toStringInt64#" )
+       [ Var "$test/testcases/malgo/Primitive.mlg d 15" ] )
+      ( Cast StringT ( Var "$test/testcases/malgo/Primitive.mlg d 16" ) ) ) )
+    ( Assign "$test/testcases/malgo/Primitive.mlg d 18"
+     ( Call
+      ( Var "@printString#" )
+      [ Var "$test/testcases/malgo/Primitive.mlg d 17" ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var "$test/testcases/malgo/Primitive.mlg d 18" ) ) ) ) ], extFuns = [] }

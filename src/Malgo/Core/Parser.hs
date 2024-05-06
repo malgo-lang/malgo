@@ -165,9 +165,13 @@ expr =
                 ),
           do
             void $ try $ symbol "destruct-record"
+            let field = do
+                  k <- rawIdent
+                  v <- ident
+                  pure (k, v)
             DestructRecord
               <$> atom
-              <*> between (symbol "(") (symbol ")") (Map.fromList <$> many ((,) <$> rawIdent <*> ident))
+              <*> between (symbol "(") (symbol ")") (Map.fromList <$> some field)
               <*> expr,
           do
             void $ symbol "destruct"

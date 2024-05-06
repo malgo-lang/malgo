@@ -1,0 +1,242 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( "$test/testcases/malgo/Factorial.mlg factAcc_curry 166",
+    [ "$test/testcases/malgo/Factorial.mlg n 167", "$test/testcases/malgo/Factorial.mlg acc 168" ],
+    [ AnyT, AnyT ] :-> AnyT, Assign "$test/testcases/malgo/Factorial.mlg d 181"
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 176"
+     ( Assign "$test/testcases/malgo/Factorial.mlg d 174"
+      ( Assign "$test/testcases/malgo/Factorial.mlg d 170"
+       ( Assign "$test/testcases/malgo/Factorial.mlg d 169"
+        ( Call
+         ( Var "@==" )
+         [ Var "$test/testcases/malgo/Factorial.mlg n 167" ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var "$test/testcases/malgo/Factorial.mlg d 169" ) ) )
+       ( Assign "$test/testcases/malgo/Factorial.mlg d 172"
+        ( Assign "$test/testcases/malgo/Factorial.mlg d 171"
+         ( Call ( Var "@Int64#" ) [ Unboxed ( Int64 0 ) ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 171" ) ) )
+        ( Assign "$test/testcases/malgo/Factorial.mlg d 173"
+         ( Call
+          ( Var "$test/testcases/malgo/Factorial.mlg d 170" )
+          [ Var "$test/testcases/malgo/Factorial.mlg d 172" ] )
+         ( Cast AnyT
+          ( Var "$test/testcases/malgo/Factorial.mlg d 173" ) ) ) ) )
+      ( Assign "$test/testcases/malgo/Factorial.mlg d 175"
+       ( Call
+        ( Var "@if" )
+        [ Var "$test/testcases/malgo/Factorial.mlg d 174" ] )
+       ( Cast
+        (
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+         ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) )
+        ( Var "$test/testcases/malgo/Factorial.mlg d 175" ) ) ) )
+     ( Assign "$test/testcases/malgo/Factorial.mlg d 179"
+      ( Let
+       [ LocalDef
+        { _variable = "$test/testcases/malgo/Factorial.mlg fun 177", typ =
+         [ SumT
+          [ Con Tuple [] ] ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Factorial.mlg $_ 178" ]
+         ( Atom ( Var "$test/testcases/malgo/Factorial.mlg acc 168" ) ) } ]
+       ( Atom ( Var "$test/testcases/malgo/Factorial.mlg fun 177" ) ) )
+      ( Assign "$test/testcases/malgo/Factorial.mlg d 180"
+       ( Call
+        ( Var "$test/testcases/malgo/Factorial.mlg d 176" )
+        [ Var "$test/testcases/malgo/Factorial.mlg d 179" ] )
+       ( Cast
+        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
+        ( Var "$test/testcases/malgo/Factorial.mlg d 180" ) ) ) ) )
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 197"
+     ( Let
+      [ LocalDef
+       { _variable = "$test/testcases/malgo/Factorial.mlg fun 182", typ =
+        [ SumT
+         [ Con Tuple [] ] ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Factorial.mlg $_ 183" ]
+        ( Assign "$test/testcases/malgo/Factorial.mlg d 191"
+         ( Assign "$test/testcases/malgo/Factorial.mlg d 189"
+          ( Assign "$test/testcases/malgo/Factorial.mlg d 185"
+           ( Assign "$test/testcases/malgo/Factorial.mlg d 184"
+            ( Call
+             ( Var "@-" )
+             [ Var "$test/testcases/malgo/Factorial.mlg n 167" ] )
+            ( Cast
+             ( [ AnyT ] :-> AnyT )
+             ( Var "$test/testcases/malgo/Factorial.mlg d 184" ) ) )
+           ( Assign "$test/testcases/malgo/Factorial.mlg d 187"
+            ( Assign "$test/testcases/malgo/Factorial.mlg d 186"
+             ( Call ( Var "@Int64#" ) [ Unboxed ( Int64 1 ) ] )
+             ( Cast AnyT
+              ( Var "$test/testcases/malgo/Factorial.mlg d 186" ) ) )
+            ( Assign "$test/testcases/malgo/Factorial.mlg d 188"
+             ( Call
+              ( Var "$test/testcases/malgo/Factorial.mlg d 185" )
+              [ Var "$test/testcases/malgo/Factorial.mlg d 187" ] )
+             ( Cast AnyT
+              ( Var "$test/testcases/malgo/Factorial.mlg d 188" ) ) ) ) )
+          ( Assign "$test/testcases/malgo/Factorial.mlg d 190"
+           ( Call
+            ( Var "@factAcc" )
+            [ Var "$test/testcases/malgo/Factorial.mlg d 189" ] )
+           ( Cast
+            ( [ AnyT ] :-> AnyT )
+            ( Var "$test/testcases/malgo/Factorial.mlg d 190" ) ) ) )
+         ( Assign "$test/testcases/malgo/Factorial.mlg d 195"
+          ( Assign "$test/testcases/malgo/Factorial.mlg d 193"
+           ( Assign "$test/testcases/malgo/Factorial.mlg d 192"
+            ( Call
+             ( Var "@*" )
+             [ Var "$test/testcases/malgo/Factorial.mlg n 167" ] )
+            ( Cast
+             ( [ AnyT ] :-> AnyT )
+             ( Var "$test/testcases/malgo/Factorial.mlg d 192" ) ) )
+           ( Assign "$test/testcases/malgo/Factorial.mlg d 194"
+            ( Call
+             ( Var "$test/testcases/malgo/Factorial.mlg d 193" )
+             [ Var "$test/testcases/malgo/Factorial.mlg acc 168" ] )
+            ( Cast AnyT
+             ( Var "$test/testcases/malgo/Factorial.mlg d 194" ) ) ) )
+          ( Assign "$test/testcases/malgo/Factorial.mlg d 196"
+           ( Call
+            ( Var "$test/testcases/malgo/Factorial.mlg d 191" )
+            [ Var "$test/testcases/malgo/Factorial.mlg d 195" ] )
+           ( Cast AnyT
+            ( Var "$test/testcases/malgo/Factorial.mlg d 196" ) ) ) ) ) } ]
+      ( Atom ( Var "$test/testcases/malgo/Factorial.mlg fun 182" ) ) )
+     ( Assign "$test/testcases/malgo/Factorial.mlg d 198"
+      ( Call
+       ( Var "$test/testcases/malgo/Factorial.mlg d 181" )
+       [ Var "$test/testcases/malgo/Factorial.mlg d 197" ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 198" ) ) ) ) ),
+   ( "$test/testcases/malgo/Factorial.mlg *_curry 127",
+    [ "$test/testcases/malgo/Factorial.mlg x 128", "$test/testcases/malgo/Factorial.mlg y 129" ],
+    [ AnyT, AnyT ] :-> AnyT, Assign "$test/testcases/malgo/Factorial.mlg d 131"
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 130"
+     ( Call
+      ( Var "@mulInt64" )
+      [ Var "$test/testcases/malgo/Factorial.mlg x 128" ] )
+     ( Cast
+      ( [ AnyT ] :-> AnyT )
+      ( Var "$test/testcases/malgo/Factorial.mlg d 130" ) ) )
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 132"
+     ( Call
+      ( Var "$test/testcases/malgo/Factorial.mlg d 131" )
+      [ Var "$test/testcases/malgo/Factorial.mlg y 129" ] )
+     ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 132" ) ) ) ),
+   ( "$test/testcases/malgo/Factorial.mlg -_curry 115",
+    [ "$test/testcases/malgo/Factorial.mlg x 116", "$test/testcases/malgo/Factorial.mlg y 117" ],
+    [ AnyT, AnyT ] :-> AnyT, Assign "$test/testcases/malgo/Factorial.mlg d 119"
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 118"
+     ( Call
+      ( Var "@subInt64" )
+      [ Var "$test/testcases/malgo/Factorial.mlg x 116" ] )
+     ( Cast
+      ( [ AnyT ] :-> AnyT )
+      ( Var "$test/testcases/malgo/Factorial.mlg d 118" ) ) )
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 120"
+     ( Call
+      ( Var "$test/testcases/malgo/Factorial.mlg d 119" )
+      [ Var "$test/testcases/malgo/Factorial.mlg y 117" ] )
+     ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 120" ) ) ) ),
+   ( "$test/testcases/malgo/Factorial.mlg ==_curry 103",
+    [ "$test/testcases/malgo/Factorial.mlg x 104", "$test/testcases/malgo/Factorial.mlg y 105" ],
+    [ AnyT, AnyT ] :-> AnyT, Assign "$test/testcases/malgo/Factorial.mlg d 107"
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 106"
+     ( Call
+      ( Var "@eqInt64" )
+      [ Var "$test/testcases/malgo/Factorial.mlg x 104" ] )
+     ( Cast
+      ( [ AnyT ] :-> AnyT )
+      ( Var "$test/testcases/malgo/Factorial.mlg d 106" ) ) )
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 108"
+     ( Call
+      ( Var "$test/testcases/malgo/Factorial.mlg d 107" )
+      [ Var "$test/testcases/malgo/Factorial.mlg y 105" ] )
+     ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 108" ) ) ) ),
+   ( "@==", [ "$test/testcases/malgo/Factorial.mlg x 98" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Factorial.mlg let 109", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Factorial.mlg y 99" ]
+      ( CallDirect "$test/testcases/malgo/Factorial.mlg ==_curry 103"
+       [ Var "$test/testcases/malgo/Factorial.mlg x 98", Var "$test/testcases/malgo/Factorial.mlg y 99" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/Factorial.mlg let 109" ) ) ),
+   ( "@-", [ "$test/testcases/malgo/Factorial.mlg x 110" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Factorial.mlg let 121", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Factorial.mlg y 111" ]
+      ( CallDirect "$test/testcases/malgo/Factorial.mlg -_curry 115"
+       [ Var "$test/testcases/malgo/Factorial.mlg x 110", Var "$test/testcases/malgo/Factorial.mlg y 111" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/Factorial.mlg let 121" ) ) ),
+   ( "@*", [ "$test/testcases/malgo/Factorial.mlg x 122" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Factorial.mlg let 133", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Factorial.mlg y 123" ]
+      ( CallDirect "$test/testcases/malgo/Factorial.mlg *_curry 127"
+       [ Var "$test/testcases/malgo/Factorial.mlg x 122", Var "$test/testcases/malgo/Factorial.mlg y 123" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/Factorial.mlg let 133" ) ) ),
+   ( "@factAcc", [ "$test/testcases/malgo/Factorial.mlg n 134" ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = "$test/testcases/malgo/Factorial.mlg let 199", typ = [ AnyT ] :-> AnyT, _object = Fun [ "$test/testcases/malgo/Factorial.mlg acc 135" ]
+      ( CallDirect "$test/testcases/malgo/Factorial.mlg factAcc_curry 166"
+       [ Var "$test/testcases/malgo/Factorial.mlg n 134", Var "$test/testcases/malgo/Factorial.mlg acc 135" ] ) } ]
+    ( Atom ( Var "$test/testcases/malgo/Factorial.mlg let 199" ) ) ),
+   ( "@fact", [ "$test/testcases/malgo/Factorial.mlg n 200" ], [ AnyT ] :-> AnyT, Assign "$test/testcases/malgo/Factorial.mlg d 202"
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 201"
+     ( Call
+      ( Var "@factAcc" )
+      [ Var "$test/testcases/malgo/Factorial.mlg n 200" ] )
+     ( Cast
+      ( [ AnyT ] :-> AnyT )
+      ( Var "$test/testcases/malgo/Factorial.mlg d 201" ) ) )
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 204"
+     ( Assign "$test/testcases/malgo/Factorial.mlg d 203"
+      ( Call ( Var "@Int64#" ) [ Unboxed ( Int64 1 ) ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 203" ) ) )
+     ( Assign "$test/testcases/malgo/Factorial.mlg d 205"
+      ( Call
+       ( Var "$test/testcases/malgo/Factorial.mlg d 202" )
+       [ Var "$test/testcases/malgo/Factorial.mlg d 204" ] )
+      ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 205" ) ) ) ) ),
+   ( "@main", [ "$test/testcases/malgo/Factorial.mlg $_ 206" ],
+    [ SumT [ Con Tuple [] ] ] :-> SumT
+    [ Con Tuple [] ], Assign "$test/testcases/malgo/Factorial.mlg d 216"
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 214"
+     ( Assign "$test/testcases/malgo/Factorial.mlg d 212"
+      ( Assign "$test/testcases/malgo/Factorial.mlg d 210"
+       ( Assign "$test/testcases/malgo/Factorial.mlg d 208"
+        ( Assign "$test/testcases/malgo/Factorial.mlg d 207"
+         ( Call ( Var "@Int64#" ) [ Unboxed ( Int64 5 ) ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 207" ) ) )
+        ( Assign "$test/testcases/malgo/Factorial.mlg d 209"
+         ( Call
+          ( Var "@fact" )
+          [ Var "$test/testcases/malgo/Factorial.mlg d 208" ] )
+         ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 209" ) ) ) )
+       ( Assign "$test/testcases/malgo/Factorial.mlg d 211"
+        ( Call
+         ( Var "@|>" )
+         [ Var "$test/testcases/malgo/Factorial.mlg d 210" ] )
+        ( Cast
+         ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
+         ( Var "$test/testcases/malgo/Factorial.mlg d 211" ) ) ) )
+      ( Assign "$test/testcases/malgo/Factorial.mlg d 213"
+       ( Call
+        ( Var "$test/testcases/malgo/Factorial.mlg d 212" )
+        [ Var "@toStringInt64" ] )
+       ( Cast AnyT ( Var "$test/testcases/malgo/Factorial.mlg d 213" ) ) ) )
+     ( Assign "$test/testcases/malgo/Factorial.mlg d 215"
+      ( Call
+       ( Var "@|>" )
+       [ Var "$test/testcases/malgo/Factorial.mlg d 214" ] )
+      ( Cast
+       ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
+       ( Var "$test/testcases/malgo/Factorial.mlg d 215" ) ) ) )
+    ( Assign "$test/testcases/malgo/Factorial.mlg d 217"
+     ( Call
+      ( Var "$test/testcases/malgo/Factorial.mlg d 216" )
+      [ Var "@putStrLn" ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var "$test/testcases/malgo/Factorial.mlg d 217" ) ) ) ) ], extFuns = [] }
