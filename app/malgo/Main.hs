@@ -5,18 +5,13 @@
 module Main (main) where
 
 import Control.Lens (makeFieldsNoPrefix)
-import Data.ByteString qualified as BS
-import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, printDiagnostic)
-import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Malgo.Core.Optimize (OptimizeOption (..))
-import Malgo.Core.Parser qualified as Core
 import Malgo.Driver qualified as Driver
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Monad qualified as Flag
 import Malgo.Prelude
 import Options.Applicative
 import System.Directory (makeAbsolute)
-import System.Exit (exitFailure)
 
 data ToLLOpt = ToLLOpt
   { srcPath :: FilePath,
@@ -44,15 +39,6 @@ main = do
               Flag.testMode = False
             }
           opt.optimizeOption
-    Core (CoreOpt srcPath) -> do
-      srcContents <- BS.readFile srcPath
-      case Core.parse srcPath (convertString srcContents) of
-        Left err ->
-          let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-              diag' = addFile diag srcPath (convertString srcContents)
-           in printDiagnostic stderr WithUnicode (TabSize 4) defaultStyle diag' >> exitFailure
-        Right prog -> do
-          putText $ render $ pretty prog
 
 toLLOpt :: Parser ToLLOpt
 toLLOpt =
@@ -79,18 +65,14 @@ toLLOpt =
   )
     <**> helper
 
-newtype CoreOpt = CoreOpt FilePath
-  deriving stock (Eq, Show)
-
-data Command
+newtype Command
   = ToLL ToLLOpt
-  | Core CoreOpt
 
 parseCommand :: IO Command
 parseCommand = do
   command <-
     execParser
-      ( info ((subparser toLL <|> subparser core) <**> helper)
+      ( info (subparser toLL <**> helper)
           $ fullDesc
           <> header "malgo programming language"
       )
@@ -98,7 +80,6 @@ parseCommand = do
     ToLL opt -> do
       srcPath <- makeAbsolute opt.srcPath
       pure $ ToLL opt {srcPath = srcPath}
-    Core opt -> pure $ Core opt
   where
     toLL =
       command "to-ll"
@@ -106,10 +87,3 @@ parseCommand = do
         $ fullDesc
         <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
         <> header "malgo to LLVM Textual IR Compiler"
-    core =
-      command "core"
-        $ info (Core <$> coreOpt)
-        $ fullDesc
-        <> progDesc "Core Compiler"
-        <> header "malgo core"
-    coreOpt = CoreOpt <$> strArgument (metavar "SOURCE" <> help "Source file" <> action "file")

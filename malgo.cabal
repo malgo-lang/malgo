@@ -51,6 +51,7 @@ library
       Malgo.Interface
       Malgo.Lens
       Malgo.Link
+      Malgo.Mangle
       Malgo.Module
       Malgo.Monad
       Malgo.MonadUniq
@@ -62,6 +63,7 @@ library
       Malgo.Rename.Pass
       Malgo.Rename.RnEnv
       Malgo.Rename.RnState
+      Malgo.SExpr
       Malgo.Syntax
       Malgo.Syntax.Extension
   other-modules:
@@ -120,6 +122,7 @@ library
     , string-conversions
     , syb
     , text
+    , text-icu
     , transformers
     , unliftio
     , unordered-containers
@@ -185,6 +188,7 @@ executable malgo
     , string-conversions
     , syb
     , text
+    , text-icu
     , transformers
     , unliftio
     , unordered-containers
@@ -264,6 +268,7 @@ test-suite malgo-test
     , string-conversions
     , syb
     , text
+    , text-icu
     , time
     , transformers
     , typed-process
