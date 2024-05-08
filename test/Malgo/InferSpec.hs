@@ -1,7 +1,7 @@
 module Malgo.InferSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Error.Diagnose
+import Data.ByteString.Lazy qualified as BL
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Parser (parseMalgo)
@@ -12,7 +12,6 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
@@ -21,9 +20,9 @@ spec = parallel do
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("infer " <> takeBaseName testcase) (driveInfer (testcaseDir </> testcase))
+    goldenHaskell "infer" (takeBaseName testcase) (driveInfer (testcaseDir </> testcase))
 
-driveInfer :: FilePath -> IO String
+driveInfer :: FilePath -> IO BL.ByteString
 driveInfer srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM LLVM flag option do

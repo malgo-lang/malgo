@@ -1,7 +1,8 @@
 module Malgo.DesugarSpec (spec) where
 
+import Data.Aeson.Encode.Pretty qualified as Aeson
 import Data.ByteString qualified as BS
-import Error.Diagnose
+import Data.ByteString.Lazy qualified as BL
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (CompileMode (..), runMalgoM)
@@ -14,7 +15,6 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
@@ -23,9 +23,9 @@ spec = parallel do
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("desugar " <> takeBaseName testcase) (driveDesugar (testcaseDir </> testcase))
+    goldenJSON "desugar" (takeBaseName testcase) (driveDesugar (testcaseDir </> testcase))
 
-driveDesugar :: FilePath -> IO String
+driveDesugar :: FilePath -> IO BL.ByteString
 driveDesugar srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM LLVM flag option do
@@ -38,4 +38,4 @@ driveDesugar srcPath = do
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (_, core) <- desugar tcEnv refined
-    pure $ pShowCompact core
+    pure $ Aeson.encodePretty core

@@ -14,15 +14,14 @@ import Prettyprinter.Render.Text qualified as PP
 import System.Directory (listDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, (</>))
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("parse " <> takeBaseName testcase) (driveParse (testcaseDir </> testcase))
+    goldenHaskell "parse" (takeBaseName testcase) (driveParse (testcaseDir </> testcase))
 
-driveParse :: FilePath -> IO String
+driveParse :: FilePath -> IO BL.ByteString
 driveParse srcPath = do
   src <- convertString <$> BL.readFile srcPath
   runMalgoM LLVM flag option do

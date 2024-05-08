@@ -12,6 +12,7 @@ build-type: Simple
 dependencies:
   - Glob
   - aeson
+  - aeson-pretty
   - base
   - binary
   - binary-instances
@@ -21,6 +22,7 @@ dependencies:
   - directory
   - effectful
   - effectful-core
+  - exceptions
   - extra
   - filepath
   - generic-data
@@ -41,12 +43,11 @@ dependencies:
   - string-conversions
   - syb
   - text
+  - text-icu
   - transformers
   - unliftio
   - unordered-containers
   - witherable
-  - exceptions
-  - text-icu
 
 ghc-options:
   - -Wall
@@ -58,6 +59,7 @@ ghc-options:
   - -Wredundant-constraints
 
   - -Wno-name-shadowing
+  - -Wno-partial-fields
   - -Wmissing-deriving-strategies
   - -Wmissing-export-lists
 

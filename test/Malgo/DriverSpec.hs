@@ -30,8 +30,6 @@ import System.Process.Typed
     setStdout,
   )
 import Test.Hspec (Spec, anyException, it, parallel, runIO, sequential, shouldBe, shouldThrow)
-import Test.Hspec.Core.Spec (getSpecDescriptionPath)
-import Test.Hspec.Golden (Golden (..), golden)
 
 getWorkspaceDir :: (MonadIO m) => m FilePath
 getWorkspaceDir = liftIO do
@@ -50,29 +48,29 @@ spec = do
   testcases <- runIO (filter (isExtensionOf "mlg") <$> listDirectory testcaseDir)
   parallel do
     for_ testcases \testcase -> sequential do
-      golden ("driver normalCase " <> takeBaseName testcase) $ testNormal (testcaseDir </> testcase)
-      goldenLLVM ("llvm normalCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM ("llvm opt normalCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
+      goldenWithTag "driver" "txt" ("normalCase " <> takeBaseName testcase) $ testNormal (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("normalCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("opt normalCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
   parallel do
     for_ testcases \testcase -> sequential do
-      golden ("driver nonoCase " <> takeBaseName testcase) $ testNoNo (testcaseDir </> testcase)
-      goldenLLVM ("llvm nonoCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM ("llvm opt nonoCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
+      goldenWithTag "driver" "txt" ("nonoCase " <> takeBaseName testcase) $ testNoNo (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("nonoCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("opt nonoCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
   parallel do
     for_ testcases \testcase -> sequential do
-      golden ("driver nooptCase " <> takeBaseName testcase) $ testNoOpt (testcaseDir </> testcase)
-      goldenLLVM ("llvm nooptCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM ("llvm opt nooptCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
+      goldenWithTag "driver" "txt" ("nooptCase " <> takeBaseName testcase) $ testNoOpt (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("nooptCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("opt nooptCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
   parallel do
     for_ testcases \testcase -> sequential do
-      golden ("driver noliftCase " <> takeBaseName testcase) $ testNoLift (testcaseDir </> testcase)
-      goldenLLVM ("llvm noliftCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM ("llvm opt noliftCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
+      goldenWithTag "driver" "txt" ("noliftCase " <> takeBaseName testcase) $ testNoLift (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("noliftCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("opt noliftCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
   parallel do
     for_ testcases \testcase -> sequential do
-      golden ("driver agressiveCase " <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
-      goldenLLVM ("llvm agressiveCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM ("llvm opt agressiveCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
+      goldenWithTag "driver" "txt" ("agressiveCase " <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("agressiveCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
+      goldenLLVM "llvm" ("opt agressiveCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
   errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
   parallel $ for_ errorcases \errorcase -> do
     it ("driver errorCase " <> takeBaseName errorcase)
@@ -127,7 +125,7 @@ test ::
   OptimizeOption ->
   -- | Compile mode
   CompileMode ->
-  IO String
+  IO BL.ByteString
 test testcase _typ lambdaLift noOptimize option compileMode = retry 3 do
   workspaceDir <- getWorkspaceDir
   let llPath = workspaceDir </> "test" </> "testcases" </> "malgo" </> takeBaseName testcase -<.> ".ll"
@@ -190,23 +188,6 @@ test testcase _typ lambdaLift noOptimize option compileMode = retry 3 do
         Just x -> pure x
         Nothing -> error $ "timeout in " <> phase
 
-goldenLLVM :: String -> IO BL.ByteString -> Spec
-goldenLLVM description runAction = do
-  path <- (<> words description) <$> getSpecDescriptionPath
-  let name = intercalate "-" path
-  it description do
-    actualOutput <- runAction
-    pure
-      Golden
-        { output = actualOutput,
-          encodePretty = convertString,
-          writeToFile = BL.writeFile,
-          readFromFile = BL.readFile,
-          goldenFile = ".golden" </> "llvm" </> name </> "golden.ll",
-          actualFile = Just (".golden" </> "llvm" </> name </> "actual.ll"),
-          failFirstTime = False
-        }
-
 readLLVM :: FilePath -> IO BL.ByteString
 readLLVM testcase = do
   workspaceDir <- getWorkspaceDir
@@ -223,23 +204,23 @@ testError :: FilePath -> IO ()
 testError testcase = do
   compile testcase False False defaultOptimizeOption LLVM
 
-testNormal :: FilePath -> IO String
+testNormal :: FilePath -> IO BL.ByteString
 testNormal testcase =
   test testcase "normal" True False defaultOptimizeOption LLVM
 
-testNoLift :: FilePath -> IO String
+testNoLift :: FilePath -> IO BL.ByteString
 testNoLift testcase =
   test testcase "nolift" False False defaultOptimizeOption LLVM
 
-testNoOpt :: FilePath -> IO String
+testNoOpt :: FilePath -> IO BL.ByteString
 testNoOpt testcase =
   test testcase "noopt" True True defaultOptimizeOption LLVM
 
-testNoNo :: FilePath -> IO String
+testNoNo :: FilePath -> IO BL.ByteString
 testNoNo testcase =
   test testcase "nono" False True defaultOptimizeOption LLVM
 
-testAggressive :: FilePath -> IO String
+testAggressive :: FilePath -> IO BL.ByteString
 testAggressive testcase =
   test testcase "aggressive" True False aggressiveOptimizeOption LLVM
 
