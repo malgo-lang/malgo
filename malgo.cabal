@@ -30,12 +30,8 @@ library
       Malgo.Core.Lint
       Malgo.Core.Optimize
       Malgo.Core.Syntax
-      Malgo.Core.Syntax.Atom
-      Malgo.Core.Syntax.Case
       Malgo.Core.Syntax.Common
       Malgo.Core.Syntax.Expr
-      Malgo.Core.Syntax.LocalDef
-      Malgo.Core.Syntax.Unboxed
       Malgo.Core.Type
       Malgo.Desugar.DsState
       Malgo.Desugar.Match
@@ -91,6 +87,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wno-partial-fields -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
+    , QuickCheck >=2.15
     , aeson
     , aeson-pretty
     , base
@@ -105,6 +102,7 @@ library
     , exceptions
     , extra
     , filepath
+    , generic-arbitrary
     , generic-data
     , hashable
     , knob
@@ -117,6 +115,7 @@ library
     , parser-combinators
     , path
     , prettyprinter
+    , quickcheck-instances
     , raw-strings-qq
     , regex-tdfa
     , store
@@ -157,6 +156,7 @@ executable malgo
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wno-partial-fields -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
+    , QuickCheck >=2.15
     , aeson
     , aeson-pretty
     , base
@@ -171,6 +171,7 @@ executable malgo
     , exceptions
     , extra
     , filepath
+    , generic-arbitrary
     , generic-data
     , hashable
     , knob
@@ -184,6 +185,7 @@ executable malgo
     , parser-combinators
     , path
     , prettyprinter
+    , quickcheck-instances
     , raw-strings-qq
     , regex-tdfa
     , store
@@ -233,6 +235,7 @@ test-suite malgo-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wno-partial-fields -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
   build-depends:
       Glob
+    , QuickCheck >=2.15
     , aeson
     , aeson-pretty
     , base
@@ -247,6 +250,7 @@ test-suite malgo-test
     , exceptions
     , extra
     , filepath
+    , generic-arbitrary
     , generic-data
     , hashable
     , hspec
@@ -264,6 +268,7 @@ test-suite malgo-test
     , path
     , pretty-simple
     , prettyprinter
+    , quickcheck-instances
     , raw-strings-qq
     , regex-tdfa
     , silently

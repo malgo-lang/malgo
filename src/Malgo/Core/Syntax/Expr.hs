@@ -1,23 +1,39 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Core.Syntax.Expr (Expr (..), HasExpr (..)) where
+module Malgo.Core.Syntax.Expr
+  ( Expr (..),
+    HasExpr (..),
+    Atom (..),
+    HasAtom (..),
+    Unboxed (..),
+    LocalDef (..),
+    Obj (..),
+    Case (..),
+    _Unpack,
+    _OpenRecord,
+    _Exact,
+    _Bind,
+  )
+where
 
-import Control.Lens (Plated (..), Traversal', sans, traverseOf, traversed, _2)
-import Data.Aeson (FromJSON, ToJSON)
+import Control.Lens (Plated (..), Traversal', makePrisms, sans, traverseOf, traversed, _2)
+import Data.Aeson (FromJSON (..), KeyValue (..), ToJSON (..), (.:))
 import Data.Data (Data)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
-import Data.Store.TH
+import Data.Store (Store)
 import Data.String.Conversions
+import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Generic.Data
-import Malgo.Core.Syntax.Atom
-import Malgo.Core.Syntax.Case
 import Malgo.Core.Syntax.Common
-import Malgo.Core.Syntax.LocalDef
-import Malgo.Core.Syntax.Unboxed
 import Malgo.Core.Type
 import Malgo.Prelude
+import Numeric (showHex)
+import Test.QuickCheck (Arbitrary (..), oneof)
+
+-- $setup
+-- >>> import Data.Aeson (decode, encode)
 
 -- | expressions
 data Expr a
@@ -70,9 +86,25 @@ data Expr a
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (ToJSON, FromJSON)
+  deriving anyclass (ToJSON, FromJSON, Store)
 
-makeStore ''Expr
+instance (Arbitrary a) => Arbitrary (Expr a) where
+  arbitrary =
+    oneof
+      [ Atom <$> arbitrary,
+        Call <$> arbitrary <*> arbitrary,
+        CallDirect <$> arbitrary <*> arbitrary,
+        RawCall <$> arbitrary <*> arbitrary <*> arbitrary,
+        Cast <$> arbitrary <*> arbitrary,
+        Let <$> arbitrary <*> arbitrary,
+        Match <$> arbitrary <*> arbitrary,
+        Switch <$> arbitrary <*> arbitrary <*> arbitrary,
+        SwitchUnboxed <$> arbitrary <*> arbitrary <*> arbitrary,
+        Destruct <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary,
+        DestructRecord <$> arbitrary <*> arbitrary <*> arbitrary,
+        Assign <$> arbitrary <*> arbitrary <*> arbitrary,
+        Error <$> arbitrary
+      ]
 
 instance (HasType a) => HasType (Expr a) where
   typeOf (Atom x) = typeOf x
@@ -214,3 +246,235 @@ instance HasExpr Obj where
   expr f = \case
     Fun ps e -> Fun ps <$> f e
     o -> pure o
+
+-- | atoms
+data Atom a
+  = -- | variable
+    Var a
+  | -- | literal of unboxed values
+    Unboxed Unboxed
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving anyclass (Store)
+
+instance (Arbitrary a) => Arbitrary (Atom a) where
+  arbitrary = oneof [Var <$> arbitrary, Unboxed <$> arbitrary]
+
+-- |
+-- prop> \x -> decode (encode x) == Just (x :: Atom String)
+instance (ToJSON a) => ToJSON (Atom a) where
+  toJSON (Var x) = toJSONTagged "Var" ["variable" .= x]
+  toJSON (Unboxed x) = toJSONTagged "Unboxed" ["literal" .= x]
+
+instance (FromJSON a) => FromJSON (Atom a) where
+  parseJSON =
+    parseJSONTagged
+      "Atom"
+      [ ("Var", \v -> Var <$> v .: "variable"),
+        ("Unboxed", \v -> Unboxed <$> v .: "literal")
+      ]
+
+instance (HasType a) => HasType (Atom a) where
+  typeOf (Var x) = typeOf x
+  typeOf (Unboxed x) = typeOf x
+
+instance (Pretty a) => Pretty (Atom a) where
+  pretty (Var x) = pretty x
+  pretty (Unboxed x) = pretty x
+
+instance HasFreeVar Atom where
+  freevars (Var x) = Set.singleton x
+  freevars Unboxed {} = mempty
+  callees _ = mempty
+
+-- | 'f' may include atoms
+class HasAtom f where
+  atom :: Traversal' (f a) (Atom a)
+
+instance HasAtom Atom where
+  atom = identity
+
+-- | unboxed values
+data Unboxed
+  = Int32 Integer
+  | Int64 Integer
+  | Float Float
+  | Double Double
+  | Char Char
+  | String Text
+  | Bool Bool
+  deriving stock (Eq, Ord, Show, Generic, Data, Typeable)
+  deriving anyclass (ToJSON, FromJSON, Store)
+
+instance Arbitrary Unboxed where
+  arbitrary =
+    oneof
+      [ Int32 <$> arbitrary,
+        Int64 <$> arbitrary,
+        Float <$> arbitrary,
+        Double <$> arbitrary,
+        Char <$> arbitrary,
+        String <$> arbitrary,
+        Bool <$> arbitrary
+      ]
+
+instance HasType Unboxed where
+  typeOf Int32 {} = Int32T
+  typeOf Int64 {} = Int64T
+  typeOf Float {} = FloatT
+  typeOf Double {} = DoubleT
+  typeOf Char {} = CharT
+  typeOf String {} = StringT
+  typeOf Bool {} = BoolT
+
+instance Pretty Unboxed where
+  pretty (Int32 x) = pretty x <> "_i32"
+  pretty (Int64 x) = pretty x <> "_i64"
+  pretty (Float x) = pretty (showHex (castFloatToWord32 x) "") <> "_f32" <+> "#|" <> pretty x <> "|#"
+  pretty (Double x) = pretty (showHex (castDoubleToWord64 x) "") <> "_f64" <+> "#|" <> pretty x <> "|#"
+  pretty (Char x) = squotes (pretty $ convertString @_ @Text $ showLitChar x "")
+  pretty (String x) = dquotes (pretty $ concatMap (`showLitChar` "") $ convertString @_ @String x)
+  pretty (Bool True) = "True#"
+  pretty (Bool False) = "False#"
+
+-- | Let bindings
+data LocalDef a = LocalDef {variable :: a, typ :: Type, object :: Obj a}
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving anyclass (ToJSON, FromJSON, Store)
+
+instance (Arbitrary a) => Arbitrary (LocalDef a) where
+  arbitrary = LocalDef <$> arbitrary <*> arbitrary <*> arbitrary
+
+instance (Pretty a) => Pretty (LocalDef a) where
+  pretty (LocalDef v t o) = parens $ vsep [pretty v <+> pretty t, pretty o]
+
+instance HasAtom LocalDef where
+  atom f LocalDef {..} = LocalDef variable typ <$> atom f object
+
+-- | heap objects
+data Obj a
+  = -- | function (arity >= 1)
+    Fun [a] (Expr a)
+  | -- | saturated constructor (arity >= 0)
+    Pack Type Con [Atom a]
+  | -- | record
+    Record (Map Text (Atom a))
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving anyclass (ToJSON, FromJSON, Store)
+
+instance (Arbitrary a) => Arbitrary (Obj a) where
+  arbitrary =
+    oneof
+      [ Fun <$> arbitrary <*> arbitrary,
+        Pack <$> arbitrary <*> arbitrary <*> arbitrary,
+        Record <$> arbitrary
+      ]
+
+instance (HasType a) => HasType (Obj a) where
+  typeOf (Fun xs e) = map typeOf xs :-> typeOf e
+  typeOf (Pack t _ _) = t
+  typeOf (Record kvs) = RecordT (fmap typeOf kvs)
+
+instance (Pretty a) => Pretty (Obj a) where
+  pretty (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pretty xs), pretty e]
+  pretty (Pack ty c xs) = parens $ sep (["pack", pretty ty, pretty c] <> map pretty xs)
+  pretty (Record kvs) =
+    parens
+      $ sep
+        [ "record"
+            <+> parens
+              ( sep
+                  $ map
+                    ( \(k, v) ->
+                        pretty k
+                          <+> pretty v
+                    )
+                    (Map.toList kvs)
+              )
+        ]
+
+instance HasFreeVar Obj where
+  freevars (Fun as e) = foldr sans (freevars e) as
+  freevars (Pack _ _ xs) = foldMap freevars xs
+  freevars (Record kvs) = foldMap freevars kvs
+  callees (Fun as e) = foldr sans (callees e) as
+  callees Pack {} = mempty
+  callees Record {} = mempty
+
+instance HasAtom Obj where
+  atom f = \case
+    Fun xs e -> Fun xs <$> traverseOf atom f e
+    Pack ty con xs -> Pack ty con <$> traverseOf (traversed . atom) f xs
+    Record kvs -> Record <$> traverseOf (traversed . atom) f kvs
+
+-- | alternatives
+data Case a
+  = -- | constructor pattern
+    Unpack Con [a] (Expr a)
+  | -- | record pattern
+    OpenRecord (Map Text a) (Expr a)
+  | -- | unboxed value pattern
+    Exact Unboxed (Expr a)
+  | -- | variable pattern
+    Bind a Type (Expr a)
+  deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
+  deriving anyclass (Store)
+
+instance (Arbitrary a) => Arbitrary (Case a) where
+  arbitrary =
+    oneof
+      [ Unpack <$> arbitrary <*> arbitrary <*> arbitrary,
+        OpenRecord <$> arbitrary <*> arbitrary,
+        Exact <$> arbitrary <*> arbitrary,
+        Bind <$> arbitrary <*> arbitrary <*> arbitrary
+      ]
+
+-- |
+-- prop> \x -> decode (encode x) == Just (x :: Case String)
+instance (ToJSON a) => ToJSON (Case a) where
+  toJSON (Unpack constructor variables body) = toJSONTagged "Unpack" ["constructor" .= constructor, "variables" .= variables, "body" .= body]
+  toJSON (OpenRecord record body) = toJSONTagged "OpenRecord" ["record" .= record, "body" .= body]
+  toJSON (Exact literal body) = toJSONTagged "Exact" ["literal" .= literal, "body" .= body]
+  toJSON (Bind variable typ body) = toJSONTagged "Bind" ["variable" .= variable, "type" .= typ, "body" .= body]
+
+instance (FromJSON a) => FromJSON (Case a) where
+  parseJSON =
+    parseJSONTagged
+      "Case"
+      [ ("Unpack", \v -> Unpack <$> v .: "constructor" <*> v .: "variables" <*> v .: "body"),
+        ("OpenRecord", \v -> OpenRecord <$> v .: "record" <*> v .: "body"),
+        ("Exact", \v -> Exact <$> v .: "literal" <*> v .: "body"),
+        ("Bind", \v -> Bind <$> v .: "variable" <*> v .: "type" <*> v .: "body")
+      ]
+
+instance (HasType a) => HasType (Case a) where
+  typeOf (Unpack _ _ e) = typeOf e
+  typeOf (OpenRecord _ e) = typeOf e
+  typeOf (Exact _ e) = typeOf e
+  typeOf (Bind _ _ e) = typeOf e
+
+instance (Pretty a) => Pretty (Case a) where
+  pretty (Unpack c xs e) =
+    parens $ sep ["unpack" <+> parens (pretty c <+> sep (map pretty xs)), pretty e]
+  pretty (OpenRecord pat e) =
+    parens $ sep ["open", parens $ sep $ map (\(k, v) -> pretty k <+> pretty v) $ Map.toList pat, pretty e]
+  pretty (Exact u e) = parens $ sep ["exact" <+> pretty u, pretty e]
+  pretty (Bind x t e) = parens $ sep ["bind", pretty x, pretty t, pretty e]
+
+instance HasFreeVar Case where
+  freevars (Unpack _ xs e) = foldr sans (freevars e) xs
+  freevars (OpenRecord pat e) = foldr sans (freevars e) (Map.elems pat)
+  freevars (Exact _ e) = freevars e
+  freevars (Bind x _ e) = sans x $ freevars e
+  callees (Unpack _ xs e) = foldr sans (callees e) xs
+  callees (OpenRecord pat e) = foldr sans (callees e) (Map.elems pat)
+  callees (Exact _ e) = callees e
+  callees (Bind x _ e) = sans x $ callees e
+
+instance HasAtom Case where
+  atom f = \case
+    Unpack con xs e -> Unpack con xs <$> traverseOf atom f e
+    OpenRecord pat e -> OpenRecord pat <$> traverseOf atom f e
+    Exact u e -> Exact u <$> traverseOf atom f e
+    Bind a t e -> Bind a t <$> traverseOf atom f e
+
+makePrisms ''Case

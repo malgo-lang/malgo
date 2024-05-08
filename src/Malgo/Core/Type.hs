@@ -6,9 +6,12 @@ module Malgo.Core.Type (Tag (..), Con (..), Type (..), HasType (..)) where
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Map.Strict qualified as Map
+import Data.Store (Store)
 import Data.Store.TH
 import Malgo.Id
 import Malgo.Prelude
+import Test.QuickCheck (Arbitrary (..), oneof)
+import Test.QuickCheck.Instances.Text ()
 
 {-
 Constructors  C ::= <tag n>
@@ -17,9 +20,10 @@ data Tag
   = Data Text
   | Tuple
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, ToJSON, FromJSON)
+  deriving anyclass (Hashable, ToJSON, FromJSON, Store)
 
-makeStore ''Tag
+instance Arbitrary Tag where
+  arbitrary = oneof [Data <$> arbitrary, pure Tuple]
 
 instance Pretty Tag where
   pretty (Data name) = pretty name
@@ -28,6 +32,9 @@ instance Pretty Tag where
 data Con = Con Tag [Type]
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, FromJSON)
+
+instance Arbitrary Con where
+  arbitrary = Con <$> arbitrary <*> arbitrary
 
 instance Pretty Con where
   pretty (Con tag xs) = parens $ sep $ pretty tag : map pretty xs
@@ -52,6 +59,24 @@ data Type
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, FromJSON)
+
+instance Arbitrary Type where
+  arbitrary =
+    oneof
+      [ (:->) <$> arbitrary <*> arbitrary,
+        pure Int32T,
+        pure Int64T,
+        pure FloatT,
+        pure DoubleT,
+        pure CharT,
+        pure StringT,
+        pure BoolT,
+        SumT <$> arbitrary,
+        PtrT <$> arbitrary,
+        RecordT <$> arbitrary,
+        pure AnyT,
+        pure VoidT
+      ]
 
 instance Pretty Type where
   pretty (a :-> b) = parens $ sep ["->", brackets (sep $ map pretty a), pretty b]
