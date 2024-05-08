@@ -38,6 +38,8 @@ How to demangle identifiers:
 -- "_M8_x2D_x3E"
 -- >>> mangle ["あいうえお"]
 -- "_M5\12354\12356\12358\12360\12362"
+-- >>> mangle ["→"]
+-- "_M6_u2192"
 mangle :: [Text] -> Text
 mangle msgs =
   let underscoreReplaced = map (T.concatMap replaceUnderscore) msgs
@@ -53,31 +55,32 @@ mangle msgs =
           T.pack
             [ '_',
               'x',
-              intToHex (ord c `div` power 1),
-              intToHex (ord c `mod` 16)
+              intToHexNth 1 c,
+              intToHexNth 0 c
             ]
       | ord c <= 0xFFFF =
           T.pack
             [ '_',
               'u',
-              intToHex (ord c `div` power 3),
-              intToHex (ord c `div` power 2 `mod` 16),
-              intToHex (ord c `div` power 1 `mod` 16),
-              intToHex (ord c `mod` 16)
+              intToHexNth 3 c,
+              intToHexNth 2 c,
+              intToHexNth 1 c,
+              intToHexNth 0 c
             ]
       | otherwise =
           T.pack
             [ '_',
               'U',
-              intToHex (ord c `div` power 7),
-              intToHex (ord c `div` power 6 `mod` 16),
-              intToHex (ord c `div` power 5 `mod` 16),
-              intToHex (ord c `div` power 4 `mod` 16),
-              intToHex (ord c `div` power 3 `mod` 16),
-              intToHex (ord c `div` power 2 `mod` 16),
-              intToHex (ord c `div` power 1 `mod` 16),
-              intToHex (ord c `mod` 16)
+              intToHexNth 7 c,
+              intToHexNth 6 c,
+              intToHexNth 5 c,
+              intToHexNth 4 c,
+              intToHexNth 3 c,
+              intToHexNth 2 c,
+              intToHexNth 1 c,
+              intToHexNth 0 c
             ]
+    intToHexNth n c = intToHex (ord c `div` power n `mod` 16)
     intToHex n
       | n < 10 = toEnum (fromEnum '0' + n)
       | otherwise = toEnum (fromEnum 'A' + n - 10)
@@ -100,6 +103,8 @@ mangle msgs =
 -- ["->"]
 -- >>> demangle "_M5あいうえお"
 -- ["\12354\12356\12358\12360\12362"]
+-- >>> demangle "_M6_u2192"
+-- ["\8594"]
 --
 -- prop> \x -> any null x || any (isDigit . head) x || demangle (mangle (map T.pack x)) == map T.pack x
 demangle :: (HasCallStack) => Text -> [Text]
@@ -111,13 +116,14 @@ demangle msg
   | otherwise = error "demangle: not a mangled identifier"
   where
     splitByRunLength msg =
-      case Text.Megaparsec.runParser (many pSingle) "<demangle>" msg of
+      case Text.Megaparsec.runParser
+        ( many (takeP Nothing . read =<< some digitChar) ::
+            Parsec Void Text [Text]
+        )
+        "<demangle>"
+        msg of
         Left e -> error $ errorBundlePretty e
         Right x -> x
-    pSingle :: Parsec Void Text Text
-    pSingle = do
-      n <- read <$> some digitChar
-      takeP Nothing n
     replace txt = case T.splitOn "_" txt of
       [] -> error "demangle: empty string"
       [x] -> x
@@ -125,20 +131,23 @@ demangle msg
     replace' txt
       | "x" `T.isPrefixOf` txt =
           case T.unpack $ T.drop 1 txt of
-            (a : b : rest) -> T.cons (chr $ hexToInt a * power 1 + hexToInt b) (T.pack rest)
+            (a : b : rest) ->
+              T.cons
+                ( chr
+                    $ hexToIntNth 1 a
+                    + hexToIntNth 0 b
+                )
+                (T.pack rest)
             _ -> error $ "demangle: invalid hex " <> convertString txt
       | "u" `T.isPrefixOf` txt =
           case T.unpack $ T.drop 1 txt of
             (a : b : c : d : rest) ->
               T.cons
                 ( chr
-                    $ hexToInt a
-                    * power 3
-                    + hexToInt b
-                    * power 2
-                    + hexToInt c
-                    * power 1
-                    + hexToInt d
+                    $ hexToIntNth 3 a
+                    + hexToIntNth 2 b
+                    + hexToIntNth 1 c
+                    + hexToIntNth 0 d
                 )
                 (T.pack rest)
             _ -> error $ "demangle: invalid hex " <> convertString txt
@@ -147,28 +156,22 @@ demangle msg
             (a : b : c : d : e : f : g : h : rest) ->
               T.cons
                 ( chr
-                    $ hexToInt a
-                    * power 7
-                    + hexToInt b
-                    * power 6
-                    + hexToInt c
-                    * power 5
-                    + hexToInt d
-                    * power 4
-                    + hexToInt e
-                    * power 3
-                    + hexToInt f
-                    * power 2
-                    + hexToInt g
-                    * power 1
-                    + hexToInt h
+                    $ hexToIntNth 7 a
+                    + hexToIntNth 6 b
+                    + hexToIntNth 5 c
+                    + hexToIntNth 4 d
+                    + hexToIntNth 3 e
+                    + hexToIntNth 2 f
+                    + hexToIntNth 1 g
+                    + hexToIntNth 0 h
                 )
                 (T.pack rest)
             _ -> error $ "demangle: invalid hex " <> convertString txt
       | otherwise = error "demangle: invalid prefix"
+    hexToIntNth n c = hexToInt c * power n
     power n = 16 ^ (n :: Int)
     hexToInt c
       | isDigit c = ord c - ord '0'
       | 'A' <= c && c <= 'F' = ord c - ord 'A' + 10
       | 'a' <= c && c <= 'f' = ord c - ord 'a' + 10
-      | otherwise = error "demangle: invalid hex"
+      | otherwise = error $ "demangle: invalid hex " <> [c]
