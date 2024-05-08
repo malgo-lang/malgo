@@ -26,12 +26,12 @@ Program
         ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 11 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "let", moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Echo.mlg" ), sort = Temporal 10 } }, typ = SumT
-        [ Con Tuple [] ], _object = Pack
+        [ Con Tuple [] ], object = Pack
         ( SumT [ Con Tuple [] ] )
         ( Con Tuple [] ) [] } ]
       ( Atom

@@ -6,7 +6,7 @@ Program
      { name = "R", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = External } }, [], [] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
@@ -17,7 +17,7 @@ Program
       [ Con
        ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
        ( Data "test/testcases/malgo/Test6.mlg.G" ) [], Con
-       ( Data "test/testcases/malgo/Test6.mlg.B" ) [] ], _object = Pack
+       ( Data "test/testcases/malgo/Test6.mlg.B" ) [] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
@@ -39,7 +39,7 @@ Program
      { name = "G", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = External } }, [], [] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
@@ -50,7 +50,7 @@ Program
       [ Con
        ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
        ( Data "test/testcases/malgo/Test6.mlg.G" ) [], Con
-       ( Data "test/testcases/malgo/Test6.mlg.B" ) [] ], _object = Pack
+       ( Data "test/testcases/malgo/Test6.mlg.B" ) [] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
@@ -72,7 +72,7 @@ Program
      { name = "B", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = External } }, [], [] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
@@ -83,7 +83,7 @@ Program
       [ Con
        ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
        ( Data "test/testcases/malgo/Test6.mlg.G" ) [], Con
-       ( Data "test/testcases/malgo/Test6.mlg.B" ) [] ], _object = Pack
+       ( Data "test/testcases/malgo/Test6.mlg.B" ) [] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/Test6.mlg.R" ) [], Con
@@ -201,12 +201,12 @@ Program
        ( Con ( Data "test/testcases/malgo/Test6.mlg.G" ) [] ) []
        ( Let
         [ LocalDef
-         { _variable = Meta
+         { variable = Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "let", moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 36 } }, typ = SumT
-          [ Con Tuple [] ], _object = Pack
+          [ Con Tuple [] ], object = Pack
           ( SumT [ Con Tuple [] ] )
           ( Con Tuple [] ) [] } ]
         ( Assign
@@ -246,12 +246,12 @@ Program
        ( Con ( Data "test/testcases/malgo/Test6.mlg.B" ) [] ) []
        ( Let
         [ LocalDef
-         { _variable = Meta
+         { variable = Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "let", moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 36 } }, typ = SumT
-          [ Con Tuple [] ], _object = Pack
+          [ Con Tuple [] ], object = Pack
           ( SumT [ Con Tuple [] ] )
           ( Con Tuple [] ) [] } ]
         ( Assign
@@ -292,12 +292,12 @@ Program
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> SumT
        [ Con Tuple [] ], id = Id
        { name = "fun", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/Test6.mlg" ), sort = Temporal 43 } }, typ = [ AnyT ] :-> SumT
-      [ Con Tuple [] ], _object = Fun
+      [ Con Tuple [] ], object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "b", moduleName = Artifact

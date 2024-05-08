@@ -46,12 +46,12 @@ Program
        ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Temporal 49 } } ], [ AnyT ] :->
     ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta =
        [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Temporal 56 } }, typ =
-      [ [ AnyT ] :-> AnyT ] :-> AnyT, _object = Fun
+      [ [ AnyT ] :-> AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "f", moduleName = Artifact
@@ -277,12 +277,12 @@ Program
         ( Match
          ( Let
           [ LocalDef
-           { _variable = Meta
+           { variable = Meta
             { meta = [ AnyT ] :-> SumT
              [ Con Tuple [] ], id = Id
              { name = "fun", moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/TestLet.mlg" ), sort = Temporal 77 } }, typ = [ AnyT ] :-> SumT
-            [ Con Tuple [] ], _object = Fun
+            [ Con Tuple [] ], object = Fun
             [ Meta
              { meta = AnyT, id = Id
               { name = "int32#", moduleName = Artifact

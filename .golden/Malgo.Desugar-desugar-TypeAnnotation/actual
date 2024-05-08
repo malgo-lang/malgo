@@ -25,10 +25,10 @@ Program
         ( ArtifactPath "test/testcases/malgo/TypeAnnotation.mlg" ), sort = Temporal 15 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TypeAnnotation.mlg" ), sort = Temporal 14 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+          ( ArtifactPath "test/testcases/malgo/TypeAnnotation.mlg" ), sort = Temporal 14 } }, typ = [ AnyT ] :-> AnyT, object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "x", moduleName = Artifact

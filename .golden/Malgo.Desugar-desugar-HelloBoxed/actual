@@ -10,14 +10,14 @@ Program
       { name = "p", moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 21 } } ], [ StringT ] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ] ], id = Id
        { name = "let", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 22 } }, typ = SumT
       [ Con
-       ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ] ], _object = Pack
+       ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/HelloBoxed.mlg.String#" ) [ StringT ] ] )
@@ -166,12 +166,12 @@ Program
           ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 32 } } )
        ( Let
         [ LocalDef
-         { _variable = Meta
+         { variable = Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "let", moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" ), sort = Temporal 31 } }, typ = SumT
-          [ Con Tuple [] ], _object = Pack
+          [ Con Tuple [] ], object = Pack
           ( SumT [ Con Tuple [] ] )
           ( Con Tuple [] ) [] } ]
         ( Atom

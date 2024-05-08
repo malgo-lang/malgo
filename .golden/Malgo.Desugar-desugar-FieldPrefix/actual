@@ -83,14 +83,14 @@ Program
              ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" ), sort = Temporal 51 } } ) ) ) )
        ( Let
         [ LocalDef
-         { _variable = Meta
+         { variable = Meta
           { meta = RecordT
            ( fromList
             [ ( "x", AnyT ), ( "y", AnyT ), ( "z", AnyT ) ] ), id = Id
            { name = "record", moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" ), sort = Temporal 53 } }, typ = RecordT
           ( fromList
-           [ ( "x", AnyT ), ( "y", AnyT ), ( "z", AnyT ) ] ), _object = Record
+           [ ( "x", AnyT ), ( "y", AnyT ), ( "z", AnyT ) ] ), object = Record
           ( fromList
            [
             ( "x", Var
@@ -182,12 +182,12 @@ Program
             ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" ), sort = Temporal 57 } } ) ) ) )
       ( Let
        [ LocalDef
-        { _variable = Meta
+        { variable = Meta
          { meta = RecordT
           ( fromList [ ( "x", AnyT ), ( "y", AnyT ) ] ), id = Id
           { name = "record", moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" ), sort = Temporal 59 } }, typ = RecordT
-         ( fromList [ ( "x", AnyT ), ( "y", AnyT ) ] ), _object = Record
+         ( fromList [ ( "x", AnyT ), ( "y", AnyT ) ] ), object = Record
          ( fromList
           [
            ( "x", Var

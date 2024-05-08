@@ -128,14 +128,14 @@ Program
          ( ArtifactPath "test/testcases/malgo/HelloImport.mlg" ), sort = Temporal 31 } } )
       ( Let
        [ LocalDef
-        { _variable = Meta
+        { variable = Meta
          { meta =
           [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
           [ Con Tuple [] ], id = Id
           { name = "fun", moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/HelloImport.mlg" ), sort = Temporal 30 } }, typ =
          [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-         [ Con Tuple [] ], _object = Fun
+         [ Con Tuple [] ], object = Fun
          [ Meta
           { meta = [ AnyT ] :-> SumT
            [ Con Tuple [] ], id = Id

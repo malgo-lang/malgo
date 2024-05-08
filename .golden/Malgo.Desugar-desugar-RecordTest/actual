@@ -14,7 +14,7 @@ Program
        ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" ), sort = Temporal 50 } } ],
     [ RecordT ( fromList [ ( "a", AnyT ), ( "b", AnyT ) ] ) ] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/RecordTest.mlg.B" )
@@ -24,7 +24,7 @@ Program
       [ Con
        ( Data "test/testcases/malgo/RecordTest.mlg.B" )
        [ RecordT
-        ( fromList [ ( "a", AnyT ), ( "b", AnyT ) ] ) ] ], _object = Pack
+        ( fromList [ ( "a", AnyT ), ( "b", AnyT ) ] ) ] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/RecordTest.mlg.B" )
@@ -196,12 +196,12 @@ Program
             ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" ), sort = Temporal 62 } } ) ) ) )
       ( Let
        [ LocalDef
-        { _variable = Meta
+        { variable = Meta
          { meta = RecordT
           ( fromList [ ( "a", AnyT ), ( "b", AnyT ) ] ), id = Id
           { name = "record", moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" ), sort = Temporal 64 } }, typ = RecordT
-         ( fromList [ ( "a", AnyT ), ( "b", AnyT ) ] ), _object = Record
+         ( fromList [ ( "a", AnyT ), ( "b", AnyT ) ] ), object = Record
          ( fromList
           [
            ( "a", Var
@@ -312,7 +312,7 @@ Program
              ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" ), sort = Temporal 74 } } )
           ( Let
            [ LocalDef
-            { _variable = Meta
+            { variable = Meta
              { meta =
               [ RecordT
                ( fromList
@@ -321,7 +321,7 @@ Program
                ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" ), sort = Temporal 73 } }, typ =
              [ RecordT
               ( fromList
-               [ ( "a", AnyT ), ( "b", AnyT ) ] ) ] :-> AnyT, _object = Fun
+               [ ( "a", AnyT ), ( "b", AnyT ) ] ) ] :-> AnyT, object = Fun
              [ Meta
               { meta = RecordT
                ( fromList [ ( "a", AnyT ), ( "b", AnyT ) ] ), id = Id

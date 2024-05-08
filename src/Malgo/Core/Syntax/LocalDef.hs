@@ -3,13 +3,11 @@
 
 module Malgo.Core.Syntax.LocalDef
   ( LocalDef (..),
-    HasObject (..),
-    HasVariable (..),
     Obj (..),
   )
 where
 
-import Control.Lens (Lens', sans, traverseOf, traversed)
+import Control.Lens (sans, traverseOf, traversed)
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Map qualified as Map
@@ -23,29 +21,15 @@ import Malgo.Core.Type
 import Malgo.Prelude
 
 -- | Let bindings
-data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
+data LocalDef a = LocalDef {variable :: a, typ :: Type, object :: Obj a}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (ToJSON, FromJSON)
-
-class HasObject s a | s -> a where
-  object :: Lens' s a
-
-instance HasObject (LocalDef a) (Obj a) where
-  {-# INLINE object #-}
-  object f (LocalDef x1 t x2) = fmap (LocalDef x1 t) (f x2)
-
-class HasVariable s a | s -> a where
-  variable :: Lens' s a
-
-instance HasVariable (LocalDef a) a where
-  {-# INLINE variable #-}
-  variable f (LocalDef x1 t x2) = fmap (\x1 -> LocalDef x1 t x2) (f x1)
 
 instance (Pretty a) => Pretty (LocalDef a) where
   pretty (LocalDef v t o) = parens $ vsep [pretty v <+> pretty t, pretty o]
 
 instance HasAtom LocalDef where
-  atom = object . atom
+  atom f LocalDef {..} = LocalDef variable typ <$> atom f object
 
 -- | heap objects
 data Obj a

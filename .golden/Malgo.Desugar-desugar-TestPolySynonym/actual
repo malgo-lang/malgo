@@ -99,12 +99,12 @@ Program
             ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 46 } } ) ) ) )
       ( Let
        [ LocalDef
-        { _variable = Meta
+        { variable = Meta
          { meta = RecordT
           ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ), id = Id
           { name = "record", moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" ), sort = Temporal 48 } }, typ = RecordT
-         ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ), _object = Record
+         ( fromList [ ( "fst", AnyT ), ( "snd", AnyT ) ] ), object = Record
          ( fromList
           [
            ( "fst", Var

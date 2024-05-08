@@ -17,12 +17,12 @@ Program
         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 31 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta =
          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
          { name = "fun", moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 30 } }, typ =
-        [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+        [ SumT [ Con Tuple [] ] ] :-> AnyT, object = Fun
         [ Meta
          { meta = SumT
           [ Con Tuple [] ], id = Id
@@ -61,12 +61,12 @@ Program
          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 33 } } )
       ( Let
        [ LocalDef
-        { _variable = Meta
+        { variable = Meta
          { meta = SumT
           [ Con Tuple [] ], id = Id
           { name = "let", moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 32 } }, typ = SumT
-         [ Con Tuple [] ], _object = Pack
+         [ Con Tuple [] ], object = Pack
          ( SumT [ Con Tuple [] ] )
          ( Con Tuple [] ) [] } ]
        ( Atom
@@ -122,12 +122,12 @@ Program
        ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 39 } } )
     ( Let
      [ LocalDef
-      { _variable = Meta
+      { variable = Meta
        { meta =
         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
         { name = "fun", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 38 } }, typ =
-       [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+       [ SumT [ Con Tuple [] ] ] :-> AnyT, object = Fun
        [ Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
@@ -154,12 +154,12 @@ Program
         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 41 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta = SumT
          [ Con Tuple [] ], id = Id
          { name = "let", moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 40 } }, typ = SumT
-        [ Con Tuple [] ], _object = Pack
+        [ Con Tuple [] ], object = Pack
         ( SumT [ Con Tuple [] ] )
         ( Con Tuple [] ) [] } ]
       ( Atom
@@ -228,14 +228,14 @@ Program
          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 52 } } )
       ( Let
        [ LocalDef
-        { _variable = Meta
+        { variable = Meta
          { meta =
           [ SumT [ Con Tuple [] ] ] :->
           ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ), id = Id
           { name = "fun", moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 51 } }, typ =
          [ SumT [ Con Tuple [] ] ] :->
-         ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ), _object = Fun
+         ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ), object = Fun
          [ Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
@@ -243,14 +243,14 @@ Program
             ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 43 } } ]
          ( Let
           [ LocalDef
-           { _variable = Meta
+           { variable = Meta
             { meta =
              [ SumT [ Con Tuple [] ] ] :-> SumT
              [ Con Tuple [] ], id = Id
              { name = "fun", moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 50 } }, typ =
             [ SumT [ Con Tuple [] ] ] :-> SumT
-            [ Con Tuple [] ], _object = Fun
+            [ Con Tuple [] ], object = Fun
             [ Meta
              { meta = SumT
               [ Con Tuple [] ], id = Id
@@ -360,12 +360,12 @@ Program
           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 54 } } )
        ( Let
         [ LocalDef
-         { _variable = Meta
+         { variable = Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "let", moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 53 } }, typ = SumT
-          [ Con Tuple [] ], _object = Pack
+          [ Con Tuple [] ], object = Pack
           ( SumT [ Con Tuple [] ] )
           ( Con Tuple [] ) [] } ]
         ( Atom

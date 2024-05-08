@@ -48,10 +48,10 @@ Program
         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 92 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta = [ AnyT ] :-> AnyT, id = Id
          { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 91 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+          ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 91 } }, typ = [ AnyT ] :-> AnyT, object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "nothing", moduleName = Artifact
@@ -107,12 +107,12 @@ Program
           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 94 } } )
        ( Let
         [ LocalDef
-         { _variable = Meta
+         { variable = Meta
           { meta = SumT
            [ Con Tuple [] ], id = Id
            { name = "let", moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 93 } }, typ = SumT
-          [ Con Tuple [] ], _object = Pack
+          [ Con Tuple [] ], object = Pack
           ( SumT [ Con Tuple [] ] )
           ( Con Tuple [] ) [] } ]
         ( Atom
@@ -344,12 +344,12 @@ Program
         ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 112 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta = [ AnyT ] :-> SumT
          [ Con Tuple [] ], id = Id
          { name = "fun", moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 111 } }, typ = [ AnyT ] :-> SumT
-        [ Con Tuple [] ], _object = Fun
+        [ Con Tuple [] ], object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "nothing", moduleName = Artifact
@@ -423,12 +423,12 @@ Program
              ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 109 } } ]
           ( Let
            [ LocalDef
-            { _variable = Meta
+            { variable = Meta
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "let", moduleName = Artifact
                ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" ), sort = Temporal 110 } }, typ = SumT
-             [ Con Tuple [] ], _object = Pack
+             [ Con Tuple [] ], object = Pack
              ( SumT [ Con Tuple [] ] )
              ( Con Tuple [] ) [] } ]
            ( Atom

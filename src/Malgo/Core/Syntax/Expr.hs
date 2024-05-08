@@ -125,7 +125,7 @@ instance HasFreeVar Expr where
   freevars (CallDirect _ xs) = foldMap freevars xs
   freevars (RawCall _ _ xs) = foldMap freevars xs
   freevars (Cast _ x) = freevars x
-  freevars (Let xs e) = foldr (sans . (._variable)) (freevars e <> foldMap (freevars . (._object)) xs) xs
+  freevars (Let xs e) = foldr (sans . (.variable)) (freevars e <> foldMap (freevars . (.object)) xs) xs
   freevars (Match e cs) = freevars e <> foldMap freevars cs
   freevars (Switch v cs e) = freevars v <> foldMap (freevars . snd) cs <> freevars e
   freevars (SwitchUnboxed v cs e) = freevars v <> foldMap (freevars . snd) cs <> freevars e
@@ -146,7 +146,7 @@ instance HasFreeVar Expr where
   callees (CallDirect f _) = Set.singleton f
   callees RawCall {} = mempty
   callees Cast {} = mempty
-  callees (Let xs e) = foldr (sans . (._variable)) (callees e <> foldMap (callees . (._object)) xs) xs
+  callees (Let xs e) = foldr (sans . (.variable)) (callees e <> foldMap (callees . (.object)) xs) xs
   callees (Match e cs) = callees e <> foldMap callees cs
   callees (Switch _ cs e) = foldMap (callees . snd) cs <> callees e
   callees (SwitchUnboxed _ cs e) = foldMap (callees . snd) cs <> callees e
@@ -208,7 +208,7 @@ instance HasExpr Case where
     Bind x t e -> Bind x t <$> f e
 
 instance HasExpr LocalDef where
-  expr = object . expr
+  expr f LocalDef {..} = LocalDef variable typ <$> expr f object
 
 instance HasExpr Obj where
   expr f = \case

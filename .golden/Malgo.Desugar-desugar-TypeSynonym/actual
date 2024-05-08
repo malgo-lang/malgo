@@ -60,12 +60,12 @@ Program
             ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 34 } } ) ) ) )
       ( Let
        [ LocalDef
-        { _variable = Meta
+        { variable = Meta
          { meta = SumT
           [ Con Tuple [ AnyT, AnyT ] ], id = Id
           { name = "let", moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 36 } }, typ = SumT
-         [ Con Tuple [ AnyT, AnyT ] ], _object = Pack
+         [ Con Tuple [ AnyT, AnyT ] ], object = Pack
          ( SumT [ Con Tuple [ AnyT, AnyT ] ] )
          ( Con Tuple [ AnyT, AnyT ] )
          [ Var
@@ -97,13 +97,13 @@ Program
      { name = "TCon", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = External } }, [], [] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con ( Data "test/testcases/malgo/TypeSynonym.mlg.TCon" ) [] ], id = Id
        { name = "let", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 30 } }, typ = SumT
       [ Con
-       ( Data "test/testcases/malgo/TypeSynonym.mlg.TCon" ) [] ], _object = Pack
+       ( Data "test/testcases/malgo/TypeSynonym.mlg.TCon" ) [] ], object = Pack
       ( SumT [ Con ( Data "test/testcases/malgo/TypeSynonym.mlg.TCon" ) [] ] )
       ( Con ( Data "test/testcases/malgo/TypeSynonym.mlg.TCon" ) [] ) [] } ]
     ( Cast AnyT
@@ -199,14 +199,14 @@ Program
         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 53 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta =
          [ SumT [ Con Tuple [ AnyT, AnyT ] ] ] :-> SumT
          [ Con Tuple [] ], id = Id
          { name = "fun", moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Temporal 52 } }, typ =
         [ SumT [ Con Tuple [ AnyT, AnyT ] ] ] :-> SumT
-        [ Con Tuple [] ], _object = Fun
+        [ Con Tuple [] ], object = Fun
         [ Meta
          { meta = SumT
           [ Con Tuple [ AnyT, AnyT ] ], id = Id

@@ -305,10 +305,10 @@ Program
     [ [ [ AnyT ] :-> AnyT ] :-> ( [ AnyT ] :-> AnyT ) ] :->
     ( [ AnyT ] :-> AnyT ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 127 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 127 } }, typ = [ AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "x", moduleName = Artifact
@@ -349,10 +349,10 @@ Program
        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 128 } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 139 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 139 } }, typ = [ AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "y", moduleName = Artifact
@@ -389,10 +389,10 @@ Program
        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 140 } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 151 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 151 } }, typ = [ AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "y", moduleName = Artifact
@@ -429,10 +429,10 @@ Program
        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 152 } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 163 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 163 } }, typ = [ AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "y", moduleName = Artifact
@@ -480,36 +480,36 @@ Program
         ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 246 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta =
          [ [ AnyT ] :-> AnyT ] :->
          ( [ AnyT ] :-> AnyT ), id = Id
          { name = "fun", moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 245 } }, typ =
         [ [ AnyT ] :-> AnyT ] :->
-        ( [ AnyT ] :-> AnyT ), _object = Fun
+        ( [ AnyT ] :-> AnyT ), object = Fun
         [ Meta
          { meta = [ AnyT ] :-> AnyT, id = Id
           { name = "f", moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 165 } } ]
         ( Let
          [ LocalDef
-          { _variable = Meta
+          { variable = Meta
            { meta = [ AnyT ] :-> AnyT, id = Id
             { name = "let", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 244 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+             ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 244 } }, typ = [ AnyT ] :-> AnyT, object = Fun
            [ Meta
             { meta = AnyT, id = Id
              { name = "n", moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 166 } } ]
            ( Let
             [ LocalDef
-             { _variable = Meta
+             { variable = Meta
               { meta =
                [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
                { name = "inner_curry", moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 204 } }, typ =
-              [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, _object = Fun
+              [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, object = Fun
               [ Meta
                { meta = [ AnyT ] :-> AnyT, id = Id
                 { name = "f", moduleName = Artifact
@@ -656,12 +656,12 @@ Program
                     ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 218 } } )
                  ( Let
                   [ LocalDef
-                   { _variable = Meta
+                   { variable = Meta
                     { meta =
                      [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
                      { name = "fun", moduleName = Artifact
                       ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 215 } }, typ =
-                    [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+                    [ SumT [ Con Tuple [] ] ] :-> AnyT, object = Fun
                     [ Meta
                      { meta = SumT
                       [ Con Tuple [] ], id = Id
@@ -731,12 +731,12 @@ Program
                    ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 242 } } )
                 ( Let
                  [ LocalDef
-                  { _variable = Meta
+                  { variable = Meta
                    { meta =
                     [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
                     { name = "fun", moduleName = Artifact
                      ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" ), sort = Temporal 221 } }, typ =
-                   [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+                   [ SumT [ Con Tuple [] ] ] :-> AnyT, object = Fun
                    [ Meta
                     { meta = SumT
                      [ Con Tuple [] ], id = Id

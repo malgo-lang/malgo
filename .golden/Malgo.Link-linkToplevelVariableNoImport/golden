@@ -27,10 +27,10 @@ Program
      { name = "comp", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } }, AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "fun", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 214 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 214 } }, typ = [ AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "nothing", moduleName = Artifact
@@ -108,12 +108,12 @@ Program
               ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } } ) [] ) ) ] ( Error AnyT ) ) ) } ]
     ( Let
      [ LocalDef
-      { _variable = Meta
+      { variable = Meta
        { meta = SumT
         [ Con Tuple [] ], id = Id
         { name = "let", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 216 } }, typ = SumT
-       [ Con Tuple [] ], _object = Pack
+       [ Con Tuple [] ], object = Pack
        ( SumT [ Con Tuple [] ] )
        ( Con Tuple [] ) [] } ]
      ( Assign
@@ -459,14 +459,14 @@ Program
       { name = "p", moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 167 } } ], [ Int32T ] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ], id = Id
        { name = "let", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 168 } }, typ = SumT
       [ Con
-       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ], _object = Pack
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32#" ) [ Int32T ] ] )
@@ -494,14 +494,14 @@ Program
       { name = "p", moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 169 } } ], [ StringT ] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ], id = Id
        { name = "let", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 170 } }, typ = SumT
       [ Con
-       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ], _object = Pack
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.String#" ) [ StringT ] ] )
@@ -525,7 +525,7 @@ Program
      { name = "Nothing", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = External } }, [], [] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
@@ -534,7 +534,7 @@ Program
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 171 } }, typ = SumT
       [ Con
        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
-       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], _object = Pack
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
@@ -559,7 +559,7 @@ Program
       { name = "p", moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 172 } } ], [ AnyT ] :-> AnyT, Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
@@ -568,7 +568,7 @@ Program
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 173 } }, typ = SumT
       [ Con
        ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
-       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], _object = Pack
+       ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Just" ) [ AnyT ] ], object = Pack
       ( SumT
        [ Con
         ( Data "test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing" ) [], Con
@@ -600,10 +600,10 @@ Program
        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 174 } } ], [ Int32T ] :->
     ( [ Int32T ] :-> Int32T ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ Int32T ] :-> Int32T, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 179 } }, typ = [ Int32T ] :-> Int32T, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 179 } }, typ = [ Int32T ] :-> Int32T, object = Fun
       [ Meta
        { meta = Int32T, id = Id
         { name = "p", moduleName = Artifact
@@ -979,10 +979,10 @@ Program
        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 201 } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 206 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 206 } }, typ = [ AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "_", moduleName = Artifact
@@ -1081,10 +1081,10 @@ Program
        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 223 } } ], [ Int32T ] :->
     ( [ Int32T ] :-> Int32T ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ Int32T ] :-> Int32T, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 234 } }, typ = [ Int32T ] :-> Int32T, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 234 } }, typ = [ Int32T ] :-> Int32T, object = Fun
       [ Meta
        { meta = Int32T, id = Id
         { name = "y", moduleName = Artifact
@@ -1121,10 +1121,10 @@ Program
        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 235 } } ], [ AnyT ] :->
     ( [ AnyT ] :-> AnyT ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 254 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 254 } }, typ = [ AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "int32#", moduleName = Artifact
@@ -1211,12 +1211,12 @@ Program
     [ SumT [ Con Tuple [] ] ] :-> SumT
     [ Con Tuple [] ], Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ AnyT ] :-> SumT
        [ Con Tuple [] ], id = Id
        { name = "fun", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 266 } }, typ = [ AnyT ] :-> SumT
-      [ Con Tuple [] ], _object = Fun
+      [ Con Tuple [] ], object = Fun
       [ Meta
        { meta = AnyT, id = Id
         { name = "nothing", moduleName = Artifact
@@ -1326,12 +1326,12 @@ Program
              ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 264 } } ]
           ( Let
            [ LocalDef
-            { _variable = Meta
+            { variable = Meta
              { meta = SumT
               [ Con Tuple [] ], id = Id
               { name = "let", moduleName = Artifact
                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" ), sort = Temporal 265 } }, typ = SumT
-             [ Con Tuple [] ], _object = Pack
+             [ Con Tuple [] ], object = Pack
              ( SumT [ Con Tuple [] ] )
              ( Con Tuple [] ) [] } ]
            ( Atom

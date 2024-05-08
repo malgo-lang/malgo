@@ -99,9 +99,9 @@ lintExpr (RawCall _ (ps :-> _) xs) = do
 lintExpr RawCall {} = error "primitive must be a function"
 lintExpr (Cast _ x) = lintAtom x
 lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True})
-  $ define "let" (map (._variable) ds) do
-    traverse_ (lintObj . (._object)) ds
-    for_ ds $ \LocalDef {_variable, _object} -> match _variable _object
+  $ define "let" (map (.variable) ds) do
+    traverse_ (lintObj . (.object)) ds
+    for_ ds $ \LocalDef {variable, object} -> match variable object
     asStatement $ lintExpr e
 lintExpr (Match e cs) = do
   LintEnv {normalized} <- ask

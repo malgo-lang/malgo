@@ -301,12 +301,12 @@ Program
        ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" ), sort = Temporal 80 } } )
     ( Let
      [ LocalDef
-      { _variable = Meta
+      { variable = Meta
        { meta = [ AnyT ] :-> SumT
         [ Con Tuple [] ], id = Id
         { name = "fun", moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" ), sort = Temporal 79 } }, typ = [ AnyT ] :-> SumT
-       [ Con Tuple [] ], _object = Fun
+       [ Con Tuple [] ], object = Fun
        [ Meta
         { meta = AnyT, id = Id
          { name = "false", moduleName = Artifact

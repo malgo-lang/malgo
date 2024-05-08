@@ -109,12 +109,12 @@ Program
        ( ArtifactPath "test/testcases/malgo/Test0.mlg" ), sort = Temporal 50 } } ], [ AnyT ] :->
     ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta =
        [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
        { name = "let", moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/Test0.mlg" ), sort = Temporal 57 } }, typ =
-      [ [ AnyT ] :-> AnyT ] :-> AnyT, _object = Fun
+      [ [ AnyT ] :-> AnyT ] :-> AnyT, object = Fun
       [ Meta
        { meta = [ AnyT ] :-> AnyT, id = Id
         { name = "f", moduleName = Artifact
@@ -217,12 +217,12 @@ Program
         ( ArtifactPath "test/testcases/malgo/Test0.mlg" ), sort = Temporal 69 } } )
      ( Let
       [ LocalDef
-       { _variable = Meta
+       { variable = Meta
         { meta = [ AnyT ] :-> SumT
          [ Con Tuple [] ], id = Id
          { name = "fun", moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Test0.mlg" ), sort = Temporal 68 } }, typ = [ AnyT ] :-> SumT
-        [ Con Tuple [] ], _object = Fun
+        [ Con Tuple [] ], object = Fun
         [ Meta
          { meta = AnyT, id = Id
           { name = "int64#", moduleName = Artifact
@@ -341,10 +341,10 @@ Program
        ( ArtifactPath "test/testcases/malgo/Test0.mlg" ), sort = Temporal 71 } } ], [ Int64T ] :->
     ( [ Int64T ] :-> Int64T ), Let
     [ LocalDef
-     { _variable = Meta
+     { variable = Meta
       { meta = [ Int64T ] :-> Int64T, id = Id
        { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Test0.mlg" ), sort = Temporal 82 } }, typ = [ Int64T ] :-> Int64T, _object = Fun
+        ( ArtifactPath "test/testcases/malgo/Test0.mlg" ), sort = Temporal 82 } }, typ = [ Int64T ] :-> Int64T, object = Fun
       [ Meta
        { meta = Int64T, id = Id
         { name = "y", moduleName = Artifact
