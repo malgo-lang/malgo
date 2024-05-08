@@ -18,6 +18,12 @@ module Malgo.SExpr
 where
 
 import Data.Kind (Type)
+import Data.Text qualified as T
+import Data.Text.ICU.Char
+  ( Bool_ (XidContinue, XidStart),
+    property,
+  )
+import Data.Text.ICU.Normalize2 (nfc)
 import Malgo.Prelude hiding (sexpr)
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec.Char
@@ -91,17 +97,14 @@ basicAtom =
     ]
 
 -- | Parse an identifier.
--- An identifier is a sequence of characters enclosed by vertical bars.
--- The vertical bars are not included in the result.
--- Each character in the sequence can be escaped by a backslash, as the same as in a string.
 ident :: (Token s ~ Char, MonadParsec e s f) => f BasicAtom
 ident =
-  Ident <$> anything
+  Ident <$> xid
   where
-    anything = do
-      c <- char '|'
-      cs <- manyTill L.charLiteral (char '|')
-      pure $ convertString (c : cs)
+    xid = do
+      c <- satisfy (property XidStart) <|> char '_'
+      cs <- many (satisfy (property XidContinue))
+      pure $ nfc $ T.pack (c : cs)
 
 type family AtomOf a :: Type
 

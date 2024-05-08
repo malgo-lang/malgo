@@ -6,6 +6,8 @@ module Malgo.Parser (parseMalgo) where
 import Control.Monad.Combinators.Expr
 import Control.Monad.Trans (lift)
 import Data.List.NonEmpty qualified as NonEmpty
+import Data.Text.ICU.Char (Bool_ (XidContinue), property)
+import Data.Text.ICU.Normalize2 (nfc)
 import Data.Text.Lazy qualified as TL
 import Data.Void
 import Effectful
@@ -591,10 +593,12 @@ symbol = void . L.symbol sc
 {-# INLINE symbol #-}
 
 identLetter :: Parser es Char
-identLetter = alphaNumChar <|> oneOf ("_#" :: String)
+identLetter = satisfy (property XidContinue) <|> char '#'
 
 opLetter :: Parser es Char
-opLetter = oneOf ("+-*/\\%=><:;|&!#." :: String)
+opLetter = do
+  notFollowedBy (oneOf @[] "(),;[]`{}_:\"'")
+  satisfy isSymbol <|> satisfy isPunctuation
 
 pKeyword :: TL.Text -> Parser es ()
 pKeyword keyword = void $ lexeme (string keyword <* notFollowedBy identLetter)
@@ -635,21 +639,21 @@ lowerIdent =
   label "lower identifier"
     $ lexeme do
       notFollowedBy reserved
-      convertString <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
+      nfc . convertString <$> ((:) <$> (lowerChar <|> char '_') <*> many identLetter)
 
 upperIdent :: Parser es Text
 upperIdent =
   label "upper identifier"
     $ lexeme do
       notFollowedBy reserved
-      convertString <$> ((:) <$> upperChar <*> many identLetter)
+      nfc . convertString <$> ((:) <$> upperChar <*> many identLetter)
 
 operator :: Parser es Text
 operator =
   label "operator"
     $ lexeme do
       notFollowedBy reservedOp
-      convertString <$> some opLetter
+      nfc . convertString <$> some opLetter
 
 -- { _ , _ , ... , _ } or { _ , _ , ... , _ , }
 asRecordFields :: Parser es a -> Parser es [a]
