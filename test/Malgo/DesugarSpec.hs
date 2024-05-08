@@ -3,6 +3,7 @@ module Malgo.DesugarSpec (spec) where
 import Data.Aeson.Encode.Pretty qualified as Aeson
 import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
+import Malgo.Core.Mangle
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (CompileMode (..), runMalgoM)
@@ -38,4 +39,4 @@ driveDesugar srcPath = do
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (_, core) <- desugar tcEnv refined
-    pure $ Aeson.encodePretty core
+    pure $ Aeson.encodePretty $ mangleProgram core

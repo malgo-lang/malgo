@@ -1,7 +1,15 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Core.Type (Tag (..), Con (..), Type (..), HasType (..)) where
+module Malgo.Core.Type
+  ( Tag (..),
+    Con (..),
+    Type (..),
+    pattern (:->),
+    HasType (..),
+  )
+where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
@@ -44,7 +52,7 @@ instance Pretty Con where
 -- あるいはknown関数を表す型
 -- FuncT [Type] Type
 data Type
-  = [Type] :-> Type
+  = FuncT [Type] Type
   | Int32T
   | Int64T
   | FloatT
@@ -59,6 +67,11 @@ data Type
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, FromJSON)
+
+{-# COMPLETE (:->), Int32T, Int64T, FloatT, DoubleT, CharT, StringT, BoolT, SumT, PtrT, RecordT, AnyT, VoidT #-}
+
+pattern (:->) :: [Type] -> Type -> Type
+pattern a :-> b = FuncT a b
 
 instance Arbitrary Type where
   arbitrary =

@@ -15,7 +15,7 @@ module Malgo.Core.Syntax
 where
 
 import Control.Lens (traverseOf, traversed, _3, _4)
-import Data.Aeson (FromJSON, ToJSON)
+import Data.Aeson (FromJSON (..), ToJSON (..), camelTo2, defaultOptions, fieldLabelModifier, genericParseJSON, genericToJSON)
 import Data.Graph
 import Data.Set qualified as Set
 import Data.Store.TH
@@ -39,8 +39,14 @@ data Program a = Program
     extFuns :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
-  deriving anyclass (ToJSON, FromJSON)
+  -- deriving anyclass (ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
+
+instance (ToJSON a) => ToJSON (Program a) where
+  toJSON = genericToJSON defaultOptions {fieldLabelModifier = camelTo2 '_'}
+
+instance (FromJSON a) => FromJSON (Program a) where
+  parseJSON = genericParseJSON defaultOptions {fieldLabelModifier = camelTo2 '_'}
 
 makeStore ''Program
 
