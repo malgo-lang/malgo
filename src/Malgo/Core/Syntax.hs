@@ -4,8 +4,7 @@
 
 -- | AST definitions for Core language
 module Malgo.Core.Syntax
-  ( module Malgo.Core.Syntax.Common,
-    module Malgo.Core.Syntax.Expr,
+  ( module Malgo.Core.Syntax.Expr,
     Program (..),
     runDef,
     let_,
@@ -26,7 +25,6 @@ import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
 import Effectful.Writer.Static.Local (Writer, runWriter, tell)
 import Generic.Data
-import Malgo.Core.Syntax.Common
 import Malgo.Core.Syntax.Expr
 import Malgo.Core.Type
 import Malgo.Id

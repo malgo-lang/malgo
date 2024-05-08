@@ -2,7 +2,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Malgo.Core.Syntax.Expr
-  ( Expr (..),
+  ( HasFreeVar (..),
+    Expr (..),
     HasExpr (..),
     Atom (..),
     HasAtom (..),
@@ -18,7 +19,7 @@ module Malgo.Core.Syntax.Expr
 where
 
 import Control.Lens (Plated (..), Traversal', makePrisms, sans, traverseOf, traversed, _2)
-import Data.Aeson (FromJSON (..), KeyValue (..), ToJSON (..), (.:))
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
@@ -26,14 +27,20 @@ import Data.Store (Store)
 import Data.String.Conversions
 import GHC.Float (castDoubleToWord64, castFloatToWord32)
 import Generic.Data
-import Malgo.Core.Syntax.Common
 import Malgo.Core.Type
 import Malgo.Prelude
 import Numeric (showHex)
-import Test.QuickCheck (Arbitrary (..), oneof)
 
--- $setup
--- >>> import Data.Aeson (decode, encode)
+-- | 'f' may have free variables
+-- 'freevars' does not include callees of `call-direct`.
+-- If you want to include callees of `call-direct`, merge 'callees' and 'freevars'.
+class HasFreeVar f where
+  -- | Free variables.
+  -- It does not include callees of `call-direct`.
+  freevars :: (Ord a) => f a -> Set a
+
+  -- | Callees.
+  callees :: (Ord a) => f a -> Set a
 
 -- | expressions
 data Expr a
@@ -87,24 +94,6 @@ data Expr a
     Error Type
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (ToJSON, FromJSON, Store)
-
-instance (Arbitrary a) => Arbitrary (Expr a) where
-  arbitrary =
-    oneof
-      [ Atom <$> arbitrary,
-        Call <$> arbitrary <*> arbitrary,
-        CallDirect <$> arbitrary <*> arbitrary,
-        RawCall <$> arbitrary <*> arbitrary <*> arbitrary,
-        Cast <$> arbitrary <*> arbitrary,
-        Let <$> arbitrary <*> arbitrary,
-        Match <$> arbitrary <*> arbitrary,
-        Switch <$> arbitrary <*> arbitrary <*> arbitrary,
-        SwitchUnboxed <$> arbitrary <*> arbitrary <*> arbitrary,
-        Destruct <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary,
-        DestructRecord <$> arbitrary <*> arbitrary <*> arbitrary,
-        Assign <$> arbitrary <*> arbitrary <*> arbitrary,
-        Error <$> arbitrary
-      ]
 
 instance (HasType a) => HasType (Expr a) where
   typeOf (Atom x) = typeOf x
@@ -254,24 +243,7 @@ data Atom a
   | -- | literal of unboxed values
     Unboxed Unboxed
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Store)
-
-instance (Arbitrary a) => Arbitrary (Atom a) where
-  arbitrary = oneof [Var <$> arbitrary, Unboxed <$> arbitrary]
-
--- |
--- prop> \x -> decode (encode x) == Just (x :: Atom String)
-instance (ToJSON a) => ToJSON (Atom a) where
-  toJSON (Var x) = toJSONTagged "Var" ["variable" .= x]
-  toJSON (Unboxed x) = toJSONTagged "Unboxed" ["literal" .= x]
-
-instance (FromJSON a) => FromJSON (Atom a) where
-  parseJSON =
-    parseJSONTagged
-      "Atom"
-      [ ("Var", \v -> Var <$> v .: "variable"),
-        ("Unboxed", \v -> Unboxed <$> v .: "literal")
-      ]
+  deriving anyclass (Store, ToJSON, FromJSON)
 
 instance (HasType a) => HasType (Atom a) where
   typeOf (Var x) = typeOf x
@@ -305,18 +277,6 @@ data Unboxed
   deriving stock (Eq, Ord, Show, Generic, Data, Typeable)
   deriving anyclass (ToJSON, FromJSON, Store)
 
-instance Arbitrary Unboxed where
-  arbitrary =
-    oneof
-      [ Int32 <$> arbitrary,
-        Int64 <$> arbitrary,
-        Float <$> arbitrary,
-        Double <$> arbitrary,
-        Char <$> arbitrary,
-        String <$> arbitrary,
-        Bool <$> arbitrary
-      ]
-
 instance HasType Unboxed where
   typeOf Int32 {} = Int32T
   typeOf Int64 {} = Int64T
@@ -341,9 +301,6 @@ data LocalDef a = LocalDef {variable :: a, typ :: Type, object :: Obj a}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (ToJSON, FromJSON, Store)
 
-instance (Arbitrary a) => Arbitrary (LocalDef a) where
-  arbitrary = LocalDef <$> arbitrary <*> arbitrary <*> arbitrary
-
 instance (Pretty a) => Pretty (LocalDef a) where
   pretty (LocalDef v t o) = parens $ vsep [pretty v <+> pretty t, pretty o]
 
@@ -360,14 +317,6 @@ data Obj a
     Record (Map Text (Atom a))
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (ToJSON, FromJSON, Store)
-
-instance (Arbitrary a) => Arbitrary (Obj a) where
-  arbitrary =
-    oneof
-      [ Fun <$> arbitrary <*> arbitrary,
-        Pack <$> arbitrary <*> arbitrary <*> arbitrary,
-        Record <$> arbitrary
-      ]
 
 instance (HasType a) => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
@@ -417,34 +366,7 @@ data Case a
   | -- | variable pattern
     Bind a Type (Expr a)
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Store)
-
-instance (Arbitrary a) => Arbitrary (Case a) where
-  arbitrary =
-    oneof
-      [ Unpack <$> arbitrary <*> arbitrary <*> arbitrary,
-        OpenRecord <$> arbitrary <*> arbitrary,
-        Exact <$> arbitrary <*> arbitrary,
-        Bind <$> arbitrary <*> arbitrary <*> arbitrary
-      ]
-
--- |
--- prop> \x -> decode (encode x) == Just (x :: Case String)
-instance (ToJSON a) => ToJSON (Case a) where
-  toJSON (Unpack constructor variables body) = toJSONTagged "Unpack" ["constructor" .= constructor, "variables" .= variables, "body" .= body]
-  toJSON (OpenRecord record body) = toJSONTagged "OpenRecord" ["record" .= record, "body" .= body]
-  toJSON (Exact literal body) = toJSONTagged "Exact" ["literal" .= literal, "body" .= body]
-  toJSON (Bind variable typ body) = toJSONTagged "Bind" ["variable" .= variable, "type" .= typ, "body" .= body]
-
-instance (FromJSON a) => FromJSON (Case a) where
-  parseJSON =
-    parseJSONTagged
-      "Case"
-      [ ("Unpack", \v -> Unpack <$> v .: "constructor" <*> v .: "variables" <*> v .: "body"),
-        ("OpenRecord", \v -> OpenRecord <$> v .: "record" <*> v .: "body"),
-        ("Exact", \v -> Exact <$> v .: "literal" <*> v .: "body"),
-        ("Bind", \v -> Bind <$> v .: "variable" <*> v .: "type" <*> v .: "body")
-      ]
+  deriving anyclass (Store, ToJSON, FromJSON)
 
 instance (HasType a) => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
