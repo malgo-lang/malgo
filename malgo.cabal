@@ -233,7 +233,7 @@ test-suite malgo-test
       NoFieldSelectors
       TypeData
       Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wno-partial-fields -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wno-partial-fields -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
     , QuickCheck >=2.15

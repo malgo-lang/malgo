@@ -14,7 +14,7 @@ import System.FilePath
 import Test.Hspec
 
 spec :: Spec
-spec = parallel do
+spec = do
   runIO do
     setupBuiltin
     setupPrelude

@@ -16,7 +16,7 @@ import System.FilePath (isExtensionOf, takeBaseName, (</>))
 import Test.Hspec
 
 spec :: Spec
-spec = parallel do
+spec = do
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
     goldenHaskell "parse" (takeBaseName testcase) (driveParse (testcaseDir </> testcase))

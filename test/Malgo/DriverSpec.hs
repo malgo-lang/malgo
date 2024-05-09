@@ -29,7 +29,7 @@ import System.Process.Typed
     setStdin,
     setStdout,
   )
-import Test.Hspec (Spec, anyException, it, parallel, runIO, sequential, shouldBe, shouldThrow)
+import Test.Hspec (Spec, anyException, it, runIO, shouldBe, shouldThrow)
 
 getWorkspaceDir :: (MonadIO m) => m FilePath
 getWorkspaceDir = liftIO do
@@ -46,33 +46,33 @@ spec = do
     setupBuiltin
     setupPrelude
   testcases <- runIO (filter (isExtensionOf "mlg") <$> listDirectory testcaseDir)
-  parallel do
-    for_ testcases \testcase -> sequential do
+  do
+    for_ testcases \testcase -> do
       goldenWithTag "driver" "txt" ("normalCase " <> takeBaseName testcase) $ testNormal (testcaseDir </> testcase)
       goldenLLVM "llvm" ("normalCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
       goldenLLVM "llvm" ("opt normalCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  parallel do
-    for_ testcases \testcase -> sequential do
+  do
+    for_ testcases \testcase -> do
       goldenWithTag "driver" "txt" ("nonoCase " <> takeBaseName testcase) $ testNoNo (testcaseDir </> testcase)
       goldenLLVM "llvm" ("nonoCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
       goldenLLVM "llvm" ("opt nonoCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  parallel do
-    for_ testcases \testcase -> sequential do
+  do
+    for_ testcases \testcase -> do
       goldenWithTag "driver" "txt" ("nooptCase " <> takeBaseName testcase) $ testNoOpt (testcaseDir </> testcase)
       goldenLLVM "llvm" ("nooptCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
       goldenLLVM "llvm" ("opt nooptCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  parallel do
-    for_ testcases \testcase -> sequential do
+  do
+    for_ testcases \testcase -> do
       goldenWithTag "driver" "txt" ("noliftCase " <> takeBaseName testcase) $ testNoLift (testcaseDir </> testcase)
       goldenLLVM "llvm" ("noliftCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
       goldenLLVM "llvm" ("opt noliftCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  parallel do
-    for_ testcases \testcase -> sequential do
+  do
+    for_ testcases \testcase -> do
       goldenWithTag "driver" "txt" ("agressiveCase " <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
       goldenLLVM "llvm" ("agressiveCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
       goldenLLVM "llvm" ("opt agressiveCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
   errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
-  parallel $ for_ errorcases \errorcase -> do
+  for_ errorcases \errorcase -> do
     it ("driver errorCase " <> takeBaseName errorcase)
       $ testError (testcaseDir </> "error" </> errorcase)
       `shouldThrow` anyException

@@ -1,4 +1,17 @@
-module Malgo.TestUtils where
+module Malgo.TestUtils
+  ( smallIndentNoColor,
+    pShowCompact,
+    testcaseDir,
+    setupBuiltin,
+    setupPrelude,
+    flag,
+    option,
+    goldenWithTag,
+    goldenJSON,
+    goldenLLVM,
+    goldenHaskell,
+  )
+where
 
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
