@@ -5,10 +5,12 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
+type Name = String;
+
 #[derive(Serialize, Deserialize, Debug)]
 struct Program {
-    top_vars: Vec<(String, Type, Expr)>,
-    top_funs: Vec<(String, Vec<String>, Type, Expr)>,
+    top_vars: Vec<(Name, Type, Expr)>,
+    top_funs: Vec<(Name, Vec<Name>, Type, Expr)>,
     ext_funs: Vec<(String, Type)>,
 }
 
@@ -45,23 +47,23 @@ enum Tag {
 enum Expr {
     Atom(Atom),
     Call(Atom, Vec<Atom>),
-    CallDirect(String, Vec<Atom>),
+    CallDirect(Name, Vec<Atom>),
     RawCall(String, Type, Vec<Atom>),
     Cast(Type, Atom),
     Let(Vec<LocalDef>, Box<Expr>),
     Match(Box<Expr>, Vec<Case>),
     Switch(Atom, Vec<(Tag, Expr)>, Box<Expr>),
     SwitchUnboxed(Atom, Vec<(Unboxed, Expr)>, Box<Expr>),
-    Destruct(Atom, Con, Vec<String>, Box<Expr>),
-    DestructRecord(Atom, BTreeMap<String, String>, Box<Expr>),
-    Assign(String, Box<Expr>, Box<Expr>),
+    Destruct(Atom, Con, Vec<Name>, Box<Expr>),
+    DestructRecord(Atom, BTreeMap<String, Name>, Box<Expr>),
+    Assign(Name, Box<Expr>, Box<Expr>),
     Error(Type),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "tag", content = "contents")]
 enum Atom {
-    Var(String),
+    Var(Name),
     Unboxed(Unboxed),
 }
 
@@ -79,7 +81,7 @@ enum Unboxed {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct LocalDef {
-    variable: String,
+    variable: Name,
     typ: Type,
     object: Obj,
 }
@@ -87,16 +89,16 @@ struct LocalDef {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "tag", content = "contents")]
 enum Case {
-    Unpack(Con, Vec<String>, Expr),
-    OpenRecord(BTreeMap<String, String>, Expr),
+    Unpack(Con, Vec<Name>, Expr),
+    OpenRecord(BTreeMap<String, Name>, Expr),
     Exact(Unboxed, Expr),
-    Bind(String, Type, Expr),
+    Bind(Name, Type, Expr),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "tag", content = "contents")]
 enum Obj {
-    Fun(Vec<String>, Expr),
+    Fun(Vec<Name>, Expr),
     Pack(Type, Con, Vec<Atom>),
     Record(BTreeMap<String, Atom>),
 }
