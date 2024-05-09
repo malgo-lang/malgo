@@ -30,6 +30,7 @@ import Malgo.Mangle (Manglable (..))
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (toList)
+import System.FilePath (isRelative)
 
 -- | Identifier sort.
 data IdSort
@@ -73,7 +74,7 @@ instance Manglable Id where
       idSortToText (Internal uniq) = "Internal" <> convertString (show uniq)
       idSortToText (Temporal uniq) = "Temporal" <> convertString (show uniq)
       idSortToText Native = "Native"
-  fromTextList [name, moduleName, sort] = Id {name, moduleName = stringToModuleName moduleName, sort = idSortFromText sort}
+  fromTextList [name, moduleName, sort] = Id {name, moduleName = stringToModuleName $ convertString moduleName, sort = idSortFromText sort}
     where
       idSortFromText txt
         | txt == "External" = External
@@ -81,7 +82,9 @@ instance Manglable Id where
         | Just uniq <- stripPrefix "Temporal" txt = Temporal (read (convertString uniq))
         | txt == "Native" = Native
         | otherwise = error "fromTextList: invalid sort"
-      stringToModuleName = undefined
+      stringToModuleName name
+        | isRelative name = Artifact (unsafeFromFilePath name)
+        | otherwise = ModuleName (convertString name)
   fromTextList _ = error "fromTextList: invalid list"
 
 makeStore ''Id
@@ -106,6 +109,8 @@ idToText Id {name, moduleName, sort = External} = moduleNameToString moduleName 
 idToText Id {name, moduleName, sort = Internal uniq} = moduleNameToString moduleName <> ".#" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, moduleName, sort = Temporal uniq} = moduleNameToString moduleName <> ".$" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, sort = Native} = name
+
+-- idToText id = mangle id
 
 newTemporalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> Eff es Id
 newTemporalId name = do

@@ -11,9 +11,12 @@ module Malgo.Module
     getModulePath,
     runWorkspaceOnPwd,
     ArtifactPath (..),
-    Resource (..),
+    unsafeFromFilePath,
     pwdPath,
+    getOriginPath,
+    getTargetPath,
     parseArtifactPath,
+    Resource (..),
     ViaStore (..),
     moduleNameToString,
   )
@@ -134,9 +137,7 @@ instance Exception WorkspaceError where
 
 data ArtifactPath = ArtifactPath
   { rawPath :: FilePath,
-    originPath :: Path Abs File,
-    relPath :: Path Rel File,
-    targetPath :: Path Abs File
+    relPath :: Path Rel File
   }
   deriving stock (Eq, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, FromJSON, Store)
@@ -153,24 +154,32 @@ deriving anyclass instance Store (Path Rel File)
 instance Pretty ArtifactPath where
   pretty path = pretty $ toFilePath path.relPath
 
-pwdPath :: (Workspace :> es) => Eff es ArtifactPath
+unsafeFromFilePath :: FilePath -> ArtifactPath
+unsafeFromFilePath path = ArtifactPath {rawPath = path, relPath = [relfile|path|]}
+
+pwdPath :: Eff es ArtifactPath
 pwdPath = do
-  workspace <- getWorkspaceAbs
-  let pwd = parent workspace
-  let originPath = pwd </> [relfile|dummy|]
   let relPath = [relfile|dummy|]
-  let targetPath = workspace </> [relfile|dummy|]
   pure
     $ ArtifactPath
       { rawPath = ".",
-        originPath,
-        relPath,
-        targetPath
+        relPath
       }
+
+getOriginPath :: (Workspace :> es) => ArtifactPath -> Eff es (Path Abs File)
+getOriginPath path = do
+  workspace <- getWorkspaceAbs
+  let basePath = parent workspace
+  pure $ basePath </> path.relPath
+
+getTargetPath :: (Workspace :> es) => ArtifactPath -> Eff es (Path Abs File)
+getTargetPath path = do
+  workspace <- getWorkspaceAbs
+  pure $ workspace </> path.relPath
 
 parseArtifactPath :: (IOE :> es, Workspace :> es) => ArtifactPath -> FilePath -> Eff es ArtifactPath
 parseArtifactPath from path = do
-  let basePath = toFilePath $ parent from.originPath
+  basePath <- toFilePath . parent <$> getOriginPath from
   rawPath <- liftIO $ withCurrentDirectory basePath $ canonicalizePath path
   originPath <- parseAbsFile rawPath
 
@@ -178,15 +187,15 @@ parseArtifactPath from path = do
   let originBasePath = parent workspace
   relPath <- stripProperPrefix originBasePath originPath
 
-  let targetPath = workspace </> relPath
-  pure $ ArtifactPath {rawPath = path, originPath, relPath, targetPath}
+  pure $ ArtifactPath {rawPath = path, relPath}
 
 class Resource a where
   toByteString :: a -> ByteString
   fromByteString :: ByteString -> a
-  load :: (IOE :> es) => ArtifactPath -> String -> Eff es a
-  load ArtifactPath {originPath, targetPath} ext = do
-    targetPath <- replaceExtension ext targetPath
+  load :: (IOE :> es, Workspace :> es) => ArtifactPath -> String -> Eff es a
+  load path ext = do
+    originPath <- getOriginPath path
+    targetPath <- replaceExtension ext =<< getTargetPath path
     exists <- liftIO $ doesFileExist $ toFilePath targetPath
     if exists
       then do
@@ -198,9 +207,9 @@ class Resource a where
         liftIO $ createDirectoryIfMissing True $ toFilePath $ parent targetPath
         liftIO $ BS.writeFile (toFilePath targetPath) content
         pure $ fromByteString content
-  save :: (IOE :> es) => ArtifactPath -> String -> a -> Eff es ()
-  save ArtifactPath {targetPath} ext content = do
-    targetPath <- replaceExtension ext targetPath
+  save :: (IOE :> es, Workspace :> es) => ArtifactPath -> String -> a -> Eff es ()
+  save path ext content = do
+    targetPath <- replaceExtension ext =<< getTargetPath path
     liftIO $ createDirectoryIfMissing True $ toFilePath $ parent targetPath
     liftIO $ BS.writeFile (toFilePath targetPath) $ toByteString content
 

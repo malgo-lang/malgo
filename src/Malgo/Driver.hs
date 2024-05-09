@@ -73,7 +73,8 @@ compileFromAST srcPath parsedAst = do
     moduleName = parsedAst.moduleName
     act = do
       registerModule moduleName srcPath
-      dstPath <- replaceExtension ".ll" srcPath.targetPath
+      targetPath <- getTargetPath srcPath
+      dstPath <- replaceExtension ".ll" targetPath
       flags <- ask @Flag
 
       when flags.debugMode $ liftIO do
