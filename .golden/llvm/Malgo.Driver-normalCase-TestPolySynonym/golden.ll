@@ -171,7 +171,7 @@ declare void @malgo_hash_table_insert(ptr, ptr, ptr)
 
 declare ptr @malgo_hash_table_get(ptr, ptr)
 
-define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.#let_closure_2840"(ptr %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg12Internal2840(ptr %0, ptr %1) {
   %p_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %p_0 = load ptr, ptr %p_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -182,7 +182,7 @@ define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.#let_closure_2840
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TestPolySynonym.mlg.$$__43_0") {
+define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal43_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { i32 } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -205,7 +205,7 @@ define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.main"(ptr %0, ptr
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 1
-  store ptr @"test/testcases/malgo/TestPolySynonym.mlg.#let_closure_2840", ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg12Internal2840, ptr %let_func_0, align 8
   %12 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 0
   %13 = load ptr, ptr %12, align 8
   %14 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 1
@@ -214,26 +214,26 @@ define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.main"(ptr %0, ptr
   %printInt32_capture_0 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 0
   store ptr null, ptr %printInt32_capture_0, align 8
   %printInt32_func_0 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
-  store ptr @"runtime/malgo/Prelude.mlg.printInt32", ptr %printInt32_func_0, align 8
+  store ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External, ptr %printInt32_func_0, align 8
   %17 = call ptr %15(ptr %13, ptr %16)
   ret ptr %17
 }
 
-define internal ptr @"test/testcases/malgo/TestPolySynonym.mlg.first"(ptr %0, ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0") {
-  %2 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0", ptr @str2838)
-  %3 = call ptr @malgo_hash_table_get(ptr %"test/testcases/malgo/TestPolySynonym.mlg.$record_40_0", ptr @str2839)
+define internal ptr @_M5first52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg8External(ptr %0, ptr %_M6record52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal40_0) {
+  %2 = call ptr @malgo_hash_table_get(ptr %_M6record52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal40_0, ptr @str2838)
+  %3 = call ptr @malgo_hash_table_get(ptr %_M6record52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal40_0, ptr @str2839)
   ret ptr %2
 }
 
-define internal ptr @"runtime/malgo/Prelude.mlg.printInt32"(ptr %0, ptr %"runtime/malgo/Prelude.mlg.$i_773_0") {
-  %2 = getelementptr { i8, <4 x i8> }, ptr %"runtime/malgo/Prelude.mlg.$i_773_0", i32 0, i32 0
+define internal ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr %0, ptr %_M1i34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal773_0) {
+  %2 = getelementptr { i8, <4 x i8> }, ptr %_M1i34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal773_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_1 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+    i8 0, label %switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
   ]
 
-"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0": ; preds = %1
-  %4 = getelementptr { i8, { i32 } }, ptr %"runtime/malgo/Prelude.mlg.$i_773_0", i32 0, i32 1
+switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %1
+  %4 = getelementptr { i8, { i32 } }, ptr %_M1i34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal773_0, i32 0, i32 1
   %5 = getelementptr { i32 }, ptr %4, i32 0, i32 0
   %6 = load i32, ptr %5, align 4
   %7 = call ptr @malgo_int32_t_to_string(i32 %6)
@@ -245,17 +245,17 @@ define internal ptr @"runtime/malgo/Prelude.mlg.printInt32"(ptr %0, ptr %"runtim
   %11 = getelementptr { i8, <8 x i8> }, ptr %8, i32 0, i32 0
   %12 = load i8, ptr %11, align 1
   switch i8 %12, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+    i8 0, label %switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
   ]
 
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
   %13 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1
   %14 = getelementptr { ptr }, ptr %13, i32 0, i32 0
   %15 = load ptr, ptr %14, align 8
   %16 = call ptr @malgo_print_string(ptr %15)
   ret ptr %16
 
-switch_default_0:                                 ; preds = %"switch_branch_runtime/malgo/Builtin.mlg.Int32#_0"
+switch_default_0:                                 ; preds = %switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
   unreachable
 
 switch_default_1:                                 ; preds = %1
@@ -268,7 +268,7 @@ define i32 @main(ptr %0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @"test/testcases/malgo/TestPolySynonym.mlg.main"(ptr null, ptr %2)
+  %4 = call ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg8External(ptr null, ptr %2)
   ret i32 0
 }
 

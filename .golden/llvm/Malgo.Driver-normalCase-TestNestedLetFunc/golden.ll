@@ -7,12 +7,12 @@ declare void @GC_init()
 
 declare ptr @malgo_print_string(ptr)
 
-define internal ptr @"test/testcases/malgo/TestNestedLetFunc.mlg.malgo_print_string"(ptr %0, ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$p_13_0") {
-  %2 = call ptr @malgo_print_string(ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$p_13_0")
+define internal ptr @_M24malgo_x5Fprint_x5Fstring54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External(ptr %0, ptr %_M1p54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal13_0) {
+  %2 = call ptr @malgo_print_string(ptr %_M1p54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal13_0)
   ret ptr %2
 }
 
-define internal ptr @"test/testcases/malgo/TestNestedLetFunc.mlg.main"(ptr %0, ptr %"test/testcases/malgo/TestNestedLetFunc.mlg.$$__14_0") {
+define internal ptr @_M4main54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal14_0) {
   %2 = call ptr @malgo_print_string(ptr @str27)
   ret ptr %2
 }
@@ -25,7 +25,7 @@ define i32 @main(ptr %0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @"test/testcases/malgo/TestNestedLetFunc.mlg.main"(ptr null, ptr %2)
+  %4 = call ptr @_M4main54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External(ptr null, ptr %2)
   ret i32 0
 }
 

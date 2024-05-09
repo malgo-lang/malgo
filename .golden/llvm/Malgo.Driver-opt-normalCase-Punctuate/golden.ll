@@ -23,30 +23,30 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal fastcc noundef ptr @"runtime/malgo/Prelude.mlg.$mapList_curry_790"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %"runtime/malgo/Prelude.mlg.$__791_0", ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %"runtime/malgo/Prelude.mlg.$nil_792_0") unnamed_addr {
-  %1 = load i8, ptr %"runtime/malgo/Prelude.mlg.$nil_792_0", align 1
+define internal fastcc noundef ptr @_M16mapList_x5Fcurry34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal790(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %_M4_x5F34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal791_0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal792_0) unnamed_addr {
+  %1 = load i8, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal792_0, align 1
   %switch = icmp eq i8 %1, 0
-  br i1 %switch, label %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0", label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
+  br i1 %switch, label %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0, label %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
 
-common.ret:                                       ; preds = %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0", %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0"
-  %common.ret.op = phi ptr [ %2, %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0" ], [ %12, %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0" ]
+common.ret:                                       ; preds = %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0, %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
+  %common.ret.op = phi ptr [ %2, %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0 ], [ %12, %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0 ]
   ret ptr %common.ret.op
 
-"switch_branch_runtime/malgo/Prelude.mlg.Nil_0":  ; preds = %0
+switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0: ; preds = %0
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %2, align 1
   br label %common.ret
 
-"switch_branch_runtime/malgo/Prelude.mlg.Cons_0": ; preds = %0
-  %3 = getelementptr { i8, { ptr, ptr } }, ptr %"runtime/malgo/Prelude.mlg.$nil_792_0", i64 0, i32 1
+switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0: ; preds = %0
+  %3 = getelementptr { i8, { ptr, ptr } }, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal792_0, i64 0, i32 1
   %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { i8, { ptr, ptr } }, ptr %"runtime/malgo/Prelude.mlg.$nil_792_0", i64 0, i32 1, i32 1
+  %5 = getelementptr { i8, { ptr, ptr } }, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal792_0, i64 0, i32 1, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = load ptr, ptr %"runtime/malgo/Prelude.mlg.$__791_0", align 8
-  %8 = getelementptr { ptr, ptr }, ptr %"runtime/malgo/Prelude.mlg.$__791_0", i64 0, i32 1
+  %7 = load ptr, ptr %_M4_x5F34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal791_0, align 8
+  %8 = getelementptr { ptr, ptr }, ptr %_M4_x5F34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal791_0, i64 0, i32 1
   %9 = load ptr, ptr %8, align 8
   %10 = tail call ptr %9(ptr %7, ptr %4)
-  %11 = tail call fastcc ptr @"runtime/malgo/Prelude.mlg.$mapList_curry_790"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %"runtime/malgo/Prelude.mlg.$__791_0", ptr nocapture nofree readonly %6)
+  %11 = tail call fastcc ptr @_M16mapList_x5Fcurry34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal790(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %_M4_x5F34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal791_0, ptr nocapture nofree readonly %6)
   %12 = tail call noundef ptr @malgo_malloc(i64 noundef 24)
   store i8 1, ptr %12, align 1
   %13 = getelementptr { i8, { ptr, ptr } }, ptr %12, i64 0, i32 1, i32 0
@@ -56,44 +56,44 @@ common.ret:                                       ; preds = %"switch_branch_runt
   br label %common.ret
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3170(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
   %p_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_string_append(ptr %p_0, ptr %1)
   ret ptr %3
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3176"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3176(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
   %p_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 8)
   store ptr %p_0, ptr %let_capture_0.i.i, align 8
   store ptr %let_capture_0.i.i, ptr %3, align 8
   %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3170", ptr %let_func_0.i.i, align 8
+  store ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3170, ptr %let_func_0.i.i, align 8
   %p_0.i.i = load ptr, ptr %let_capture_0.i.i, align 8
   %4 = tail call ptr @malgo_string_append(ptr %p_0.i.i, ptr %1)
   ret ptr %4
 }
 
-define internal fastcc noundef ptr @"runtime/malgo/Prelude.mlg.concatString"(ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %"runtime/malgo/Prelude.mlg.$nil_974_0") unnamed_addr {
-  %1 = load i8, ptr %"runtime/malgo/Prelude.mlg.$nil_974_0", align 1
+define internal fastcc noundef ptr @_M12concatString34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal974_0) unnamed_addr {
+  %1 = load i8, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal974_0, align 1
   %switch = icmp eq i8 %1, 0
-  br i1 %switch, label %common.ret1, label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
+  br i1 %switch, label %common.ret1, label %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
 
-common.ret1:                                      ; preds = %0, %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
-  %.sink = phi ptr [ %14, %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0" ], [ @str3175, %0 ]
+common.ret1:                                      ; preds = %0, %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
+  %.sink = phi ptr [ %14, %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0 ], [ @str3175, %0 ]
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %2, align 1
   %3 = getelementptr { i8, { ptr } }, ptr %2, i64 0, i32 1, i32 0
   store ptr %.sink, ptr %3, align 8
   ret ptr %2
 
-"switch_branch_runtime/malgo/Prelude.mlg.Cons_0": ; preds = %0
-  %4 = getelementptr { i8, { ptr, ptr } }, ptr %"runtime/malgo/Prelude.mlg.$nil_974_0", i64 0, i32 1
+switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0: ; preds = %0
+  %4 = getelementptr { i8, { ptr, ptr } }, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal974_0, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = getelementptr { i8, { ptr, ptr } }, ptr %"runtime/malgo/Prelude.mlg.$nil_974_0", i64 0, i32 1, i32 1
+  %6 = getelementptr { i8, { ptr, ptr } }, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal974_0, i64 0, i32 1, i32 1
   %7 = load ptr, ptr %6, align 8
-  %8 = tail call fastcc ptr @"runtime/malgo/Prelude.mlg.concatString"(ptr nocapture nofree readonly %7)
+  %8 = tail call fastcc ptr @_M12concatString34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readonly %7)
   %9 = getelementptr { i8, { ptr } }, ptr %5, i64 0, i32 1
   %10 = load ptr, ptr %9, align 8
   %11 = getelementptr { i8, { ptr } }, ptr %8, i64 0, i32 1
@@ -103,45 +103,45 @@ common.ret1:                                      ; preds = %0, %"switch_branch_
   store ptr %10, ptr %let_capture_0, align 8
   store ptr %let_capture_0, ptr %13, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3176", ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3176, ptr %let_func_0, align 8
   %14 = tail call ptr @malgo_string_append(ptr %10, ptr %12)
   br label %common.ret1
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3178"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3178(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
   %p_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_string_append(ptr %p_0, ptr %1)
   ret ptr %3
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3180"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3180(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
   %p_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_string_append(ptr %p_0, ptr %1)
   ret ptr %3
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3184"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3184(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
   %p_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_string_append(ptr %p_0, ptr %1)
   ret ptr %3
 }
 
-define internal ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3185"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3185(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr %1) {
   %p_0 = load ptr, ptr %0, align 8
   %3 = tail call ptr @malgo_string_append(ptr %p_0, ptr %1)
   ret ptr %3
 }
 
-define internal noundef ptr @"test/testcases/malgo/Punctuate.mlg.show"(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %"test/testcases/malgo/Punctuate.mlg.$symbol_120_0") {
-  %2 = load i8, ptr %"test/testcases/malgo/Punctuate.mlg.$symbol_120_0", align 1
+define internal noundef ptr @_M4show46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %_M6symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg11Temporal120_0) {
+  %2 = load i8, ptr %_M6symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg11Temporal120_0, align 1
   switch i8 %2, label %switch_default_9 [
-    i8 0, label %"switch_branch_test/testcases/malgo/Punctuate.mlg.Symbol_0"
-    i8 1, label %"switch_branch_test/testcases/malgo/Punctuate.mlg.SInt_0"
-    i8 2, label %"switch_branch_test/testcases/malgo/Punctuate.mlg.SList_0"
+    i8 0, label %switch_branch__M6Symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0
+    i8 1, label %switch_branch__M4SInt46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0
+    i8 2, label %switch_branch__M5SList46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0
   ]
 
-"switch_branch_test/testcases/malgo/Punctuate.mlg.Symbol_0": ; preds = %1
-  %3 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/Punctuate.mlg.$symbol_120_0", i64 0, i32 1
+switch_branch__M6Symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0: ; preds = %1
+  %3 = getelementptr { i8, { ptr } }, ptr %_M6symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg11Temporal120_0, i64 0, i32 1
   %4 = load ptr, ptr %3, align 8
   %5 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %5, align 1
@@ -155,13 +155,13 @@ define internal noundef ptr @"test/testcases/malgo/Punctuate.mlg.show"(ptr nocap
   store ptr %let_capture_0, ptr %9, align 8
   br label %common.ret
 
-common.ret:                                       ; preds = %"switch_branch_test/testcases/malgo/Punctuate.mlg.SList_0", %"switch_branch_test/testcases/malgo/Punctuate.mlg.SInt_0", %"switch_branch_test/testcases/malgo/Punctuate.mlg.Symbol_0"
-  %.sink = phi ptr [ %43, %"switch_branch_test/testcases/malgo/Punctuate.mlg.SList_0" ], [ %23, %"switch_branch_test/testcases/malgo/Punctuate.mlg.SInt_0" ], [ %9, %"switch_branch_test/testcases/malgo/Punctuate.mlg.Symbol_0" ]
-  %"test/testcases/malgo/Punctuate.mlg.#let_closure_3185.sink" = phi ptr [ @"test/testcases/malgo/Punctuate.mlg.#let_closure_3185", %"switch_branch_test/testcases/malgo/Punctuate.mlg.SList_0" ], [ @"test/testcases/malgo/Punctuate.mlg.#let_closure_3180", %"switch_branch_test/testcases/malgo/Punctuate.mlg.SInt_0" ], [ @"test/testcases/malgo/Punctuate.mlg.#let_closure_3178", %"switch_branch_test/testcases/malgo/Punctuate.mlg.Symbol_0" ]
-  %let_capture_6.sink = phi ptr [ %let_capture_6, %"switch_branch_test/testcases/malgo/Punctuate.mlg.SList_0" ], [ %let_capture_2, %"switch_branch_test/testcases/malgo/Punctuate.mlg.SInt_0" ], [ %let_capture_0, %"switch_branch_test/testcases/malgo/Punctuate.mlg.Symbol_0" ]
-  %.sink7 = phi ptr [ %39, %"switch_branch_test/testcases/malgo/Punctuate.mlg.SList_0" ], [ %19, %"switch_branch_test/testcases/malgo/Punctuate.mlg.SInt_0" ], [ %8, %"switch_branch_test/testcases/malgo/Punctuate.mlg.Symbol_0" ]
+common.ret:                                       ; preds = %switch_branch__M5SList46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0, %switch_branch__M4SInt46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0, %switch_branch__M6Symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0
+  %.sink = phi ptr [ %43, %switch_branch__M5SList46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ], [ %23, %switch_branch__M4SInt46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ], [ %9, %switch_branch__M6Symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ]
+  %_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3185.sink = phi ptr [ @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3185, %switch_branch__M5SList46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ], [ @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3180, %switch_branch__M4SInt46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ], [ @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3178, %switch_branch__M6Symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ]
+  %let_capture_6.sink = phi ptr [ %let_capture_6, %switch_branch__M5SList46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ], [ %let_capture_2, %switch_branch__M4SInt46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ], [ %let_capture_0, %switch_branch__M6Symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ]
+  %.sink7 = phi ptr [ %39, %switch_branch__M5SList46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ], [ %19, %switch_branch__M4SInt46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ], [ %8, %switch_branch__M6Symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0 ]
   %let_func_3 = getelementptr { ptr, ptr }, ptr %.sink, i64 0, i32 1
-  store ptr %"test/testcases/malgo/Punctuate.mlg.#let_closure_3185.sink", ptr %let_func_3, align 8
+  store ptr %_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3185.sink, ptr %let_func_3, align 8
   %p_0.i3 = load ptr, ptr %let_capture_6.sink, align 8
   %10 = tail call ptr @malgo_string_append(ptr %p_0.i3, ptr %.sink7)
   %11 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
@@ -170,8 +170,8 @@ common.ret:                                       ; preds = %"switch_branch_test
   store ptr %10, ptr %12, align 8
   ret ptr %11
 
-"switch_branch_test/testcases/malgo/Punctuate.mlg.SInt_0": ; preds = %1
-  %13 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/Punctuate.mlg.$symbol_120_0", i64 0, i32 1
+switch_branch__M4SInt46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0: ; preds = %1
+  %13 = getelementptr { i8, { ptr } }, ptr %_M6symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg11Temporal120_0, i64 0, i32 1
   %14 = load ptr, ptr %13, align 8
   %15 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %15, align 1
@@ -191,8 +191,8 @@ common.ret:                                       ; preds = %"switch_branch_test
   store ptr %let_capture_2, ptr %23, align 8
   br label %common.ret
 
-"switch_branch_test/testcases/malgo/Punctuate.mlg.SList_0": ; preds = %1
-  %24 = getelementptr { i8, { ptr } }, ptr %"test/testcases/malgo/Punctuate.mlg.$symbol_120_0", i64 0, i32 1
+switch_branch__M5SList46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External_0: ; preds = %1
+  %24 = getelementptr { i8, { ptr } }, ptr %_M6symbol46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg11Temporal120_0, i64 0, i32 1
   %25 = load ptr, ptr %24, align 8
   %26 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %26, align 1
@@ -205,10 +205,10 @@ common.ret:                                       ; preds = %"switch_branch_test
   %30 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %30, align 8
   %show_func_0 = getelementptr { ptr, ptr }, ptr %30, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Punctuate.mlg.show", ptr %show_func_0, align 8
-  %31 = tail call fastcc ptr @"runtime/malgo/Prelude.mlg.$mapList_curry_790"(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %30, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %25)
-  %32 = tail call fastcc ptr @"runtime/malgo/Prelude.mlg.$punctuate_curry_746"(ptr nofree noundef nonnull align 8 dereferenceable(1) %28, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %31)
-  %33 = tail call fastcc ptr @"runtime/malgo/Prelude.mlg.concatString"(ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %32)
+  store ptr @_M4show46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External, ptr %show_func_0, align 8
+  %31 = tail call fastcc ptr @_M16mapList_x5Fcurry34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal790(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %30, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %25)
+  %32 = tail call fastcc ptr @_M18punctuate_x5Fcurry34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal746(ptr nofree noundef nonnull align 8 dereferenceable(1) %28, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %31)
+  %33 = tail call fastcc ptr @_M12concatString34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %32)
   %34 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %34, align 1
   %35 = getelementptr { i8, { ptr } }, ptr %34, i64 0, i32 1, i32 0
@@ -220,7 +220,7 @@ common.ret:                                       ; preds = %"switch_branch_test
   store ptr %37, ptr %let_capture_4, align 8
   store ptr %let_capture_4, ptr %38, align 8
   %let_func_2 = getelementptr { ptr, ptr }, ptr %38, i64 0, i32 1
-  store ptr @"test/testcases/malgo/Punctuate.mlg.#let_closure_3184", ptr %let_func_2, align 8
+  store ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg12Internal3184, ptr %let_func_2, align 8
   %p_0.i2 = load ptr, ptr %let_capture_4, align 8
   %39 = tail call ptr @malgo_string_append(ptr %p_0.i2, ptr noundef nonnull @str3183)
   %40 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -238,30 +238,30 @@ switch_default_9:                                 ; preds = %1
   unreachable
 }
 
-define internal fastcc noundef ptr @"runtime/malgo/Prelude.mlg.$punctuate_curry_746"(ptr nofree noundef nonnull align 8 dereferenceable(1) %"runtime/malgo/Prelude.mlg.$__747_0", ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %"runtime/malgo/Prelude.mlg.$nil_748_0") unnamed_addr {
-  %1 = load i8, ptr %"runtime/malgo/Prelude.mlg.$nil_748_0", align 1
+define internal fastcc noundef ptr @_M18punctuate_x5Fcurry34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal746(ptr nofree noundef nonnull align 8 dereferenceable(1) %_M4_x5F34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal747_0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal748_0) unnamed_addr {
+  %1 = load i8, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal748_0, align 1
   %switch = icmp eq i8 %1, 0
-  br i1 %switch, label %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0", label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
+  br i1 %switch, label %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0, label %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
 
-common.ret:                                       ; preds = %"switch_branch_runtime/malgo/Prelude.mlg.Nil_1", %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0", %"switch_branch_runtime/malgo/Prelude.mlg.Cons_1"
-  %common.ret.op = phi ptr [ %16, %"switch_branch_runtime/malgo/Prelude.mlg.Cons_1" ], [ %2, %"switch_branch_runtime/malgo/Prelude.mlg.Nil_0" ], [ %9, %"switch_branch_runtime/malgo/Prelude.mlg.Nil_1" ]
+common.ret:                                       ; preds = %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_1, %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0, %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_1
+  %common.ret.op = phi ptr [ %16, %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_1 ], [ %2, %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0 ], [ %9, %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_1 ]
   ret ptr %common.ret.op
 
-"switch_branch_runtime/malgo/Prelude.mlg.Nil_0":  ; preds = %0
+switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0: ; preds = %0
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %2, align 1
   br label %common.ret
 
-"switch_branch_runtime/malgo/Prelude.mlg.Cons_0": ; preds = %0
-  %3 = getelementptr { i8, { ptr, ptr } }, ptr %"runtime/malgo/Prelude.mlg.$nil_748_0", i64 0, i32 1
+switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0: ; preds = %0
+  %3 = getelementptr { i8, { ptr, ptr } }, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal748_0, i64 0, i32 1
   %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { i8, { ptr, ptr } }, ptr %"runtime/malgo/Prelude.mlg.$nil_748_0", i64 0, i32 1, i32 1
+  %5 = getelementptr { i8, { ptr, ptr } }, ptr %_M3nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal748_0, i64 0, i32 1, i32 1
   %6 = load ptr, ptr %5, align 8
   %7 = load i8, ptr %6, align 1
   %switch1 = icmp eq i8 %7, 0
-  br i1 %switch1, label %"switch_branch_runtime/malgo/Prelude.mlg.Nil_1", label %"switch_branch_runtime/malgo/Prelude.mlg.Cons_1"
+  br i1 %switch1, label %switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_1, label %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_1
 
-"switch_branch_runtime/malgo/Prelude.mlg.Nil_1":  ; preds = %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
+switch_branch__M3Nil34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_1: ; preds = %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
   %8 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %8, align 1
   %9 = tail call noundef ptr @malgo_malloc(i64 noundef 24)
@@ -272,12 +272,12 @@ common.ret:                                       ; preds = %"switch_branch_runt
   store ptr %8, ptr %11, align 8
   br label %common.ret
 
-"switch_branch_runtime/malgo/Prelude.mlg.Cons_1": ; preds = %"switch_branch_runtime/malgo/Prelude.mlg.Cons_0"
-  %12 = tail call fastcc ptr @"runtime/malgo/Prelude.mlg.$punctuate_curry_746"(ptr nofree noundef nonnull align 8 dereferenceable(1) %"runtime/malgo/Prelude.mlg.$__747_0", ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %6)
+switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_1: ; preds = %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
+  %12 = tail call fastcc ptr @_M18punctuate_x5Fcurry34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal746(ptr nofree noundef nonnull align 8 dereferenceable(1) %_M4_x5F34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal747_0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %6)
   %13 = tail call ptr @malgo_malloc(i64 noundef 24)
   store i8 1, ptr %13, align 1
   %14 = getelementptr { i8, { ptr, ptr } }, ptr %13, i64 0, i32 1, i32 0
-  store ptr %"runtime/malgo/Prelude.mlg.$__747_0", ptr %14, align 8
+  store ptr %_M4_x5F34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal747_0, ptr %14, align 8
   %15 = getelementptr { i8, { ptr, ptr } }, ptr %13, i64 0, i32 1, i32 1
   store ptr %12, ptr %15, align 8
   %16 = tail call noundef ptr @malgo_malloc(i64 noundef 24)
@@ -365,7 +365,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store i8 2, ptr %37, align 8
   %38 = getelementptr { i8, { ptr } }, ptr %37, i64 0, i32 1, i32 0
   store ptr %34, ptr %38, align 8
-  %39 = tail call ptr @"test/testcases/malgo/Punctuate.mlg.show"(ptr poison, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(1) %37)
+  %39 = tail call ptr @_M4show46test_x2Ftestcases_x2Fmalgo_x2FPunctuate_x2Emlg8External(ptr poison, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(1) %37)
   %40 = getelementptr { i8, { ptr } }, ptr %39, i64 0, i32 1
   %41 = load ptr, ptr %40, align 8
   %42 = tail call ptr @malgo_print_string(ptr %41)

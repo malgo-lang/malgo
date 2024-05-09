@@ -105,9 +105,6 @@ instance (Pretty a) => Pretty (Meta a) where
 makeStore ''Meta
 
 idToText :: Id -> Text
--- idToText Id {name, moduleName, sort = External} = moduleNameToString moduleName <> "." <> name
--- idToText Id {name, moduleName, sort = Internal uniq} = moduleNameToString moduleName <> ".#" <> name <> "_" <> convertString (show uniq)
--- idToText Id {name, moduleName, sort = Temporal uniq} = moduleNameToString moduleName <> ".$" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, sort = Native} = name
 idToText id = mangle id
 
