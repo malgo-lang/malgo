@@ -1,7 +1,7 @@
 ; ModuleID = 'test/testcases/malgo/Undefined.mlg'
 source_filename = "test/testcases/malgo/Undefined.mlg"
 
-@"runtime/malgo/Builtin.mlg.undefined" = global ptr undef
+@_M9undefined34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External = global ptr undef
 @str2811 = unnamed_addr constant [3 x i8] c"OK\00"
 
 declare void @GC_init()
@@ -164,7 +164,7 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @"test/testcases/malgo/Undefined.mlg.main"(ptr %0, ptr %"test/testcases/malgo/Undefined.mlg.$$__21_0") {
+define internal ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal21_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -173,10 +173,10 @@ define internal ptr @"test/testcases/malgo/Undefined.mlg.main"(ptr %0, ptr %"tes
   %5 = getelementptr { i8, <8 x i8> }, ptr %2, i32 0, i32 0
   %6 = load i8, ptr %5, align 1
   switch i8 %6, label %switch_default_0 [
-    i8 0, label %"switch_branch_runtime/malgo/Builtin.mlg.String#_0"
+    i8 0, label %switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
   ]
 
-"switch_branch_runtime/malgo/Builtin.mlg.String#_0": ; preds = %1
+switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %1
   %7 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1
   %8 = getelementptr { ptr }, ptr %7, i32 0, i32 0
   %9 = load ptr, ptr %8, align 8
@@ -187,18 +187,18 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @"test/testcases/malgo/Undefined.mlg.f"(ptr %0, ptr %"test/testcases/malgo/Undefined.mlg.$eta_29_0") {
-  %2 = load ptr, ptr @"runtime/malgo/Builtin.mlg.undefined", align 8
+define internal ptr @_M1f46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M3eta46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal29_0) {
+  %2 = load ptr, ptr @_M9undefined34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External, align 8
   %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %"test/testcases/malgo/Undefined.mlg.$eta_29_0")
+  %7 = call ptr %6(ptr %4, ptr %_M3eta46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal29_0)
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/Undefined.mlg.g"(ptr %0, ptr %"test/testcases/malgo/Undefined.mlg.$x_20_0") {
-  %2 = load ptr, ptr @"runtime/malgo/Builtin.mlg.undefined", align 8
+define internal ptr @_M1g46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M1x46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal20_0) {
+  %2 = load ptr, ptr @_M9undefined34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External, align 8
   ret ptr %2
 }
 
@@ -208,7 +208,7 @@ define i32 @main(ptr %0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @"test/testcases/malgo/Undefined.mlg.main"(ptr null, ptr %2)
+  %4 = call ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr null, ptr %2)
   ret i32 0
 }
 
@@ -217,6 +217,6 @@ define internal void @"malgo_load_test/testcases/malgo/Undefined.mlg"() {
   %2 = getelementptr { i8, {} }, ptr %1, i32 0, i32 0
   store i8 0, ptr %2, align 1
   %3 = call ptr @malgo_unsafe_cast(ptr %1)
-  store ptr %3, ptr @"runtime/malgo/Builtin.mlg.undefined", align 8
+  store ptr %3, ptr @_M9undefined34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External, align 8
   ret void
 }

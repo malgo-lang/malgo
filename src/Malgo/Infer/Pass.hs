@@ -112,7 +112,7 @@ tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     lookupType pos name >>= \case
       TyCon con -> do
-        params' <- for params $ newInternalId . idToText
+        params' <- for params $ newInternalId . (.name)
         zipWithM_
           ( \p p' ->
               modify $ insertTypeDef p (TypeDef (TyVar p') [] [])
@@ -129,7 +129,7 @@ tcDataDefs ds = do
   for ds \(pos, name, params, valueCons) -> do
     -- 1. 宣言から、各コンストラクタの型シグネチャを生成する
     name' <- lookupType pos name
-    params' <- for params \(_, p) -> newInternalId (idToText p)
+    params' <- for params \(_, p) -> newInternalId p.name
     zipWithM_
       ( \(_, p) p' ->
           modify $ insertTypeDef p (TypeDef (TyVar p') [] [])

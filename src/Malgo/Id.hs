@@ -26,7 +26,7 @@ import Data.Text (stripPrefix)
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State)
-import Malgo.Mangle (Manglable (..))
+import Malgo.Mangle (Manglable (..), mangle)
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (toList)
@@ -105,12 +105,11 @@ instance (Pretty a) => Pretty (Meta a) where
 makeStore ''Meta
 
 idToText :: Id -> Text
-idToText Id {name, moduleName, sort = External} = moduleNameToString moduleName <> "." <> name
-idToText Id {name, moduleName, sort = Internal uniq} = moduleNameToString moduleName <> ".#" <> name <> "_" <> convertString (show uniq)
-idToText Id {name, moduleName, sort = Temporal uniq} = moduleNameToString moduleName <> ".$" <> name <> "_" <> convertString (show uniq)
+-- idToText Id {name, moduleName, sort = External} = moduleNameToString moduleName <> "." <> name
+-- idToText Id {name, moduleName, sort = Internal uniq} = moduleNameToString moduleName <> ".#" <> name <> "_" <> convertString (show uniq)
+-- idToText Id {name, moduleName, sort = Temporal uniq} = moduleNameToString moduleName <> ".$" <> name <> "_" <> convertString (show uniq)
 idToText Id {name, sort = Native} = name
-
--- idToText id = mangle id
+idToText id = mangle id
 
 newTemporalId :: (State Uniq :> es, Reader ModuleName :> es) => Text -> Eff es Id
 newTemporalId name = do

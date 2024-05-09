@@ -159,8 +159,8 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @"test/testcases/malgo/FuncOverUnboxed.mlg.f"(ptr %0, i64 %"test/testcases/malgo/FuncOverUnboxed.mlg.$unboxed_22_0") {
-  switch i64 %"test/testcases/malgo/FuncOverUnboxed.mlg.$unboxed_22_0", label %switch-unboxed_default_0 [
+define internal ptr @_M1f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr %0, i64 %_M7unboxed52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg10Temporal22_0) {
+  switch i64 %_M7unboxed52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg10Temporal22_0, label %switch-unboxed_default_0 [
     i64 0, label %switch-unboxed_branch_0_i64_0
     i64 1, label %switch-unboxed_branch_1_i64_0
   ]
@@ -181,8 +181,8 @@ switch-unboxed_default_0:                         ; preds = %1
   ret ptr %7
 }
 
-define internal ptr @"test/testcases/malgo/FuncOverUnboxed.mlg.main"(ptr %0, ptr %"test/testcases/malgo/FuncOverUnboxed.mlg.$$__33_0") {
-  %2 = call ptr @"test/testcases/malgo/FuncOverUnboxed.mlg.f"(ptr null, i64 0)
+define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg10Temporal33_0) {
+  %2 = call ptr @_M1f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr null, i64 0)
   ret ptr %2
 }
 
@@ -194,7 +194,7 @@ define i32 @main(ptr %0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
-  %4 = call ptr @"test/testcases/malgo/FuncOverUnboxed.mlg.main"(ptr null, ptr %2)
+  %4 = call ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr null, ptr %2)
   ret i32 0
 }
 
