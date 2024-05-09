@@ -1,4 +1,4 @@
-module Malgo.Mangle (mangle, demangle) where
+module Malgo.Mangle (Manglable (..), mangle, demangle) where
 
 import Control.Exception (assert)
 import Data.Text qualified as T
@@ -6,6 +6,16 @@ import Data.Text.ICU.Char (Bool_ (IDContinue), property)
 import Malgo.Prelude
 import Text.Megaparsec
 import Text.Megaparsec.Char (digitChar)
+
+class Manglable a where
+  toTextList :: a -> [Text]
+  fromTextList :: [Text] -> a
+
+mangle :: (Manglable a) => a -> Text
+mangle = mangleTextList . toTextList
+
+demangle :: (Manglable a) => Text -> a
+demangle = fromTextList . demangleTextList
 
 {-
 Note for mangling identifiers:
@@ -26,22 +36,22 @@ How to demangle identifiers:
 
 -- | Mangle a list of identifiers.
 --
--- >>> mangle ["foo", "bar"]
+-- >>> mangleTextList ["foo", "bar"]
 -- "_M3foo3bar"
--- >>> mangle ["foo/bar.mlg", "baz"]
+-- >>> mangleTextList ["foo/bar.mlg", "baz"]
 -- "_M17foo_x2Fbar_x2Emlg3baz"
--- >>> mangle ["foo/bar.mlg", "baz_42"]
+-- >>> mangleTextList ["foo/bar.mlg", "baz_42"]
 -- "_M17foo_x2Fbar_x2Emlg9baz_x5F42"
--- >>> mangle ["+"]
+-- >>> mangleTextList ["+"]
 -- "_M4_x2B"
--- >>> mangle ["->"]
+-- >>> mangleTextList ["->"]
 -- "_M8_x2D_x3E"
--- >>> mangle ["あいうえお"]
+-- >>> mangleTextList ["あいうえお"]
 -- "_M5\12354\12356\12358\12360\12362"
--- >>> mangle ["→"]
+-- >>> mangleTextList ["→"]
 -- "_M6_u2192"
-mangle :: [Text] -> Text
-mangle msgs =
+mangleTextList :: [Text] -> Text
+mangleTextList msgs =
   let underscoreReplaced = map (T.concatMap replaceUnderscore) msgs
       otherReplaced = map (T.concatMap replaceOther) underscoreReplaced
       runLengthed = map runLength otherReplaced
@@ -89,43 +99,43 @@ mangle msgs =
       | T.null x = ""
       | otherwise = assert (not $ isDigit $ T.head x) $ T.pack (show $ T.length x) <> x
 
--- | Demangle a mangled identifier.
+-- | DemangleTextList a mangleTextListd identifier.
 --
--- >>> demangle "_M3foo3bar"
+-- >>> demangleTextList "_M3foo3bar"
 -- ["foo","bar"]
--- >>> demangle "_M17foo_x2Fbar_x2Emlg3baz"
+-- >>> demangleTextList "_M17foo_x2Fbar_x2Emlg3baz"
 -- ["foo/bar.mlg","baz"]
--- >>> demangle "_M17foo_x2Fbar_x2Emlg9baz_x5F42"
+-- >>> demangleTextList "_M17foo_x2Fbar_x2Emlg9baz_x5F42"
 -- ["foo/bar.mlg","baz_42"]
--- >>> demangle "_M4_x2B"
+-- >>> demangleTextList "_M4_x2B"
 -- ["+"]
--- >>> demangle "_M8_x2D_x3E"
+-- >>> demangleTextList "_M8_x2D_x3E"
 -- ["->"]
--- >>> demangle "_M5あいうえお"
+-- >>> demangleTextList "_M5あいうえお"
 -- ["\12354\12356\12358\12360\12362"]
--- >>> demangle "_M6_u2192"
+-- >>> demangleTextList "_M6_u2192"
 -- ["\8594"]
 --
--- prop> \x -> any null x || any (isDigit . head) x || demangle (mangle (map T.pack x)) == map T.pack x
-demangle :: (HasCallStack) => Text -> [Text]
-demangle msg
+-- prop> \x -> any null x || any (isDigit . head) x || demangleTextList (mangleTextList (map T.pack x)) == map T.pack x
+demangleTextList :: (HasCallStack) => Text -> [Text]
+demangleTextList msg
   | "_M" `T.isPrefixOf` msg =
       let prefixRemoved = T.drop 2 msg
           msgs = splitByRunLength prefixRemoved
        in map replace msgs
-  | otherwise = error "demangle: not a mangled identifier"
+  | otherwise = error "demangleTextList: not a mangleTextListd identifier"
   where
     splitByRunLength msg =
       case Text.Megaparsec.runParser
         ( many (takeP Nothing . read =<< some digitChar) ::
             Parsec Void Text [Text]
         )
-        "<demangle>"
+        "<demangleTextList>"
         msg of
         Left e -> error $ errorBundlePretty e
         Right x -> x
     replace txt = case T.splitOn "_" txt of
-      [] -> error "demangle: empty string"
+      [] -> error "demangleTextList: empty string"
       [x] -> x
       (x : xs) -> mconcat $ x : map replace' xs
     replace' txt
@@ -138,7 +148,7 @@ demangle msg
                     + hexToIntNth 0 b
                 )
                 (T.pack rest)
-            _ -> error $ "demangle: invalid hex " <> convertString txt
+            _ -> error $ "demangleTextList: invalid hex " <> convertString txt
       | "u" `T.isPrefixOf` txt =
           case T.unpack $ T.drop 1 txt of
             (a : b : c : d : rest) ->
@@ -150,7 +160,7 @@ demangle msg
                     + hexToIntNth 0 d
                 )
                 (T.pack rest)
-            _ -> error $ "demangle: invalid hex " <> convertString txt
+            _ -> error $ "demangleTextList: invalid hex " <> convertString txt
       | "U" `T.isPrefixOf` txt =
           case T.unpack $ T.drop 1 txt of
             (a : b : c : d : e : f : g : h : rest) ->
@@ -166,12 +176,12 @@ demangle msg
                     + hexToIntNth 0 h
                 )
                 (T.pack rest)
-            _ -> error $ "demangle: invalid hex " <> convertString txt
-      | otherwise = error "demangle: invalid prefix"
+            _ -> error $ "demangleTextList: invalid hex " <> convertString txt
+      | otherwise = error "demangleTextList: invalid prefix"
     hexToIntNth n c = hexToInt c * power n
     power n = 16 ^ (n :: Int)
     hexToInt c
       | isDigit c = ord c - ord '0'
       | 'A' <= c && c <= 'F' = ord c - ord 'A' + 10
       | 'a' <= c && c <= 'f' = ord c - ord 'a' + 10
-      | otherwise = error $ "demangle: invalid hex " <> [c]
+      | otherwise = error $ "demangleTextList: invalid hex " <> [c]

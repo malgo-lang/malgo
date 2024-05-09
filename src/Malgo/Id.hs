@@ -22,9 +22,11 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Store ()
 import Data.Store.TH
+import Data.Text (stripPrefix)
 import Effectful (Eff, (:>))
 import Effectful.Reader.Static (Reader, ask)
 import Effectful.State.Static.Local (State)
+import Malgo.Mangle (Manglable (..))
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (toList)
@@ -63,6 +65,24 @@ instance Pretty Id where
   pretty Id {name, moduleName, sort = Internal uniq} = "#" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, moduleName, sort = Temporal uniq} = "$" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, sort = Native} = "%" <> pretty name
+
+instance Manglable Id where
+  toTextList Id {name, moduleName, sort} = [name, moduleNameToString moduleName, idSortToText sort]
+    where
+      idSortToText External = "External"
+      idSortToText (Internal uniq) = "Internal" <> convertString (show uniq)
+      idSortToText (Temporal uniq) = "Temporal" <> convertString (show uniq)
+      idSortToText Native = "Native"
+  fromTextList [name, moduleName, sort] = Id {name, moduleName = stringToModuleName moduleName, sort = idSortFromText sort}
+    where
+      idSortFromText txt
+        | txt == "External" = External
+        | Just uniq <- stripPrefix "Internal" txt = Internal (read (convertString uniq))
+        | Just uniq <- stripPrefix "Temporal" txt = Temporal (read (convertString uniq))
+        | txt == "Native" = Native
+        | otherwise = error "fromTextList: invalid sort"
+      stringToModuleName = undefined
+  fromTextList _ = error "fromTextList: invalid list"
 
 makeStore ''Id
 
