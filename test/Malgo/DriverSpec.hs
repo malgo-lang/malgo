@@ -5,6 +5,7 @@
 
 module Malgo.DriverSpec (spec) where
 
+import Control.Lens (view, _1, _2, _3)
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
 import Data.Text qualified as T
@@ -14,7 +15,7 @@ import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
 import Malgo.TestUtils
-import System.Directory (copyFile, createDirectoryIfMissing, getCurrentDirectory, listDirectory, makeRelativeToCurrentDirectory)
+import System.Directory (listDirectory, makeRelativeToCurrentDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
@@ -29,59 +30,28 @@ import System.Process.Typed
     setStdin,
     setStdout,
   )
-import Test.Hspec (Spec, anyException, it, runIO, shouldBe, shouldThrow)
-
-getWorkspaceDir :: (MonadIO m) => m FilePath
-getWorkspaceDir = liftIO do
-  pwd <- getCurrentDirectory
-  createDirectoryIfMissing True $ pwd </> ".malgo-work"
-  createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "libs"
-  return $ pwd </> ".malgo-work"
+import Test.Hspec (Spec, anyException, beforeAll, it, runIO, shouldBe, shouldThrow)
+import Test.Hspec.Core.Hooks (mapSubject)
 
 spec :: Spec
 spec = do
-  -- Setup malgo base library
-  runIO do
-    setupRuntime
-    setupBuiltin
-    setupPrelude
   testcases <- runIO (filter (isExtensionOf "mlg") <$> listDirectory testcaseDir)
-  do
-    for_ testcases \testcase -> do
-      goldenWithTag "driver" "txt" ("normalCase " <> takeBaseName testcase) $ testNormal (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("normalCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("opt normalCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  do
-    for_ testcases \testcase -> do
-      goldenWithTag "driver" "txt" ("nonoCase " <> takeBaseName testcase) $ testNoNo (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("nonoCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("opt nonoCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  do
-    for_ testcases \testcase -> do
-      goldenWithTag "driver" "txt" ("nooptCase " <> takeBaseName testcase) $ testNoOpt (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("nooptCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("opt nooptCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  do
-    for_ testcases \testcase -> do
-      goldenWithTag "driver" "txt" ("noliftCase " <> takeBaseName testcase) $ testNoLift (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("noliftCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("opt noliftCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
-  do
-    for_ testcases \testcase -> do
-      goldenWithTag "driver" "txt" ("agressiveCase " <> takeBaseName testcase) $ testAggressive (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("agressiveCase " <> takeBaseName testcase) $ readLLVM (testcaseDir </> testcase)
-      goldenLLVM "llvm" ("opt agressiveCase " <> takeBaseName testcase) $ readLLVMOpt (testcaseDir </> testcase)
+  for_ testcases \testcase -> beforeAll
+    ( do
+        result <- testNormal (testcaseDir </> testcase)
+        ll <- readLLVM (testcaseDir </> testcase)
+        llOpt <- readLLVMOpt (testcaseDir </> testcase)
+        pure (result, ll, llOpt)
+    )
+    do
+      mapSubject (view _1) $ goldenWithTag' "driver" "txt" ("normalCase " <> takeBaseName testcase)
+      mapSubject (view _2) $ goldenWithTag' "llvm" "ll" ("normalCase " <> takeBaseName testcase)
+      mapSubject (view _3) $ goldenWithTag' "llvm" "ll" ("opt normalCase " <> takeBaseName testcase)
   errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
   for_ errorcases \errorcase -> do
     it ("driver errorCase " <> takeBaseName errorcase)
       $ testError (testcaseDir </> "error" </> errorcase)
       `shouldThrow` anyException
-
--- | Copy runtime.c to /tmp/malgo-test/libs
-setupRuntime :: IO ()
-setupRuntime = do
-  workspaceDir <- getWorkspaceDir
-  copyFile "./runtime/malgo/runtime.c" (workspaceDir </> "libs/runtime.c")
 
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()
@@ -207,23 +177,3 @@ testError testcase = do
 testNormal :: FilePath -> IO BL.ByteString
 testNormal testcase =
   test testcase "normal" True False defaultOptimizeOption LLVM
-
-testNoLift :: FilePath -> IO BL.ByteString
-testNoLift testcase =
-  test testcase "nolift" False False defaultOptimizeOption LLVM
-
-testNoOpt :: FilePath -> IO BL.ByteString
-testNoOpt testcase =
-  test testcase "noopt" True True defaultOptimizeOption LLVM
-
-testNoNo :: FilePath -> IO BL.ByteString
-testNoNo testcase =
-  test testcase "nono" False True defaultOptimizeOption LLVM
-
-testAggressive :: FilePath -> IO BL.ByteString
-testAggressive testcase =
-  test testcase "aggressive" True False aggressiveOptimizeOption LLVM
-
-aggressiveOptimizeOption :: OptimizeOption
-aggressiveOptimizeOption =
-  defaultOptimizeOption {inlineThreshold = 30, doSpecializeFunction = True}

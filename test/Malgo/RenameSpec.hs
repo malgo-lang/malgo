@@ -14,9 +14,6 @@ import Test.Hspec
 
 spec :: Spec
 spec = do
-  runIO do
-    setupBuiltin
-    setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
     goldenHaskell "rename" (takeBaseName testcase) (driveRename (testcaseDir </> testcase))

@@ -15,9 +15,6 @@ import Test.Hspec
 
 spec :: Spec
 spec = do
-  runIO do
-    setupBuiltin
-    setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
     goldenHaskell "infer" (takeBaseName testcase) (driveInfer (testcaseDir </> testcase))

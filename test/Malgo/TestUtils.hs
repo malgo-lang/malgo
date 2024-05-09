@@ -2,11 +2,14 @@ module Malgo.TestUtils
   ( smallIndentNoColor,
     pShowCompact,
     testcaseDir,
+    getWorkspaceDir,
+    setupRuntime,
     setupBuiltin,
     setupPrelude,
     flag,
     option,
     goldenWithTag,
+    goldenWithTag',
     goldenJSON,
     goldenLLVM,
     goldenHaskell,
@@ -20,9 +23,10 @@ import Malgo.Core.Optimize (OptimizeOption, defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
+import System.Directory
 import System.FilePath ((<.>), (</>))
 import Test.Hspec (Spec, it)
-import Test.Hspec.Core.Spec (getSpecDescriptionPath)
+import Test.Hspec.Core.Spec (SpecM, getSpecDescriptionPath)
 import Test.Hspec.Golden
 import Text.Pretty.Simple
 
@@ -39,6 +43,19 @@ pShowCompact x = convertString $ pShowOpt smallIndentNoColor x
 
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
+
+getWorkspaceDir :: (MonadIO m) => m FilePath
+getWorkspaceDir = liftIO do
+  pwd <- getCurrentDirectory
+  createDirectoryIfMissing True $ pwd </> ".malgo-work"
+  createDirectoryIfMissing True $ pwd </> ".malgo-work" </> "libs"
+  return $ pwd </> ".malgo-work"
+
+-- | Copy runtime.c to /tmp/malgo-test/libs
+setupRuntime :: IO ()
+setupRuntime = do
+  workspaceDir <- getWorkspaceDir
+  copyFile "./runtime/malgo/runtime.c" (workspaceDir </> "libs/runtime.c")
 
 setupBuiltin :: IO ()
 setupBuiltin =
@@ -72,6 +89,21 @@ goldenWithTag tag ext description action = do
           actualFile = Just (".golden" </> tag </> name </> "actual" <.> ext),
           failFirstTime = False
         }
+
+goldenWithTag' :: (ConvertibleStrings a String) => String -> String -> String -> SpecM a ()
+goldenWithTag' tag ext description = do
+  path <- (<> words description) <$> getSpecDescriptionPath
+  let name = intercalate "-" path
+  it (tag <> " " <> description) \actualOutput -> do
+    Golden
+      { output = convertString actualOutput,
+        encodePretty = convertString,
+        writeToFile = writeFile,
+        readFromFile = readFile,
+        goldenFile = ".golden" </> tag </> name </> "golden" <.> ext,
+        actualFile = Just (".golden" </> tag </> name </> "actual" <.> ext),
+        failFirstTime = False
+      }
 
 goldenJSON :: String -> String -> IO BL.ByteString -> Spec
 goldenJSON tag = goldenWithTag tag "json"
