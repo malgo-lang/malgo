@@ -111,47 +111,177 @@
                 "tag": "FuncT"
             },
             {
-                "clauses": [
+                "bindings": [
                     {
-                        "body": {
+                        "object": {
                             "body": {
-                                "tag": "Cast",
-                                "type": {
-                                    "constructors": [
-                                        {
-                                            "parameters": [],
-                                            "tag": {
-                                                "tag": "Tuple"
-                                            }
-                                        }
-                                    ],
-                                    "tag": "SumT"
-                                },
-                                "value": {
-                                    "tag": "Var",
-                                    "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal25"
-                                }
-                            },
-                            "expression": {
-                                "arguments": [
+                                "bindings": [
                                     {
-                                        "literal": {
-                                            "contents": "PASS",
-                                            "tag": "String"
+                                        "object": {
+                                            "body": {
+                                                "bindings": [
+                                                    {
+                                                        "object": {
+                                                            "arguments": [],
+                                                            "constructor": {
+                                                                "parameters": [],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            },
+                                                            "tag": "Pack",
+                                                            "type": {
+                                                                "constructors": [
+                                                                    {
+                                                                        "parameters": [],
+                                                                        "tag": {
+                                                                            "tag": "Tuple"
+                                                                        }
+                                                                    }
+                                                                ],
+                                                                "tag": "SumT"
+                                                            }
+                                                        },
+                                                        "type": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "tag": "Tuple"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        },
+                                                        "variable": "_M3let54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal17"
+                                                    }
+                                                ],
+                                                "body": {
+                                                    "atom": {
+                                                        "tag": "Var",
+                                                        "variable": "_M3let54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal17"
+                                                    },
+                                                    "tag": "Atom"
+                                                },
+                                                "tag": "Let"
+                                            },
+                                            "parameters": [
+                                                "_M1a54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal16"
+                                            ],
+                                            "tag": "Fun"
                                         },
-                                        "tag": "Unboxed"
+                                        "type": {
+                                            "parameters": [
+                                                {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            },
+                                            "tag": "FuncT"
+                                        },
+                                        "variable": "_M3fun54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal18"
                                     }
                                 ],
-                                "callee": {
-                                    "tag": "Var",
-                                    "variable": "_M24malgo_x5Fprint_x5Fstring54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External"
+                                "body": {
+                                    "bindings": [
+                                        {
+                                            "object": {
+                                                "arguments": [],
+                                                "constructor": {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                },
+                                                "tag": "Pack",
+                                                "type": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                }
+                                            },
+                                            "type": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            },
+                                            "variable": "_M3let54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal20"
+                                        }
+                                    ],
+                                    "body": {
+                                        "body": {
+                                            "tag": "Cast",
+                                            "type": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            },
+                                            "value": {
+                                                "tag": "Var",
+                                                "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal22"
+                                            }
+                                        },
+                                        "expression": {
+                                            "arguments": [
+                                                {
+                                                    "tag": "Var",
+                                                    "variable": "_M3let54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal20"
+                                                }
+                                            ],
+                                            "callee": {
+                                                "tag": "Var",
+                                                "variable": "_M3fun54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal18"
+                                            },
+                                            "tag": "Call"
+                                        },
+                                        "tag": "Assign",
+                                        "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal22"
+                                    },
+                                    "tag": "Let"
                                 },
-                                "tag": "Call"
+                                "tag": "Let"
                             },
-                            "tag": "Assign",
-                            "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal25"
+                            "parameters": [
+                                "_M8_x24_x5F54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal15"
+                            ],
+                            "tag": "Fun"
                         },
-                        "tag": "Bind",
                         "type": {
                             "parameters": [
                                 {
@@ -179,243 +309,48 @@
                             },
                             "tag": "FuncT"
                         },
-                        "variable": "_M92let_x5F_x5FM1f54test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FTestNestedLetFunc_x5Fx2Emlg9Internal254test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal24"
+                        "variable": "_M3fun54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal23"
                     }
                 ],
-                "scrutinee": {
-                    "bindings": [
-                        {
-                            "object": {
-                                "body": {
-                                    "body": {
-                                        "body": {
-                                            "body": {
-                                                "tag": "Cast",
-                                                "type": {
-                                                    "constructors": [
-                                                        {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "tag": "SumT"
-                                                },
-                                                "value": {
-                                                    "tag": "Var",
-                                                    "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal22"
-                                                }
-                                            },
-                                            "expression": {
-                                                "arguments": [
-                                                    {
-                                                        "tag": "Var",
-                                                        "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal21"
-                                                    }
-                                                ],
-                                                "callee": {
-                                                    "tag": "Var",
-                                                    "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal19"
-                                                },
-                                                "tag": "Call"
-                                            },
-                                            "tag": "Assign",
-                                            "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal22"
-                                        },
-                                        "expression": {
-                                            "bindings": [
-                                                {
-                                                    "object": {
-                                                        "arguments": [],
-                                                        "constructor": {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        },
-                                                        "tag": "Pack",
-                                                        "type": {
-                                                            "constructors": [
-                                                                {
-                                                                    "parameters": [],
-                                                                    "tag": {
-                                                                        "tag": "Tuple"
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    },
-                                                    "type": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    },
-                                                    "variable": "_M3let54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal20"
-                                                }
-                                            ],
-                                            "body": {
-                                                "atom": {
-                                                    "tag": "Var",
-                                                    "variable": "_M3let54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal20"
-                                                },
-                                                "tag": "Atom"
-                                            },
-                                            "tag": "Let"
-                                        },
-                                        "tag": "Assign",
-                                        "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal21"
-                                    },
-                                    "expression": {
-                                        "bindings": [
-                                            {
-                                                "object": {
-                                                    "body": {
-                                                        "bindings": [
-                                                            {
-                                                                "object": {
-                                                                    "arguments": [],
-                                                                    "constructor": {
-                                                                        "parameters": [],
-                                                                        "tag": {
-                                                                            "tag": "Tuple"
-                                                                        }
-                                                                    },
-                                                                    "tag": "Pack",
-                                                                    "type": {
-                                                                        "constructors": [
-                                                                            {
-                                                                                "parameters": [],
-                                                                                "tag": {
-                                                                                    "tag": "Tuple"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "tag": "SumT"
-                                                                    }
-                                                                },
-                                                                "type": {
-                                                                    "constructors": [
-                                                                        {
-                                                                            "parameters": [],
-                                                                            "tag": {
-                                                                                "tag": "Tuple"
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "tag": "SumT"
-                                                                },
-                                                                "variable": "_M3let54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal17"
-                                                            }
-                                                        ],
-                                                        "body": {
-                                                            "atom": {
-                                                                "tag": "Var",
-                                                                "variable": "_M3let54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal17"
-                                                            },
-                                                            "tag": "Atom"
-                                                        },
-                                                        "tag": "Let"
-                                                    },
-                                                    "parameters": [
-                                                        "_M1a54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal16"
-                                                    ],
-                                                    "tag": "Fun"
-                                                },
-                                                "type": {
-                                                    "parameters": [
-                                                        {
-                                                            "constructors": [
-                                                                {
-                                                                    "parameters": [],
-                                                                    "tag": {
-                                                                        "tag": "Tuple"
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    ],
-                                                    "returns": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    },
-                                                    "tag": "FuncT"
-                                                },
-                                                "variable": "_M3fun54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal18"
-                                            }
-                                        ],
-                                        "body": {
-                                            "atom": {
-                                                "tag": "Var",
-                                                "variable": "_M3fun54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal18"
-                                            },
-                                            "tag": "Atom"
-                                        },
-                                        "tag": "Let"
-                                    },
-                                    "tag": "Assign",
-                                    "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal19"
-                                },
-                                "parameters": [
-                                    "_M8_x24_x5F54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal15"
-                                ],
-                                "tag": "Fun"
-                            },
-                            "type": {
-                                "parameters": [
-                                    {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "tag": "Tuple"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    }
-                                ],
-                                "returns": {
-                                    "constructors": [
-                                        {
-                                            "parameters": [],
-                                            "tag": {
-                                                "tag": "Tuple"
-                                            }
-                                        }
-                                    ],
-                                    "tag": "SumT"
-                                },
-                                "tag": "FuncT"
-                            },
-                            "variable": "_M3fun54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal23"
-                        }
-                    ],
+                "body": {
                     "body": {
-                        "atom": {
-                            "tag": "Var",
-                            "variable": "_M3fun54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal23"
+                        "tag": "Cast",
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
                         },
-                        "tag": "Atom"
+                        "value": {
+                            "tag": "Var",
+                            "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal25"
+                        }
                     },
-                    "tag": "Let"
+                    "expression": {
+                        "arguments": [
+                            {
+                                "literal": {
+                                    "contents": "PASS",
+                                    "tag": "String"
+                                },
+                                "tag": "Unboxed"
+                            }
+                        ],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": "_M24malgo_x5Fprint_x5Fstring54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External"
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal25"
                 },
-                "tag": "Match"
+                "tag": "Let"
             }
         ]
     ],

@@ -36,41 +36,41 @@
             {
                 "body": {
                     "body": {
-                        "tag": "Cast",
-                        "type": {
-                            "constructors": [
-                                {
-                                    "parameters": [],
-                                    "tag": {
-                                        "tag": "Tuple"
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
                                     }
+                                ],
+                                "tag": "SumT"
+                            },
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg10Temporal10"
+                            }
+                        },
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "tag": "Var",
+                                    "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg9Temporal9"
                                 }
                             ],
-                            "tag": "SumT"
+                            "callee": {
+                                "tag": "Var",
+                                "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                            },
+                            "tag": "Call"
                         },
-                        "value": {
-                            "tag": "Var",
-                            "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg10Temporal10"
-                        }
+                        "tag": "Assign",
+                        "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg10Temporal10"
                     },
                     "expression": {
-                        "arguments": [
-                            {
-                                "tag": "Var",
-                                "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg9Temporal9"
-                            }
-                        ],
-                        "callee": {
-                            "tag": "Var",
-                            "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
-                        },
-                        "tag": "Call"
-                    },
-                    "tag": "Assign",
-                    "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg10Temporal10"
-                },
-                "expression": {
-                    "body": {
                         "tag": "Cast",
                         "type": {
                             "tag": "AnyT"
@@ -80,27 +80,27 @@
                             "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg9Temporal8"
                         }
                     },
-                    "expression": {
-                        "arguments": [
-                            {
-                                "literal": {
-                                    "contents": "Hello, world",
-                                    "tag": "String"
-                                },
-                                "tag": "Unboxed"
-                            }
-                        ],
-                        "callee": {
-                            "tag": "Var",
-                            "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
-                        },
-                        "tag": "Call"
-                    },
                     "tag": "Assign",
-                    "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg9Temporal8"
+                    "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg9Temporal9"
+                },
+                "expression": {
+                    "arguments": [
+                        {
+                            "literal": {
+                                "contents": "Hello, world",
+                                "tag": "String"
+                            },
+                            "tag": "Unboxed"
+                        }
+                    ],
+                    "callee": {
+                        "tag": "Var",
+                        "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                    },
+                    "tag": "Call"
                 },
                 "tag": "Assign",
-                "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg9Temporal9"
+                "variable": "_M1d55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg9Temporal8"
             }
         ]
     ],

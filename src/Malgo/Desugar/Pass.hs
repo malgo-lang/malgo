@@ -305,9 +305,8 @@ curryFun _ _ [p] e = pure ([p], e)
 curryFun isToplevel hint ps e = curryFun' ps []
   where
     curryFun' [] _ = error "length ps >= 1"
-    curryFun' [x] as = do
-      if isToplevel
-        then do
+    curryFun' [x] as
+      | isToplevel = do
           -- トップレベル関数であるならeに自由変数は含まれないので、
           -- uncurry後の関数もトップレベル関数にできる。
           fun <- withMeta (C.typeOf $ Fun ps e) <$> newTemporalId (hint <> "_curry")
@@ -316,7 +315,7 @@ curryFun isToplevel hint ps e = curryFun' ps []
           modify \s@DsState {..} -> s {_globalDefs = FunDef fun ps' (C.typeOf fun) e' : _globalDefs}
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
-        else do
+      | otherwise = do
           fun <- withMeta (C.typeOf $ Fun ps e) <$> newTemporalId (hint <> "_curry")
           let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
           ps' <- traverse (\p -> withMeta p.meta <$> newTemporalId p.id.name) ps
