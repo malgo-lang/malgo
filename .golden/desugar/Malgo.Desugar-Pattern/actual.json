@@ -49,20 +49,20 @@
                             "tag": "SumT"
                         },
                         "value": {
-                            "contents": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal19",
-                            "tag": "Var"
+                            "tag": "Var",
+                            "variable": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal19"
                         }
                     },
                     "expression": {
                         "arguments": [
                             {
-                                "contents": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal18",
-                                "tag": "Var"
+                                "tag": "Var",
+                                "variable": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal18"
                             }
                         ],
                         "callee": {
-                            "contents": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External",
-                            "tag": "Var"
+                            "tag": "Var",
+                            "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
                         },
                         "tag": "Call"
                     },
@@ -76,14 +76,14 @@
                             "tag": "AnyT"
                         },
                         "value": {
-                            "contents": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal17",
-                            "tag": "Var"
+                            "tag": "Var",
+                            "variable": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal17"
                         }
                     },
                     "expression": {
                         "arguments": [
                             {
-                                "contents": {
+                                "literal": {
                                     "contents": "OK",
                                     "tag": "String"
                                 },
@@ -91,8 +91,8 @@
                             }
                         ],
                         "callee": {
-                            "contents": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                            "tag": "Var"
+                            "tag": "Var",
+                            "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
                         },
                         "tag": "Call"
                     },
@@ -122,50 +122,46 @@
             {
                 "clauses": [
                     {
-                        "contents": [
-                            {
-                                "parameters": [],
-                                "tag": {
-                                    "name": "Nil",
-                                    "tag": "Data"
-                                }
-                            },
-                            [],
-                            {
-                                "arguments": [],
-                                "callee": "_M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                "tag": "CallDirect"
+                        "body": {
+                            "arguments": [],
+                            "callee": "_M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                            "tag": "CallDirect"
+                        },
+                        "constructor": {
+                            "parameters": [],
+                            "tag": {
+                                "name": "Nil",
+                                "tag": "Data"
                             }
-                        ],
-                        "tag": "Unpack"
+                        },
+                        "tag": "Unpack",
+                        "variables": []
                     },
                     {
-                        "contents": [
-                            {
-                                "parameters": [
-                                    {
-                                        "tag": "AnyT"
-                                    },
-                                    {
-                                        "tag": "AnyT"
-                                    }
-                                ],
-                                "tag": {
-                                    "name": "Cons",
-                                    "tag": "Data"
+                        "body": {
+                            "arguments": [],
+                            "callee": "_M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                            "tag": "CallDirect"
+                        },
+                        "constructor": {
+                            "parameters": [
+                                {
+                                    "tag": "AnyT"
+                                },
+                                {
+                                    "tag": "AnyT"
                                 }
-                            },
-                            [
-                                "_M1p44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal21",
-                                "_M1p44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal22"
                             ],
-                            {
-                                "arguments": [],
-                                "callee": "_M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                "tag": "CallDirect"
+                            "tag": {
+                                "name": "Cons",
+                                "tag": "Data"
                             }
-                        ],
-                        "tag": "Unpack"
+                        },
+                        "tag": "Unpack",
+                        "variables": [
+                            "_M1p44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal21",
+                            "_M1p44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal22"
+                        ]
                     }
                 ],
                 "scrutinee": {
@@ -197,8 +193,8 @@
                         "tag": "SumT"
                     },
                     "value": {
-                        "contents": "_M3nil44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal20",
-                        "tag": "Var"
+                        "tag": "Var",
+                        "variable": "_M3nil44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal20"
                     }
                 },
                 "tag": "Match"

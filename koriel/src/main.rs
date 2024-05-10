@@ -284,10 +284,10 @@ enum Expr {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(tag = "tag", content = "contents")]
+#[serde(tag = "tag")]
 enum Atom {
-    Var(Name),
-    Unboxed(Unboxed),
+    Var { variable: Name },
+    Unboxed { literal: Unboxed },
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -311,20 +311,45 @@ struct LocalDef {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(tag = "tag", content = "contents")]
+#[serde(tag = "tag")]
 enum Case {
-    Unpack(Con, Vec<Name>, Expr),
-    OpenRecord(BTreeMap<String, Name>, Expr),
-    Exact(Unboxed, Expr),
-    Bind(Name, Type, Expr),
+    Unpack {
+        constructor: Con,
+        variables: Vec<Name>,
+        body: Expr,
+    },
+    OpenRecord {
+        fields: BTreeMap<String, Name>,
+        body: Expr,
+    },
+    Exact {
+        literal: Unboxed,
+        body: Expr,
+    },
+    Bind {
+        variable: Name,
+        #[serde(rename = "type")]
+        typ: Type,
+        body: Expr,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(tag = "tag", content = "contents")]
+#[serde(tag = "tag")]
 enum Obj {
-    Fun(Vec<Name>, Expr),
-    Pack(Type, Con, Vec<Atom>),
-    Record(BTreeMap<String, Atom>),
+    Fun {
+        parameters: Vec<Name>,
+        body: Expr,
+    },
+    Pack {
+        #[serde(rename = "type")]
+        typ: Type,
+        constructor: Con,
+        arguments: Vec<Atom>,
+    },
+    Record {
+        fields: BTreeMap<String, Atom>,
+    },
 }
 
 fn main() -> io::Result<()> {

@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 -- | AST definitions for Core language
@@ -391,9 +392,9 @@ instance HasExpr Obj where
 -- | atoms
 data Atom a
   = -- | variable
-    Var a
+    Var {variable :: a}
   | -- | literal of unboxed values
-    Unboxed Unboxed
+    Unboxed {literal :: Unboxed}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
   deriving anyclass (Store, ToJSON, FromJSON)
 
@@ -468,13 +469,29 @@ instance HasAtom LocalDef where
 -- | heap objects
 data Obj a
   = -- | function (arity >= 1)
-    Fun [a] (Expr a)
+    Fun {parameters :: [a], body :: Expr a}
   | -- | saturated constructor (arity >= 0)
-    Pack Type Con [Atom a]
+    Pack {typ :: Type, constructor :: Con, arguments :: [Atom a]}
   | -- | record
-    Record (Map Text (Atom a))
+    Record {fields :: Map Text (Atom a)}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (ToJSON, FromJSON, Store)
+  deriving anyclass (Store)
+
+instance (ToJSON a) => ToJSON (Obj a) where
+  toJSON =
+    genericToJSON
+      defaultOptions
+        { fieldLabelModifier =
+            \field -> if field == "typ" then "type" else field
+        }
+
+instance (FromJSON a) => FromJSON (Obj a) where
+  parseJSON =
+    genericParseJSON
+      defaultOptions
+        { fieldLabelModifier =
+            \field -> if field == "typ" then "type" else field
+        }
 
 instance (HasType a) => HasType (Obj a) where
   typeOf (Fun xs e) = map typeOf xs :-> typeOf e
@@ -516,15 +533,31 @@ instance HasAtom Obj where
 -- | alternatives
 data Case a
   = -- | constructor pattern
-    Unpack Con [a] (Expr a)
+    Unpack {constructor :: Con, variables :: [a], body :: Expr a}
   | -- | record pattern
-    OpenRecord (Map Text a) (Expr a)
+    OpenRecord {fields :: Map Text a, body :: Expr a}
   | -- | unboxed value pattern
-    Exact Unboxed (Expr a)
+    Exact {literal :: Unboxed, body :: Expr a}
   | -- | variable pattern
-    Bind a Type (Expr a)
+    Bind {variable :: a, typ :: Type, body :: Expr a}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (Store, ToJSON, FromJSON)
+  deriving anyclass (Store)
+
+instance (ToJSON a) => ToJSON (Case a) where
+  toJSON =
+    genericToJSON
+      defaultOptions
+        { fieldLabelModifier =
+            \field -> if field == "typ" then "type" else field
+        }
+
+instance (FromJSON a) => FromJSON (Case a) where
+  parseJSON =
+    genericParseJSON
+      defaultOptions
+        { fieldLabelModifier =
+            \field -> if field == "typ" then "type" else field
+        }
 
 instance (HasType a) => HasType (Case a) where
   typeOf (Unpack _ _ e) = typeOf e
