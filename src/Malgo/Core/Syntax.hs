@@ -27,7 +27,8 @@ module Malgo.Core.Syntax
 where
 
 import Control.Lens (Plated (..), Traversal', makePrisms, sans, traverseOf, traversed, _2, _3, _4)
-import Data.Aeson (FromJSON (..), ToJSON (..), camelTo2, defaultOptions, fieldLabelModifier, genericParseJSON, genericToJSON)
+import Data.Aeson (FromJSON (..), KeyValue (..), ToJSON (..), Value, camelTo2, defaultOptions, fieldLabelModifier, genericParseJSON, genericToJSON, object, withObject, (.:))
+import Data.Aeson.Types (Pair)
 import Data.Data (Data)
 import Data.Graph
 import Data.Map.Strict qualified as Map
@@ -207,7 +208,44 @@ data Expr a
   | -- | raise an internal error
     Error Type
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (ToJSON, FromJSON, Store)
+  deriving anyclass (Store)
+
+instance (ToJSON a) => ToJSON (Expr a) where
+  toJSON (Atom x) = withTag "Atom" ["atom" .= x]
+  toJSON (Call f xs) = withTag "Call" ["callee" .= f, "arguments" .= xs]
+  toJSON (CallDirect f xs) = withTag "CallDirect" ["callee" .= f, "arguments" .= xs]
+  toJSON (RawCall p t xs) = withTag "RawCall" ["name" .= p, "type" .= t, "arguments" .= xs]
+  toJSON (Cast ty x) = withTag "Cast" ["type" .= ty, "value" .= x]
+  toJSON (Let xs e) = withTag "Let" ["bindings" .= xs, "body" .= e]
+  toJSON (Match e cs) = withTag "Match" ["scrutinee" .= e, "clauses" .= cs]
+  toJSON (Switch v cs e) = withTag "Switch" ["scrutinee" .= v, "clauses" .= cs, "default" .= e]
+  toJSON (SwitchUnboxed v cs e) = withTag "SwitchUnboxed" ["scrutinee" .= v, "clauses" .= cs, "default" .= e]
+  toJSON (Destruct v con xs e) = withTag "Destruct" ["scrutinee" .= v, "constructor" .= con, "variables" .= xs, "body" .= e]
+  toJSON (DestructRecord v kvs e) = withTag "DestructRecord" ["scrutinee" .= v, "fields" .= kvs, "body" .= e]
+  toJSON (Assign x v e) = withTag "Assign" ["variable" .= x, "expression" .= v, "body" .= e]
+  toJSON (Error t) = withTag "Error" ["type" .= t]
+
+withTag :: Text -> [Pair] -> Value
+withTag tag pairs = object $ "tag" .= tag : pairs
+
+instance (FromJSON a) => FromJSON (Expr a) where
+  parseJSON = withObject "Expr" $ \v -> do
+    tag <- v .: "tag"
+    case tag :: Text of
+      "Atom" -> Atom <$> v .: "atom"
+      "Call" -> Call <$> v .: "callee" <*> v .: "arguments"
+      "CallDirect" -> CallDirect <$> v .: "callee" <*> v .: "arguments"
+      "RawCall" -> RawCall <$> v .: "name" <*> v .: "type" <*> v .: "arguments"
+      "Cast" -> Cast <$> v .: "type" <*> v .: "value"
+      "Let" -> Let <$> v .: "bindings" <*> v .: "body"
+      "Match" -> Match <$> v .: "scrutinee" <*> v .: "clauses"
+      "Switch" -> Switch <$> v .: "scrutinee" <*> v .: "clauses" <*> v .: "default"
+      "SwitchUnboxed" -> SwitchUnboxed <$> v .: "scrutinee" <*> v .: "clauses" <*> v .: "default"
+      "Destruct" -> Destruct <$> v .: "scrutinee" <*> v .: "constructor" <*> v .: "variables" <*> v .: "body"
+      "DestructRecord" -> DestructRecord <$> v .: "scrutinee" <*> v .: "fields" <*> v .: "body"
+      "Assign" -> Assign <$> v .: "variable" <*> v .: "expresison" <*> v .: "body"
+      "Error" -> Error <$> v .: "type"
+      _ -> fail $ "Unknown tag: " <> convertString tag
 
 instance (HasType a) => HasType (Expr a) where
   typeOf (Atom x) = typeOf x
@@ -413,7 +451,13 @@ instance Pretty Unboxed where
 -- | Let bindings
 data LocalDef a = LocalDef {variable :: a, typ :: Type, object :: Obj a}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
-  deriving anyclass (ToJSON, FromJSON, Store)
+  deriving anyclass (Store)
+
+instance (ToJSON a) => ToJSON (LocalDef a) where
+  toJSON LocalDef {variable, typ, object = obj} = object ["variable" .= variable, "type" .= typ, "object" .= obj]
+
+instance (FromJSON a) => FromJSON (LocalDef a) where
+  parseJSON = withObject "LocalDef" $ \v -> LocalDef <$> v .: "variable" <*> v .: "type" <*> v .: "object"
 
 instance (Pretty a) => Pretty (LocalDef a) where
   pretty (LocalDef v t o) = parens $ vsep [pretty v <+> pretty t, pretty o]

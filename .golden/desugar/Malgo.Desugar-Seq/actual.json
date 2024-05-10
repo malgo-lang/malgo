@@ -34,84 +34,70 @@
                 "tag": "FuncT"
             },
             {
-                "contents": [
-                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal45",
-                    {
-                        "contents": [
-                            "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal44",
-                            {
-                                "contents": [
-                                    {
-                                        "contents": "_M13toStringInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                        "tag": "Var"
-                                    },
-                                    [
-                                        {
-                                            "contents": "_M17executeWhenLoaded40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg8External",
-                                            "tag": "Var"
-                                        }
-                                    ]
-                                ],
-                                "tag": "Call"
-                            },
-                            {
-                                "contents": [
-                                    {
-                                        "tag": "AnyT"
-                                    },
-                                    {
-                                        "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal44",
-                                        "tag": "Var"
+                "body": {
+                    "body": {
+                        "tag": "Cast",
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
                                     }
-                                ],
-                                "tag": "Cast"
-                            }
-                        ],
-                        "tag": "Assign"
+                                }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "value": {
+                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal46",
+                            "tag": "Var"
+                        }
                     },
-                    {
-                        "contents": [
-                            "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal46",
+                    "expression": {
+                        "arguments": [
                             {
-                                "contents": [
-                                    {
-                                        "contents": "_M11printString34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                        "tag": "Var"
-                                    },
-                                    [
-                                        {
-                                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal45",
-                                            "tag": "Var"
-                                        }
-                                    ]
-                                ],
-                                "tag": "Call"
-                            },
-                            {
-                                "contents": [
-                                    {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "tag": "Tuple"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    },
-                                    {
-                                        "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal46",
-                                        "tag": "Var"
-                                    }
-                                ],
-                                "tag": "Cast"
+                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal45",
+                                "tag": "Var"
                             }
                         ],
-                        "tag": "Assign"
-                    }
-                ],
-                "tag": "Assign"
+                        "callee": {
+                            "contents": "_M11printString34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                            "tag": "Var"
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal46"
+                },
+                "expression": {
+                    "body": {
+                        "tag": "Cast",
+                        "type": {
+                            "tag": "AnyT"
+                        },
+                        "value": {
+                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal44",
+                            "tag": "Var"
+                        }
+                    },
+                    "expression": {
+                        "arguments": [
+                            {
+                                "contents": "_M17executeWhenLoaded40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg8External",
+                                "tag": "Var"
+                            }
+                        ],
+                        "callee": {
+                            "contents": "_M13toStringInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                            "tag": "Var"
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal44"
+                },
+                "tag": "Assign",
+                "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal45"
             }
         ]
     ],
@@ -122,373 +108,309 @@
                 "tag": "AnyT"
             },
             {
-                "contents": [
-                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal42",
-                    {
-                        "contents": [
-                            {
-                                "contents": [
-                                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal27",
-                                    {
-                                        "contents": [
-                                            {
-                                                "contents": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                "tag": "Var"
+                "body": {
+                    "atom": {
+                        "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal42",
+                        "tag": "Var"
+                    },
+                    "tag": "Atom"
+                },
+                "expression": {
+                    "clauses": [
+                        {
+                            "contents": [
+                                "_M78let_x5F_x5FM1x40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal040test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal28",
+                                {
+                                    "tag": "AnyT"
+                                },
+                                {
+                                    "clauses": [
+                                        {
+                                            "contents": [
+                                                "_M78let_x5F_x5FM1y40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal140test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal30",
+                                                {
+                                                    "tag": "AnyT"
+                                                },
+                                                {
+                                                    "body": {
+                                                        "body": {
+                                                            "body": {
+                                                                "tag": "Cast",
+                                                                "type": {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                "value": {
+                                                                    "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal41",
+                                                                    "tag": "Var"
+                                                                }
+                                                            },
+                                                            "expression": {
+                                                                "arguments": [
+                                                                    {
+                                                                        "contents": "_M78let_x5F_x5FM1y40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal140test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal30",
+                                                                        "tag": "Var"
+                                                                    }
+                                                                ],
+                                                                "callee": {
+                                                                    "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal40",
+                                                                    "tag": "Var"
+                                                                },
+                                                                "tag": "Call"
+                                                            },
+                                                            "tag": "Assign",
+                                                            "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal41"
+                                                        },
+                                                        "expression": {
+                                                            "body": {
+                                                                "tag": "Cast",
+                                                                "type": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                },
+                                                                "value": {
+                                                                    "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal39",
+                                                                    "tag": "Var"
+                                                                }
+                                                            },
+                                                            "expression": {
+                                                                "arguments": [
+                                                                    {
+                                                                        "contents": "_M78let_x5F_x5FM1x40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal040test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal28",
+                                                                        "tag": "Var"
+                                                                    }
+                                                                ],
+                                                                "callee": {
+                                                                    "contents": "_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                                                    "tag": "Var"
+                                                                },
+                                                                "tag": "Call"
+                                                            },
+                                                            "tag": "Assign",
+                                                            "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal39"
+                                                        },
+                                                        "tag": "Assign",
+                                                        "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal40"
+                                                    },
+                                                    "expression": {
+                                                        "body": {
+                                                            "body": {
+                                                                "tag": "Cast",
+                                                                "type": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "tag": "Tuple"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
+                                                                },
+                                                                "value": {
+                                                                    "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal37",
+                                                                    "tag": "Var"
+                                                                }
+                                                            },
+                                                            "expression": {
+                                                                "arguments": [
+                                                                    {
+                                                                        "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal36",
+                                                                        "tag": "Var"
+                                                                    }
+                                                                ],
+                                                                "callee": {
+                                                                    "contents": "_M11printString34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                                                    "tag": "Var"
+                                                                },
+                                                                "tag": "Call"
+                                                            },
+                                                            "tag": "Assign",
+                                                            "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal37"
+                                                        },
+                                                        "expression": {
+                                                            "body": {
+                                                                "body": {
+                                                                    "tag": "Cast",
+                                                                    "type": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "value": {
+                                                                        "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal35",
+                                                                        "tag": "Var"
+                                                                    }
+                                                                },
+                                                                "expression": {
+                                                                    "arguments": [
+                                                                        {
+                                                                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal34",
+                                                                            "tag": "Var"
+                                                                        }
+                                                                    ],
+                                                                    "callee": {
+                                                                        "contents": "_M13toStringInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                                                        "tag": "Var"
+                                                                    },
+                                                                    "tag": "Call"
+                                                                },
+                                                                "tag": "Assign",
+                                                                "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal35"
+                                                            },
+                                                            "expression": {
+                                                                "body": {
+                                                                    "body": {
+                                                                        "tag": "Cast",
+                                                                        "type": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "value": {
+                                                                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal33",
+                                                                            "tag": "Var"
+                                                                        }
+                                                                    },
+                                                                    "expression": {
+                                                                        "arguments": [
+                                                                            {
+                                                                                "contents": "_M78let_x5F_x5FM1y40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal140test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal30",
+                                                                                "tag": "Var"
+                                                                            }
+                                                                        ],
+                                                                        "callee": {
+                                                                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal32",
+                                                                            "tag": "Var"
+                                                                        },
+                                                                        "tag": "Call"
+                                                                    },
+                                                                    "tag": "Assign",
+                                                                    "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal33"
+                                                                },
+                                                                "expression": {
+                                                                    "body": {
+                                                                        "tag": "Cast",
+                                                                        "type": {
+                                                                            "parameters": [
+                                                                                {
+                                                                                    "tag": "AnyT"
+                                                                                }
+                                                                            ],
+                                                                            "returns": {
+                                                                                "tag": "AnyT"
+                                                                            },
+                                                                            "tag": "FuncT"
+                                                                        },
+                                                                        "value": {
+                                                                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal31",
+                                                                            "tag": "Var"
+                                                                        }
+                                                                    },
+                                                                    "expression": {
+                                                                        "arguments": [
+                                                                            {
+                                                                                "contents": "_M78let_x5F_x5FM1x40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal040test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal28",
+                                                                                "tag": "Var"
+                                                                            }
+                                                                        ],
+                                                                        "callee": {
+                                                                            "contents": "_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                                                            "tag": "Var"
+                                                                        },
+                                                                        "tag": "Call"
+                                                                    },
+                                                                    "tag": "Assign",
+                                                                    "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal31"
+                                                                },
+                                                                "tag": "Assign",
+                                                                "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal32"
+                                                            },
+                                                            "tag": "Assign",
+                                                            "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal34"
+                                                        },
+                                                        "tag": "Assign",
+                                                        "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal36"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal38"
+                                                }
+                                            ],
+                                            "tag": "Bind"
+                                        }
+                                    ],
+                                    "scrutinee": {
+                                        "body": {
+                                            "tag": "Cast",
+                                            "type": {
+                                                "tag": "AnyT"
                                             },
-                                            [
+                                            "value": {
+                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal29",
+                                                "tag": "Var"
+                                            }
+                                        },
+                                        "expression": {
+                                            "arguments": [
                                                 {
                                                     "contents": {
-                                                        "contents": 1,
+                                                        "contents": 2,
                                                         "tag": "Int32"
                                                     },
                                                     "tag": "Unboxed"
                                                 }
-                                            ]
-                                        ],
-                                        "tag": "Call"
-                                    },
-                                    {
-                                        "contents": [
-                                            {
-                                                "tag": "AnyT"
-                                            },
-                                            {
-                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal27",
-                                                "tag": "Var"
-                                            }
-                                        ],
-                                        "tag": "Cast"
-                                    }
-                                ],
-                                "tag": "Assign"
-                            },
-                            [
-                                {
-                                    "contents": [
-                                        "_M78let_x5F_x5FM1x40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal040test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal28",
-                                        {
-                                            "tag": "AnyT"
-                                        },
-                                        {
-                                            "contents": [
-                                                {
-                                                    "contents": [
-                                                        "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal29",
-                                                        {
-                                                            "contents": [
-                                                                {
-                                                                    "contents": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                                    "tag": "Var"
-                                                                },
-                                                                [
-                                                                    {
-                                                                        "contents": {
-                                                                            "contents": 2,
-                                                                            "tag": "Int32"
-                                                                        },
-                                                                        "tag": "Unboxed"
-                                                                    }
-                                                                ]
-                                                            ],
-                                                            "tag": "Call"
-                                                        },
-                                                        {
-                                                            "contents": [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                },
-                                                                {
-                                                                    "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal29",
-                                                                    "tag": "Var"
-                                                                }
-                                                            ],
-                                                            "tag": "Cast"
-                                                        }
-                                                    ],
-                                                    "tag": "Assign"
-                                                },
-                                                [
-                                                    {
-                                                        "contents": [
-                                                            "_M78let_x5F_x5FM1y40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal140test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal30",
-                                                            {
-                                                                "tag": "AnyT"
-                                                            },
-                                                            {
-                                                                "contents": [
-                                                                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal38",
-                                                                    {
-                                                                        "contents": [
-                                                                            "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal36",
-                                                                            {
-                                                                                "contents": [
-                                                                                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal34",
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal32",
-                                                                                            {
-                                                                                                "contents": [
-                                                                                                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal31",
-                                                                                                    {
-                                                                                                        "contents": [
-                                                                                                            {
-                                                                                                                "contents": "_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                                                                                "tag": "Var"
-                                                                                                            },
-                                                                                                            [
-                                                                                                                {
-                                                                                                                    "contents": "_M78let_x5F_x5FM1x40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal040test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal28",
-                                                                                                                    "tag": "Var"
-                                                                                                                }
-                                                                                                            ]
-                                                                                                        ],
-                                                                                                        "tag": "Call"
-                                                                                                    },
-                                                                                                    {
-                                                                                                        "contents": [
-                                                                                                            {
-                                                                                                                "parameters": [
-                                                                                                                    {
-                                                                                                                        "tag": "AnyT"
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "returns": {
-                                                                                                                    "tag": "AnyT"
-                                                                                                                },
-                                                                                                                "tag": "FuncT"
-                                                                                                            },
-                                                                                                            {
-                                                                                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal31",
-                                                                                                                "tag": "Var"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "tag": "Cast"
-                                                                                                    }
-                                                                                                ],
-                                                                                                "tag": "Assign"
-                                                                                            },
-                                                                                            {
-                                                                                                "contents": [
-                                                                                                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal33",
-                                                                                                    {
-                                                                                                        "contents": [
-                                                                                                            {
-                                                                                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal32",
-                                                                                                                "tag": "Var"
-                                                                                                            },
-                                                                                                            [
-                                                                                                                {
-                                                                                                                    "contents": "_M78let_x5F_x5FM1y40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal140test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal30",
-                                                                                                                    "tag": "Var"
-                                                                                                                }
-                                                                                                            ]
-                                                                                                        ],
-                                                                                                        "tag": "Call"
-                                                                                                    },
-                                                                                                    {
-                                                                                                        "contents": [
-                                                                                                            {
-                                                                                                                "tag": "AnyT"
-                                                                                                            },
-                                                                                                            {
-                                                                                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal33",
-                                                                                                                "tag": "Var"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "tag": "Cast"
-                                                                                                    }
-                                                                                                ],
-                                                                                                "tag": "Assign"
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "Assign"
-                                                                                    },
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal35",
-                                                                                            {
-                                                                                                "contents": [
-                                                                                                    {
-                                                                                                        "contents": "_M13toStringInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                                                                        "tag": "Var"
-                                                                                                    },
-                                                                                                    [
-                                                                                                        {
-                                                                                                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal34",
-                                                                                                            "tag": "Var"
-                                                                                                        }
-                                                                                                    ]
-                                                                                                ],
-                                                                                                "tag": "Call"
-                                                                                            },
-                                                                                            {
-                                                                                                "contents": [
-                                                                                                    {
-                                                                                                        "tag": "AnyT"
-                                                                                                    },
-                                                                                                    {
-                                                                                                        "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal35",
-                                                                                                        "tag": "Var"
-                                                                                                    }
-                                                                                                ],
-                                                                                                "tag": "Cast"
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "Assign"
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "Assign"
-                                                                            },
-                                                                            {
-                                                                                "contents": [
-                                                                                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal37",
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "contents": "_M11printString34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                                                                "tag": "Var"
-                                                                                            },
-                                                                                            [
-                                                                                                {
-                                                                                                    "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal36",
-                                                                                                    "tag": "Var"
-                                                                                                }
-                                                                                            ]
-                                                                                        ],
-                                                                                        "tag": "Call"
-                                                                                    },
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "constructors": [
-                                                                                                    {
-                                                                                                        "parameters": [],
-                                                                                                        "tag": {
-                                                                                                            "tag": "Tuple"
-                                                                                                        }
-                                                                                                    }
-                                                                                                ],
-                                                                                                "tag": "SumT"
-                                                                                            },
-                                                                                            {
-                                                                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal37",
-                                                                                                "tag": "Var"
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "Cast"
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "Assign"
-                                                                            }
-                                                                        ],
-                                                                        "tag": "Assign"
-                                                                    },
-                                                                    {
-                                                                        "contents": [
-                                                                            "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal40",
-                                                                            {
-                                                                                "contents": [
-                                                                                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal39",
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "contents": "_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                                                                "tag": "Var"
-                                                                                            },
-                                                                                            [
-                                                                                                {
-                                                                                                    "contents": "_M78let_x5F_x5FM1x40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal040test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal28",
-                                                                                                    "tag": "Var"
-                                                                                                }
-                                                                                            ]
-                                                                                        ],
-                                                                                        "tag": "Call"
-                                                                                    },
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "parameters": [
-                                                                                                    {
-                                                                                                        "tag": "AnyT"
-                                                                                                    }
-                                                                                                ],
-                                                                                                "returns": {
-                                                                                                    "tag": "AnyT"
-                                                                                                },
-                                                                                                "tag": "FuncT"
-                                                                                            },
-                                                                                            {
-                                                                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal39",
-                                                                                                "tag": "Var"
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "Cast"
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "Assign"
-                                                                            },
-                                                                            {
-                                                                                "contents": [
-                                                                                    "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal41",
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal40",
-                                                                                                "tag": "Var"
-                                                                                            },
-                                                                                            [
-                                                                                                {
-                                                                                                    "contents": "_M78let_x5F_x5FM1y40test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FSeq_x5Fx2Emlg9Internal140test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal30",
-                                                                                                    "tag": "Var"
-                                                                                                }
-                                                                                            ]
-                                                                                        ],
-                                                                                        "tag": "Call"
-                                                                                    },
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "tag": "AnyT"
-                                                                                            },
-                                                                                            {
-                                                                                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal41",
-                                                                                                "tag": "Var"
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "Cast"
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "Assign"
-                                                                            }
-                                                                        ],
-                                                                        "tag": "Assign"
-                                                                    }
-                                                                ],
-                                                                "tag": "Assign"
-                                                            }
-                                                        ],
-                                                        "tag": "Bind"
-                                                    }
-                                                ]
                                             ],
-                                            "tag": "Match"
-                                        }
-                                    ],
-                                    "tag": "Bind"
+                                            "callee": {
+                                                "contents": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                                "tag": "Var"
+                                            },
+                                            "tag": "Call"
+                                        },
+                                        "tag": "Assign",
+                                        "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal29"
+                                    },
+                                    "tag": "Match"
                                 }
-                            ]
-                        ],
-                        "tag": "Match"
-                    },
-                    {
-                        "contents": {
-                            "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal42",
-                            "tag": "Var"
+                            ],
+                            "tag": "Bind"
+                        }
+                    ],
+                    "scrutinee": {
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "AnyT"
+                            },
+                            "value": {
+                                "contents": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal27",
+                                "tag": "Var"
+                            }
                         },
-                        "tag": "Atom"
-                    }
-                ],
-                "tag": "Assign"
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "contents": {
+                                        "contents": 1,
+                                        "tag": "Int32"
+                                    },
+                                    "tag": "Unboxed"
+                                }
+                            ],
+                            "callee": {
+                                "contents": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                "tag": "Var"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal27"
+                    },
+                    "tag": "Match"
+                },
+                "tag": "Assign",
+                "variable": "_M1d40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg10Temporal42"
             }
         ]
     ]

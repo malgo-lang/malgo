@@ -34,176 +34,146 @@
                 "tag": "FuncT"
             },
             {
-                "contents": [
-                    "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal17",
-                    {
-                        "contents": [
-                            "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal15",
-                            {
-                                "contents": [
-                                    "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal13",
-                                    {
-                                        "contents": [
-                                            "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal12",
-                                            {
-                                                "contents": [
-                                                    {
-                                                        "contents": "_M12addInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                        "tag": "Var"
-                                                    },
-                                                    [
-                                                        {
-                                                            "contents": {
-                                                                "contents": 40,
-                                                                "tag": "Int64"
-                                                            },
-                                                            "tag": "Unboxed"
-                                                        }
-                                                    ]
-                                                ],
-                                                "tag": "Call"
-                                            },
-                                            {
-                                                "contents": [
-                                                    {
-                                                        "parameters": [
-                                                            {
-                                                                "tag": "Int64T"
-                                                            }
-                                                        ],
-                                                        "returns": {
-                                                            "tag": "Int64T"
-                                                        },
-                                                        "tag": "FuncT"
-                                                    },
-                                                    {
-                                                        "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal12",
-                                                        "tag": "Var"
-                                                    }
-                                                ],
-                                                "tag": "Cast"
-                                            }
-                                        ],
-                                        "tag": "Assign"
-                                    },
-                                    {
-                                        "contents": [
-                                            "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal14",
-                                            {
-                                                "contents": [
-                                                    {
-                                                        "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal13",
-                                                        "tag": "Var"
-                                                    },
-                                                    [
-                                                        {
-                                                            "contents": {
-                                                                "contents": 2,
-                                                                "tag": "Int64"
-                                                            },
-                                                            "tag": "Unboxed"
-                                                        }
-                                                    ]
-                                                ],
-                                                "tag": "Call"
-                                            },
-                                            {
-                                                "contents": [
-                                                    {
-                                                        "tag": "Int64T"
-                                                    },
-                                                    {
-                                                        "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal14",
-                                                        "tag": "Var"
-                                                    }
-                                                ],
-                                                "tag": "Cast"
-                                            }
-                                        ],
-                                        "tag": "Assign"
+                "body": {
+                    "body": {
+                        "tag": "Cast",
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
                                     }
-                                ],
-                                "tag": "Assign"
-                            },
+                                }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "value": {
+                            "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal18",
+                            "tag": "Var"
+                        }
+                    },
+                    "expression": {
+                        "arguments": [
                             {
-                                "contents": [
-                                    "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal16",
-                                    {
-                                        "contents": [
-                                            {
-                                                "contents": "_M17toStringInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                "tag": "Var"
-                                            },
-                                            [
-                                                {
-                                                    "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal15",
-                                                    "tag": "Var"
-                                                }
-                                            ]
-                                        ],
-                                        "tag": "Call"
-                                    },
-                                    {
-                                        "contents": [
-                                            {
-                                                "tag": "StringT"
-                                            },
-                                            {
-                                                "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal16",
-                                                "tag": "Var"
-                                            }
-                                        ],
-                                        "tag": "Cast"
-                                    }
-                                ],
-                                "tag": "Assign"
+                                "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal17",
+                                "tag": "Var"
                             }
                         ],
-                        "tag": "Assign"
+                        "callee": {
+                            "contents": "_M15printString_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                            "tag": "Var"
+                        },
+                        "tag": "Call"
                     },
-                    {
-                        "contents": [
-                            "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal18",
-                            {
-                                "contents": [
+                    "tag": "Assign",
+                    "variable": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal18"
+                },
+                "expression": {
+                    "body": {
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "StringT"
+                            },
+                            "value": {
+                                "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal16",
+                                "tag": "Var"
+                            }
+                        },
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal15",
+                                    "tag": "Var"
+                                }
+                            ],
+                            "callee": {
+                                "contents": "_M17toStringInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                "tag": "Var"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal16"
+                    },
+                    "expression": {
+                        "body": {
+                            "body": {
+                                "tag": "Cast",
+                                "type": {
+                                    "tag": "Int64T"
+                                },
+                                "value": {
+                                    "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal14",
+                                    "tag": "Var"
+                                }
+                            },
+                            "expression": {
+                                "arguments": [
                                     {
-                                        "contents": "_M15printString_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                        "tag": "Var"
-                                    },
-                                    [
-                                        {
-                                            "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal17",
-                                            "tag": "Var"
-                                        }
-                                    ]
+                                        "contents": {
+                                            "contents": 2,
+                                            "tag": "Int64"
+                                        },
+                                        "tag": "Unboxed"
+                                    }
                                 ],
+                                "callee": {
+                                    "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal13",
+                                    "tag": "Var"
+                                },
                                 "tag": "Call"
                             },
-                            {
-                                "contents": [
-                                    {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "tag": "Tuple"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
+                            "tag": "Assign",
+                            "variable": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal14"
+                        },
+                        "expression": {
+                            "body": {
+                                "tag": "Cast",
+                                "type": {
+                                    "parameters": [
+                                        {
+                                            "tag": "Int64T"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "Int64T"
                                     },
+                                    "tag": "FuncT"
+                                },
+                                "value": {
+                                    "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal12",
+                                    "tag": "Var"
+                                }
+                            },
+                            "expression": {
+                                "arguments": [
                                     {
-                                        "contents": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal18",
-                                        "tag": "Var"
+                                        "contents": {
+                                            "contents": 40,
+                                            "tag": "Int64"
+                                        },
+                                        "tag": "Unboxed"
                                     }
                                 ],
-                                "tag": "Cast"
-                            }
-                        ],
-                        "tag": "Assign"
-                    }
-                ],
-                "tag": "Assign"
+                                "callee": {
+                                    "contents": "_M12addInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                    "tag": "Var"
+                                },
+                                "tag": "Call"
+                            },
+                            "tag": "Assign",
+                            "variable": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal12"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal13"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal15"
+                },
+                "tag": "Assign",
+                "variable": "_M1d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal17"
             }
         ]
     ],

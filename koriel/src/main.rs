@@ -219,21 +219,68 @@ enum Tag {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(tag = "tag", content = "contents")]
+#[serde(tag = "tag")]
 enum Expr {
-    Atom(Atom),
-    Call(Atom, Vec<Atom>),
-    CallDirect(Name, Vec<Atom>),
-    RawCall(String, Type, Vec<Atom>),
-    Cast(Type, Atom),
-    Let(Vec<LocalDef>, Box<Expr>),
-    Match(Box<Expr>, Vec<Case>),
-    Switch(Atom, Vec<(Tag, Expr)>, Box<Expr>),
-    SwitchUnboxed(Atom, Vec<(Unboxed, Expr)>, Box<Expr>),
-    Destruct(Atom, Con, Vec<Name>, Box<Expr>),
-    DestructRecord(Atom, BTreeMap<String, Name>, Box<Expr>),
-    Assign(Name, Box<Expr>, Box<Expr>),
-    Error(Type),
+    Atom {
+        atom: Atom,
+    },
+    Call {
+        callee: Atom,
+        arguments: Vec<Atom>,
+    },
+    CallDirect {
+        callee: Name,
+        arguments: Vec<Atom>,
+    },
+    RawCall {
+        name: String,
+        #[serde(rename = "type")]
+        typ: Type,
+        arguments: Vec<Atom>,
+    },
+    Cast {
+        #[serde(rename = "type")]
+        typ: Type,
+        value: Atom,
+    },
+    Let {
+        bindings: Vec<LocalDef>,
+        body: Box<Expr>,
+    },
+    Match {
+        scrutinee: Box<Expr>,
+        clauses: Vec<Case>,
+    },
+    Switch {
+        scrutinee: Atom,
+        clauses: Vec<(Tag, Expr)>,
+        default: Box<Expr>,
+    },
+    SwitchUnboxed {
+        scrutinee: Atom,
+        clauses: Vec<(Unboxed, Expr)>,
+        default: Box<Expr>,
+    },
+    Destruct {
+        scrutinee: Atom,
+        constructor: Con,
+        variables: Vec<Name>,
+        body: Box<Expr>,
+    },
+    DestructRecord {
+        scrutinee: Atom,
+        fields: BTreeMap<String, Name>,
+        body: Box<Expr>,
+    },
+    Assign {
+        variable: Name,
+        expression: Box<Expr>,
+        body: Box<Expr>,
+    },
+    Error {
+        #[serde(rename = "type")]
+        typ: Type,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -258,6 +305,7 @@ enum Unboxed {
 #[derive(Serialize, Deserialize, Debug)]
 struct LocalDef {
     variable: Name,
+    #[serde(rename = "type")]
     typ: Type,
     object: Obj,
 }

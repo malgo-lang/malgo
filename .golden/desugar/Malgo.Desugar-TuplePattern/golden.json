@@ -12,90 +12,86 @@
                 "tag": "FuncT"
             },
             {
-                "contents": [
-                    [
-                        {
-                            "object": {
-                                "contents": [
-                                    {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "A",
-                                                    "tag": "Data"
-                                                }
-                                            },
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "B",
-                                                    "tag": "Data"
-                                                }
-                                            },
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "C",
-                                                    "tag": "Data"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "A",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    []
-                                ],
-                                "tag": "Pack"
-                            },
-                            "typ": {
-                                "constructors": [
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "A",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "B",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "C",
-                                            "tag": "Data"
-                                        }
-                                    }
-                                ],
-                                "tag": "SumT"
-                            },
-                            "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal26"
-                        }
-                    ],
+                "bindings": [
                     {
-                        "contents": [
-                            {
-                                "tag": "AnyT"
-                            },
-                            {
-                                "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal26",
-                                "tag": "Var"
-                            }
-                        ],
-                        "tag": "Cast"
+                        "object": {
+                            "contents": [
+                                {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "A",
+                                                "tag": "Data"
+                                            }
+                                        },
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "B",
+                                                "tag": "Data"
+                                            }
+                                        },
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "C",
+                                                "tag": "Data"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "A",
+                                        "tag": "Data"
+                                    }
+                                },
+                                []
+                            ],
+                            "tag": "Pack"
+                        },
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "A",
+                                        "tag": "Data"
+                                    }
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "B",
+                                        "tag": "Data"
+                                    }
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "C",
+                                        "tag": "Data"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal26"
                     }
                 ],
+                "body": {
+                    "tag": "Cast",
+                    "type": {
+                        "tag": "AnyT"
+                    },
+                    "value": {
+                        "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal26",
+                        "tag": "Var"
+                    }
+                },
                 "tag": "Let"
             }
         ],
@@ -110,90 +106,86 @@
                 "tag": "FuncT"
             },
             {
-                "contents": [
-                    [
-                        {
-                            "object": {
-                                "contents": [
-                                    {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "A",
-                                                    "tag": "Data"
-                                                }
-                                            },
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "B",
-                                                    "tag": "Data"
-                                                }
-                                            },
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "C",
-                                                    "tag": "Data"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "B",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    []
-                                ],
-                                "tag": "Pack"
-                            },
-                            "typ": {
-                                "constructors": [
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "A",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "B",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "C",
-                                            "tag": "Data"
-                                        }
-                                    }
-                                ],
-                                "tag": "SumT"
-                            },
-                            "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal27"
-                        }
-                    ],
+                "bindings": [
                     {
-                        "contents": [
-                            {
-                                "tag": "AnyT"
-                            },
-                            {
-                                "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal27",
-                                "tag": "Var"
-                            }
-                        ],
-                        "tag": "Cast"
+                        "object": {
+                            "contents": [
+                                {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "A",
+                                                "tag": "Data"
+                                            }
+                                        },
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "B",
+                                                "tag": "Data"
+                                            }
+                                        },
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "C",
+                                                "tag": "Data"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "B",
+                                        "tag": "Data"
+                                    }
+                                },
+                                []
+                            ],
+                            "tag": "Pack"
+                        },
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "A",
+                                        "tag": "Data"
+                                    }
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "B",
+                                        "tag": "Data"
+                                    }
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "C",
+                                        "tag": "Data"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal27"
                     }
                 ],
+                "body": {
+                    "tag": "Cast",
+                    "type": {
+                        "tag": "AnyT"
+                    },
+                    "value": {
+                        "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal27",
+                        "tag": "Var"
+                    }
+                },
                 "tag": "Let"
             }
         ],
@@ -208,90 +200,86 @@
                 "tag": "FuncT"
             },
             {
-                "contents": [
-                    [
-                        {
-                            "object": {
-                                "contents": [
-                                    {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "A",
-                                                    "tag": "Data"
-                                                }
-                                            },
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "B",
-                                                    "tag": "Data"
-                                                }
-                                            },
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "C",
-                                                    "tag": "Data"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "C",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    []
-                                ],
-                                "tag": "Pack"
-                            },
-                            "typ": {
-                                "constructors": [
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "A",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "B",
-                                            "tag": "Data"
-                                        }
-                                    },
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "name": "C",
-                                            "tag": "Data"
-                                        }
-                                    }
-                                ],
-                                "tag": "SumT"
-                            },
-                            "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal28"
-                        }
-                    ],
+                "bindings": [
                     {
-                        "contents": [
-                            {
-                                "tag": "AnyT"
-                            },
-                            {
-                                "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal28",
-                                "tag": "Var"
-                            }
-                        ],
-                        "tag": "Cast"
+                        "object": {
+                            "contents": [
+                                {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "A",
+                                                "tag": "Data"
+                                            }
+                                        },
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "B",
+                                                "tag": "Data"
+                                            }
+                                        },
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "name": "C",
+                                                "tag": "Data"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "C",
+                                        "tag": "Data"
+                                    }
+                                },
+                                []
+                            ],
+                            "tag": "Pack"
+                        },
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "A",
+                                        "tag": "Data"
+                                    }
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "B",
+                                        "tag": "Data"
+                                    }
+                                },
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "C",
+                                        "tag": "Data"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal28"
                     }
                 ],
+                "body": {
+                    "tag": "Cast",
+                    "type": {
+                        "tag": "AnyT"
+                    },
+                    "value": {
+                        "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal28",
+                        "tag": "Var"
+                    }
+                },
                 "tag": "Let"
             }
         ],
@@ -328,604 +316,409 @@
                 "tag": "FuncT"
             },
             {
-                "contents": [
-                    "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal36",
-                    {
-                        "contents": [
-                            "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal33",
-                            {
-                                "contents": [
-                                    "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal30",
+                "body": {
+                    "body": {
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "constructors": [
                                     {
-                                        "contents": [
-                                            "_M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External",
-                                            []
-                                        ],
-                                        "tag": "CallDirect"
-                                    },
-                                    {
-                                        "contents": [
-                                            "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal31",
-                                            {
-                                                "contents": [
-                                                    "_M1B49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External",
-                                                    []
-                                                ],
-                                                "tag": "CallDirect"
-                                            },
-                                            {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "object": {
-                                                                "contents": [
-                                                                    {
-                                                                        "constructors": [
-                                                                            {
-                                                                                "parameters": [
-                                                                                    {
-                                                                                        "tag": "AnyT"
-                                                                                    },
-                                                                                    {
-                                                                                        "tag": "AnyT"
-                                                                                    }
-                                                                                ],
-                                                                                "tag": {
-                                                                                    "tag": "Tuple"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "tag": "SumT"
-                                                                    },
-                                                                    {
-                                                                        "parameters": [
-                                                                            {
-                                                                                "tag": "AnyT"
-                                                                            },
-                                                                            {
-                                                                                "tag": "AnyT"
-                                                                            }
-                                                                        ],
-                                                                        "tag": {
-                                                                            "tag": "Tuple"
-                                                                        }
-                                                                    },
-                                                                    [
-                                                                        {
-                                                                            "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal30",
-                                                                            "tag": "Var"
-                                                                        },
-                                                                        {
-                                                                            "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal31",
-                                                                            "tag": "Var"
-                                                                        }
-                                                                    ]
-                                                                ],
-                                                                "tag": "Pack"
-                                                            },
-                                                            "typ": {
-                                                                "constructors": [
-                                                                    {
-                                                                        "parameters": [
-                                                                            {
-                                                                                "tag": "AnyT"
-                                                                            },
-                                                                            {
-                                                                                "tag": "AnyT"
-                                                                            }
-                                                                        ],
-                                                                        "tag": {
-                                                                            "tag": "Tuple"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "tag": "SumT"
-                                                            },
-                                                            "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal32"
-                                                        }
-                                                    ],
-                                                    {
-                                                        "contents": {
-                                                            "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal32",
-                                                            "tag": "Var"
-                                                        },
-                                                        "tag": "Atom"
-                                                    }
-                                                ],
-                                                "tag": "Let"
-                                            }
-                                        ],
-                                        "tag": "Assign"
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
                                     }
                                 ],
-                                "tag": "Assign"
+                                "tag": "SumT"
                             },
+                            "value": {
+                                "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal47",
+                                "tag": "Var"
+                            }
+                        },
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal46",
+                                    "tag": "Var"
+                                }
+                            ],
+                            "callee": {
+                                "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal36",
+                                "tag": "Var"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal47"
+                    },
+                    "expression": {
+                        "bindings": [
                             {
-                                "contents": [
-                                    "_M4cast49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal34",
-                                    {
-                                        "contents": [
-                                            {
-                                                "tag": "AnyT"
-                                            },
-                                            {
-                                                "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal33",
-                                                "tag": "Var"
-                                            }
+                                "object": {
+                                    "contents": [
+                                        [
+                                            "_M5tuple49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal37"
                                         ],
-                                        "tag": "Cast"
-                                    },
-                                    {
-                                        "contents": [
-                                            "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal35",
-                                            {
-                                                "contents": [
-                                                    {
-                                                        "contents": "_M8_x7C_x3E34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External",
-                                                        "tag": "Var"
-                                                    },
-                                                    [
+                                        {
+                                            "clauses": [
+                                                {
+                                                    "contents": [
                                                         {
-                                                            "contents": "_M4cast49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal34",
-                                                            "tag": "Var"
-                                                        }
-                                                    ]
-                                                ],
-                                                "tag": "Call"
-                                            },
-                                            {
-                                                "contents": [
-                                                    {
-                                                        "parameters": [
-                                                            {
-                                                                "parameters": [
-                                                                    {
-                                                                        "constructors": [
-                                                                            {
-                                                                                "parameters": [
-                                                                                    {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        },
+                                                        [
+                                                            "_M1p49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal38",
+                                                            "_M1p49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal39"
+                                                        ],
+                                                        {
+                                                            "clauses": [
+                                                                {
+                                                                    "contents": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "A",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        },
+                                                                        [],
+                                                                        {
+                                                                            "body": {
+                                                                                "body": {
+                                                                                    "tag": "Cast",
+                                                                                    "type": {
+                                                                                        "constructors": [
+                                                                                            {
+                                                                                                "parameters": [],
+                                                                                                "tag": {
+                                                                                                    "tag": "Tuple"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "tag": "SumT"
+                                                                                    },
+                                                                                    "value": {
+                                                                                        "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal42",
+                                                                                        "tag": "Var"
+                                                                                    }
+                                                                                },
+                                                                                "expression": {
+                                                                                    "arguments": [
+                                                                                        {
+                                                                                            "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal41",
+                                                                                            "tag": "Var"
+                                                                                        }
+                                                                                    ],
+                                                                                    "callee": {
+                                                                                        "contents": "_M11printString34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                                                                        "tag": "Var"
+                                                                                    },
+                                                                                    "tag": "Call"
+                                                                                },
+                                                                                "tag": "Assign",
+                                                                                "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal42"
+                                                                            },
+                                                                            "expression": {
+                                                                                "body": {
+                                                                                    "tag": "Cast",
+                                                                                    "type": {
                                                                                         "tag": "AnyT"
                                                                                     },
-                                                                                    {
-                                                                                        "tag": "AnyT"
+                                                                                    "value": {
+                                                                                        "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal40",
+                                                                                        "tag": "Var"
                                                                                     }
-                                                                                ],
-                                                                                "tag": {
-                                                                                    "tag": "Tuple"
-                                                                                }
+                                                                                },
+                                                                                "expression": {
+                                                                                    "arguments": [
+                                                                                        {
+                                                                                            "contents": {
+                                                                                                "contents": "A",
+                                                                                                "tag": "String"
+                                                                                            },
+                                                                                            "tag": "Unboxed"
+                                                                                        }
+                                                                                    ],
+                                                                                    "callee": {
+                                                                                        "contents": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
+                                                                                        "tag": "Var"
+                                                                                    },
+                                                                                    "tag": "Call"
+                                                                                },
+                                                                                "tag": "Assign",
+                                                                                "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal40"
+                                                                            },
+                                                                            "tag": "Assign",
+                                                                            "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal41"
+                                                                        }
+                                                                    ],
+                                                                    "tag": "Unpack"
+                                                                },
+                                                                {
+                                                                    "contents": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "B",
+                                                                                "tag": "Data"
                                                                             }
-                                                                        ],
-                                                                        "tag": "SumT"
-                                                                    }
-                                                                ],
-                                                                "returns": {
+                                                                        },
+                                                                        [],
+                                                                        {
+                                                                            "bindings": [
+                                                                                {
+                                                                                    "object": {
+                                                                                        "contents": [
+                                                                                            {
+                                                                                                "constructors": [
+                                                                                                    {
+                                                                                                        "parameters": [],
+                                                                                                        "tag": {
+                                                                                                            "tag": "Tuple"
+                                                                                                        }
+                                                                                                    }
+                                                                                                ],
+                                                                                                "tag": "SumT"
+                                                                                            },
+                                                                                            {
+                                                                                                "parameters": [],
+                                                                                                "tag": {
+                                                                                                    "tag": "Tuple"
+                                                                                                }
+                                                                                            },
+                                                                                            []
+                                                                                        ],
+                                                                                        "tag": "Pack"
+                                                                                    },
+                                                                                    "type": {
+                                                                                        "constructors": [
+                                                                                            {
+                                                                                                "parameters": [],
+                                                                                                "tag": {
+                                                                                                    "tag": "Tuple"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "tag": "SumT"
+                                                                                    },
+                                                                                    "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal43"
+                                                                                }
+                                                                            ],
+                                                                            "body": {
+                                                                                "atom": {
+                                                                                    "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal43",
+                                                                                    "tag": "Var"
+                                                                                },
+                                                                                "tag": "Atom"
+                                                                            },
+                                                                            "tag": "Let"
+                                                                        }
+                                                                    ],
+                                                                    "tag": "Unpack"
+                                                                },
+                                                                {
+                                                                    "contents": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "C",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        },
+                                                                        [],
+                                                                        {
+                                                                            "bindings": [
+                                                                                {
+                                                                                    "object": {
+                                                                                        "contents": [
+                                                                                            {
+                                                                                                "constructors": [
+                                                                                                    {
+                                                                                                        "parameters": [],
+                                                                                                        "tag": {
+                                                                                                            "tag": "Tuple"
+                                                                                                        }
+                                                                                                    }
+                                                                                                ],
+                                                                                                "tag": "SumT"
+                                                                                            },
+                                                                                            {
+                                                                                                "parameters": [],
+                                                                                                "tag": {
+                                                                                                    "tag": "Tuple"
+                                                                                                }
+                                                                                            },
+                                                                                            []
+                                                                                        ],
+                                                                                        "tag": "Pack"
+                                                                                    },
+                                                                                    "type": {
+                                                                                        "constructors": [
+                                                                                            {
+                                                                                                "parameters": [],
+                                                                                                "tag": {
+                                                                                                    "tag": "Tuple"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "tag": "SumT"
+                                                                                    },
+                                                                                    "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal44"
+                                                                                }
+                                                                            ],
+                                                                            "body": {
+                                                                                "atom": {
+                                                                                    "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal44",
+                                                                                    "tag": "Var"
+                                                                                },
+                                                                                "tag": "Atom"
+                                                                            },
+                                                                            "tag": "Let"
+                                                                        }
+                                                                    ],
+                                                                    "tag": "Unpack"
+                                                                }
+                                                            ],
+                                                            "scrutinee": {
+                                                                "tag": "Cast",
+                                                                "type": {
                                                                     "constructors": [
                                                                         {
                                                                             "parameters": [],
                                                                             "tag": {
-                                                                                "tag": "Tuple"
+                                                                                "name": "A",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "B",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "C",
+                                                                                "tag": "Data"
                                                                             }
                                                                         }
                                                                     ],
                                                                     "tag": "SumT"
                                                                 },
-                                                                "tag": "FuncT"
-                                                            }
-                                                        ],
-                                                        "returns": {
-                                                            "constructors": [
-                                                                {
-                                                                    "parameters": [],
-                                                                    "tag": {
-                                                                        "tag": "Tuple"
-                                                                    }
+                                                                "value": {
+                                                                    "contents": "_M1p49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal38",
+                                                                    "tag": "Var"
                                                                 }
-                                                            ],
-                                                            "tag": "SumT"
+                                                            },
+                                                            "tag": "Match"
+                                                        }
+                                                    ],
+                                                    "tag": "Unpack"
+                                                }
+                                            ],
+                                            "scrutinee": {
+                                                "atom": {
+                                                    "contents": "_M5tuple49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal37",
+                                                    "tag": "Var"
+                                                },
+                                                "tag": "Atom"
+                                            },
+                                            "tag": "Match"
+                                        }
+                                    ],
+                                    "tag": "Fun"
+                                },
+                                "type": {
+                                    "parameters": [
+                                        {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
                                                         },
-                                                        "tag": "FuncT"
-                                                    },
-                                                    {
-                                                        "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal35",
-                                                        "tag": "Var"
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "tag": {
+                                                        "tag": "Tuple"
                                                     }
-                                                ],
-                                                "tag": "Cast"
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
                                             }
                                         ],
-                                        "tag": "Assign"
-                                    }
-                                ],
-                                "tag": "Assign"
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                },
+                                "variable": "_M3fun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal45"
                             }
                         ],
-                        "tag": "Assign"
+                        "body": {
+                            "atom": {
+                                "contents": "_M3fun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal45",
+                                "tag": "Var"
+                            },
+                            "tag": "Atom"
+                        },
+                        "tag": "Let"
                     },
-                    {
-                        "contents": [
-                            "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal46",
-                            {
-                                "contents": [
-                                    [
+                    "tag": "Assign",
+                    "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal46"
+                },
+                "expression": {
+                    "body": {
+                        "body": {
+                            "body": {
+                                "tag": "Cast",
+                                "type": {
+                                    "parameters": [
                                         {
-                                            "object": {
-                                                "contents": [
-                                                    [
-                                                        "_M5tuple49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal37"
-                                                    ],
-                                                    {
-                                                        "contents": [
-                                                            {
-                                                                "contents": {
-                                                                    "contents": "_M5tuple49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal37",
-                                                                    "tag": "Var"
-                                                                },
-                                                                "tag": "Atom"
-                                                            },
-                                                            [
-                                                                {
-                                                                    "contents": [
-                                                                        {
-                                                                            "parameters": [
-                                                                                {
-                                                                                    "tag": "AnyT"
-                                                                                },
-                                                                                {
-                                                                                    "tag": "AnyT"
-                                                                                }
-                                                                            ],
-                                                                            "tag": {
-                                                                                "tag": "Tuple"
-                                                                            }
-                                                                        },
-                                                                        [
-                                                                            "_M1p49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal38",
-                                                                            "_M1p49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal39"
-                                                                        ],
-                                                                        {
-                                                                            "contents": [
-                                                                                {
-                                                                                    "contents": [
-                                                                                        {
-                                                                                            "constructors": [
-                                                                                                {
-                                                                                                    "parameters": [],
-                                                                                                    "tag": {
-                                                                                                        "name": "A",
-                                                                                                        "tag": "Data"
-                                                                                                    }
-                                                                                                },
-                                                                                                {
-                                                                                                    "parameters": [],
-                                                                                                    "tag": {
-                                                                                                        "name": "B",
-                                                                                                        "tag": "Data"
-                                                                                                    }
-                                                                                                },
-                                                                                                {
-                                                                                                    "parameters": [],
-                                                                                                    "tag": {
-                                                                                                        "name": "C",
-                                                                                                        "tag": "Data"
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
-                                                                                            "tag": "SumT"
-                                                                                        },
-                                                                                        {
-                                                                                            "contents": "_M1p49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal38",
-                                                                                            "tag": "Var"
-                                                                                        }
-                                                                                    ],
-                                                                                    "tag": "Cast"
-                                                                                },
-                                                                                [
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "parameters": [],
-                                                                                                "tag": {
-                                                                                                    "name": "A",
-                                                                                                    "tag": "Data"
-                                                                                                }
-                                                                                            },
-                                                                                            [],
-                                                                                            {
-                                                                                                "contents": [
-                                                                                                    "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal41",
-                                                                                                    {
-                                                                                                        "contents": [
-                                                                                                            "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal40",
-                                                                                                            {
-                                                                                                                "contents": [
-                                                                                                                    {
-                                                                                                                        "contents": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                                                                                        "tag": "Var"
-                                                                                                                    },
-                                                                                                                    [
-                                                                                                                        {
-                                                                                                                            "contents": {
-                                                                                                                                "contents": "A",
-                                                                                                                                "tag": "String"
-                                                                                                                            },
-                                                                                                                            "tag": "Unboxed"
-                                                                                                                        }
-                                                                                                                    ]
-                                                                                                                ],
-                                                                                                                "tag": "Call"
-                                                                                                            },
-                                                                                                            {
-                                                                                                                "contents": [
-                                                                                                                    {
-                                                                                                                        "tag": "AnyT"
-                                                                                                                    },
-                                                                                                                    {
-                                                                                                                        "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal40",
-                                                                                                                        "tag": "Var"
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "tag": "Cast"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "tag": "Assign"
-                                                                                                    },
-                                                                                                    {
-                                                                                                        "contents": [
-                                                                                                            "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal42",
-                                                                                                            {
-                                                                                                                "contents": [
-                                                                                                                    {
-                                                                                                                        "contents": "_M11printString34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External",
-                                                                                                                        "tag": "Var"
-                                                                                                                    },
-                                                                                                                    [
-                                                                                                                        {
-                                                                                                                            "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal41",
-                                                                                                                            "tag": "Var"
-                                                                                                                        }
-                                                                                                                    ]
-                                                                                                                ],
-                                                                                                                "tag": "Call"
-                                                                                                            },
-                                                                                                            {
-                                                                                                                "contents": [
-                                                                                                                    {
-                                                                                                                        "constructors": [
-                                                                                                                            {
-                                                                                                                                "parameters": [],
-                                                                                                                                "tag": {
-                                                                                                                                    "tag": "Tuple"
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        "tag": "SumT"
-                                                                                                                    },
-                                                                                                                    {
-                                                                                                                        "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal42",
-                                                                                                                        "tag": "Var"
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "tag": "Cast"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "tag": "Assign"
-                                                                                                    }
-                                                                                                ],
-                                                                                                "tag": "Assign"
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "Unpack"
-                                                                                    },
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "parameters": [],
-                                                                                                "tag": {
-                                                                                                    "name": "B",
-                                                                                                    "tag": "Data"
-                                                                                                }
-                                                                                            },
-                                                                                            [],
-                                                                                            {
-                                                                                                "contents": [
-                                                                                                    [
-                                                                                                        {
-                                                                                                            "object": {
-                                                                                                                "contents": [
-                                                                                                                    {
-                                                                                                                        "constructors": [
-                                                                                                                            {
-                                                                                                                                "parameters": [],
-                                                                                                                                "tag": {
-                                                                                                                                    "tag": "Tuple"
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        "tag": "SumT"
-                                                                                                                    },
-                                                                                                                    {
-                                                                                                                        "parameters": [],
-                                                                                                                        "tag": {
-                                                                                                                            "tag": "Tuple"
-                                                                                                                        }
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ],
-                                                                                                                "tag": "Pack"
-                                                                                                            },
-                                                                                                            "typ": {
-                                                                                                                "constructors": [
-                                                                                                                    {
-                                                                                                                        "parameters": [],
-                                                                                                                        "tag": {
-                                                                                                                            "tag": "Tuple"
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "tag": "SumT"
-                                                                                                            },
-                                                                                                            "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal43"
-                                                                                                        }
-                                                                                                    ],
-                                                                                                    {
-                                                                                                        "contents": {
-                                                                                                            "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal43",
-                                                                                                            "tag": "Var"
-                                                                                                        },
-                                                                                                        "tag": "Atom"
-                                                                                                    }
-                                                                                                ],
-                                                                                                "tag": "Let"
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "Unpack"
-                                                                                    },
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            {
-                                                                                                "parameters": [],
-                                                                                                "tag": {
-                                                                                                    "name": "C",
-                                                                                                    "tag": "Data"
-                                                                                                }
-                                                                                            },
-                                                                                            [],
-                                                                                            {
-                                                                                                "contents": [
-                                                                                                    [
-                                                                                                        {
-                                                                                                            "object": {
-                                                                                                                "contents": [
-                                                                                                                    {
-                                                                                                                        "constructors": [
-                                                                                                                            {
-                                                                                                                                "parameters": [],
-                                                                                                                                "tag": {
-                                                                                                                                    "tag": "Tuple"
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        "tag": "SumT"
-                                                                                                                    },
-                                                                                                                    {
-                                                                                                                        "parameters": [],
-                                                                                                                        "tag": {
-                                                                                                                            "tag": "Tuple"
-                                                                                                                        }
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ],
-                                                                                                                "tag": "Pack"
-                                                                                                            },
-                                                                                                            "typ": {
-                                                                                                                "constructors": [
-                                                                                                                    {
-                                                                                                                        "parameters": [],
-                                                                                                                        "tag": {
-                                                                                                                            "tag": "Tuple"
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "tag": "SumT"
-                                                                                                            },
-                                                                                                            "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal44"
-                                                                                                        }
-                                                                                                    ],
-                                                                                                    {
-                                                                                                        "contents": {
-                                                                                                            "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal44",
-                                                                                                            "tag": "Var"
-                                                                                                        },
-                                                                                                        "tag": "Atom"
-                                                                                                    }
-                                                                                                ],
-                                                                                                "tag": "Let"
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "Unpack"
-                                                                                    }
-                                                                                ]
-                                                                            ],
-                                                                            "tag": "Match"
-                                                                        }
-                                                                    ],
-                                                                    "tag": "Unpack"
-                                                                }
-                                                            ]
-                                                        ],
-                                                        "tag": "Match"
-                                                    }
-                                                ],
-                                                "tag": "Fun"
-                                            },
-                                            "typ": {
-                                                "parameters": [
-                                                    {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    },
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    }
-                                                                ],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    }
-                                                ],
-                                                "returns": {
+                                            "parameters": [
+                                                {
                                                     "constructors": [
                                                         {
-                                                            "parameters": [],
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
                                                             "tag": {
                                                                 "tag": "Tuple"
                                                             }
                                                         }
                                                     ],
                                                     "tag": "SumT"
-                                                },
-                                                "tag": "FuncT"
-                                            },
-                                            "variable": "_M3fun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal45"
-                                        }
-                                    ],
-                                    {
-                                        "contents": {
-                                            "contents": "_M3fun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal45",
-                                            "tag": "Var"
-                                        },
-                                        "tag": "Atom"
-                                    }
-                                ],
-                                "tag": "Let"
-                            },
-                            {
-                                "contents": [
-                                    "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal47",
-                                    {
-                                        "contents": [
-                                            {
-                                                "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal36",
-                                                "tag": "Var"
-                                            },
-                                            [
-                                                {
-                                                    "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal46",
-                                                    "tag": "Var"
                                                 }
-                                            ]
-                                        ],
-                                        "tag": "Call"
-                                    },
-                                    {
-                                        "contents": [
-                                            {
+                                            ],
+                                            "returns": {
                                                 "constructors": [
                                                     {
                                                         "parameters": [],
@@ -936,21 +729,158 @@
                                                 ],
                                                 "tag": "SumT"
                                             },
+                                            "tag": "FuncT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
                                             {
-                                                "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal47",
-                                                "tag": "Var"
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
                                             }
                                         ],
-                                        "tag": "Cast"
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                },
+                                "value": {
+                                    "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal35",
+                                    "tag": "Var"
+                                }
+                            },
+                            "expression": {
+                                "arguments": [
+                                    {
+                                        "contents": "_M4cast49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal34",
+                                        "tag": "Var"
                                     }
                                 ],
-                                "tag": "Assign"
+                                "callee": {
+                                    "contents": "_M8_x7C_x3E34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External",
+                                    "tag": "Var"
+                                },
+                                "tag": "Call"
+                            },
+                            "tag": "Assign",
+                            "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal35"
+                        },
+                        "expression": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "AnyT"
+                            },
+                            "value": {
+                                "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal33",
+                                "tag": "Var"
                             }
-                        ],
-                        "tag": "Assign"
-                    }
-                ],
-                "tag": "Assign"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M4cast49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal34"
+                    },
+                    "expression": {
+                        "body": {
+                            "body": {
+                                "bindings": [
+                                    {
+                                        "object": {
+                                            "contents": [
+                                                {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                },
+                                                [
+                                                    {
+                                                        "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal30",
+                                                        "tag": "Var"
+                                                    },
+                                                    {
+                                                        "contents": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal31",
+                                                        "tag": "Var"
+                                                    }
+                                                ]
+                                            ],
+                                            "tag": "Pack"
+                                        },
+                                        "type": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        },
+                                        "variable": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal32"
+                                    }
+                                ],
+                                "body": {
+                                    "atom": {
+                                        "contents": "_M3let49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal32",
+                                        "tag": "Var"
+                                    },
+                                    "tag": "Atom"
+                                },
+                                "tag": "Let"
+                            },
+                            "expression": {
+                                "arguments": [],
+                                "callee": "_M1B49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External",
+                                "tag": "CallDirect"
+                            },
+                            "tag": "Assign",
+                            "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal31"
+                        },
+                        "expression": {
+                            "arguments": [],
+                            "callee": "_M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External",
+                            "tag": "CallDirect"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal30"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal33"
+                },
+                "tag": "Assign",
+                "variable": "_M1d49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal36"
             }
         ]
     ],
