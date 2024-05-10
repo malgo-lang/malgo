@@ -206,12 +206,15 @@ enum Type {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Con(Tag, Vec<Type>);
+struct Con {
+    tag: Tag,
+    parameters: Vec<Type>,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(tag = "tag", content = "contents")]
+#[serde(tag = "tag")]
 enum Tag {
-    Data(String),
+    Data { name: String },
     Tuple,
 }
 

@@ -10,24 +10,24 @@
                 "parameters": [
                     {
                         "constructors": [
-                            [
-                                {
+                            {
+                                "parameters": [],
+                                "tag": {
                                     "tag": "Tuple"
-                                },
-                                []
-                            ]
+                                }
+                            }
                         ],
                         "tag": "SumT"
                     }
                 ],
                 "returns": {
                     "constructors": [
-                        [
-                            {
+                        {
+                            "parameters": [],
+                            "tag": {
                                 "tag": "Tuple"
-                            },
-                            []
-                        ]
+                            }
+                        }
                     ],
                     "tag": "SumT"
                 },
@@ -94,12 +94,12 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
+                                            {
+                                                "parameters": [],
+                                                "tag": {
                                                     "tag": "Tuple"
-                                                },
-                                                []
-                                            ]
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
@@ -139,27 +139,27 @@
                         "contents": [
                             {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Nil",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nil",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "Cons",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             },
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "Cons",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -173,13 +173,13 @@
                     [
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Nil",
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "Nil",
                                         "tag": "Data"
-                                    },
-                                    []
-                                ],
+                                    }
+                                },
                                 [],
                                 {
                                     "contents": [
@@ -193,20 +193,20 @@
                         },
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Cons",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "tag": "AnyT"
                                         },
                                         {
                                             "tag": "AnyT"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "Cons",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal21",
                                     "_M1p44test_x2Ftestcases_x2Fmalgo_x2FPattern_x2Emlg10Temporal22"

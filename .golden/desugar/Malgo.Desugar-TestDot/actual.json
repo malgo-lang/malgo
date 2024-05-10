@@ -23,17 +23,17 @@
                         "contents": [
                             {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Int64#",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "Int64T"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "Int64#",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -47,17 +47,17 @@
                     [
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Int64#",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "tag": "Int64T"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "Int64#",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p44test_x2Ftestcases_x2Fmalgo_x2FTestDot_x2Emlg10Temporal31"
                                 ],
@@ -200,24 +200,24 @@
                 "parameters": [
                     {
                         "constructors": [
-                            [
-                                {
+                            {
+                                "parameters": [],
+                                "tag": {
                                     "tag": "Tuple"
-                                },
-                                []
-                            ]
+                                }
+                            }
                         ],
                         "tag": "SumT"
                     }
                 ],
                 "returns": {
                     "constructors": [
-                        [
-                            {
+                        {
+                            "parameters": [],
+                            "tag": {
                                 "tag": "Tuple"
-                            },
-                            []
-                        ]
+                            }
+                        }
                     ],
                     "tag": "SumT"
                 },
@@ -433,12 +433,12 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
+                                            {
+                                                "parameters": [],
+                                                "tag": {
                                                     "tag": "Tuple"
-                                                },
-                                                []
-                                            ]
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },

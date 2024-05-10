@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
 
@@ -25,7 +26,7 @@ import Test.QuickCheck.Instances.Text ()
 Constructors  C ::= <tag n>
 -}
 data Tag
-  = Data Text
+  = Data {name :: Text}
   | Tuple
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, FromJSON, Store)
@@ -37,7 +38,7 @@ instance Pretty Tag where
   pretty (Data name) = pretty name
   pretty Tuple = "Tuple#"
 
-data Con = Con Tag [Type]
+data Con = Con {tag :: Tag, parameters :: [Type]}
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, FromJSON)
 

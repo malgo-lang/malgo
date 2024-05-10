@@ -35,33 +35,29 @@
                         "contents": [
                             {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Done",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ],
-                                    [
-                                        {
-                                            "contents": "NotYetDone",
+                                        ],
+                                        "tag": {
+                                            "name": "Done",
                                             "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "parameters": [
                                                     {
                                                         "constructors": [
-                                                            [
-                                                                {
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
                                                                     "tag": "Tuple"
-                                                                },
-                                                                []
-                                                            ]
+                                                                }
+                                                            }
                                                         ],
                                                         "tag": "SumT"
                                                     }
@@ -71,8 +67,12 @@
                                                 },
                                                 "tag": "FuncT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "NotYetDone",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -86,17 +86,17 @@
                     [
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Done",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "tag": "AnyT"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "Done",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal291"
                                 ],
@@ -138,22 +138,18 @@
                         },
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "NotYetDone",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "parameters": [
                                                 {
                                                     "constructors": [
-                                                        [
-                                                            {
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
                                                                 "tag": "Tuple"
-                                                            },
-                                                            []
-                                                        ]
+                                                            }
+                                                        }
                                                     ],
                                                     "tag": "SumT"
                                                 }
@@ -163,8 +159,12 @@
                                             },
                                             "tag": "FuncT"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "NotYetDone",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal293"
                                 ],
@@ -197,33 +197,33 @@
                                                                                                             "contents": [
                                                                                                                 {
                                                                                                                     "constructors": [
-                                                                                                                        [
-                                                                                                                            {
+                                                                                                                        {
+                                                                                                                            "parameters": [],
+                                                                                                                            "tag": {
                                                                                                                                 "tag": "Tuple"
-                                                                                                                            },
-                                                                                                                            []
-                                                                                                                        ]
+                                                                                                                            }
+                                                                                                                        }
                                                                                                                     ],
                                                                                                                     "tag": "SumT"
                                                                                                                 },
-                                                                                                                [
-                                                                                                                    {
+                                                                                                                {
+                                                                                                                    "parameters": [],
+                                                                                                                    "tag": {
                                                                                                                         "tag": "Tuple"
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ],
+                                                                                                                    }
+                                                                                                                },
                                                                                                                 []
                                                                                                             ],
                                                                                                             "tag": "Pack"
                                                                                                         },
                                                                                                         "typ": {
                                                                                                             "constructors": [
-                                                                                                                [
-                                                                                                                    {
+                                                                                                                {
+                                                                                                                    "parameters": [],
+                                                                                                                    "tag": {
                                                                                                                         "tag": "Tuple"
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ]
+                                                                                                                    }
+                                                                                                                }
                                                                                                             ],
                                                                                                             "tag": "SumT"
                                                                                                         },
@@ -371,12 +371,12 @@
                                                             "parameters": [
                                                                 {
                                                                     "constructors": [
-                                                                        [
-                                                                            {
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
                                                                                 "tag": "Tuple"
-                                                                            },
-                                                                            []
-                                                                        ]
+                                                                            }
+                                                                        }
                                                                     ],
                                                                     "tag": "SumT"
                                                                 }
@@ -467,33 +467,29 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "Done",
-                                                    "tag": "Data"
-                                                },
-                                                [
+                                            {
+                                                "parameters": [
                                                     {
                                                         "tag": "AnyT"
                                                     }
-                                                ]
-                                            ],
-                                            [
-                                                {
-                                                    "contents": "NotYetDone",
+                                                ],
+                                                "tag": {
+                                                    "name": "Done",
                                                     "tag": "Data"
-                                                },
-                                                [
+                                                }
+                                            },
+                                            {
+                                                "parameters": [
                                                     {
                                                         "parameters": [
                                                             {
                                                                 "constructors": [
-                                                                    [
-                                                                        {
+                                                                    {
+                                                                        "parameters": [],
+                                                                        "tag": {
                                                                             "tag": "Tuple"
-                                                                        },
-                                                                        []
-                                                                    ]
+                                                                        }
+                                                                    }
                                                                 ],
                                                                 "tag": "SumT"
                                                             }
@@ -503,22 +499,26 @@
                                                         },
                                                         "tag": "FuncT"
                                                     }
-                                                ]
-                                            ]
+                                                ],
+                                                "tag": {
+                                                    "name": "NotYetDone",
+                                                    "tag": "Data"
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "Done",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ],
+                                        ],
+                                        "tag": {
+                                            "name": "Done",
+                                            "tag": "Data"
+                                        }
+                                    },
                                     [
                                         {
                                             "contents": "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal258",
@@ -530,33 +530,29 @@
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Done",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ],
-                                    [
-                                        {
-                                            "contents": "NotYetDone",
+                                        ],
+                                        "tag": {
+                                            "name": "Done",
                                             "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "parameters": [
                                                     {
                                                         "constructors": [
-                                                            [
-                                                                {
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
                                                                     "tag": "Tuple"
-                                                                },
-                                                                []
-                                                            ]
+                                                                }
+                                                            }
                                                         ],
                                                         "tag": "SumT"
                                                     }
@@ -566,8 +562,12 @@
                                                 },
                                                 "tag": "FuncT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "NotYetDone",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -601,12 +601,12 @@
                         "parameters": [
                             {
                                 "constructors": [
-                                    [
-                                        {
+                                    {
+                                        "parameters": [],
+                                        "tag": {
                                             "tag": "Tuple"
-                                        },
-                                        []
-                                    ]
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             }
@@ -630,33 +630,29 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "Done",
-                                                    "tag": "Data"
-                                                },
-                                                [
+                                            {
+                                                "parameters": [
                                                     {
                                                         "tag": "AnyT"
                                                     }
-                                                ]
-                                            ],
-                                            [
-                                                {
-                                                    "contents": "NotYetDone",
+                                                ],
+                                                "tag": {
+                                                    "name": "Done",
                                                     "tag": "Data"
-                                                },
-                                                [
+                                                }
+                                            },
+                                            {
+                                                "parameters": [
                                                     {
                                                         "parameters": [
                                                             {
                                                                 "constructors": [
-                                                                    [
-                                                                        {
+                                                                    {
+                                                                        "parameters": [],
+                                                                        "tag": {
                                                                             "tag": "Tuple"
-                                                                        },
-                                                                        []
-                                                                    ]
+                                                                        }
+                                                                    }
                                                                 ],
                                                                 "tag": "SumT"
                                                             }
@@ -666,27 +662,27 @@
                                                         },
                                                         "tag": "FuncT"
                                                     }
-                                                ]
-                                            ]
+                                                ],
+                                                "tag": {
+                                                    "name": "NotYetDone",
+                                                    "tag": "Data"
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "NotYetDone",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "parameters": [
                                                     {
                                                         "constructors": [
-                                                            [
-                                                                {
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
                                                                     "tag": "Tuple"
-                                                                },
-                                                                []
-                                                            ]
+                                                                }
+                                                            }
                                                         ],
                                                         "tag": "SumT"
                                                     }
@@ -696,8 +692,12 @@
                                                 },
                                                 "tag": "FuncT"
                                             }
-                                        ]
-                                    ],
+                                        ],
+                                        "tag": {
+                                            "name": "NotYetDone",
+                                            "tag": "Data"
+                                        }
+                                    },
                                     [
                                         {
                                             "contents": "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal260",
@@ -709,33 +709,29 @@
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Done",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ],
-                                    [
-                                        {
-                                            "contents": "NotYetDone",
+                                        ],
+                                        "tag": {
+                                            "name": "Done",
                                             "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "parameters": [
                                                     {
                                                         "constructors": [
-                                                            [
-                                                                {
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
                                                                     "tag": "Tuple"
-                                                                },
-                                                                []
-                                                            ]
+                                                                }
+                                                            }
                                                         ],
                                                         "tag": "SumT"
                                                     }
@@ -745,8 +741,12 @@
                                                 },
                                                 "tag": "FuncT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "NotYetDone",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -791,33 +791,29 @@
                         "contents": [
                             {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Done",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ],
-                                    [
-                                        {
-                                            "contents": "NotYetDone",
+                                        ],
+                                        "tag": {
+                                            "name": "Done",
                                             "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "parameters": [
                                                     {
                                                         "constructors": [
-                                                            [
-                                                                {
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
                                                                     "tag": "Tuple"
-                                                                },
-                                                                []
-                                                            ]
+                                                                }
+                                                            }
                                                         ],
                                                         "tag": "SumT"
                                                     }
@@ -827,8 +823,12 @@
                                                 },
                                                 "tag": "FuncT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "NotYetDone",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -842,17 +842,17 @@
                     [
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Done",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "tag": "AnyT"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "Done",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal263"
                                 ],
@@ -894,22 +894,18 @@
                         },
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "NotYetDone",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "parameters": [
                                                 {
                                                     "constructors": [
-                                                        [
-                                                            {
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
                                                                 "tag": "Tuple"
-                                                            },
-                                                            []
-                                                        ]
+                                                            }
+                                                        }
                                                     ],
                                                     "tag": "SumT"
                                                 }
@@ -919,8 +915,12 @@
                                             },
                                             "tag": "FuncT"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "NotYetDone",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal265"
                                 ],
@@ -935,33 +935,33 @@
                                                             "contents": [
                                                                 {
                                                                     "constructors": [
-                                                                        [
-                                                                            {
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
                                                                                 "tag": "Tuple"
-                                                                            },
-                                                                            []
-                                                                        ]
+                                                                            }
+                                                                        }
                                                                     ],
                                                                     "tag": "SumT"
                                                                 },
-                                                                [
-                                                                    {
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
                                                                         "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ],
+                                                                    }
+                                                                },
                                                                 []
                                                             ],
                                                             "tag": "Pack"
                                                         },
                                                         "typ": {
                                                             "constructors": [
-                                                                [
-                                                                    {
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
                                                                         "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
+                                                                    }
+                                                                }
                                                             ],
                                                             "tag": "SumT"
                                                         },
@@ -1330,24 +1330,24 @@
                 "parameters": [
                     {
                         "constructors": [
-                            [
-                                {
+                            {
+                                "parameters": [],
+                                "tag": {
                                     "tag": "Tuple"
-                                },
-                                []
-                            ]
+                                }
+                            }
                         ],
                         "tag": "SumT"
                     }
                 ],
                 "returns": {
                     "constructors": [
-                        [
-                            {
+                        {
+                            "parameters": [],
+                            "tag": {
                                 "tag": "Tuple"
-                            },
-                            []
-                        ]
+                            }
+                        }
                     ],
                     "tag": "SumT"
                 },
@@ -1756,12 +1756,12 @@
                                                                 ],
                                                                 "returns": {
                                                                     "constructors": [
-                                                                        [
-                                                                            {
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
                                                                                 "tag": "Tuple"
-                                                                            },
-                                                                            []
-                                                                        ]
+                                                                            }
+                                                                        }
                                                                     ],
                                                                     "tag": "SumT"
                                                                 },
@@ -1770,12 +1770,12 @@
                                                         ],
                                                         "returns": {
                                                             "constructors": [
-                                                                [
-                                                                    {
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
                                                                         "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
+                                                                    }
+                                                                }
                                                             ],
                                                             "tag": "SumT"
                                                         },
@@ -1812,33 +1812,29 @@
                                                                         "contents": [
                                                                             {
                                                                                 "constructors": [
-                                                                                    [
-                                                                                        {
-                                                                                            "contents": "Done",
-                                                                                            "tag": "Data"
-                                                                                        },
-                                                                                        [
+                                                                                    {
+                                                                                        "parameters": [
                                                                                             {
                                                                                                 "tag": "AnyT"
                                                                                             }
-                                                                                        ]
-                                                                                    ],
-                                                                                    [
-                                                                                        {
-                                                                                            "contents": "NotYetDone",
+                                                                                        ],
+                                                                                        "tag": {
+                                                                                            "name": "Done",
                                                                                             "tag": "Data"
-                                                                                        },
-                                                                                        [
+                                                                                        }
+                                                                                    },
+                                                                                    {
+                                                                                        "parameters": [
                                                                                             {
                                                                                                 "parameters": [
                                                                                                     {
                                                                                                         "constructors": [
-                                                                                                            [
-                                                                                                                {
+                                                                                                            {
+                                                                                                                "parameters": [],
+                                                                                                                "tag": {
                                                                                                                     "tag": "Tuple"
-                                                                                                                },
-                                                                                                                []
-                                                                                                            ]
+                                                                                                                }
+                                                                                                            }
                                                                                                         ],
                                                                                                         "tag": "SumT"
                                                                                                     }
@@ -1848,8 +1844,12 @@
                                                                                                 },
                                                                                                 "tag": "FuncT"
                                                                                             }
-                                                                                        ]
-                                                                                    ]
+                                                                                        ],
+                                                                                        "tag": {
+                                                                                            "name": "NotYetDone",
+                                                                                            "tag": "Data"
+                                                                                        }
+                                                                                    }
                                                                                 ],
                                                                                 "tag": "SumT"
                                                                             },
@@ -1863,17 +1863,17 @@
                                                                     [
                                                                         {
                                                                             "contents": [
-                                                                                [
-                                                                                    {
-                                                                                        "contents": "Done",
-                                                                                        "tag": "Data"
-                                                                                    },
-                                                                                    [
+                                                                                {
+                                                                                    "parameters": [
                                                                                         {
                                                                                             "tag": "AnyT"
                                                                                         }
-                                                                                    ]
-                                                                                ],
+                                                                                    ],
+                                                                                    "tag": {
+                                                                                        "name": "Done",
+                                                                                        "tag": "Data"
+                                                                                    }
+                                                                                },
                                                                                 [
                                                                                     "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal375"
                                                                                 ],
@@ -1935,12 +1935,12 @@
                                                                                                     "contents": [
                                                                                                         {
                                                                                                             "constructors": [
-                                                                                                                [
-                                                                                                                    {
+                                                                                                                {
+                                                                                                                    "parameters": [],
+                                                                                                                    "tag": {
                                                                                                                         "tag": "Tuple"
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ]
+                                                                                                                    }
+                                                                                                                }
                                                                                                             ],
                                                                                                             "tag": "SumT"
                                                                                                         },
@@ -1962,22 +1962,18 @@
                                                                         },
                                                                         {
                                                                             "contents": [
-                                                                                [
-                                                                                    {
-                                                                                        "contents": "NotYetDone",
-                                                                                        "tag": "Data"
-                                                                                    },
-                                                                                    [
+                                                                                {
+                                                                                    "parameters": [
                                                                                         {
                                                                                             "parameters": [
                                                                                                 {
                                                                                                     "constructors": [
-                                                                                                        [
-                                                                                                            {
+                                                                                                        {
+                                                                                                            "parameters": [],
+                                                                                                            "tag": {
                                                                                                                 "tag": "Tuple"
-                                                                                                            },
-                                                                                                            []
-                                                                                                        ]
+                                                                                                            }
+                                                                                                        }
                                                                                                     ],
                                                                                                     "tag": "SumT"
                                                                                                 }
@@ -1987,8 +1983,12 @@
                                                                                             },
                                                                                             "tag": "FuncT"
                                                                                         }
-                                                                                    ]
-                                                                                ],
+                                                                                    ],
+                                                                                    "tag": {
+                                                                                        "name": "NotYetDone",
+                                                                                        "tag": "Data"
+                                                                                    }
+                                                                                },
                                                                                 [
                                                                                     "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal379"
                                                                                 ],
@@ -2053,12 +2053,12 @@
                                                                                                     "contents": [
                                                                                                         {
                                                                                                             "constructors": [
-                                                                                                                [
-                                                                                                                    {
+                                                                                                                {
+                                                                                                                    "parameters": [],
+                                                                                                                    "tag": {
                                                                                                                         "tag": "Tuple"
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ]
+                                                                                                                    }
+                                                                                                                }
                                                                                                             ],
                                                                                                             "tag": "SumT"
                                                                                                         },
@@ -2093,12 +2093,12 @@
                                                         ],
                                                         "returns": {
                                                             "constructors": [
-                                                                [
-                                                                    {
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
                                                                         "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
+                                                                    }
+                                                                }
                                                             ],
                                                             "tag": "SumT"
                                                         },
@@ -2139,12 +2139,12 @@
                                                 "contents": [
                                                     {
                                                         "constructors": [
-                                                            [
-                                                                {
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
                                                                     "tag": "Tuple"
-                                                                },
-                                                                []
-                                                            ]
+                                                                }
+                                                            }
                                                         ],
                                                         "tag": "SumT"
                                                     },
@@ -2348,12 +2348,12 @@
                                                                     "parameters": [
                                                                         {
                                                                             "constructors": [
-                                                                                [
-                                                                                    {
+                                                                                {
+                                                                                    "parameters": [],
+                                                                                    "tag": {
                                                                                         "tag": "Tuple"
-                                                                                    },
-                                                                                    []
-                                                                                ]
+                                                                                    }
+                                                                                }
                                                                             ],
                                                                             "tag": "SumT"
                                                                         }
@@ -2460,12 +2460,12 @@
                                                                                                         "contents": [
                                                                                                             {
                                                                                                                 "constructors": [
-                                                                                                                    [
-                                                                                                                        {
+                                                                                                                    {
+                                                                                                                        "parameters": [],
+                                                                                                                        "tag": {
                                                                                                                             "tag": "Tuple"
-                                                                                                                        },
-                                                                                                                        []
-                                                                                                                    ]
+                                                                                                                        }
+                                                                                                                    }
                                                                                                                 ],
                                                                                                                 "tag": "SumT"
                                                                                                             },
@@ -2543,12 +2543,12 @@
                                                                         "parameters": [
                                                                             {
                                                                                 "constructors": [
-                                                                                    [
-                                                                                        {
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
                                                                                             "tag": "Tuple"
-                                                                                        },
-                                                                                        []
-                                                                                    ]
+                                                                                        }
+                                                                                    }
                                                                                 ],
                                                                                 "tag": "SumT"
                                                                             }
@@ -2633,12 +2633,12 @@
                                                                         "parameters": [
                                                                             {
                                                                                 "constructors": [
-                                                                                    [
-                                                                                        {
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
                                                                                             "tag": "Tuple"
-                                                                                        },
-                                                                                        []
-                                                                                    ]
+                                                                                        }
+                                                                                    }
                                                                                 ],
                                                                                 "tag": "SumT"
                                                                             }
@@ -2720,12 +2720,12 @@
                                                                                                             "parameters": [
                                                                                                                 {
                                                                                                                     "constructors": [
-                                                                                                                        [
-                                                                                                                            {
+                                                                                                                        {
+                                                                                                                            "parameters": [],
+                                                                                                                            "tag": {
                                                                                                                                 "tag": "Tuple"
-                                                                                                                            },
-                                                                                                                            []
-                                                                                                                        ]
+                                                                                                                            }
+                                                                                                                        }
                                                                                                                     ],
                                                                                                                     "tag": "SumT"
                                                                                                                 }
@@ -2832,12 +2832,12 @@
                                                                                                                                                 "contents": [
                                                                                                                                                     {
                                                                                                                                                         "constructors": [
-                                                                                                                                                            [
-                                                                                                                                                                {
+                                                                                                                                                            {
+                                                                                                                                                                "parameters": [],
+                                                                                                                                                                "tag": {
                                                                                                                                                                     "tag": "Tuple"
-                                                                                                                                                                },
-                                                                                                                                                                []
-                                                                                                                                                            ]
+                                                                                                                                                                }
+                                                                                                                                                            }
                                                                                                                                                         ],
                                                                                                                                                         "tag": "SumT"
                                                                                                                                                     },
@@ -2915,12 +2915,12 @@
                                                                                                                 "parameters": [
                                                                                                                     {
                                                                                                                         "constructors": [
-                                                                                                                            [
-                                                                                                                                {
+                                                                                                                            {
+                                                                                                                                "parameters": [],
+                                                                                                                                "tag": {
                                                                                                                                     "tag": "Tuple"
-                                                                                                                                },
-                                                                                                                                []
-                                                                                                                            ]
+                                                                                                                                }
+                                                                                                                            }
                                                                                                                         ],
                                                                                                                         "tag": "SumT"
                                                                                                                     }
@@ -3005,12 +3005,12 @@
                                                                                                                 "parameters": [
                                                                                                                     {
                                                                                                                         "constructors": [
-                                                                                                                            [
-                                                                                                                                {
+                                                                                                                            {
+                                                                                                                                "parameters": [],
+                                                                                                                                "tag": {
                                                                                                                                     "tag": "Tuple"
-                                                                                                                                },
-                                                                                                                                []
-                                                                                                                            ]
+                                                                                                                                }
+                                                                                                                            }
                                                                                                                         ],
                                                                                                                         "tag": "SumT"
                                                                                                                     }
@@ -3183,12 +3183,12 @@
                                                                                                 "parameters": [
                                                                                                     {
                                                                                                         "constructors": [
-                                                                                                            [
-                                                                                                                {
+                                                                                                            {
+                                                                                                                "parameters": [],
+                                                                                                                "tag": {
                                                                                                                     "tag": "Tuple"
-                                                                                                                },
-                                                                                                                []
-                                                                                                            ]
+                                                                                                                }
+                                                                                                            }
                                                                                                         ],
                                                                                                         "tag": "SumT"
                                                                                                     }
@@ -3257,12 +3257,12 @@
                                                         "parameters": [
                                                             {
                                                                 "constructors": [
-                                                                    [
-                                                                        {
+                                                                    {
+                                                                        "parameters": [],
+                                                                        "tag": {
                                                                             "tag": "Tuple"
-                                                                        },
-                                                                        []
-                                                                    ]
+                                                                        }
+                                                                    }
                                                                 ],
                                                                 "tag": "SumT"
                                                             }

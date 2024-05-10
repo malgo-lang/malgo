@@ -10,12 +10,12 @@
                 ],
                 "returns": {
                     "constructors": [
-                        [
-                            {
+                        {
+                            "parameters": [],
+                            "tag": {
                                 "tag": "Tuple"
-                            },
-                            []
-                        ]
+                            }
+                        }
                     ],
                     "tag": "SumT"
                 },
@@ -28,12 +28,12 @@
                 "parameters": [
                     {
                         "constructors": [
-                            [
-                                {
+                            {
+                                "parameters": [],
+                                "tag": {
                                     "tag": "Tuple"
-                                },
-                                []
-                            ]
+                                }
+                            }
                         ],
                         "tag": "SumT"
                     }
@@ -136,44 +136,44 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "Nil",
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "name": "Nil",
                                                     "tag": "Data"
-                                                },
-                                                []
-                                            ],
-                                            [
-                                                {
-                                                    "contents": "Cons",
-                                                    "tag": "Data"
-                                                },
-                                                [
+                                                }
+                                            },
+                                            {
+                                                "parameters": [
                                                     {
                                                         "tag": "AnyT"
                                                     },
                                                     {
                                                         "tag": "AnyT"
                                                     }
-                                                ]
-                                            ]
+                                                ],
+                                                "tag": {
+                                                    "name": "Cons",
+                                                    "tag": "Data"
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "Cons",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             },
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ],
+                                        ],
+                                        "tag": {
+                                            "name": "Cons",
+                                            "tag": "Data"
+                                        }
+                                    },
                                     [
                                         {
                                             "contents": "_M1p41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal129",
@@ -189,27 +189,27 @@
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Nil",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nil",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "Cons",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             },
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "Cons",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -250,58 +250,58 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "Nothing",
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "name": "Nothing",
                                                     "tag": "Data"
-                                                },
-                                                []
-                                            ],
-                                            [
-                                                {
-                                                    "contents": "Just",
-                                                    "tag": "Data"
-                                                },
-                                                [
+                                                }
+                                            },
+                                            {
+                                                "parameters": [
                                                     {
                                                         "tag": "AnyT"
                                                     }
-                                                ]
-                                            ]
+                                                ],
+                                                "tag": {
+                                                    "name": "Just",
+                                                    "tag": "Data"
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "Nothing",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nothing",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
+                                        }
+                                    },
                                     []
                                 ],
                                 "tag": "Pack"
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Nothing",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nothing",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "Just",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "Just",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -348,38 +348,38 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "Nothing",
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "name": "Nothing",
                                                     "tag": "Data"
-                                                },
-                                                []
-                                            ],
-                                            [
-                                                {
-                                                    "contents": "Just",
-                                                    "tag": "Data"
-                                                },
-                                                [
+                                                }
+                                            },
+                                            {
+                                                "parameters": [
                                                     {
                                                         "tag": "AnyT"
                                                     }
-                                                ]
-                                            ]
+                                                ],
+                                                "tag": {
+                                                    "name": "Just",
+                                                    "tag": "Data"
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "Just",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ],
+                                        ],
+                                        "tag": {
+                                            "name": "Just",
+                                            "tag": "Data"
+                                        }
+                                    },
                                     [
                                         {
                                             "contents": "_M1p41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal120",
@@ -391,24 +391,24 @@
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Nothing",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nothing",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "Just",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "Just",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -449,50 +449,50 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "False",
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "name": "False",
                                                     "tag": "Data"
-                                                },
-                                                []
-                                            ],
-                                            [
-                                                {
-                                                    "contents": "True",
+                                                }
+                                            },
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "name": "True",
                                                     "tag": "Data"
-                                                },
-                                                []
-                                            ]
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "False",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "False",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
+                                        }
+                                    },
                                     []
                                 ],
                                 "tag": "Pack"
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "False",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "False",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "True",
+                                        }
+                                    },
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "True",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ]
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -533,50 +533,50 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "False",
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "name": "False",
                                                     "tag": "Data"
-                                                },
-                                                []
-                                            ],
-                                            [
-                                                {
-                                                    "contents": "True",
+                                                }
+                                            },
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "name": "True",
                                                     "tag": "Data"
-                                                },
-                                                []
-                                            ]
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "True",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "True",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
+                                        }
+                                    },
                                     []
                                 ],
                                 "tag": "Pack"
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "False",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "False",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "True",
+                                        }
+                                    },
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "True",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ]
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -617,64 +617,64 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "Nil",
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "name": "Nil",
                                                     "tag": "Data"
-                                                },
-                                                []
-                                            ],
-                                            [
-                                                {
-                                                    "contents": "Cons",
-                                                    "tag": "Data"
-                                                },
-                                                [
+                                                }
+                                            },
+                                            {
+                                                "parameters": [
                                                     {
                                                         "tag": "AnyT"
                                                     },
                                                     {
                                                         "tag": "AnyT"
                                                     }
-                                                ]
-                                            ]
+                                                ],
+                                                "tag": {
+                                                    "name": "Cons",
+                                                    "tag": "Data"
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "Nil",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nil",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
+                                        }
+                                    },
                                     []
                                 ],
                                 "tag": "Pack"
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Nil",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nil",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "Cons",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             },
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "Cons",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -787,12 +787,12 @@
                 ],
                 "returns": {
                     "constructors": [
-                        [
-                            {
+                        {
+                            "parameters": [],
+                            "tag": {
                                 "tag": "Tuple"
-                            },
-                            []
-                        ]
+                            }
+                        }
                     ],
                     "tag": "SumT"
                 },
@@ -809,12 +809,12 @@
                         ],
                         "returns": {
                             "constructors": [
-                                [
-                                    {
+                                {
+                                    "parameters": [],
+                                    "tag": {
                                         "tag": "Tuple"
-                                    },
-                                    []
-                                ]
+                                    }
+                                }
                             ],
                             "tag": "SumT"
                         },
@@ -839,12 +839,12 @@
                 "parameters": [
                     {
                         "constructors": [
-                            [
-                                {
+                            {
+                                "parameters": [],
+                                "tag": {
                                     "tag": "Tuple"
-                                },
-                                []
-                            ]
+                                }
+                            }
                         ],
                         "tag": "SumT"
                     }
@@ -861,12 +861,12 @@
                         "parameters": [
                             {
                                 "constructors": [
-                                    [
-                                        {
+                                    {
+                                        "parameters": [],
+                                        "tag": {
                                             "tag": "Tuple"
-                                        },
-                                        []
-                                    ]
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             }
@@ -1001,27 +1001,27 @@
                         "contents": [
                             {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Nil",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nil",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "Cons",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             },
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "Cons",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -1035,13 +1035,13 @@
                     [
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Nil",
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "Nil",
                                         "tag": "Data"
-                                    },
-                                    []
-                                ],
+                                    }
+                                },
                                 [],
                                 {
                                     "contents": [
@@ -1055,20 +1055,20 @@
                         },
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Cons",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "tag": "AnyT"
                                         },
                                         {
                                             "tag": "AnyT"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "Cons",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal144",
                                     "_M1p41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal145"
@@ -1136,24 +1136,24 @@
                         "contents": [
                             {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "Nothing",
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nothing",
                                             "tag": "Data"
-                                        },
-                                        []
-                                    ],
-                                    [
-                                        {
-                                            "contents": "Just",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "Just",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -1167,13 +1167,13 @@
                     [
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Nothing",
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "name": "Nothing",
                                         "tag": "Data"
-                                    },
-                                    []
-                                ],
+                                    }
+                                },
                                 [],
                                 {
                                     "contents": [
@@ -1187,17 +1187,17 @@
                         },
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "Just",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "tag": "AnyT"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "Just",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal148"
                                 ],
@@ -1314,24 +1314,24 @@
                 "parameters": [
                     {
                         "constructors": [
-                            [
-                                {
+                            {
+                                "parameters": [],
+                                "tag": {
                                     "tag": "Tuple"
-                                },
-                                []
-                            ]
+                                }
+                            }
                         ],
                         "tag": "SumT"
                     }
                 ],
                 "returns": {
                     "constructors": [
-                        [
-                            {
+                        {
+                            "parameters": [],
+                            "tag": {
                                 "tag": "Tuple"
-                            },
-                            []
-                        ]
+                            }
+                        }
                     ],
                     "tag": "SumT"
                 },
@@ -1617,12 +1617,12 @@
                                                         ],
                                                         "returns": {
                                                             "constructors": [
-                                                                [
-                                                                    {
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
                                                                         "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
+                                                                    }
+                                                                }
                                                             ],
                                                             "tag": "SumT"
                                                         },
@@ -1631,12 +1631,12 @@
                                                 ],
                                                 "returns": {
                                                     "constructors": [
-                                                        [
-                                                            {
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
                                                                 "tag": "Tuple"
-                                                            },
-                                                            []
-                                                        ]
+                                                            }
+                                                        }
                                                     ],
                                                     "tag": "SumT"
                                                 },
@@ -1673,20 +1673,20 @@
                                                                 "contents": [
                                                                     {
                                                                         "constructors": [
-                                                                            [
-                                                                                {
-                                                                                    "contents": "False",
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "name": "False",
                                                                                     "tag": "Data"
-                                                                                },
-                                                                                []
-                                                                            ],
-                                                                            [
-                                                                                {
-                                                                                    "contents": "True",
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "name": "True",
                                                                                     "tag": "Data"
-                                                                                },
-                                                                                []
-                                                                            ]
+                                                                                }
+                                                                            }
                                                                         ],
                                                                         "tag": "SumT"
                                                                     },
@@ -1700,13 +1700,13 @@
                                                             [
                                                                 {
                                                                     "contents": [
-                                                                        [
-                                                                            {
-                                                                                "contents": "False",
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "False",
                                                                                 "tag": "Data"
-                                                                            },
-                                                                            []
-                                                                        ],
+                                                                            }
+                                                                        },
                                                                         [],
                                                                         {
                                                                             "contents": [
@@ -1733,12 +1733,12 @@
                                                                                     "contents": [
                                                                                         {
                                                                                             "constructors": [
-                                                                                                [
-                                                                                                    {
+                                                                                                {
+                                                                                                    "parameters": [],
+                                                                                                    "tag": {
                                                                                                         "tag": "Tuple"
-                                                                                                    },
-                                                                                                    []
-                                                                                                ]
+                                                                                                    }
+                                                                                                }
                                                                                             ],
                                                                                             "tag": "SumT"
                                                                                         },
@@ -1757,13 +1757,13 @@
                                                                 },
                                                                 {
                                                                     "contents": [
-                                                                        [
-                                                                            {
-                                                                                "contents": "True",
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "True",
                                                                                 "tag": "Data"
-                                                                            },
-                                                                            []
-                                                                        ],
+                                                                            }
+                                                                        },
                                                                         [],
                                                                         {
                                                                             "contents": [
@@ -1776,33 +1776,33 @@
                                                                                                     "contents": [
                                                                                                         {
                                                                                                             "constructors": [
-                                                                                                                [
-                                                                                                                    {
+                                                                                                                {
+                                                                                                                    "parameters": [],
+                                                                                                                    "tag": {
                                                                                                                         "tag": "Tuple"
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ]
+                                                                                                                    }
+                                                                                                                }
                                                                                                             ],
                                                                                                             "tag": "SumT"
                                                                                                         },
-                                                                                                        [
-                                                                                                            {
+                                                                                                        {
+                                                                                                            "parameters": [],
+                                                                                                            "tag": {
                                                                                                                 "tag": "Tuple"
-                                                                                                            },
-                                                                                                            []
-                                                                                                        ],
+                                                                                                            }
+                                                                                                        },
                                                                                                         []
                                                                                                     ],
                                                                                                     "tag": "Pack"
                                                                                                 },
                                                                                                 "typ": {
                                                                                                     "constructors": [
-                                                                                                        [
-                                                                                                            {
+                                                                                                        {
+                                                                                                            "parameters": [],
+                                                                                                            "tag": {
                                                                                                                 "tag": "Tuple"
-                                                                                                            },
-                                                                                                            []
-                                                                                                        ]
+                                                                                                            }
+                                                                                                        }
                                                                                                     ],
                                                                                                     "tag": "SumT"
                                                                                                 },
@@ -1841,12 +1841,12 @@
                                                                                             "contents": [
                                                                                                 {
                                                                                                     "constructors": [
-                                                                                                        [
-                                                                                                            {
+                                                                                                        {
+                                                                                                            "parameters": [],
+                                                                                                            "tag": {
                                                                                                                 "tag": "Tuple"
-                                                                                                            },
-                                                                                                            []
-                                                                                                        ]
+                                                                                                            }
+                                                                                                        }
                                                                                                     ],
                                                                                                     "tag": "SumT"
                                                                                                 },
@@ -1881,12 +1881,12 @@
                                                 ],
                                                 "returns": {
                                                     "constructors": [
-                                                        [
-                                                            {
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
                                                                 "tag": "Tuple"
-                                                            },
-                                                            []
-                                                        ]
+                                                            }
+                                                        }
                                                     ],
                                                     "tag": "SumT"
                                                 },
@@ -1927,12 +1927,12 @@
                                         "contents": [
                                             {
                                                 "constructors": [
-                                                    [
-                                                        {
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
                                                             "tag": "Tuple"
-                                                        },
-                                                        []
-                                                    ]
+                                                        }
+                                                    }
                                                 ],
                                                 "tag": "SumT"
                                             },

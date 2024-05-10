@@ -33,12 +33,8 @@
                                 "contents": [
                                     {
                                         "constructors": [
-                                            [
-                                                {
-                                                    "contents": "B",
-                                                    "tag": "Data"
-                                                },
-                                                [
+                                            {
+                                                "parameters": [
                                                     {
                                                         "map": {
                                                             "a": {
@@ -50,17 +46,17 @@
                                                         },
                                                         "tag": "RecordT"
                                                     }
-                                                ]
-                                            ]
+                                                ],
+                                                "tag": {
+                                                    "name": "B",
+                                                    "tag": "Data"
+                                                }
+                                            }
                                         ],
                                         "tag": "SumT"
                                     },
-                                    [
-                                        {
-                                            "contents": "B",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "map": {
                                                     "a": {
@@ -72,8 +68,12 @@
                                                 },
                                                 "tag": "RecordT"
                                             }
-                                        ]
-                                    ],
+                                        ],
+                                        "tag": {
+                                            "name": "B",
+                                            "tag": "Data"
+                                        }
+                                    },
                                     [
                                         {
                                             "contents": "_M1p47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg10Temporal50",
@@ -85,12 +85,8 @@
                             },
                             "typ": {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "B",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "map": {
                                                     "a": {
@@ -102,8 +98,12 @@
                                                 },
                                                 "tag": "RecordT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "B",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -148,12 +148,8 @@
                         "contents": [
                             {
                                 "constructors": [
-                                    [
-                                        {
-                                            "contents": "B",
-                                            "tag": "Data"
-                                        },
-                                        [
+                                    {
+                                        "parameters": [
                                             {
                                                 "map": {
                                                     "a": {
@@ -165,8 +161,12 @@
                                                 },
                                                 "tag": "RecordT"
                                             }
-                                        ]
-                                    ]
+                                        ],
+                                        "tag": {
+                                            "name": "B",
+                                            "tag": "Data"
+                                        }
+                                    }
                                 ],
                                 "tag": "SumT"
                             },
@@ -180,12 +180,8 @@
                     [
                         {
                             "contents": [
-                                [
-                                    {
-                                        "contents": "B",
-                                        "tag": "Data"
-                                    },
-                                    [
+                                {
+                                    "parameters": [
                                         {
                                             "map": {
                                                 "a": {
@@ -197,8 +193,12 @@
                                             },
                                             "tag": "RecordT"
                                         }
-                                    ]
-                                ],
+                                    ],
+                                    "tag": {
+                                        "name": "B",
+                                        "tag": "Data"
+                                    }
+                                },
                                 [
                                     "_M1p47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg10Temporal53"
                                 ],
@@ -304,24 +304,24 @@
                 "parameters": [
                     {
                         "constructors": [
-                            [
-                                {
+                            {
+                                "parameters": [],
+                                "tag": {
                                     "tag": "Tuple"
-                                },
-                                []
-                            ]
+                                }
+                            }
                         ],
                         "tag": "SumT"
                     }
                 ],
                 "returns": {
                     "constructors": [
-                        [
-                            {
+                        {
+                            "parameters": [],
+                            "tag": {
                                 "tag": "Tuple"
-                            },
-                            []
-                        ]
+                            }
+                        }
                     ],
                     "tag": "SumT"
                 },
@@ -771,12 +771,12 @@
                                                     "contents": [
                                                         {
                                                             "constructors": [
-                                                                [
-                                                                    {
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
                                                                         "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
+                                                                    }
+                                                                }
                                                             ],
                                                             "tag": "SumT"
                                                         },
