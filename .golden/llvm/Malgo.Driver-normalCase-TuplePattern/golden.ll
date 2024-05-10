@@ -252,12 +252,12 @@ define internal ptr @_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_
   %9 = getelementptr { i8, {} }, ptr %6, i32 0, i32 0
   %10 = load i8, ptr %9, align 1
   switch i8 %10, label %switch_default_1 [
-    i8 0, label %switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0
-    i8 1, label %switch_branch__M1B49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0
-    i8 2, label %switch_branch__M1C49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0
+    i8 0, label %switch_branch_A_0
+    i8 1, label %switch_branch_B_0
+    i8 2, label %switch_branch_C_0
   ]
 
-switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0: ; preds = %"switch_branch_Tuple#_0"
+switch_branch_A_0:                                ; preds = %"switch_branch_Tuple#_0"
   %11 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %12 = getelementptr { i8, { ptr } }, ptr %11, i32 0, i32 0
   store i8 0, ptr %12, align 1
@@ -266,26 +266,26 @@ switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0
   %14 = getelementptr { i8, <8 x i8> }, ptr %11, i32 0, i32 0
   %15 = load i8, ptr %14, align 1
   switch i8 %15, label %switch_default_0 [
-    i8 0, label %switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+    i8 0, label %"switch_branch_String#_0"
   ]
 
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0
+"switch_branch_String#_0":                        ; preds = %switch_branch_A_0
   %16 = getelementptr { i8, { ptr } }, ptr %11, i32 0, i32 1
   %17 = getelementptr { ptr }, ptr %16, i32 0, i32 0
   %18 = load ptr, ptr %17, align 8
   %19 = call ptr @malgo_print_string(ptr %18)
   ret ptr %19
 
-switch_default_0:                                 ; preds = %switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0
+switch_default_0:                                 ; preds = %switch_branch_A_0
   unreachable
 
-switch_branch__M1B49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0: ; preds = %"switch_branch_Tuple#_0"
+switch_branch_B_0:                                ; preds = %"switch_branch_Tuple#_0"
   %20 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %21 = getelementptr { i8, {} }, ptr %20, i32 0, i32 0
   store i8 0, ptr %21, align 1
   ret ptr %20
 
-switch_branch__M1C49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0: ; preds = %"switch_branch_Tuple#_0"
+switch_branch_C_0:                                ; preds = %"switch_branch_Tuple#_0"
   %22 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %23 = getelementptr { i8, {} }, ptr %22, i32 0, i32 0
   store i8 0, ptr %23, align 1

@@ -112,23 +112,23 @@ define internal ptr @_M14let_x5Fclosure51test_x2Ftestcases_x2Fmalgo_x2FInlineFun
   %switch.i = icmp eq i8 %11, 0
   %12 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %12, align 1
-  br i1 %switch.i, label %switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0.i, label %switch_branch__M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0.i
+  br i1 %switch.i, label %switch_branch_False_0.i, label %switch_branch_True_0.i
 
-switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0.i: ; preds = %2
+switch_branch_False_0.i:                          ; preds = %2
   %13 = load ptr, ptr %10, align 8
   %14 = load ptr, ptr %fun_func_0.i, align 8
   %15 = tail call ptr %14(ptr %13, ptr nonnull %12)
   br label %_M10raw_x5Flet51test_x2Ftestcases_x2Fmalgo_x2FInlineFunction_x2Emlg12Temporal3484.exit
 
-switch_branch__M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0.i: ; preds = %2
+switch_branch_True_0.i:                           ; preds = %2
   %16 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %16, align 1
   %17 = getelementptr { i8, { i32 } }, ptr %16, i64 0, i32 1, i32 0
   store i32 1, ptr %17, align 4
   br label %_M10raw_x5Flet51test_x2Ftestcases_x2Fmalgo_x2FInlineFunction_x2Emlg12Temporal3484.exit
 
-_M10raw_x5Flet51test_x2Ftestcases_x2Fmalgo_x2FInlineFunction_x2Emlg12Temporal3484.exit: ; preds = %switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0.i, %switch_branch__M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0.i
-  %common.ret.op.i = phi ptr [ %15, %switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0.i ], [ %16, %switch_branch__M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0.i ]
+_M10raw_x5Flet51test_x2Ftestcases_x2Fmalgo_x2FInlineFunction_x2Emlg12Temporal3484.exit: ; preds = %switch_branch_False_0.i, %switch_branch_True_0.i
+  %common.ret.op.i = phi ptr [ %15, %switch_branch_False_0.i ], [ %16, %switch_branch_True_0.i ]
   ret ptr %common.ret.op.i
 }
 
@@ -357,7 +357,7 @@ define internal ptr @_M14let_x5Fclosure51test_x2Ftestcases_x2Fmalgo_x2FInlineFun
 }
 
 define internal ptr @_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal716_0) {
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0:
+"switch_branch_String#_0":
   %1 = getelementptr { i8, { ptr } }, ptr %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal716_0, i64 0, i32 1
   %2 = load ptr, ptr %1, align 8
   %3 = tail call ptr @malgo_print_string(ptr %2)

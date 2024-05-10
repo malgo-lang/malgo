@@ -177,10 +177,10 @@ define internal ptr @_M4main41test_x2Ftestcases_x2Fmalgo_x2FEcho_x2Emlg8External
   %10 = getelementptr { i8, <8 x i8> }, ptr %7, i32 0, i32 0
   %11 = load i8, ptr %10, align 1
   switch i8 %11, label %switch_default_0 [
-    i8 0, label %switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+    i8 0, label %"switch_branch_String#_0"
   ]
 
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %1
+"switch_branch_String#_0":                        ; preds = %1
   %12 = getelementptr { i8, { ptr } }, ptr %7, i32 0, i32 1
   %13 = getelementptr { ptr }, ptr %12, i32 0, i32 0
   %14 = load ptr, ptr %13, align 8

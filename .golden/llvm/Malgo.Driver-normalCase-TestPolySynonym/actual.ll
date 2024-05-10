@@ -229,10 +229,10 @@ define internal ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External
   %2 = getelementptr { i8, <4 x i8> }, ptr %_M1i34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal773_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_1 [
-    i8 0, label %switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+    i8 0, label %"switch_branch_Int32#_0"
   ]
 
-switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %1
+"switch_branch_Int32#_0":                         ; preds = %1
   %4 = getelementptr { i8, { i32 } }, ptr %_M1i34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal773_0, i32 0, i32 1
   %5 = getelementptr { i32 }, ptr %4, i32 0, i32 0
   %6 = load i32, ptr %5, align 4
@@ -245,17 +245,17 @@ switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; pre
   %11 = getelementptr { i8, <8 x i8> }, ptr %8, i32 0, i32 0
   %12 = load i8, ptr %11, align 1
   switch i8 %12, label %switch_default_0 [
-    i8 0, label %switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+    i8 0, label %"switch_branch_String#_0"
   ]
 
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+"switch_branch_String#_0":                        ; preds = %"switch_branch_Int32#_0"
   %13 = getelementptr { i8, { ptr } }, ptr %8, i32 0, i32 1
   %14 = getelementptr { ptr }, ptr %13, i32 0, i32 0
   %15 = load ptr, ptr %14, align 8
   %16 = call ptr @malgo_print_string(ptr %15)
   ret ptr %16
 
-switch_default_0:                                 ; preds = %switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+switch_default_0:                                 ; preds = %"switch_branch_Int32#_0"
   unreachable
 
 switch_default_1:                                 ; preds = %1

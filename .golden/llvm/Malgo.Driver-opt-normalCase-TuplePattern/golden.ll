@@ -23,12 +23,12 @@ define internal ptr @_M14fun_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePatt
   %.val = load ptr, ptr %3, align 8
   %.val.val = load i8, ptr %.val, align 1
   switch i8 %.val.val, label %switch_default_1.i [
-    i8 0, label %switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i
-    i8 1, label %switch_branch__M1B49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i
-    i8 2, label %switch_branch__M1C49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i
+    i8 0, label %switch_branch_A_0.i
+    i8 1, label %switch_branch_B_0.i
+    i8 2, label %switch_branch_C_0.i
   ]
 
-switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i: ; preds = %2
+switch_branch_A_0.i:                              ; preds = %2
   %4 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %4, align 1
   %5 = getelementptr { i8, { ptr } }, ptr %4, i64 0, i32 1, i32 0
@@ -36,12 +36,12 @@ switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0
   %6 = tail call ptr @malgo_print_string(ptr noundef nonnull @str2836)
   br label %_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal2833.exit
 
-switch_branch__M1B49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i: ; preds = %2
+switch_branch_B_0.i:                              ; preds = %2
   %7 = tail call noundef ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %7, align 1
   br label %_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal2833.exit
 
-switch_branch__M1C49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i: ; preds = %2
+switch_branch_C_0.i:                              ; preds = %2
   %8 = tail call noundef ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %8, align 1
   br label %_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal2833.exit
@@ -49,8 +49,8 @@ switch_branch__M1C49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0
 switch_default_1.i:                               ; preds = %2
   unreachable
 
-_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal2833.exit: ; preds = %switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i, %switch_branch__M1B49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i, %switch_branch__M1C49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i
-  %common.ret.op.i = phi ptr [ %6, %switch_branch__M1A49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i ], [ %7, %switch_branch__M1B49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i ], [ %8, %switch_branch__M1C49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8External_0.i ]
+_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal2833.exit: ; preds = %switch_branch_A_0.i, %switch_branch_B_0.i, %switch_branch_C_0.i
+  %common.ret.op.i = phi ptr [ %6, %switch_branch_A_0.i ], [ %7, %switch_branch_B_0.i ], [ %8, %switch_branch_C_0.i ]
   ret ptr %common.ret.op.i
 }
 

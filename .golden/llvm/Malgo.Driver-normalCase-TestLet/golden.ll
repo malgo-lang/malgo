@@ -201,10 +201,10 @@ define internal ptr @_M4main44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg8Exter
   %11 = getelementptr { i8, <4 x i8> }, ptr %8, i32 0, i32 0
   %12 = load i8, ptr %11, align 1
   switch i8 %12, label %switch_default_0 [
-    i8 0, label %switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+    i8 0, label %"switch_branch_Int32#_0"
   ]
 
-switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %1
+"switch_branch_Int32#_0":                         ; preds = %1
   %13 = getelementptr { i8, { i32 } }, ptr %8, i32 0, i32 1
   %14 = getelementptr { i32 }, ptr %13, i32 0, i32 0
   %15 = load i32, ptr %14, align 4

@@ -337,10 +337,10 @@ define internal double @_M11traceShowId52test_x2Ftestcases_x2Fmalgo_x2FTestArith
   %6 = getelementptr { i8, <8 x i8> }, ptr %3, i32 0, i32 0
   %7 = load i8, ptr %6, align 1
   switch i8 %7, label %switch_default_0 [
-    i8 0, label %switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+    i8 0, label %"switch_branch_String#_0"
   ]
 
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %1
+"switch_branch_String#_0":                        ; preds = %1
   %8 = getelementptr { i8, { ptr } }, ptr %3, i32 0, i32 1
   %9 = getelementptr { ptr }, ptr %8, i32 0, i32 0
   %10 = load ptr, ptr %9, align 8
@@ -555,10 +555,10 @@ define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Em
   %18 = getelementptr { i8, <8 x i8> }, ptr %15, i32 0, i32 0
   %19 = load i8, ptr %18, align 1
   switch i8 %19, label %switch_default_0 [
-    i8 0, label %switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+    i8 0, label %"switch_branch_String#_0"
   ]
 
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %1
+"switch_branch_String#_0":                        ; preds = %1
   %20 = getelementptr { i8, { ptr } }, ptr %15, i32 0, i32 1
   %21 = getelementptr { ptr }, ptr %20, i32 0, i32 0
   %22 = load ptr, ptr %21, align 8

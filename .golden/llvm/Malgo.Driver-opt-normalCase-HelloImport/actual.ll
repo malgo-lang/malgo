@@ -34,7 +34,7 @@ define internal ptr @_M14fun_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImpo
 }
 
 define internal ptr @_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal716_0) {
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0:
+"switch_branch_String#_0":
   %1 = getelementptr { i8, { ptr } }, ptr %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal716_0, i64 0, i32 1
   %2 = load ptr, ptr %1, align 8
   %3 = tail call ptr @malgo_print_string(ptr %2)

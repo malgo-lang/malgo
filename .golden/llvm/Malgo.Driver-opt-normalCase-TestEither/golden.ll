@@ -34,9 +34,9 @@ define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEithe
 define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3700(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
-  br i1 %switch.i, label %switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i, label %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i
+  br i1 %switch.i, label %switch_branch_Left_0.i, label %switch_branch_Right_0.i
 
-switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i: ; preds = %2
+switch_branch_Left_0.i:                           ; preds = %2
   %4 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %4, align 1
   %5 = getelementptr { i8, { ptr } }, ptr %4, i64 0, i32 1, i32 0
@@ -49,7 +49,7 @@ switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_
   %9 = tail call ptr @malgo_newline(ptr noundef nonnull %8)
   br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3621.exit
 
-switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i: ; preds = %2
+switch_branch_Right_0.i:                          ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %1, i64 0, i32 1
   %11 = load ptr, ptr %10, align 8
   %12 = getelementptr { i8, { i32 } }, ptr %11, i64 0, i32 1
@@ -62,8 +62,8 @@ switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External
   %17 = tail call ptr @malgo_print_string(ptr %14)
   br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3621.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3621.exit: ; preds = %switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i
-  %common.ret.op.i = phi ptr [ %9, %switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i ], [ %17, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i ]
+_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3621.exit: ; preds = %switch_branch_Left_0.i, %switch_branch_Right_0.i
+  %common.ret.op.i = phi ptr [ %9, %switch_branch_Left_0.i ], [ %17, %switch_branch_Right_0.i ]
   ret ptr %common.ret.op.i
 }
 
@@ -81,9 +81,9 @@ define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEithe
   %3 = getelementptr i8, ptr %1, i64 8
   %.val1 = load ptr, ptr %3, align 8
   %switch.i = icmp eq i8 %.val, 0
-  br i1 %switch.i, label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3637.exit, label %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i
+  br i1 %switch.i, label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3637.exit, label %switch_branch_Right_0.i
 
-switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i: ; preds = %2
+switch_branch_Right_0.i:                          ; preds = %2
   %4 = getelementptr { i8, { i32 } }, ptr %.val1, i64 0, i32 1
   %5 = load i32, ptr %4, align 4
   %6 = tail call ptr @malgo_int32_t_to_string(i32 %5)
@@ -104,8 +104,8 @@ switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External
   %d_0.i.i = load ptr, ptr %let_capture_0.i, align 8
   br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3637.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3637.exit: ; preds = %2, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i
-  %d_0.i.sink.i = phi ptr [ %d_0.i.i, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i ], [ %.val1, %2 ]
+_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3637.exit: ; preds = %2, %switch_branch_Right_0.i
+  %d_0.i.sink.i = phi ptr [ %d_0.i.i, %switch_branch_Right_0.i ], [ %.val1, %2 ]
   %11 = getelementptr { i8, { ptr } }, ptr %d_0.i.sink.i, i64 0, i32 1
   %12 = load ptr, ptr %11, align 8
   %13 = tail call ptr @malgo_print_string(ptr %12)
@@ -131,9 +131,9 @@ define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEithe
   %3 = getelementptr i8, ptr %1, i64 8
   %.val1 = load ptr, ptr %3, align 8
   %switch.i = icmp eq i8 %.val, 0
-  br i1 %switch.i, label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3642.exit, label %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i
+  br i1 %switch.i, label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3642.exit, label %switch_branch_Right_0.i
 
-switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i: ; preds = %2
+switch_branch_Right_0.i:                          ; preds = %2
   %4 = getelementptr { i8, { i32 } }, ptr %.val1, i64 0, i32 1
   %5 = load i32, ptr %4, align 4
   %6 = tail call ptr @malgo_int32_t_to_string(i32 %5)
@@ -154,8 +154,8 @@ switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External
   %d_0.i.i = load ptr, ptr %let_capture_0.i, align 8
   br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3642.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3642.exit: ; preds = %2, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i
-  %d_0.i.sink.i = phi ptr [ %d_0.i.i, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_0.i ], [ %.val1, %2 ]
+_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3642.exit: ; preds = %2, %switch_branch_Right_0.i
+  %d_0.i.sink.i = phi ptr [ %d_0.i.i, %switch_branch_Right_0.i ], [ %.val1, %2 ]
   %11 = getelementptr { i8, { ptr } }, ptr %d_0.i.sink.i, i64 0, i32 1
   %12 = load ptr, ptr %11, align 8
   %13 = tail call ptr @malgo_print_string(ptr %12)
@@ -168,7 +168,7 @@ _M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Temporal3642.ex
 }
 
 define internal ptr @_M6putStr34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal723_0) {
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0:
+"switch_branch_String#_0":
   %1 = getelementptr { i8, { ptr } }, ptr %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal723_0, i64 0, i32 1
   %2 = load ptr, ptr %1, align 8
   %3 = tail call ptr @malgo_print_string(ptr %2)
@@ -176,7 +176,7 @@ switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0:
 }
 
 define internal ptr @_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal716_0) {
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0:
+"switch_branch_String#_0":
   %1 = getelementptr { i8, { ptr } }, ptr %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal716_0, i64 0, i32 1
   %2 = load ptr, ptr %1, align 8
   %3 = tail call ptr @malgo_print_string(ptr %2)
@@ -322,9 +322,9 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %38 = tail call ptr %37(ptr %36, ptr nonnull %35)
   %39 = load i8, ptr %14, align 1
   %switch.i = icmp eq i8 %39, 0
-  br i1 %switch.i, label %switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_4.i, label %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_5.i
+  br i1 %switch.i, label %switch_branch_Left_4.i, label %switch_branch_Right_5.i
 
-switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_4.i: ; preds = %1
+switch_branch_Left_4.i:                           ; preds = %1
   %40 = load ptr, ptr %15, align 8
   %41 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %41, align 1
@@ -342,7 +342,7 @@ switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_
   store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3710, ptr %let_func_5.i, align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External.exit
 
-switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_5.i: ; preds = %1
+switch_branch_Right_5.i:                          ; preds = %1
   %46 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %46, align 1
   %47 = getelementptr { i8, { ptr } }, ptr %46, i64 0, i32 1, i32 0
@@ -363,10 +363,10 @@ switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External
   store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3714, ptr %let_func_7.i, align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External.exit
 
-_M4main47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External.exit: ; preds = %switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_4.i, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_5.i
-  %_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3715.sink.i = phi ptr [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3715, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_5.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3711, %switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_4.i ]
-  %.sink6.i = phi ptr [ %52, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_5.i ], [ %45, %switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_4.i ]
-  %let_func_7.sink.i = phi ptr [ %let_func_7.i, %switch_branch__M5Right47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_5.i ], [ %let_func_5.i, %switch_branch__M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External_4.i ]
+_M4main47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External.exit: ; preds = %switch_branch_Left_4.i, %switch_branch_Right_5.i
+  %_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3715.sink.i = phi ptr [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3715, %switch_branch_Right_5.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg12Internal3711, %switch_branch_Left_4.i ]
+  %.sink6.i = phi ptr [ %52, %switch_branch_Right_5.i ], [ %45, %switch_branch_Left_4.i ]
+  %let_func_7.sink.i = phi ptr [ %let_func_7.i, %switch_branch_Right_5.i ], [ %let_func_5.i, %switch_branch_Left_4.i ]
   %53 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_14.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_14.i, ptr %53, align 8

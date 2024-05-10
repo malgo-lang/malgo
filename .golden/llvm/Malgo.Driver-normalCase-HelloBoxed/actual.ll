@@ -43,10 +43,10 @@ define internal ptr @_M4main47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Ex
   %5 = getelementptr { i8, <8 x i8> }, ptr %2, i32 0, i32 0
   %6 = load i8, ptr %5, align 1
   switch i8 %6, label %switch_default_0 [
-    i8 0, label %switch_branch__M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External_0
+    i8 0, label %"switch_branch_String#_0"
   ]
 
-switch_branch__M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External_0: ; preds = %1
+"switch_branch_String#_0":                        ; preds = %1
   %7 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1
   %8 = getelementptr { ptr }, ptr %7, i32 0, i32 0
   %9 = load ptr, ptr %8, align 8
@@ -70,10 +70,10 @@ define internal ptr @_M8putStrLn47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Eml
   %2 = getelementptr { i8, <8 x i8> }, ptr %_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal27_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_0 [
-    i8 0, label %switch_branch__M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External_0
+    i8 0, label %"switch_branch_String#_0"
   ]
 
-switch_branch__M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External_0: ; preds = %1
+"switch_branch_String#_0":                        ; preds = %1
   %4 = getelementptr { i8, { ptr } }, ptr %_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal27_0, i32 0, i32 1
   %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
   %6 = load ptr, ptr %5, align 8

@@ -45,7 +45,7 @@ define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FFactorial
 }
 
 define internal ptr @_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal716_0) {
-switch_branch__M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0:
+"switch_branch_String#_0":
   %1 = getelementptr { i8, { ptr } }, ptr %_M3str34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal716_0, i64 0, i32 1
   %2 = load ptr, ptr %1, align 8
   %3 = tail call ptr @malgo_print_string(ptr %2)
@@ -185,9 +185,9 @@ define internal noundef ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FF
 define internal fastcc noundef ptr @_M16factAcc_x5Fcurry46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal166(ptr nofree noundef nonnull align 4 dereferenceable(1) %_M1n46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal167_0, ptr nofree noundef nonnull align 4 dereferenceable(1) %_M3acc46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal168_0) unnamed_addr {
   br label %tailrecurse
 
-tailrecurse:                                      ; preds = %switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0, %0
-  %_M1n46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal167_0.tr = phi ptr [ %_M1n46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal167_0, %0 ], [ %18, %switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0 ]
-  %_M3acc46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal168_0.tr = phi ptr [ %_M3acc46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal168_0, %0 ], [ %25, %switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0 ]
+tailrecurse:                                      ; preds = %switch_branch_False_0, %0
+  %_M1n46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal167_0.tr = phi ptr [ %_M1n46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal167_0, %0 ], [ %18, %switch_branch_False_0 ]
+  %_M3acc46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal168_0.tr = phi ptr [ %_M3acc46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal168_0, %0 ], [ %25, %switch_branch_False_0 ]
   %1 = tail call ptr @malgo_malloc(i64 noundef 12)
   store i8 0, ptr %1, align 1
   %2 = getelementptr { i8, { i64 } }, ptr %1, i64 0, i32 1, i32 0
@@ -230,9 +230,9 @@ tailrecurse:                                      ; preds = %switch_branch__M5Fa
   %switch = icmp eq i8 %10, 0
   %11 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %11, align 1
-  br i1 %switch, label %switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0, label %switch_branch__M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+  br i1 %switch, label %switch_branch_False_0, label %switch_branch_True_0
 
-switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %tailrecurse
+switch_branch_False_0:                            ; preds = %tailrecurse
   %12 = tail call ptr @malgo_malloc(i64 noundef 12)
   store i8 0, ptr %12, align 1
   %13 = getelementptr { i8, { i64 } }, ptr %12, i64 0, i32 1, i32 0
@@ -282,7 +282,7 @@ switch_branch__M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds =
   store i64 %24, ptr %26, align 4
   br label %tailrecurse
 
-switch_branch__M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %tailrecurse
+switch_branch_True_0:                             ; preds = %tailrecurse
   ret ptr %_M3acc46test_x2Ftestcases_x2Fmalgo_x2FFactorial_x2Emlg11Temporal168_0.tr
 }
 

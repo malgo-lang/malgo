@@ -41,17 +41,17 @@ define internal i64 @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSy
 define internal fastcc noundef ptr @_M3sum52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg8External(ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %_M4cons52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal95_0) unnamed_addr {
   %1 = load i8, ptr %_M4cons52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal95_0, align 1
   %switch = icmp eq i8 %1, 0
-  br i1 %switch, label %common.ret1, label %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
+  br i1 %switch, label %common.ret1, label %switch_branch_Cons_0
 
-common.ret1:                                      ; preds = %0, %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0
-  %.sink = phi i64 [ %14, %switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0 ], [ 0, %0 ]
+common.ret1:                                      ; preds = %0, %switch_branch_Cons_0
+  %.sink = phi i64 [ %14, %switch_branch_Cons_0 ], [ 0, %0 ]
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 12)
   store i8 0, ptr %2, align 1
   %3 = getelementptr { i8, { i64 } }, ptr %2, i64 0, i32 1, i32 0
   store i64 %.sink, ptr %3, align 4
   ret ptr %2
 
-switch_branch__M4Cons34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External_0: ; preds = %0
+switch_branch_Cons_0:                             ; preds = %0
   %4 = getelementptr { i8, { ptr, ptr } }, ptr %_M4cons52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal95_0, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
   %6 = getelementptr { i8, { ptr, ptr } }, ptr %_M4cons52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal95_0, i64 0, i32 1, i32 1

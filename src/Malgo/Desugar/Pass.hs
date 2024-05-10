@@ -182,7 +182,7 @@ dsDataDef (_, name, _, cons) =
     ps <- traverse (\t -> withMeta t <$> newTemporalId "p") paramTypes'
     expr <- runDef $ do
       unfoldedType <- unfoldType retType
-      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data $ idToText conName) paramTypes') $ map C.Var ps)
+      packed <- let_ unfoldedType (Pack unfoldedType (C.Con (Data conName.name) paramTypes') $ map C.Var ps)
       pure $ Cast retType' packed
     (ps, e) <- case ps of
       [] -> pure ([], expr)

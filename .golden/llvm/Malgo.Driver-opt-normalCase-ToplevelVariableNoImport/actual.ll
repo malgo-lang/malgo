@@ -82,9 +82,9 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %10 = load i8, ptr %9, align 1
   %switch.i = icmp eq i8 %10, 0
   %11 = tail call ptr @malgo_malloc(i64 noundef 16)
-  br i1 %switch.i, label %switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i, label %switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i
+  br i1 %switch.i, label %switch_branch_Nothing_0.i, label %switch_branch_Just_0.i
 
-switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i: ; preds = %1
+switch_branch_Nothing_0.i:                        ; preds = %1
   store i8 0, ptr %11, align 1
   %12 = getelementptr { i8, { ptr } }, ptr %11, i64 0, i32 1, i32 0
   store ptr @str542, ptr %12, align 8
@@ -113,7 +113,7 @@ switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport
   store ptr %let_capture_2.i, ptr %20, align 8
   br label %_M4main61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External.exit
 
-switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i: ; preds = %1
+switch_branch_Just_0.i:                           ; preds = %1
   store ptr null, ptr %11, align 8
   %const_func_1.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
   store ptr @_M5const61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External, ptr %const_func_1.i, align 8
@@ -137,12 +137,12 @@ switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2
   store ptr %let_capture_6.i, ptr %26, align 8
   br label %_M4main61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External.exit
 
-_M4main61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External.exit: ; preds = %switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i, %switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i
-  %.sink.i = phi ptr [ %26, %switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ], [ %20, %switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ]
-  %_M14let_x5Fclosure61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg11Internal546.sink.i = phi ptr [ @_M14let_x5Fclosure61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg11Internal546, %switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ], [ @_M14let_x5Fclosure61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg11Internal544, %switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ]
-  %let_capture_6.sink.i = phi ptr [ %let_capture_6.i, %switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ], [ %let_capture_2.i, %switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ]
-  %.sink15.i = phi i32 [ %25, %switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ], [ %19, %switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ]
-  %cast_0.i1.sink11.i = phi ptr [ %cast_0.i1.i, %switch_branch__M4Just61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ], [ %cast_0.i.i, %switch_branch__M7Nothing61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External_0.i ]
+_M4main61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg8External.exit: ; preds = %switch_branch_Nothing_0.i, %switch_branch_Just_0.i
+  %.sink.i = phi ptr [ %26, %switch_branch_Just_0.i ], [ %20, %switch_branch_Nothing_0.i ]
+  %_M14let_x5Fclosure61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg11Internal546.sink.i = phi ptr [ @_M14let_x5Fclosure61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg11Internal546, %switch_branch_Just_0.i ], [ @_M14let_x5Fclosure61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg11Internal544, %switch_branch_Nothing_0.i ]
+  %let_capture_6.sink.i = phi ptr [ %let_capture_6.i, %switch_branch_Just_0.i ], [ %let_capture_2.i, %switch_branch_Nothing_0.i ]
+  %.sink15.i = phi i32 [ %25, %switch_branch_Just_0.i ], [ %19, %switch_branch_Nothing_0.i ]
+  %cast_0.i1.sink11.i = phi ptr [ %cast_0.i1.i, %switch_branch_Just_0.i ], [ %cast_0.i.i, %switch_branch_Nothing_0.i ]
   %let_func_3.i = getelementptr { ptr, ptr }, ptr %.sink.i, i64 0, i32 1
   store ptr %_M14let_x5Fclosure61test_x2Ftestcases_x2Fmalgo_x2FToplevelVariableNoImport_x2Emlg11Internal546.sink.i, ptr %let_func_3.i, align 8
   %p_0.i2.i = load i32, ptr %let_capture_6.sink.i, align 4

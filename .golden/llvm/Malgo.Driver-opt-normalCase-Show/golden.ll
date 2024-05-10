@@ -293,7 +293,7 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
 }
 
 define internal noundef ptr @_M14fun_x5Fclosure41test_x2Ftestcases_x2Fmalgo_x2FShow_x2Emlg12Internal3240(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %1) {
-switch_branch__M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0:
+"switch_branch_Int32#_0":
   %2 = getelementptr { i8, { i32 } }, ptr %1, i64 0, i32 1
   %3 = load i32, ptr %2, align 4
   %4 = tail call ptr @malgo_int32_t_to_string(i32 %3)

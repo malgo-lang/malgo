@@ -44,10 +44,10 @@ define internal ptr @_M4main44test_x2Ftestcases_x2Fmalgo_x2FDataDef_x2Emlg8Exter
   %5 = getelementptr { i8, <8 x i8> }, ptr %2, i32 0, i32 0
   %6 = load i8, ptr %5, align 1
   switch i8 %6, label %switch_default_0 [
-    i8 0, label %switch_branch__M7Int_x2344test_x2Ftestcases_x2Fmalgo_x2FDataDef_x2Emlg8External_0
+    i8 0, label %"switch_branch_Int#_0"
   ]
 
-switch_branch__M7Int_x2344test_x2Ftestcases_x2Fmalgo_x2FDataDef_x2Emlg8External_0: ; preds = %1
+"switch_branch_Int#_0":                           ; preds = %1
   %7 = getelementptr { i8, { i64 } }, ptr %2, i32 0, i32 1
   %8 = getelementptr { i64 }, ptr %7, i32 0, i32 0
   %9 = load i64, ptr %8, align 4

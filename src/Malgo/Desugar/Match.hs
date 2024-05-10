@@ -99,7 +99,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       -- 各コンストラクタごとにC.Caseを生成する
       cases <- for valueConstructors \(conName, Forall _ conType) -> do
         paramTypes <- traverse dsType $ fst $ splitTyArr conType
-        let coreCon = Core.Con (Data $ idToText conName) paramTypes
+        let coreCon = Core.Con (Data conName.name) paramTypes
         params <- traverse (\t -> withMeta t <$> newTemporalId "p") paramTypes
         let (pat', es') = group conName pat es
         Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err

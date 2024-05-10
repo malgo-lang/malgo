@@ -23,20 +23,20 @@ define internal ptr @_M14let_x5Fclosure41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Em
 define internal ptr @_M14fun_x5Fclosure41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Internal248(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %.val = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %.val, 0
-  br i1 %switch.i, label %switch_branch__M5False41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8External_0.i, label %switch_branch__M4True41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8External_0.i
+  br i1 %switch.i, label %switch_branch_False_0.i, label %switch_branch_True_0.i
 
-switch_branch__M5False41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8External_0.i: ; preds = %2
+switch_branch_False_0.i:                          ; preds = %2
   %3 = tail call ptr @malgo_print_string(ptr noundef nonnull @str251)
   br label %_M10raw_x5Ffun41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal236.exit
 
-switch_branch__M4True41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8External_0.i: ; preds = %2
+switch_branch_True_0.i:                           ; preds = %2
   %4 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %4, align 1
   %5 = tail call ptr @malgo_exit_failure(ptr noundef nonnull %4)
   br label %_M10raw_x5Ffun41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal236.exit
 
-_M10raw_x5Ffun41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal236.exit: ; preds = %switch_branch__M5False41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8External_0.i, %switch_branch__M4True41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8External_0.i
-  %common.ret.op.i = phi ptr [ %3, %switch_branch__M5False41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8External_0.i ], [ %5, %switch_branch__M4True41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8External_0.i ]
+_M10raw_x5Ffun41test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg11Temporal236.exit: ; preds = %switch_branch_False_0.i, %switch_branch_True_0.i
+  %common.ret.op.i = phi ptr [ %3, %switch_branch_False_0.i ], [ %5, %switch_branch_True_0.i ]
   ret ptr %common.ret.op.i
 }
 

@@ -280,10 +280,10 @@ define internal ptr @_M10raw_x5Ffun42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg1
   %2 = getelementptr { i8, <8 x i8> }, ptr %_M9int64_x2342test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal63_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_0 [
-    i8 0, label %switch_branch__M9Int64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0
+    i8 0, label %"switch_branch_Int64#_0"
   ]
 
-switch_branch__M9Int64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External_0: ; preds = %1
+"switch_branch_Int64#_0":                         ; preds = %1
   %4 = getelementptr { i8, { i64 } }, ptr %_M9int64_x2342test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal63_0, i32 0, i32 1
   %5 = getelementptr { i64 }, ptr %4, i32 0, i32 0
   %6 = load i64, ptr %5, align 4
