@@ -159,12 +159,12 @@ lintAtom (Unboxed _) = pass
 
 lintProgram :: (Reader LintEnv :> es) => Program (Meta Type) -> Eff es ()
 lintProgram Program {..} = do
-  let vs = map (view _1) topVars
-  let fs = map (view _1) topFuns
+  let vs = map (view _1) variables
+  let fs = map (view _1) functions
   define "program" (vs <> fs) do
-    for_ topVars \(v, _, e) -> do
+    for_ variables \(v, _, e) -> do
       match v (typeOf e)
       lintExpr e
-    for_ topFuns \(f, ps, _, body) -> define (pretty f) ps do
+    for_ functions \(f, ps, _, body) -> define (pretty f) ps do
       match f (map typeOf ps :-> typeOf body)
       lintExpr body

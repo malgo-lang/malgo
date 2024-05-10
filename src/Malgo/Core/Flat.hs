@@ -20,10 +20,10 @@ normalize ::
   Program (Meta Type) ->
   Eff es (Program (Meta Type))
 normalize Program {..} = do
-  topVars <- for topVars \(name, ty, expr) -> do
+  variables <- for variables \(name, ty, expr) -> do
     expr' <- runContT (flat expr) pure
     pure (name, ty, expr')
-  topFuns <- for topFuns \(name, params, ty, expr) -> do
+  functions <- for functions \(name, params, ty, expr) -> do
     expr' <- runContT (flat expr) pure
     pure (name, params, ty, expr')
   pure Program {..}

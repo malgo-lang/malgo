@@ -52,11 +52,11 @@ parseId name meta
 
 annProgram :: (Reader Context :> es, IOE :> es) => Program Text -> Eff es (Program (Meta Type))
 annProgram Program {..} = do
-  varEnv <- foldMapM prepareVarDecl topVars
-  funEnv <- foldMapM prepareFunDecl topFuns
+  varEnv <- foldMapM prepareVarDecl variables
+  funEnv <- foldMapM prepareFunDecl functions
   local (\ctx -> ctx {nameEnv = varEnv <> funEnv}) do
-    topVars <- traverse annVarDecl topVars
-    topFuns <- traverse annFunDecl topFuns
+    variables <- traverse annVarDecl variables
+    functions <- traverse annFunDecl functions
     pure Program {..}
 
 prepareVarDecl :: (Reader Context :> es) => (Text, Type, Expr Text) -> Eff es (Map Text (Meta Type))

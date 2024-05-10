@@ -57,22 +57,22 @@ lambdalift ::
   Eff es (Program (Meta Type))
 lambdalift Program {..} =
   evalState
-    LambdaLiftState {funcs = mempty, knowns = Set.fromList $ map (view _1) topFuns, defined = Set.fromList $ map (view _1) topFuns <> map (view _1) topVars}
+    LambdaLiftState {funcs = mempty, knowns = Set.fromList $ map (view _1) functions, defined = Set.fromList $ map (view _1) functions <> map (view _1) variables}
     $ do
-      topFuns <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) topFuns
-      for_ topFuns \(f, ps, t, e) -> do
+      functions <- traverse (\(f, ps, t, e) -> (f,ps,t,) <$> llift e) functions
+      for_ functions \(f, ps, t, e) -> do
         addFunc f (ps, t, e)
         addKnown f
       LambdaLiftState {funcs} <- get
-      -- TODO: lambdalift topVars
+      -- TODO: lambdalift variables
       prog <-
         normalize
           $ Program
-            topVars
+            variables
             ( map (\(f, (ps, t, e)) -> (f, ps, t, e))
                 $ Map.toList funcs
             )
-            extFuns
+            externals
       traverseOf expr toDirect prog
 
 llift ::

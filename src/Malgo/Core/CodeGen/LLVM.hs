@@ -89,11 +89,11 @@ newCodeGenEnv moduleName Program {..} =
       moduleName
     }
   where
-    -- topVarsのOprMapを作成
-    varMap = mconcatMap ?? topVars $ \(v, _, _) ->
+    -- variablesのOprMapを作成
+    varMap = mconcatMap ?? variables $ \(v, _, _) ->
       Map.singleton v (ConstantOperand $ C.GlobalReference $ toName v)
     -- topFuncsのOprMapを作成
-    funcMap = mconcatMap ?? topFuns $ \(f, _, _, _) ->
+    funcMap = mconcatMap ?? functions $ \(f, _, _, _) ->
       Map.singleton f (ConstantOperand $ C.GlobalReference $ toName f)
 
 type MonadCodeGen m =
@@ -128,13 +128,13 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
     _ <- typedef (mkName "struct.bucket") Nothing -- (Just $ StructureType False [ptr i8, ptr i8, ptr $ NamedTypeReference (mkName "struct.bucket")])
     _ <- typedef (mkName "struct.hash_table") Nothing -- (Just $ StructureType False [ArrayType 16 (NamedTypeReference (mkName "struct.bucket")), i64])
     void $ extern "GC_init" [] LT.void
-    for_ extFuns \(name, typ) -> do
+    for_ externals \(name, typ) -> do
       let name' = LLVM.AST.mkName $ convertString name
       case typ of
         ps :-> r -> extern name' (map convType ps) (convType r)
         _ -> error "invalid type"
-    traverse_ (\(n, _, e) -> genVar n e) topVars
-    traverse_ (\(f, ps, _, body) -> genFunc f ps body) topFuns
+    traverse_ (\(n, _, e) -> genVar n e) variables
+    traverse_ (\(f, ps, _, body) -> genFunc f ps body) functions
     case mentry of
       Just entry -> do
         (f, (ps, body)) <-
@@ -147,7 +147,7 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
               pure (Atom $ Unboxed $ Int32 0)
         void $ genFunc f ps body
       Nothing -> pass
-    genLoadModule $ runContT (initTopVars topVars) (const retVoid)
+    genLoadModule $ runContT (initTopVars variables) (const retVoid)
   let llvmModule =
         defaultModule
           { LLVM.AST.moduleName = fromString srcPath,

@@ -173,9 +173,9 @@ fn char_to_hex(s: &String) -> String {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Program {
-    top_vars: Vec<(Name, Type, Expr)>,
-    top_funs: Vec<(Name, Vec<Name>, Type, Expr)>,
-    ext_funs: Vec<(String, Type)>,
+    variables: Vec<(Name, Type, Expr)>,
+    functions: Vec<(Name, Vec<Name>, Type, Expr)>,
+    externals: Vec<(String, Type)>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

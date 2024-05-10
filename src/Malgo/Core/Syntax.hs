@@ -49,9 +49,9 @@ import Numeric (showHex)
 
 -- | toplevel function definitions
 data Program a = Program
-  { topVars :: [(a, Type, Expr a)],
-    topFuns :: [(a, [a], Type, Expr a)],
-    extFuns :: [(Text, Type)]
+  { variables :: [(a, Type, Expr a)],
+    functions :: [(a, [a], Type, Expr a)],
+    externals :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
   -- deriving anyclass (ToJSON, FromJSON)
@@ -74,29 +74,29 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
                 -- parens $ sep ["define" <+> pretty v, pretty t, pretty e]
                 sexpr ["define", pretty v, pretty t, pretty e]
             )
-            topVars,
+            variables,
           ["; functions"],
           map
             ( \(f, ps, t, e) ->
                 -- parens $ sep [sep ["define" <+> parens (sep $ map pretty $ f : ps), pretty t], pretty e]
                 sexpr ["define", sexpr $ map pretty $ f : ps, pretty t, pretty e]
             )
-            topFuns,
+            functions,
           ["; externals"],
           map
             ( \(f, t) ->
                 -- parens $ sep ["extern", "%" <> pretty f, pretty t]
                 sexpr ["extern", "%" <> pretty f, pretty t]
             )
-            extFuns
+            externals
         ]
 
 instance HasExpr Program where
   expr f Program {..} =
     Program
-      <$> traverseOf (traversed . _3) f topVars
-      <*> traverseOf (traversed . _4) f topFuns
-      <*> pure extFuns
+      <$> traverseOf (traversed . _3) f variables
+      <*> traverseOf (traversed . _4) f functions
+      <*> pure externals
 
 runDef :: Eff (Writer (Endo (Expr (Meta Type))) : es) (Expr (Meta Type)) -> Eff es (Expr (Meta Type))
 runDef m = uncurry (flip appEndo) <$> runWriter m
@@ -139,7 +139,7 @@ cast ty e
 
 callGraph :: (Ord a) => Program a -> (Graph, Vertex -> (a, a, [a]), a -> Maybe Vertex)
 callGraph Program {..} =
-  let edges = map cgTopVar topVars <> map cgTopFun topFuns
+  let edges = map cgTopVar variables <> map cgTopFun functions
    in graphFromEdges edges
   where
     cgTopVar (a, _, e) = (a, a, Set.toList $ callees e <> freevars e) -- Merge @callees@ and @freevars@ to avoid missing callees used as a closure.
