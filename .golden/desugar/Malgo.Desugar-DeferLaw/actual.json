@@ -7,16 +7,14 @@
                 "_M1x45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg10Temporal22"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
+                "parameters": [
                     {
                         "tag": "AnyT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -42,24 +40,22 @@
                                         "tag": "Fun"
                                     },
                                     "typ": {
-                                        "contents": [
-                                            [
-                                                {
-                                                    "contents": [
-                                                        [
-                                                            {
-                                                                "tag": "Tuple"
-                                                            },
-                                                            []
-                                                        ]
-                                                    ],
-                                                    "tag": "SumT"
-                                                }
-                                            ],
+                                        "parameters": [
                                             {
-                                                "tag": "AnyT"
+                                                "constructors": [
+                                                    [
+                                                        {
+                                                            "tag": "Tuple"
+                                                        },
+                                                        []
+                                                    ]
+                                                ],
+                                                "tag": "SumT"
                                             }
                                         ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
                                         "tag": "FuncT"
                                     },
                                     "variable": "_M3fun45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg10Temporal24"
@@ -85,7 +81,7 @@
                                             "object": {
                                                 "contents": [
                                                     {
-                                                        "contents": [
+                                                        "constructors": [
                                                             [
                                                                 {
                                                                     "tag": "Tuple"
@@ -106,7 +102,7 @@
                                                 "tag": "Pack"
                                             },
                                             "typ": {
-                                                "contents": [
+                                                "constructors": [
                                                     [
                                                         {
                                                             "tag": "Tuple"
@@ -175,22 +171,9 @@
                 "_M8_x24_x5F45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg10Temporal29"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -201,6 +184,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -302,7 +296,7 @@
                             {
                                 "contents": [
                                     {
-                                        "contents": [
+                                        "constructors": [
                                             [
                                                 {
                                                     "tag": "Tuple"

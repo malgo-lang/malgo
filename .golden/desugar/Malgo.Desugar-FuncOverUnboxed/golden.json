@@ -7,24 +7,22 @@
                 "_M7unboxed52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg10Temporal22"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "Int64T"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
-                            [
-                                {
-                                    "tag": "Tuple"
-                                },
-                                []
-                            ]
-                        ],
-                        "tag": "SumT"
+                        "tag": "Int64T"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -103,7 +101,7 @@
                                                 {
                                                     "contents": [
                                                         {
-                                                            "contents": [
+                                                            "constructors": [
                                                                 [
                                                                     {
                                                                         "tag": "Tuple"
@@ -195,7 +193,7 @@
                                                 {
                                                     "contents": [
                                                         {
-                                                            "contents": [
+                                                            "constructors": [
                                                                 [
                                                                     {
                                                                         "tag": "Tuple"
@@ -287,7 +285,7 @@
                                                 {
                                                     "contents": [
                                                         {
-                                                            "contents": [
+                                                            "constructors": [
                                                                 [
                                                                     {
                                                                         "tag": "Tuple"
@@ -324,22 +322,9 @@
                 "_M8_x24_x5F52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg10Temporal33"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -350,6 +335,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -376,7 +372,7 @@
                     {
                         "contents": [
                             {
-                                "contents": [
+                                "constructors": [
                                     [
                                         {
                                             "tag": "Tuple"

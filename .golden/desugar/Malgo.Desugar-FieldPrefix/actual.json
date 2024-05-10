@@ -7,24 +7,22 @@
                 "_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": {
-                                "x": {
-                                    "tag": "AnyT"
-                                },
-                                "y": {
-                                    "tag": "AnyT"
-                                }
-                            },
-                            "tag": "RecordT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "tag": "AnyT"
+                        "map": {
+                            "x": {
+                                "tag": "AnyT"
+                            },
+                            "y": {
+                                "tag": "AnyT"
+                            }
+                        },
+                        "tag": "RecordT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -64,24 +62,22 @@
                 "_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": {
-                                "x": {
-                                    "tag": "AnyT"
-                                },
-                                "y": {
-                                    "tag": "AnyT"
-                                }
-                            },
-                            "tag": "RecordT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "tag": "AnyT"
+                        "map": {
+                            "x": {
+                                "tag": "AnyT"
+                            },
+                            "y": {
+                                "tag": "AnyT"
+                            }
+                        },
+                        "tag": "RecordT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -121,32 +117,30 @@
                 "_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": {
-                                "x": {
-                                    "tag": "AnyT"
-                                },
-                                "y": {
-                                    "tag": "AnyT"
-                                }
-                            },
-                            "tag": "RecordT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
-                            [
-                                {
-                                    "tag": "Tuple"
-                                },
-                                []
-                            ]
-                        ],
-                        "tag": "SumT"
+                        "map": {
+                            "x": {
+                                "tag": "AnyT"
+                            },
+                            "y": {
+                                "tag": "AnyT"
+                            }
+                        },
+                        "tag": "RecordT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -225,7 +219,7 @@
                                                         {
                                                             "contents": [
                                                                 {
-                                                                    "contents": [
+                                                                    "constructors": [
                                                                         [
                                                                             {
                                                                                 "tag": "Tuple"
@@ -311,7 +305,7 @@
                                                                 {
                                                                     "contents": [
                                                                         {
-                                                                            "contents": [
+                                                                            "constructors": [
                                                                                 [
                                                                                     {
                                                                                         "tag": "Tuple"
@@ -391,7 +385,7 @@
                                                                 {
                                                                     "contents": [
                                                                         {
-                                                                            "contents": [
+                                                                            "constructors": [
                                                                                 [
                                                                                     {
                                                                                         "tag": "Tuple"
@@ -434,22 +428,9 @@
                 "_M8_x24_x5F48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal81"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -460,6 +441,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -483,7 +475,7 @@
                     {
                         "contents": [
                             {
-                                "contents": [
+                                "constructors": [
                                     [
                                         {
                                             "tag": "Tuple"
@@ -509,7 +501,7 @@
         [
             "_M6zero3D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External",
             {
-                "contents": {
+                "map": {
                     "x": {
                         "tag": "AnyT"
                     },
@@ -664,7 +656,7 @@
                                                                 "tag": "Record"
                                                             },
                                                             "typ": {
-                                                                "contents": {
+                                                                "map": {
                                                                     "x": {
                                                                         "tag": "AnyT"
                                                                     },
@@ -713,7 +705,7 @@
         [
             "_M6zero2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External",
             {
-                "contents": {
+                "map": {
                     "x": {
                         "tag": "AnyT"
                     },
@@ -822,7 +814,7 @@
                                                         "tag": "Record"
                                                     },
                                                     "typ": {
-                                                        "contents": {
+                                                        "map": {
                                                             "x": {
                                                                 "tag": "AnyT"
                                                             },

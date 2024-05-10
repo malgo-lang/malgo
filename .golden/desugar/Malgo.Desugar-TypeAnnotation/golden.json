@@ -7,22 +7,9 @@
                 "_M8_x24_x5F51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg10Temporal12"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -33,6 +20,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -61,16 +59,14 @@
                                                 "tag": "Fun"
                                             },
                                             "typ": {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "tag": "AnyT"
-                                                        }
-                                                    ],
+                                                "parameters": [
                                                     {
                                                         "tag": "AnyT"
                                                     }
                                                 ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
                                                 "tag": "FuncT"
                                             },
                                             "variable": "_M3fun51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg10Temporal14"
@@ -185,7 +181,7 @@
                             {
                                 "contents": [
                                     {
-                                        "contents": [
+                                        "constructors": [
                                             [
                                                 {
                                                     "tag": "Tuple"

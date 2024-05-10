@@ -7,22 +7,9 @@
                 "_M8_x24_x5F41test_x2Ftestcases_x2Fmalgo_x2FEcho_x2Emlg9Temporal9"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -33,6 +20,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -48,7 +46,7 @@
                                             "object": {
                                                 "contents": [
                                                     {
-                                                        "contents": [
+                                                        "constructors": [
                                                             [
                                                                 {
                                                                     "tag": "Tuple"
@@ -69,7 +67,7 @@
                                                 "tag": "Pack"
                                             },
                                             "typ": {
-                                                "contents": [
+                                                "constructors": [
                                                     [
                                                         {
                                                             "tag": "Tuple"
@@ -167,7 +165,7 @@
                             {
                                 "contents": [
                                     {
-                                        "contents": [
+                                        "constructors": [
                                             [
                                                 {
                                                     "tag": "Tuple"

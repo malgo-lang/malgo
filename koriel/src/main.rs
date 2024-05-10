@@ -75,7 +75,6 @@ fn hex_to_char(s: String) -> String {
 }
 
 fn split_by_run_length(s: &str) -> Vec<String> {
-    dbg!(s);
     let mut messages = Vec::new();
     let mut current = String::new();
     let mut count = 0;
@@ -180,9 +179,12 @@ struct Program {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(tag = "tag", content = "contents")]
+#[serde(tag = "tag")]
 enum Type {
-    FuncT(Vec<Type>, Box<Type>),
+    FuncT {
+        parameters: Vec<Type>,
+        returns: Box<Type>,
+    },
     Int32T,
     Int64T,
     FloatT,
@@ -190,9 +192,15 @@ enum Type {
     CharT,
     StringT,
     BoolT,
-    SumT(Vec<Con>),
-    PtrT(Box<Type>),
-    RecordT(BTreeMap<String, Type>),
+    SumT {
+        constructors: Vec<Con>,
+    },
+    PtrT {
+        inner: Box<Type>,
+    },
+    RecordT {
+        map: BTreeMap<String, Type>,
+    },
     AnyT,
     VoidT,
 }
@@ -280,4 +288,30 @@ fn main() -> io::Result<()> {
     println!("{:#?}", json);
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use walkdir::WalkDir;
+
+    #[test]
+    fn parse_malgo_golden() {
+        let json_dir = "../.golden/desugar";
+        for entry in WalkDir::new(json_dir).into_iter().filter_map(|e| e.ok()) {
+            let f_name = entry.file_name().to_string_lossy();
+
+            if f_name == "golden.json" {
+                let input = std::fs::read_to_string(entry.path()).unwrap();
+                let program: Result<super::Program, serde_json::Error> =
+                    serde_json::from_str(&input);
+
+                match program {
+                    Ok(_) => {}
+                    Err(e) => {
+                        panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -52,7 +52,7 @@ instance Pretty Con where
 -- あるいはknown関数を表す型
 -- FuncT [Type] Type
 data Type
-  = FuncT [Type] Type
+  = FuncT {parameters :: [Type], returns :: Type}
   | Int32T
   | Int64T
   | FloatT
@@ -60,9 +60,9 @@ data Type
   | CharT
   | StringT
   | BoolT
-  | SumT [Con]
-  | PtrT Type
-  | RecordT (Map Text Type)
+  | SumT {constructors :: [Con]}
+  | PtrT {inner :: Type}
+  | RecordT {map :: Map Text Type}
   | AnyT
   | VoidT
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)

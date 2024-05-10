@@ -7,22 +7,9 @@
                 "_M8_x24_x5F46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal11"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -33,6 +20,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -68,16 +66,14 @@
                                             {
                                                 "contents": [
                                                     {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "tag": "Int64T"
-                                                                }
-                                                            ],
+                                                        "parameters": [
                                                             {
                                                                 "tag": "Int64T"
                                                             }
                                                         ],
+                                                        "returns": {
+                                                            "tag": "Int64T"
+                                                        },
                                                         "tag": "FuncT"
                                                     },
                                                     {
@@ -186,7 +182,7 @@
                             {
                                 "contents": [
                                     {
-                                        "contents": [
+                                        "constructors": [
                                             [
                                                 {
                                                     "tag": "Tuple"

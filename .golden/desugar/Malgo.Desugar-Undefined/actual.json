@@ -7,16 +7,14 @@
                 "_M1x46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal20"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
+                "parameters": [
                     {
                         "tag": "AnyT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -33,22 +31,9 @@
                 "_M8_x24_x5F46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal21"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -59,6 +44,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -179,7 +175,7 @@
                                                                     {
                                                                         "contents": [
                                                                             {
-                                                                                "contents": [
+                                                                                "constructors": [
                                                                                     [
                                                                                         {
                                                                                             "tag": "Tuple"
@@ -223,16 +219,14 @@
                 "_M3eta46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal29"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
+                "parameters": [
                     {
                         "tag": "AnyT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -244,16 +238,14 @@
                             {
                                 "contents": [
                                     {
-                                        "contents": [
-                                            [
-                                                {
-                                                    "tag": "AnyT"
-                                                }
-                                            ],
+                                        "parameters": [
                                             {
                                                 "tag": "AnyT"
                                             }
                                         ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
                                         "tag": "FuncT"
                                     },
                                     {

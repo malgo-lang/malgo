@@ -7,24 +7,22 @@
                 "_M1p47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg10Temporal50"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": {
-                                "a": {
-                                    "tag": "AnyT"
-                                },
-                                "b": {
-                                    "tag": "AnyT"
-                                }
-                            },
-                            "tag": "RecordT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "tag": "AnyT"
+                        "map": {
+                            "a": {
+                                "tag": "AnyT"
+                            },
+                            "b": {
+                                "tag": "AnyT"
+                            }
+                        },
+                        "tag": "RecordT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -34,7 +32,7 @@
                             "object": {
                                 "contents": [
                                     {
-                                        "contents": [
+                                        "constructors": [
                                             [
                                                 {
                                                     "contents": "B",
@@ -42,7 +40,7 @@
                                                 },
                                                 [
                                                     {
-                                                        "contents": {
+                                                        "map": {
                                                             "a": {
                                                                 "tag": "AnyT"
                                                             },
@@ -64,7 +62,7 @@
                                         },
                                         [
                                             {
-                                                "contents": {
+                                                "map": {
                                                     "a": {
                                                         "tag": "AnyT"
                                                     },
@@ -86,7 +84,7 @@
                                 "tag": "Pack"
                             },
                             "typ": {
-                                "contents": [
+                                "constructors": [
                                     [
                                         {
                                             "contents": "B",
@@ -94,7 +92,7 @@
                                         },
                                         [
                                             {
-                                                "contents": {
+                                                "map": {
                                                     "a": {
                                                         "tag": "AnyT"
                                                     },
@@ -134,16 +132,14 @@
                 "_M1b47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg10Temporal52"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
+                "parameters": [
                     {
                         "tag": "AnyT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -151,7 +147,7 @@
                     {
                         "contents": [
                             {
-                                "contents": [
+                                "constructors": [
                                     [
                                         {
                                             "contents": "B",
@@ -159,7 +155,7 @@
                                         },
                                         [
                                             {
-                                                "contents": {
+                                                "map": {
                                                     "a": {
                                                         "tag": "AnyT"
                                                     },
@@ -191,7 +187,7 @@
                                     },
                                     [
                                         {
-                                            "contents": {
+                                            "map": {
                                                 "a": {
                                                     "tag": "AnyT"
                                                 },
@@ -250,24 +246,22 @@
                 "_M6record47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg10Temporal56"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": {
-                                "a": {
-                                    "tag": "AnyT"
-                                },
-                                "b": {
-                                    "tag": "AnyT"
-                                }
-                            },
-                            "tag": "RecordT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "tag": "AnyT"
+                        "map": {
+                            "a": {
+                                "tag": "AnyT"
+                            },
+                            "b": {
+                                "tag": "AnyT"
+                            }
+                        },
+                        "tag": "RecordT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -307,22 +301,9 @@
                 "_M8_x24_x5F47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg10Temporal59"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -333,6 +314,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -433,7 +425,7 @@
                                                         "tag": "Record"
                                                     },
                                                     "typ": {
-                                                        "contents": {
+                                                        "map": {
                                                             "a": {
                                                                 "tag": "AnyT"
                                                             },
@@ -467,7 +459,7 @@
                             "contents": [
                                 "_M85let_x5F_x5FM1x47test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FRecordTest_x5Fx2Emlg9Internal547test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg10Temporal65",
                                 {
-                                    "contents": {
+                                    "map": {
                                         "a": {
                                             "tag": "AnyT"
                                         },
@@ -543,16 +535,14 @@
                                                                         {
                                                                             "contents": [
                                                                                 {
-                                                                                    "contents": [
-                                                                                        [
-                                                                                            {
-                                                                                                "tag": "AnyT"
-                                                                                            }
-                                                                                        ],
+                                                                                    "parameters": [
                                                                                         {
                                                                                             "tag": "AnyT"
                                                                                         }
                                                                                     ],
+                                                                                    "returns": {
+                                                                                        "tag": "AnyT"
+                                                                                    },
                                                                                     "tag": "FuncT"
                                                                                 },
                                                                                 {
@@ -617,24 +607,22 @@
                                                                                             "tag": "Fun"
                                                                                         },
                                                                                         "typ": {
-                                                                                            "contents": [
-                                                                                                [
-                                                                                                    {
-                                                                                                        "contents": {
-                                                                                                            "a": {
-                                                                                                                "tag": "AnyT"
-                                                                                                            },
-                                                                                                            "b": {
-                                                                                                                "tag": "AnyT"
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "tag": "RecordT"
-                                                                                                    }
-                                                                                                ],
+                                                                                            "parameters": [
                                                                                                 {
-                                                                                                    "tag": "AnyT"
+                                                                                                    "map": {
+                                                                                                        "a": {
+                                                                                                            "tag": "AnyT"
+                                                                                                        },
+                                                                                                        "b": {
+                                                                                                            "tag": "AnyT"
+                                                                                                        }
+                                                                                                    },
+                                                                                                    "tag": "RecordT"
                                                                                                 }
                                                                                             ],
+                                                                                            "returns": {
+                                                                                                "tag": "AnyT"
+                                                                                            },
                                                                                             "tag": "FuncT"
                                                                                         },
                                                                                         "variable": "_M3fun47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg10Temporal73"
@@ -782,7 +770,7 @@
                                                 {
                                                     "contents": [
                                                         {
-                                                            "contents": [
+                                                            "constructors": [
                                                                 [
                                                                     {
                                                                         "tag": "Tuple"

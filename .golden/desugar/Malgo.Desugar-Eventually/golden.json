@@ -8,29 +8,25 @@
                 "_M1k47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal290"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "AnyT"
-                        },
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "AnyT"
-                                    }
-                                ],
-                                {
-                                    "tag": "AnyT"
-                                }
-                            ],
-                            "tag": "FuncT"
-                        }
-                    ],
+                "parameters": [
                     {
                         "tag": "AnyT"
+                    },
+                    {
+                        "parameters": [
+                            {
+                                "tag": "AnyT"
+                            }
+                        ],
+                        "returns": {
+                            "tag": "AnyT"
+                        },
+                        "tag": "FuncT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -38,7 +34,7 @@
                     {
                         "contents": [
                             {
-                                "contents": [
+                                "constructors": [
                                     [
                                         {
                                             "contents": "Done",
@@ -57,24 +53,22 @@
                                         },
                                         [
                                             {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "contents": [
-                                                                [
-                                                                    {
-                                                                        "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    ],
+                                                "parameters": [
                                                     {
-                                                        "tag": "AnyT"
+                                                        "constructors": [
+                                                            [
+                                                                {
+                                                                    "tag": "Tuple"
+                                                                },
+                                                                []
+                                                            ]
+                                                        ],
+                                                        "tag": "SumT"
                                                     }
                                                 ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
                                                 "tag": "FuncT"
                                             }
                                         ]
@@ -151,24 +145,22 @@
                                     },
                                     [
                                         {
-                                            "contents": [
-                                                [
-                                                    {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "tag": "Tuple"
-                                                                },
-                                                                []
-                                                            ]
-                                                        ],
-                                                        "tag": "SumT"
-                                                    }
-                                                ],
+                                            "parameters": [
                                                 {
-                                                    "tag": "AnyT"
+                                                    "constructors": [
+                                                        [
+                                                            {
+                                                                "tag": "Tuple"
+                                                            },
+                                                            []
+                                                        ]
+                                                    ],
+                                                    "tag": "SumT"
                                                 }
                                             ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
                                             "tag": "FuncT"
                                         }
                                     ]
@@ -204,7 +196,7 @@
                                                                                                         "object": {
                                                                                                             "contents": [
                                                                                                                 {
-                                                                                                                    "contents": [
+                                                                                                                    "constructors": [
                                                                                                                         [
                                                                                                                             {
                                                                                                                                 "tag": "Tuple"
@@ -225,7 +217,7 @@
                                                                                                             "tag": "Pack"
                                                                                                         },
                                                                                                         "typ": {
-                                                                                                            "contents": [
+                                                                                                            "constructors": [
                                                                                                                 [
                                                                                                                     {
                                                                                                                         "tag": "Tuple"
@@ -305,26 +297,22 @@
                                                                                         {
                                                                                             "contents": [
                                                                                                 {
-                                                                                                    "contents": [
-                                                                                                        [
-                                                                                                            {
-                                                                                                                "contents": [
-                                                                                                                    [
-                                                                                                                        {
-                                                                                                                            "tag": "AnyT"
-                                                                                                                        }
-                                                                                                                    ],
-                                                                                                                    {
-                                                                                                                        "tag": "AnyT"
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "tag": "FuncT"
-                                                                                                            }
-                                                                                                        ],
+                                                                                                    "parameters": [
                                                                                                         {
-                                                                                                            "tag": "AnyT"
+                                                                                                            "parameters": [
+                                                                                                                {
+                                                                                                                    "tag": "AnyT"
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "returns": {
+                                                                                                                "tag": "AnyT"
+                                                                                                            },
+                                                                                                            "tag": "FuncT"
                                                                                                         }
                                                                                                     ],
+                                                                                                    "returns": {
+                                                                                                        "tag": "AnyT"
+                                                                                                    },
                                                                                                     "tag": "FuncT"
                                                                                                 },
                                                                                                 {
@@ -380,24 +368,22 @@
                                                             "tag": "Fun"
                                                         },
                                                         "typ": {
-                                                            "contents": [
-                                                                [
-                                                                    {
-                                                                        "contents": [
-                                                                            [
-                                                                                {
-                                                                                    "tag": "Tuple"
-                                                                                },
-                                                                                []
-                                                                            ]
-                                                                        ],
-                                                                        "tag": "SumT"
-                                                                    }
-                                                                ],
+                                                            "parameters": [
                                                                 {
-                                                                    "tag": "AnyT"
+                                                                    "constructors": [
+                                                                        [
+                                                                            {
+                                                                                "tag": "Tuple"
+                                                                            },
+                                                                            []
+                                                                        ]
+                                                                    ],
+                                                                    "tag": "SumT"
                                                                 }
                                                             ],
+                                                            "returns": {
+                                                                "tag": "AnyT"
+                                                            },
                                                             "tag": "FuncT"
                                                         },
                                                         "variable": "_M3fun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal294"
@@ -463,16 +449,14 @@
                 "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal258"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
+                "parameters": [
                     {
                         "tag": "AnyT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -482,7 +466,7 @@
                             "object": {
                                 "contents": [
                                     {
-                                        "contents": [
+                                        "constructors": [
                                             [
                                                 {
                                                     "contents": "Done",
@@ -501,24 +485,22 @@
                                                 },
                                                 [
                                                     {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "contents": [
-                                                                        [
-                                                                            {
-                                                                                "tag": "Tuple"
-                                                                            },
-                                                                            []
-                                                                        ]
-                                                                    ],
-                                                                    "tag": "SumT"
-                                                                }
-                                                            ],
+                                                        "parameters": [
                                                             {
-                                                                "tag": "AnyT"
+                                                                "constructors": [
+                                                                    [
+                                                                        {
+                                                                            "tag": "Tuple"
+                                                                        },
+                                                                        []
+                                                                    ]
+                                                                ],
+                                                                "tag": "SumT"
                                                             }
                                                         ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
                                                         "tag": "FuncT"
                                                     }
                                                 ]
@@ -547,7 +529,7 @@
                                 "tag": "Pack"
                             },
                             "typ": {
-                                "contents": [
+                                "constructors": [
                                     [
                                         {
                                             "contents": "Done",
@@ -566,24 +548,22 @@
                                         },
                                         [
                                             {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "contents": [
-                                                                [
-                                                                    {
-                                                                        "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    ],
+                                                "parameters": [
                                                     {
-                                                        "tag": "AnyT"
+                                                        "constructors": [
+                                                            [
+                                                                {
+                                                                    "tag": "Tuple"
+                                                                },
+                                                                []
+                                                            ]
+                                                        ],
+                                                        "tag": "SumT"
                                                     }
                                                 ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
                                                 "tag": "FuncT"
                                             }
                                         ]
@@ -616,34 +596,30 @@
                 "_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal260"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "contents": [
-                                            [
-                                                {
-                                                    "tag": "Tuple"
-                                                },
-                                                []
-                                            ]
-                                        ],
-                                        "tag": "SumT"
-                                    }
-                                ],
-                                {
-                                    "tag": "AnyT"
-                                }
-                            ],
-                            "tag": "FuncT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "tag": "AnyT"
+                        "parameters": [
+                            {
+                                "constructors": [
+                                    [
+                                        {
+                                            "tag": "Tuple"
+                                        },
+                                        []
+                                    ]
+                                ],
+                                "tag": "SumT"
+                            }
+                        ],
+                        "returns": {
+                            "tag": "AnyT"
+                        },
+                        "tag": "FuncT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -653,7 +629,7 @@
                             "object": {
                                 "contents": [
                                     {
-                                        "contents": [
+                                        "constructors": [
                                             [
                                                 {
                                                     "contents": "Done",
@@ -672,24 +648,22 @@
                                                 },
                                                 [
                                                     {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "contents": [
-                                                                        [
-                                                                            {
-                                                                                "tag": "Tuple"
-                                                                            },
-                                                                            []
-                                                                        ]
-                                                                    ],
-                                                                    "tag": "SumT"
-                                                                }
-                                                            ],
+                                                        "parameters": [
                                                             {
-                                                                "tag": "AnyT"
+                                                                "constructors": [
+                                                                    [
+                                                                        {
+                                                                            "tag": "Tuple"
+                                                                        },
+                                                                        []
+                                                                    ]
+                                                                ],
+                                                                "tag": "SumT"
                                                             }
                                                         ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
                                                         "tag": "FuncT"
                                                     }
                                                 ]
@@ -704,24 +678,22 @@
                                         },
                                         [
                                             {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "contents": [
-                                                                [
-                                                                    {
-                                                                        "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    ],
+                                                "parameters": [
                                                     {
-                                                        "tag": "AnyT"
+                                                        "constructors": [
+                                                            [
+                                                                {
+                                                                    "tag": "Tuple"
+                                                                },
+                                                                []
+                                                            ]
+                                                        ],
+                                                        "tag": "SumT"
                                                     }
                                                 ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
                                                 "tag": "FuncT"
                                             }
                                         ]
@@ -736,7 +708,7 @@
                                 "tag": "Pack"
                             },
                             "typ": {
-                                "contents": [
+                                "constructors": [
                                     [
                                         {
                                             "contents": "Done",
@@ -755,24 +727,22 @@
                                         },
                                         [
                                             {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "contents": [
-                                                                [
-                                                                    {
-                                                                        "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    ],
+                                                "parameters": [
                                                     {
-                                                        "tag": "AnyT"
+                                                        "constructors": [
+                                                            [
+                                                                {
+                                                                    "tag": "Tuple"
+                                                                },
+                                                                []
+                                                            ]
+                                                        ],
+                                                        "tag": "SumT"
                                                     }
                                                 ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
                                                 "tag": "FuncT"
                                             }
                                         ]
@@ -805,16 +775,14 @@
                 "_M4done47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal262"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
+                "parameters": [
                     {
                         "tag": "AnyT"
                     }
                 ],
+                "returns": {
+                    "tag": "AnyT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -822,7 +790,7 @@
                     {
                         "contents": [
                             {
-                                "contents": [
+                                "constructors": [
                                     [
                                         {
                                             "contents": "Done",
@@ -841,24 +809,22 @@
                                         },
                                         [
                                             {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "contents": [
-                                                                [
-                                                                    {
-                                                                        "tag": "Tuple"
-                                                                    },
-                                                                    []
-                                                                ]
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    ],
+                                                "parameters": [
                                                     {
-                                                        "tag": "AnyT"
+                                                        "constructors": [
+                                                            [
+                                                                {
+                                                                    "tag": "Tuple"
+                                                                },
+                                                                []
+                                                            ]
+                                                        ],
+                                                        "tag": "SumT"
                                                     }
                                                 ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
                                                 "tag": "FuncT"
                                             }
                                         ]
@@ -935,24 +901,22 @@
                                     },
                                     [
                                         {
-                                            "contents": [
-                                                [
-                                                    {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "tag": "Tuple"
-                                                                },
-                                                                []
-                                                            ]
-                                                        ],
-                                                        "tag": "SumT"
-                                                    }
-                                                ],
+                                            "parameters": [
                                                 {
-                                                    "tag": "AnyT"
+                                                    "constructors": [
+                                                        [
+                                                            {
+                                                                "tag": "Tuple"
+                                                            },
+                                                            []
+                                                        ]
+                                                    ],
+                                                    "tag": "SumT"
                                                 }
                                             ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
                                             "tag": "FuncT"
                                         }
                                     ]
@@ -970,7 +934,7 @@
                                                         "object": {
                                                             "contents": [
                                                                 {
-                                                                    "contents": [
+                                                                    "constructors": [
                                                                         [
                                                                             {
                                                                                 "tag": "Tuple"
@@ -991,7 +955,7 @@
                                                             "tag": "Pack"
                                                         },
                                                         "typ": {
-                                                            "contents": [
+                                                            "constructors": [
                                                                 [
                                                                     {
                                                                         "tag": "Tuple"
@@ -1064,74 +1028,62 @@
                 "_M6record47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal269"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": {
-                                "bind": {
-                                    "contents": [
-                                        [
-                                            {
-                                                "tag": "AnyT"
-                                            }
-                                        ],
+                "parameters": [
+                    {
+                        "map": {
+                            "bind": {
+                                "parameters": [
+                                    {
+                                        "tag": "AnyT"
+                                    }
+                                ],
+                                "returns": {
+                                    "parameters": [
                                         {
-                                            "contents": [
-                                                [
-                                                    {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
-                                                            {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        ],
-                                                        "tag": "FuncT"
-                                                    }
-                                                ],
+                                            "parameters": [
                                                 {
                                                     "tag": "AnyT"
                                                 }
                                             ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
                                             "tag": "FuncT"
                                         }
                                     ],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
                                     "tag": "FuncT"
                                 },
-                                "return": {
-                                    "contents": [
-                                        [
-                                            {
-                                                "tag": "AnyT"
-                                            }
-                                        ],
-                                        {
-                                            "tag": "AnyT"
-                                        }
-                                    ],
-                                    "tag": "FuncT"
-                                }
+                                "tag": "FuncT"
                             },
-                            "tag": "RecordT"
-                        }
-                    ],
-                    {
-                        "contents": [
-                            [
-                                {
+                            "return": {
+                                "parameters": [
+                                    {
+                                        "tag": "AnyT"
+                                    }
+                                ],
+                                "returns": {
                                     "tag": "AnyT"
-                                }
-                            ],
-                            {
-                                "tag": "AnyT"
+                                },
+                                "tag": "FuncT"
                             }
-                        ],
-                        "tag": "FuncT"
+                        },
+                        "tag": "RecordT"
                     }
                 ],
+                "returns": {
+                    "parameters": [
+                        {
+                            "tag": "AnyT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -1171,36 +1123,30 @@
                 "_M4done47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal272"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
-                            [
-                                {
-                                    "contents": [
-                                        [
-                                            {
-                                                "tag": "AnyT"
-                                            }
-                                        ],
-                                        {
-                                            "tag": "AnyT"
-                                        }
-                                    ],
-                                    "tag": "FuncT"
-                                }
-                            ],
-                            {
-                                "tag": "AnyT"
-                            }
-                        ],
-                        "tag": "FuncT"
+                        "tag": "AnyT"
                     }
                 ],
+                "returns": {
+                    "parameters": [
+                        {
+                            "parameters": [
+                                {
+                                    "tag": "AnyT"
+                                }
+                            ],
+                            "returns": {
+                                "tag": "AnyT"
+                            },
+                            "tag": "FuncT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -1232,26 +1178,22 @@
                                 "tag": "Fun"
                             },
                             "typ": {
-                                "contents": [
-                                    [
-                                        {
-                                            "contents": [
-                                                [
-                                                    {
-                                                        "tag": "AnyT"
-                                                    }
-                                                ],
-                                                {
-                                                    "tag": "AnyT"
-                                                }
-                                            ],
-                                            "tag": "FuncT"
-                                        }
-                                    ],
+                                "parameters": [
                                     {
-                                        "tag": "AnyT"
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
                                     }
                                 ],
+                                "returns": {
+                                    "tag": "AnyT"
+                                },
                                 "tag": "FuncT"
                             },
                             "variable": "_M3let47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal305"
@@ -1274,94 +1216,78 @@
                 "_M6record47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal308"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": {
-                                "bind": {
-                                    "contents": [
-                                        [
-                                            {
-                                                "tag": "AnyT"
-                                            }
-                                        ],
-                                        {
-                                            "contents": [
-                                                [
-                                                    {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
-                                                            {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        ],
-                                                        "tag": "FuncT"
-                                                    }
-                                                ],
-                                                {
-                                                    "tag": "AnyT"
-                                                }
-                                            ],
-                                            "tag": "FuncT"
-                                        }
-                                    ],
-                                    "tag": "FuncT"
-                                },
-                                "return": {
-                                    "contents": [
-                                        [
-                                            {
-                                                "tag": "AnyT"
-                                            }
-                                        ],
-                                        {
-                                            "tag": "AnyT"
-                                        }
-                                    ],
-                                    "tag": "FuncT"
-                                }
-                            },
-                            "tag": "RecordT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
-                            [
-                                {
-                                    "tag": "AnyT"
-                                }
-                            ],
-                            {
-                                "contents": [
-                                    [
-                                        {
-                                            "contents": [
-                                                [
-                                                    {
-                                                        "tag": "AnyT"
-                                                    }
-                                                ],
-                                                {
-                                                    "tag": "AnyT"
-                                                }
-                                            ],
-                                            "tag": "FuncT"
-                                        }
-                                    ],
+                        "map": {
+                            "bind": {
+                                "parameters": [
                                     {
                                         "tag": "AnyT"
                                     }
                                 ],
+                                "returns": {
+                                    "parameters": [
+                                        {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
+                                    "tag": "FuncT"
+                                },
+                                "tag": "FuncT"
+                            },
+                            "return": {
+                                "parameters": [
+                                    {
+                                        "tag": "AnyT"
+                                    }
+                                ],
+                                "returns": {
+                                    "tag": "AnyT"
+                                },
+                                "tag": "FuncT"
+                            }
+                        },
+                        "tag": "RecordT"
+                    }
+                ],
+                "returns": {
+                    "parameters": [
+                        {
+                            "tag": "AnyT"
+                        }
+                    ],
+                    "returns": {
+                        "parameters": [
+                            {
+                                "parameters": [
+                                    {
+                                        "tag": "AnyT"
+                                    }
+                                ],
+                                "returns": {
+                                    "tag": "AnyT"
+                                },
                                 "tag": "FuncT"
                             }
                         ],
+                        "returns": {
+                            "tag": "AnyT"
+                        },
                         "tag": "FuncT"
-                    }
-                ],
+                    },
+                    "tag": "FuncT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -1401,22 +1327,9 @@
                 "_M8_x24_x5F47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal355"
             ],
             {
-                "contents": [
-                    [
-                        {
-                            "contents": [
-                                [
-                                    {
-                                        "tag": "Tuple"
-                                    },
-                                    []
-                                ]
-                            ],
-                            "tag": "SumT"
-                        }
-                    ],
+                "parameters": [
                     {
-                        "contents": [
+                        "constructors": [
                             [
                                 {
                                     "tag": "Tuple"
@@ -1427,6 +1340,17 @@
                         "tag": "SumT"
                     }
                 ],
+                "returns": {
+                    "constructors": [
+                        [
+                            {
+                                "tag": "Tuple"
+                            },
+                            []
+                        ]
+                    ],
+                    "tag": "SumT"
+                },
                 "tag": "FuncT"
             },
             {
@@ -1456,26 +1380,22 @@
                                     {
                                         "contents": [
                                             {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "contents": [
-                                                                [
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    }
-                                                                ],
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
-                                                            "tag": "FuncT"
-                                                        }
-                                                    ],
+                                                "parameters": [
                                                     {
-                                                        "tag": "AnyT"
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        "tag": "FuncT"
                                                     }
                                                 ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
                                                 "tag": "FuncT"
                                             },
                                             {
@@ -1566,26 +1486,22 @@
                                                                                     {
                                                                                         "contents": [
                                                                                             {
-                                                                                                "contents": [
-                                                                                                    [
-                                                                                                        {
-                                                                                                            "contents": [
-                                                                                                                [
-                                                                                                                    {
-                                                                                                                        "tag": "AnyT"
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                {
-                                                                                                                    "tag": "AnyT"
-                                                                                                                }
-                                                                                                            ],
-                                                                                                            "tag": "FuncT"
-                                                                                                        }
-                                                                                                    ],
+                                                                                                "parameters": [
                                                                                                     {
-                                                                                                        "tag": "AnyT"
+                                                                                                        "parameters": [
+                                                                                                            {
+                                                                                                                "tag": "AnyT"
+                                                                                                            }
+                                                                                                        ],
+                                                                                                        "returns": {
+                                                                                                            "tag": "AnyT"
+                                                                                                        },
+                                                                                                        "tag": "FuncT"
                                                                                                     }
                                                                                                 ],
+                                                                                                "returns": {
+                                                                                                    "tag": "AnyT"
+                                                                                                },
                                                                                                 "tag": "FuncT"
                                                                                             },
                                                                                             {
@@ -1655,26 +1571,22 @@
                                                                             {
                                                                                 "contents": [
                                                                                     {
-                                                                                        "contents": [
-                                                                                            [
-                                                                                                {
-                                                                                                    "contents": [
-                                                                                                        [
-                                                                                                            {
-                                                                                                                "tag": "AnyT"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        {
-                                                                                                            "tag": "AnyT"
-                                                                                                        }
-                                                                                                    ],
-                                                                                                    "tag": "FuncT"
-                                                                                                }
-                                                                                            ],
+                                                                                        "parameters": [
                                                                                             {
-                                                                                                "tag": "AnyT"
+                                                                                                "parameters": [
+                                                                                                    {
+                                                                                                        "tag": "AnyT"
+                                                                                                    }
+                                                                                                ],
+                                                                                                "returns": {
+                                                                                                    "tag": "AnyT"
+                                                                                                },
+                                                                                                "tag": "FuncT"
                                                                                             }
                                                                                         ],
+                                                                                        "returns": {
+                                                                                            "tag": "AnyT"
+                                                                                        },
                                                                                         "tag": "FuncT"
                                                                                     },
                                                                                     {
@@ -1747,26 +1659,22 @@
                                                             {
                                                                 "contents": [
                                                                     {
-                                                                        "contents": [
-                                                                            [
-                                                                                {
-                                                                                    "contents": [
-                                                                                        [
-                                                                                            {
-                                                                                                "tag": "AnyT"
-                                                                                            }
-                                                                                        ],
-                                                                                        {
-                                                                                            "tag": "AnyT"
-                                                                                        }
-                                                                                    ],
-                                                                                    "tag": "FuncT"
-                                                                                }
-                                                                            ],
+                                                                        "parameters": [
                                                                             {
-                                                                                "tag": "AnyT"
+                                                                                "parameters": [
+                                                                                    {
+                                                                                        "tag": "AnyT"
+                                                                                    }
+                                                                                ],
+                                                                                "returns": {
+                                                                                    "tag": "AnyT"
+                                                                                },
+                                                                                "tag": "FuncT"
                                                                             }
                                                                         ],
+                                                                        "returns": {
+                                                                            "tag": "AnyT"
+                                                                        },
                                                                         "tag": "FuncT"
                                                                     },
                                                                     {
@@ -1839,42 +1747,38 @@
                                             {
                                                 "contents": [
                                                     {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "contents": [
+                                                        "parameters": [
+                                                            {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "constructors": [
                                                                         [
                                                                             {
-                                                                                "tag": "AnyT"
-                                                                            }
-                                                                        ],
-                                                                        {
-                                                                            "contents": [
-                                                                                [
-                                                                                    {
-                                                                                        "tag": "Tuple"
-                                                                                    },
-                                                                                    []
-                                                                                ]
-                                                                            ],
-                                                                            "tag": "SumT"
-                                                                        }
+                                                                                "tag": "Tuple"
+                                                                            },
+                                                                            []
+                                                                        ]
                                                                     ],
-                                                                    "tag": "FuncT"
-                                                                }
-                                                            ],
-                                                            {
-                                                                "contents": [
-                                                                    [
-                                                                        {
-                                                                            "tag": "Tuple"
-                                                                        },
-                                                                        []
-                                                                    ]
-                                                                ],
-                                                                "tag": "SumT"
+                                                                    "tag": "SumT"
+                                                                },
+                                                                "tag": "FuncT"
                                                             }
                                                         ],
+                                                        "returns": {
+                                                            "constructors": [
+                                                                [
+                                                                    {
+                                                                        "tag": "Tuple"
+                                                                    },
+                                                                    []
+                                                                ]
+                                                            ],
+                                                            "tag": "SumT"
+                                                        },
                                                         "tag": "FuncT"
                                                     },
                                                     {
@@ -1907,7 +1811,7 @@
                                                                     {
                                                                         "contents": [
                                                                             {
-                                                                                "contents": [
+                                                                                "constructors": [
                                                                                     [
                                                                                         {
                                                                                             "contents": "Done",
@@ -1926,24 +1830,22 @@
                                                                                         },
                                                                                         [
                                                                                             {
-                                                                                                "contents": [
-                                                                                                    [
-                                                                                                        {
-                                                                                                            "contents": [
-                                                                                                                [
-                                                                                                                    {
-                                                                                                                        "tag": "Tuple"
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ]
-                                                                                                            ],
-                                                                                                            "tag": "SumT"
-                                                                                                        }
-                                                                                                    ],
+                                                                                                "parameters": [
                                                                                                     {
-                                                                                                        "tag": "AnyT"
+                                                                                                        "constructors": [
+                                                                                                            [
+                                                                                                                {
+                                                                                                                    "tag": "Tuple"
+                                                                                                                },
+                                                                                                                []
+                                                                                                            ]
+                                                                                                        ],
+                                                                                                        "tag": "SumT"
                                                                                                     }
                                                                                                 ],
+                                                                                                "returns": {
+                                                                                                    "tag": "AnyT"
+                                                                                                },
                                                                                                 "tag": "FuncT"
                                                                                             }
                                                                                         ]
@@ -2032,7 +1934,7 @@
                                                                                                 {
                                                                                                     "contents": [
                                                                                                         {
-                                                                                                            "contents": [
+                                                                                                            "constructors": [
                                                                                                                 [
                                                                                                                     {
                                                                                                                         "tag": "Tuple"
@@ -2067,24 +1969,22 @@
                                                                                     },
                                                                                     [
                                                                                         {
-                                                                                            "contents": [
-                                                                                                [
-                                                                                                    {
-                                                                                                        "contents": [
-                                                                                                            [
-                                                                                                                {
-                                                                                                                    "tag": "Tuple"
-                                                                                                                },
-                                                                                                                []
-                                                                                                            ]
-                                                                                                        ],
-                                                                                                        "tag": "SumT"
-                                                                                                    }
-                                                                                                ],
+                                                                                            "parameters": [
                                                                                                 {
-                                                                                                    "tag": "AnyT"
+                                                                                                    "constructors": [
+                                                                                                        [
+                                                                                                            {
+                                                                                                                "tag": "Tuple"
+                                                                                                            },
+                                                                                                            []
+                                                                                                        ]
+                                                                                                    ],
+                                                                                                    "tag": "SumT"
                                                                                                 }
                                                                                             ],
+                                                                                            "returns": {
+                                                                                                "tag": "AnyT"
+                                                                                            },
                                                                                             "tag": "FuncT"
                                                                                         }
                                                                                     ]
@@ -2152,7 +2052,7 @@
                                                                                                 {
                                                                                                     "contents": [
                                                                                                         {
-                                                                                                            "contents": [
+                                                                                                            "constructors": [
                                                                                                                 [
                                                                                                                     {
                                                                                                                         "tag": "Tuple"
@@ -2186,24 +2086,22 @@
                                                         "tag": "Fun"
                                                     },
                                                     "typ": {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
+                                                        "parameters": [
                                                             {
-                                                                "contents": [
-                                                                    [
-                                                                        {
-                                                                            "tag": "Tuple"
-                                                                        },
-                                                                        []
-                                                                    ]
-                                                                ],
-                                                                "tag": "SumT"
+                                                                "tag": "AnyT"
                                                             }
                                                         ],
+                                                        "returns": {
+                                                            "constructors": [
+                                                                [
+                                                                    {
+                                                                        "tag": "Tuple"
+                                                                    },
+                                                                    []
+                                                                ]
+                                                            ],
+                                                            "tag": "SumT"
+                                                        },
                                                         "tag": "FuncT"
                                                     },
                                                     "variable": "_M3fun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal383"
@@ -2240,7 +2138,7 @@
                                             {
                                                 "contents": [
                                                     {
-                                                        "contents": [
+                                                        "constructors": [
                                                             [
                                                                 {
                                                                     "tag": "Tuple"
@@ -2275,51 +2173,43 @@
         [
             "_M10eventually47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External",
             {
-                "contents": {
+                "map": {
                     "bind": {
-                        "contents": [
-                            [
-                                {
-                                    "tag": "AnyT"
-                                }
-                            ],
-                            {
-                                "contents": [
-                                    [
-                                        {
-                                            "contents": [
-                                                [
-                                                    {
-                                                        "tag": "AnyT"
-                                                    }
-                                                ],
-                                                {
-                                                    "tag": "AnyT"
-                                                }
-                                            ],
-                                            "tag": "FuncT"
-                                        }
-                                    ],
-                                    {
-                                        "tag": "AnyT"
-                                    }
-                                ],
-                                "tag": "FuncT"
-                            }
-                        ],
-                        "tag": "FuncT"
-                    },
-                    "return": {
-                        "contents": [
-                            [
-                                {
-                                    "tag": "AnyT"
-                                }
-                            ],
+                        "parameters": [
                             {
                                 "tag": "AnyT"
                             }
                         ],
+                        "returns": {
+                            "parameters": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "tag": "AnyT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            ],
+                            "returns": {
+                                "tag": "AnyT"
+                            },
+                            "tag": "FuncT"
+                        },
+                        "tag": "FuncT"
+                    },
+                    "return": {
+                        "parameters": [
+                            {
+                                "tag": "AnyT"
+                            }
+                        ],
+                        "returns": {
+                            "tag": "AnyT"
+                        },
                         "tag": "FuncT"
                     }
                 },
@@ -2346,51 +2236,43 @@
                                         "tag": "Record"
                                     },
                                     "typ": {
-                                        "contents": {
+                                        "map": {
                                             "bind": {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "tag": "AnyT"
-                                                        }
-                                                    ],
-                                                    {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "contents": [
-                                                                        [
-                                                                            {
-                                                                                "tag": "AnyT"
-                                                                            }
-                                                                        ],
-                                                                        {
-                                                                            "tag": "AnyT"
-                                                                        }
-                                                                    ],
-                                                                    "tag": "FuncT"
-                                                                }
-                                                            ],
-                                                            {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        ],
-                                                        "tag": "FuncT"
-                                                    }
-                                                ],
-                                                "tag": "FuncT"
-                                            },
-                                            "return": {
-                                                "contents": [
-                                                    [
-                                                        {
-                                                            "tag": "AnyT"
-                                                        }
-                                                    ],
+                                                "parameters": [
                                                     {
                                                         "tag": "AnyT"
                                                     }
                                                 ],
+                                                "returns": {
+                                                    "parameters": [
+                                                        {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "returns": {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            "tag": "FuncT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                },
+                                                "tag": "FuncT"
+                                            },
+                                            "return": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "AnyT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
                                                 "tag": "FuncT"
                                             }
                                         },
@@ -2455,44 +2337,38 @@
                                             {
                                                 "contents": [
                                                     {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
+                                                        "parameters": [
                                                             {
-                                                                "contents": [
-                                                                    [
-                                                                        {
-                                                                            "contents": [
-                                                                                [
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            [
-                                                                                                {
-                                                                                                    "tag": "Tuple"
-                                                                                                },
-                                                                                                []
-                                                                                            ]
-                                                                                        ],
-                                                                                        "tag": "SumT"
-                                                                                    }
-                                                                                ],
-                                                                                {
-                                                                                    "tag": "AnyT"
-                                                                                }
-                                                                            ],
-                                                                            "tag": "FuncT"
-                                                                        }
-                                                                    ],
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    }
-                                                                ],
-                                                                "tag": "FuncT"
+                                                                "tag": "AnyT"
                                                             }
                                                         ],
+                                                        "returns": {
+                                                            "parameters": [
+                                                                {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "constructors": [
+                                                                                [
+                                                                                    {
+                                                                                        "tag": "Tuple"
+                                                                                    },
+                                                                                    []
+                                                                                ]
+                                                                            ],
+                                                                            "tag": "SumT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            ],
+                                                            "returns": {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            "tag": "FuncT"
+                                                        },
                                                         "tag": "FuncT"
                                                     },
                                                     {
@@ -2583,7 +2459,7 @@
                                                                                                     {
                                                                                                         "contents": [
                                                                                                             {
-                                                                                                                "contents": [
+                                                                                                                "constructors": [
                                                                                                                     [
                                                                                                                         {
                                                                                                                             "tag": "Tuple"
@@ -2664,24 +2540,22 @@
                                                                         "tag": "Fun"
                                                                     },
                                                                     "typ": {
-                                                                        "contents": [
-                                                                            [
-                                                                                {
-                                                                                    "contents": [
-                                                                                        [
-                                                                                            {
-                                                                                                "tag": "Tuple"
-                                                                                            },
-                                                                                            []
-                                                                                        ]
-                                                                                    ],
-                                                                                    "tag": "SumT"
-                                                                                }
-                                                                            ],
+                                                                        "parameters": [
                                                                             {
-                                                                                "tag": "AnyT"
+                                                                                "constructors": [
+                                                                                    [
+                                                                                        {
+                                                                                            "tag": "Tuple"
+                                                                                        },
+                                                                                        []
+                                                                                    ]
+                                                                                ],
+                                                                                "tag": "SumT"
                                                                             }
                                                                         ],
+                                                                        "returns": {
+                                                                            "tag": "AnyT"
+                                                                        },
                                                                         "tag": "FuncT"
                                                                     },
                                                                     "variable": "_M3fun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal320"
@@ -2754,34 +2628,30 @@
                                                     {
                                                         "contents": [
                                                             {
-                                                                "contents": [
-                                                                    [
-                                                                        {
-                                                                            "contents": [
-                                                                                [
-                                                                                    {
-                                                                                        "contents": [
-                                                                                            [
-                                                                                                {
-                                                                                                    "tag": "Tuple"
-                                                                                                },
-                                                                                                []
-                                                                                            ]
-                                                                                        ],
-                                                                                        "tag": "SumT"
-                                                                                    }
-                                                                                ],
-                                                                                {
-                                                                                    "tag": "AnyT"
-                                                                                }
-                                                                            ],
-                                                                            "tag": "FuncT"
-                                                                        }
-                                                                    ],
+                                                                "parameters": [
                                                                     {
-                                                                        "tag": "AnyT"
+                                                                        "parameters": [
+                                                                            {
+                                                                                "constructors": [
+                                                                                    [
+                                                                                        {
+                                                                                            "tag": "Tuple"
+                                                                                        },
+                                                                                        []
+                                                                                    ]
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            }
+                                                                        ],
+                                                                        "returns": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "tag": "FuncT"
                                                                     }
                                                                 ],
+                                                                "returns": {
+                                                                    "tag": "AnyT"
+                                                                },
                                                                 "tag": "FuncT"
                                                             },
                                                             {
@@ -2839,44 +2709,38 @@
                                                                                     {
                                                                                         "contents": [
                                                                                             {
-                                                                                                "contents": [
-                                                                                                    [
-                                                                                                        {
-                                                                                                            "tag": "AnyT"
-                                                                                                        }
-                                                                                                    ],
+                                                                                                "parameters": [
                                                                                                     {
-                                                                                                        "contents": [
-                                                                                                            [
-                                                                                                                {
-                                                                                                                    "contents": [
-                                                                                                                        [
-                                                                                                                            {
-                                                                                                                                "contents": [
-                                                                                                                                    [
-                                                                                                                                        {
-                                                                                                                                            "tag": "Tuple"
-                                                                                                                                        },
-                                                                                                                                        []
-                                                                                                                                    ]
-                                                                                                                                ],
-                                                                                                                                "tag": "SumT"
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        {
-                                                                                                                            "tag": "AnyT"
-                                                                                                                        }
-                                                                                                                    ],
-                                                                                                                    "tag": "FuncT"
-                                                                                                                }
-                                                                                                            ],
-                                                                                                            {
-                                                                                                                "tag": "AnyT"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "tag": "FuncT"
+                                                                                                        "tag": "AnyT"
                                                                                                     }
                                                                                                 ],
+                                                                                                "returns": {
+                                                                                                    "parameters": [
+                                                                                                        {
+                                                                                                            "parameters": [
+                                                                                                                {
+                                                                                                                    "constructors": [
+                                                                                                                        [
+                                                                                                                            {
+                                                                                                                                "tag": "Tuple"
+                                                                                                                            },
+                                                                                                                            []
+                                                                                                                        ]
+                                                                                                                    ],
+                                                                                                                    "tag": "SumT"
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "returns": {
+                                                                                                                "tag": "AnyT"
+                                                                                                            },
+                                                                                                            "tag": "FuncT"
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    "returns": {
+                                                                                                        "tag": "AnyT"
+                                                                                                    },
+                                                                                                    "tag": "FuncT"
+                                                                                                },
                                                                                                 "tag": "FuncT"
                                                                                             },
                                                                                             {
@@ -2967,7 +2831,7 @@
                                                                                                                                             {
                                                                                                                                                 "contents": [
                                                                                                                                                     {
-                                                                                                                                                        "contents": [
+                                                                                                                                                        "constructors": [
                                                                                                                                                             [
                                                                                                                                                                 {
                                                                                                                                                                     "tag": "Tuple"
@@ -3048,24 +2912,22 @@
                                                                                                                 "tag": "Fun"
                                                                                                             },
                                                                                                             "typ": {
-                                                                                                                "contents": [
-                                                                                                                    [
-                                                                                                                        {
-                                                                                                                            "contents": [
-                                                                                                                                [
-                                                                                                                                    {
-                                                                                                                                        "tag": "Tuple"
-                                                                                                                                    },
-                                                                                                                                    []
-                                                                                                                                ]
-                                                                                                                            ],
-                                                                                                                            "tag": "SumT"
-                                                                                                                        }
-                                                                                                                    ],
+                                                                                                                "parameters": [
                                                                                                                     {
-                                                                                                                        "tag": "AnyT"
+                                                                                                                        "constructors": [
+                                                                                                                            [
+                                                                                                                                {
+                                                                                                                                    "tag": "Tuple"
+                                                                                                                                },
+                                                                                                                                []
+                                                                                                                            ]
+                                                                                                                        ],
+                                                                                                                        "tag": "SumT"
                                                                                                                     }
                                                                                                                 ],
+                                                                                                                "returns": {
+                                                                                                                    "tag": "AnyT"
+                                                                                                                },
                                                                                                                 "tag": "FuncT"
                                                                                                             },
                                                                                                             "variable": "_M3fun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal336"
@@ -3138,34 +3000,30 @@
                                                                                             {
                                                                                                 "contents": [
                                                                                                     {
-                                                                                                        "contents": [
-                                                                                                            [
-                                                                                                                {
-                                                                                                                    "contents": [
-                                                                                                                        [
-                                                                                                                            {
-                                                                                                                                "contents": [
-                                                                                                                                    [
-                                                                                                                                        {
-                                                                                                                                            "tag": "Tuple"
-                                                                                                                                        },
-                                                                                                                                        []
-                                                                                                                                    ]
-                                                                                                                                ],
-                                                                                                                                "tag": "SumT"
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        {
-                                                                                                                            "tag": "AnyT"
-                                                                                                                        }
-                                                                                                                    ],
-                                                                                                                    "tag": "FuncT"
-                                                                                                                }
-                                                                                                            ],
+                                                                                                        "parameters": [
                                                                                                             {
-                                                                                                                "tag": "AnyT"
+                                                                                                                "parameters": [
+                                                                                                                    {
+                                                                                                                        "constructors": [
+                                                                                                                            [
+                                                                                                                                {
+                                                                                                                                    "tag": "Tuple"
+                                                                                                                                },
+                                                                                                                                []
+                                                                                                                            ]
+                                                                                                                        ],
+                                                                                                                        "tag": "SumT"
+                                                                                                                    }
+                                                                                                                ],
+                                                                                                                "returns": {
+                                                                                                                    "tag": "AnyT"
+                                                                                                                },
+                                                                                                                "tag": "FuncT"
                                                                                                             }
                                                                                                         ],
+                                                                                                        "returns": {
+                                                                                                            "tag": "AnyT"
+                                                                                                        },
                                                                                                         "tag": "FuncT"
                                                                                                     },
                                                                                                     {
@@ -3220,16 +3078,14 @@
                                                                                                                     {
                                                                                                                         "contents": [
                                                                                                                             {
-                                                                                                                                "contents": [
-                                                                                                                                    [
-                                                                                                                                        {
-                                                                                                                                            "tag": "AnyT"
-                                                                                                                                        }
-                                                                                                                                    ],
+                                                                                                                                "parameters": [
                                                                                                                                     {
                                                                                                                                         "tag": "AnyT"
                                                                                                                                     }
                                                                                                                                 ],
+                                                                                                                                "returns": {
+                                                                                                                                    "tag": "AnyT"
+                                                                                                                                },
                                                                                                                                 "tag": "FuncT"
                                                                                                                             },
                                                                                                                             {
@@ -3324,24 +3180,22 @@
                                                                                                 "tag": "Fun"
                                                                                             },
                                                                                             "typ": {
-                                                                                                "contents": [
-                                                                                                    [
-                                                                                                        {
-                                                                                                            "contents": [
-                                                                                                                [
-                                                                                                                    {
-                                                                                                                        "tag": "Tuple"
-                                                                                                                    },
-                                                                                                                    []
-                                                                                                                ]
-                                                                                                            ],
-                                                                                                            "tag": "SumT"
-                                                                                                        }
-                                                                                                    ],
+                                                                                                "parameters": [
                                                                                                     {
-                                                                                                        "tag": "AnyT"
+                                                                                                        "constructors": [
+                                                                                                            [
+                                                                                                                {
+                                                                                                                    "tag": "Tuple"
+                                                                                                                },
+                                                                                                                []
+                                                                                                            ]
+                                                                                                        ],
+                                                                                                        "tag": "SumT"
                                                                                                     }
                                                                                                 ],
+                                                                                                "returns": {
+                                                                                                    "tag": "AnyT"
+                                                                                                },
                                                                                                 "tag": "FuncT"
                                                                                             },
                                                                                             "variable": "_M3fun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal348"
@@ -3400,24 +3254,22 @@
                                                         "tag": "Fun"
                                                     },
                                                     "typ": {
-                                                        "contents": [
-                                                            [
-                                                                {
-                                                                    "contents": [
-                                                                        [
-                                                                            {
-                                                                                "tag": "Tuple"
-                                                                            },
-                                                                            []
-                                                                        ]
-                                                                    ],
-                                                                    "tag": "SumT"
-                                                                }
-                                                            ],
+                                                        "parameters": [
                                                             {
-                                                                "tag": "AnyT"
+                                                                "constructors": [
+                                                                    [
+                                                                        {
+                                                                            "tag": "Tuple"
+                                                                        },
+                                                                        []
+                                                                    ]
+                                                                ],
+                                                                "tag": "SumT"
                                                             }
                                                         ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
                                                         "tag": "FuncT"
                                                     },
                                                     "variable": "_M3fun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal351"
