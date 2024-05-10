@@ -7,7 +7,11 @@ use serde::{Deserialize, Serialize};
 use unicode_xid::UnicodeXID;
 
 #[derive(Debug)]
-struct Name(Vec<String>);
+struct Name {
+    name: String,
+    path: String,
+    sort: String,
+}
 
 impl<'de> Deserialize<'de> for Name {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
@@ -17,9 +21,15 @@ impl<'de> Deserialize<'de> for Name {
         let s: String = Deserialize::deserialize(deserializer)?;
         let prefix_removed = s.trim_start_matches("_M");
         let messages = split_by_run_length(prefix_removed);
-        let replaced = messages.into_iter().map(hex_to_char).collect();
+        let replaced: Vec<String> = messages.into_iter().map(hex_to_char).collect();
 
-        Ok(Name(replaced))
+        assert_eq!(replaced.len(), 3);
+
+        Ok(Name {
+            name: replaced[0].clone(),
+            path: replaced[1].clone(),
+            sort: replaced[2].clone(),
+        })
     }
 }
 
@@ -98,8 +108,8 @@ impl Serialize for Name {
     where
         S: serde::Serializer,
     {
-        let underscore_replaced = self
-            .0
+        let msgs = vec![self.name.clone(), self.path.clone(), self.sort.clone()];
+        let underscore_replaced = msgs
             .iter()
             .map(|c| {
                 let mut result = String::new();
