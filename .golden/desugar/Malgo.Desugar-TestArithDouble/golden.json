@@ -20,33 +20,33 @@
             {
                 "body": {
                     "body": {
-                        "body": {
-                            "tag": "Cast",
-                            "type": {
-                                "tag": "AnyT"
-                            },
-                            "value": {
-                                "tag": "Var",
-                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal94"
-                            }
+                        "tag": "Cast",
+                        "type": {
+                            "tag": "AnyT"
                         },
-                        "expression": {
-                            "arguments": [
-                                {
-                                    "tag": "Var",
-                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal93"
-                                }
-                            ],
-                            "callee": {
-                                "tag": "Var",
-                                "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
-                            },
-                            "tag": "Call"
-                        },
-                        "tag": "Assign",
-                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal94"
+                        "value": {
+                            "tag": "Var",
+                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal94"
+                        }
                     },
                     "expression": {
+                        "arguments": [
+                            {
+                                "tag": "Var",
+                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal93"
+                            }
+                        ],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal94"
+                },
+                "expression": {
+                    "body": {
                         "tag": "Cast",
                         "type": {
                             "tag": "StringT"
@@ -56,24 +56,24 @@
                             "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal92"
                         }
                     },
-                    "tag": "Assign",
-                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal93"
-                },
-                "expression": {
-                    "arguments": [
-                        {
+                    "expression": {
+                        "arguments": [
+                            {
+                                "tag": "Var",
+                                "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal91"
+                            }
+                        ],
+                        "callee": {
                             "tag": "Var",
-                            "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal91"
-                        }
-                    ],
-                    "callee": {
-                        "tag": "Var",
-                        "variable": "_M18toStringDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                            "variable": "_M18toStringDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                        },
+                        "tag": "Call"
                     },
-                    "tag": "Call"
+                    "tag": "Assign",
+                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal92"
                 },
                 "tag": "Assign",
-                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal92"
+                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal93"
             }
         ],
         [
@@ -94,35 +94,31 @@
             },
             {
                 "body": {
+                    "atom": {
+                        "tag": "Var",
+                        "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal95"
+                    },
+                    "tag": "Atom"
+                },
+                "expression": {
                     "body": {
                         "body": {
-                            "body": {
-                                "atom": {
-                                    "tag": "Var",
-                                    "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal95"
-                                },
-                                "tag": "Atom"
-                            },
-                            "expression": {
-                                "tag": "Cast",
-                                "type": {
-                                    "constructors": [
-                                        {
-                                            "parameters": [],
-                                            "tag": {
-                                                "tag": "Tuple"
-                                            }
+                            "tag": "Cast",
+                            "type": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
                                         }
-                                    ],
-                                    "tag": "SumT"
-                                },
-                                "value": {
-                                    "tag": "Var",
-                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal98"
-                                }
+                                    }
+                                ],
+                                "tag": "SumT"
                             },
-                            "tag": "Assign",
-                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal99"
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal98"
+                            }
                         },
                         "expression": {
                             "arguments": [
@@ -141,33 +137,37 @@
                         "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal98"
                     },
                     "expression": {
-                        "tag": "Cast",
-                        "type": {
-                            "tag": "AnyT"
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "AnyT"
+                            },
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal96"
+                            }
                         },
-                        "value": {
-                            "tag": "Var",
-                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal96"
-                        }
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "tag": "Var",
+                                    "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal95"
+                                }
+                            ],
+                            "callee": {
+                                "tag": "Var",
+                                "variable": "_M4show52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg8External"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal96"
                     },
                     "tag": "Assign",
                     "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal97"
                 },
-                "expression": {
-                    "arguments": [
-                        {
-                            "tag": "Var",
-                            "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal95"
-                        }
-                    ],
-                    "callee": {
-                        "tag": "Var",
-                        "variable": "_M4show52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg8External"
-                    },
-                    "tag": "Call"
-                },
                 "tag": "Assign",
-                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal96"
+                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg10Temporal99"
             }
         ],
         [
@@ -189,33 +189,33 @@
             {
                 "body": {
                     "body": {
-                        "body": {
-                            "tag": "Cast",
-                            "type": {
-                                "tag": "DoubleT"
-                            },
-                            "value": {
-                                "tag": "Var",
-                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal103"
-                            }
+                        "tag": "Cast",
+                        "type": {
+                            "tag": "DoubleT"
                         },
-                        "expression": {
-                            "arguments": [
-                                {
-                                    "tag": "Var",
-                                    "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal100"
-                                }
-                            ],
-                            "callee": {
-                                "tag": "Var",
-                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal102"
-                            },
-                            "tag": "Call"
-                        },
-                        "tag": "Assign",
-                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal103"
+                        "value": {
+                            "tag": "Var",
+                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal103"
+                        }
                     },
                     "expression": {
+                        "arguments": [
+                            {
+                                "tag": "Var",
+                                "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal100"
+                            }
+                        ],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal102"
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal103"
+                },
+                "expression": {
+                    "body": {
                         "tag": "Cast",
                         "type": {
                             "parameters": [
@@ -233,27 +233,27 @@
                             "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal101"
                         }
                     },
-                    "tag": "Assign",
-                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal102"
-                },
-                "expression": {
-                    "arguments": [
-                        {
-                            "literal": {
-                                "contents": 0,
-                                "tag": "Double"
-                            },
-                            "tag": "Unboxed"
-                        }
-                    ],
-                    "callee": {
-                        "tag": "Var",
-                        "variable": "_M13subDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                    "expression": {
+                        "arguments": [
+                            {
+                                "literal": {
+                                    "contents": 0,
+                                    "tag": "Double"
+                                },
+                                "tag": "Unboxed"
+                            }
+                        ],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": "_M13subDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                        },
+                        "tag": "Call"
                     },
-                    "tag": "Call"
+                    "tag": "Assign",
+                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal101"
                 },
                 "tag": "Assign",
-                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal101"
+                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal102"
             }
         ],
         [
@@ -291,33 +291,33 @@
                                             "body": {
                                                 "body": {
                                                     "body": {
-                                                        "body": {
-                                                            "tag": "Cast",
-                                                            "type": {
-                                                                "tag": "DoubleT"
-                                                            },
-                                                            "value": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal114"
-                                                            }
+                                                        "tag": "Cast",
+                                                        "type": {
+                                                            "tag": "DoubleT"
                                                         },
-                                                        "expression": {
-                                                            "arguments": [
-                                                                {
-                                                                    "tag": "Var",
-                                                                    "variable": "_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal111"
-                                                                }
-                                                            ],
-                                                            "callee": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal113"
-                                                            },
-                                                            "tag": "Call"
-                                                        },
-                                                        "tag": "Assign",
-                                                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal114"
+                                                        "value": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal114"
+                                                        }
                                                     },
                                                     "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal111"
+                                                            }
+                                                        ],
+                                                        "callee": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal113"
+                                                        },
+                                                        "tag": "Call"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal114"
+                                                },
+                                                "expression": {
+                                                    "body": {
                                                         "tag": "Cast",
                                                         "type": {
                                                             "parameters": [
@@ -335,24 +335,24 @@
                                                             "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal112"
                                                         }
                                                     },
-                                                    "tag": "Assign",
-                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal113"
-                                                },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
+                                                    "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal110"
+                                                            }
+                                                        ],
+                                                        "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal110"
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": "_M13mulDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": "_M13mulDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                        },
+                                                        "tag": "Call"
                                                     },
-                                                    "tag": "Call"
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal112"
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal112"
+                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal113"
                                             },
                                             "parameters": [
                                                 "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal110",
@@ -460,33 +460,33 @@
                                             "body": {
                                                 "body": {
                                                     "body": {
-                                                        "body": {
-                                                            "tag": "Cast",
-                                                            "type": {
-                                                                "tag": "DoubleT"
-                                                            },
-                                                            "value": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal126"
-                                                            }
+                                                        "tag": "Cast",
+                                                        "type": {
+                                                            "tag": "DoubleT"
                                                         },
-                                                        "expression": {
-                                                            "arguments": [
-                                                                {
-                                                                    "tag": "Var",
-                                                                    "variable": "_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal123"
-                                                                }
-                                                            ],
-                                                            "callee": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal125"
-                                                            },
-                                                            "tag": "Call"
-                                                        },
-                                                        "tag": "Assign",
-                                                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal126"
+                                                        "value": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal126"
+                                                        }
                                                     },
                                                     "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal123"
+                                                            }
+                                                        ],
+                                                        "callee": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal125"
+                                                        },
+                                                        "tag": "Call"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal126"
+                                                },
+                                                "expression": {
+                                                    "body": {
                                                         "tag": "Cast",
                                                         "type": {
                                                             "parameters": [
@@ -504,24 +504,24 @@
                                                             "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal124"
                                                         }
                                                     },
-                                                    "tag": "Assign",
-                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal125"
-                                                },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
+                                                    "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal122"
+                                                            }
+                                                        ],
+                                                        "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal122"
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": "_M13addDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": "_M13addDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                        },
+                                                        "tag": "Call"
                                                     },
-                                                    "tag": "Call"
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal124"
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal124"
+                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal125"
                                             },
                                             "parameters": [
                                                 "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal122",
@@ -629,33 +629,33 @@
                                             "body": {
                                                 "body": {
                                                     "body": {
-                                                        "body": {
-                                                            "tag": "Cast",
-                                                            "type": {
-                                                                "tag": "DoubleT"
-                                                            },
-                                                            "value": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal138"
-                                                            }
+                                                        "tag": "Cast",
+                                                        "type": {
+                                                            "tag": "DoubleT"
                                                         },
-                                                        "expression": {
-                                                            "arguments": [
-                                                                {
-                                                                    "tag": "Var",
-                                                                    "variable": "_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal135"
-                                                                }
-                                                            ],
-                                                            "callee": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal137"
-                                                            },
-                                                            "tag": "Call"
-                                                        },
-                                                        "tag": "Assign",
-                                                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal138"
+                                                        "value": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal138"
+                                                        }
                                                     },
                                                     "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal135"
+                                                            }
+                                                        ],
+                                                        "callee": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal137"
+                                                        },
+                                                        "tag": "Call"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal138"
+                                                },
+                                                "expression": {
+                                                    "body": {
                                                         "tag": "Cast",
                                                         "type": {
                                                             "parameters": [
@@ -673,24 +673,24 @@
                                                             "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal136"
                                                         }
                                                     },
-                                                    "tag": "Assign",
-                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal137"
-                                                },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
+                                                    "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal134"
+                                                            }
+                                                        ],
+                                                        "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal134"
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": "_M13addDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": "_M13addDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                        },
+                                                        "tag": "Call"
                                                     },
-                                                    "tag": "Call"
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal136"
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal136"
+                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal137"
                                             },
                                             "parameters": [
                                                 "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal134",
@@ -798,33 +798,33 @@
                                             "body": {
                                                 "body": {
                                                     "body": {
-                                                        "body": {
-                                                            "tag": "Cast",
-                                                            "type": {
-                                                                "tag": "DoubleT"
-                                                            },
-                                                            "value": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal150"
-                                                            }
+                                                        "tag": "Cast",
+                                                        "type": {
+                                                            "tag": "DoubleT"
                                                         },
-                                                        "expression": {
-                                                            "arguments": [
-                                                                {
-                                                                    "tag": "Var",
-                                                                    "variable": "_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal147"
-                                                                }
-                                                            ],
-                                                            "callee": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal149"
-                                                            },
-                                                            "tag": "Call"
-                                                        },
-                                                        "tag": "Assign",
-                                                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal150"
+                                                        "value": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal150"
+                                                        }
                                                     },
                                                     "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal147"
+                                                            }
+                                                        ],
+                                                        "callee": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal149"
+                                                        },
+                                                        "tag": "Call"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal150"
+                                                },
+                                                "expression": {
+                                                    "body": {
                                                         "tag": "Cast",
                                                         "type": {
                                                             "parameters": [
@@ -842,24 +842,24 @@
                                                             "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal148"
                                                         }
                                                     },
-                                                    "tag": "Assign",
-                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal149"
-                                                },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
+                                                    "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal146"
+                                                            }
+                                                        ],
+                                                        "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal146"
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": "_M13mulDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": "_M13mulDouble_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                        },
+                                                        "tag": "Call"
                                                     },
-                                                    "tag": "Call"
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal148"
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal148"
+                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal149"
                                             },
                                             "parameters": [
                                                 "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal146",
@@ -951,74 +951,70 @@
             {
                 "body": {
                     "body": {
+                        "tag": "Cast",
+                        "type": {
+                            "tag": "DoubleT"
+                        },
+                        "value": {
+                            "tag": "Var",
+                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal159"
+                        }
+                    },
+                    "expression": {
+                        "arguments": [
+                            {
+                                "tag": "Var",
+                                "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal152"
+                            }
+                        ],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal158"
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal159"
+                },
+                "expression": {
+                    "body": {
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "parameters": [
+                                    {
+                                        "tag": "DoubleT"
+                                    }
+                                ],
+                                "returns": {
+                                    "tag": "DoubleT"
+                                },
+                                "tag": "FuncT"
+                            },
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal157"
+                            }
+                        },
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "tag": "Var",
+                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal156"
+                                }
+                            ],
+                            "callee": {
+                                "tag": "Var",
+                                "variable": "_M4_x2A52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg8External"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal157"
+                    },
+                    "expression": {
                         "body": {
                             "body": {
-                                "body": {
-                                    "body": {
-                                        "body": {
-                                            "tag": "Cast",
-                                            "type": {
-                                                "tag": "DoubleT"
-                                            },
-                                            "value": {
-                                                "tag": "Var",
-                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal159"
-                                            }
-                                        },
-                                        "expression": {
-                                            "arguments": [
-                                                {
-                                                    "tag": "Var",
-                                                    "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal152"
-                                                }
-                                            ],
-                                            "callee": {
-                                                "tag": "Var",
-                                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal158"
-                                            },
-                                            "tag": "Call"
-                                        },
-                                        "tag": "Assign",
-                                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal159"
-                                    },
-                                    "expression": {
-                                        "tag": "Cast",
-                                        "type": {
-                                            "parameters": [
-                                                {
-                                                    "tag": "DoubleT"
-                                                }
-                                            ],
-                                            "returns": {
-                                                "tag": "DoubleT"
-                                            },
-                                            "tag": "FuncT"
-                                        },
-                                        "value": {
-                                            "tag": "Var",
-                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal157"
-                                        }
-                                    },
-                                    "tag": "Assign",
-                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal158"
-                                },
-                                "expression": {
-                                    "arguments": [
-                                        {
-                                            "tag": "Var",
-                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal156"
-                                        }
-                                    ],
-                                    "callee": {
-                                        "tag": "Var",
-                                        "variable": "_M4_x2A52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg8External"
-                                    },
-                                    "tag": "Call"
-                                },
-                                "tag": "Assign",
-                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal157"
-                            },
-                            "expression": {
                                 "tag": "Cast",
                                 "type": {
                                     "tag": "DoubleT"
@@ -1028,64 +1024,68 @@
                                     "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal155"
                                 }
                             },
+                            "expression": {
+                                "arguments": [
+                                    {
+                                        "literal": {
+                                            "contents": 0,
+                                            "tag": "Double"
+                                        },
+                                        "tag": "Unboxed"
+                                    }
+                                ],
+                                "callee": {
+                                    "tag": "Var",
+                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal154"
+                                },
+                                "tag": "Call"
+                            },
                             "tag": "Assign",
-                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal156"
+                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal155"
                         },
                         "expression": {
-                            "arguments": [
-                                {
-                                    "literal": {
-                                        "contents": 0,
-                                        "tag": "Double"
+                            "body": {
+                                "tag": "Cast",
+                                "type": {
+                                    "parameters": [
+                                        {
+                                            "tag": "DoubleT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "DoubleT"
                                     },
-                                    "tag": "Unboxed"
+                                    "tag": "FuncT"
+                                },
+                                "value": {
+                                    "tag": "Var",
+                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal153"
                                 }
-                            ],
-                            "callee": {
-                                "tag": "Var",
-                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal154"
                             },
-                            "tag": "Call"
+                            "expression": {
+                                "arguments": [
+                                    {
+                                        "tag": "Var",
+                                        "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal152"
+                                    }
+                                ],
+                                "callee": {
+                                    "tag": "Var",
+                                    "variable": "_M4_x2B52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg8External"
+                                },
+                                "tag": "Call"
+                            },
+                            "tag": "Assign",
+                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal153"
                         },
                         "tag": "Assign",
-                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal155"
-                    },
-                    "expression": {
-                        "tag": "Cast",
-                        "type": {
-                            "parameters": [
-                                {
-                                    "tag": "DoubleT"
-                                }
-                            ],
-                            "returns": {
-                                "tag": "DoubleT"
-                            },
-                            "tag": "FuncT"
-                        },
-                        "value": {
-                            "tag": "Var",
-                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal153"
-                        }
+                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal154"
                     },
                     "tag": "Assign",
-                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal154"
-                },
-                "expression": {
-                    "arguments": [
-                        {
-                            "tag": "Var",
-                            "variable": "_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal152"
-                        }
-                    ],
-                    "callee": {
-                        "tag": "Var",
-                        "variable": "_M4_x2B52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg8External"
-                    },
-                    "tag": "Call"
+                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal156"
                 },
                 "tag": "Assign",
-                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal153"
+                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal158"
             }
         ],
         [
@@ -1123,54 +1123,50 @@
             {
                 "body": {
                     "body": {
-                        "body": {
-                            "body": {
-                                "body": {
-                                    "tag": "Cast",
-                                    "type": {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "tag": "Tuple"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    },
-                                    "value": {
-                                        "tag": "Var",
-                                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal165"
+                        "tag": "Cast",
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
                                     }
-                                },
-                                "expression": {
-                                    "arguments": [
-                                        {
-                                            "tag": "Var",
-                                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal164"
-                                        }
-                                    ],
-                                    "callee": {
-                                        "tag": "Var",
-                                        "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
-                                    },
-                                    "tag": "Call"
-                                },
-                                "tag": "Assign",
-                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal165"
-                            },
-                            "expression": {
-                                "tag": "Cast",
-                                "type": {
-                                    "tag": "AnyT"
-                                },
-                                "value": {
-                                    "tag": "Var",
-                                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal163"
                                 }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "value": {
+                            "tag": "Var",
+                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal165"
+                        }
+                    },
+                    "expression": {
+                        "arguments": [
+                            {
+                                "tag": "Var",
+                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal164"
+                            }
+                        ],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal165"
+                },
+                "expression": {
+                    "body": {
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "AnyT"
                             },
-                            "tag": "Assign",
-                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal164"
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal163"
+                            }
                         },
                         "expression": {
                             "arguments": [
@@ -1189,36 +1185,40 @@
                         "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal163"
                     },
                     "expression": {
-                        "tag": "Cast",
-                        "type": {
-                            "tag": "DoubleT"
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "DoubleT"
+                            },
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal161"
+                            }
                         },
-                        "value": {
-                            "tag": "Var",
-                            "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal161"
-                        }
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "literal": {
+                                        "contents": 0.5,
+                                        "tag": "Double"
+                                    },
+                                    "tag": "Unboxed"
+                                }
+                            ],
+                            "callee": {
+                                "tag": "Var",
+                                "variable": "_M1f52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg8External"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal161"
                     },
                     "tag": "Assign",
                     "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal162"
                 },
-                "expression": {
-                    "arguments": [
-                        {
-                            "literal": {
-                                "contents": 0.5,
-                                "tag": "Double"
-                            },
-                            "tag": "Unboxed"
-                        }
-                    ],
-                    "callee": {
-                        "tag": "Var",
-                        "variable": "_M1f52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg8External"
-                    },
-                    "tag": "Call"
-                },
                 "tag": "Assign",
-                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal161"
+                "variable": "_M1d52test_x2Ftestcases_x2Fmalgo_x2FTestArithDouble_x2Emlg11Temporal164"
             }
         ]
     ],

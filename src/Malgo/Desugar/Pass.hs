@@ -189,7 +189,7 @@ dsDataDef (_, name, _, cons) =
     modify \s@DsState {..} -> s {_nameEnv = Map.insert conName conName' _nameEnv}
     pure (FunDef conName' ps (C.typeOf conName') e)
   where
-    -- 引数のない値コンストラクタは、0引数のCore関数に変換される
+    -- Value constructor without arguments is converted to a call to a 0-argument function
     buildConType [] retType = [] :-> retType
     buildConType paramTypes retType = foldr (\a b -> [a] :-> b) retType paramTypes
 
@@ -213,8 +213,8 @@ dsExpr (G.Var (Typed typ _) name) = do
       | otherwise -> errorDoc $ "Invalid type:" <+> squotes (pretty name)
     _ -> pass
   case C.typeOf name' of
-    -- 引数のない値コンストラクタは、0引数関数の呼び出しに変換する（クロージャは作らない）
-    [] :-> _ | isConstructor name -> pure $ CallDirect name' []
+    -- Value constructor without arguments is converted to a call to a 0-argument function
+    [] :-> _ | isConstructor name -> pure $ Call (C.Var name') []
     _ -> pure $ Atom $ C.Var name'
   where
     isConstructor Id {name} | T.length name > 0 = Char.isUpper (T.head name)

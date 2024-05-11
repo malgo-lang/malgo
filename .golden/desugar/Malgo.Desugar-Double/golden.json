@@ -36,54 +36,50 @@
             {
                 "body": {
                     "body": {
-                        "body": {
-                            "body": {
-                                "body": {
-                                    "tag": "Cast",
-                                    "type": {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "tag": "Tuple"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    },
-                                    "value": {
-                                        "tag": "Var",
-                                        "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal14"
+                        "tag": "Cast",
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
                                     }
-                                },
-                                "expression": {
-                                    "arguments": [
-                                        {
-                                            "tag": "Var",
-                                            "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal13"
-                                        }
-                                    ],
-                                    "callee": {
-                                        "tag": "Var",
-                                        "variable": "_M6putStr34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
-                                    },
-                                    "tag": "Call"
-                                },
-                                "tag": "Assign",
-                                "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal14"
-                            },
-                            "expression": {
-                                "tag": "Cast",
-                                "type": {
-                                    "tag": "AnyT"
-                                },
-                                "value": {
-                                    "tag": "Var",
-                                    "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal12"
                                 }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "value": {
+                            "tag": "Var",
+                            "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal14"
+                        }
+                    },
+                    "expression": {
+                        "arguments": [
+                            {
+                                "tag": "Var",
+                                "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal13"
+                            }
+                        ],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": "_M6putStr34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal14"
+                },
+                "expression": {
+                    "body": {
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "AnyT"
                             },
-                            "tag": "Assign",
-                            "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal13"
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal12"
+                            }
                         },
                         "expression": {
                             "arguments": [
@@ -102,36 +98,40 @@
                         "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal12"
                     },
                     "expression": {
-                        "tag": "Cast",
-                        "type": {
-                            "tag": "AnyT"
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "AnyT"
+                            },
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal10"
+                            }
                         },
-                        "value": {
-                            "tag": "Var",
-                            "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal10"
-                        }
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "literal": {
+                                        "contents": 3.14,
+                                        "tag": "Double"
+                                    },
+                                    "tag": "Unboxed"
+                                }
+                            ],
+                            "callee": {
+                                "tag": "Var",
+                                "variable": "_M10Double_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal10"
                     },
                     "tag": "Assign",
                     "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal11"
                 },
-                "expression": {
-                    "arguments": [
-                        {
-                            "literal": {
-                                "contents": 3.14,
-                                "tag": "Double"
-                            },
-                            "tag": "Unboxed"
-                        }
-                    ],
-                    "callee": {
-                        "tag": "Var",
-                        "variable": "_M10Double_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
-                    },
-                    "tag": "Call"
-                },
                 "tag": "Assign",
-                "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal10"
+                "variable": "_M1d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg10Temporal13"
             }
         ]
     ],

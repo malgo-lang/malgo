@@ -191,239 +191,163 @@
                 "body": {
                     "body": {
                         "body": {
-                            "body": {
-                                "bindings": [
+                            "tag": "Cast",
+                            "type": {
+                                "constructors": [
                                     {
-                                        "object": {
-                                            "body": {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            },
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal70"
+                            }
+                        },
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "tag": "Var",
+                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal69"
+                                }
+                            ],
+                            "callee": {
+                                "tag": "Var",
+                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal62"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal70"
+                    },
+                    "expression": {
+                        "bindings": [
+                            {
+                                "object": {
+                                    "body": {
+                                        "clauses": [
+                                            {
                                                 "body": {
-                                                    "clauses": [
-                                                        [
-                                                            {
-                                                                "name": "Int64#",
-                                                                "tag": "Data"
-                                                            },
-                                                            {
-                                                                "body": {
-                                                                    "body": {
-                                                                        "body": {
-                                                                            "body": {
-                                                                                "tag": "Cast",
-                                                                                "type": {
-                                                                                    "constructors": [
-                                                                                        {
-                                                                                            "parameters": [],
-                                                                                            "tag": {
-                                                                                                "tag": "Tuple"
-                                                                                            }
-                                                                                        }
-                                                                                    ],
-                                                                                    "tag": "SumT"
-                                                                                },
-                                                                                "value": {
-                                                                                    "tag": "Var",
-                                                                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal67"
-                                                                                }
-                                                                            },
-                                                                            "expression": {
-                                                                                "arguments": [
-                                                                                    {
-                                                                                        "tag": "Var",
-                                                                                        "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal66"
-                                                                                    }
-                                                                                ],
-                                                                                "callee": {
-                                                                                    "tag": "Var",
-                                                                                    "variable": "_M15printString_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
-                                                                                },
-                                                                                "tag": "Call"
-                                                                            },
-                                                                            "tag": "Assign",
-                                                                            "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal67"
-                                                                        },
-                                                                        "expression": {
-                                                                            "tag": "Cast",
-                                                                            "type": {
-                                                                                "tag": "StringT"
-                                                                            },
-                                                                            "value": {
-                                                                                "tag": "Var",
-                                                                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal65"
-                                                                            }
-                                                                        },
-                                                                        "tag": "Assign",
-                                                                        "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal66"
-                                                                    },
-                                                                    "expression": {
-                                                                        "arguments": [
-                                                                            {
-                                                                                "tag": "Var",
-                                                                                "variable": "_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal64"
-                                                                            }
-                                                                        ],
-                                                                        "callee": {
-                                                                            "tag": "Var",
-                                                                            "variable": "_M17toStringInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
-                                                                        },
-                                                                        "tag": "Call"
-                                                                    },
-                                                                    "tag": "Assign",
-                                                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal65"
-                                                                },
-                                                                "constructor": {
-                                                                    "parameters": [
-                                                                        {
-                                                                            "tag": "Int64T"
-                                                                        }
-                                                                    ],
-                                                                    "tag": {
-                                                                        "name": "Int64#",
-                                                                        "tag": "Data"
-                                                                    }
-                                                                },
-                                                                "scrutinee": {
-                                                                    "tag": "Var",
-                                                                    "variable": "_M9scrutinee42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal83"
-                                                                },
-                                                                "tag": "Destruct",
-                                                                "variables": [
-                                                                    "_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal64"
-                                                                ]
-                                                            }
-                                                        ]
-                                                    ],
-                                                    "default": {
-                                                        "tag": "Error",
-                                                        "type": {
-                                                            "constructors": [
-                                                                {
-                                                                    "parameters": [],
-                                                                    "tag": {
-                                                                        "tag": "Tuple"
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    },
-                                                    "scrutinee": {
-                                                        "tag": "Var",
-                                                        "variable": "_M9scrutinee42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal83"
-                                                    },
-                                                    "tag": "Switch"
-                                                },
-                                                "expression": {
-                                                    "tag": "Cast",
-                                                    "type": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [
+                                                    "body": {
+                                                        "body": {
+                                                            "tag": "Cast",
+                                                            "type": {
+                                                                "constructors": [
                                                                     {
-                                                                        "tag": "Int64T"
+                                                                        "parameters": [],
+                                                                        "tag": {
+                                                                            "tag": "Tuple"
+                                                                        }
                                                                     }
                                                                 ],
-                                                                "tag": {
-                                                                    "name": "Int64#",
-                                                                    "tag": "Data"
-                                                                }
+                                                                "tag": "SumT"
+                                                            },
+                                                            "value": {
+                                                                "tag": "Var",
+                                                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal67"
                                                             }
-                                                        ],
-                                                        "tag": "SumT"
+                                                        },
+                                                        "expression": {
+                                                            "arguments": [
+                                                                {
+                                                                    "tag": "Var",
+                                                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal66"
+                                                                }
+                                                            ],
+                                                            "callee": {
+                                                                "tag": "Var",
+                                                                "variable": "_M15printString_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            },
+                                                            "tag": "Call"
+                                                        },
+                                                        "tag": "Assign",
+                                                        "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal67"
                                                     },
-                                                    "value": {
-                                                        "tag": "Var",
-                                                        "variable": "_M9int64_x2342test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal63"
+                                                    "expression": {
+                                                        "body": {
+                                                            "tag": "Cast",
+                                                            "type": {
+                                                                "tag": "StringT"
+                                                            },
+                                                            "value": {
+                                                                "tag": "Var",
+                                                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal65"
+                                                            }
+                                                        },
+                                                        "expression": {
+                                                            "arguments": [
+                                                                {
+                                                                    "tag": "Var",
+                                                                    "variable": "_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal64"
+                                                                }
+                                                            ],
+                                                            "callee": {
+                                                                "tag": "Var",
+                                                                "variable": "_M17toStringInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            },
+                                                            "tag": "Call"
+                                                        },
+                                                        "tag": "Assign",
+                                                        "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal65"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal66"
+                                                },
+                                                "constructor": {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "Int64T"
+                                                        }
+                                                    ],
+                                                    "tag": {
+                                                        "name": "Int64#",
+                                                        "tag": "Data"
                                                     }
                                                 },
-                                                "tag": "Assign",
-                                                "variable": "_M9scrutinee42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal83"
-                                            },
-                                            "parameters": [
-                                                "_M9int64_x2342test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal63"
-                                            ],
-                                            "tag": "Fun"
-                                        },
-                                        "type": {
-                                            "parameters": [
-                                                {
-                                                    "tag": "AnyT"
-                                                }
-                                            ],
-                                            "returns": {
+                                                "tag": "Unpack",
+                                                "variables": [
+                                                    "_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal64"
+                                                ]
+                                            }
+                                        ],
+                                        "scrutinee": {
+                                            "tag": "Cast",
+                                            "type": {
                                                 "constructors": [
                                                     {
-                                                        "parameters": [],
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "Int64T"
+                                                            }
+                                                        ],
                                                         "tag": {
-                                                            "tag": "Tuple"
+                                                            "name": "Int64#",
+                                                            "tag": "Data"
                                                         }
                                                     }
                                                 ],
                                                 "tag": "SumT"
                                             },
-                                            "tag": "FuncT"
-                                        },
-                                        "variable": "_M3fun42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal68"
-                                    }
-                                ],
-                                "body": {
-                                    "body": {
-                                        "tag": "Cast",
-                                        "type": {
-                                            "constructors": [
-                                                {
-                                                    "parameters": [],
-                                                    "tag": {
-                                                        "tag": "Tuple"
-                                                    }
-                                                }
-                                            ],
-                                            "tag": "SumT"
-                                        },
-                                        "value": {
-                                            "tag": "Var",
-                                            "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal70"
-                                        }
-                                    },
-                                    "expression": {
-                                        "arguments": [
-                                            {
+                                            "value": {
                                                 "tag": "Var",
-                                                "variable": "_M3fun42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal68"
+                                                "variable": "_M9int64_x2342test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal63"
                                             }
-                                        ],
-                                        "callee": {
-                                            "tag": "Var",
-                                            "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal62"
                                         },
-                                        "tag": "Call"
+                                        "tag": "Match"
                                     },
-                                    "tag": "Assign",
-                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal70"
+                                    "parameters": [
+                                        "_M9int64_x2342test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal63"
+                                    ],
+                                    "tag": "Fun"
                                 },
-                                "tag": "Let"
-                            },
-                            "expression": {
-                                "tag": "Cast",
                                 "type": {
                                     "parameters": [
                                         {
-                                            "parameters": [
-                                                {
-                                                    "tag": "AnyT"
-                                                }
-                                            ],
-                                            "returns": {
-                                                "constructors": [
-                                                    {
-                                                        "parameters": [],
-                                                        "tag": {
-                                                            "tag": "Tuple"
-                                                        }
-                                                    }
-                                                ],
-                                                "tag": "SumT"
-                                            },
-                                            "tag": "FuncT"
+                                            "tag": "AnyT"
                                         }
                                     ],
                                     "returns": {
@@ -439,13 +363,64 @@
                                     },
                                     "tag": "FuncT"
                                 },
-                                "value": {
-                                    "tag": "Var",
-                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal61"
-                                }
+                                "variable": "_M3fun42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal68"
+                            }
+                        ],
+                        "body": {
+                            "atom": {
+                                "tag": "Var",
+                                "variable": "_M3fun42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal68"
                             },
-                            "tag": "Assign",
-                            "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal62"
+                            "tag": "Atom"
+                        },
+                        "tag": "Let"
+                    },
+                    "tag": "Assign",
+                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal69"
+                },
+                "expression": {
+                    "body": {
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "parameters": [
+                                    {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                ],
+                                "returns": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                },
+                                "tag": "FuncT"
+                            },
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal61"
+                            }
                         },
                         "expression": {
                             "arguments": [
@@ -464,36 +439,40 @@
                         "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal61"
                     },
                     "expression": {
-                        "tag": "Cast",
-                        "type": {
-                            "tag": "AnyT"
+                        "body": {
+                            "tag": "Cast",
+                            "type": {
+                                "tag": "AnyT"
+                            },
+                            "value": {
+                                "tag": "Var",
+                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal59"
+                            }
                         },
-                        "value": {
-                            "tag": "Var",
-                            "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal59"
-                        }
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "literal": {
+                                        "contents": 1,
+                                        "tag": "Int64"
+                                    },
+                                    "tag": "Unboxed"
+                                }
+                            ],
+                            "callee": {
+                                "tag": "Var",
+                                "variable": "_M9Int64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal59"
                     },
                     "tag": "Assign",
                     "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal60"
                 },
-                "expression": {
-                    "arguments": [
-                        {
-                            "literal": {
-                                "contents": 1,
-                                "tag": "Int64"
-                            },
-                            "tag": "Unboxed"
-                        }
-                    ],
-                    "callee": {
-                        "tag": "Var",
-                        "variable": "_M9Int64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
-                    },
-                    "tag": "Call"
-                },
                 "tag": "Assign",
-                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal59"
+                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal62"
             }
         ],
         [
@@ -531,33 +510,33 @@
                                             "body": {
                                                 "body": {
                                                     "body": {
-                                                        "body": {
-                                                            "tag": "Cast",
-                                                            "type": {
-                                                                "tag": "Int64T"
-                                                            },
-                                                            "value": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal81"
-                                                            }
+                                                        "tag": "Cast",
+                                                        "type": {
+                                                            "tag": "Int64T"
                                                         },
-                                                        "expression": {
-                                                            "arguments": [
-                                                                {
-                                                                    "tag": "Var",
-                                                                    "variable": "_M1y42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal78"
-                                                                }
-                                                            ],
-                                                            "callee": {
-                                                                "tag": "Var",
-                                                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal80"
-                                                            },
-                                                            "tag": "Call"
-                                                        },
-                                                        "tag": "Assign",
-                                                        "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal81"
+                                                        "value": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal81"
+                                                        }
                                                     },
                                                     "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1y42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal78"
+                                                            }
+                                                        ],
+                                                        "callee": {
+                                                            "tag": "Var",
+                                                            "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal80"
+                                                        },
+                                                        "tag": "Call"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal81"
+                                                },
+                                                "expression": {
+                                                    "body": {
                                                         "tag": "Cast",
                                                         "type": {
                                                             "parameters": [
@@ -575,24 +554,24 @@
                                                             "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal79"
                                                         }
                                                     },
-                                                    "tag": "Assign",
-                                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal80"
-                                                },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
+                                                    "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": "_M1x42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal77"
+                                                            }
+                                                        ],
+                                                        "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M1x42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal77"
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": "_M12addInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": "_M12addInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                        },
+                                                        "tag": "Call"
                                                     },
-                                                    "tag": "Call"
+                                                    "tag": "Assign",
+                                                    "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal79"
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal79"
+                                                "variable": "_M1d42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal80"
                                             },
                                             "parameters": [
                                                 "_M1x42test_x2Ftestcases_x2Fmalgo_x2FTest0_x2Emlg10Temporal77",

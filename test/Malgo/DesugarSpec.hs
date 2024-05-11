@@ -3,8 +3,6 @@ module Malgo.DesugarSpec (spec) where
 import Data.Aeson.Encode.Pretty qualified as Aeson
 import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
-import Effectful.Reader.Static (runReader)
-import Malgo.Core.Flat qualified as Flat
 import Malgo.Core.Mangle
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
@@ -14,7 +12,6 @@ import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
-import Malgo.Syntax
 import Malgo.TestUtils
 import System.Directory
 import System.FilePath
@@ -39,5 +36,4 @@ driveDesugar srcPath = do
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (_, core) <- desugar tcEnv refined
-    core <- runReader refined.moduleName $ Flat.normalize core
     pure $ Aeson.encodePretty $ mangleProgram core

@@ -59,10 +59,6 @@ pub enum Expr {
         callee: Atom,
         arguments: Vec<Atom>,
     },
-    CallDirect {
-        callee: name::Name,
-        arguments: Vec<Atom>,
-    },
     RawCall {
         name: String,
         #[serde(rename = "type")]
@@ -81,27 +77,6 @@ pub enum Expr {
     Match {
         scrutinee: Box<Expr>,
         clauses: Vec<Case>,
-    },
-    Switch {
-        scrutinee: Atom,
-        clauses: Vec<(Tag, Expr)>,
-        default: Box<Expr>,
-    },
-    SwitchUnboxed {
-        scrutinee: Atom,
-        clauses: Vec<(Unboxed, Expr)>,
-        default: Box<Expr>,
-    },
-    Destruct {
-        scrutinee: Atom,
-        constructor: Con,
-        variables: Vec<name::Name>,
-        body: Box<Expr>,
-    },
-    DestructRecord {
-        scrutinee: Atom,
-        fields: BTreeMap<String, name::Name>,
-        body: Box<Expr>,
     },
     Assign {
         variable: name::Name,

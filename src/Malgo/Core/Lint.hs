@@ -66,7 +66,7 @@ isMatch x y
   | typeOf x == typeOf y = True
   | otherwise = False
 
-match :: (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> f ()
+match :: HasCallStack => (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> f ()
 match x y
   | isMatch x y = pass
   | otherwise =
