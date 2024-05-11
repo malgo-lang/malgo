@@ -4,6 +4,8 @@ mod name;
 
 mod syntax;
 
+mod closure;
+
 fn main() -> io::Result<()> {
     // Read the stdin until EOF is reached
     let mut input = String::new();
