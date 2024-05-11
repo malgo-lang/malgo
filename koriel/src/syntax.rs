@@ -1,11 +1,11 @@
-use crate::name;
+use crate::name::Name;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Program {
-    pub variables: Vec<(name::Name, Type, Expr)>,
-    pub functions: Vec<(name::Name, Vec<name::Name>, Type, Expr)>,
+    pub variables: Vec<(Name, Type, Expr)>,
+    pub functions: Vec<(Name, Vec<Name>, Type, Expr)>,
     pub externals: Vec<(String, Type)>,
 }
 
@@ -79,7 +79,7 @@ pub enum Expr {
         clauses: Vec<Case>,
     },
     Assign {
-        variable: name::Name,
+        variable: Name,
         expression: Box<Expr>,
         body: Box<Expr>,
     },
@@ -92,7 +92,7 @@ pub enum Expr {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "tag")]
 pub enum Atom {
-    Var { variable: name::Name },
+    Var { variable: Name },
     Unboxed { literal: Unboxed },
 }
 
@@ -110,7 +110,7 @@ pub enum Unboxed {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct LocalDef {
-    pub variable: name::Name,
+    pub variable: Name,
     #[serde(rename = "type")]
     pub typ: Type,
     pub object: Obj,
@@ -121,11 +121,11 @@ pub struct LocalDef {
 pub enum Case {
     Unpack {
         constructor: Con,
-        variables: Vec<name::Name>,
+        variables: Vec<Name>,
         body: Expr,
     },
     OpenRecord {
-        fields: BTreeMap<String, name::Name>,
+        fields: BTreeMap<String, Name>,
         body: Expr,
     },
     Exact {
@@ -133,7 +133,7 @@ pub enum Case {
         body: Expr,
     },
     Bind {
-        variable: name::Name,
+        variable: Name,
         #[serde(rename = "type")]
         typ: Type,
         body: Expr,
@@ -144,7 +144,7 @@ pub enum Case {
 #[serde(tag = "tag")]
 pub enum Obj {
     Fun {
-        parameters: Vec<name::Name>,
+        parameters: Vec<Name>,
         body: Expr,
     },
     Pack {

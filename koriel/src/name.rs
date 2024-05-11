@@ -1,11 +1,52 @@
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 use unicode_xid::UnicodeXID;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Sort {
+    External,
+    Internal(u64),
+    Temporal(u64),
+    Native,
+}
+
+impl ToString for Sort {
+    fn to_string(&self) -> String {
+        match self {
+            Sort::External => "External".to_string(),
+            Sort::Internal(x) => format!("Internal{}", x),
+            Sort::Temporal(x) => format!("Temporal{}", x),
+            Sort::Native => "Native".to_string(),
+        }
+    }
+}
+
+impl FromStr for Sort {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == "External" {
+            Ok(Sort::External)
+        } else if s == "Native" {
+            Ok(Sort::Native)
+        } else if s.starts_with("Internal") {
+            let x = s.trim_start_matches("Internal").parse().unwrap();
+            Ok(Sort::Internal(x))
+        } else if s.starts_with("Temporal") {
+            let x = s.trim_start_matches("Temporal").parse().unwrap();
+            Ok(Sort::Temporal(x))
+        } else {
+            Err(format!("Invalid sort: {}", s))
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Name {
     pub name: String,
     pub path: String,
-    pub sort: String,
+    pub sort: Sort,
 }
 
 impl<'de> Deserialize<'de> for Name {
@@ -20,10 +61,11 @@ impl<'de> Deserialize<'de> for Name {
 
         assert_eq!(replaced.len(), 3);
 
+        let sort = Sort::from_str(&replaced[2]).unwrap();
         Ok(Name {
             name: replaced[0].clone(),
             path: replaced[1].clone(),
-            sort: replaced[2].clone(),
+            sort,
         })
     }
 }
@@ -102,7 +144,8 @@ impl Serialize for Name {
     where
         S: serde::Serializer,
     {
-        let msgs = vec![self.name.clone(), self.path.clone(), self.sort.clone()];
+        let sort = self.sort.to_string();
+        let msgs = vec![self.name.clone(), self.path.clone(), sort];
         let underscore_replaced = msgs
             .iter()
             .map(|c| {
