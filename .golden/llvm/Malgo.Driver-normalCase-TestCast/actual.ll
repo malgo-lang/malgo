@@ -165,7 +165,7 @@ declare ptr @malgo_read_vector(i64, ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @_M14let_x5Fclosure45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg12Internal2848(ptr %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg12Internal3637(ptr %0, ptr %1) {
   %p_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
   %p_0 = load i64, ptr %p_addr_0, align 4
   %3 = call ptr @malgo_new_vector(i64 %p_0, ptr %1)
@@ -180,11 +180,11 @@ define internal ptr @_M22malgo_x5Fnew_x5Fvector45test_x2Ftestcases_x2Fmalgo_x2FT
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg12Internal2848, ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg12Internal3637, ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal ptr @_M14let_x5Fclosure45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg12Internal2849(ptr %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg12Internal3638(ptr %0, ptr %1) {
   %p_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
   %p_0 = load i64, ptr %p_addr_0, align 4
   %3 = call ptr @malgo_read_vector(i64 %p_0, ptr %1)
@@ -199,7 +199,7 @@ define internal ptr @_M23malgo_x5Fread_x5Fvector45test_x2Ftestcases_x2Fmalgo_x2F
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg12Internal2849, ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg12Internal3638, ptr %let_func_0, align 8
   ret ptr %2
 }
 

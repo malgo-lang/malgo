@@ -37,104 +37,6 @@
     ],
     "functions": [
         [
-            "_M32malgo_x5Fread_x5Fvector_x5Fcurry45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal35",
-            [
-                "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal36",
-                "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal37"
-            ],
-            {
-                "parameters": [
-                    {
-                        "tag": "Int64T"
-                    },
-                    {
-                        "tag": "AnyT"
-                    }
-                ],
-                "returns": {
-                    "tag": "AnyT"
-                },
-                "tag": "FuncT"
-            },
-            {
-                "arguments": [
-                    {
-                        "tag": "Var",
-                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal36"
-                    },
-                    {
-                        "tag": "Var",
-                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal37"
-                    }
-                ],
-                "name": "malgo_read_vector",
-                "tag": "RawCall",
-                "type": {
-                    "parameters": [
-                        {
-                            "tag": "Int64T"
-                        },
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
-                    "returns": {
-                        "tag": "AnyT"
-                    },
-                    "tag": "FuncT"
-                }
-            }
-        ],
-        [
-            "_M31malgo_x5Fnew_x5Fvector_x5Fcurry45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal29",
-            [
-                "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal30",
-                "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal31"
-            ],
-            {
-                "parameters": [
-                    {
-                        "tag": "Int64T"
-                    },
-                    {
-                        "tag": "AnyT"
-                    }
-                ],
-                "returns": {
-                    "tag": "AnyT"
-                },
-                "tag": "FuncT"
-            },
-            {
-                "arguments": [
-                    {
-                        "tag": "Var",
-                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal30"
-                    },
-                    {
-                        "tag": "Var",
-                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal31"
-                    }
-                ],
-                "name": "malgo_new_vector",
-                "tag": "RawCall",
-                "type": {
-                    "parameters": [
-                        {
-                            "tag": "Int64T"
-                        },
-                        {
-                            "tag": "AnyT"
-                        }
-                    ],
-                    "returns": {
-                        "tag": "AnyT"
-                    },
-                    "tag": "FuncT"
-                }
-            }
-        ],
-        [
             "_M22malgo_x5Fnew_x5Fvector45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg8External",
             [
                 "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal27"
@@ -163,18 +65,78 @@
                     {
                         "object": {
                             "body": {
-                                "arguments": [
+                                "bindings": [
                                     {
-                                        "tag": "Var",
-                                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal27"
-                                    },
-                                    {
-                                        "tag": "Var",
-                                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal28"
+                                        "object": {
+                                            "body": {
+                                                "arguments": [
+                                                    {
+                                                        "tag": "Var",
+                                                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal30"
+                                                    },
+                                                    {
+                                                        "tag": "Var",
+                                                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal31"
+                                                    }
+                                                ],
+                                                "name": "malgo_new_vector",
+                                                "tag": "RawCall",
+                                                "type": {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "Int64T"
+                                                        },
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            },
+                                            "parameters": [
+                                                "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal30",
+                                                "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal31"
+                                            ],
+                                            "tag": "Fun"
+                                        },
+                                        "type": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "Int64T"
+                                                },
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        },
+                                        "variable": "_M31malgo_x5Fnew_x5Fvector_x5Fcurry45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal29"
                                     }
                                 ],
-                                "callee": "_M31malgo_x5Fnew_x5Fvector_x5Fcurry45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal29",
-                                "tag": "CallDirect"
+                                "body": {
+                                    "arguments": [
+                                        {
+                                            "tag": "Var",
+                                            "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal27"
+                                        },
+                                        {
+                                            "tag": "Var",
+                                            "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal28"
+                                        }
+                                    ],
+                                    "callee": {
+                                        "tag": "Var",
+                                        "variable": "_M31malgo_x5Fnew_x5Fvector_x5Fcurry45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal29"
+                                    },
+                                    "tag": "Call"
+                                },
+                                "tag": "Let"
                             },
                             "parameters": [
                                 "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal28"
@@ -234,18 +196,78 @@
                     {
                         "object": {
                             "body": {
-                                "arguments": [
+                                "bindings": [
                                     {
-                                        "tag": "Var",
-                                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal33"
-                                    },
-                                    {
-                                        "tag": "Var",
-                                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal34"
+                                        "object": {
+                                            "body": {
+                                                "arguments": [
+                                                    {
+                                                        "tag": "Var",
+                                                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal36"
+                                                    },
+                                                    {
+                                                        "tag": "Var",
+                                                        "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal37"
+                                                    }
+                                                ],
+                                                "name": "malgo_read_vector",
+                                                "tag": "RawCall",
+                                                "type": {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "Int64T"
+                                                        },
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            },
+                                            "parameters": [
+                                                "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal36",
+                                                "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal37"
+                                            ],
+                                            "tag": "Fun"
+                                        },
+                                        "type": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "Int64T"
+                                                },
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        },
+                                        "variable": "_M32malgo_x5Fread_x5Fvector_x5Fcurry45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal35"
                                     }
                                 ],
-                                "callee": "_M32malgo_x5Fread_x5Fvector_x5Fcurry45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal35",
-                                "tag": "CallDirect"
+                                "body": {
+                                    "arguments": [
+                                        {
+                                            "tag": "Var",
+                                            "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal33"
+                                        },
+                                        {
+                                            "tag": "Var",
+                                            "variable": "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal34"
+                                        }
+                                    ],
+                                    "callee": {
+                                        "tag": "Var",
+                                        "variable": "_M32malgo_x5Fread_x5Fvector_x5Fcurry45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal35"
+                                    },
+                                    "tag": "Call"
+                                },
+                                "tag": "Let"
                             },
                             "parameters": [
                                 "_M1p45test_x2Ftestcases_x2Fmalgo_x2FTestCast_x2Emlg10Temporal34"

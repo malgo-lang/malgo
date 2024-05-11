@@ -1,9 +1,9 @@
 ; ModuleID = 'test/testcases/malgo/TestPolySynonym.mlg'
 source_filename = "test/testcases/malgo/TestPolySynonym.mlg"
 
-@str2837 = unnamed_addr constant [5 x i8] c"hoge\00"
-@str2838 = unnamed_addr constant [4 x i8] c"fst\00"
-@str2839 = unnamed_addr constant [4 x i8] c"snd\00"
+@str3624 = unnamed_addr constant [5 x i8] c"hoge\00"
+@str3625 = unnamed_addr constant [4 x i8] c"fst\00"
+@str3626 = unnamed_addr constant [4 x i8] c"snd\00"
 
 declare void @GC_init()
 
@@ -171,7 +171,7 @@ declare void @malgo_hash_table_insert(ptr, ptr, ptr)
 
 declare ptr @malgo_hash_table_get(ptr, ptr)
 
-define internal ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg12Internal2840(ptr %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg12Internal3627(ptr %0, ptr %1) {
   %p_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %p_0 = load ptr, ptr %p_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -192,12 +192,12 @@ define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Em
   %6 = getelementptr { i8, { ptr } }, ptr %5, i32 0, i32 0
   store i8 0, ptr %6, align 1
   %7 = getelementptr { i8, { ptr } }, ptr %5, i32 0, i32 1, i32 0
-  store ptr @str2837, ptr %7, align 8
+  store ptr @str3624, ptr %7, align 8
   %8 = call ptr @malgo_hash_table_new()
-  call void @malgo_hash_table_insert(ptr %8, ptr @str2838, ptr %2)
-  call void @malgo_hash_table_insert(ptr %8, ptr @str2839, ptr %5)
-  %9 = call ptr @malgo_hash_table_get(ptr %8, ptr @str2838)
-  %10 = call ptr @malgo_hash_table_get(ptr %8, ptr @str2839)
+  call void @malgo_hash_table_insert(ptr %8, ptr @str3625, ptr %2)
+  call void @malgo_hash_table_insert(ptr %8, ptr @str3626, ptr %5)
+  %9 = call ptr @malgo_hash_table_get(ptr %8, ptr @str3625)
+  %10 = call ptr @malgo_hash_table_get(ptr %8, ptr @str3626)
   %11 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
   %p_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
@@ -205,7 +205,7 @@ define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Em
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg12Internal2840, ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg12Internal3627, ptr %let_func_0, align 8
   %12 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 0
   %13 = load ptr, ptr %12, align 8
   %14 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 1
@@ -220,8 +220,8 @@ define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Em
 }
 
 define internal ptr @_M5first52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg8External(ptr %0, ptr %_M6record52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal40_0) {
-  %2 = call ptr @malgo_hash_table_get(ptr %_M6record52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal40_0, ptr @str2838)
-  %3 = call ptr @malgo_hash_table_get(ptr %_M6record52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal40_0, ptr @str2839)
+  %2 = call ptr @malgo_hash_table_get(ptr %_M6record52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal40_0, ptr @str3625)
+  %3 = call ptr @malgo_hash_table_get(ptr %_M6record52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg10Temporal40_0, ptr @str3626)
   ret ptr %2
 }
 

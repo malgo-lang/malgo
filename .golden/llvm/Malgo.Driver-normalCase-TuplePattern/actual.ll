@@ -1,7 +1,7 @@
 ; ModuleID = 'test/testcases/malgo/TuplePattern.mlg'
 source_filename = "test/testcases/malgo/TuplePattern.mlg"
 
-@str2836 = unnamed_addr constant [2 x i8] c"A\00"
+@str3623 = unnamed_addr constant [2 x i8] c"A\00"
 
 declare void @GC_init()
 
@@ -184,7 +184,7 @@ define internal ptr @_M1C49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8Ext
   ret ptr %2
 }
 
-define internal ptr @_M14let_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Internal2834(ptr %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Internal3621(ptr %0, ptr %1) {
   %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %cast_0 = load ptr, ptr %cast_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -195,8 +195,8 @@ define internal ptr @_M14let_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePatt
   ret ptr %7
 }
 
-define internal ptr @_M14fun_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Internal2835(ptr %0, ptr %1) {
-  %3 = call ptr @_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal2833(ptr null, ptr %1)
+define internal ptr @_M14fun_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Internal3622(ptr %0, ptr %1) {
+  %3 = call ptr @_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal3620(ptr null, ptr %1)
   ret ptr %3
 }
 
@@ -221,13 +221,13 @@ define internal ptr @_M4main49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %10, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %10, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Internal2834, ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Internal3621, ptr %let_func_0, align 8
   %11 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_1 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 0
   store ptr %fun_capture_0, ptr %fun_capture_1, align 8
   %fun_func_0 = getelementptr { ptr, ptr }, ptr %11, i32 0, i32 1
-  store ptr @_M14fun_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Internal2835, ptr %fun_func_0, align 8
+  store ptr @_M14fun_x5Fclosure49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Internal3622, ptr %fun_func_0, align 8
   %12 = getelementptr { ptr, ptr }, ptr %10, i32 0, i32 0
   %13 = load ptr, ptr %12, align 8
   %14 = getelementptr { ptr, ptr }, ptr %10, i32 0, i32 1
@@ -236,7 +236,7 @@ define internal ptr @_M4main49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg8
   ret ptr %16
 }
 
-define internal ptr @_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal2833(ptr %0, ptr %_M5tuple49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal37_0) {
+define internal ptr @_M10raw_x5Ffun49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg12Temporal3620(ptr %0, ptr %_M5tuple49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal37_0) {
   %2 = getelementptr { i8, <16 x i8> }, ptr %_M5tuple49test_x2Ftestcases_x2Fmalgo_x2FTuplePattern_x2Emlg10Temporal37_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_2 [
@@ -262,7 +262,7 @@ switch_branch_A_0:                                ; preds = %"switch_branch_Tupl
   %12 = getelementptr { i8, { ptr } }, ptr %11, i32 0, i32 0
   store i8 0, ptr %12, align 1
   %13 = getelementptr { i8, { ptr } }, ptr %11, i32 0, i32 1, i32 0
-  store ptr @str2836, ptr %13, align 8
+  store ptr @str3623, ptr %13, align 8
   %14 = getelementptr { i8, <8 x i8> }, ptr %11, i32 0, i32 0
   %15 = load i8, ptr %14, align 1
   switch i8 %15, label %switch_default_0 [

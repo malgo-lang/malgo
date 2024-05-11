@@ -3,10 +3,10 @@ source_filename = "test/testcases/malgo/FieldPrefix.mlg"
 
 @_M6zero3D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External = local_unnamed_addr global ptr undef
 @_M6zero2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External = local_unnamed_addr global ptr undef
-@str2924 = unnamed_addr constant [2 x i8] c"x\00"
-@str2925 = unnamed_addr constant [2 x i8] c"y\00"
-@str2926 = unnamed_addr constant [3 x i8] c", \00"
-@str2931 = unnamed_addr constant [2 x i8] c"z\00"
+@str3707 = unnamed_addr constant [2 x i8] c"x\00"
+@str3708 = unnamed_addr constant [2 x i8] c"y\00"
+@str3709 = unnamed_addr constant [3 x i8] c", \00"
+@str3714 = unnamed_addr constant [2 x i8] c"z\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -33,9 +33,9 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %7 = getelementptr { i8, { float } }, ptr %6, i64 0, i32 1, i32 0
   store float 0.000000e+00, ptr %7, align 4
   %8 = tail call ptr @malgo_hash_table_new()
-  tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str2924, ptr noundef nonnull %2)
-  tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str2925, ptr noundef nonnull %4)
-  tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str2931, ptr noundef nonnull %6)
+  tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str3707, ptr noundef nonnull %2)
+  tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str3708, ptr noundef nonnull %4)
+  tail call void @malgo_hash_table_insert(ptr %8, ptr noundef nonnull @str3714, ptr noundef nonnull %6)
   store ptr %8, ptr @_M6zero3D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External, align 8
   %9 = tail call ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %9, align 1
@@ -46,14 +46,14 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %12 = getelementptr { i8, { i32 } }, ptr %11, i64 0, i32 1, i32 0
   store i32 0, ptr %12, align 4
   %13 = tail call ptr @malgo_hash_table_new()
-  tail call void @malgo_hash_table_insert(ptr %13, ptr noundef nonnull @str2924, ptr noundef nonnull %9)
-  tail call void @malgo_hash_table_insert(ptr %13, ptr noundef nonnull @str2925, ptr noundef nonnull %11)
+  tail call void @malgo_hash_table_insert(ptr %13, ptr noundef nonnull @str3707, ptr noundef nonnull %9)
+  tail call void @malgo_hash_table_insert(ptr %13, ptr noundef nonnull @str3708, ptr noundef nonnull %11)
   store ptr %13, ptr @_M6zero2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External, align 8
   %14 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %14, align 1
   %15 = load ptr, ptr @_M6zero2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External, align 8
-  %16 = tail call ptr @malgo_hash_table_get(ptr %15, ptr noundef nonnull @str2924)
-  %17 = tail call ptr @malgo_hash_table_get(ptr %15, ptr noundef nonnull @str2925)
+  %16 = tail call ptr @malgo_hash_table_get(ptr %15, ptr noundef nonnull @str3707)
+  %17 = tail call ptr @malgo_hash_table_get(ptr %15, ptr noundef nonnull @str3708)
   %18 = getelementptr { i8, { i32 } }, ptr %16, i64 0, i32 1
   %19 = load i32, ptr %18, align 4
   %20 = tail call ptr @malgo_int32_t_to_string(i32 %19)
@@ -65,8 +65,8 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %24 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %24, align 1
   %25 = getelementptr { i8, { ptr } }, ptr %24, i64 0, i32 1, i32 0
-  store ptr @str2926, ptr %25, align 8
-  %26 = tail call ptr @malgo_print_string(ptr noundef nonnull @str2926)
+  store ptr @str3709, ptr %25, align 8
+  %26 = tail call ptr @malgo_print_string(ptr noundef nonnull @str3709)
   %27 = getelementptr { i8, { i32 } }, ptr %17, i64 0, i32 1
   %28 = load i32, ptr %27, align 4
   %29 = tail call ptr @malgo_int32_t_to_string(i32 %28)

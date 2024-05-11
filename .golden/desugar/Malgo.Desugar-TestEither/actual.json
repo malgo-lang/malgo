@@ -2,196 +2,6 @@
     "externals": [],
     "functions": [
         [
-            "_M16andThen_x5Fcurry47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal260",
-            [
-                "_M4_x5F47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal261",
-                "_M4left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal262"
-            ],
-            {
-                "parameters": [
-                    {
-                        "parameters": [
-                            {
-                                "tag": "AnyT"
-                            }
-                        ],
-                        "returns": {
-                            "tag": "AnyT"
-                        },
-                        "tag": "FuncT"
-                    },
-                    {
-                        "tag": "AnyT"
-                    }
-                ],
-                "returns": {
-                    "tag": "AnyT"
-                },
-                "tag": "FuncT"
-            },
-            {
-                "body": {
-                    "clauses": [
-                        [
-                            {
-                                "name": "Left",
-                                "tag": "Data"
-                            },
-                            {
-                                "body": {
-                                    "body": {
-                                        "tag": "Cast",
-                                        "type": {
-                                            "tag": "AnyT"
-                                        },
-                                        "value": {
-                                            "tag": "Var",
-                                            "variable": "_M1d47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal264"
-                                        }
-                                    },
-                                    "expression": {
-                                        "arguments": [
-                                            {
-                                                "tag": "Var",
-                                                "variable": "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal263"
-                                            }
-                                        ],
-                                        "callee": {
-                                            "tag": "Var",
-                                            "variable": "_M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External"
-                                        },
-                                        "tag": "Call"
-                                    },
-                                    "tag": "Assign",
-                                    "variable": "_M1d47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal264"
-                                },
-                                "constructor": {
-                                    "parameters": [
-                                        {
-                                            "tag": "AnyT"
-                                        }
-                                    ],
-                                    "tag": {
-                                        "name": "Left",
-                                        "tag": "Data"
-                                    }
-                                },
-                                "scrutinee": {
-                                    "tag": "Var",
-                                    "variable": "_M9scrutinee47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal374"
-                                },
-                                "tag": "Destruct",
-                                "variables": [
-                                    "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal263"
-                                ]
-                            }
-                        ],
-                        [
-                            {
-                                "name": "Right",
-                                "tag": "Data"
-                            },
-                            {
-                                "body": {
-                                    "body": {
-                                        "tag": "Cast",
-                                        "type": {
-                                            "tag": "AnyT"
-                                        },
-                                        "value": {
-                                            "tag": "Var",
-                                            "variable": "_M1d47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal266"
-                                        }
-                                    },
-                                    "expression": {
-                                        "arguments": [
-                                            {
-                                                "tag": "Var",
-                                                "variable": "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal265"
-                                            }
-                                        ],
-                                        "callee": {
-                                            "tag": "Var",
-                                            "variable": "_M4_x5F47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal261"
-                                        },
-                                        "tag": "Call"
-                                    },
-                                    "tag": "Assign",
-                                    "variable": "_M1d47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal266"
-                                },
-                                "constructor": {
-                                    "parameters": [
-                                        {
-                                            "tag": "AnyT"
-                                        }
-                                    ],
-                                    "tag": {
-                                        "name": "Right",
-                                        "tag": "Data"
-                                    }
-                                },
-                                "scrutinee": {
-                                    "tag": "Var",
-                                    "variable": "_M9scrutinee47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal374"
-                                },
-                                "tag": "Destruct",
-                                "variables": [
-                                    "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal265"
-                                ]
-                            }
-                        ]
-                    ],
-                    "default": {
-                        "tag": "Error",
-                        "type": {
-                            "tag": "AnyT"
-                        }
-                    },
-                    "scrutinee": {
-                        "tag": "Var",
-                        "variable": "_M9scrutinee47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal374"
-                    },
-                    "tag": "Switch"
-                },
-                "expression": {
-                    "tag": "Cast",
-                    "type": {
-                        "constructors": [
-                            {
-                                "parameters": [
-                                    {
-                                        "tag": "AnyT"
-                                    }
-                                ],
-                                "tag": {
-                                    "name": "Left",
-                                    "tag": "Data"
-                                }
-                            },
-                            {
-                                "parameters": [
-                                    {
-                                        "tag": "AnyT"
-                                    }
-                                ],
-                                "tag": {
-                                    "name": "Right",
-                                    "tag": "Data"
-                                }
-                            }
-                        ],
-                        "tag": "SumT"
-                    },
-                    "value": {
-                        "tag": "Var",
-                        "variable": "_M4left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal262"
-                    }
-                },
-                "tag": "Assign",
-                "variable": "_M9scrutinee47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal374"
-            }
-        ],
-        [
             "_M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External",
             [
                 "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal249"
@@ -470,18 +280,219 @@
                     {
                         "object": {
                             "body": {
-                                "arguments": [
+                                "bindings": [
                                     {
-                                        "tag": "Var",
-                                        "variable": "_M4_x5F47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal254"
-                                    },
-                                    {
-                                        "tag": "Var",
-                                        "variable": "_M4left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal255"
+                                        "object": {
+                                            "body": {
+                                                "body": {
+                                                    "clauses": [
+                                                        [
+                                                            {
+                                                                "name": "Left",
+                                                                "tag": "Data"
+                                                            },
+                                                            {
+                                                                "body": {
+                                                                    "body": {
+                                                                        "tag": "Cast",
+                                                                        "type": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "value": {
+                                                                            "tag": "Var",
+                                                                            "variable": "_M1d47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal264"
+                                                                        }
+                                                                    },
+                                                                    "expression": {
+                                                                        "arguments": [
+                                                                            {
+                                                                                "tag": "Var",
+                                                                                "variable": "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal263"
+                                                                            }
+                                                                        ],
+                                                                        "callee": {
+                                                                            "tag": "Var",
+                                                                            "variable": "_M4Left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg8External"
+                                                                        },
+                                                                        "tag": "Call"
+                                                                    },
+                                                                    "tag": "Assign",
+                                                                    "variable": "_M1d47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal264"
+                                                                },
+                                                                "constructor": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "tag": {
+                                                                        "name": "Left",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                "scrutinee": {
+                                                                    "tag": "Var",
+                                                                    "variable": "_M9scrutinee47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal374"
+                                                                },
+                                                                "tag": "Destruct",
+                                                                "variables": [
+                                                                    "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal263"
+                                                                ]
+                                                            }
+                                                        ],
+                                                        [
+                                                            {
+                                                                "name": "Right",
+                                                                "tag": "Data"
+                                                            },
+                                                            {
+                                                                "body": {
+                                                                    "body": {
+                                                                        "tag": "Cast",
+                                                                        "type": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "value": {
+                                                                            "tag": "Var",
+                                                                            "variable": "_M1d47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal266"
+                                                                        }
+                                                                    },
+                                                                    "expression": {
+                                                                        "arguments": [
+                                                                            {
+                                                                                "tag": "Var",
+                                                                                "variable": "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal265"
+                                                                            }
+                                                                        ],
+                                                                        "callee": {
+                                                                            "tag": "Var",
+                                                                            "variable": "_M4_x5F47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal261"
+                                                                        },
+                                                                        "tag": "Call"
+                                                                    },
+                                                                    "tag": "Assign",
+                                                                    "variable": "_M1d47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal266"
+                                                                },
+                                                                "constructor": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "tag": {
+                                                                        "name": "Right",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                "scrutinee": {
+                                                                    "tag": "Var",
+                                                                    "variable": "_M9scrutinee47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal374"
+                                                                },
+                                                                "tag": "Destruct",
+                                                                "variables": [
+                                                                    "_M1p47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal265"
+                                                                ]
+                                                            }
+                                                        ]
+                                                    ],
+                                                    "default": {
+                                                        "tag": "Error",
+                                                        "type": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    },
+                                                    "scrutinee": {
+                                                        "tag": "Var",
+                                                        "variable": "_M9scrutinee47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal374"
+                                                    },
+                                                    "tag": "Switch"
+                                                },
+                                                "expression": {
+                                                    "tag": "Cast",
+                                                    "type": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "tag": {
+                                                                    "name": "Left",
+                                                                    "tag": "Data"
+                                                                }
+                                                            },
+                                                            {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "tag": {
+                                                                    "name": "Right",
+                                                                    "tag": "Data"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    },
+                                                    "value": {
+                                                        "tag": "Var",
+                                                        "variable": "_M4left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal262"
+                                                    }
+                                                },
+                                                "tag": "Assign",
+                                                "variable": "_M9scrutinee47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal374"
+                                            },
+                                            "parameters": [
+                                                "_M4_x5F47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal261",
+                                                "_M4left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal262"
+                                            ],
+                                            "tag": "Fun"
+                                        },
+                                        "type": {
+                                            "parameters": [
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                },
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        },
+                                        "variable": "_M16andThen_x5Fcurry47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal260"
                                     }
                                 ],
-                                "callee": "_M16andThen_x5Fcurry47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal260",
-                                "tag": "CallDirect"
+                                "body": {
+                                    "arguments": [
+                                        {
+                                            "tag": "Var",
+                                            "variable": "_M4_x5F47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal254"
+                                        },
+                                        {
+                                            "tag": "Var",
+                                            "variable": "_M4left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal255"
+                                        }
+                                    ],
+                                    "callee": {
+                                        "tag": "Var",
+                                        "variable": "_M16andThen_x5Fcurry47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal260"
+                                    },
+                                    "tag": "Call"
+                                },
+                                "tag": "Let"
                             },
                             "parameters": [
                                 "_M4left47test_x2Ftestcases_x2Fmalgo_x2FTestEither_x2Emlg11Temporal255"

@@ -109,12 +109,12 @@ dsScDef (Typed typ _, name, expr) = do
       pure [VarDef name' typ' expr']
     dsFunDef name (G.Fn _ cs) = do
       name' <- lookupName name
-      (ps, e) <- fnToObj True name.name cs
+      (ps, e) <- fnToObj name.name cs
       pure [FunDef name' ps (C.typeOf name') e]
     dsFunDef name expr = do
       name' <- lookupName name
       typ' <- dsType typ
-      (ps, e) <- curryFun True name.name [] =<< runDef (fmap Atom (cast typ' =<< dsExpr expr))
+      (ps, e) <- curryFun name.name [] =<< runDef (fmap Atom (cast typ' =<< dsExpr expr))
       pure [FunDef name' ps (C.typeOf name') e]
 
 fnToObj ::
@@ -122,11 +122,10 @@ fnToObj ::
     Reader ModuleName :> es,
     State DsState :> es
   ) =>
-  Bool ->
   Text ->
   NonEmpty (Clause (Malgo Refine)) ->
   Eff es ([Meta C.Type], C.Expr (Meta C.Type))
-fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
+fnToObj hint cs@(Clause _ ps e :| _) = do
   ps' <- traverse (\p -> withMeta <$> dsType (GT.typeOf p) <*> newTemporalId (patToName p)) ps
   eType <- dsType (GT.typeOf e)
   -- destruct Clauses
@@ -138,7 +137,7 @@ fnToObj isToplevel hint cs@(Clause _ ps e :| _) = do
         )
         cs
   body <- match ps' (patMatrix $ toList pss) (toList es) (Error eType)
-  curryFun isToplevel hint ps' body
+  curryFun hint ps' body
 
 patToName :: Pat (Malgo 'Refine) -> Text
 patToName (G.VarP _ v) = v.name
@@ -161,7 +160,7 @@ dsForeign (Typed typ (_, primName), name, _) = do
   paramTypes' <- traverse dsType paramTypes
   retType <- dsType retType
   params <- traverse (\t -> withMeta t <$> newTemporalId "p") paramTypes'
-  (ps, e) <- curryFun True name.name params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
+  (ps, e) <- curryFun name.name params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
   modify \s@DsState {..} -> s {_nameEnv = Map.insert name name' _nameEnv}
   pure [FunDef name' ps (C.typeOf name') e, ExtDef primName (paramTypes' :-> retType)]
 
@@ -186,7 +185,7 @@ dsDataDef (_, name, _, cons) =
       pure $ Cast retType' packed
     (ps, e) <- case ps of
       [] -> pure ([], expr)
-      _ -> curryFun True conName.name ps expr
+      _ -> curryFun conName.name ps expr
     modify \s@DsState {..} -> s {_nameEnv = Map.insert conName conName' _nameEnv}
     pure (FunDef conName' ps (C.typeOf conName') e)
   where
@@ -233,7 +232,7 @@ dsExpr (G.Apply (Typed typ _) fun arg) = runDef $ do
     _ ->
       error "typeOf f' must be [_] :-> _. All functions which evaluated by Apply are single-parameter function"
 dsExpr (G.Fn (Typed typ _) cs) = do
-  obj <- fnToObj False "inner" cs
+  obj <- fnToObj "inner" cs
   v <- withMeta <$> dsType typ <*> newTemporalId "fun"
   pure $ C.Let [C.LocalDef v (C.typeOf v) (uncurry Fun obj)] $ Atom $ C.Var v
 dsExpr (G.Tuple _ es) = runDef $ do
@@ -282,12 +281,11 @@ curryFun ::
     Reader ModuleName :> es,
     State DsState :> es
   ) =>
-  Bool ->
   Text ->
   [Meta C.Type] ->
   C.Expr (Meta C.Type) ->
   Eff es ([Meta C.Type], C.Expr (Meta C.Type))
-curryFun isToplevel hint [] e = do
+curryFun hint [] e = do
   case C.typeOf e of
     [] :-> _ -> do
       body <- runDef do
@@ -299,28 +297,18 @@ curryFun isToplevel hint [] e = do
       body <- runDef do
         f <- bind e
         pure $ C.Call f (map C.Var ps)
-      curryFun isToplevel hint ps body
+      curryFun hint ps body
     _ -> errorDoc $ "Invalid expression:" <+> squotes (pretty e)
-curryFun _ _ [p] e = pure ([p], e)
-curryFun isToplevel hint ps e = curryFun' ps []
+curryFun _ [p] e = pure ([p], e)
+curryFun hint ps e = curryFun' ps []
   where
     curryFun' [] _ = error "length ps >= 1"
-    curryFun' [x] as
-      | isToplevel = do
-          -- トップレベル関数であるならeに自由変数は含まれないので、
-          -- uncurry後の関数もトップレベル関数にできる。
-          fun <- withMeta (C.typeOf $ Fun ps e) <$> newTemporalId (hint <> "_curry")
-          ps' <- traverse (\p -> withMeta p.meta <$> newTemporalId p.id.name) ps
-          e' <- alpha (Map.fromList $ zip ps $ map C.Var ps') e
-          modify \s@DsState {..} -> s {_globalDefs = FunDef fun ps' (C.typeOf fun) e' : _globalDefs}
-          let body = C.CallDirect fun $ reverse $ C.Var x : as
-          pure ([x], body)
-      | otherwise = do
-          fun <- withMeta (C.typeOf $ Fun ps e) <$> newTemporalId (hint <> "_curry")
-          let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
-          ps' <- traverse (\p -> withMeta p.meta <$> newTemporalId p.id.name) ps
-          e' <- alpha (Map.fromList $ zip ps $ map C.Var ps') e
-          pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
+    curryFun' [x] as = do
+      fun <- withMeta (C.typeOf $ Fun ps e) <$> newTemporalId (hint <> "_curry")
+      let body = C.Call (C.Var fun) $ reverse $ C.Var x : as
+      ps' <- traverse (\p -> withMeta p.meta <$> newTemporalId p.id.name) ps
+      e' <- alpha (Map.fromList $ zip ps $ map C.Var ps') e
+      pure ([x], C.Let [LocalDef fun (C.typeOf fun) (Fun ps' e')] body)
     curryFun' (x : xs) as = do
       fun <- curryFun' xs (C.Var x : as)
       let funObj = uncurry Fun fun

@@ -161,10 +161,10 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal i64 @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2990(ptr %0, i64 %1) {
+define internal i64 @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3842(ptr %0, i64 %1) {
   %x_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
   %x_0 = load i64, ptr %x_addr_0, align 4
-  %3 = call i64 @_M10raw_x5Flet52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Temporal2988(ptr null, i64 %x_0, i64 %1)
+  %3 = call i64 @_M10raw_x5Flet52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Temporal3840(ptr null, i64 %x_0, i64 %1)
   ret i64 %3
 }
 
@@ -176,28 +176,18 @@ define internal ptr @_M8_x2B_x2352test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2990, ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3842, ptr %let_func_0, align 8
   ret ptr %2
 }
 
-define internal i64 @_M21addInt64_x23_x5Fcurry34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4000(ptr %0, i64 %_M1x34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4001_0, i64 %_M1y34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4002_0) {
-  %2 = call i64 @malgo_add_int64_t(i64 %_M1x34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4001_0, i64 %_M1y34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4002_0)
-  ret i64 %2
-}
-
-define internal i64 @_M35malgo_x5Fadd_x5Fint64_x5Ft_x5Fcurry34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal1834(ptr %0, i64 %_M1p34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal1835_0, i64 %_M1p34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal1836_0) {
-  %2 = call i64 @malgo_add_int64_t(i64 %_M1p34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal1835_0, i64 %_M1p34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal1836_0)
-  ret i64 %2
-}
-
-define internal i64 @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2991(ptr %0, i64 %1) {
+define internal i64 @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3843(ptr %0, i64 %1) {
   %x_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
   %x_0 = load i64, ptr %x_addr_0, align 4
-  %3 = call i64 @_M35malgo_x5Fadd_x5Fint64_x5Ft_x5Fcurry34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal1834(ptr null, i64 %x_0, i64 %1)
+  %3 = call i64 @malgo_add_int64_t(i64 %x_0, i64 %1)
   ret i64 %3
 }
 
-define internal i64 @_M10raw_x5Flet52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Temporal2988(ptr %0, i64 %_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal83_0, i64 %_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal84_0) {
+define internal i64 @_M10raw_x5Flet52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Temporal3840(ptr %0, i64 %_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal83_0, i64 %_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal84_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i64 }, ptr null, i32 1) to i64))
   %x_0 = getelementptr { i64 }, ptr %let_capture_0, i32 0, i32 0
@@ -205,16 +195,12 @@ define internal i64 @_M10raw_x5Flet52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRec
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2991, ptr %let_func_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i64 %6(ptr %4, i64 %_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal84_0)
-  ret i64 %7
+  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3843, ptr %let_func_0, align 8
+  %3 = call i64 @malgo_add_int64_t(i64 %_M1x52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal83_0, i64 %_M1y52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg10Temporal84_0)
+  ret i64 %3
 }
 
-define internal ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2992(ptr %0, ptr %1) {
+define internal ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3844(ptr %0, ptr %1) {
   %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %d_0 = load ptr, ptr %d_addr_0, align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -225,8 +211,8 @@ define internal ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSy
   ret ptr %7
 }
 
-define internal ptr @_M14fun_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2993(ptr %0, ptr %1) {
-  %3 = call ptr @_M10raw_x5Ffun52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Temporal2989(ptr null, ptr %1)
+define internal ptr @_M14fun_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3845(ptr %0, ptr %1) {
+  %3 = call ptr @_M10raw_x5Ffun52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Temporal3841(ptr null, ptr %1)
   ret ptr %3
 }
 
@@ -266,13 +252,13 @@ define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Em
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2992, ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3844, ptr %let_func_0, align 8
   %20 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
   %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
   %fun_capture_1 = getelementptr { ptr, ptr }, ptr %20, i32 0, i32 0
   store ptr %fun_capture_0, ptr %fun_capture_1, align 8
   %fun_func_0 = getelementptr { ptr, ptr }, ptr %20, i32 0, i32 1
-  store ptr @_M14fun_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2993, ptr %fun_func_0, align 8
+  store ptr @_M14fun_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3845, ptr %fun_func_0, align 8
   %21 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 0
   %22 = load ptr, ptr %21, align 8
   %23 = getelementptr { ptr, ptr }, ptr %19, i32 0, i32 1
@@ -281,7 +267,7 @@ define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Em
   ret ptr %25
 }
 
-define internal ptr @_M10raw_x5Ffun52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Temporal2989(ptr %0, ptr %_M1i52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg11Temporal132_0) {
+define internal ptr @_M10raw_x5Ffun52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Temporal3841(ptr %0, ptr %_M1i52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg11Temporal132_0) {
   %2 = getelementptr { i8, <8 x i8> }, ptr %_M1i52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg11Temporal132_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_1 [
@@ -318,10 +304,10 @@ switch_default_1:                                 ; preds = %1
   unreachable
 }
 
-define internal i64 @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2994(ptr %0, i64 %1) {
+define internal i64 @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3846(ptr %0, i64 %1) {
   %p_addr_0 = getelementptr { i64 }, ptr %0, i32 0, i32 0
   %p_0 = load i64, ptr %p_addr_0, align 4
-  %3 = call i64 @_M21addInt64_x23_x5Fcurry34runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4000(ptr null, i64 %p_0, i64 %1)
+  %3 = call i64 @malgo_add_int64_t(i64 %p_0, i64 %1)
   ret i64 %3
 }
 
@@ -375,7 +361,7 @@ switch_branch_Cons_0:                             ; preds = %1
   %let_capture_1 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 0
   store ptr %let_capture_0, ptr %let_capture_1, align 8
   %let_func_0 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal2994, ptr %let_func_0, align 8
+  store ptr @_M14let_x5Fclosure52test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg12Internal3846, ptr %let_func_0, align 8
   %24 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 0
   %25 = load ptr, ptr %24, align 8
   %26 = getelementptr { ptr, ptr }, ptr %23, i32 0, i32 1

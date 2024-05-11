@@ -13,7 +13,27 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal i32 @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3020(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+define internal noundef ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3632(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
+  %"int32#_0" = load ptr, ptr %0, align 8
+  %3 = getelementptr i8, ptr %"int32#_0", i64 4
+  %"int32#_0.val" = load i32, ptr %3, align 4
+  %4 = getelementptr i8, ptr %1, i64 4
+  %.val = load i32, ptr %4, align 4
+  %5 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 4)
+  store i32 %"int32#_0.val", ptr %let_capture_0.i, align 4
+  store ptr %let_capture_0.i, ptr %5, align 8
+  %let_func_0.i = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
+  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3633, ptr %let_func_0.i, align 8
+  %6 = tail call i32 @malgo_add_int32_t(i32 %"int32#_0.val", i32 %.val)
+  %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
+  store i8 0, ptr %7, align 1
+  %8 = getelementptr { i8, { i32 } }, ptr %7, i64 0, i32 1, i32 0
+  store i32 %6, ptr %8, align 4
+  ret ptr %7
+}
+
+define internal i32 @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3633(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
   %p_0 = load i32, ptr %0, align 4
   %3 = tail call i32 @malgo_add_int32_t(i32 %p_0, i32 %1)
   ret i32 %3
@@ -29,74 +49,65 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store i8 0, ptr %4, align 1
   %5 = getelementptr { i8, { i32 } }, ptr %4, i64 0, i32 1, i32 0
   store i32 2, ptr %5, align 4
-  %6 = load i32, ptr %3, align 4
-  %7 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 4)
-  store i32 %6, ptr %let_capture_0.i, align 4
-  store ptr %let_capture_0.i, ptr %7, align 8
-  %let_func_0.i = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3025, ptr %let_func_0.i, align 8
-  %8 = tail call i32 @malgo_add_int32_t(i32 %6, i32 noundef 2)
-  %9 = tail call ptr @malgo_malloc(i64 noundef 8)
-  store i8 0, ptr %9, align 1
-  %10 = getelementptr { i8, { i32 } }, ptr %9, i64 0, i32 1, i32 0
-  store i32 %8, ptr %10, align 4
-  %11 = tail call ptr @malgo_int32_t_to_string(i32 %8)
-  %12 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store i8 0, ptr %12, align 1
-  %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
-  store ptr %11, ptr %13, align 8
-  %14 = tail call ptr @malgo_print_string(ptr %11)
-  %15 = load i32, ptr %3, align 4
-  %16 = load i32, ptr %5, align 4
-  %17 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_2.i = tail call ptr @malgo_malloc(i64 noundef 4)
-  store i32 %15, ptr %let_capture_2.i, align 4
-  store ptr %let_capture_2.i, ptr %17, align 8
-  %let_func_1.i = getelementptr { ptr, ptr }, ptr %17, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3026, ptr %let_func_1.i, align 8
-  %18 = tail call i32 @malgo_add_int32_t(i32 %15, i32 %16)
-  %19 = tail call ptr @malgo_malloc(i64 noundef 8)
-  store i8 0, ptr %19, align 1
-  %20 = getelementptr { i8, { i32 } }, ptr %19, i64 0, i32 1, i32 0
-  store i32 %18, ptr %20, align 4
-  store ptr %19, ptr @_M17executeWhenLoaded40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg8External, align 8
-  %21 = tail call ptr @malgo_malloc(i64 noundef 1)
-  store i8 0, ptr %21, align 1
-  %22 = load ptr, ptr @_M17executeWhenLoaded40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg8External, align 8
-  %23 = getelementptr { i8, { i32 } }, ptr %22, i64 0, i32 1
-  %24 = load i32, ptr %23, align 4
-  %25 = tail call ptr @malgo_int32_t_to_string(i32 %24)
-  %26 = tail call ptr @malgo_malloc(i64 noundef 16)
-  store i8 0, ptr %26, align 1
-  %27 = getelementptr { i8, { ptr } }, ptr %26, i64 0, i32 1, i32 0
-  store ptr %25, ptr %27, align 8
-  %28 = tail call ptr @malgo_print_string(ptr %25)
+  %6 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %2, ptr %let_capture_0.i.i, align 8
+  store ptr %let_capture_0.i.i, ptr %6, align 8
+  %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
+  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3632, ptr %let_func_0.i.i, align 8
+  %"int32#_0.i.i" = load ptr, ptr %let_capture_0.i.i, align 8
+  %7 = getelementptr i8, ptr %"int32#_0.i.i", i64 4
+  %"int32#_0.val.i.i" = load i32, ptr %7, align 4
+  %.val.i.i = load i32, ptr %5, align 4
+  %8 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0.i.i.i = tail call ptr @malgo_malloc(i64 noundef 4)
+  store i32 %"int32#_0.val.i.i", ptr %let_capture_0.i.i.i, align 4
+  store ptr %let_capture_0.i.i.i, ptr %8, align 8
+  %let_func_0.i.i.i = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
+  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3633, ptr %let_func_0.i.i.i, align 8
+  %9 = tail call i32 @malgo_add_int32_t(i32 %"int32#_0.val.i.i", i32 %.val.i.i)
+  %10 = tail call ptr @malgo_malloc(i64 noundef 8)
+  store i8 0, ptr %10, align 1
+  %11 = getelementptr { i8, { i32 } }, ptr %10, i64 0, i32 1, i32 0
+  store i32 %9, ptr %11, align 4
+  %12 = tail call ptr @malgo_int32_t_to_string(i32 %9)
+  %13 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store i8 0, ptr %13, align 1
+  %14 = getelementptr { i8, { ptr } }, ptr %13, i64 0, i32 1, i32 0
+  store ptr %12, ptr %14, align 8
+  %15 = tail call ptr @malgo_print_string(ptr %12)
+  %16 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0.i1.i = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %2, ptr %let_capture_0.i1.i, align 8
+  store ptr %let_capture_0.i1.i, ptr %16, align 8
+  %let_func_0.i2.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
+  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3632, ptr %let_func_0.i2.i, align 8
+  %"int32#_0.i3.i" = load ptr, ptr %let_capture_0.i1.i, align 8
+  %17 = getelementptr i8, ptr %"int32#_0.i3.i", i64 4
+  %"int32#_0.val.i4.i" = load i32, ptr %17, align 4
+  %.val.i5.i = load i32, ptr %5, align 4
+  %18 = tail call ptr @malgo_malloc(i64 noundef 16)
+  %let_capture_0.i.i6.i = tail call ptr @malgo_malloc(i64 noundef 4)
+  store i32 %"int32#_0.val.i4.i", ptr %let_capture_0.i.i6.i, align 4
+  store ptr %let_capture_0.i.i6.i, ptr %18, align 8
+  %let_func_0.i.i7.i = getelementptr { ptr, ptr }, ptr %18, i64 0, i32 1
+  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3633, ptr %let_func_0.i.i7.i, align 8
+  %19 = tail call i32 @malgo_add_int32_t(i32 %"int32#_0.val.i4.i", i32 %.val.i5.i)
+  %20 = tail call ptr @malgo_malloc(i64 noundef 8)
+  store i8 0, ptr %20, align 1
+  %21 = getelementptr { i8, { i32 } }, ptr %20, i64 0, i32 1, i32 0
+  store i32 %19, ptr %21, align 4
+  store ptr %20, ptr @_M17executeWhenLoaded40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg8External, align 8
+  %22 = tail call ptr @malgo_malloc(i64 noundef 1)
+  store i8 0, ptr %22, align 1
+  %23 = load ptr, ptr @_M17executeWhenLoaded40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg8External, align 8
+  %24 = getelementptr { i8, { i32 } }, ptr %23, i64 0, i32 1
+  %25 = load i32, ptr %24, align 4
+  %26 = tail call ptr @malgo_int32_t_to_string(i32 %25)
+  %27 = tail call ptr @malgo_malloc(i64 noundef 16)
+  store i8 0, ptr %27, align 1
+  %28 = getelementptr { i8, { ptr } }, ptr %27, i64 0, i32 1, i32 0
+  store ptr %26, ptr %28, align 8
+  %29 = tail call ptr @malgo_print_string(ptr %26)
   ret i32 0
-}
-
-define internal i32 @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3025(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
-  %p_0 = load i32, ptr %0, align 4
-  %3 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 4)
-  store i32 %p_0, ptr %let_capture_0.i, align 4
-  store ptr %let_capture_0.i, ptr %3, align 8
-  %let_func_0.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3020, ptr %let_func_0.i, align 8
-  %p_0.i = load i32, ptr %let_capture_0.i, align 4
-  %4 = tail call i32 @malgo_add_int32_t(i32 %p_0.i, i32 %1)
-  ret i32 %4
-}
-
-define internal i32 @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3026(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
-  %p_0 = load i32, ptr %0, align 4
-  %3 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 4)
-  store i32 %p_0, ptr %let_capture_0.i, align 4
-  store ptr %let_capture_0.i, ptr %3, align 8
-  %let_func_0.i = getelementptr { ptr, ptr }, ptr %3, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure40test_x2Ftestcases_x2Fmalgo_x2FSeq_x2Emlg12Internal3020, ptr %let_func_0.i, align 8
-  %p_0.i = load i32, ptr %let_capture_0.i, align 4
-  %4 = tail call i32 @malgo_add_int32_t(i32 %p_0.i, i32 %1)
-  ret i32 %4
 }

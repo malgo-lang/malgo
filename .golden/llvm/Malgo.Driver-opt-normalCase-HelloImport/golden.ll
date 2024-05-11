@@ -1,8 +1,8 @@
 ; ModuleID = '.malgo-work/test/testcases/malgo/HelloImport.ll'
 source_filename = "test/testcases/malgo/HelloImport.mlg"
 
-@str2818 = unnamed_addr constant [7 x i8] c" world\00"
-@str2819 = unnamed_addr constant [6 x i8] c"hello\00"
+@str3605 = unnamed_addr constant [7 x i8] c" world\00"
+@str3606 = unnamed_addr constant [6 x i8] c"hello\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -12,7 +12,7 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @_M14let_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImport_x2Emlg12Internal2820(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+define internal ptr @_M14let_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImport_x2Emlg12Internal3607(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
   %cast_0 = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
@@ -21,11 +21,11 @@ define internal ptr @_M14let_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImpo
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImport_x2Emlg12Internal2821(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly %1) {
+define internal ptr @_M14fun_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImport_x2Emlg12Internal3608(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly %1) {
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { ptr } }, ptr %3, i64 0, i32 1, i32 0
-  store ptr @str2818, ptr %4, align 8
+  store ptr @str3605, ptr %4, align 8
   %5 = load ptr, ptr %1, align 8
   %6 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %7 = load ptr, ptr %6, align 8
@@ -53,8 +53,8 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %3 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { ptr } }, ptr %3, i64 0, i32 1, i32 0
-  store ptr @str2819, ptr %4, align 8
-  %5 = tail call ptr @malgo_print_string(ptr noundef nonnull @str2819)
+  store ptr @str3606, ptr %4, align 8
+  %5 = tail call ptr @malgo_print_string(ptr noundef nonnull @str3606)
   %6 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %6, align 8
   %putStrLn_func_0.i = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
@@ -64,12 +64,12 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   store ptr %6, ptr %let_capture_0.i, align 8
   store ptr %let_capture_0.i, ptr %7, align 8
   %let_func_0.i = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImport_x2Emlg12Internal2820, ptr %let_func_0.i, align 8
+  store ptr @_M14let_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImport_x2Emlg12Internal3607, ptr %let_func_0.i, align 8
   %8 = tail call ptr @malgo_malloc(i64 noundef 16)
   %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 0)
   store ptr %fun_capture_0.i, ptr %8, align 8
   %fun_func_0.i = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
-  store ptr @_M14fun_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImport_x2Emlg12Internal2821, ptr %fun_func_0.i, align 8
+  store ptr @_M14fun_x5Fclosure48test_x2Ftestcases_x2Fmalgo_x2FHelloImport_x2Emlg12Internal3608, ptr %fun_func_0.i, align 8
   %9 = load ptr, ptr %7, align 8
   %10 = load ptr, ptr %let_func_0.i, align 8
   %11 = tail call ptr %10(ptr %9, ptr nonnull %8)

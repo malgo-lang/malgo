@@ -3,10 +3,10 @@ source_filename = "test/testcases/malgo/FieldPrefix.mlg"
 
 @_M6zero3D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External = global ptr undef
 @_M6zero2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External = global ptr undef
-@str2924 = unnamed_addr constant [2 x i8] c"x\00"
-@str2925 = unnamed_addr constant [2 x i8] c"y\00"
-@str2926 = unnamed_addr constant [3 x i8] c", \00"
-@str2931 = unnamed_addr constant [2 x i8] c"z\00"
+@str3707 = unnamed_addr constant [2 x i8] c"x\00"
+@str3708 = unnamed_addr constant [2 x i8] c"y\00"
+@str3709 = unnamed_addr constant [3 x i8] c", \00"
+@str3714 = unnamed_addr constant [2 x i8] c"z\00"
 
 declare void @GC_init()
 
@@ -177,8 +177,8 @@ declare ptr @malgo_hash_table_get(ptr, ptr)
 declare ptr @malgo_malloc(i64)
 
 define internal ptr @_M7print2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67_0) {
-  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67_0, ptr @str2924)
-  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67_0, ptr @str2925)
+  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67_0, ptr @str3707)
+  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67_0, ptr @str3708)
   %4 = getelementptr { i8, <4 x i8> }, ptr %2, i32 0, i32 0
   %5 = load i8, ptr %4, align 1
   switch i8 %5, label %switch_default_4 [
@@ -210,7 +210,7 @@ define internal ptr @_M7print2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Eml
   %20 = getelementptr { i8, { ptr } }, ptr %19, i32 0, i32 0
   store i8 0, ptr %20, align 1
   %21 = getelementptr { i8, { ptr } }, ptr %19, i32 0, i32 1, i32 0
-  store ptr @str2926, ptr %21, align 8
+  store ptr @str3709, ptr %21, align 8
   %22 = getelementptr { i8, <8 x i8> }, ptr %19, i32 0, i32 0
   %23 = load i8, ptr %22, align 1
   switch i8 %23, label %switch_default_2 [
@@ -268,14 +268,14 @@ switch_default_4:                                 ; preds = %1
 }
 
 define internal ptr @_M3x2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64_0) {
-  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64_0, ptr @str2924)
-  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64_0, ptr @str2925)
+  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64_0, ptr @str3707)
+  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64_0, ptr @str3708)
   ret ptr %2
 }
 
 define internal ptr @_M3y2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61_0) {
-  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61_0, ptr @str2924)
-  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61_0, ptr @str2925)
+  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61_0, ptr @str3707)
+  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61_0, ptr @str3708)
   ret ptr %3
 }
 
@@ -310,9 +310,9 @@ define internal void @"malgo_load_test/testcases/malgo/FieldPrefix.mlg"() {
   %9 = getelementptr { i8, { float } }, ptr %7, i32 0, i32 1, i32 0
   store float 0.000000e+00, ptr %9, align 4
   %10 = call ptr @malgo_hash_table_new()
-  call void @malgo_hash_table_insert(ptr %10, ptr @str2924, ptr %1)
-  call void @malgo_hash_table_insert(ptr %10, ptr @str2925, ptr %4)
-  call void @malgo_hash_table_insert(ptr %10, ptr @str2931, ptr %7)
+  call void @malgo_hash_table_insert(ptr %10, ptr @str3707, ptr %1)
+  call void @malgo_hash_table_insert(ptr %10, ptr @str3708, ptr %4)
+  call void @malgo_hash_table_insert(ptr %10, ptr @str3714, ptr %7)
   store ptr %10, ptr @_M6zero3D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External, align 8
   %11 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %12 = getelementptr { i8, { i32 } }, ptr %11, i32 0, i32 0
@@ -325,8 +325,8 @@ define internal void @"malgo_load_test/testcases/malgo/FieldPrefix.mlg"() {
   %16 = getelementptr { i8, { i32 } }, ptr %14, i32 0, i32 1, i32 0
   store i32 0, ptr %16, align 4
   %17 = call ptr @malgo_hash_table_new()
-  call void @malgo_hash_table_insert(ptr %17, ptr @str2924, ptr %11)
-  call void @malgo_hash_table_insert(ptr %17, ptr @str2925, ptr %14)
+  call void @malgo_hash_table_insert(ptr %17, ptr @str3707, ptr %11)
+  call void @malgo_hash_table_insert(ptr %17, ptr @str3708, ptr %14)
   store ptr %17, ptr @_M6zero2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External, align 8
   ret void
 }

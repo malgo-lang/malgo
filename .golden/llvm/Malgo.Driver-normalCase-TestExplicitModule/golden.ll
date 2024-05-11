@@ -1,7 +1,7 @@
 ; ModuleID = 'test/testcases/malgo/TestExplicitModule.mlg'
 source_filename = "test/testcases/malgo/TestExplicitModule.mlg"
 
-@str2796 = unnamed_addr constant [13 x i8] c"Hello, world\00"
+@str3579 = unnamed_addr constant [13 x i8] c"Hello, world\00"
 
 declare void @GC_init()
 
@@ -168,7 +168,7 @@ define internal ptr @_M4main55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr @str2796, ptr %4, align 8
+  store ptr @str3579, ptr %4, align 8
   %5 = getelementptr { i8, <8 x i8> }, ptr %2, i32 0, i32 0
   %6 = load i8, ptr %5, align 1
   switch i8 %6, label %switch_default_0 [

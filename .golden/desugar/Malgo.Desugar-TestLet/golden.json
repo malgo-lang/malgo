@@ -2,62 +2,6 @@
     "externals": [],
     "functions": [
         [
-            "_M17_x7C_x3E_x5Fcurry44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal52",
-            [
-                "_M1x44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal53",
-                "_M1f44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal54"
-            ],
-            {
-                "parameters": [
-                    {
-                        "tag": "AnyT"
-                    },
-                    {
-                        "parameters": [
-                            {
-                                "tag": "AnyT"
-                            }
-                        ],
-                        "returns": {
-                            "tag": "AnyT"
-                        },
-                        "tag": "FuncT"
-                    }
-                ],
-                "returns": {
-                    "tag": "AnyT"
-                },
-                "tag": "FuncT"
-            },
-            {
-                "body": {
-                    "tag": "Cast",
-                    "type": {
-                        "tag": "AnyT"
-                    },
-                    "value": {
-                        "tag": "Var",
-                        "variable": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal55"
-                    }
-                },
-                "expression": {
-                    "arguments": [
-                        {
-                            "tag": "Var",
-                            "variable": "_M1x44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal53"
-                        }
-                    ],
-                    "callee": {
-                        "tag": "Var",
-                        "variable": "_M1f44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal54"
-                    },
-                    "tag": "Call"
-                },
-                "tag": "Assign",
-                "variable": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal55"
-            }
-        ],
-        [
             "_M8_x7C_x3E44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg8External",
             [
                 "_M1x44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal49"
@@ -94,18 +38,85 @@
                     {
                         "object": {
                             "body": {
-                                "arguments": [
+                                "bindings": [
                                     {
-                                        "tag": "Var",
-                                        "variable": "_M1x44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal49"
-                                    },
-                                    {
-                                        "tag": "Var",
-                                        "variable": "_M1f44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal50"
+                                        "object": {
+                                            "body": {
+                                                "body": {
+                                                    "tag": "Cast",
+                                                    "type": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "value": {
+                                                        "tag": "Var",
+                                                        "variable": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal55"
+                                                    }
+                                                },
+                                                "expression": {
+                                                    "arguments": [
+                                                        {
+                                                            "tag": "Var",
+                                                            "variable": "_M1x44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal53"
+                                                        }
+                                                    ],
+                                                    "callee": {
+                                                        "tag": "Var",
+                                                        "variable": "_M1f44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal54"
+                                                    },
+                                                    "tag": "Call"
+                                                },
+                                                "tag": "Assign",
+                                                "variable": "_M1d44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal55"
+                                            },
+                                            "parameters": [
+                                                "_M1x44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal53",
+                                                "_M1f44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal54"
+                                            ],
+                                            "tag": "Fun"
+                                        },
+                                        "type": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                },
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        },
+                                        "variable": "_M17_x7C_x3E_x5Fcurry44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal52"
                                     }
                                 ],
-                                "callee": "_M17_x7C_x3E_x5Fcurry44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal52",
-                                "tag": "CallDirect"
+                                "body": {
+                                    "arguments": [
+                                        {
+                                            "tag": "Var",
+                                            "variable": "_M1x44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal49"
+                                        },
+                                        {
+                                            "tag": "Var",
+                                            "variable": "_M1f44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal50"
+                                        }
+                                    ],
+                                    "callee": {
+                                        "tag": "Var",
+                                        "variable": "_M17_x7C_x3E_x5Fcurry44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal52"
+                                    },
+                                    "tag": "Call"
+                                },
+                                "tag": "Let"
                             },
                             "parameters": [
                                 "_M1f44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg10Temporal50"
