@@ -2,11 +2,79 @@ use crate::name::Name;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+/// Context for closure conversion.
+struct ClosureContext {
+    program: Program,
+}
+
+impl ClosureContext {
+    pub fn new() -> Self {
+        ClosureContext {
+            program: Program {
+                variables: Vec::new(),
+                functions: Vec::new(),
+                closures: Vec::new(),
+                externals: Vec::new(),
+            },
+        }
+    }
+    
+    pub fn add_variable(&mut self, variable: VariableDef) {
+        self.program.variables.push(variable);
+    }
+    
+    pub fn add_function(&mut self, function: FunctionDef) {
+        self.program.functions.push(function);
+    }
+
+    pub fn add_closure(&mut self, closure: ClosureDef) {
+        self.program.closures.push(closure);
+    }
+
+    pub fn add_external(&mut self, external: ExternalDef) {
+        self.program.externals.push(external);
+    }
+}
+
+/// A Program is a collection of definitions.
+/// All definitions are global and mutually recursive.
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Program {
-    pub variables: Vec<(Name, Type, Expr)>,
-    pub functions: Vec<(Name, Vec<Name>, Type, Expr)>,
-    pub externals: Vec<(String, Type)>,
+    pub variables: Vec<VariableDef>,
+    pub functions: Vec<FunctionDef>,
+    pub closures: Vec<ClosureDef>,
+    pub externals: Vec<ExternalDef>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct VariableDef {
+    pub name: Name,
+    #[serde(rename = "type")]
+    pub typ: Type,
+    pub value: Expr,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct FunctionDef {
+    pub name: Name,
+    pub parameters: Vec<Name>,
+    #[serde(rename = "type")]
+    pub typ: Type,
+    pub body: Expr,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ClosureDef {
+    pub name: Name,
+    pub function: Name,
+    pub environment: BTreeMap<Name, Atom>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ExternalDef {
+    pub name: String,
+    #[serde(rename = "type")]
+    pub typ: Type,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

@@ -4,9 +4,33 @@ use std::collections::BTreeMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Program {
-    pub variables: Vec<(Name, Type, Expr)>,
-    pub functions: Vec<(Name, Vec<Name>, Type, Expr)>,
-    pub externals: Vec<(String, Type)>,
+    pub variables: Vec<VariableDef>,
+    pub functions: Vec<FunctionDef>,
+    pub externals: Vec<ExternalDef>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct VariableDef {
+    pub name: Name,
+    #[serde(rename = "type")]
+    pub typ: Type,
+    pub value: Expr,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct FunctionDef {
+    pub name: Name,
+    pub parameters: Vec<Name>,
+    #[serde(rename = "type")]
+    pub typ: Type,
+    pub body: Expr,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ExternalDef {
+    pub name: String,
+    #[serde(rename = "type")]
+    pub typ: Type,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

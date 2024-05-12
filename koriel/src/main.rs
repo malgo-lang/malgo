@@ -27,6 +27,12 @@ mod tests {
     #[test]
     fn parse_malgo_golden() {
         let json_dir = "../.golden/desugar";
+
+        // check if json_dir exists
+        if !std::path::Path::new(json_dir).exists() {
+            panic!("{} does not exist", json_dir);
+        }
+
         for entry in WalkDir::new(json_dir).into_iter().filter_map(|e| e.ok()) {
             let f_name = entry.file_name().to_string_lossy();
 

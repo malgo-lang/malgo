@@ -62,10 +62,10 @@ data Id = Id
   deriving anyclass (Hashable, ToJSON, FromJSON)
 
 instance Pretty Id where
-  pretty Id {name, sort = External} = "@" <> pretty name
-  pretty Id {name, moduleName, sort = Internal uniq} = "#" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
-  pretty Id {name, moduleName, sort = Temporal uniq} = "$" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
-  pretty Id {name, sort = Native} = "%" <> pretty name
+  pretty Id {name, moduleName, sort = External} = pretty moduleName <> "." <> pretty name
+  pretty Id {name, sort = Internal uniq} = pretty name <> "_" <> pretty uniq
+  pretty Id {name, sort = Temporal uniq} = "$" <> pretty name <> "_" <> pretty uniq
+  pretty Id {name, sort = Native} = pretty name
 
 instance Manglable Id where
   toTextList Id {name, moduleName, sort} = [name, moduleNameToString moduleName, idSortToText sort]

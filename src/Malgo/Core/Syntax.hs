@@ -56,7 +56,6 @@ data Program a = Program
     externals :: [(Text, Type)]
   }
   deriving stock (Eq, Show, Functor, Generic)
-  -- deriving anyclass (ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
   deriving anyclass (Store)
 
