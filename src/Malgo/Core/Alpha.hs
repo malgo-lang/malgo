@@ -9,7 +9,6 @@ where
 import Control.Exception (assert)
 import Control.Lens (traverseOf)
 import Data.Map.Strict qualified as Map
-import Data.Text qualified as T
 import Effectful (Eff, runPureEff, (:>))
 import Effectful.Reader.Static (Reader, ask, local, runReader)
 import Effectful.State.Static.Local (State)

@@ -597,7 +597,8 @@ identLetter = satisfy (property XidContinue) <|> char '#'
 
 opLetter :: Parser es Char
 opLetter = do
-  notFollowedBy (oneOf @[] "(),;[]`{}_:\"'")
+  -- '$' is a special character for internal use
+  notFollowedBy (oneOf @[] "(),;[]`{}_:\"'$")
   satisfy isSymbol <|> satisfy isPunctuation
 
 pKeyword :: TL.Text -> Parser es ()
