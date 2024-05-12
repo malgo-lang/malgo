@@ -1,9 +1,9 @@
-use std::str::FromStr;
+use std::{fmt::Display, str::FromStr};
 
 use serde::{Deserialize, Serialize};
 use unicode_xid::UnicodeXID;
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub enum Sort {
     External,
     Internal,
@@ -40,11 +40,22 @@ impl FromStr for Sort {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
 pub struct Name {
     pub name: String,
     pub path: String,
     pub sort: Sort,
+}
+
+impl Display for Name {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self.sort {
+            Sort::External => write!(f, "{}.{}", self.path, self.name),
+            Sort::Internal => write!(f, "{}", self.name),
+            Sort::Temporal => write!(f, "${}", self.name),
+            Sort::Native => write!(f, "{}", self.name),
+        }
+    }
 }
 
 impl<'de> Deserialize<'de> for Name {
