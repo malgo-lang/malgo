@@ -164,7 +164,7 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal21_0) {
+define internal ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x2411_x241546test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -187,17 +187,17 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M1f46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M3eta46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal29_0) {
+define internal ptr @_M1f46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M9eta_x241d46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8Temporal_0) {
   %2 = load ptr, ptr @_M9undefined34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External, align 8
   %3 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %_M3eta46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal29_0)
+  %7 = call ptr %6(ptr %4, ptr %_M9eta_x241d46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8Temporal_0)
   ret ptr %7
 }
 
-define internal ptr @_M1g46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M1x46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg10Temporal20_0) {
+define internal ptr @_M1g46test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8External(ptr %0, ptr %_M12x_x240_x241446test_x2Ftestcases_x2Fmalgo_x2FUndefined_x2Emlg8Temporal_0) {
   %2 = load ptr, ptr @_M9undefined34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External, align 8
   ret ptr %2
 }

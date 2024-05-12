@@ -163,18 +163,18 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg12Internal3707(ptr %0, ptr %1) {
-  %cast_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %cast_0 = load ptr, ptr %cast_addr_0, align 8
-  %3 = getelementptr { ptr, ptr }, ptr %cast_0, i32 0, i32 0
+define internal ptr @_M35let_x24468_x24e26_x5Fclosure_x24e7b46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Internal(ptr %0, ptr %1) {
+  %"cast$2f_addr_0" = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %"cast$2f_0" = load ptr, ptr %"cast$2f_addr_0", align 8
+  %3 = getelementptr { ptr, ptr }, ptr %"cast$2f_0", i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %cast_0, i32 0, i32 1
+  %5 = getelementptr { ptr, ptr }, ptr %"cast$2f_0", i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
   %7 = call ptr %6(ptr %4, ptr %1)
   ret ptr %7
 }
 
-define internal ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg10Temporal42_0) {
+define internal ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x2423_x242a46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -204,13 +204,13 @@ define internal ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Ext
   %printInt32_func_0 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
   store ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External, ptr %printInt32_func_0, align 8
   %17 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %cast_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %16, ptr %cast_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg12Internal3707, ptr %let_func_0, align 8
+  %"let$468$e26_capture_0" = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %"cast$2f_0" = getelementptr { ptr }, ptr %"let$468$e26_capture_0", i32 0, i32 0
+  store ptr %16, ptr %"cast$2f_0", align 8
+  %"let$468$e26_capture_1" = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 0
+  store ptr %"let$468$e26_capture_0", ptr %"let$468$e26_capture_1", align 8
+  %"let$468$e26_func_0" = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 1
+  store ptr @_M35let_x24468_x24e26_x5Fclosure_x24e7b46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Internal, ptr %"let$468$e26_func_0", align 8
   %18 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %19 = getelementptr { i8, { i32 } }, ptr %18, i32 0, i32 0
   store i8 0, ptr %19, align 1
@@ -249,34 +249,34 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg12Internal3708(ptr %0, ptr %1) {
-  %"int32#_addr_0" = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %"int32#_0" = load ptr, ptr %"int32#_addr_0", align 8
-  %3 = call ptr @_M10raw_x5Flet46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg12Temporal3705(ptr null, ptr %"int32#_0", ptr %1)
+define internal ptr @_M28let_x24fda_x5Fclosure_x24e7c46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Internal(ptr %0, ptr %1) {
+  %"int32#$fc7_addr_0" = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %"int32#$fc7_0" = load ptr, ptr %"int32#$fc7_addr_0", align 8
+  %3 = call ptr @_M24raw_x5Flet_x24fda_x24e7946test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Temporal(ptr null, ptr %"int32#$fc7_0", ptr %1)
   ret ptr %3
 }
 
-define internal ptr @_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External(ptr %0, ptr %_M9int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4039_0) {
+define internal ptr @_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External(ptr %0, ptr %_M16int32_x23_x24fc734runtime_x2Fmalgo_x2FBuiltin_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %"int32#_0" = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %_M9int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4039_0, ptr %"int32#_0", align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg12Internal3708, ptr %let_func_0, align 8
+  %"let$fda_capture_0" = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %"int32#$fc7_0" = getelementptr { ptr }, ptr %"let$fda_capture_0", i32 0, i32 0
+  store ptr %_M16int32_x23_x24fc734runtime_x2Fmalgo_x2FBuiltin_x2Emlg8Temporal_0, ptr %"int32#$fc7_0", align 8
+  %"let$fda_capture_1" = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %"let$fda_capture_0", ptr %"let$fda_capture_1", align 8
+  %"let$fda_func_0" = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @_M28let_x24fda_x5Fclosure_x24e7c46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Internal, ptr %"let$fda_func_0", align 8
   ret ptr %2
 }
 
-define internal ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr %0, ptr %_M1i34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal773_0) {
-  %2 = getelementptr { i8, <4 x i8> }, ptr %_M1i34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal773_0, i32 0, i32 0
+define internal ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr %0, ptr %_M14i_x245c_x2430534runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0) {
+  %2 = getelementptr { i8, <4 x i8> }, ptr %_M14i_x245c_x2430534runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_1 [
     i8 0, label %"switch_branch_Int32#_0"
   ]
 
 "switch_branch_Int32#_0":                         ; preds = %1
-  %4 = getelementptr { i8, { i32 } }, ptr %_M1i34runtime_x2Fmalgo_x2FPrelude_x2Emlg11Temporal773_0, i32 0, i32 1
+  %4 = getelementptr { i8, { i32 } }, ptr %_M14i_x245c_x2430534runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i32 0, i32 1
   %5 = getelementptr { i32 }, ptr %4, i32 0, i32 0
   %6 = load i32, ptr %5, align 4
   %7 = call ptr @malgo_int32_t_to_string(i32 %6)
@@ -305,8 +305,8 @@ switch_default_1:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M4succ46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8External(ptr %0, ptr %_M1x46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg10Temporal36_0) {
-  %2 = call ptr @_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External(ptr null, ptr %_M1x46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg10Temporal36_0)
+define internal ptr @_M4succ46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8External(ptr %0, ptr %_M12x_x240_x242446test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Temporal_0) {
+  %2 = call ptr @_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External(ptr null, ptr %_M12x_x240_x242446test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Temporal_0)
   %3 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %4 = getelementptr { i8, { i32 } }, ptr %3, i32 0, i32 0
   store i8 0, ptr %4, align 1
@@ -320,42 +320,42 @@ define internal ptr @_M4succ46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Ext
   ret ptr %10
 }
 
-define internal i32 @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg12Internal3709(ptr %0, i32 %1) {
-  %p_addr_0 = getelementptr { i32 }, ptr %0, i32 0, i32 0
-  %p_0 = load i32, ptr %p_addr_0, align 4
-  %3 = call i32 @malgo_add_int32_t(i32 %p_0, i32 %1)
+define internal i32 @_M35let_x24715_x24c90_x5Fclosure_x24e7d46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Internal(ptr %0, i32 %1) {
+  %"p$fc9$fd3$c73_addr_0" = getelementptr { i32 }, ptr %0, i32 0, i32 0
+  %"p$fc9$fd3$c73_0" = load i32, ptr %"p$fc9$fd3$c73_addr_0", align 4
+  %3 = call i32 @malgo_add_int32_t(i32 %"p$fc9$fd3$c73_0", i32 %1)
   ret i32 %3
 }
 
-define internal ptr @_M10raw_x5Flet46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg12Temporal3705(ptr %0, ptr %_M9int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4039_0, ptr %_M9int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4040_0) {
-  %2 = getelementptr { i8, <4 x i8> }, ptr %_M9int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4039_0, i32 0, i32 0
+define internal ptr @_M24raw_x5Flet_x24fda_x24e7946test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Temporal(ptr %0, ptr %_M16int32_x23_x24fc734runtime_x2Fmalgo_x2FBuiltin_x2Emlg8Temporal_0, ptr %_M16int32_x23_x24fc834runtime_x2Fmalgo_x2FBuiltin_x2Emlg8Temporal_0) {
+  %2 = getelementptr { i8, <4 x i8> }, ptr %_M16int32_x23_x24fc734runtime_x2Fmalgo_x2FBuiltin_x2Emlg8Temporal_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_1 [
     i8 0, label %"switch_branch_Int32#_0"
   ]
 
 "switch_branch_Int32#_0":                         ; preds = %1
-  %4 = getelementptr { i8, { i32 } }, ptr %_M9int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4039_0, i32 0, i32 1
+  %4 = getelementptr { i8, { i32 } }, ptr %_M16int32_x23_x24fc734runtime_x2Fmalgo_x2FBuiltin_x2Emlg8Temporal_0, i32 0, i32 1
   %5 = getelementptr { i32 }, ptr %4, i32 0, i32 0
   %6 = load i32, ptr %5, align 4
-  %7 = getelementptr { i8, <4 x i8> }, ptr %_M9int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4040_0, i32 0, i32 0
+  %7 = getelementptr { i8, <4 x i8> }, ptr %_M16int32_x23_x24fc834runtime_x2Fmalgo_x2FBuiltin_x2Emlg8Temporal_0, i32 0, i32 0
   %8 = load i8, ptr %7, align 1
   switch i8 %8, label %switch_default_0 [
     i8 0, label %"switch_branch_Int32#_1"
   ]
 
 "switch_branch_Int32#_1":                         ; preds = %"switch_branch_Int32#_0"
-  %9 = getelementptr { i8, { i32 } }, ptr %_M9int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg12Temporal4040_0, i32 0, i32 1
+  %9 = getelementptr { i8, { i32 } }, ptr %_M16int32_x23_x24fc834runtime_x2Fmalgo_x2FBuiltin_x2Emlg8Temporal_0, i32 0, i32 1
   %10 = getelementptr { i32 }, ptr %9, i32 0, i32 0
   %11 = load i32, ptr %10, align 4
   %12 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i32 }, ptr null, i32 1) to i64))
-  %p_0 = getelementptr { i32 }, ptr %let_capture_0, i32 0, i32 0
-  store i32 %6, ptr %p_0, align 4
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %12, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %12, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg12Internal3709, ptr %let_func_0, align 8
+  %"let$715$c90_capture_0" = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i32 }, ptr null, i32 1) to i64))
+  %"p$fc9$fd3$c73_0" = getelementptr { i32 }, ptr %"let$715$c90_capture_0", i32 0, i32 0
+  store i32 %6, ptr %"p$fc9$fd3$c73_0", align 4
+  %"let$715$c90_capture_1" = getelementptr { ptr, ptr }, ptr %12, i32 0, i32 0
+  store ptr %"let$715$c90_capture_0", ptr %"let$715$c90_capture_1", align 8
+  %"let$715$c90_func_0" = getelementptr { ptr, ptr }, ptr %12, i32 0, i32 1
+  store ptr @_M35let_x24715_x24c90_x5Fclosure_x24e7d46test_x2Ftestcases_x2Fmalgo_x2FUseModule_x2Emlg8Internal, ptr %"let$715$c90_func_0", align 8
   %13 = call i32 @malgo_add_int32_t(i32 %6, i32 %11)
   %14 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { i32 } }, ptr null, i32 1) to i64))
   %15 = getelementptr { i8, { i32 } }, ptr %14, i32 0, i32 0

@@ -163,7 +163,7 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @_M4main45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg10Temporal29_0) {
+define internal ptr @_M4main45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x2415_x241d45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -193,8 +193,8 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M1f45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg8External(ptr %0, ptr %_M1x45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg10Temporal22_0) {
-  ret ptr %_M1x45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg10Temporal22_0
+define internal ptr @_M1f45test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg8External(ptr %0, ptr %_M12x_x241_x241645test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg8Temporal_0) {
+  ret ptr %_M12x_x241_x241645test_x2Ftestcases_x2Fmalgo_x2FDeferLaw_x2Emlg8Temporal_0
 }
 
 define i32 @main(ptr %0) {

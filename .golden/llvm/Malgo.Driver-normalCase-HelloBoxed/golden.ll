@@ -9,32 +9,32 @@ declare ptr @malgo_print_string(ptr)
 
 declare ptr @malgo_newline(ptr)
 
-define internal ptr @_M24malgo_x5Fprint_x5Fstring47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M1p47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal23_0) {
-  %2 = call ptr @malgo_print_string(ptr %_M1p47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal23_0)
+define internal ptr @_M24malgo_x5Fprint_x5Fstring47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M7p_x241747test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_print_string(ptr %_M7p_x241747test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0)
   ret ptr %2
 }
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @_M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M1p47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal21_0) {
+define internal ptr @_M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M7p_x241547test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %_M1p47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal21_0, ptr %4, align 8
+  store ptr %_M7p_x241547test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0, ptr %4, align 8
   ret ptr %2
 }
 
-define internal ptr @_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M1x47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal25_0) {
+define internal ptr @_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M12x_x241_x241947test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
   %4 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %_M1x47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal25_0, ptr %4, align 8
+  store ptr %_M12x_x241_x241947test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0, ptr %4, align 8
   ret ptr %2
 }
 
-define internal ptr @_M4main47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal34_0) {
+define internal ptr @_M4main47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x2414_x242247test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -61,20 +61,20 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M16malgo_x5Fnewline47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M1p47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal24_0) {
-  %2 = call ptr @malgo_newline(ptr %_M1p47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal24_0)
+define internal ptr @_M16malgo_x5Fnewline47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M7p_x241847test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_newline(ptr %_M7p_x241847test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0)
   ret ptr %2
 }
 
-define internal ptr @_M8putStrLn47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal27_0) {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal27_0, i32 0, i32 0
+define internal ptr @_M8putStrLn47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M16string_x23_x241b47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0) {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %_M16string_x23_x241b47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_0 [
     i8 0, label %"switch_branch_String#_0"
   ]
 
 "switch_branch_String#_0":                        ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg10Temporal27_0, i32 0, i32 1
+  %4 = getelementptr { i8, { ptr } }, ptr %_M16string_x23_x241b47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0, i32 0, i32 1
   %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
   %6 = load ptr, ptr %5, align 8
   %7 = call ptr @malgo_print_string(ptr %6)

@@ -17,16 +17,16 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4184(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24105847test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"d$108$fd8_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  %6 = tail call ptr %5(ptr %3, ptr %"d$108$fd8_0")
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4185(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M29fun_x2417f_x5Fclosure_x24105947test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
@@ -42,7 +42,7 @@ switch_branch_Done_0.i:                           ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %9, i64 0, i32 1, i32 0
   store ptr %8, ptr %10, align 8
   %11 = tail call ptr @malgo_print_string(ptr %8)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4103.exit
+  br label %_M25raw_x5Ffun_x2417f_x24100747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -50,23 +50,23 @@ switch_branch_NotYetDone_0.i:                     ; preds = %2
   %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
   store ptr @str4219, ptr %13, align 8
   %14 = tail call ptr @malgo_print_string(ptr noundef nonnull @str4219)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4103.exit
+  br label %_M25raw_x5Ffun_x2417f_x24100747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4103.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Ffun_x2417f_x24100747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %11, %switch_branch_Done_0.i ], [ %14, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4192(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24106047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"d$108$fd8_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  %6 = tail call ptr %5(ptr %3, ptr %"d$108$fd8_0")
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4193(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M29fun_x2417f_x5Fclosure_x24106147test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
@@ -82,7 +82,7 @@ switch_branch_Done_0.i:                           ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %9, i64 0, i32 1, i32 0
   store ptr %8, ptr %10, align 8
   %11 = tail call ptr @malgo_print_string(ptr %8)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4112.exit
+  br label %_M25raw_x5Ffun_x2417f_x24101047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -90,23 +90,23 @@ switch_branch_NotYetDone_0.i:                     ; preds = %2
   %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
   store ptr @str4219, ptr %13, align 8
   %14 = tail call ptr @malgo_print_string(ptr noundef nonnull @str4219)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4112.exit
+  br label %_M25raw_x5Ffun_x2417f_x24101047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4112.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Ffun_x2417f_x24101047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %11, %switch_branch_Done_0.i ], [ %14, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4196(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24106447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"d$108$fd8_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  %6 = tail call ptr %5(ptr %3, ptr %"d$108$fd8_0")
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4197(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M29fun_x2417f_x5Fclosure_x24106547test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
@@ -122,7 +122,7 @@ switch_branch_Done_0.i:                           ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %9, i64 0, i32 1, i32 0
   store ptr %8, ptr %10, align 8
   %11 = tail call ptr @malgo_print_string(ptr %8)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4115.exit
+  br label %_M25raw_x5Ffun_x2417f_x24101347test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -130,23 +130,23 @@ switch_branch_NotYetDone_0.i:                     ; preds = %2
   %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
   store ptr @str4219, ptr %13, align 8
   %14 = tail call ptr @malgo_print_string(ptr noundef nonnull @str4219)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4115.exit
+  br label %_M25raw_x5Ffun_x2417f_x24101347test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4115.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Ffun_x2417f_x24101347test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %11, %switch_branch_Done_0.i ], [ %14, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4198(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24106647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"d$10c$fdb_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  %6 = tail call ptr %5(ptr %3, ptr %"d$10c$fdb_0")
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4199(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M29fun_x2417f_x5Fclosure_x24106747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
@@ -162,7 +162,7 @@ switch_branch_Done_0.i:                           ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %9, i64 0, i32 1, i32 0
   store ptr %8, ptr %10, align 8
   %11 = tail call ptr @malgo_print_string(ptr %8)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4116.exit
+  br label %_M25raw_x5Ffun_x2417f_x24101447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -170,23 +170,23 @@ switch_branch_NotYetDone_0.i:                     ; preds = %2
   %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
   store ptr @str4219, ptr %13, align 8
   %14 = tail call ptr @malgo_print_string(ptr noundef nonnull @str4219)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4116.exit
+  br label %_M25raw_x5Ffun_x2417f_x24101447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4116.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Ffun_x2417f_x24101447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %11, %switch_branch_Done_0.i ], [ %14, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4200(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24106847test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"d$108$fd8_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  %6 = tail call ptr %5(ptr %3, ptr %"d$108$fd8_0")
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4201(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M29fun_x2417f_x5Fclosure_x24106947test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
@@ -202,7 +202,7 @@ switch_branch_Done_0.i:                           ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %9, i64 0, i32 1, i32 0
   store ptr %8, ptr %10, align 8
   %11 = tail call ptr @malgo_print_string(ptr %8)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4130.exit
+  br label %_M25raw_x5Ffun_x2417f_x24102247test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -210,23 +210,23 @@ switch_branch_NotYetDone_0.i:                     ; preds = %2
   %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
   store ptr @str4219, ptr %13, align 8
   %14 = tail call ptr @malgo_print_string(ptr noundef nonnull @str4219)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4130.exit
+  br label %_M25raw_x5Ffun_x2417f_x24102247test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4130.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Ffun_x2417f_x24102247test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %11, %switch_branch_Done_0.i ], [ %14, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4208(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24107047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"d$108$fd8_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  %6 = tail call ptr %5(ptr %3, ptr %"d$108$fd8_0")
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4209(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M29fun_x2417f_x5Fclosure_x24107147test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
@@ -242,7 +242,7 @@ switch_branch_Done_0.i:                           ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %9, i64 0, i32 1, i32 0
   store ptr %8, ptr %10, align 8
   %11 = tail call ptr @malgo_print_string(ptr %8)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4139.exit
+  br label %_M25raw_x5Ffun_x2417f_x24102b47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -250,23 +250,23 @@ switch_branch_NotYetDone_0.i:                     ; preds = %2
   %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
   store ptr @str4219, ptr %13, align 8
   %14 = tail call ptr @malgo_print_string(ptr noundef nonnull @str4219)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4139.exit
+  br label %_M25raw_x5Ffun_x2417f_x24102b47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4139.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Ffun_x2417f_x24102b47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %11, %switch_branch_Done_0.i ], [ %14, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4212(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24107447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"d$108$fd8_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  %6 = tail call ptr %5(ptr %3, ptr %"d$108$fd8_0")
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4213(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M29fun_x2417f_x5Fclosure_x24107547test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
@@ -282,7 +282,7 @@ switch_branch_Done_0.i:                           ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %9, i64 0, i32 1, i32 0
   store ptr %8, ptr %10, align 8
   %11 = tail call ptr @malgo_print_string(ptr %8)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4142.exit
+  br label %_M25raw_x5Ffun_x2417f_x24102e47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -290,23 +290,23 @@ switch_branch_NotYetDone_0.i:                     ; preds = %2
   %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
   store ptr @str4219, ptr %13, align 8
   %14 = tail call ptr @malgo_print_string(ptr noundef nonnull @str4219)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4142.exit
+  br label %_M25raw_x5Ffun_x2417f_x24102e47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4142.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Ffun_x2417f_x24102e47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %11, %switch_branch_Done_0.i ], [ %14, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4214(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %d_0 = load ptr, ptr %0, align 8
+define internal ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24107647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"d$10c$fdb_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %d_0)
+  %6 = tail call ptr %5(ptr %3, ptr %"d$10c$fdb_0")
   ret ptr %6
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4215(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M29fun_x2417f_x5Fclosure_x24107747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %3 = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %3, 0
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
@@ -322,7 +322,7 @@ switch_branch_Done_0.i:                           ; preds = %2
   %10 = getelementptr { i8, { ptr } }, ptr %9, i64 0, i32 1, i32 0
   store ptr %8, ptr %10, align 8
   %11 = tail call ptr @malgo_print_string(ptr %8)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4143.exit
+  br label %_M25raw_x5Ffun_x2417f_x24102f47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %12 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -330,20 +330,20 @@ switch_branch_NotYetDone_0.i:                     ; preds = %2
   %13 = getelementptr { i8, { ptr } }, ptr %12, i64 0, i32 1, i32 0
   store ptr @str4219, ptr %13, align 8
   %14 = tail call ptr @malgo_print_string(ptr noundef nonnull @str4219)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4143.exit
+  br label %_M25raw_x5Ffun_x2417f_x24102f47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4143.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Ffun_x2417f_x24102f47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %11, %switch_branch_Done_0.i ], [ %14, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
 declare ptr @malgo_hash_table_get(ptr, ptr) local_unnamed_addr
 
-define internal ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4218(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nofree %1) {
-  %done_0 = load ptr, ptr %0, align 8
-  %3 = load i8, ptr %done_0, align 8
+define internal ptr @_M29let_x24131_x5Fclosure_x24107a47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nofree %1) {
+  %"done$110_0" = load ptr, ptr %0, align 8
+  %3 = load i8, ptr %"done$110_0", align 8
   %switch.i = icmp eq i8 %3, 0
-  %4 = getelementptr { i8, { ptr } }, ptr %done_0, i64 0, i32 1
+  %4 = getelementptr { i8, { ptr } }, ptr %"done$110_0", i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
   br i1 %switch.i, label %switch_branch_Done_0.i, label %switch_branch_NotYetDone_0.i
 
@@ -352,92 +352,92 @@ switch_branch_Done_0.i:                           ; preds = %2
   %7 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %8 = load ptr, ptr %7, align 8
   %9 = tail call ptr %8(ptr %6, ptr %5)
-  br label %_M10raw_x5Flet47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4102.exit
+  br label %_M25raw_x5Flet_x24131_x24100647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i:                     ; preds = %2
   %10 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr %5, ptr %fun_capture_0.i, align 8
-  %k_0.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i, i64 0, i32 1
-  store ptr %1, ptr %k_0.i, align 8
-  store ptr %fun_capture_0.i, ptr %10, align 8
-  %fun_func_0.i = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
-  store ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4220, ptr %fun_func_0.i, align 8
+  %"fun$11d$126$f86_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr %5, ptr %"fun$11d$126$f86_capture_0.i", align 8
+  %"k$8$111_0.i" = getelementptr { ptr, ptr }, ptr %"fun$11d$126$f86_capture_0.i", i64 0, i32 1
+  store ptr %1, ptr %"k$8$111_0.i", align 8
+  store ptr %"fun$11d$126$f86_capture_0.i", ptr %10, align 8
+  %"fun$11d$126$f86_func_0.i" = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
+  store ptr @_M43fun_x2411d_x24126_x24f86_x5Fclosure_x24107c47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"fun$11d$126$f86_func_0.i", align 8
   %11 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
   store i8 1, ptr %11, align 1
   %12 = getelementptr { i8, { ptr } }, ptr %11, i64 0, i32 1, i32 0
   store ptr %10, ptr %12, align 8
-  br label %_M10raw_x5Flet47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4102.exit
+  br label %_M25raw_x5Flet_x24131_x24100647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Flet47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4102.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
+_M25raw_x5Flet_x24131_x24100647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i, %switch_branch_NotYetDone_0.i
   %common.ret.op.i = phi ptr [ %9, %switch_branch_Done_0.i ], [ %11, %switch_branch_NotYetDone_0.i ]
   ret ptr %common.ret.op.i
 }
 
-define internal ptr @_M14eventuallyBind47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nofree %_M4done47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal272_0) {
+define internal ptr @_M14eventuallyBind47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nofree %_M11done_x2411047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal_0) {
   %2 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0 = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %_M4done47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal272_0, ptr %let_capture_0, align 8
-  store ptr %let_capture_0, ptr %2, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4218, ptr %let_func_0, align 8
+  %"let$131_capture_0" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %_M11done_x2411047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal_0, ptr %"let$131_capture_0", align 8
+  store ptr %"let$131_capture_0", ptr %2, align 8
+  %"let$131_func_0" = getelementptr { ptr, ptr }, ptr %2, i64 0, i32 1
+  store ptr @_M29let_x24131_x5Fclosure_x24107a47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$131_func_0", align 8
   ret ptr %2
 }
 
-define internal noundef ptr @_M4Done47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nofree %_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal258_0) {
+define internal noundef ptr @_M4Done47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nofree %_M8p_x2410247test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal_0) {
   %2 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %2, align 1
   %3 = getelementptr { i8, { ptr } }, ptr %2, i64 0, i32 1, i32 0
-  store ptr %_M1p47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg11Temporal258_0, ptr %3, align 8
+  store ptr %_M8p_x2410247test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal_0, ptr %3, align 8
   ret ptr %2
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4220(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr nocapture nofree readnone %1) {
-  %p_0 = load ptr, ptr %0, align 8
-  %k_addr_0 = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
-  %k_0 = load ptr, ptr %k_addr_0, align 8
+define internal ptr @_M43fun_x2411d_x24126_x24f86_x5Fclosure_x24107c47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %0, ptr nocapture nofree readnone %1) {
+  %"p$114$125$f85_0" = load ptr, ptr %0, align 8
+  %"k$8$111_addr_0" = getelementptr { ptr, ptr }, ptr %0, i64 0, i32 1
+  %"k$8$111_0" = load ptr, ptr %"k$8$111_addr_0", align 8
   %3 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %3, align 1
-  %4 = load ptr, ptr %p_0, align 8
-  %5 = getelementptr { ptr, ptr }, ptr %p_0, i64 0, i32 1
+  %4 = load ptr, ptr %"p$114$125$f85_0", align 8
+  %5 = getelementptr { ptr, ptr }, ptr %"p$114$125$f85_0", i64 0, i32 1
   %6 = load ptr, ptr %5, align 8
   %7 = tail call ptr %6(ptr %4, ptr nonnull %3)
   %8 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0.i.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %7, ptr %let_capture_0.i.i, align 8
-  store ptr %let_capture_0.i.i, ptr %8, align 8
-  %let_func_0.i.i = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4218, ptr %let_func_0.i.i, align 8
-  %done_0.i.i = load ptr, ptr %let_capture_0.i.i, align 8
-  %9 = load i8, ptr %done_0.i.i, align 8
+  %"let$131_capture_0.i.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %7, ptr %"let$131_capture_0.i.i", align 8
+  store ptr %"let$131_capture_0.i.i", ptr %8, align 8
+  %"let$131_func_0.i.i" = getelementptr { ptr, ptr }, ptr %8, i64 0, i32 1
+  store ptr @_M29let_x24131_x5Fclosure_x24107a47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$131_func_0.i.i", align 8
+  %"done$110_0.i.i" = load ptr, ptr %"let$131_capture_0.i.i", align 8
+  %9 = load i8, ptr %"done$110_0.i.i", align 8
   %switch.i.i.i = icmp eq i8 %9, 0
-  %10 = getelementptr { i8, { ptr } }, ptr %done_0.i.i, i64 0, i32 1
+  %10 = getelementptr { i8, { ptr } }, ptr %"done$110_0.i.i", i64 0, i32 1
   %11 = load ptr, ptr %10, align 8
   br i1 %switch.i.i.i, label %switch_branch_Done_0.i.i.i, label %switch_branch_NotYetDone_0.i.i.i
 
 switch_branch_Done_0.i.i.i:                       ; preds = %2
-  %12 = load ptr, ptr %k_0, align 8
-  %13 = getelementptr { ptr, ptr }, ptr %k_0, i64 0, i32 1
+  %12 = load ptr, ptr %"k$8$111_0", align 8
+  %13 = getelementptr { ptr, ptr }, ptr %"k$8$111_0", i64 0, i32 1
   %14 = load ptr, ptr %13, align 8
   %15 = tail call ptr %14(ptr %12, ptr %11)
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4101.exit
+  br label %_M39raw_x5Ffun_x2411d_x24126_x24f86_x24100547test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
 switch_branch_NotYetDone_0.i.i.i:                 ; preds = %2
   %16 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %fun_capture_0.i.i.i = tail call ptr @malgo_malloc(i64 noundef 16)
-  store ptr %11, ptr %fun_capture_0.i.i.i, align 8
-  %k_0.i.i.i = getelementptr { ptr, ptr }, ptr %fun_capture_0.i.i.i, i64 0, i32 1
-  store ptr %k_0, ptr %k_0.i.i.i, align 8
-  store ptr %fun_capture_0.i.i.i, ptr %16, align 8
-  %fun_func_0.i.i.i = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4220, ptr %fun_func_0.i.i.i, align 8
+  %"fun$11d$126$f86_capture_0.i.i.i" = tail call ptr @malgo_malloc(i64 noundef 16)
+  store ptr %11, ptr %"fun$11d$126$f86_capture_0.i.i.i", align 8
+  %"k$8$111_0.i.i.i" = getelementptr { ptr, ptr }, ptr %"fun$11d$126$f86_capture_0.i.i.i", i64 0, i32 1
+  store ptr %"k$8$111_0", ptr %"k$8$111_0.i.i.i", align 8
+  store ptr %"fun$11d$126$f86_capture_0.i.i.i", ptr %16, align 8
+  %"fun$11d$126$f86_func_0.i.i.i" = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
+  store ptr @_M43fun_x2411d_x24126_x24f86_x5Fclosure_x24107c47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"fun$11d$126$f86_func_0.i.i.i", align 8
   %17 = tail call noundef ptr @malgo_malloc(i64 noundef 16)
   store i8 1, ptr %17, align 1
   %18 = getelementptr { i8, { ptr } }, ptr %17, i64 0, i32 1, i32 0
   store ptr %16, ptr %18, align 8
-  br label %_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4101.exit
+  br label %_M39raw_x5Ffun_x2411d_x24126_x24f86_x24100547test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit
 
-_M10raw_x5Ffun47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Temporal4101.exit: ; preds = %switch_branch_Done_0.i.i.i, %switch_branch_NotYetDone_0.i.i.i
+_M39raw_x5Ffun_x2411d_x24126_x24f86_x24100547test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Temporal.exit: ; preds = %switch_branch_Done_0.i.i.i, %switch_branch_NotYetDone_0.i.i.i
   %common.ret.op.i.i.i = phi ptr [ %15, %switch_branch_Done_0.i.i.i ], [ %17, %switch_branch_NotYetDone_0.i.i.i ]
   ret ptr %common.ret.op.i.i.i
 }
@@ -459,10 +459,10 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %5 = tail call ptr @malgo_hash_table_get(ptr %2, ptr noundef nonnull @str4216)
   %6 = tail call ptr @malgo_hash_table_get(ptr %2, ptr noundef nonnull @str4217)
   %7 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %fun_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 0)
-  store ptr %fun_capture_0.i, ptr %7, align 8
-  %fun_func_0.i = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
-  store ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4225, ptr %fun_func_0.i, align 8
+  %"fun$140_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 0)
+  store ptr %"fun$140_capture_0.i", ptr %7, align 8
+  %"fun$140_func_0.i" = getelementptr { ptr, ptr }, ptr %7, i64 0, i32 1
+  store ptr @_M29fun_x24140_x5Fclosure_x24108147test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"fun$140_func_0.i", align 8
   %8 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 1, ptr %8, align 1
   %9 = getelementptr { i8, { ptr } }, ptr %8, i64 0, i32 1, i32 0
@@ -472,10 +472,10 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %12 = load ptr, ptr %11, align 8
   %13 = tail call ptr %12(ptr %10, ptr nonnull %8)
   %14 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %fun_capture_2.i = tail call ptr @malgo_malloc(i64 noundef 0)
-  store ptr %fun_capture_2.i, ptr %14, align 8
-  %fun_func_1.i = getelementptr { ptr, ptr }, ptr %14, i64 0, i32 1
-  store ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4227, ptr %fun_func_1.i, align 8
+  %"fun$15f_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 0)
+  store ptr %"fun$15f_capture_0.i", ptr %14, align 8
+  %"fun$15f_func_0.i" = getelementptr { ptr, ptr }, ptr %14, i64 0, i32 1
+  store ptr @_M29fun_x2415f_x5Fclosure_x24108347test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"fun$15f_func_0.i", align 8
   %15 = load ptr, ptr %13, align 8
   %16 = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
   %17 = load ptr, ptr %16, align 8
@@ -516,11 +516,11 @@ switch_branch_Done_1.i:                           ; preds = %switch_branch_Done_
   %35 = getelementptr { i8, { ptr } }, ptr %34, i64 0, i32 1, i32 0
   store ptr %29, ptr %35, align 8
   %36 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_0.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %34, ptr %let_capture_0.i, align 8
-  store ptr %let_capture_0.i, ptr %36, align 8
-  %let_func_0.i = getelementptr { ptr, ptr }, ptr %36, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4184, ptr %let_func_0.i, align 8
+  %"let$2c2$fa8_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %34, ptr %"let$2c2$fa8_capture_0.i", align 8
+  store ptr %"let$2c2$fa8_capture_0.i", ptr %36, align 8
+  %"let$2c2$fa8_func_0.i" = getelementptr { ptr, ptr }, ptr %36, i64 0, i32 1
+  store ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24105847test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$2c2$fa8_func_0.i", align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit
 
 switch_branch_NotYetDone_3.i:                     ; preds = %switch_branch_Done_0.i
@@ -546,11 +546,11 @@ switch_branch_Done_5.i:                           ; preds = %switch_branch_NotYe
   %48 = getelementptr { i8, { ptr } }, ptr %47, i64 0, i32 1, i32 0
   store ptr %44, ptr %48, align 8
   %49 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_8.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %47, ptr %let_capture_8.i, align 8
-  store ptr %let_capture_8.i, ptr %49, align 8
-  %let_func_4.i = getelementptr { ptr, ptr }, ptr %49, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4192, ptr %let_func_4.i, align 8
+  %"let$2c2$fa8_capture_8.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %47, ptr %"let$2c2$fa8_capture_8.i", align 8
+  store ptr %"let$2c2$fa8_capture_8.i", ptr %49, align 8
+  %"let$2c2$fa8_func_4.i" = getelementptr { ptr, ptr }, ptr %49, i64 0, i32 1
+  store ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24106047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$2c2$fa8_func_4.i", align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit
 
 switch_branch_NotYetDone_5.i:                     ; preds = %switch_branch_NotYetDone_3.i
@@ -572,11 +572,11 @@ switch_branch_Done_7.i:                           ; preds = %switch_branch_NotYe
   %59 = getelementptr { i8, { ptr } }, ptr %58, i64 0, i32 1, i32 0
   store ptr %57, ptr %59, align 8
   %60 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_12.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %58, ptr %let_capture_12.i, align 8
-  store ptr %let_capture_12.i, ptr %60, align 8
-  %let_func_6.i = getelementptr { ptr, ptr }, ptr %60, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4196, ptr %let_func_6.i, align 8
+  %"let$2c2$fa8_capture_12.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %58, ptr %"let$2c2$fa8_capture_12.i", align 8
+  store ptr %"let$2c2$fa8_capture_12.i", ptr %60, align 8
+  %"let$2c2$fa8_func_6.i" = getelementptr { ptr, ptr }, ptr %60, i64 0, i32 1
+  store ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24106447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$2c2$fa8_func_6.i", align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit
 
 switch_branch_NotYetDone_6.i:                     ; preds = %switch_branch_NotYetDone_5.i
@@ -587,11 +587,11 @@ switch_branch_NotYetDone_6.i:                     ; preds = %switch_branch_NotYe
   %64 = load ptr, ptr %63, align 8
   %65 = tail call ptr %64(ptr %62, ptr nonnull %61)
   %66 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_14.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %65, ptr %let_capture_14.i, align 8
-  store ptr %let_capture_14.i, ptr %66, align 8
-  %let_func_7.i = getelementptr { ptr, ptr }, ptr %66, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4198, ptr %let_func_7.i, align 8
+  %"let$2c2$fa8_capture_14.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %65, ptr %"let$2c2$fa8_capture_14.i", align 8
+  store ptr %"let$2c2$fa8_capture_14.i", ptr %66, align 8
+  %"let$2c2$fa8_func_7.i" = getelementptr { ptr, ptr }, ptr %66, i64 0, i32 1
+  store ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24106647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$2c2$fa8_func_7.i", align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit
 
 switch_branch_NotYetDone_7.i:                     ; preds = %1
@@ -622,11 +622,11 @@ switch_branch_Done_8.i:                           ; preds = %switch_branch_NotYe
   %81 = getelementptr { i8, { ptr } }, ptr %80, i64 0, i32 1, i32 0
   store ptr %75, ptr %81, align 8
   %82 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_16.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %80, ptr %let_capture_16.i, align 8
-  store ptr %let_capture_16.i, ptr %82, align 8
-  %let_func_8.i = getelementptr { ptr, ptr }, ptr %82, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4200, ptr %let_func_8.i, align 8
+  %"let$2c2$fa8_capture_16.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %80, ptr %"let$2c2$fa8_capture_16.i", align 8
+  store ptr %"let$2c2$fa8_capture_16.i", ptr %82, align 8
+  %"let$2c2$fa8_func_8.i" = getelementptr { ptr, ptr }, ptr %82, i64 0, i32 1
+  store ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24106847test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$2c2$fa8_func_8.i", align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit
 
 switch_branch_NotYetDone_11.i:                    ; preds = %switch_branch_NotYetDone_7.i
@@ -652,11 +652,11 @@ switch_branch_Done_12.i:                          ; preds = %switch_branch_NotYe
   %94 = getelementptr { i8, { ptr } }, ptr %93, i64 0, i32 1, i32 0
   store ptr %90, ptr %94, align 8
   %95 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_24.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %93, ptr %let_capture_24.i, align 8
-  store ptr %let_capture_24.i, ptr %95, align 8
-  %let_func_12.i = getelementptr { ptr, ptr }, ptr %95, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4208, ptr %let_func_12.i, align 8
+  %"let$2c2$fa8_capture_24.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %93, ptr %"let$2c2$fa8_capture_24.i", align 8
+  store ptr %"let$2c2$fa8_capture_24.i", ptr %95, align 8
+  %"let$2c2$fa8_func_12.i" = getelementptr { ptr, ptr }, ptr %95, i64 0, i32 1
+  store ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24107047test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$2c2$fa8_func_12.i", align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit
 
 switch_branch_NotYetDone_13.i:                    ; preds = %switch_branch_NotYetDone_11.i
@@ -678,11 +678,11 @@ switch_branch_Done_14.i:                          ; preds = %switch_branch_NotYe
   %105 = getelementptr { i8, { ptr } }, ptr %104, i64 0, i32 1, i32 0
   store ptr %103, ptr %105, align 8
   %106 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_28.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %104, ptr %let_capture_28.i, align 8
-  store ptr %let_capture_28.i, ptr %106, align 8
-  %let_func_14.i = getelementptr { ptr, ptr }, ptr %106, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4212, ptr %let_func_14.i, align 8
+  %"let$2c2$fa8_capture_28.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %104, ptr %"let$2c2$fa8_capture_28.i", align 8
+  store ptr %"let$2c2$fa8_capture_28.i", ptr %106, align 8
+  %"let$2c2$fa8_func_14.i" = getelementptr { ptr, ptr }, ptr %106, i64 0, i32 1
+  store ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24107447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$2c2$fa8_func_14.i", align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit
 
 switch_branch_NotYetDone_14.i:                    ; preds = %switch_branch_NotYetDone_13.i
@@ -693,24 +693,24 @@ switch_branch_NotYetDone_14.i:                    ; preds = %switch_branch_NotYe
   %110 = load ptr, ptr %109, align 8
   %111 = tail call ptr %110(ptr %108, ptr nonnull %107)
   %112 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %let_capture_30.i = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %111, ptr %let_capture_30.i, align 8
-  store ptr %let_capture_30.i, ptr %112, align 8
-  %let_func_15.i = getelementptr { ptr, ptr }, ptr %112, i64 0, i32 1
-  store ptr @_M14let_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4214, ptr %let_func_15.i, align 8
+  %"let$2c2$fa8_capture_30.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %111, ptr %"let$2c2$fa8_capture_30.i", align 8
+  store ptr %"let$2c2$fa8_capture_30.i", ptr %112, align 8
+  %"let$2c2$fa8_func_15.i" = getelementptr { ptr, ptr }, ptr %112, i64 0, i32 1
+  store ptr @_M36let_x242c2_x24fa8_x5Fclosure_x24107647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"let$2c2$fa8_func_15.i", align 8
   br label %_M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit
 
 _M4main47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External.exit: ; preds = %switch_branch_Done_1.i, %switch_branch_Done_5.i, %switch_branch_Done_7.i, %switch_branch_NotYetDone_6.i, %switch_branch_Done_8.i, %switch_branch_Done_12.i, %switch_branch_Done_14.i, %switch_branch_NotYetDone_14.i
-  %_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4215.sink.i = phi ptr [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4215, %switch_branch_NotYetDone_14.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4213, %switch_branch_Done_14.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4209, %switch_branch_Done_12.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4201, %switch_branch_Done_8.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4199, %switch_branch_NotYetDone_6.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4197, %switch_branch_Done_7.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4193, %switch_branch_Done_5.i ], [ @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4185, %switch_branch_Done_1.i ]
+  %_M29fun_x2417f_x5Fclosure_x24107747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal.sink.i = phi ptr [ @_M29fun_x2417f_x5Fclosure_x24107747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, %switch_branch_NotYetDone_14.i ], [ @_M29fun_x2417f_x5Fclosure_x24107547test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, %switch_branch_Done_14.i ], [ @_M29fun_x2417f_x5Fclosure_x24107147test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, %switch_branch_Done_12.i ], [ @_M29fun_x2417f_x5Fclosure_x24106947test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, %switch_branch_Done_8.i ], [ @_M29fun_x2417f_x5Fclosure_x24106747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, %switch_branch_NotYetDone_6.i ], [ @_M29fun_x2417f_x5Fclosure_x24106547test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, %switch_branch_Done_7.i ], [ @_M29fun_x2417f_x5Fclosure_x24106147test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, %switch_branch_Done_5.i ], [ @_M29fun_x2417f_x5Fclosure_x24105947test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, %switch_branch_Done_1.i ]
   %.sink9.i = phi ptr [ %112, %switch_branch_NotYetDone_14.i ], [ %106, %switch_branch_Done_14.i ], [ %95, %switch_branch_Done_12.i ], [ %82, %switch_branch_Done_8.i ], [ %66, %switch_branch_NotYetDone_6.i ], [ %60, %switch_branch_Done_7.i ], [ %49, %switch_branch_Done_5.i ], [ %36, %switch_branch_Done_1.i ]
-  %let_func_15.sink.i = phi ptr [ %let_func_15.i, %switch_branch_NotYetDone_14.i ], [ %let_func_14.i, %switch_branch_Done_14.i ], [ %let_func_12.i, %switch_branch_Done_12.i ], [ %let_func_8.i, %switch_branch_Done_8.i ], [ %let_func_7.i, %switch_branch_NotYetDone_6.i ], [ %let_func_6.i, %switch_branch_Done_7.i ], [ %let_func_4.i, %switch_branch_Done_5.i ], [ %let_func_0.i, %switch_branch_Done_1.i ]
+  %"let$2c2$fa8_func_15.sink.i" = phi ptr [ %"let$2c2$fa8_func_15.i", %switch_branch_NotYetDone_14.i ], [ %"let$2c2$fa8_func_14.i", %switch_branch_Done_14.i ], [ %"let$2c2$fa8_func_12.i", %switch_branch_Done_12.i ], [ %"let$2c2$fa8_func_8.i", %switch_branch_Done_8.i ], [ %"let$2c2$fa8_func_7.i", %switch_branch_NotYetDone_6.i ], [ %"let$2c2$fa8_func_6.i", %switch_branch_Done_7.i ], [ %"let$2c2$fa8_func_4.i", %switch_branch_Done_5.i ], [ %"let$2c2$fa8_func_0.i", %switch_branch_Done_1.i ]
   %113 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %fun_capture_30.i = tail call ptr @malgo_malloc(i64 noundef 0)
-  store ptr %fun_capture_30.i, ptr %113, align 8
-  %fun_func_15.i = getelementptr { ptr, ptr }, ptr %113, i64 0, i32 1
-  store ptr %_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4215.sink.i, ptr %fun_func_15.i, align 8
+  %"fun$17f_capture_30.i" = tail call ptr @malgo_malloc(i64 noundef 0)
+  store ptr %"fun$17f_capture_30.i", ptr %113, align 8
+  %"fun$17f_func_15.i" = getelementptr { ptr, ptr }, ptr %113, i64 0, i32 1
+  store ptr %_M29fun_x2417f_x5Fclosure_x24107747test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal.sink.i, ptr %"fun$17f_func_15.i", align 8
   %114 = load ptr, ptr %.sink9.i, align 8
-  %115 = load ptr, ptr %let_func_15.sink.i, align 8
+  %115 = load ptr, ptr %"let$2c2$fa8_func_15.sink.i", align 8
   %116 = tail call ptr %115(ptr %114, ptr nonnull %113)
   ret i32 0
 }
@@ -719,7 +719,7 @@ declare ptr @malgo_hash_table_new() local_unnamed_addr
 
 declare void @malgo_hash_table_insert(ptr, ptr, ptr) local_unnamed_addr
 
-define internal noundef ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4225(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @_M29fun_x24140_x5Fclosure_x24108147test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
 "switch_branch_String#_0":
   %2 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %2, align 1
@@ -733,7 +733,7 @@ define internal noundef ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FE
   ret ptr %5
 }
 
-define internal noundef ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4228(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal noundef ptr @_M29fun_x24150_x5Fclosure_x24108447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
 "switch_branch_String#_0":
   %2 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %2, align 1
@@ -747,7 +747,7 @@ define internal noundef ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FE
   ret ptr %5
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4230(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal ptr @_M29fun_x2415c_x5Fclosure_x24108647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = load ptr, ptr @_M10eventually47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External, align 8
   %4 = tail call ptr @malgo_hash_table_get(ptr %3, ptr noundef nonnull @str4216)
   %5 = tail call ptr @malgo_hash_table_get(ptr %3, ptr noundef nonnull @str4217)
@@ -762,15 +762,15 @@ define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventuall
   ret ptr %11
 }
 
-define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4227(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
+define internal ptr @_M29fun_x2415f_x5Fclosure_x24108347test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree readnone %1) {
   %3 = load ptr, ptr @_M10eventually47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8External, align 8
   %4 = tail call ptr @malgo_hash_table_get(ptr %3, ptr noundef nonnull @str4216)
   %5 = tail call ptr @malgo_hash_table_get(ptr %3, ptr noundef nonnull @str4217)
   %6 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %fun_capture_0 = tail call ptr @malgo_malloc(i64 noundef 0)
-  store ptr %fun_capture_0, ptr %6, align 8
-  %fun_func_0 = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
-  store ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4228, ptr %fun_func_0, align 8
+  %"fun$150_capture_0" = tail call ptr @malgo_malloc(i64 noundef 0)
+  store ptr %"fun$150_capture_0", ptr %6, align 8
+  %"fun$150_func_0" = getelementptr { ptr, ptr }, ptr %6, i64 0, i32 1
+  store ptr @_M29fun_x24150_x5Fclosure_x24108447test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"fun$150_func_0", align 8
   %7 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 1, ptr %7, align 1
   %8 = getelementptr { i8, { ptr } }, ptr %7, i64 0, i32 1, i32 0
@@ -780,10 +780,10 @@ define internal ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventuall
   %11 = load ptr, ptr %10, align 8
   %12 = tail call ptr %11(ptr %9, ptr nonnull %7)
   %13 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %fun_capture_2 = tail call ptr @malgo_malloc(i64 noundef 0)
-  store ptr %fun_capture_2, ptr %13, align 8
-  %fun_func_1 = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
-  store ptr @_M14fun_x5Fclosure47test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg12Internal4230, ptr %fun_func_1, align 8
+  %"fun$15c_capture_0" = tail call ptr @malgo_malloc(i64 noundef 0)
+  store ptr %"fun$15c_capture_0", ptr %13, align 8
+  %"fun$15c_func_0" = getelementptr { ptr, ptr }, ptr %13, i64 0, i32 1
+  store ptr @_M29fun_x2415c_x5Fclosure_x24108647test_x2Ftestcases_x2Fmalgo_x2FEventually_x2Emlg8Internal, ptr %"fun$15c_func_0", align 8
   %14 = load ptr, ptr %12, align 8
   %15 = getelementptr { ptr, ptr }, ptr %12, i64 0, i32 1
   %16 = load ptr, ptr %15, align 8

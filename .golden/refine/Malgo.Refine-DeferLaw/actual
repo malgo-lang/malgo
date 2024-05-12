@@ -8,12 +8,12 @@ Module
       { annotated = TyArr
        ( TyVar
         ( Id
-         { name = "t", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ) )
+         { name = "t$a", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) )
        ( TyVar
         ( Id
-         { name = "t", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ) ), value = Range
+         { name = "t$a", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ), value = Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 7, sourceColumn = Pos 1 } } }, Id
@@ -23,12 +23,12 @@ Module
        { annotated = TyArr
         ( TyVar
          ( Id
-          { name = "t", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ) )
+          { name = "t$a", moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) )
         ( TyVar
          ( Id
-          { name = "t", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ) ), value = Range
+          { name = "t$a", moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ), value = Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 11 }, _end = SourcePos
          { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 25 } } } )
@@ -37,12 +37,12 @@ Module
         { annotated = TyArr
          ( TyVar
           ( Id
-           { name = "t", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ) )
+           { name = "t$a", moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) )
          ( TyVar
           ( Id
-           { name = "t", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ) ), value = Range
+           { name = "t$a", moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ), value = Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 11 }, _end = SourcePos
           { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 25 } } } )
@@ -50,20 +50,20 @@ Module
         ( Typed
          { annotated = TyVar
           ( Id
-           { name = "t", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ), value = Range
+           { name = "t$a", moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 11 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 13 } } } )
         ( Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 1 } ) ]
+         { name = "x$1", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyVar
           ( Id
-           { name = "t", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ), value = Range
+           { name = "t$a", moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ), value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 16 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 25 } } } )
@@ -76,8 +76,8 @@ Module
           ( Typed
            { annotated = TyVar
             ( Id
-             { name = "t", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ), value = Range
+             { name = "t$a", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ), value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 16 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 25 } } } )
@@ -87,8 +87,8 @@ Module
              ( TyTuple 0 )
              ( TyVar
               ( Id
-               { name = "t", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ) ), value = Range
+               { name = "t$a", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 18 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 } } } )
@@ -98,8 +98,8 @@ Module
               ( TyTuple 0 )
               ( TyVar
                ( Id
-                { name = "t", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ) ), value = Range
+                { name = "t$a", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ), value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 18 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 } } } )
@@ -110,14 +110,14 @@ Module
                 { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 18 }, _end = SourcePos
                 { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 } } } )
              ( Id
-              { name = "$_", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 8 } ) ]
+              { name = "$_$8", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ]
             ( Seq
              ( Typed
               { annotated = TyVar
                ( Id
-                { name = "t", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ), value = Range
+                { name = "t$a", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ), value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 18 }, _end = SourcePos
                 { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 } } } )
@@ -130,14 +130,14 @@ Module
                ( Typed
                 { annotated = TyVar
                  ( Id
-                  { name = "t", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 10 } ), value = Range
+                  { name = "t$a", moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ), value = Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 18 }, _end = SourcePos
                   { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 20 } } } )
                ( Id
-                { name = "x", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 1 } ) ) :| [] ) ) :| [] ) )
+                { name = "x$1", moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ) :| [] ) ) :| [] ) )
           ( Tuple
            ( Typed
             { annotated = TyTuple 0, value = Range
@@ -176,8 +176,8 @@ Module
            { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 8, sourceColumn = Pos 3 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 9, sourceColumn = Pos 1 } } } )
         ( Id
-         { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 21 } ) ]
+         { name = "$_$15", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -295,16 +295,16 @@ Module
         { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 4, sourceColumn = Pos 9 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 4, sourceColumn = Pos 11 } } )
       ( Id
-       { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 0 } ) )
+       { name = "a$0", moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) )
      ( TyVar
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 4, sourceColumn = Pos 14 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/DeferLaw.mlg", sourceLine = Pos 5, sourceColumn = Pos 1 } } )
       ( Id
-       { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal 0 } ) ) ) ], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
+       { name = "a$0", moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" ), sort = Internal } ) ) ) ], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
    [
     ( Range
      { _start = SourcePos

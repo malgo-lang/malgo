@@ -9,6 +9,7 @@ where
 import Control.Exception (assert)
 import Control.Lens (traverseOf)
 import Data.Map.Strict qualified as Map
+import Data.Text qualified as T
 import Effectful (Eff, runPureEff, (:>))
 import Effectful.Reader.Static (Reader, ask, local, runReader)
 import Effectful.State.Static.Local (State)
@@ -45,12 +46,14 @@ lookupId n = do
 
 cloneMeta :: (Reader ModuleName :> es, State Uniq :> es) => Meta a -> Eff es (Meta a)
 cloneMeta Meta {meta, id = Id {..}} = do
-  assert (case sort of Internal _ -> True; Temporal _ -> True; _ -> False) pass
+  assert (case sort of Internal -> True; Temporal -> True; _ -> False) pass
   moduleName <- ask @ModuleName
   uniq <- getUniq
-  pure case sort of
-    Internal _ -> Meta {meta, id = Id {sort = Internal uniq, ..}}
-    Temporal _ -> Meta {meta, id = Id {sort = Temporal uniq, ..}}
+  case sort of
+    Internal ->
+      pure $ Meta {meta, id = Id {name = name <> uniqToText uniq, ..}}
+    Temporal ->
+      pure $ Meta {meta, id = Id {name = name <> uniqToText uniq, ..}}
     _ -> error "unreachable: cloneId"
 {-# INLINE cloneMeta #-}
 

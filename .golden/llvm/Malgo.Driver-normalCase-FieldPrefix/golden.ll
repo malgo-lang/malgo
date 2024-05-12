@@ -166,7 +166,7 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @_M4main48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal81_0) {
+define internal ptr @_M4main48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x242e_x245148test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0) {
   %2 = load ptr, ptr @_M6zero2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External, align 8
   %3 = call ptr @_M7print2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr null, ptr %2)
   ret ptr %3
@@ -176,9 +176,9 @@ declare ptr @malgo_hash_table_get(ptr, ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @_M7print2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67_0) {
-  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67_0, ptr @str3707)
-  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal67_0, ptr @str3708)
+define internal ptr @_M7print2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M12record_x244348test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_hash_table_get(ptr %_M12record_x244348test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0, ptr @str3707)
+  %3 = call ptr @malgo_hash_table_get(ptr %_M12record_x244348test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0, ptr @str3708)
   %4 = getelementptr { i8, <4 x i8> }, ptr %2, i32 0, i32 0
   %5 = load i8, ptr %4, align 1
   switch i8 %5, label %switch_default_4 [
@@ -267,15 +267,15 @@ switch_default_4:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M3x2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64_0) {
-  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64_0, ptr @str3707)
-  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal64_0, ptr @str3708)
+define internal ptr @_M3x2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M12record_x244048test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_hash_table_get(ptr %_M12record_x244048test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0, ptr @str3707)
+  %3 = call ptr @malgo_hash_table_get(ptr %_M12record_x244048test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0, ptr @str3708)
   ret ptr %2
 }
 
-define internal ptr @_M3y2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61_0) {
-  %2 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61_0, ptr @str3707)
-  %3 = call ptr @malgo_hash_table_get(ptr %_M6record48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg10Temporal61_0, ptr @str3708)
+define internal ptr @_M3y2D48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8External(ptr %0, ptr %_M12record_x243d48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_hash_table_get(ptr %_M12record_x243d48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0, ptr @str3707)
+  %3 = call ptr @malgo_hash_table_get(ptr %_M12record_x243d48test_x2Ftestcases_x2Fmalgo_x2FFieldPrefix_x2Emlg8Temporal_0, ptr @str3708)
   ret ptr %3
 }
 

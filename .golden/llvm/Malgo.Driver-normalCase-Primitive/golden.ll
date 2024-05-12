@@ -159,7 +159,7 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg10Temporal11_0) {
+define internal ptr @_M4main46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8External(ptr %0, ptr %_M18_x24_x5F_x24a_x24b46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal_0) {
   %2 = call i64 @malgo_add_int64_t(i64 40, i64 2)
   %3 = call ptr @malgo_int64_t_to_string(i64 %2)
   %4 = call ptr @malgo_print_string(ptr %3)

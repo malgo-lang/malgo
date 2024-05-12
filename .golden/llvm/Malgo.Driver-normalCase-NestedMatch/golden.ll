@@ -53,12 +53,12 @@ define internal ptr @_M5True248test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8
   ret ptr %2
 }
 
-define internal ptr @_M24malgo_x5Fprint_x5Fstring48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8External(ptr %0, ptr %_M1p48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg10Temporal36_0) {
-  %2 = call ptr @malgo_print_string(ptr %_M1p48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg10Temporal36_0)
+define internal ptr @_M24malgo_x5Fprint_x5Fstring48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8External(ptr %0, ptr %_M7p_x242448test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_print_string(ptr %_M7p_x242448test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8Temporal_0)
   ret ptr %2
 }
 
-define internal ptr @_M4main48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg10Temporal38_0) {
+define internal ptr @_M4main48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x241d_x242648test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 1, ptr %3, align 1
@@ -201,8 +201,8 @@ switch_default_6:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M24malgo_x5Fexit_x5Ffailure48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8External(ptr %0, ptr %_M1p48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg10Temporal37_0) {
-  %2 = call ptr @malgo_exit_failure(ptr %_M1p48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg10Temporal37_0)
+define internal ptr @_M24malgo_x5Fexit_x5Ffailure48test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8External(ptr %0, ptr %_M7p_x242548test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_exit_failure(ptr %_M7p_x242548test_x2Ftestcases_x2Fmalgo_x2FNestedMatch_x2Emlg8Temporal_0)
   ret ptr %2
 }
 

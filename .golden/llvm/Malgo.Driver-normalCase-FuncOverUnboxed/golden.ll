@@ -159,8 +159,8 @@ declare i8 @malgo_get_char(ptr)
 
 declare ptr @malgo_get_contents(ptr)
 
-define internal ptr @_M1f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr %0, i64 %_M7unboxed52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg10Temporal22_0) {
-  switch i64 %_M7unboxed52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg10Temporal22_0, label %switch-unboxed_default_0 [
+define internal ptr @_M1f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr %0, i64 %_M13unboxed_x241652test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal_0) {
+  switch i64 %_M13unboxed_x241652test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal_0, label %switch-unboxed_default_0 [
     i64 0, label %switch-unboxed_branch_0_i64_0
     i64 1, label %switch-unboxed_branch_1_i64_0
   ]
@@ -181,7 +181,7 @@ switch-unboxed_default_0:                         ; preds = %1
   ret ptr %7
 }
 
-define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg10Temporal33_0) {
+define internal ptr @_M4main52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x2415_x242152test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal_0) {
   %2 = call ptr @_M1f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External(ptr null, i64 0)
   ret ptr %2
 }

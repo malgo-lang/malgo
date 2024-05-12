@@ -161,7 +161,7 @@ declare ptr @malgo_get_contents(ptr)
 
 declare ptr @malgo_malloc(i64)
 
-define internal ptr @_M4main43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg9Temporal9_0) {
+define internal ptr @_M4main43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8External(ptr %0, ptr %_M18_x24_x5F_x248_x24943test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { double } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { double } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1

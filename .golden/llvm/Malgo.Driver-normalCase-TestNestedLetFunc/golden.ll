@@ -7,12 +7,12 @@ declare void @GC_init()
 
 declare ptr @malgo_print_string(ptr)
 
-define internal ptr @_M24malgo_x5Fprint_x5Fstring54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External(ptr %0, ptr %_M1p54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal13_0) {
-  %2 = call ptr @malgo_print_string(ptr %_M1p54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal13_0)
+define internal ptr @_M24malgo_x5Fprint_x5Fstring54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External(ptr %0, ptr %_M6p_x24d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_print_string(ptr %_M6p_x24d54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8Temporal_0)
   ret ptr %2
 }
 
-define internal ptr @_M4main54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg10Temporal14_0) {
+define internal ptr @_M4main54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External(ptr %0, ptr %_M18_x24_x5F_x24c_x24e54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_print_string(ptr @str27)
   ret ptr %2
 }

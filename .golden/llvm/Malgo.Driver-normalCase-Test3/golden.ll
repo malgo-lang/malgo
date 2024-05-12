@@ -31,28 +31,28 @@ define internal ptr @_M3Nil42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External
   ret ptr %2
 }
 
-define internal ptr @_M24malgo_x5Fprint_x5Fstring42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External(ptr %0, ptr %_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal77_0) {
-  %2 = call ptr @malgo_print_string(ptr %_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal77_0)
+define internal ptr @_M24malgo_x5Fprint_x5Fstring42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External(ptr %0, ptr %_M7p_x244d42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0) {
+  %2 = call ptr @malgo_print_string(ptr %_M7p_x244d42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0)
   ret ptr %2
 }
 
-define internal ptr @_M14let_x5Fclosure42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Internal147(ptr %0, ptr %1) {
-  %d_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %d_0 = load ptr, ptr %d_addr_0, align 8
+define internal ptr @_M32let_x2455_x2486_x5Fclosure_x249342test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Internal(ptr %0, ptr %1) {
+  %"d$60_addr_0" = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %"d$60_0" = load ptr, ptr %"d$60_addr_0", align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %d_0)
+  %7 = call ptr %6(ptr %4, ptr %"d$60_0")
   ret ptr %7
 }
 
-define internal ptr @_M14fun_x5Fclosure42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Internal148(ptr %0, ptr %1) {
-  %3 = call ptr @_M10raw_x5Ffun42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Temporal146(ptr null, ptr %1)
+define internal ptr @_M26fun_x246d_x5Fclosure_x249442test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Internal(ptr %0, ptr %1) {
+  %3 = call ptr @_M22raw_x5Ffun_x246d_x249242test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal(ptr null, ptr %1)
   ret ptr %3
 }
 
-define internal ptr @_M4main42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External(ptr %0, ptr %_M8_x24_x5F42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal86_0) {
+define internal ptr @_M4main42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x2441_x245642test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, {} }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, {} }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1
@@ -77,19 +77,19 @@ define internal ptr @_M4main42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Externa
   %15 = getelementptr { i8, { ptr, ptr } }, ptr %12, i32 0, i32 1, i32 1
   store ptr %8, ptr %15, align 8
   %16 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %d_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %12, ptr %d_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Internal147, ptr %let_func_0, align 8
+  %"let$55$86_capture_0" = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %"d$60_0" = getelementptr { ptr }, ptr %"let$55$86_capture_0", i32 0, i32 0
+  store ptr %12, ptr %"d$60_0", align 8
+  %"let$55$86_capture_1" = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 0
+  store ptr %"let$55$86_capture_0", ptr %"let$55$86_capture_1", align 8
+  %"let$55$86_func_0" = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
+  store ptr @_M32let_x2455_x2486_x5Fclosure_x249342test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Internal, ptr %"let$55$86_func_0", align 8
   %17 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %fun_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
-  %fun_capture_1 = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 0
-  store ptr %fun_capture_0, ptr %fun_capture_1, align 8
-  %fun_func_0 = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 1
-  store ptr @_M14fun_x5Fclosure42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Internal148, ptr %fun_func_0, align 8
+  %"fun$6d_capture_0" = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({}, ptr null, i32 1) to i64))
+  %"fun$6d_capture_1" = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 0
+  store ptr %"fun$6d_capture_0", ptr %"fun$6d_capture_1", align 8
+  %"fun$6d_func_0" = getelementptr { ptr, ptr }, ptr %17, i32 0, i32 1
+  store ptr @_M26fun_x246d_x5Fclosure_x249442test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Internal, ptr %"fun$6d_func_0", align 8
   %18 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 0
   %19 = load ptr, ptr %18, align 8
   %20 = getelementptr { ptr, ptr }, ptr %16, i32 0, i32 1
@@ -98,50 +98,50 @@ define internal ptr @_M4main42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Externa
   ret ptr %22
 }
 
-define internal ptr @_M14let_x5Fclosure42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Internal149(ptr %0, ptr %1) {
-  %x_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %x_0 = load ptr, ptr %x_addr_0, align 8
+define internal ptr @_M26let_x2455_x5Fclosure_x249542test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Internal(ptr %0, ptr %1) {
+  %"x$3$4e_addr_0" = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %"x$3$4e_0" = load ptr, ptr %"x$3$4e_addr_0", align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
   %4 = load ptr, ptr %3, align 8
   %5 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 1
   %6 = load ptr, ptr %5, align 8
-  %7 = call ptr %6(ptr %4, ptr %x_0)
+  %7 = call ptr %6(ptr %4, ptr %"x$3$4e_0")
   ret ptr %7
 }
 
-define internal ptr @_M8_x7C_x3E42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External(ptr %0, ptr %_M1x42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal78_0) {
+define internal ptr @_M8_x7C_x3E42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External(ptr %0, ptr %_M12x_x243_x244e42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %x_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %_M1x42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal78_0, ptr %x_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Internal149, ptr %let_func_0, align 8
+  %"let$55_capture_0" = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %"x$3$4e_0" = getelementptr { ptr }, ptr %"let$55_capture_0", i32 0, i32 0
+  store ptr %_M12x_x243_x244e42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0, ptr %"x$3$4e_0", align 8
+  %"let$55_capture_1" = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %"let$55_capture_0", ptr %"let$55_capture_1", align 8
+  %"let$55_func_0" = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @_M26let_x2455_x5Fclosure_x249542test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Internal, ptr %"let$55_func_0", align 8
   ret ptr %2
 }
 
-define internal ptr @_M14let_x5Fclosure42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Internal150(ptr %0, ptr %1) {
-  %p_addr_0 = getelementptr { ptr }, ptr %0, i32 0, i32 0
-  %p_0 = load ptr, ptr %p_addr_0, align 8
-  %3 = call ptr @_M10raw_x5Flet42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Temporal145(ptr null, ptr %p_0, ptr %1)
+define internal ptr @_M26let_x244c_x5Fclosure_x249642test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Internal(ptr %0, ptr %1) {
+  %"p$45_addr_0" = getelementptr { ptr }, ptr %0, i32 0, i32 0
+  %"p$45_0" = load ptr, ptr %"p$45_addr_0", align 8
+  %3 = call ptr @_M22raw_x5Flet_x244c_x249142test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal(ptr null, ptr %"p$45_0", ptr %1)
   ret ptr %3
 }
 
-define internal ptr @_M4Cons42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External(ptr %0, ptr %_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal69_0) {
+define internal ptr @_M4Cons42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8External(ptr %0, ptr %_M7p_x244542test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr, ptr }, ptr null, i32 1) to i64))
-  %let_capture_0 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
-  %p_0 = getelementptr { ptr }, ptr %let_capture_0, i32 0, i32 0
-  store ptr %_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal69_0, ptr %p_0, align 8
-  %let_capture_1 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
-  store ptr %let_capture_0, ptr %let_capture_1, align 8
-  %let_func_0 = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @_M14let_x5Fclosure42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Internal150, ptr %let_func_0, align 8
+  %"let$4c_capture_0" = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ ptr }, ptr null, i32 1) to i64))
+  %"p$45_0" = getelementptr { ptr }, ptr %"let$4c_capture_0", i32 0, i32 0
+  store ptr %_M7p_x244542test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0, ptr %"p$45_0", align 8
+  %"let$4c_capture_1" = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
+  store ptr %"let$4c_capture_0", ptr %"let$4c_capture_1", align 8
+  %"let$4c_func_0" = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
+  store ptr @_M26let_x244c_x5Fclosure_x249642test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Internal, ptr %"let$4c_func_0", align 8
   ret ptr %2
 }
 
-define internal ptr @_M10raw_x5Ffun42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Temporal146(ptr %0, ptr %_M4cons42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Temporal100_0) {
-  %2 = getelementptr { i8, <16 x i8> }, ptr %_M4cons42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Temporal100_0, i32 0, i32 0
+define internal ptr @_M22raw_x5Ffun_x246d_x249242test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal(ptr %0, ptr %_M10cons_x246442test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0) {
+  %2 = getelementptr { i8, <16 x i8> }, ptr %_M10cons_x246442test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_4 [
     i8 0, label %switch_branch_Nil_0
@@ -153,7 +153,7 @@ switch_branch_Nil_0:                              ; preds = %1
   ret ptr %4
 
 switch_branch_Cons_0:                             ; preds = %1
-  %5 = getelementptr { i8, { ptr, ptr } }, ptr %_M4cons42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Temporal100_0, i32 0, i32 1
+  %5 = getelementptr { i8, { ptr, ptr } }, ptr %_M10cons_x246442test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0, i32 0, i32 1
   %6 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 0
   %7 = load ptr, ptr %6, align 8
   %8 = getelementptr { ptr, ptr }, ptr %5, i32 0, i32 1
@@ -235,14 +235,14 @@ switch_default_4:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M10raw_x5Flet42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg11Temporal145(ptr %0, ptr %_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal69_0, ptr %_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal70_0) {
+define internal ptr @_M22raw_x5Flet_x244c_x249142test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal(ptr %0, ptr %_M7p_x244542test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0, ptr %_M7p_x244642test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr, ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 0
   store i8 1, ptr %3, align 1
   %4 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 1, i32 0
-  store ptr %_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal69_0, ptr %4, align 8
+  store ptr %_M7p_x244542test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0, ptr %4, align 8
   %5 = getelementptr { i8, { ptr, ptr } }, ptr %2, i32 0, i32 1, i32 1
-  store ptr %_M1p42test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg10Temporal70_0, ptr %5, align 8
+  store ptr %_M7p_x244642test_x2Ftestcases_x2Fmalgo_x2FTest3_x2Emlg8Temporal_0, ptr %5, align 8
   ret ptr %2
 }
 

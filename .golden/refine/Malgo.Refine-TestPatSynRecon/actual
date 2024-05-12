@@ -32,16 +32,16 @@ Module
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 5, sourceColumn = Pos 13 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 5, sourceColumn = Pos 15 } } } )
         ( Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 0 } ), VarP
+         { name = "x$0", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ), VarP
         ( Typed
          { annotated = TyPrim Int64T, value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 5, sourceColumn = Pos 15 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 5, sourceColumn = Pos 17 } } } )
         ( Id
-         { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 1 } ) ]
+         { name = "y$1", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyPrim Int64T, value = Range
@@ -82,8 +82,8 @@ Module
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 5, sourceColumn = Pos 30 }, _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 5, sourceColumn = Pos 32 } } } )
             ( Id
-             { name = "x", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 0 } ) ) )
+             { name = "x$0", moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ) )
           ( Var
            ( Typed
             { annotated = TyPrim Int64T, value = Range
@@ -91,8 +91,8 @@ Module
               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 5, sourceColumn = Pos 32 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 5, sourceColumn = Pos 33 } } } )
            ( Id
-            { name = "y", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 1 } ) ) ) :| [] ) ) :| [] ) ) ],
+            { name = "y$1", moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyArr
@@ -187,8 +187,8 @@ Module
              { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 8, sourceColumn = Pos 18 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 8, sourceColumn = Pos 19 } } } )
           ( Id
-           { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 2 } ) ], VarP
+           { name = "x$2", moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ], VarP
          ( Typed
           { annotated = TyApp
            ( TyCon
@@ -203,8 +203,8 @@ Module
             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 8, sourceColumn = Pos 21 }, _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 8, sourceColumn = Pos 24 } } } )
          ( Id
-          { name = "xs", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 3 } ) ] ]
+          { name = "xs$3", moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ] ]
        ( Seq
         ( Typed
          { annotated = TyCon
@@ -320,8 +320,8 @@ Module
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 9, sourceColumn = Pos 11 }, _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 9, sourceColumn = Pos 14 } } } )
              ( Id
-              { name = "xs", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 3 } ) ) ) )
+              { name = "xs$3", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ) ) )
           ( Fn
            ( Typed
             { annotated = TyArr
@@ -369,8 +369,8 @@ Module
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 9, sourceColumn = Pos 26 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 9, sourceColumn = Pos 27 } } } )
               ( Id
-               { name = "s", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 4 } ) ] ]
+               { name = "s$4", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ] ]
             ( Seq
              ( Typed
               { annotated = TyCon
@@ -447,8 +447,8 @@ Module
                        { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 9, sourceColumn = Pos 40 }, _end = SourcePos
                        { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 9, sourceColumn = Pos 42 } } } )
                     ( Id
-                     { name = "x", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 2 } ) ) )
+                     { name = "x$2", moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ) )
                   ( Var
                    ( Typed
                     { annotated = TyPrim Int64T, value = Range
@@ -456,8 +456,8 @@ Module
                       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 9, sourceColumn = Pos 45 }, _end = SourcePos
                       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 9, sourceColumn = Pos 46 } } } )
                    ( Id
-                    { name = "s", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 4 } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ) :| [] ) ) :|
+                    { name = "s$4", moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ) :| [] ) ) :|
        [ Clause
         ( Typed
          { annotated = TyArr
@@ -569,8 +569,8 @@ Module
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 14, sourceColumn = Pos 3 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 16, sourceColumn = Pos 1 } } } )
         ( Id
-         { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 82 } ) ]
+         { name = "$_$52", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -966,8 +966,8 @@ Module
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 15, sourceColumn = Pos 9 }, _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 15, sourceColumn = Pos 11 } } } )
              ( Id
-              { name = "i", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 5 } ) ]
+              { name = "i$5", moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ]
             ( Seq
              ( Typed
               { annotated = TyTuple 0, value = Range
@@ -1009,8 +1009,8 @@ Module
                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 15, sourceColumn = Pos 25 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg", sourceLine = Pos 15, sourceColumn = Pos 26 } } } )
                 ( Id
-                 { name = "i", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal 5 } ) ) ) :| [] ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ] ], _scSigs = [], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
+                 { name = "i$5", moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" ), sort = Internal } ) ) ) :| [] ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ] ], _scSigs = [], _dataDefs = [], _typeSynonyms = [], _foreigns = [], _imports =
    [
     ( Range
      { _start = SourcePos

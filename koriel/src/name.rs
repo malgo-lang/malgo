@@ -6,8 +6,8 @@ use unicode_xid::UnicodeXID;
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Sort {
     External,
-    Internal(u64),
-    Temporal(u64),
+    Internal,
+    Temporal,
     Native,
 }
 
@@ -15,8 +15,8 @@ impl ToString for Sort {
     fn to_string(&self) -> String {
         match self {
             Sort::External => "External".to_string(),
-            Sort::Internal(x) => format!("Internal{}", x),
-            Sort::Temporal(x) => format!("Temporal{}", x),
+            Sort::Internal => "Internal".to_string(),
+            Sort::Temporal => "Temporal".to_string(),
             Sort::Native => "Native".to_string(),
         }
     }
@@ -30,12 +30,10 @@ impl FromStr for Sort {
             Ok(Sort::External)
         } else if s == "Native" {
             Ok(Sort::Native)
-        } else if s.starts_with("Internal") {
-            let x = s.trim_start_matches("Internal").parse().unwrap();
-            Ok(Sort::Internal(x))
-        } else if s.starts_with("Temporal") {
-            let x = s.trim_start_matches("Temporal").parse().unwrap();
-            Ok(Sort::Temporal(x))
+        } else if s == "Internal" {
+            Ok(Sort::Internal)
+        } else if s == "Temporal" {
+            Ok(Sort::Temporal)
         } else {
             Err(format!("Invalid sort: {}", s))
         }

@@ -56,8 +56,8 @@ Module
            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 15, sourceColumn = Pos 17 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 15, sourceColumn = Pos 19 } } } )
         ( Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 1 } ) ]
+         { name = "x$1", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyCon
@@ -82,8 +82,8 @@ Module
              { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 15, sourceColumn = Pos 22 }, _end = SourcePos
              { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 15, sourceColumn = Pos 24 } } } )
           ( Id
-           { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 1 } ) ) :| [] ) ) :| [] ) ) ],
+           { name = "x$1", moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) :| [] ) ) :| [] ) ) ],
     [
      ( Typed
       { annotated = TyApp
@@ -206,8 +206,8 @@ Module
            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 3 }, _end = SourcePos
            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 20, sourceColumn = Pos 1 } } } )
         ( Id
-         { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 29 } ) ]
+         { name = "$_$1d", moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ]
        ( Seq
         ( Typed
          { annotated = TyTuple 0, value = Range
@@ -311,8 +311,8 @@ Module
                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 15 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 16 } } } )
               ( Id
-               { name = "h", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 2 } ), VarP
+               { name = "h$2", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ), VarP
               ( Typed
                { annotated = TyCon
                 ( Id
@@ -322,8 +322,8 @@ Module
                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 18 }, _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 19 } } } )
               ( Id
-               { name = "w", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 3 } ) ] ]
+               { name = "w$3", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ] ]
             ( Seq
              ( Typed
               { annotated = TyTuple 0, value = Range
@@ -365,8 +365,8 @@ Module
                    { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 31 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 32 } } } )
                 ( Id
-                 { name = "h", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 2 } ) ) ) :|
+                 { name = "h$2", moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) ) :|
               [ NoBind
                ( Range
                 { _start = SourcePos
@@ -455,8 +455,8 @@ Module
                     { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 55 }, _end = SourcePos
                     { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 57 } } } )
                  ( Id
-                  { name = "w", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 3 } ) ) ) ] ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ] ], _scSigs =
+                  { name = "w$3", moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ) ) ] ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ] ], _scSigs =
    [
     ( Range
      { _start = SourcePos
@@ -552,8 +552,8 @@ Module
      { name = "MyTuple", moduleName = Artifact
       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = External },
      [ Id
-      { name = "a", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 0 } ], TyTuple
+      { name = "a$0", moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ], TyTuple
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 18 }, _end = SourcePos
@@ -564,15 +564,15 @@ Module
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 19 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 20 } } )
       ( Id
-       { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 0 } ), TyVar
+       { name = "a$0", moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ), TyVar
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 22 }, _end = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 4, sourceColumn = Pos 23 } } )
       ( Id
-       { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal 0 } ) ] ),
+       { name = "a$0", moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = Internal } ) ] ),
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 6, sourceColumn = Pos 6 }, _end = SourcePos
