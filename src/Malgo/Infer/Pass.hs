@@ -61,7 +61,7 @@ infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
       zonkedTcEnv <-
         get
           >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+          >>= traverseOf (typeDefMap . traversed . valueConstructors . traversed . _2 . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
       pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
