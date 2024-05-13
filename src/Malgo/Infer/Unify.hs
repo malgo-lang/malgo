@@ -22,7 +22,9 @@ import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
+import GHC.Exception (prettyCallStack)
 import GHC.Records (HasField)
+import GHC.Stack (callStack)
 import Malgo.Id
 import Malgo.Infer.TcEnv (TcEnv)
 import Malgo.Infer.TypeRep
@@ -30,6 +32,7 @@ import Malgo.Lens (kindCtx, typeSynonymMap)
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint)
+import UnliftIO (Exception (displayException), catch)
 
 -- * Constraint
 
@@ -60,12 +63,15 @@ freshVar hint = do
   pure $ MetaVar newVar
 
 bindVar :: (IOE :> es, State TcEnv :> es, State TypeMap :> es, Reader Flag :> es) => Range -> MetaVar -> Type -> Eff es ()
-bindVar x v t = do
+bindVar x v t = catchInvalidKindError do
   when (occursCheck v t) $ errorOn x $ "Occurs check:" <+> squotes (pretty v) <+> "for" <+> pretty t
   ctx <- gets @TcEnv (view kindCtx)
   solve [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
   modify @TypeMap (Map.insert v t)
   where
+    catchInvalidKindError :: (IOE :> es, Reader Flag :> es) => Eff es () -> Eff es ()
+    catchInvalidKindError act =
+      act `catch` \(e :: InvalidKindError) -> errorOn x $ pretty $ displayException e
     occursCheck :: MetaVar -> Type -> Bool
     occursCheck v t = Set.member v (freevars t)
 
@@ -93,7 +99,7 @@ zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
 type UnifyResult ann = Either (Range, Doc ann) (Map MetaVar Type, [(Range, Constraint)])
 
 -- | Unify two types
-unify :: Range -> Type -> Type -> UnifyResult ann
+unify :: (HasCallStack) => Range -> Type -> Type -> UnifyResult ann
 unify _ (TyMeta v1) (TyMeta v2)
   | v1 == v2 = pure (mempty, [])
   | otherwise = pure (Map.singleton v1 (TyMeta v2), [])
@@ -111,11 +117,13 @@ unify _ TyPtr TyPtr = pure (mempty, [])
 unify _ TYPE TYPE = pure (mempty, [])
 unify x t1 t2 = Left (x, unifyErrorMessage t1 t2)
   where
-    unifyErrorMessage t1 t2 = vsep ["Couldn't match", nest 7 (pretty t1), nest 2 ("with" <+> pretty t2)]
+    unifyErrorMessage :: (HasCallStack) => Type -> Type -> Doc ann
+    unifyErrorMessage t1 t2 =
+      vsep ["Couldn't match", nest 7 (pretty t1), nest 2 ("with" <+> pretty t2), nest 2 ("callstack:" <+> pretty (prettyCallStack callStack))]
 
 -- * Constraint solver
 
-solve :: (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) => [(Range, Constraint)] -> Eff es ()
+solve :: (HasCallStack) => (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) => [(Range, Constraint)] -> Eff es ()
 solve = solveLoop (5000 :: Int)
   where
     solveLoop n _ | n <= 0 = error "Constraint solver error: iteration limit"

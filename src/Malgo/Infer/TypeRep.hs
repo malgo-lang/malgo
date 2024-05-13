@@ -13,6 +13,7 @@ module Malgo.Infer.TypeRep
     MetaVar (..),
     HasType (..),
     HasKind (..),
+    InvalidKindError (..),
     Scheme (..),
     TypeDef (..),
     typeConstructor,
@@ -31,6 +32,7 @@ module Malgo.Infer.TypeRep
   )
 where
 
+import Control.Exception (Exception (..), throw)
 import Control.Lens (At (at), Traversal', makeLenses, mapped, (?~), (^.), _1, _2)
 import Data.Data (Data)
 import Data.Map.Strict qualified as Map (fromList, toList)
@@ -38,6 +40,8 @@ import Data.Set qualified as Set (singleton)
 import Data.Store (Store)
 import Effectful (Eff)
 import Effectful.State.Static.Local (State, evalState)
+import GHC.Exception (CallStack, prettyCallStack)
+import GHC.Stack (callStack)
 import Malgo.Id
 import Malgo.Prelude
 
@@ -117,7 +121,7 @@ instance Pretty Type where
       prettyPrec _ (TyConApp (TyTuple _) ts) = parens $ sep $ punctuate "," $ map (prettyPrec 0) ts
       prettyPrec _ (TyConApp TyPtr [t]) = "Ptr#" <+> prettyPrec 0 t
       prettyPrec d (TyApp t1 t2) =
-        maybeParens (d > 10) $ hsep [prettyPrec 10 t1, prettyPrec 11 t2]
+        maybeParens (d > 11) $ hsep [prettyPrec 11 t1, prettyPrec 12 t2]
       prettyPrec _ (TyVar v) = pretty v
       prettyPrec _ (TyCon c) = pretty c
       prettyPrec _ (TyPrim p) = pretty p
@@ -182,7 +186,7 @@ class HasType a where
   types :: Traversal' a Type
 
 class HasKind a where
-  kindOf :: KindCtx -> a -> Kind
+  kindOf :: (HasCallStack) => KindCtx -> a -> Kind
 
 instance HasKind TypeVar where
   kindOf ctx v = askKind v ctx
@@ -194,9 +198,18 @@ instance HasType Type where
   typeOf = identity
   types = identity
 
+data InvalidKindError = InvalidKindError CallStack Type
+
+instance Show InvalidKindError where
+  show = displayException
+
+instance Exception InvalidKindError where
+  displayException (InvalidKindError callStack ty) =
+    "Invalid kind: " <> show ty <> "\n\tat " <> prettyCallStack callStack
+
 instance HasKind Type where
   kindOf ctx (TyApp (kindOf ctx -> TyArr _ k) _) = k
-  kindOf _ TyApp {} = error "invalid kind"
+  kindOf _ t@TyApp {} = throw $ InvalidKindError callStack t
   kindOf ctx (TyVar v) = kindOf ctx v
   kindOf ctx (TyCon c) = kindOf ctx c
   kindOf ctx (TyPrim p) = kindOf ctx p
@@ -230,7 +243,7 @@ data TypeDef ty = TypeDef
     _typeParameters :: [TypeVar],
     _valueConstructors :: [(Id, Scheme ty)]
   }
-  deriving stock (Show, Generic, Functor, Foldable, Traversable)
+  deriving stock (Show, Generic)
   deriving anyclass (Store)
 
 instance (Pretty ty) => Pretty (TypeDef ty) where
