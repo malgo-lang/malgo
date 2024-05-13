@@ -14,8 +14,16 @@ fn main() -> io::Result<()> {
     // Parse the input as JSON using serde_json
     let json: syntax::Program = serde_json::from_str(&input)?;
 
-    // Print the JSON to stdout
-    println!("{:#?}", json);
+    let closure = closure::closure_conversion(json);
+
+    match closure {
+        Ok(closure) => {
+            println!("{:#?}", closure);
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+        }
+    }
 
     Ok(())
 }

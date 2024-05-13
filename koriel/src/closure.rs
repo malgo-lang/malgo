@@ -5,12 +5,10 @@ use std::collections::{BTreeMap, BTreeSet};
 /// Context for closure conversion.
 struct ClosureContext {
     program: Program,
-    unique_supply: u64,
-    source_path: String,
 }
 
 impl ClosureContext {
-    pub fn new(source_path: String) -> Self {
+    pub fn new() -> Self {
         ClosureContext {
             program: Program {
                 variables: Vec::new(),
@@ -18,8 +16,6 @@ impl ClosureContext {
                 closures: Vec::new(),
                 externals: Vec::new(),
             },
-            unique_supply: 0,
-            source_path,
         }
     }
 
@@ -38,36 +34,23 @@ impl ClosureContext {
     pub fn add_external(&mut self, external: ExternalDef) {
         self.program.externals.push(external);
     }
-
-    pub fn fresh_name(&mut self, hint: &str) -> Name {
-        use crate::name::Sort::Temporal;
-        let name = Name {
-            name: format!("{}${}", hint, self.unique_supply),
-            path: self.source_path.clone(),
-            sort: Temporal,
-        };
-        self.unique_supply += 1;
-        name
-    }
 }
 
 type Result<T> = std::result::Result<T, CCError>;
 
 #[derive(Debug)]
-enum CCError {
-    Unimplemented,
-    NotValidSuffix(Name, &'static str),
+pub enum CCError {
     InvalidType(Name, syntax::Type),
+    InvalidType2(Name, Type),
 }
 
 impl std::fmt::Display for CCError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            CCError::Unimplemented => write!(f, "Unimplemented"),
-            CCError::NotValidSuffix(name, suffix) => {
-                write!(f, "Not valid suffix: {} (expected: {})", name, suffix)
-            }
             CCError::InvalidType(name, typ) => {
+                write!(f, "Invalid type: `{}` as {:?}", name, typ)
+            }
+            CCError::InvalidType2(name, typ) => {
                 write!(f, "Invalid type: `{}` as {:?}", name, typ)
             }
         }
@@ -76,8 +59,8 @@ impl std::fmt::Display for CCError {
 
 impl std::error::Error for CCError {}
 
-pub fn closure_conversion(program: syntax::Program, source_path: String) -> Result<Program> {
-    let mut context = ClosureContext::new(source_path);
+pub fn closure_conversion(program: syntax::Program) -> Result<Program> {
+    let mut context = ClosureContext::new();
     for variable_def in program.variables {
         cc_variable_def(&mut context, variable_def)?;
     }
@@ -171,24 +154,9 @@ fn cc_function_def(context: &mut ClosureContext, function_def: syntax::FunctionD
 /// lifted name is used for the function that takes the environment as an argument.
 fn to_lifted_name(name: &Name) -> Name {
     Name {
-        name: format!("{}$closure", name.name),
+        name: format!("{}$lifted", name.name),
         path: name.path.clone(),
         sort: name.sort.clone(),
-    }
-}
-
-/// Remove the suffix "$lifted" from the name.
-/// If the name does not have the suffix "$lifted", return an error (NotValidSuffix).
-fn from_lifted_name(name: &Name) -> Result<Name> {
-    if name.name.ends_with("$lifted") {
-        let func = name.name.trim_end_matches("$lifted");
-        Ok(Name {
-            name: func.to_string(),
-            path: name.path.clone(),
-            sort: name.sort,
-        })
-    } else {
-        Err(CCError::NotValidSuffix(name.clone(), "$lifted"))
     }
 }
 
@@ -202,32 +170,332 @@ fn to_env_name(name: &Name) -> Name {
     }
 }
 
-/// Extract the original function name from an environment name.
-/// Remove the suffix "$env" from the name.
-/// If the name does not have the suffix "$env", return an error (NotValidSuffix).
-fn from_env_name(name: &Name) -> Result<Name> {
-    if name.name.ends_with("$env") {
-        let func = name.name.trim_end_matches("$env");
-        Ok(Name {
-            name: func.to_string(),
-            path: name.path.clone(),
-            sort: name.sort,
-        })
-    } else {
-        Err(CCError::NotValidSuffix(name.clone(), "$env"))
-    }
-}
-
 fn cc_external_def(context: &mut ClosureContext, external_def: syntax::ExternalDef) -> Result<()> {
-    todo!()
+    let typ = cc_type(context, external_def.typ)?;
+    context.add_external(ExternalDef {
+        name: external_def.name,
+        typ,
+    });
+
+    Ok(())
 }
 
 fn cc_type(context: &mut ClosureContext, typ: syntax::Type) -> Result<Type> {
-    todo!()
+    match typ {
+        syntax::Type::FuncT {
+            parameters,
+            returns,
+        } => {
+            let parameters = parameters
+                .into_iter()
+                .map(|parameter| cc_type(context, parameter))
+                .collect::<Result<Vec<Type>>>()?;
+            let returns = Box::new(cc_type(context, *returns)?);
+            Ok(Type::FuncT {
+                parameters,
+                returns,
+            })
+        }
+        syntax::Type::Int32T => Ok(Type::Int32T),
+        syntax::Type::Int64T => Ok(Type::Int64T),
+        syntax::Type::FloatT => Ok(Type::FloatT),
+        syntax::Type::DoubleT => Ok(Type::DoubleT),
+        syntax::Type::CharT => Ok(Type::CharT),
+        syntax::Type::StringT => Ok(Type::StringT),
+        syntax::Type::BoolT => Ok(Type::BoolT),
+        syntax::Type::SumT { constructors } => {
+            let constructors = constructors
+                .into_iter()
+                .map(|con| cc_con(context, con))
+                .collect::<Result<Vec<Con>>>()?;
+            Ok(Type::SumT { constructors })
+        }
+        syntax::Type::PtrT { inner } => {
+            let inner = Box::new(cc_type(context, *inner)?);
+            Ok(Type::PtrT { inner })
+        }
+        syntax::Type::RecordT { map } => {
+            let map = map
+                .into_iter()
+                .map(|(key, value)| {
+                    let cc_value = cc_type(context, value)?;
+                    Ok((key, cc_value))
+                })
+                .collect::<Result<BTreeMap<String, Type>>>()?;
+            Ok(Type::RecordT { map })
+        }
+        syntax::Type::AnyT => Ok(Type::AnyT),
+        syntax::Type::VoidT => Ok(Type::VoidT),
+    }
+}
+
+fn cc_con(context: &mut ClosureContext, con: syntax::Con) -> Result<Con> {
+    let tag = cc_tag(con.tag)?;
+    let parameters = con
+        .parameters
+        .into_iter()
+        .map(|parameter| cc_type(context, parameter))
+        .collect::<Result<Vec<Type>>>()?;
+    Ok(Con { tag, parameters })
+}
+
+fn cc_tag(tag: syntax::Tag) -> Result<Tag> {
+    match tag {
+        syntax::Tag::Data { name } => Ok(Tag::Data { name }),
+        syntax::Tag::Tuple => Ok(Tag::Tuple),
+    }
 }
 
 fn cc_expr(context: &mut ClosureContext, expr: syntax::Expr) -> Result<Expr> {
-    todo!()
+    match expr {
+        syntax::Expr::Atom { atom } => {
+            let atom = cc_atom(context, atom)?;
+            Ok(Expr::Atom { atom })
+        }
+        syntax::Expr::Call { callee, arguments } => {
+            let callee = cc_atom(context, callee)?;
+            let arguments = arguments
+                .into_iter()
+                .map(|argument| cc_atom(context, argument))
+                .collect::<Result<Vec<Atom>>>()?;
+            Ok(Expr::CallClosure { callee, arguments })
+        }
+        syntax::Expr::RawCall {
+            name,
+            typ,
+            arguments,
+        } => {
+            let typ = cc_type(context, typ)?;
+            let arguments = arguments
+                .into_iter()
+                .map(|argument| cc_atom(context, argument))
+                .collect::<Result<Vec<Atom>>>()?;
+            Ok(Expr::RawCall {
+                name,
+                typ,
+                arguments,
+            })
+        }
+        syntax::Expr::Cast { typ, value } => {
+            let typ = cc_type(context, typ)?;
+            let value = cc_atom(context, value)?;
+            Ok(Expr::Cast { typ, value })
+        }
+        syntax::Expr::Let { bindings, body } => {
+            let bindings = bindings
+                .into_iter()
+                .map(|binding| cc_local_def(context, binding))
+                .collect::<Result<Vec<LocalDef>>>()?;
+            let body = Box::new(cc_expr(context, *body)?);
+            Ok(Expr::Let { bindings, body })
+        }
+        syntax::Expr::Match { scrutinee, clauses } => {
+            let scrutinee = Box::new(cc_expr(context, *scrutinee)?);
+            let clauses = clauses
+                .into_iter()
+                .map(|clause| cc_case(context, clause))
+                .collect::<Result<Vec<Case>>>()?;
+            Ok(Expr::Match { scrutinee, clauses })
+        }
+        syntax::Expr::Assign {
+            variable,
+            expression,
+            body,
+        } => {
+            let expression = Box::new(cc_expr(context, *expression)?);
+            let body = Box::new(cc_expr(context, *body)?);
+            Ok(Expr::Assign {
+                variable,
+                expression,
+                body,
+            })
+        }
+        syntax::Expr::Error { typ } => Ok(Expr::Error {
+            typ: cc_type(context, typ)?,
+        }),
+    }
+}
+
+fn cc_case(context: &mut ClosureContext, case: syntax::Case) -> Result<Case> {
+    match case {
+        syntax::Case::Unpack {
+            constructor,
+            variables,
+            body,
+        } => {
+            let constructor = cc_con(context, constructor)?;
+            let variables = variables
+                .into_iter()
+                .map(|variable| cc_variable(context, variable))
+                .collect::<Result<Vec<Name>>>()?;
+            let body = cc_expr(context, body)?;
+            Ok(Case::Unpack {
+                constructor,
+                variables,
+                body,
+            })
+        }
+        syntax::Case::OpenRecord { fields, body } => {
+            let fields = fields
+                .into_iter()
+                .map(|(key, value)| {
+                    let value = cc_variable(context, value)?;
+                    Ok((key, value))
+                })
+                .collect::<Result<BTreeMap<String, Name>>>()?;
+            let body = cc_expr(context, body)?;
+            Ok(Case::OpenRecord { fields, body })
+        }
+        syntax::Case::Exact { literal, body } => {
+            let literal = cc_unboxed(context, literal);
+            let body = cc_expr(context, body)?;
+            Ok(Case::Exact { literal, body })
+        }
+        syntax::Case::Bind {
+            variable,
+            typ,
+            body,
+        } => {
+            let typ = cc_type(context, typ)?;
+            let body = cc_expr(context, body)?;
+            Ok(Case::Bind {
+                variable,
+                typ,
+                body,
+            })
+        }
+    }
+}
+
+fn cc_local_def(context: &mut ClosureContext, local_def: syntax::LocalDef) -> Result<LocalDef> {
+    let typ = cc_type(context, local_def.typ)?;
+    let object = cc_obj(context, &local_def.variable, &typ, local_def.object)?;
+    Ok(LocalDef {
+        variable: local_def.variable,
+        typ,
+        object,
+    })
+}
+
+fn cc_obj(context: &mut ClosureContext, name: &Name, typ: &Type, obj: syntax::Obj) -> Result<Obj> {
+    match obj {
+        syntax::Obj::Fun { parameters, body } => {
+            let lifted_name = to_lifted_name(name);
+            let env_name = to_env_name(name);
+
+            let mut cc_parameters = Vec::new();
+            cc_parameters.push(env_name.clone());
+            for parameter in parameters {
+                cc_parameters.push(parameter);
+            }
+
+            let typ = match typ {
+                Type::FuncT {
+                    parameters,
+                    returns,
+                } => {
+                    let mut cc_parameters = Vec::new();
+                    cc_parameters.push(Type::EnvT);
+                    for parameter in parameters {
+                        cc_parameters.push(parameter.clone());
+                    }
+                    Type::FuncT {
+                        parameters: cc_parameters,
+                        returns: returns.clone(),
+                    }
+                }
+                _ => return Err(CCError::InvalidType2(name.clone(), typ.clone())),
+            };
+
+            let mut body = cc_expr(context, body)?;
+
+            // Note: free_variables includes `name` and other bindings as free variables.
+            let mut free_variables = body.free_variables();
+            free_variables.remove(&lifted_name);
+            for parameter in &cc_parameters {
+                free_variables.remove(parameter);
+            }
+            free_variables.remove(&env_name);
+
+            for free_variable in &free_variables {
+                body = Expr::SelectEnv {
+                    variable: free_variable.clone(),
+                    environment: Atom::Var {
+                        variable: env_name.clone(),
+                    },
+                    body: Box::new(body),
+                };
+            }
+
+            context.add_function(FunctionDef {
+                name: lifted_name.clone(),
+                parameters: cc_parameters,
+                typ,
+                body,
+            });
+
+            Ok(Obj::Closure {
+                function: lifted_name,
+                environment: free_variables.into_iter().collect(),
+            })
+        }
+        syntax::Obj::Pack {
+            typ,
+            constructor,
+            arguments,
+        } => {
+            let typ = cc_type(context, typ)?;
+            let constructor = cc_con(context, constructor)?;
+            let arguments = arguments
+                .into_iter()
+                .map(|argument| cc_atom(context, argument))
+                .collect::<Result<Vec<Atom>>>()?;
+            Ok(Obj::Pack {
+                typ,
+                constructor,
+                arguments,
+            })
+        }
+        syntax::Obj::Record { fields } => {
+            let fields = fields
+                .into_iter()
+                .map(|(key, value)| {
+                    let value = cc_atom(context, value)?;
+                    Ok((key, value))
+                })
+                .collect::<Result<BTreeMap<String, Atom>>>()?;
+            Ok(Obj::Record { fields })
+        }
+    }
+}
+
+fn cc_atom(context: &mut ClosureContext, atom: syntax::Atom) -> Result<Atom> {
+    match atom {
+        syntax::Atom::Var { variable } => {
+            let variable = cc_variable(context, variable)?;
+            Ok(Atom::Var { variable })
+        }
+        syntax::Atom::Unboxed { literal } => {
+            let literal = cc_unboxed(context, literal);
+            Ok(Atom::Unboxed { literal })
+        }
+    }
+}
+
+fn cc_variable(_context: &mut ClosureContext, variable: Name) -> Result<Name> {
+    Ok(variable)
+}
+
+fn cc_unboxed(_context: &mut ClosureContext, literal: syntax::Unboxed) -> Unboxed {
+    match literal {
+        syntax::Unboxed::Int32(i) => Unboxed::Int32(i),
+        syntax::Unboxed::Int64(i) => Unboxed::Int64(i),
+        syntax::Unboxed::Float(f) => Unboxed::Float(f),
+        syntax::Unboxed::Double(f) => Unboxed::Double(f),
+        syntax::Unboxed::Char(c) => Unboxed::Char(c),
+        syntax::Unboxed::String(s) => Unboxed::String(s),
+        syntax::Unboxed::Bool(b) => Unboxed::Bool(b),
+    }
 }
 
 trait ClosureTerm {
@@ -275,7 +543,7 @@ pub struct ExternalDef {
     pub typ: Type,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "tag")]
 pub enum Type {
     FuncT {
@@ -304,13 +572,13 @@ pub enum Type {
     EnvT,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Con {
     pub tag: Tag,
     pub parameters: Vec<Type>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "tag")]
 pub enum Tag {
     Data { name: String },
@@ -564,8 +832,8 @@ impl ClosureTerm for Obj {
                 environment,
             } => {
                 let mut set = BTreeSet::new();
-                for atom in environment.values() {
-                    set.extend(atom.free_variables());
+                for variable in environment {
+                    set.insert(variable.clone());
                 }
                 set
             }
