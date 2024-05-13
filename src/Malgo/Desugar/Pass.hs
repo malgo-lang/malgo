@@ -97,7 +97,6 @@ dsScDef ::
   ScDef (Malgo Refine) ->
   Eff es [Def]
 dsScDef (Typed typ _, name, expr) = do
-  -- ScDefは関数かlazy valueでなくてはならない
   case typ of
     GT.TyArr _ _ -> dsFunDef name expr
     _ -> dsVarDef name expr
