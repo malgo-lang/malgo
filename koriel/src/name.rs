@@ -64,16 +64,17 @@ impl Display for Id {
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Serialize, Deserialize)]
+#[serde(tag = "tag")]
 pub enum ModuleName {
-    ModuleName(String),
-    Artifact(ArtifactPath),
+    ModuleName { name: String },
+    Artifact { path: ArtifactPath },
 }
 
 impl Display for ModuleName {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ModuleName::ModuleName(name) => write!(f, "{}", name),
-            ModuleName::Artifact(path) => write!(f, "{}", path),
+            ModuleName::ModuleName { name } => write!(f, "{}", name),
+            ModuleName::Artifact { path } => write!(f, "{}", path),
         }
     }
 }
