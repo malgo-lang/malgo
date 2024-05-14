@@ -192,13 +192,12 @@ tcScDefGroup :: (State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader Modul
 tcScDefGroup = traverse tcScDefs
 
 tcScDefs :: (State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader ModuleName :> es, State Uniq :> es, Reader Flag :> es) => [ScDef (Malgo Rename)] -> Eff es [ScDef (Malgo Infer)]
-tcScDefs [] = pure []
-tcScDefs ds@((pos, _, _) : _) = do
-  ds <- traverse tcScDef ds
-  -- generalize mutually recursive functions
-  (as, types) <- generalizeMutRecs pos $ map (view (_1 . to typeOf)) ds
-  validateSignatures ds (as, types)
-  pure ds
+tcScDefs ds =
+  for ds \def -> do
+    def'@(x, _, _) <- tcScDef def
+    Forall as typ <- generalize x.value (view (_1 . to typeOf) def')
+    validateSignature def' (Forall as typ)
+    pure def'
 
 -- | Infer types of a function (or variable)
 --
@@ -215,14 +214,14 @@ tcScDef (pos, name, expr) = do
   pure (Typed exprType pos, name, expr')
 
 -- | Validate user-declared type signature and add type schemes to environment
-validateSignatures ::
+validateSignature ::
   (State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
-  -- | definitions of mutualy recursive functions
-  [ScDef (Malgo 'Infer)] ->
-  -- | signatures of mutualy recursive functions
-  ([TypeVar], [Type]) ->
+  -- | definition of function
+  ScDef (Malgo 'Infer) ->
+  -- | inferred signature of function
+  Scheme Type ->
   Eff es ()
-validateSignatures ds (as, types) = zipWithM_ checkSingle ds types
+validateSignature def (Forall as typ) = checkSingle def typ
   where
     -- check single case
     checkSingle (pos, name, _) inferredSchemeType = do
