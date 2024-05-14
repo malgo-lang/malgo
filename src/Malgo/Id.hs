@@ -19,7 +19,7 @@ module Malgo.Id
   )
 where
 
-import Data.Aeson (FromJSON, ToJSON)
+import Data.Aeson (FromJSON (..), KeyValue ((.=)), ToJSON (..), object, withObject, (.:))
 import Data.Data (Data)
 import Data.Store ()
 import Data.Store.TH
@@ -60,7 +60,13 @@ data Id = Id
     sort :: IdSort
   }
   deriving stock (Show, Eq, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, ToJSON, FromJSON)
+  deriving anyclass (Hashable)
+
+instance ToJSON Id where
+  toJSON Id {name, moduleName, sort} = object ["name" .= name, "module_name" .= moduleName, "sort" .= sort]
+
+instance FromJSON Id where
+  parseJSON = withObject "Id" $ \v -> Id <$> v .: "name" <*> v .: "module_name" <*> v .: "sort"
 
 instance Pretty Id where
   pretty Id {name, moduleName, sort = External} = pretty moduleName <> "." <> pretty name

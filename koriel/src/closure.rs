@@ -1,6 +1,12 @@
-use crate::{name::Name, syntax};
+use crate::{
+    name::{self, Id},
+    syntax,
+};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
+
+type SName = name::Name<syntax::Type>;
+type Name = name::Name<Type>;
 
 /// Context for closure conversion.
 struct ClosureContext {
@@ -40,7 +46,7 @@ type Result<T> = std::result::Result<T, CCError>;
 
 #[derive(Debug)]
 pub enum CCError {
-    InvalidType(Name, syntax::Type),
+    InvalidType(SName, syntax::Type),
     InvalidType2(Name, Type),
 }
 
@@ -48,10 +54,10 @@ impl std::fmt::Display for CCError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             CCError::InvalidType(name, typ) => {
-                write!(f, "Invalid type: `{}` as {:?}", name, typ)
+                write!(f, "Invalid type: `{}` as {:?}", name.id, typ)
             }
             CCError::InvalidType2(name, typ) => {
-                write!(f, "Invalid type: `{}` as {:?}", name, typ)
+                write!(f, "Invalid type: `{}` as {:?}", name.id, typ)
             }
         }
     }
@@ -73,26 +79,33 @@ pub fn closure_conversion(program: syntax::Program) -> Result<Program> {
     Ok(context.program)
 }
 
+fn cc_name(context: &mut ClosureContext, name: SName) -> Result<Name> {
+    let meta = cc_type(context, name.meta)?;
+
+    Ok(Name { meta, id: name.id })
+}
+
 fn cc_variable_def(context: &mut ClosureContext, variable_def: syntax::VariableDef) -> Result<()> {
+    let name = cc_name(context, variable_def.name)?;
     let typ = cc_type(context, variable_def.typ)?;
     let value = cc_expr(context, variable_def.value)?;
 
-    context.add_variable(VariableDef {
-        name: variable_def.name,
-        typ,
-        value,
-    });
+    context.add_variable(VariableDef { name, typ, value });
 
     Ok(())
 }
 
 fn cc_function_def(context: &mut ClosureContext, function_def: syntax::FunctionDef) -> Result<()> {
-    let lifted_name: Name = to_lifted_name(&function_def.name);
-    let env_name: Name = to_env_name(&function_def.name);
+    let env_name: SName = to_env_name(&function_def.name);
+    let env_name: Name = Name {
+        meta: Type::EnvT,
+        id: env_name.id,
+    };
 
     let mut parameters = Vec::new();
     parameters.push(env_name.clone());
     for parameter in function_def.parameters {
+        let parameter = cc_name(context, parameter)?;
         parameters.push(parameter);
     }
 
@@ -112,6 +125,12 @@ fn cc_function_def(context: &mut ClosureContext, function_def: syntax::FunctionD
             }
         }
         _ => return Err(CCError::InvalidType(function_def.name, function_def.typ)),
+    };
+
+    let lifted_name: SName = to_lifted_name(&function_def.name);
+    let lifted_name = Name {
+        meta: typ.clone(),
+        id: lifted_name.id,
     };
 
     let mut body = cc_expr(context, function_def.body)?;
@@ -141,8 +160,9 @@ fn cc_function_def(context: &mut ClosureContext, function_def: syntax::FunctionD
         body,
     });
 
+    let function_name = cc_name(context, function_def.name)?;
     context.add_closure(ClosureDef {
-        name: function_def.name.clone(),
+        name: function_name,
         function: lifted_name.clone(),
         environment: free_variables.into_iter().collect(),
     });
@@ -152,21 +172,27 @@ fn cc_function_def(context: &mut ClosureContext, function_def: syntax::FunctionD
 
 /// Add the suffix "$lifted" to the name.
 /// lifted name is used for the function that takes the environment as an argument.
-fn to_lifted_name(name: &Name) -> Name {
-    Name {
-        name: format!("{}$lifted", name.name),
-        path: name.path.clone(),
-        sort: name.sort.clone(),
+fn to_lifted_name<T: Clone>(name: &name::Name<T>) -> name::Name<T> {
+    name::Name {
+        meta: name.meta.clone(),
+        id: Id {
+            name: format!("{}$lifted", name.id.name),
+            module_name: name.id.module_name.clone(),
+            sort: name.id.sort,
+        },
     }
 }
 
 /// Make a name for a capture environment.
 /// Add the suffix "$env" to the name.
-fn to_env_name(name: &Name) -> Name {
-    Name {
-        name: format!("{}$env", name.name),
-        path: name.path.clone(),
-        sort: name.sort,
+fn to_env_name<T: Clone>(name: &name::Name<T>) -> name::Name<T> {
+    name::Name {
+        meta: name.meta.clone(),
+        id: Id {
+            name: format!("{}$env", name.id.name),
+            module_name: name.id.module_name.clone(),
+            sort: name.id.sort,
+        },
     }
 }
 
@@ -302,6 +328,7 @@ fn cc_expr(context: &mut ClosureContext, expr: syntax::Expr) -> Result<Expr> {
             expression,
             body,
         } => {
+            let variable = cc_name(context, variable)?;
             let expression = Box::new(cc_expr(context, *expression)?);
             let body = Box::new(cc_expr(context, *body)?);
             Ok(Expr::Assign {
@@ -326,7 +353,7 @@ fn cc_case(context: &mut ClosureContext, case: syntax::Case) -> Result<Case> {
             let constructor = cc_con(context, constructor)?;
             let variables = variables
                 .into_iter()
-                .map(|variable| cc_variable(context, variable))
+                .map(|variable| cc_name(context, variable))
                 .collect::<Result<Vec<Name>>>()?;
             let body = cc_expr(context, body)?;
             Ok(Case::Unpack {
@@ -339,7 +366,7 @@ fn cc_case(context: &mut ClosureContext, case: syntax::Case) -> Result<Case> {
             let fields = fields
                 .into_iter()
                 .map(|(key, value)| {
-                    let value = cc_variable(context, value)?;
+                    let value = cc_name(context, value)?;
                     Ok((key, value))
                 })
                 .collect::<Result<BTreeMap<String, Name>>>()?;
@@ -356,6 +383,7 @@ fn cc_case(context: &mut ClosureContext, case: syntax::Case) -> Result<Case> {
             typ,
             body,
         } => {
+            let variable = cc_name(context, variable)?;
             let typ = cc_type(context, typ)?;
             let body = cc_expr(context, body)?;
             Ok(Case::Bind {
@@ -368,10 +396,11 @@ fn cc_case(context: &mut ClosureContext, case: syntax::Case) -> Result<Case> {
 }
 
 fn cc_local_def(context: &mut ClosureContext, local_def: syntax::LocalDef) -> Result<LocalDef> {
+    let variable = cc_name(context, local_def.variable)?;
     let typ = cc_type(context, local_def.typ)?;
-    let object = cc_obj(context, &local_def.variable, &typ, local_def.object)?;
+    let object = cc_obj(context, &variable, &typ, local_def.object)?;
     Ok(LocalDef {
-        variable: local_def.variable,
+        variable,
         typ,
         object,
     })
@@ -380,12 +409,16 @@ fn cc_local_def(context: &mut ClosureContext, local_def: syntax::LocalDef) -> Re
 fn cc_obj(context: &mut ClosureContext, name: &Name, typ: &Type, obj: syntax::Obj) -> Result<Obj> {
     match obj {
         syntax::Obj::Fun { parameters, body } => {
-            let lifted_name = to_lifted_name(name);
             let env_name = to_env_name(name);
+            let env_name = Name {
+                meta: Type::EnvT,
+                id: env_name.id,
+            };
 
             let mut cc_parameters = Vec::new();
             cc_parameters.push(env_name.clone());
             for parameter in parameters {
+                let parameter = cc_name(context, parameter)?;
                 cc_parameters.push(parameter);
             }
 
@@ -409,6 +442,11 @@ fn cc_obj(context: &mut ClosureContext, name: &Name, typ: &Type, obj: syntax::Ob
 
             let mut body = cc_expr(context, body)?;
 
+            let lifted_name = to_lifted_name(name);
+            let lifted_name = Name {
+                meta: typ.clone(),
+                id: lifted_name.id,
+            };
             // Note: free_variables includes `name` and other bindings as free variables.
             let mut free_variables = body.free_variables();
             free_variables.remove(&lifted_name);
@@ -472,7 +510,7 @@ fn cc_obj(context: &mut ClosureContext, name: &Name, typ: &Type, obj: syntax::Ob
 fn cc_atom(context: &mut ClosureContext, atom: syntax::Atom) -> Result<Atom> {
     match atom {
         syntax::Atom::Var { variable } => {
-            let variable = cc_variable(context, variable)?;
+            let variable = cc_name(context, variable)?;
             Ok(Atom::Var { variable })
         }
         syntax::Atom::Unboxed { literal } => {
@@ -480,10 +518,6 @@ fn cc_atom(context: &mut ClosureContext, atom: syntax::Atom) -> Result<Atom> {
             Ok(Atom::Unboxed { literal })
         }
     }
-}
-
-fn cc_variable(_context: &mut ClosureContext, variable: Name) -> Result<Name> {
-    Ok(variable)
 }
 
 fn cc_unboxed(_context: &mut ClosureContext, literal: syntax::Unboxed) -> Unboxed {
@@ -543,7 +577,7 @@ pub struct ExternalDef {
     pub typ: Type,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(tag = "tag")]
 pub enum Type {
     FuncT {
@@ -572,13 +606,13 @@ pub enum Type {
     EnvT,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Con {
     pub tag: Tag,
     pub parameters: Vec<Type>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(tag = "tag")]
 pub enum Tag {
     Data { name: String },

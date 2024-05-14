@@ -1,6 +1,8 @@
-use crate::name::{native_name, Name};
+use crate::name;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+
+type Name = name::Name<Type>;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Program {
@@ -124,13 +126,7 @@ impl HasType for ExternalDef {
     }
 }
 
-impl Definable for ExternalDef {
-    fn add_to_context(&self, ctx: &mut TypeContext) {
-        ctx.insert(native_name(&self.name), self.typ.clone())
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(tag = "tag")]
 pub enum Type {
     FuncT {
@@ -157,13 +153,13 @@ pub enum Type {
     VoidT,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Con {
     pub tag: Tag,
     pub parameters: Vec<Type>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(tag = "tag")]
 pub enum Tag {
     Data { name: String },
@@ -291,7 +287,9 @@ pub enum Atom {
 impl HasType for Atom {
     fn get_type(&self, ctx: &TypeContext) -> Type {
         match self {
-            Atom::Var { variable } => ctx.get(variable).expect(&format!("{} not found", variable)),
+            Atom::Var { variable } => ctx
+                .get(variable)
+                .expect(&format!("{} not found", variable.id)),
             Atom::Unboxed { literal } => match literal {
                 Unboxed::Int32(_) => Type::Int32T,
                 Unboxed::Int64(_) => Type::Int64T,

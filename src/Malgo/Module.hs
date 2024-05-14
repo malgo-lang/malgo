@@ -155,7 +155,16 @@ data ArtifactPath = ArtifactPath
     relPath :: Path Rel File
   }
   deriving stock (Eq, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, ToJSON, FromJSON, Store)
+  deriving anyclass (Hashable, Store)
+
+instance ToJSON ArtifactPath where
+  toJSON ArtifactPath {..} = object ["raw_path" .= rawPath, "rel_path" .= relPath]
+
+instance FromJSON ArtifactPath where
+  parseJSON = withObject "ArtifactPath" \o -> do
+    rawPath <- o .: "raw_path"
+    relPath <- o .: "rel_path"
+    pure ArtifactPath {rawPath, relPath}
 
 instance Show ArtifactPath where
   -- Do not show rawPath, originPath, targetPath.

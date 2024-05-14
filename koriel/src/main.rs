@@ -24,9 +24,6 @@ fn main() -> io::Result<()> {
     for fun_def in &program.functions {
         fun_def.add_to_context(&mut ctx);
     }
-    for ext_def in &program.externals {
-        ext_def.add_to_context(&mut ctx);
-    }
     for var_def in &program.variables {
         let declared = ctx.type_of(var_def);
         let actual = ctx.type_of(&var_def.value);
@@ -105,9 +102,6 @@ mod tests {
                         }
                         for fun_def in &program.functions {
                             fun_def.add_to_context(&mut ctx);
-                        }
-                        for ext_def in &program.externals {
-                            ext_def.add_to_context(&mut ctx);
                         }
                         for var_def in &program.variables {
                             let declared = ctx.type_of(var_def);
