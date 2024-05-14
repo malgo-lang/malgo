@@ -47,6 +47,14 @@ pub struct Name {
     pub sort: Sort,
 }
 
+pub fn native_name(name: &str) -> Name {
+    Name {
+        name: name.to_string(),
+        path: "".to_string(),
+        sort: Sort::Native,
+    }
+}
+
 impl Display for Name {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self.sort {

@@ -89,10 +89,8 @@ compileFromAST srcPath parsedAst = do
 
       (dsEnv, core) <- desugar tcEnv refinedAst
 
-      save srcPath ".json" (ViaJSON $ Mangle.mangleProgram core)
-
       core <- do
-        core <- runReader moduleName $ Flat.normalize core
+        -- core <- runReader moduleName $ Flat.normalize core
         _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
         save srcPath ".mo" (ViaStore core)
 
@@ -104,6 +102,10 @@ compileFromAST srcPath parsedAst = do
 
         lint True core
         pure core
+
+      save srcPath ".json" (ViaJSON $ Mangle.mangleProgram core)
+
+      core <- runReader moduleName $ Flat.normalize core
 
       when flags.debugMode
         $ liftIO do

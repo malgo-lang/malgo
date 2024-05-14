@@ -1,5 +1,7 @@
 use std::io::{self, Read};
 
+use syntax::Definable;
+
 mod name;
 
 mod syntax;
@@ -12,9 +14,34 @@ fn main() -> io::Result<()> {
     std::io::stdin().read_to_string(&mut input).unwrap();
 
     // Parse the input as JSON using serde_json
-    let json: syntax::Program = serde_json::from_str(&input)?;
+    let program: syntax::Program = serde_json::from_str(&input)?;
 
-    let closure = closure::closure_conversion(json);
+    // Check if the program is well-typed
+    let mut ctx = syntax::TypeContext::new();
+    for var_def in &program.variables {
+        var_def.add_to_context(&mut ctx);
+    }
+    for fun_def in &program.functions {
+        fun_def.add_to_context(&mut ctx);
+    }
+    for ext_def in &program.externals {
+        ext_def.add_to_context(&mut ctx);
+    }
+    for var_def in &program.variables {
+        let declared = ctx.type_of(var_def);
+        let actual = ctx.type_of(&var_def.value);
+        dbg!(&var_def.name);
+        dbg!(&declared);
+        assert_eq!(declared, actual);
+    }
+    for fun_def in &program.functions {
+        let declared = ctx.type_of(fun_def);
+        dbg!(&fun_def.name);
+        dbg!(&declared);
+        assert!(matches!(declared, syntax::Type::FuncT { .. }));
+    }
+
+    let closure = closure::closure_conversion(program);
 
     match closure {
         Ok(closure) => {
@@ -37,6 +64,8 @@ mod tests {
     };
 
     use walkdir::WalkDir;
+
+    use crate::syntax::Definable;
 
     #[test]
     fn parse_examples() {
@@ -68,8 +97,32 @@ mod tests {
                 let program: Result<super::syntax::Program, serde_json::Error> =
                     serde_json::from_str(&source);
 
-                match program {
-                    Ok(_) => {}
+                match &program {
+                    Ok(program) => {
+                        let mut ctx = super::syntax::TypeContext::new();
+                        for var_def in &program.variables {
+                            var_def.add_to_context(&mut ctx);
+                        }
+                        for fun_def in &program.functions {
+                            fun_def.add_to_context(&mut ctx);
+                        }
+                        for ext_def in &program.externals {
+                            ext_def.add_to_context(&mut ctx);
+                        }
+                        for var_def in &program.variables {
+                            let declared = ctx.type_of(var_def);
+                            let actual = ctx.type_of(&var_def.value);
+                            dbg!(&var_def.name);
+                            dbg!(&declared);
+                            assert_eq!(declared, actual);
+                        }
+                        for fun_def in &program.functions {
+                            let declared = ctx.type_of(fun_def);
+                            dbg!(&fun_def.name);
+                            dbg!(&declared);
+                            assert!(matches!(declared, super::syntax::Type::FuncT { .. }));
+                        }
+                    }
                     Err(e) => {
                         panic!("Error on {}: {}", json_path.to_string_lossy(), e);
                     }
