@@ -30,7 +30,62 @@ fn main() -> io::Result<()> {
 
 #[cfg(test)]
 mod tests {
+    use std::{
+        io::{self, Write},
+        path::PathBuf,
+        process::Command,
+    };
+
     use walkdir::WalkDir;
+
+    #[test]
+    fn parse_examples() {
+        let examples = "./examples";
+
+        // check if examples exists
+        if !std::path::Path::new(examples).exists() {
+            panic!("{} does not exist", examples);
+        }
+
+        for entry in WalkDir::new(examples).into_iter().filter_map(|e| e.ok()) {
+            let f_name = entry.file_name().to_string_lossy();
+
+            if f_name.ends_with(".mlg") {
+                let output = Command::new("malgo")
+                    .arg("to-ll")
+                    .arg(entry.path())
+                    .output()
+                    .expect("failed to execute process");
+                io::stdout().write_all(&output.stdout).unwrap();
+                io::stderr().write_all(&output.stderr).unwrap();
+                assert!(output.status.success());
+
+                let mut json_path = PathBuf::from(".malgo-work");
+                json_path.push(entry.path());
+                json_path.set_extension("json");
+
+                let source = std::fs::read_to_string(&json_path).unwrap();
+                let program: Result<super::syntax::Program, serde_json::Error> =
+                    serde_json::from_str(&source);
+
+                match program {
+                    Ok(_) => {}
+                    Err(e) => {
+                        panic!("Error on {}: {}", json_path.to_string_lossy(), e);
+                    }
+                }
+
+                let closure = super::closure::closure_conversion(program.unwrap());
+
+                match closure {
+                    Ok(_) => {}
+                    Err(e) => {
+                        panic!("Error on {}: {}", json_path.to_string_lossy(), e);
+                    }
+                }
+            }
+        }
+    }
 
     #[test]
     fn parse_malgo_golden() {

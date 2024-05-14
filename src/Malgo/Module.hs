@@ -18,6 +18,7 @@ module Malgo.Module
     parseArtifactPath,
     Resource (..),
     ViaStore (..),
+    ViaJSON (..),
     moduleNameToString,
   )
 where
@@ -25,6 +26,7 @@ where
 import Control.Lens (at, (?~), (^.))
 import Control.Monad.Catch
 import Data.Aeson hiding (encode)
+import Data.Aeson qualified as Aeson
 import Data.ByteString (ByteString)
 import Data.ByteString qualified as BS
 import Data.Data
@@ -36,7 +38,7 @@ import GHC.Records
 import GHC.Stack (callStack)
 import Malgo.Prelude
 import Path
-import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, findFile, getCurrentDirectory, makeAbsolute)
+import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, findFile, getCurrentDirectory, getModificationTime, makeAbsolute)
 import System.Directory.Extra (listDirectories)
 import System.FilePath (makeRelative)
 import System.FilePath qualified as F
@@ -200,14 +202,22 @@ class Resource a where
     exists <- liftIO $ doesFileExist $ toFilePath targetPath
     if exists
       then do
-        content <- liftIO $ BS.readFile $ toFilePath targetPath
-        pure $ fromByteString content
-      else do
+        originModified <- liftIO $ getModificationTime $ toFilePath originPath
+        targetModified <- liftIO $ getModificationTime $ toFilePath targetPath
+        if originModified > targetModified
+          then readAndCopy originPath targetPath
+          else do
+            content <- liftIO $ BS.readFile $ toFilePath targetPath
+            pure $ fromByteString content
+      else readAndCopy originPath targetPath
+    where
+      readAndCopy originPath targetPath = do
         originPath <- replaceExtension ext originPath
         content <- liftIO $ BS.readFile $ toFilePath originPath
         liftIO $ createDirectoryIfMissing True $ toFilePath $ parent targetPath
         liftIO $ BS.writeFile (toFilePath targetPath) content
         pure $ fromByteString content
+
   save :: (IOE :> es, Workspace :> es) => ArtifactPath -> String -> a -> Eff es ()
   save path ext content = do
     targetPath <- replaceExtension ext =<< getTargetPath path
@@ -224,3 +234,13 @@ instance (Store a) => Resource (ViaStore a) where
 instance Resource ByteString where
   toByteString = identity
   fromByteString = identity
+
+newtype ViaJSON a = ViaJSON a
+  deriving newtype (FromJSON, ToJSON)
+
+instance (FromJSON a, ToJSON a) => Resource (ViaJSON a) where
+  toByteString (ViaJSON a) = convertString $ Aeson.encode a
+  fromByteString bs =
+    case Aeson.decodeStrict bs of
+      Just a -> a
+      Nothing -> error "Failed to decode JSON"
