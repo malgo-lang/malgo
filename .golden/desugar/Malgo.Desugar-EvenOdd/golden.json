@@ -2,9 +2,47 @@
     "externals": [],
     "functions": [
         [
-            "_M4even44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "even",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "AnyT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M15int32_x23_x243344test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "int32#$33",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -27,7 +65,26 @@
                                         "arguments": [],
                                         "callee": {
                                             "tag": "Var",
-                                            "variable": "_M4True34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "True",
+                                                    "sort": "External"
+                                                },
+                                                "meta": {
+                                                    "parameters": [],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
                                         },
                                         "tag": "Call"
                                     },
@@ -47,24 +104,92 @@
                                                 },
                                                 "value": {
                                                     "tag": "Var",
-                                                    "variable": "_M7d_x243a44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$3a",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 }
                                             },
                                             "expression": {
                                                 "arguments": [
                                                     {
                                                         "tag": "Var",
-                                                        "variable": "_M7d_x243944test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$39",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        }
                                                     }
                                                 ],
                                                 "callee": {
                                                     "tag": "Var",
-                                                    "variable": "_M3odd44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8External"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "odd",
+                                                            "sort": "External"
+                                                        },
+                                                        "meta": {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "returns": {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            "tag": "FuncT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Call"
                                             },
                                             "tag": "Assign",
-                                            "variable": "_M7d_x243a44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$3a",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         },
                                         "expression": {
                                             "body": {
@@ -76,24 +201,92 @@
                                                         },
                                                         "value": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x243844test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$38",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
                                                         "arguments": [
                                                             {
                                                                 "tag": "Var",
-                                                                "variable": "_M7d_x243744test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "d$37",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                }
                                                             }
                                                         ],
                                                         "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x243544test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$35",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Call"
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x243844test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$38",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 },
                                                 "expression": {
                                                     "body": {
@@ -103,7 +296,22 @@
                                                         },
                                                         "value": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x243644test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$36",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
@@ -118,15 +326,68 @@
                                                         ],
                                                         "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "Int32#",
+                                                                    "sort": "External"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "Int32T"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Call"
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x243644test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$36",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M7d_x243744test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$37",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             },
                                             "expression": {
                                                 "body": {
@@ -144,42 +405,202 @@
                                                     },
                                                     "value": {
                                                         "tag": "Var",
-                                                        "variable": "_M7d_x243444test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$34",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                "tag": "FuncT"
+                                                            }
+                                                        }
                                                     }
                                                 },
                                                 "expression": {
                                                     "arguments": [
                                                         {
                                                             "tag": "Var",
-                                                            "variable": "_M15int32_x23_x243344test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "int32#$33",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         }
                                                     ],
                                                     "callee": {
                                                         "tag": "Var",
-                                                        "variable": "_M8subInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "subInt32",
+                                                                "sort": "External"
+                                                            },
+                                                            "meta": {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                },
+                                                                "tag": "FuncT"
+                                                            }
+                                                        }
                                                     },
                                                     "tag": "Call"
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M7d_x243444test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$34",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        "tag": "FuncT"
+                                                    }
+                                                }
                                             },
                                             "tag": "Assign",
-                                            "variable": "_M7d_x243544test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$35",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
                                         },
                                         "tag": "Assign",
-                                        "variable": "_M7d_x243944test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$39",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
                                     },
                                     "tag": "Bind",
                                     "type": {
                                         "tag": "Int32T"
                                     },
-                                    "variable": "_M10_x5F_x243c44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "_$3c",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "Int32T"
+                                        }
+                                    }
                                 }
                             ],
                             "scrutinee": {
                                 "atom": {
                                     "tag": "Var",
-                                    "variable": "_M7p_x243b44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "p$3b",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "Int32T"
+                                        }
+                                    }
                                 },
                                 "tag": "Atom"
                             },
@@ -198,7 +619,22 @@
                         },
                         "tag": "Unpack",
                         "variables": [
-                            "_M7p_x243b44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                            {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "p$3b",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "Int32T"
+                                }
+                            }
                         ]
                     }
                 ],
@@ -222,16 +658,69 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M15int32_x23_x243344test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "int32#$33",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     }
                 },
                 "tag": "Match"
             }
         ],
         [
-            "_M3odd44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "odd",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "AnyT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M15int32_x23_x243d44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "int32#$3d",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -254,7 +743,26 @@
                                         "arguments": [],
                                         "callee": {
                                             "tag": "Var",
-                                            "variable": "_M5False34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "False",
+                                                    "sort": "External"
+                                                },
+                                                "meta": {
+                                                    "parameters": [],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
                                         },
                                         "tag": "Call"
                                     },
@@ -274,24 +782,92 @@
                                                 },
                                                 "value": {
                                                     "tag": "Var",
-                                                    "variable": "_M7d_x244444test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$44",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 }
                                             },
                                             "expression": {
                                                 "arguments": [
                                                     {
                                                         "tag": "Var",
-                                                        "variable": "_M7d_x244344test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$43",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        }
                                                     }
                                                 ],
                                                 "callee": {
                                                     "tag": "Var",
-                                                    "variable": "_M4even44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8External"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "even",
+                                                            "sort": "External"
+                                                        },
+                                                        "meta": {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "returns": {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            "tag": "FuncT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Call"
                                             },
                                             "tag": "Assign",
-                                            "variable": "_M7d_x244444test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$44",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         },
                                         "expression": {
                                             "body": {
@@ -303,24 +879,92 @@
                                                         },
                                                         "value": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x244244test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$42",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
                                                         "arguments": [
                                                             {
                                                                 "tag": "Var",
-                                                                "variable": "_M7d_x244144test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "d$41",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                }
                                                             }
                                                         ],
                                                         "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x243f44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$3f",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Call"
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x244244test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$42",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 },
                                                 "expression": {
                                                     "body": {
@@ -330,7 +974,22 @@
                                                         },
                                                         "value": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x244044test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$40",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
@@ -345,15 +1004,68 @@
                                                         ],
                                                         "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "Int32#",
+                                                                    "sort": "External"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "Int32T"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Call"
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x244044test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$40",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M7d_x244144test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$41",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             },
                                             "expression": {
                                                 "body": {
@@ -371,42 +1083,202 @@
                                                     },
                                                     "value": {
                                                         "tag": "Var",
-                                                        "variable": "_M7d_x243e44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$3e",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                "tag": "FuncT"
+                                                            }
+                                                        }
                                                     }
                                                 },
                                                 "expression": {
                                                     "arguments": [
                                                         {
                                                             "tag": "Var",
-                                                            "variable": "_M15int32_x23_x243d44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "int32#$3d",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         }
                                                     ],
                                                     "callee": {
                                                         "tag": "Var",
-                                                        "variable": "_M8subInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "subInt32",
+                                                                "sort": "External"
+                                                            },
+                                                            "meta": {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                },
+                                                                "tag": "FuncT"
+                                                            }
+                                                        }
                                                     },
                                                     "tag": "Call"
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M7d_x243e44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$3e",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        "tag": "FuncT"
+                                                    }
+                                                }
                                             },
                                             "tag": "Assign",
-                                            "variable": "_M7d_x243f44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$3f",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
                                         },
                                         "tag": "Assign",
-                                        "variable": "_M7d_x244344test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$43",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
                                     },
                                     "tag": "Bind",
                                     "type": {
                                         "tag": "Int32T"
                                     },
-                                    "variable": "_M10_x5F_x244644test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "_$46",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "Int32T"
+                                        }
+                                    }
                                 }
                             ],
                             "scrutinee": {
                                 "atom": {
                                     "tag": "Var",
-                                    "variable": "_M7p_x244544test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "p$45",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "Int32T"
+                                        }
+                                    }
                                 },
                                 "tag": "Atom"
                             },
@@ -425,7 +1297,22 @@
                         },
                         "tag": "Unpack",
                         "variables": [
-                            "_M7p_x244544test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                            {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "p$45",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "Int32T"
+                                }
+                            }
                         ]
                     }
                 ],
@@ -449,16 +1336,93 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M15int32_x23_x243d44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "int32#$3d",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     }
                 },
                 "tag": "Match"
             }
         ],
         [
-            "_M4main44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M20_x24_x5F_x2432_x244744test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$32$47",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -505,24 +1469,116 @@
                             },
                             "value": {
                                 "tag": "Var",
-                                "variable": "_M7d_x245544test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$55",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                }
                             }
                         },
                         "expression": {
                             "arguments": [
                                 {
                                     "tag": "Var",
-                                    "variable": "_M7d_x245444test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$54",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             ],
                             "callee": {
                                 "tag": "Var",
-                                "variable": "_M7d_x245044test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$50",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Call"
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x245544test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$55",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     },
                     "expression": {
                         "body": {
@@ -533,24 +1589,92 @@
                                 },
                                 "value": {
                                     "tag": "Var",
-                                    "variable": "_M7d_x245344test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$53",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             },
                             "expression": {
                                 "arguments": [
                                     {
                                         "tag": "Var",
-                                        "variable": "_M7d_x245244test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$52",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
                                     }
                                 ],
                                 "callee": {
                                     "tag": "Var",
-                                    "variable": "_M4even44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8External"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "even",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Call"
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x245344test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$53",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
                         "expression": {
                             "body": {
@@ -560,7 +1684,22 @@
                                 },
                                 "value": {
                                     "tag": "Var",
-                                    "variable": "_M7d_x245144test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$51",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             },
                             "expression": {
@@ -575,18 +1714,86 @@
                                 ],
                                 "callee": {
                                     "tag": "Var",
-                                    "variable": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                    "relPath": "runtime/malgo/Builtin.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "Int32#",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "Int32T"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Call"
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x245144test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$51",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x245244test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                        "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$52",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     },
                     "tag": "Assign",
-                    "variable": "_M7d_x245444test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$54",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
+                    }
                 },
                 "expression": {
                     "bindings": [
@@ -612,24 +1819,116 @@
                                                         },
                                                         "value": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x244b44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$4b",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "tag": "Tuple"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
+                                                                }
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
                                                         "arguments": [
                                                             {
                                                                 "tag": "Var",
-                                                                "variable": "_M7d_x244a44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "d$4a",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                }
                                                             }
                                                         ],
                                                         "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./runtime/malgo/Prelude.mlg",
+                                                                            "relPath": "runtime/malgo/Prelude.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "putStrLn",
+                                                                    "sort": "External"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "constructors": [
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "tag": "Tuple"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "tag": "SumT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Call"
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x244b44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$4b",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "tag": "Tuple"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        }
+                                                    }
                                                 },
                                                 "expression": {
                                                     "body": {
@@ -639,7 +1938,22 @@
                                                         },
                                                         "value": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x244944test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$49",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
@@ -654,15 +1968,68 @@
                                                         ],
                                                         "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "String#",
+                                                                    "sort": "External"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "StringT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Call"
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x244944test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$49",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M7d_x244a44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$4a",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             },
                                             "constructor": {
                                                 "parameters": [],
@@ -692,24 +2059,116 @@
                                                         },
                                                         "value": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x244e44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$4e",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "tag": "Tuple"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
+                                                                }
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
                                                         "arguments": [
                                                             {
                                                                 "tag": "Var",
-                                                                "variable": "_M7d_x244d44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "d$4d",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                }
                                                             }
                                                         ],
                                                         "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./runtime/malgo/Prelude.mlg",
+                                                                            "relPath": "runtime/malgo/Prelude.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "putStrLn",
+                                                                    "sort": "External"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "constructors": [
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "tag": "Tuple"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "tag": "SumT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Call"
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x244e44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$4e",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "tag": "Tuple"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        }
+                                                    }
                                                 },
                                                 "expression": {
                                                     "body": {
@@ -719,7 +2178,22 @@
                                                         },
                                                         "value": {
                                                             "tag": "Var",
-                                                            "variable": "_M7d_x244c44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$4c",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
@@ -734,15 +2208,68 @@
                                                         ],
                                                         "callee": {
                                                             "tag": "Var",
-                                                            "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "String#",
+                                                                    "sort": "External"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "StringT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Call"
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x244c44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$4c",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M7d_x244d44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$4d",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             },
                                             "constructor": {
                                                 "parameters": [],
@@ -778,13 +2305,43 @@
                                         },
                                         "value": {
                                             "tag": "Var",
-                                            "variable": "_M11false_x244844test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "false$48",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         }
                                     },
                                     "tag": "Match"
                                 },
                                 "parameters": [
-                                    "_M11false_x244844test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                                    {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                                    "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "false$48",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 ],
                                 "tag": "Fun"
                             },
@@ -807,20 +2364,113 @@
                                 },
                                 "tag": "FuncT"
                             },
-                            "variable": "_M9fun_x244f44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "fun$4f",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "AnyT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         }
                     ],
                     "body": {
                         "atom": {
                             "tag": "Var",
-                            "variable": "_M9fun_x244f44test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                            "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "fun$4f",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "AnyT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Atom"
                     },
                     "tag": "Let"
                 },
                 "tag": "Assign",
-                "variable": "_M7d_x245044test_x2Ftestcases_x2Fmalgo_x2FEvenOdd_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/EvenOdd.mlg",
+                                "relPath": "test/testcases/malgo/EvenOdd.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$50",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "parameters": [
+                            {
+                                "tag": "AnyT"
+                            }
+                        ],
+                        "returns": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "tag": "FuncT"
+                    }
+                }
             }
         ]
     ],

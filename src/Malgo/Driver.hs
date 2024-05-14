@@ -14,7 +14,6 @@ import Malgo.Core.CodeGen.LLVM qualified as LLVM
 import Malgo.Core.Flat qualified as Flat
 import Malgo.Core.LambdaLift (lambdalift)
 import Malgo.Core.Lint (lint)
-import Malgo.Core.Mangle qualified as Mangle
 import Malgo.Core.Optimize (OptimizeOption, optimizeProgram)
 import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
@@ -89,8 +88,10 @@ compileFromAST srcPath parsedAst = do
 
       (dsEnv, core) <- desugar tcEnv refinedAst
 
+      save srcPath ".json" (ViaJSON core)
+
       core <- do
-        -- core <- runReader moduleName $ Flat.normalize core
+        core <- runReader moduleName $ Flat.normalize core
         _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
         save srcPath ".mo" (ViaStore core)
 
@@ -102,10 +103,6 @@ compileFromAST srcPath parsedAst = do
 
         lint True core
         pure core
-
-      save srcPath ".json" (ViaJSON $ Mangle.mangleProgram core)
-
-      core <- runReader moduleName $ Flat.normalize core
 
       when flags.debugMode
         $ liftIO do

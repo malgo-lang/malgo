@@ -2,7 +2,26 @@
     "externals": [],
     "functions": [
         [
-            "_M4TCon48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "TCon",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [],
             {
                 "parameters": [],
@@ -49,7 +68,31 @@
                             ],
                             "tag": "SumT"
                         },
-                        "variable": "_M9let_x241e48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "let$1e",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "TCon",
+                                            "tag": "Data"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     }
                 ],
                 "body": {
@@ -59,16 +102,78 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M9let_x241e48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "let$1e",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "TCon",
+                                            "tag": "Data"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     }
                 },
                 "tag": "Let"
             }
         ],
         [
-            "_M7idOverS48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "idOverS",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "AnyT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M12x_x241_x241f48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "x$1$1f",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -84,15 +189,92 @@
             {
                 "atom": {
                     "tag": "Var",
-                    "variable": "_M12x_x241_x241f48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "x$1$1f",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
+                    }
                 },
                 "tag": "Atom"
             }
         ],
         [
-            "_M4main48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M20_x24_x5F_x241d_x242648test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$1d$26",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -139,24 +321,178 @@
                             },
                             "value": {
                                 "tag": "Var",
-                                "variable": "_M7d_x243648test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$36",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                }
                             }
                         },
                         "expression": {
                             "arguments": [
                                 {
                                     "tag": "Var",
-                                    "variable": "_M7d_x243548test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$35",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 }
                             ],
                             "callee": {
                                 "tag": "Var",
-                                "variable": "_M7d_x242948test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$29",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "parameters": [
+                                                    {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Call"
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x243648test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$36",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     },
                     "expression": {
                         "bindings": [
@@ -183,24 +519,116 @@
                                                                 },
                                                                 "value": {
                                                                     "tag": "Var",
-                                                                    "variable": "_M7d_x243348test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                    "variable": {
+                                                                        "id": {
+                                                                            "moduleName": {
+                                                                                "path": {
+                                                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                                },
+                                                                                "tag": "Artifact"
+                                                                            },
+                                                                            "name": "d$33",
+                                                                            "sort": "Temporal"
+                                                                        },
+                                                                        "meta": {
+                                                                            "constructors": [
+                                                                                {
+                                                                                    "parameters": [],
+                                                                                    "tag": {
+                                                                                        "tag": "Tuple"
+                                                                                    }
+                                                                                }
+                                                                            ],
+                                                                            "tag": "SumT"
+                                                                        }
+                                                                    }
                                                                 }
                                                             },
                                                             "expression": {
                                                                 "arguments": [
                                                                     {
                                                                         "tag": "Var",
-                                                                        "variable": "_M7p_x242c48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "moduleName": {
+                                                                                    "path": {
+                                                                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "p$2c",
+                                                                                "sort": "Temporal"
+                                                                            },
+                                                                            "meta": {
+                                                                                "tag": "AnyT"
+                                                                            }
+                                                                        }
                                                                     }
                                                                 ],
                                                                 "callee": {
                                                                     "tag": "Var",
-                                                                    "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                                                                    "variable": {
+                                                                        "id": {
+                                                                            "moduleName": {
+                                                                                "path": {
+                                                                                    "rawPath": "./runtime/malgo/Prelude.mlg",
+                                                                                    "relPath": "runtime/malgo/Prelude.mlg"
+                                                                                },
+                                                                                "tag": "Artifact"
+                                                                            },
+                                                                            "name": "putStrLn",
+                                                                            "sort": "External"
+                                                                        },
+                                                                        "meta": {
+                                                                            "parameters": [
+                                                                                {
+                                                                                    "tag": "AnyT"
+                                                                                }
+                                                                            ],
+                                                                            "returns": {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            },
+                                                                            "tag": "FuncT"
+                                                                        }
+                                                                    }
                                                                 },
                                                                 "tag": "Call"
                                                             },
                                                             "tag": "Assign",
-                                                            "variable": "_M7d_x243348test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$33",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "tag": "Tuple"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
+                                                                }
+                                                            }
                                                         },
                                                         "expression": {
                                                             "body": {
@@ -219,24 +647,116 @@
                                                                     },
                                                                     "value": {
                                                                         "tag": "Var",
-                                                                        "variable": "_M7d_x243148test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "moduleName": {
+                                                                                    "path": {
+                                                                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "d$31",
+                                                                                "sort": "Temporal"
+                                                                            },
+                                                                            "meta": {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            }
+                                                                        }
                                                                     }
                                                                 },
                                                                 "expression": {
                                                                     "arguments": [
                                                                         {
                                                                             "tag": "Var",
-                                                                            "variable": "_M7d_x243048test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                            "variable": {
+                                                                                "id": {
+                                                                                    "moduleName": {
+                                                                                        "path": {
+                                                                                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                                        },
+                                                                                        "tag": "Artifact"
+                                                                                    },
+                                                                                    "name": "d$30",
+                                                                                    "sort": "Temporal"
+                                                                                },
+                                                                                "meta": {
+                                                                                    "tag": "AnyT"
+                                                                                }
+                                                                            }
                                                                         }
                                                                     ],
                                                                     "callee": {
                                                                         "tag": "Var",
-                                                                        "variable": "_M6putStr34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "moduleName": {
+                                                                                    "path": {
+                                                                                        "rawPath": "./runtime/malgo/Prelude.mlg",
+                                                                                        "relPath": "runtime/malgo/Prelude.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "putStr",
+                                                                                "sort": "External"
+                                                                            },
+                                                                            "meta": {
+                                                                                "parameters": [
+                                                                                    {
+                                                                                        "tag": "AnyT"
+                                                                                    }
+                                                                                ],
+                                                                                "returns": {
+                                                                                    "constructors": [
+                                                                                        {
+                                                                                            "parameters": [],
+                                                                                            "tag": {
+                                                                                                "tag": "Tuple"
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    "tag": "SumT"
+                                                                                },
+                                                                                "tag": "FuncT"
+                                                                            }
+                                                                        }
                                                                     },
                                                                     "tag": "Call"
                                                                 },
                                                                 "tag": "Assign",
-                                                                "variable": "_M7d_x243148test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "d$31",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "constructors": [
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "tag": "Tuple"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "tag": "SumT"
+                                                                    }
+                                                                }
                                                             },
                                                             "expression": {
                                                                 "body": {
@@ -246,7 +766,22 @@
                                                                     },
                                                                     "value": {
                                                                         "tag": "Var",
-                                                                        "variable": "_M7d_x242f48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "moduleName": {
+                                                                                    "path": {
+                                                                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "d$2f",
+                                                                                "sort": "Temporal"
+                                                                            },
+                                                                            "meta": {
+                                                                                "tag": "AnyT"
+                                                                            }
+                                                                        }
                                                                     }
                                                                 },
                                                                 "expression": {
@@ -261,18 +796,94 @@
                                                                     ],
                                                                     "callee": {
                                                                         "tag": "Var",
-                                                                        "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "moduleName": {
+                                                                                    "path": {
+                                                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "String#",
+                                                                                "sort": "External"
+                                                                            },
+                                                                            "meta": {
+                                                                                "parameters": [
+                                                                                    {
+                                                                                        "tag": "StringT"
+                                                                                    }
+                                                                                ],
+                                                                                "returns": {
+                                                                                    "tag": "AnyT"
+                                                                                },
+                                                                                "tag": "FuncT"
+                                                                            }
+                                                                        }
                                                                     },
                                                                     "tag": "Call"
                                                                 },
                                                                 "tag": "Assign",
-                                                                "variable": "_M7d_x242f48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "d$2f",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                }
                                                             },
                                                             "tag": "Assign",
-                                                            "variable": "_M7d_x243048test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$30",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Assign",
-                                                        "variable": "_M7d_x243248test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$32",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "constructors": [
+                                                                    {
+                                                                        "parameters": [],
+                                                                        "tag": {
+                                                                            "tag": "Tuple"
+                                                                        }
+                                                                    }
+                                                                ],
+                                                                "tag": "SumT"
+                                                            }
+                                                        }
                                                     },
                                                     "expression": {
                                                         "body": {
@@ -290,27 +901,142 @@
                                                             },
                                                             "value": {
                                                                 "tag": "Var",
-                                                                "variable": "_M7d_x242d48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "d$2d",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "constructors": [
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "tag": "Tuple"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "tag": "SumT"
+                                                                    }
+                                                                }
                                                             }
                                                         },
                                                         "expression": {
                                                             "arguments": [
                                                                 {
                                                                     "tag": "Var",
-                                                                    "variable": "_M7p_x242b48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                                    "variable": {
+                                                                        "id": {
+                                                                            "moduleName": {
+                                                                                "path": {
+                                                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                                },
+                                                                                "tag": "Artifact"
+                                                                            },
+                                                                            "name": "p$2b",
+                                                                            "sort": "Temporal"
+                                                                        },
+                                                                        "meta": {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    }
                                                                 }
                                                             ],
                                                             "callee": {
                                                                 "tag": "Var",
-                                                                "variable": "_M6putStr34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./runtime/malgo/Prelude.mlg",
+                                                                                "relPath": "runtime/malgo/Prelude.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "putStr",
+                                                                        "sort": "External"
+                                                                    },
+                                                                    "meta": {
+                                                                        "parameters": [
+                                                                            {
+                                                                                "tag": "AnyT"
+                                                                            }
+                                                                        ],
+                                                                        "returns": {
+                                                                            "constructors": [
+                                                                                {
+                                                                                    "parameters": [],
+                                                                                    "tag": {
+                                                                                        "tag": "Tuple"
+                                                                                    }
+                                                                                }
+                                                                            ],
+                                                                            "tag": "SumT"
+                                                                        },
+                                                                        "tag": "FuncT"
+                                                                    }
+                                                                }
                                                             },
                                                             "tag": "Call"
                                                         },
                                                         "tag": "Assign",
-                                                        "variable": "_M7d_x242d48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$2d",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "constructors": [
+                                                                    {
+                                                                        "parameters": [],
+                                                                        "tag": {
+                                                                            "tag": "Tuple"
+                                                                        }
+                                                                    }
+                                                                ],
+                                                                "tag": "SumT"
+                                                            }
+                                                        }
                                                     },
                                                     "tag": "Assign",
-                                                    "variable": "_M7d_x242e48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$2e",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "tag": "Tuple"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        }
+                                                    }
                                                 },
                                                 "constructor": {
                                                     "parameters": [
@@ -327,22 +1053,112 @@
                                                 },
                                                 "tag": "Unpack",
                                                 "variables": [
-                                                    "_M7p_x242b48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal",
-                                                    "_M7p_x242c48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                    {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "p$2b",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    },
+                                                    {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "p$2c",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 ]
                                             }
                                         ],
                                         "scrutinee": {
                                             "atom": {
                                                 "tag": "Var",
-                                                "variable": "_M11tuple_x242a48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "tuple$2a",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    }
+                                                }
                                             },
                                             "tag": "Atom"
                                         },
                                         "tag": "Match"
                                     },
                                     "parameters": [
-                                        "_M11tuple_x242a48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                        {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "tuple$2a",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        ],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        }
                                     ],
                                     "tag": "Fun"
                                 },
@@ -380,20 +1196,158 @@
                                     },
                                     "tag": "FuncT"
                                 },
-                                "variable": "_M9fun_x243448test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "fun$34",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        ],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             }
                         ],
                         "body": {
                             "atom": {
                                 "tag": "Var",
-                                "variable": "_M9fun_x243448test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "fun$34",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        ],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Atom"
                         },
                         "tag": "Let"
                     },
                     "tag": "Assign",
-                    "variable": "_M7d_x243548test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$35",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "parameters": [
+                                {
+                                    "constructors": [
+                                        {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                },
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            ],
+                            "returns": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            },
+                            "tag": "FuncT"
+                        }
+                    }
                 },
                 "expression": {
                     "body": {
@@ -451,24 +1405,140 @@
                             },
                             "value": {
                                 "tag": "Var",
-                                "variable": "_M7d_x242848test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$28",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "AnyT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             }
                         },
                         "expression": {
                             "arguments": [
                                 {
                                     "tag": "Var",
-                                    "variable": "_M10cast_x242748test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "cast$27",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             ],
                             "callee": {
                                 "tag": "Var",
-                                "variable": "_M8_x7C_x3E34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./runtime/malgo/Prelude.mlg",
+                                                "relPath": "runtime/malgo/Prelude.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "|>",
+                                        "sort": "External"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "parameters": [
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Call"
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x242848test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$28",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "parameters": [
+                                    {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                ],
+                                "returns": {
+                                    "tag": "AnyT"
+                                },
+                                "tag": "FuncT"
+                            }
+                        }
                     },
                     "expression": {
                         "tag": "Cast",
@@ -477,20 +1547,157 @@
                         },
                         "value": {
                             "tag": "Var",
-                            "variable": "_M5hello48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8External"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "hello",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                },
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            }
                         }
                     },
                     "tag": "Assign",
-                    "variable": "_M10cast_x242748test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "cast$27",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
+                    }
                 },
                 "tag": "Assign",
-                "variable": "_M7d_x242948test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$29",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "parameters": [
+                            {
+                                "parameters": [
+                                    {
+                                        "constructors": [
+                                            {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    {
+                                                        "tag": "AnyT"
+                                                    }
+                                                ],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                ],
+                                "returns": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                },
+                                "tag": "FuncT"
+                            }
+                        ],
+                        "returns": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "tag": "FuncT"
+                    }
+                }
             }
         ]
     ],
     "variables": [
         [
-            "_M5hello48test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "hello",
+                    "sort": "External"
+                },
+                "meta": {
+                    "constructors": [
+                        {
+                            "parameters": [
+                                {
+                                    "tag": "AnyT"
+                                },
+                                {
+                                    "tag": "AnyT"
+                                }
+                            ],
+                            "tag": {
+                                "tag": "Tuple"
+                            }
+                        }
+                    ],
+                    "tag": "SumT"
+                }
+            },
             {
                 "constructors": [
                     {
@@ -513,7 +1720,37 @@
                 "body": {
                     "atom": {
                         "tag": "Var",
-                        "variable": "_M7d_x242548test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$25",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            },
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     },
                     "tag": "Atom"
                 },
@@ -526,11 +1763,41 @@
                                         "arguments": [
                                             {
                                                 "tag": "Var",
-                                                "variable": "_M7d_x242148test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$21",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             },
                                             {
                                                 "tag": "Var",
-                                                "variable": "_M7d_x242348test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$23",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             }
                                         ],
                                         "constructor": {
@@ -584,13 +1851,73 @@
                                         ],
                                         "tag": "SumT"
                                     },
-                                    "variable": "_M9let_x242448test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "let$24",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        }
+                                    }
                                 }
                             ],
                             "body": {
                                 "atom": {
                                     "tag": "Var",
-                                    "variable": "_M9let_x242448test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "let$24",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        }
+                                    }
                                 },
                                 "tag": "Atom"
                             },
@@ -604,7 +1931,22 @@
                                 },
                                 "value": {
                                     "tag": "Var",
-                                    "variable": "_M7d_x242248test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$22",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             },
                             "expression": {
@@ -619,15 +1961,68 @@
                                 ],
                                 "callee": {
                                     "tag": "Var",
-                                    "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                    "relPath": "runtime/malgo/Builtin.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "String#",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "StringT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Call"
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x242248test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                            "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$22",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x242348test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$23",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     },
                     "expression": {
                         "body": {
@@ -637,7 +2032,22 @@
                             },
                             "value": {
                                 "tag": "Var",
-                                "variable": "_M7d_x242048test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$20",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             }
                         },
                         "expression": {
@@ -652,18 +2062,101 @@
                             ],
                             "callee": {
                                 "tag": "Var",
-                                "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                "relPath": "runtime/malgo/Builtin.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "String#",
+                                        "sort": "External"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "StringT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Call"
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x242048test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                        "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$20",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     },
                     "tag": "Assign",
-                    "variable": "_M7d_x242148test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                    "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$21",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
+                    }
                 },
                 "tag": "Assign",
-                "variable": "_M7d_x242548test_x2Ftestcases_x2Fmalgo_x2FTypeSynonym_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/TypeSynonym.mlg",
+                                "relPath": "test/testcases/malgo/TypeSynonym.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$25",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [
+                                    {
+                                        "tag": "AnyT"
+                                    },
+                                    {
+                                        "tag": "AnyT"
+                                    }
+                                ],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             }
         ]
     ]

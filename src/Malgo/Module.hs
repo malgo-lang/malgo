@@ -48,7 +48,19 @@ data ModuleName
   = ModuleName Text
   | Artifact ArtifactPath
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, ToJSON, FromJSON, Store)
+  deriving anyclass (Hashable, Store)
+
+instance ToJSON ModuleName where
+  toJSON (ModuleName name) = object ["tag" .= ("ModuleName" :: Text), "name" .= name]
+  toJSON (Artifact path) = object ["tag" .= ("Artifact" :: Text), "path" .= path]
+
+instance FromJSON ModuleName where
+  parseJSON = withObject "ModuleName" \o -> do
+    tag <- o .: "tag"
+    case tag :: Text of
+      "ModuleName" -> ModuleName <$> o .: "name"
+      "Artifact" -> Artifact <$> o .: "path"
+      _ -> fail "Invalid tag"
 
 instance Pretty ModuleName where
   pretty (ModuleName raw) = pretty raw

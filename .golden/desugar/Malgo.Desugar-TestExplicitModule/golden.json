@@ -2,9 +2,71 @@
     "externals": [],
     "functions": [
         [
-            "_M4main55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/TestExplicitModule.mlg",
+                            "relPath": "test/testcases/malgo/TestExplicitModule.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M18_x24_x5F_x246_x24755test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/TestExplicitModule.mlg",
+                                "relPath": "test/testcases/malgo/TestExplicitModule.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$6$7",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -50,24 +112,116 @@
                         },
                         "value": {
                             "tag": "Var",
-                            "variable": "_M6d_x24a55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/TestExplicitModule.mlg",
+                                            "relPath": "test/testcases/malgo/TestExplicitModule.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$a",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            }
                         }
                     },
                     "expression": {
                         "arguments": [
                             {
                                 "tag": "Var",
-                                "variable": "_M6d_x24955test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TestExplicitModule.mlg",
+                                                "relPath": "test/testcases/malgo/TestExplicitModule.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$9",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             }
                         ],
                         "callee": {
                             "tag": "Var",
-                            "variable": "_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./runtime/malgo/Prelude.mlg",
+                                            "relPath": "runtime/malgo/Prelude.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "putStrLn",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "AnyT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Call"
                     },
                     "tag": "Assign",
-                    "variable": "_M6d_x24a55test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/TestExplicitModule.mlg",
+                                    "relPath": "test/testcases/malgo/TestExplicitModule.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$a",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    }
                 },
                 "expression": {
                     "body": {
@@ -77,7 +231,22 @@
                         },
                         "value": {
                             "tag": "Var",
-                            "variable": "_M6d_x24855test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/TestExplicitModule.mlg",
+                                            "relPath": "test/testcases/malgo/TestExplicitModule.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$8",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         }
                     },
                     "expression": {
@@ -92,15 +261,68 @@
                         ],
                         "callee": {
                             "tag": "Var",
-                            "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "String#",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "StringT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Call"
                     },
                     "tag": "Assign",
-                    "variable": "_M6d_x24855test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/TestExplicitModule.mlg",
+                                    "relPath": "test/testcases/malgo/TestExplicitModule.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$8",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
+                    }
                 },
                 "tag": "Assign",
-                "variable": "_M6d_x24955test_x2Ftestcases_x2Fmalgo_x2FTestExplicitModule_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/TestExplicitModule.mlg",
+                                "relPath": "test/testcases/malgo/TestExplicitModule.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$9",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             }
         ]
     ],

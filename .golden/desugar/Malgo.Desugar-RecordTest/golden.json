@@ -2,9 +2,63 @@
     "externals": [],
     "functions": [
         [
-            "_M1B47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "B",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "map": {
+                                "a": {
+                                    "tag": "AnyT"
+                                },
+                                "b": {
+                                    "tag": "AnyT"
+                                }
+                            },
+                            "tag": "RecordT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M7p_x243247test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "p$32",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "map": {
+                            "a": {
+                                "tag": "AnyT"
+                            },
+                            "b": {
+                                "tag": "AnyT"
+                            }
+                        },
+                        "tag": "RecordT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -32,7 +86,30 @@
                             "arguments": [
                                 {
                                     "tag": "Var",
-                                    "variable": "_M7p_x243247test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "p$32",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "map": {
+                                                "a": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "b": {
+                                                    "tag": "AnyT"
+                                                }
+                                            },
+                                            "tag": "RecordT"
+                                        }
+                                    }
                                 }
                             ],
                             "constructor": {
@@ -104,7 +181,43 @@
                             ],
                             "tag": "SumT"
                         },
-                        "variable": "_M9let_x243347test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "let$33",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [
+                                            {
+                                                "map": {
+                                                    "a": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "b": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                },
+                                                "tag": "RecordT"
+                                            }
+                                        ],
+                                        "tag": {
+                                            "name": "B",
+                                            "tag": "Data"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     }
                 ],
                 "body": {
@@ -114,16 +227,90 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M9let_x243347test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "let$33",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [
+                                            {
+                                                "map": {
+                                                    "a": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "b": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                },
+                                                "tag": "RecordT"
+                                            }
+                                        ],
+                                        "tag": {
+                                            "name": "B",
+                                            "tag": "Data"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     }
                 },
                 "tag": "Let"
             }
         ],
         [
-            "_M1g47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "g",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "AnyT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M7b_x243447test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "b$34",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -145,13 +332,58 @@
                                     "body": {
                                         "atom": {
                                             "tag": "Var",
-                                            "variable": "_M7p_x243647test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "p$36",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         },
                                         "tag": "Atom"
                                     },
                                     "fields": {
-                                        "a": "_M7p_x243647test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal",
-                                        "b": "_M7p_x243747test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                        "a": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "p$36",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        },
+                                        "b": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "p$37",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
                                     },
                                     "tag": "OpenRecord"
                                 }
@@ -159,7 +391,30 @@
                             "scrutinee": {
                                 "atom": {
                                     "tag": "Var",
-                                    "variable": "_M7p_x243547test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "p$35",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "map": {
+                                                "a": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "b": {
+                                                    "tag": "AnyT"
+                                                }
+                                            },
+                                            "tag": "RecordT"
+                                        }
+                                    }
                                 },
                                 "tag": "Atom"
                             },
@@ -186,7 +441,30 @@
                         },
                         "tag": "Unpack",
                         "variables": [
-                            "_M7p_x243547test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                            {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "p$35",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "map": {
+                                        "a": {
+                                            "tag": "AnyT"
+                                        },
+                                        "b": {
+                                            "tag": "AnyT"
+                                        }
+                                    },
+                                    "tag": "RecordT"
+                                }
+                            }
                         ]
                     }
                 ],
@@ -218,16 +496,85 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M7b_x243447test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "b$34",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     }
                 },
                 "tag": "Match"
             }
         ],
         [
-            "_M1f47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "f",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "map": {
+                                "a": {
+                                    "tag": "AnyT"
+                                },
+                                "b": {
+                                    "tag": "AnyT"
+                                }
+                            },
+                            "tag": "RecordT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M12record_x243847test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "record$38",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "map": {
+                            "a": {
+                                "tag": "AnyT"
+                            },
+                            "b": {
+                                "tag": "AnyT"
+                            }
+                        },
+                        "tag": "RecordT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -254,13 +601,58 @@
                         "body": {
                             "atom": {
                                 "tag": "Var",
-                                "variable": "_M7p_x243947test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "p$39",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             },
                             "tag": "Atom"
                         },
                         "fields": {
-                            "a": "_M7p_x243947test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal",
-                            "b": "_M7p_x243a47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                            "a": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "p$39",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            },
+                            "b": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "p$3a",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
                         "tag": "OpenRecord"
                     }
@@ -268,7 +660,30 @@
                 "scrutinee": {
                     "atom": {
                         "tag": "Var",
-                        "variable": "_M12record_x243847test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "record$38",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "map": {
+                                    "a": {
+                                        "tag": "AnyT"
+                                    },
+                                    "b": {
+                                        "tag": "AnyT"
+                                    }
+                                },
+                                "tag": "RecordT"
+                            }
+                        }
                     },
                     "tag": "Atom"
                 },
@@ -276,9 +691,71 @@
             }
         ],
         [
-            "_M4main47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M20_x24_x5F_x2431_x243b47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$31$3b",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -327,24 +804,116 @@
                                     },
                                     "value": {
                                         "tag": "Var",
-                                        "variable": "_M7d_x245147test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$51",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        }
                                     }
                                 },
                                 "expression": {
                                     "arguments": [
                                         {
                                             "tag": "Var",
-                                            "variable": "_M7d_x245047test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$50",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         }
                                     ],
                                     "callee": {
                                         "tag": "Var",
-                                        "variable": "_M11printString34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "printString",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "AnyT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
                                     },
                                     "tag": "Call"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x245147test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$51",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                }
                             },
                             "expression": {
                                 "body": {
@@ -355,24 +924,92 @@
                                         },
                                         "value": {
                                             "tag": "Var",
-                                            "variable": "_M7d_x244f47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$4f",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         }
                                     },
                                     "expression": {
                                         "arguments": [
                                             {
                                                 "tag": "Var",
-                                                "variable": "_M7d_x244e47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$4e",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             }
                                         ],
                                         "callee": {
                                             "tag": "Var",
-                                            "variable": "_M13toStringInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "toStringInt32",
+                                                    "sort": "External"
+                                                },
+                                                "meta": {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
                                         },
                                         "tag": "Call"
                                     },
                                     "tag": "Assign",
-                                    "variable": "_M7d_x244f47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$4f",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 },
                                 "expression": {
                                     "body": {
@@ -384,24 +1021,92 @@
                                                 },
                                                 "value": {
                                                     "tag": "Var",
-                                                    "variable": "_M7d_x244d47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$4d",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 }
                                             },
                                             "expression": {
                                                 "arguments": [
                                                     {
                                                         "tag": "Var",
-                                                        "variable": "_M7d_x244c47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$4c",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        }
                                                     }
                                                 ],
                                                 "callee": {
                                                     "tag": "Var",
-                                                    "variable": "_M7d_x244547test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$45",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "returns": {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            "tag": "FuncT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Call"
                                             },
                                             "tag": "Assign",
-                                            "variable": "_M7d_x244d47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$4d",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         },
                                         "expression": {
                                             "body": {
@@ -412,24 +1117,108 @@
                                                     },
                                                     "value": {
                                                         "tag": "Var",
-                                                        "variable": "_M7d_x244b47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$4b",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        }
                                                     }
                                                 },
                                                 "expression": {
                                                     "arguments": [
                                                         {
                                                             "tag": "Var",
-                                                            "variable": "_M98let_x5F_x5FM6x_x5Fx24547test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FRecordTest_x5Fx2Emlg8Internal_x244147test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                            "variable": {
+                                                                "id": {
+                                                                    "moduleName": {
+                                                                        "path": {
+                                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "let__M6x_x24547test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal$41",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "map": {
+                                                                        "a": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "b": {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    },
+                                                                    "tag": "RecordT"
+                                                                }
+                                                            }
                                                         }
                                                     ],
                                                     "callee": {
                                                         "tag": "Var",
-                                                        "variable": "_M7d_x244a47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$4a",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "parameters": [
+                                                                    {
+                                                                        "map": {
+                                                                            "a": {
+                                                                                "tag": "AnyT"
+                                                                            },
+                                                                            "b": {
+                                                                                "tag": "AnyT"
+                                                                            }
+                                                                        },
+                                                                        "tag": "RecordT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                "tag": "FuncT"
+                                                            }
+                                                        }
                                                     },
                                                     "tag": "Call"
                                                 },
                                                 "tag": "Assign",
-                                                "variable": "_M7d_x244b47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$4b",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             },
                                             "expression": {
                                                 "bindings": [
@@ -441,13 +1230,58 @@
                                                                         "body": {
                                                                             "atom": {
                                                                                 "tag": "Var",
-                                                                                "variable": "_M7p_x244847test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                                                "variable": {
+                                                                                    "id": {
+                                                                                        "moduleName": {
+                                                                                            "path": {
+                                                                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                                            },
+                                                                                            "tag": "Artifact"
+                                                                                        },
+                                                                                        "name": "p$48",
+                                                                                        "sort": "Temporal"
+                                                                                    },
+                                                                                    "meta": {
+                                                                                        "tag": "AnyT"
+                                                                                    }
+                                                                                }
                                                                             },
                                                                             "tag": "Atom"
                                                                         },
                                                                         "fields": {
-                                                                            "a": "_M7p_x244747test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal",
-                                                                            "b": "_M7p_x244847test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                                            "a": {
+                                                                                "id": {
+                                                                                    "moduleName": {
+                                                                                        "path": {
+                                                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                                        },
+                                                                                        "tag": "Artifact"
+                                                                                    },
+                                                                                    "name": "p$47",
+                                                                                    "sort": "Temporal"
+                                                                                },
+                                                                                "meta": {
+                                                                                    "tag": "AnyT"
+                                                                                }
+                                                                            },
+                                                                            "b": {
+                                                                                "id": {
+                                                                                    "moduleName": {
+                                                                                        "path": {
+                                                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                                        },
+                                                                                        "tag": "Artifact"
+                                                                                    },
+                                                                                    "name": "p$48",
+                                                                                    "sort": "Temporal"
+                                                                                },
+                                                                                "meta": {
+                                                                                    "tag": "AnyT"
+                                                                                }
+                                                                            }
                                                                         },
                                                                         "tag": "OpenRecord"
                                                                     }
@@ -455,14 +1289,60 @@
                                                                 "scrutinee": {
                                                                     "atom": {
                                                                         "tag": "Var",
-                                                                        "variable": "_M12record_x244647test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "moduleName": {
+                                                                                    "path": {
+                                                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "record$46",
+                                                                                "sort": "Temporal"
+                                                                            },
+                                                                            "meta": {
+                                                                                "map": {
+                                                                                    "a": {
+                                                                                        "tag": "AnyT"
+                                                                                    },
+                                                                                    "b": {
+                                                                                        "tag": "AnyT"
+                                                                                    }
+                                                                                },
+                                                                                "tag": "RecordT"
+                                                                            }
+                                                                        }
                                                                     },
                                                                     "tag": "Atom"
                                                                 },
                                                                 "tag": "Match"
                                                             },
                                                             "parameters": [
-                                                                "_M12record_x244647test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                                {
+                                                                    "id": {
+                                                                        "moduleName": {
+                                                                            "path": {
+                                                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "record$46",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "map": {
+                                                                            "a": {
+                                                                                "tag": "AnyT"
+                                                                            },
+                                                                            "b": {
+                                                                                "tag": "AnyT"
+                                                                            }
+                                                                        },
+                                                                        "tag": "RecordT"
+                                                                    }
+                                                                }
                                                             ],
                                                             "tag": "Fun"
                                                         },
@@ -485,23 +1365,131 @@
                                                             },
                                                             "tag": "FuncT"
                                                         },
-                                                        "variable": "_M9fun_x244947test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "fun$49",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "parameters": [
+                                                                    {
+                                                                        "map": {
+                                                                            "a": {
+                                                                                "tag": "AnyT"
+                                                                            },
+                                                                            "b": {
+                                                                                "tag": "AnyT"
+                                                                            }
+                                                                        },
+                                                                        "tag": "RecordT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                "tag": "FuncT"
+                                                            }
+                                                        }
                                                     }
                                                 ],
                                                 "body": {
                                                     "atom": {
                                                         "tag": "Var",
-                                                        "variable": "_M9fun_x244947test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "fun$49",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "parameters": [
+                                                                    {
+                                                                        "map": {
+                                                                            "a": {
+                                                                                "tag": "AnyT"
+                                                                            },
+                                                                            "b": {
+                                                                                "tag": "AnyT"
+                                                                            }
+                                                                        },
+                                                                        "tag": "RecordT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                "tag": "FuncT"
+                                                            }
+                                                        }
                                                     },
                                                     "tag": "Atom"
                                                 },
                                                 "tag": "Let"
                                             },
                                             "tag": "Assign",
-                                            "variable": "_M7d_x244a47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$4a",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "parameters": [
+                                                        {
+                                                            "map": {
+                                                                "a": {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                "b": {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            },
+                                                            "tag": "RecordT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
                                         },
                                         "tag": "Assign",
-                                        "variable": "_M7d_x244c47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$4c",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
                                     },
                                     "expression": {
                                         "body": {
@@ -520,24 +1508,116 @@
                                                 },
                                                 "value": {
                                                     "tag": "Var",
-                                                    "variable": "_M7d_x244447test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$44",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "returns": {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            "tag": "FuncT"
+                                                        }
+                                                    }
                                                 }
                                             },
                                             "expression": {
                                                 "arguments": [
                                                     {
                                                         "tag": "Var",
-                                                        "variable": "_M7d_x244347test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$43",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        }
                                                     }
                                                 ],
                                                 "callee": {
                                                     "tag": "Var",
-                                                    "variable": "_M8addInt3234runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                                    "relPath": "runtime/malgo/Builtin.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "addInt32",
+                                                            "sort": "External"
+                                                        },
+                                                        "meta": {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                }
+                                                            ],
+                                                            "returns": {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                ],
+                                                                "returns": {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                "tag": "FuncT"
+                                                            },
+                                                            "tag": "FuncT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Call"
                                             },
                                             "tag": "Assign",
-                                            "variable": "_M7d_x244447test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$44",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
                                         },
                                         "expression": {
                                             "body": {
@@ -547,36 +1627,188 @@
                                                 },
                                                 "value": {
                                                     "tag": "Var",
-                                                    "variable": "_M7d_x244247test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$42",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    }
                                                 }
                                             },
                                             "expression": {
                                                 "arguments": [
                                                     {
                                                         "tag": "Var",
-                                                        "variable": "_M98let_x5F_x5FM6x_x5Fx24547test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FRecordTest_x5Fx2Emlg8Internal_x244147test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                        "variable": {
+                                                            "id": {
+                                                                "moduleName": {
+                                                                    "path": {
+                                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "let__M6x_x24547test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal$41",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "map": {
+                                                                    "a": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "b": {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                },
+                                                                "tag": "RecordT"
+                                                            }
+                                                        }
                                                     }
                                                 ],
                                                 "callee": {
                                                     "tag": "Var",
-                                                    "variable": "_M1f47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8External"
+                                                    "variable": {
+                                                        "id": {
+                                                            "moduleName": {
+                                                                "path": {
+                                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "f",
+                                                            "sort": "External"
+                                                        },
+                                                        "meta": {
+                                                            "parameters": [
+                                                                {
+                                                                    "map": {
+                                                                        "a": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "b": {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    },
+                                                                    "tag": "RecordT"
+                                                                }
+                                                            ],
+                                                            "returns": {
+                                                                "tag": "AnyT"
+                                                            },
+                                                            "tag": "FuncT"
+                                                        }
+                                                    }
                                                 },
                                                 "tag": "Call"
                                             },
                                             "tag": "Assign",
-                                            "variable": "_M7d_x244247test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$42",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         },
                                         "tag": "Assign",
-                                        "variable": "_M7d_x244347test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$43",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
                                     },
                                     "tag": "Assign",
-                                    "variable": "_M7d_x244547test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$45",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x244e47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$4e",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x245047test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$50",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
                         "tag": "Bind",
                         "type": {
@@ -590,7 +1822,30 @@
                             },
                             "tag": "RecordT"
                         },
-                        "variable": "_M98let_x5F_x5FM6x_x5Fx24547test_x5Fx2Ftestcases_x5Fx2Fmalgo_x5Fx2FRecordTest_x5Fx2Emlg8Internal_x244147test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "let__M6x_x24547test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal$41",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "map": {
+                                    "a": {
+                                        "tag": "AnyT"
+                                    },
+                                    "b": {
+                                        "tag": "AnyT"
+                                    }
+                                },
+                                "tag": "RecordT"
+                            }
+                        }
                     }
                 ],
                 "scrutinee": {
@@ -602,11 +1857,41 @@
                                         "fields": {
                                             "a": {
                                                 "tag": "Var",
-                                                "variable": "_M7d_x243d47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$3d",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             },
                                             "b": {
                                                 "tag": "Var",
-                                                "variable": "_M7d_x243f47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$3f",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             }
                                         },
                                         "tag": "Record"
@@ -622,13 +1907,59 @@
                                         },
                                         "tag": "RecordT"
                                     },
-                                    "variable": "_M12record_x244047test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "record$40",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "map": {
+                                                "a": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "b": {
+                                                    "tag": "AnyT"
+                                                }
+                                            },
+                                            "tag": "RecordT"
+                                        }
+                                    }
                                 }
                             ],
                             "body": {
                                 "atom": {
                                     "tag": "Var",
-                                    "variable": "_M12record_x244047test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "record$40",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "map": {
+                                                "a": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "b": {
+                                                    "tag": "AnyT"
+                                                }
+                                            },
+                                            "tag": "RecordT"
+                                        }
+                                    }
                                 },
                                 "tag": "Atom"
                             },
@@ -642,7 +1973,22 @@
                                 },
                                 "value": {
                                     "tag": "Var",
-                                    "variable": "_M7d_x243e47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$3e",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             },
                             "expression": {
@@ -657,15 +2003,68 @@
                                 ],
                                 "callee": {
                                     "tag": "Var",
-                                    "variable": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                    "relPath": "runtime/malgo/Builtin.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "Int32#",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "Int32T"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Call"
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x243e47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                            "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$3e",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x243f47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$3f",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     },
                     "expression": {
                         "body": {
@@ -675,7 +2074,22 @@
                             },
                             "value": {
                                 "tag": "Var",
-                                "variable": "_M7d_x243c47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                                "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$3c",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             }
                         },
                         "expression": {
@@ -690,15 +2104,68 @@
                             ],
                             "callee": {
                                 "tag": "Var",
-                                "variable": "_M9Int32_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                "relPath": "runtime/malgo/Builtin.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "Int32#",
+                                        "sort": "External"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "Int32T"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Call"
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x243c47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                        "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$3c",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     },
                     "tag": "Assign",
-                    "variable": "_M7d_x243d47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/RecordTest.mlg",
+                                    "relPath": "test/testcases/malgo/RecordTest.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$3d",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
+                    }
                 },
                 "tag": "Match"
             }

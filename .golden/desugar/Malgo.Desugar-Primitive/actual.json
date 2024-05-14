@@ -2,9 +2,71 @@
     "externals": [],
     "functions": [
         [
-            "_M4main46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                            "relPath": "test/testcases/malgo/Primitive.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M18_x24_x5F_x24a_x24b46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                "relPath": "test/testcases/malgo/Primitive.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$a$b",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -50,24 +112,116 @@
                         },
                         "value": {
                             "tag": "Var",
-                            "variable": "_M7d_x241246test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                            "relPath": "test/testcases/malgo/Primitive.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$12",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            }
                         }
                     },
                     "expression": {
                         "arguments": [
                             {
                                 "tag": "Var",
-                                "variable": "_M7d_x241146test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                                "relPath": "test/testcases/malgo/Primitive.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$11",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "StringT"
+                                    }
+                                }
                             }
                         ],
                         "callee": {
                             "tag": "Var",
-                            "variable": "_M15printString_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "printString#",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "StringT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Call"
                     },
                     "tag": "Assign",
-                    "variable": "_M7d_x241246test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                    "relPath": "test/testcases/malgo/Primitive.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$12",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    }
                 },
                 "expression": {
                     "body": {
@@ -78,24 +232,92 @@
                             },
                             "value": {
                                 "tag": "Var",
-                                "variable": "_M7d_x241046test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                                "relPath": "test/testcases/malgo/Primitive.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$10",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "StringT"
+                                    }
+                                }
                             }
                         },
                         "expression": {
                             "arguments": [
                                 {
                                     "tag": "Var",
-                                    "variable": "_M6d_x24f46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                                    "relPath": "test/testcases/malgo/Primitive.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$f",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "Int64T"
+                                        }
+                                    }
                                 }
                             ],
                             "callee": {
                                 "tag": "Var",
-                                "variable": "_M17toStringInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                "relPath": "runtime/malgo/Builtin.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "toStringInt64#",
+                                        "sort": "External"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "Int64T"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "StringT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Call"
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x241046test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                        "relPath": "test/testcases/malgo/Primitive.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$10",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "StringT"
+                            }
+                        }
                     },
                     "expression": {
                         "body": {
@@ -106,7 +328,22 @@
                                 },
                                 "value": {
                                     "tag": "Var",
-                                    "variable": "_M6d_x24e46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                                    "relPath": "test/testcases/malgo/Primitive.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$e",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "Int64T"
+                                        }
+                                    }
                                 }
                             },
                             "expression": {
@@ -121,12 +358,50 @@
                                 ],
                                 "callee": {
                                     "tag": "Var",
-                                    "variable": "_M6d_x24d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                                    "relPath": "test/testcases/malgo/Primitive.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$d",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "Int64T"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "Int64T"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Call"
                             },
                             "tag": "Assign",
-                            "variable": "_M6d_x24e46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                            "relPath": "test/testcases/malgo/Primitive.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$e",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "Int64T"
+                                }
+                            }
                         },
                         "expression": {
                             "body": {
@@ -144,7 +419,30 @@
                                 },
                                 "value": {
                                     "tag": "Var",
-                                    "variable": "_M6d_x24c46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                                    "relPath": "test/testcases/malgo/Primitive.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$c",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "Int64T"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "Int64T"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 }
                             },
                             "expression": {
@@ -159,21 +457,128 @@
                                 ],
                                 "callee": {
                                     "tag": "Var",
-                                    "variable": "_M12addInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                    "relPath": "runtime/malgo/Builtin.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "addInt64#",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "Int64T"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "Int64T"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "Int64T"
+                                                },
+                                                "tag": "FuncT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Call"
                             },
                             "tag": "Assign",
-                            "variable": "_M6d_x24c46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                            "relPath": "test/testcases/malgo/Primitive.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$c",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "Int64T"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "Int64T"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Assign",
-                        "variable": "_M6d_x24d46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                        "relPath": "test/testcases/malgo/Primitive.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$d",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "parameters": [
+                                    {
+                                        "tag": "Int64T"
+                                    }
+                                ],
+                                "returns": {
+                                    "tag": "Int64T"
+                                },
+                                "tag": "FuncT"
+                            }
+                        }
                     },
                     "tag": "Assign",
-                    "variable": "_M6d_x24f46test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                    "relPath": "test/testcases/malgo/Primitive.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$f",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "Int64T"
+                        }
+                    }
                 },
                 "tag": "Assign",
-                "variable": "_M7d_x241146test_x2Ftestcases_x2Fmalgo_x2FPrimitive_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/Primitive.mlg",
+                                "relPath": "test/testcases/malgo/Primitive.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$11",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "StringT"
+                    }
+                }
             }
         ]
     ],

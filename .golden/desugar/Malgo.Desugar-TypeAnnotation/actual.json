@@ -2,9 +2,71 @@
     "externals": [],
     "functions": [
         [
-            "_M4main51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                            "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M18_x24_x5F_x24b_x24c51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$b$c",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -50,24 +112,116 @@
                         },
                         "value": {
                             "tag": "Var",
-                            "variable": "_M7d_x241451test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                            "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$14",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            }
                         }
                     },
                     "expression": {
                         "arguments": [
                             {
                                 "tag": "Var",
-                                "variable": "_M7d_x241351test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$13",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             }
                         ],
                         "callee": {
                             "tag": "Var",
-                            "variable": "_M11printString34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./runtime/malgo/Builtin.mlg",
+                                            "relPath": "runtime/malgo/Builtin.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "printString",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "AnyT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Call"
                     },
                     "tag": "Assign",
-                    "variable": "_M7d_x241451test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                    "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$14",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    }
                 },
                 "expression": {
                     "body": {
@@ -79,24 +233,92 @@
                                 },
                                 "value": {
                                     "tag": "Var",
-                                    "variable": "_M7d_x241251test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                    "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$12",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             },
                             "expression": {
                                 "arguments": [
                                     {
                                         "tag": "Var",
-                                        "variable": "_M7d_x241151test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                        "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$11",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
                                     }
                                 ],
                                 "callee": {
                                     "tag": "Var",
-                                    "variable": "_M6d_x24f51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                    "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$f",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Call"
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x241251test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                            "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$12",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
                         "expression": {
                             "body": {
@@ -106,7 +328,22 @@
                                 },
                                 "value": {
                                     "tag": "Var",
-                                    "variable": "_M7d_x241051test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                    "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$10",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             },
                             "expression": {
@@ -121,15 +358,68 @@
                                 ],
                                 "callee": {
                                     "tag": "Var",
-                                    "variable": "_M10String_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                    "relPath": "runtime/malgo/Builtin.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "String#",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "StringT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
                                 },
                                 "tag": "Call"
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x241051test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                            "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$10",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
                         "tag": "Assign",
-                        "variable": "_M7d_x241151test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                        "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$11",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     },
                     "expression": {
                         "bindings": [
@@ -138,12 +428,42 @@
                                     "body": {
                                         "atom": {
                                             "tag": "Var",
-                                            "variable": "_M11x_x240_x24d51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                            "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "x$0$d",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
                                         },
                                         "tag": "Atom"
                                     },
                                     "parameters": [
-                                        "_M11x_x240_x24d51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                        {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                        "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "x$0$d",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
                                     ],
                                     "tag": "Fun"
                                 },
@@ -158,23 +478,107 @@
                                     },
                                     "tag": "FuncT"
                                 },
-                                "variable": "_M8fun_x24e51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "fun$e",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             }
                         ],
                         "body": {
                             "atom": {
                                 "tag": "Var",
-                                "variable": "_M8fun_x24e51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                                "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "fun$e",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Atom"
                         },
                         "tag": "Let"
                     },
                     "tag": "Assign",
-                    "variable": "_M6d_x24f51test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                    "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$f",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "parameters": [
+                                {
+                                    "tag": "AnyT"
+                                }
+                            ],
+                            "returns": {
+                                "tag": "AnyT"
+                            },
+                            "tag": "FuncT"
+                        }
+                    }
                 },
                 "tag": "Assign",
-                "variable": "_M7d_x241351test_x2Ftestcases_x2Fmalgo_x2FTypeAnnotation_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/TypeAnnotation.mlg",
+                                "relPath": "test/testcases/malgo/TypeAnnotation.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$13",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             }
         ]
     ],

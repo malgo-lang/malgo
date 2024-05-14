@@ -2,9 +2,55 @@
     "externals": [],
     "functions": [
         [
-            "_M1f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                            "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "f",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "Int64T"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M13unboxed_x241652test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "unboxed$16",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "Int64T"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -45,24 +91,116 @@
                                     },
                                     "value": {
                                         "tag": "Var",
-                                        "variable": "_M7d_x241c52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$1c",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        }
                                     }
                                 },
                                 "expression": {
                                     "arguments": [
                                         {
                                             "tag": "Var",
-                                            "variable": "_M7d_x241b52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                            "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$1b",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "StringT"
+                                                }
+                                            }
                                         }
                                     ],
                                     "callee": {
                                         "tag": "Var",
-                                        "variable": "_M15printString_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "printString#",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "StringT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
                                     },
                                     "tag": "Call"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x241c52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$1c",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                }
                             },
                             "expression": {
                                 "body": {
@@ -72,7 +210,22 @@
                                     },
                                     "value": {
                                         "tag": "Var",
-                                        "variable": "_M7d_x241a52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$1a",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "StringT"
+                                            }
+                                        }
                                     }
                                 },
                                 "expression": {
@@ -87,15 +240,68 @@
                                     ],
                                     "callee": {
                                         "tag": "Var",
-                                        "variable": "_M17toStringInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "toStringInt64#",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "Int64T"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "StringT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
                                     },
                                     "tag": "Call"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x241a52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$1a",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "StringT"
+                                    }
+                                }
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x241b52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                            "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$1b",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "StringT"
+                                }
+                            }
                         },
                         "literal": {
                             "contents": 0,
@@ -121,24 +327,116 @@
                                     },
                                     "value": {
                                         "tag": "Var",
-                                        "variable": "_M7d_x241f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$1f",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        }
                                     }
                                 },
                                 "expression": {
                                     "arguments": [
                                         {
                                             "tag": "Var",
-                                            "variable": "_M7d_x241e52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                            "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$1e",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "StringT"
+                                                }
+                                            }
                                         }
                                     ],
                                     "callee": {
                                         "tag": "Var",
-                                        "variable": "_M15printString_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "printString#",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "StringT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
                                     },
                                     "tag": "Call"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x241f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$1f",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                }
                             },
                             "expression": {
                                 "body": {
@@ -148,7 +446,22 @@
                                     },
                                     "value": {
                                         "tag": "Var",
-                                        "variable": "_M7d_x241d52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$1d",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "StringT"
+                                            }
+                                        }
                                     }
                                 },
                                 "expression": {
@@ -163,15 +476,68 @@
                                     ],
                                     "callee": {
                                         "tag": "Var",
-                                        "variable": "_M17toStringInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "toStringInt64#",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "Int64T"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "StringT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
                                     },
                                     "tag": "Call"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x241d52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$1d",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "StringT"
+                                    }
+                                }
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x241e52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                            "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$1e",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "StringT"
+                                }
+                            }
                         },
                         "literal": {
                             "contents": 1,
@@ -197,24 +563,116 @@
                                     },
                                     "value": {
                                         "tag": "Var",
-                                        "variable": "_M7d_x241952test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$19",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        }
                                     }
                                 },
                                 "expression": {
                                     "arguments": [
                                         {
                                             "tag": "Var",
-                                            "variable": "_M7d_x241852test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                            "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$18",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "StringT"
+                                                }
+                                            }
                                         }
                                     ],
                                     "callee": {
                                         "tag": "Var",
-                                        "variable": "_M15printString_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "printString#",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "StringT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
                                     },
                                     "tag": "Call"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x241952test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$19",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                }
                             },
                             "expression": {
                                 "body": {
@@ -224,7 +682,22 @@
                                     },
                                     "value": {
                                         "tag": "Var",
-                                        "variable": "_M7d_x241752test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$17",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "StringT"
+                                            }
+                                        }
                                     }
                                 },
                                 "expression": {
@@ -239,27 +712,110 @@
                                     ],
                                     "callee": {
                                         "tag": "Var",
-                                        "variable": "_M17toStringInt64_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                        "relPath": "runtime/malgo/Builtin.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "toStringInt64#",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "Int64T"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "StringT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
                                     },
                                     "tag": "Call"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x241752test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$17",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "StringT"
+                                    }
+                                }
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x241852test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                            "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$18",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "StringT"
+                                }
+                            }
                         },
                         "tag": "Bind",
                         "type": {
                             "tag": "Int64T"
                         },
-                        "variable": "_M10_x5F_x242052test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "_$20",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "Int64T"
+                            }
+                        }
                     }
                 ],
                 "scrutinee": {
                     "atom": {
                         "tag": "Var",
-                        "variable": "_M13unboxed_x241652test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "unboxed$16",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "Int64T"
+                            }
+                        }
                     },
                     "tag": "Atom"
                 },
@@ -267,9 +823,71 @@
             }
         ],
         [
-            "_M4main52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                            "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M20_x24_x5F_x2415_x242152test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$15$21",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -314,7 +932,30 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M7d_x242252test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$22",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     }
                 },
                 "expression": {
@@ -329,12 +970,66 @@
                     ],
                     "callee": {
                         "tag": "Var",
-                        "variable": "_M1f52test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8External"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                        "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "f",
+                                "sort": "External"
+                            },
+                            "meta": {
+                                "parameters": [
+                                    {
+                                        "tag": "Int64T"
+                                    }
+                                ],
+                                "returns": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                },
+                                "tag": "FuncT"
+                            }
+                        }
                     },
                     "tag": "Call"
                 },
                 "tag": "Assign",
-                "variable": "_M7d_x242252test_x2Ftestcases_x2Fmalgo_x2FFuncOverUnboxed_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/FuncOverUnboxed.mlg",
+                                "relPath": "test/testcases/malgo/FuncOverUnboxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$22",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             }
         ]
     ],

@@ -2,9 +2,71 @@
     "externals": [],
     "functions": [
         [
-            "_M4main43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/Double.mlg",
+                            "relPath": "test/testcases/malgo/Double.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M18_x24_x5F_x248_x24943test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/Double.mlg",
+                                "relPath": "test/testcases/malgo/Double.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$8$9",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -50,24 +112,116 @@
                         },
                         "value": {
                             "tag": "Var",
-                            "variable": "_M6d_x24e43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/Double.mlg",
+                                            "relPath": "test/testcases/malgo/Double.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$e",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            }
                         }
                     },
                     "expression": {
                         "arguments": [
                             {
                                 "tag": "Var",
-                                "variable": "_M6d_x24d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/Double.mlg",
+                                                "relPath": "test/testcases/malgo/Double.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$d",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             }
                         ],
                         "callee": {
                             "tag": "Var",
-                            "variable": "_M6putStr34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./runtime/malgo/Prelude.mlg",
+                                            "relPath": "runtime/malgo/Prelude.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "putStr",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "AnyT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Call"
                     },
                     "tag": "Assign",
-                    "variable": "_M6d_x24e43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/Double.mlg",
+                                    "relPath": "test/testcases/malgo/Double.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$e",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    }
                 },
                 "expression": {
                     "body": {
@@ -78,24 +232,92 @@
                             },
                             "value": {
                                 "tag": "Var",
-                                "variable": "_M6d_x24c43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/Double.mlg",
+                                                "relPath": "test/testcases/malgo/Double.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$c",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             }
                         },
                         "expression": {
                             "arguments": [
                                 {
                                     "tag": "Var",
-                                    "variable": "_M6d_x24b43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/Double.mlg",
+                                                    "relPath": "test/testcases/malgo/Double.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$b",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "AnyT"
+                                        }
+                                    }
                                 }
                             ],
                             "callee": {
                                 "tag": "Var",
-                                "variable": "_M14toStringDouble34runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                "relPath": "runtime/malgo/Builtin.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "toStringDouble",
+                                        "sort": "External"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Call"
                         },
                         "tag": "Assign",
-                        "variable": "_M6d_x24c43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/Double.mlg",
+                                        "relPath": "test/testcases/malgo/Double.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$c",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     },
                     "expression": {
                         "body": {
@@ -105,7 +327,22 @@
                             },
                             "value": {
                                 "tag": "Var",
-                                "variable": "_M6d_x24a43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/Double.mlg",
+                                                "relPath": "test/testcases/malgo/Double.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$a",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             }
                         },
                         "expression": {
@@ -120,18 +357,86 @@
                             ],
                             "callee": {
                                 "tag": "Var",
-                                "variable": "_M10Double_x2334runtime_x2Fmalgo_x2FBuiltin_x2Emlg8External"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./runtime/malgo/Builtin.mlg",
+                                                "relPath": "runtime/malgo/Builtin.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "Double#",
+                                        "sort": "External"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "tag": "DoubleT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "tag": "AnyT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
                             },
                             "tag": "Call"
                         },
                         "tag": "Assign",
-                        "variable": "_M6d_x24a43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/Double.mlg",
+                                        "relPath": "test/testcases/malgo/Double.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$a",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     },
                     "tag": "Assign",
-                    "variable": "_M6d_x24b43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/Double.mlg",
+                                    "relPath": "test/testcases/malgo/Double.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$b",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
+                    }
                 },
                 "tag": "Assign",
-                "variable": "_M6d_x24d43test_x2Ftestcases_x2Fmalgo_x2FDouble_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/Double.mlg",
+                                "relPath": "test/testcases/malgo/Double.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$d",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             }
         ]
     ],

@@ -55,9 +55,47 @@
     ],
     "functions": [
         [
-            "_M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "String#",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "StringT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M7p_x241547test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "p$15",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "StringT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -77,7 +115,22 @@
                             "arguments": [
                                 {
                                     "tag": "Var",
-                                    "variable": "_M7p_x241547test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                    "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "p$15",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "tag": "StringT"
+                                        }
+                                    }
                                 }
                             ],
                             "constructor": {
@@ -125,7 +178,35 @@
                             ],
                             "tag": "SumT"
                         },
-                        "variable": "_M9let_x241647test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "let$16",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [
+                                            {
+                                                "tag": "StringT"
+                                            }
+                                        ],
+                                        "tag": {
+                                            "name": "String#",
+                                            "tag": "Data"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     }
                 ],
                 "body": {
@@ -135,16 +216,90 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M9let_x241647test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "let$16",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [
+                                            {
+                                                "tag": "StringT"
+                                            }
+                                        ],
+                                        "tag": {
+                                            "name": "String#",
+                                            "tag": "Data"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     }
                 },
                 "tag": "Let"
             }
         ],
         [
-            "_M24malgo_x5Fprint_x5Fstring47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "malgo_print_string",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "StringT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M7p_x241747test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "p$17",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "StringT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -169,7 +324,22 @@
                 "arguments": [
                     {
                         "tag": "Var",
-                        "variable": "_M7p_x241747test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "p$17",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "StringT"
+                            }
+                        }
                     }
                 ],
                 "name": "malgo_print_string",
@@ -196,9 +366,71 @@
             }
         ],
         [
-            "_M16malgo_x5Fnewline47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "malgo_newline",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M7p_x241847test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "p$18",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -231,7 +463,30 @@
                 "arguments": [
                     {
                         "tag": "Var",
-                        "variable": "_M7p_x241847test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "p$18",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
                     }
                 ],
                 "name": "malgo_newline",
@@ -266,9 +521,47 @@
             }
         ],
         [
-            "_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "string#",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "StringT"
+                        }
+                    ],
+                    "returns": {
+                        "tag": "AnyT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M12x_x241_x241947test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "x$1$19",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "StringT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -289,30 +582,144 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M7d_x241a47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$1a",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     }
                 },
                 "expression": {
                     "arguments": [
                         {
                             "tag": "Var",
-                            "variable": "_M12x_x241_x241947test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "x$1$19",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "StringT"
+                                }
+                            }
                         }
                     ],
                     "callee": {
                         "tag": "Var",
-                        "variable": "_M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "String#",
+                                "sort": "External"
+                            },
+                            "meta": {
+                                "parameters": [
+                                    {
+                                        "tag": "StringT"
+                                    }
+                                ],
+                                "returns": {
+                                    "tag": "AnyT"
+                                },
+                                "tag": "FuncT"
+                            }
+                        }
                     },
                     "tag": "Call"
                 },
                 "tag": "Assign",
-                "variable": "_M7d_x241a47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$1a",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             }
         ],
         [
-            "_M8putStrLn47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "putStrLn",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "tag": "AnyT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M16string_x23_x241b47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "string#$1b",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -354,24 +761,132 @@
                                         },
                                         "value": {
                                             "tag": "Var",
-                                            "variable": "_M7d_x242147test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$21",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                }
+                                            }
                                         }
                                     },
                                     "expression": {
                                         "arguments": [
                                             {
                                                 "tag": "Var",
-                                                "variable": "_M7d_x242047test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                                "variable": {
+                                                    "id": {
+                                                        "moduleName": {
+                                                            "path": {
+                                                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$20",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    }
+                                                }
                                             }
                                         ],
                                         "callee": {
                                             "tag": "Var",
-                                            "variable": "_M16malgo_x5Fnewline47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "malgo_newline",
+                                                    "sort": "External"
+                                                },
+                                                "meta": {
+                                                    "parameters": [
+                                                        {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "tag": "Tuple"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
                                         },
                                         "tag": "Call"
                                     },
                                     "tag": "Assign",
-                                    "variable": "_M7d_x242147test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                    "variable": {
+                                        "id": {
+                                            "moduleName": {
+                                                "path": {
+                                                    "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                    "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$21",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        }
+                                    }
                                 },
                                 "expression": {
                                     "bindings": [
@@ -408,20 +923,89 @@
                                                 ],
                                                 "tag": "SumT"
                                             },
-                                            "variable": "_M9let_x241f47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "let$1f",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                }
+                                            }
                                         }
                                     ],
                                     "body": {
                                         "atom": {
                                             "tag": "Var",
-                                            "variable": "_M9let_x241f47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "let$1f",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                }
+                                            }
                                         },
                                         "tag": "Atom"
                                     },
                                     "tag": "Let"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x242047test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$20",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                }
                             },
                             "expression": {
                                 "body": {
@@ -439,27 +1023,142 @@
                                     },
                                     "value": {
                                         "tag": "Var",
-                                        "variable": "_M7d_x241d47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$1d",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        }
                                     }
                                 },
                                 "expression": {
                                     "arguments": [
                                         {
                                             "tag": "Var",
-                                            "variable": "_M7p_x241c47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                            "variable": {
+                                                "id": {
+                                                    "moduleName": {
+                                                        "path": {
+                                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "p$1c",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "StringT"
+                                                }
+                                            }
                                         }
                                     ],
                                     "callee": {
                                         "tag": "Var",
-                                        "variable": "_M24malgo_x5Fprint_x5Fstring47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External"
+                                        "variable": {
+                                            "id": {
+                                                "moduleName": {
+                                                    "path": {
+                                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "malgo_print_string",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "StringT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
                                     },
                                     "tag": "Call"
                                 },
                                 "tag": "Assign",
-                                "variable": "_M7d_x241d47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$1d",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    }
+                                }
                             },
                             "tag": "Assign",
-                            "variable": "_M7d_x241e47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$1e",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            }
                         },
                         "constructor": {
                             "parameters": [
@@ -474,7 +1173,22 @@
                         },
                         "tag": "Unpack",
                         "variables": [
-                            "_M7p_x241c47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                            {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "p$1c",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "StringT"
+                                }
+                            }
                         ]
                     }
                 ],
@@ -498,16 +1212,93 @@
                     },
                     "value": {
                         "tag": "Var",
-                        "variable": "_M16string_x23_x241b47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                        "variable": {
+                            "id": {
+                                "moduleName": {
+                                    "path": {
+                                        "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                        "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "string#$1b",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
                     }
                 },
                 "tag": "Match"
             }
         ],
         [
-            "_M4main47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External",
+            {
+                "id": {
+                    "moduleName": {
+                        "path": {
+                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                        },
+                        "tag": "Artifact"
+                    },
+                    "name": "main",
+                    "sort": "External"
+                },
+                "meta": {
+                    "parameters": [
+                        {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    ],
+                    "returns": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    },
+                    "tag": "FuncT"
+                }
+            },
             [
-                "_M20_x24_x5F_x2414_x242247test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "$_$14$22",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "tag": "Tuple"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             ],
             {
                 "parameters": [
@@ -553,24 +1344,116 @@
                         },
                         "value": {
                             "tag": "Var",
-                            "variable": "_M7d_x242547test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$25",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            }
                         }
                     },
                     "expression": {
                         "arguments": [
                             {
                                 "tag": "Var",
-                                "variable": "_M7d_x242447test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                                "variable": {
+                                    "id": {
+                                        "moduleName": {
+                                            "path": {
+                                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$24",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
                             }
                         ],
                         "callee": {
                             "tag": "Var",
-                            "variable": "_M8putStrLn47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "putStrLn",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "AnyT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Call"
                     },
                     "tag": "Assign",
-                    "variable": "_M7d_x242547test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                    "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$25",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        }
+                    }
                 },
                 "expression": {
                     "body": {
@@ -580,7 +1463,22 @@
                         },
                         "value": {
                             "tag": "Var",
-                            "variable": "_M7d_x242347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$23",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         }
                     },
                     "expression": {
@@ -595,15 +1493,68 @@
                         ],
                         "callee": {
                             "tag": "Var",
-                            "variable": "_M10String_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External"
+                            "variable": {
+                                "id": {
+                                    "moduleName": {
+                                        "path": {
+                                            "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                            "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "String#",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "tag": "StringT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
                         },
                         "tag": "Call"
                     },
                     "tag": "Assign",
-                    "variable": "_M7d_x242347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                    "variable": {
+                        "id": {
+                            "moduleName": {
+                                "path": {
+                                    "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                    "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$23",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
+                    }
                 },
                 "tag": "Assign",
-                "variable": "_M7d_x242447test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal"
+                "variable": {
+                    "id": {
+                        "moduleName": {
+                            "path": {
+                                "rawPath": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "relPath": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "d$24",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             }
         ]
     ],
