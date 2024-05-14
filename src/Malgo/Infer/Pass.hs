@@ -203,7 +203,7 @@ tcScDefs ds =
 --
 -- `tcScDef` does *not* to generalize inferred types.
 --
--- We need to generalize them by `generalizeMutRecs` and validate them signatures by `validateSignatures`
+-- We need to generalize them by `generalize` and validate them signatures by `validateSignature`
 tcScDef :: (State TcEnv :> es, Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, IOE :> es, Reader Flag :> es) => ScDef (Malgo Rename) -> Eff es (ScDef (Malgo Infer))
 tcScDef (pos, name, expr) = do
   (expr', wanted) <- runWriter (tcExpr expr)
@@ -221,43 +221,39 @@ validateSignature ::
   -- | inferred signature of function
   Scheme Type ->
   Eff es ()
-validateSignature def (Forall as typ) = checkSingle def typ
-  where
-    -- check single case
-    checkSingle (pos, name, _) inferredSchemeType = do
-      declaredScheme <- lookupVar pos.value name
-      let inferredScheme = Forall as inferredSchemeType
-      case declaredScheme of
-        -- No explicit signature
-        Forall [] (TyMeta _) ->
-          modify $ insertSignature name inferredScheme
-        _ -> do
-          -- 型同士を比較する際には型シノニムを展開する
-          -- When we need to bind two or more variables to a single variable,
-          -- the declared signature is more general than the inferred one.
-          --   Example:
-          --     declared: forall a b. a -> b -> a
-          --     inferred: forall   x. x -> x -> x
-          --       evidence = [a -> x, b -> x] Error! Declared is too general
-          --
-          --    declared: forall a b. a -> b -> a
-          --    inferred: forall x y. x -> y -> x
-          --     evidence = [a -> x, b -> y] OK! Declared is well matched with inferred
-          abbrEnv <- gets @TcEnv (view typeSynonymMap)
-          let Forall _ declaredType = fmap (expandAllTypeSynonym abbrEnv) declaredScheme
-          let Forall _ inferredType = fmap (expandAllTypeSynonym abbrEnv) inferredScheme
-          case evidenceOfEquiv declaredType inferredType of
-            Just evidence
-              | anySame $ Map.elems evidence -> errorOn pos.value $ vsep ["Signature too general:", nest 2 ("Declared:" <+> pretty declaredScheme), nest 2 ("Inferred:" <+> pretty inferredScheme)]
-              | otherwise ->
-                  modify $ insertSignature name declaredScheme
-            Nothing ->
-              errorOn pos.value
-                $ vsep
-                  [ "Signature mismatch:",
-                    nest 2 ("Declared:" <+> pretty declaredScheme),
-                    nest 2 ("Inferred:" <+> pretty inferredScheme)
-                  ]
+validateSignature (pos, name, _) inferredScheme = do
+  declaredScheme <- lookupVar pos.value name
+  case declaredScheme of
+    -- No explicit signature
+    Forall [] (TyMeta _) ->
+      modify $ insertSignature name inferredScheme
+    _ -> do
+      -- 型同士を比較する際には型シノニムを展開する
+      -- When we need to bind two or more variables to a single variable,
+      -- the declared signature is more general than the inferred one.
+      --   Example:
+      --     declared: forall a b. a -> b -> a
+      --     inferred: forall   x. x -> x -> x
+      --       evidence = [a -> x, b -> x] Error! Declared is too general
+      --
+      --    declared: forall a b. a -> b -> a
+      --    inferred: forall x y. x -> y -> x
+      --     evidence = [a -> x, b -> y] OK! Declared is well matched with inferred
+      abbrEnv <- gets @TcEnv (view typeSynonymMap)
+      let Forall _ declaredType = fmap (expandAllTypeSynonym abbrEnv) declaredScheme
+      let Forall _ inferredType = fmap (expandAllTypeSynonym abbrEnv) inferredScheme
+      case evidenceOfEquiv declaredType inferredType of
+        Just evidence
+          | anySame $ Map.elems evidence -> errorOn pos.value $ vsep ["Signature too general:", nest 2 ("Declared:" <+> pretty declaredScheme), nest 2 ("Inferred:" <+> pretty inferredScheme)]
+          | otherwise ->
+              modify $ insertSignature name declaredScheme
+        Nothing ->
+          errorOn pos.value
+            $ vsep
+              [ "Signature mismatch:",
+                nest 2 ("Declared:" <+> pretty declaredScheme),
+                nest 2 ("Inferred:" <+> pretty inferredScheme)
+              ]
 
 -- | Which combination of variables should be unification to consider two types as equal?
 -- Use in `tcScDefs`.
