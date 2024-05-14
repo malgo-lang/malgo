@@ -5,7 +5,7 @@
 
 module Malgo.DriverSpec (spec) where
 
-import Control.Exception (SomeException, catch)
+import Control.Exception (catch)
 import Control.Lens (view, _1, _2, _3)
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
