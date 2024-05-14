@@ -10,7 +10,6 @@ module Malgo.Infer.Unify
     zonk,
     solve,
     generalize,
-    generalizeMutRecs,
     instantiate,
   )
 where
@@ -151,18 +150,6 @@ generalize x term = do
   let as = map toBound fvs
   zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
   Forall as <$> zonk zonkedTerm
-
-generalizeMutRecs ::
-  (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
-  Range ->
-  [Type] ->
-  Eff es ([TypeVar], [Type])
-generalizeMutRecs x terms = do
-  zonkedTerms <- traverse zonk terms
-  let fvs = Set.toList $ mconcat $ map freevars zonkedTerms
-  let as = map toBound fvs
-  zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
-  (as,) <$> traverse zonk zonkedTerms
 
 -- `toBound` "generates" a new bound variable from a free variable.
 -- But it's not really generating a new variable, it's just using the free variable as a bound variable.
