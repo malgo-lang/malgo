@@ -466,7 +466,6 @@ def toStringChar# = { x -> malgo_char_to_string x }
 def toStringChar : Char -> String
 def toStringChar = { Char# x -> String# (toStringChar# x) }
 
-
 -- IO functions
 foreign import malgo_exit_failure : () -> a
 def exitFailure : () -> a

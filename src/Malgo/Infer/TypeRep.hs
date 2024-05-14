@@ -239,7 +239,10 @@ instance (Pretty ty) => Pretty (Scheme ty) where
 -- | Definition of Type constructor
 -- valueConstructorsのSchemeは、typeParametersで全称化されている
 data TypeDef ty = TypeDef
-  { _typeConstructor :: ty,
+  { -- | Type constructor
+    -- Type constructors are usually `TyCon`, but they can be other types.
+    -- So _typeConstructor field should not be zonked.
+    _typeConstructor :: ty,
     _typeParameters :: [TypeVar],
     _valueConstructors :: [(Id, Scheme ty)]
   }

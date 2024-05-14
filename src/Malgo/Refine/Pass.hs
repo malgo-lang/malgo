@@ -41,7 +41,10 @@ refineExpr (Var x v) = do
     Nothing -> pass
     Just (Forall _ originalType) -> do
       let instantiatedType = x.annotated
-      checkValidInstantiation originalType instantiatedType
+      typeSynonymMap <- asks @RefineEnv (.typeSynonymMap)
+      let originalType' = expandAllTypeSynonym typeSynonymMap originalType
+      let instantiatedType' = expandAllTypeSynonym typeSynonymMap instantiatedType
+      checkValidInstantiation originalType' instantiatedType'
   pure $ Var x v
   where
     checkValidInstantiation (T.TyVar v) (TyPrim p) = errorOn x.value $ "Invalid instantiation:" <+> "'" <> pretty v <> "'" <+> "can't be instantiated with" <+> pretty p

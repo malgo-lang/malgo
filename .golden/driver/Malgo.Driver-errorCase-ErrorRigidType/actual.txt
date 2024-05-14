@@ -1,0 +1,10 @@
+[error]: compile error
+     ╭──▶ ./test/testcases/malgo/error/ErrorRigidType.mlg@2:1-3:1
+     │
+   2 │ ╭┤ def apply = { f x -> f x }
+   3 │ ├┤ <no line>
+     • │ 
+     • ╰╸ Signature too general:
+     •    Declared: forall a$0$5 b$1$7. (a$0$5 -> b$1$7) -> b$1$7 -> a$0$5
+     •    Inferred: forall t$b. (t$b -> t$b) -> t$b -> t$b
+─────╯

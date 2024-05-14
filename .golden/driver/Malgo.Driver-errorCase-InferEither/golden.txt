@@ -1,0 +1,13 @@
+[error]: compile error
+     ╭──▶ ./test/testcases/malgo/error/InferEither.mlg@18:9-18:12
+     │
+  18 │   id1 x |> id2 |> { Right y -> printInt32 y }
+     •         ┬── 
+     •         ╰╸ Couldn't match
+     •            runtime/malgo/Builtin.mlg.String
+     •            with runtime/malgo/Builtin.mlg.Bool
+     •            callstack: CallStack (from HasCallStack):
+     •                unifyErrorMessage, called at src/Malgo/Infer/Unify.hs:118:26 in malgo-1.0.0-inplace:Malgo.Infer.Unify
+     •                unify, called at src/Malgo/Infer/Unify.hs:135:12 in malgo-1.0.0-inplace:Malgo.Infer.Unify
+     •                solve, called at src/Malgo/Infer/Pass.hs:214:3 in malgo-1.0.0-inplace:Malgo.Infer.Pass
+─────╯

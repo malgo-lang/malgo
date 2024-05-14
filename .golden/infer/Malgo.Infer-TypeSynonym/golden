@@ -233,16 +233,14 @@ Module
           ( Var
            ( Typed
             { annotated = TyApp
-             ( TyApp
-              ( TyTuple 2 )
-              ( TyCon
-               ( Id
-                { name = "String", moduleName = Artifact
-                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
              ( TyCon
               ( Id
-               { name = "String", moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ), value = Range
+               { name = "MyTuple", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = External } ) )
+             ( TyCon
+              ( Id
+               { name = "MyString", moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" ), sort = External } ) ), value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 3 }, _end = SourcePos
               { sourceName = "./test/testcases/malgo/TypeSynonym.mlg", sourceLine = Pos 19, sourceColumn = Pos 9 } } } )

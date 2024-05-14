@@ -54,15 +54,17 @@ infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
       put tcEnv
       bg' <- tcBindGroup bg
       abbrEnv <- gets @TcEnv (view typeSynonymMap)
-      zonkedBg <-
-        traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
-          >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-      zonkedTcEnv <-
-        get
-          >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (typeDefMap . traversed . valueConstructors . traversed . _2 . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+      zonkedBg <- zonkBindGroup bg'
+      zonkedTcEnv <- zonkTcEnv abbrEnv =<< get
       pure (Module name zonkedBg, zonkedTcEnv)
+  where
+    zonkBindGroup bg =
+      traverseOf (scDefs . traversed . traversed . _1 . types) zonk bg
+        >>= traverseOf (scDefs . traversed . traversed . _3 . types) zonk
+        >>= traverseOf (foreigns . traversed . _1 . types) zonk
+    zonkTcEnv abbrEnv tcEnv =
+      traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) tcEnv
+        >>= traverseOf (typeDefMap . traversed . valueConstructors . traversed . _2 . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
 
 tcBindGroup ::
   (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (Map ModuleName Interface) :> es, Reader Flag :> es, Workspace :> es) =>

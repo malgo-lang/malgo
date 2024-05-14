@@ -459,18 +459,15 @@ Module
               ( Var
                ( Typed
                 { annotated = TyArr
-                 ( TyRecord
-                  ( fromList
-                   [
-                    ( "show", TyArr
-                     ( TyVar
-                      ( Id
-                       { name = "t$25", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = Internal } ) )
-                     ( TyCon
-                      ( Id
-                       { name = "String", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) )
+                 ( TyApp
+                  ( TyCon
+                   ( Id
+                    { name = "Show", moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                  ( TyVar
+                   ( Id
+                    { name = "t$25", moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = Internal } ) ) )
                  ( TyArr
                   ( TyVar
                    ( Id
@@ -1104,18 +1101,15 @@ Module
                    ( Var
                     ( Typed
                      { annotated = TyArr
-                      ( TyRecord
-                       ( fromList
-                        [
-                         ( "show", TyArr
-                          ( TyVar
-                           ( Id
-                            { name = "t$3d", moduleName = Artifact
-                             ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = Internal } ) )
-                          ( TyCon
-                           ( Id
-                            { name = "String", moduleName = Artifact
-                             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) )
+                      ( TyApp
+                       ( TyCon
+                        ( Id
+                         { name = "Show", moduleName = Artifact
+                          ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                       ( TyVar
+                        ( Id
+                         { name = "t$3d", moduleName = Artifact
+                          ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = Internal } ) ) )
                       ( TyArr
                        ( TyVar
                         ( Id
@@ -1246,18 +1240,15 @@ Module
                      ( Var
                       ( Typed
                        { annotated = TyArr
-                        ( TyRecord
-                         ( fromList
-                          [
-                           ( "show", TyArr
-                            ( TyVar
-                             ( Id
-                              { name = "t$3f", moduleName = Artifact
-                               ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = Internal } ) )
-                            ( TyCon
-                             ( Id
-                              { name = "String", moduleName = Artifact
-                               ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) )
+                        ( TyApp
+                         ( TyCon
+                          ( Id
+                           { name = "Show", moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                         ( TyVar
+                          ( Id
+                           { name = "t$3f", moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = Internal } ) ) )
                         ( TyArr
                          ( TyVar
                           ( Id
@@ -1406,25 +1397,22 @@ Module
            ( Var
             ( Typed
              { annotated = TyArr
-              ( TyRecord
-               ( fromList
-                [
-                 ( "show", TyArr
-                  ( TyApp
-                   ( TyApp
-                    ( TyTuple 2 )
-                    ( TyCon
-                     ( Id
-                      { name = "Int32", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
-                   ( TyCon
-                    ( Id
-                     { name = "Int32", moduleName = Artifact
-                      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
-                  ( TyCon
-                   ( Id
-                    { name = "String", moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) )
+              ( TyApp
+               ( TyCon
+                ( Id
+                 { name = "Show", moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+               ( TyApp
+                ( TyApp
+                 ( TyTuple 2 )
+                 ( TyCon
+                  ( Id
+                   { name = "Int32", moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
+                ( TyCon
+                 ( Id
+                  { name = "Int32", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) )
               ( TyArr
                ( TyApp
                 ( TyApp
@@ -1500,87 +1488,72 @@ Module
               ( Apply
                ( Typed
                 { annotated = TyArr
-                 ( TyRecord
-                  ( fromList
-                   [
-                    ( "show", TyArr
-                     ( TyCon
-                      ( Id
-                       { name = "Int32", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
-                     ( TyCon
-                      ( Id
-                       { name = "String", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) )
-                 ( TyRecord
-                  ( fromList
-                   [
-                    ( "show", TyArr
-                     ( TyApp
-                      ( TyApp
-                       ( TyTuple 2 )
-                       ( TyCon
-                        ( Id
-                         { name = "Int32", moduleName = Artifact
-                          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
-                      ( TyCon
-                       ( Id
-                        { name = "Int32", moduleName = Artifact
-                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
-                     ( TyCon
-                      ( Id
-                       { name = "String", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) ), value = Range
+                 ( TyApp
+                  ( TyCon
+                   ( Id
+                    { name = "Show", moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                  ( TyCon
+                   ( Id
+                    { name = "Int32", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
+                 ( TyApp
+                  ( TyCon
+                   ( Id
+                    { name = "Show", moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                  ( TyApp
+                   ( TyApp
+                    ( TyTuple 2 )
+                    ( TyCon
+                     ( Id
+                      { name = "Int32", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
+                   ( TyCon
+                    ( Id
+                     { name = "Int32", moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ), value = Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Show.mlg", sourceLine = Pos 32, sourceColumn = Pos 21 }, _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Show.mlg", sourceLine = Pos 32, sourceColumn = Pos 51 } } } )
                ( Var
                 ( Typed
                  { annotated = TyArr
-                  ( TyRecord
-                   ( fromList
-                    [
-                     ( "show", TyArr
+                  ( TyApp
+                   ( TyCon
+                    ( Id
+                     { name = "Show", moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                   ( TyCon
+                    ( Id
+                     { name = "Int32", moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
+                  ( TyArr
+                   ( TyApp
+                    ( TyCon
+                     ( Id
+                      { name = "Show", moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                    ( TyCon
+                     ( Id
+                      { name = "Int32", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
+                   ( TyApp
+                    ( TyCon
+                     ( Id
+                      { name = "Show", moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                    ( TyApp
+                     ( TyApp
+                      ( TyTuple 2 )
                       ( TyCon
                        ( Id
                         { name = "Int32", moduleName = Artifact
-                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
-                      ( TyCon
-                       ( Id
-                        { name = "String", moduleName = Artifact
-                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) )
-                  ( TyArr
-                   ( TyRecord
-                    ( fromList
-                     [
-                      ( "show", TyArr
-                       ( TyCon
-                        ( Id
-                         { name = "Int32", moduleName = Artifact
-                          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
-                       ( TyCon
-                        ( Id
-                         { name = "String", moduleName = Artifact
-                          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) )
-                   ( TyRecord
-                    ( fromList
-                     [
-                      ( "show", TyArr
-                       ( TyApp
-                        ( TyApp
-                         ( TyTuple 2 )
-                         ( TyCon
-                          ( Id
-                           { name = "Int32", moduleName = Artifact
-                            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
-                        ( TyCon
-                         ( Id
-                          { name = "Int32", moduleName = Artifact
-                           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
-                       ( TyCon
-                        ( Id
-                         { name = "String", moduleName = Artifact
-                          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ) ) ), value = Range
+                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
+                     ( TyCon
+                      ( Id
+                       { name = "Int32", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ) ), value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Show.mlg", sourceLine = Pos 32, sourceColumn = Pos 21 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Show.mlg", sourceLine = Pos 32, sourceColumn = Pos 32 } } } )
@@ -1589,18 +1562,15 @@ Module
                   ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
                ( Var
                 ( Typed
-                 { annotated = TyRecord
-                  ( fromList
-                   [
-                    ( "show", TyArr
-                     ( TyCon
-                      ( Id
-                       { name = "Int32", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
-                     ( TyCon
-                      ( Id
-                       { name = "String", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ), value = Range
+                 { annotated = TyApp
+                  ( TyCon
+                   ( Id
+                    { name = "Show", moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                  ( TyCon
+                   ( Id
+                    { name = "Int32", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ), value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Show.mlg", sourceLine = Pos 32, sourceColumn = Pos 32 }, _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Show.mlg", sourceLine = Pos 32, sourceColumn = Pos 42 } } } )
@@ -1609,18 +1579,15 @@ Module
                   ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) ) )
               ( Var
                ( Typed
-                { annotated = TyRecord
-                 ( fromList
-                  [
-                   ( "show", TyArr
-                    ( TyCon
-                     ( Id
-                      { name = "Int32", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
-                    ( TyCon
-                     ( Id
-                      { name = "String", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) ) ] ), value = Range
+                { annotated = TyApp
+                 ( TyCon
+                  ( Id
+                   { name = "Show", moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/Show.mlg" ), sort = External } ) )
+                 ( TyCon
+                  ( Id
+                   { name = "Int32", moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ), value = Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Show.mlg", sourceLine = Pos 32, sourceColumn = Pos 42 }, _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Show.mlg", sourceLine = Pos 32, sourceColumn = Pos 51 } } } )

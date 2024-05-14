@@ -5,6 +5,7 @@
 
 module Malgo.DriverSpec (spec) where
 
+import Control.Exception (SomeException, catch)
 import Control.Lens (view, _1, _2, _3)
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
@@ -17,6 +18,7 @@ import Malgo.Prelude
 import Malgo.TestUtils
 import System.Directory (listDirectory, makeRelativeToCurrentDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, (-<.>), (</>))
+import System.IO.Silently (hCapture_)
 import System.Process.Typed
   ( ExitCode (ExitFailure, ExitSuccess),
     byteStringInput,
@@ -30,7 +32,7 @@ import System.Process.Typed
     setStdin,
     setStdout,
   )
-import Test.Hspec (Spec, anyException, beforeAll, it, runIO, shouldBe, shouldThrow)
+import Test.Hspec (Spec, beforeAll, runIO, sequential, shouldBe)
 import Test.Hspec.Core.Hooks (mapSubject)
 
 spec :: Spec
@@ -48,10 +50,14 @@ spec = do
       mapSubject (view _2) $ goldenWithTag' "llvm" "ll" ("normalCase " <> takeBaseName testcase)
       mapSubject (view _3) $ goldenWithTag' "llvm" "ll" ("opt normalCase " <> takeBaseName testcase)
   errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
-  for_ errorcases \errorcase -> do
-    it ("driver errorCase " <> takeBaseName errorcase)
-      $ testError (testcaseDir </> "error" </> errorcase)
-      `shouldThrow` anyException
+  sequential $ for_ errorcases \errorcase -> do
+    let errOutput =
+          hCapture_
+            [stdout, stderr]
+            ( testError (testcaseDir </> "error" </> errorcase)
+                `catch` \(_ :: ExitCode) -> pure ()
+            )
+    goldenWithTag "driver" "txt" ("errorCase " <> takeBaseName errorcase) (convertString <$> errOutput)
 
 -- | Wrapper of 'Malgo.Driver.compile'
 compile :: FilePath -> Bool -> Bool -> OptimizeOption -> CompileMode -> IO ()

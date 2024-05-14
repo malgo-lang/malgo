@@ -1,0 +1,13 @@
+[error]: compile error
+     ╭──▶ ./test/testcases/malgo/error/NonExhaustive.mlg@15:14-15:32
+     │
+  15 │ def head = { (Cons x Nil) -> x }
+     •              ┬───────────────── 
+     •              ╰╸ Pattern is not exhaustive: [ K(test/testcases/malgo/error/NonExhaustive.mlg.Nil) | K(test/testcases/malgo/error/NonExhaustive.mlg.Cons,
+     •                                            O,
+     •                                            T(test/testcases/malgo/error/NonExhaustive.mlg.List a$5$a$26)) | K(test/testcases/malgo/error/NonExhaustive.mlg.Cons,
+     •                                            T(a$5$a$26),
+     •                                            K(test/testcases/malgo/error/NonExhaustive.mlg.Cons,
+     •                                            T(a$5$a$26),
+     •                                            T(test/testcases/malgo/error/NonExhaustive.mlg.List a$5$a$26))) ]
+─────╯
