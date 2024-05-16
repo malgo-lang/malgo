@@ -70,7 +70,8 @@ compile src lambdaLift noOptimize option compileMode =
         { noOptimize,
           lambdaLift,
           debugMode = False,
-          testMode = True
+          testMode = True,
+          exitAfterDesugar = False
         }
       option
 

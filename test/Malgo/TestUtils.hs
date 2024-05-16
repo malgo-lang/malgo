@@ -68,7 +68,7 @@ setupPrelude =
     Driver.compile "./runtime/malgo/Prelude.mlg"
 
 flag :: Flag
-flag = Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode = True}
+flag = Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode = True, exitAfterDesugar = False}
 
 option :: OptimizeOption
 option = defaultOptimizeOption

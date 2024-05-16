@@ -90,70 +90,71 @@ compileFromAST srcPath parsedAst = do
 
       save srcPath ".json" (ViaJSON core)
 
-      core <- do
-        core <- runReader moduleName $ Flat.normalize core
-        _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
-        save srcPath ".mo" (ViaStore core)
+      unless flags.exitAfterDesugar do
+        core <- do
+          core <- runReader moduleName $ Flat.normalize core
+          _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
+          save srcPath ".mo" (ViaStore core)
 
-        let inf = buildInterface moduleName rnState tcEnv dsEnv
-        save srcPath ".mlgi" (ViaStore inf)
+          let inf = buildInterface moduleName rnState tcEnv dsEnv
+          save srcPath ".mlgi" (ViaStore inf)
 
-        core <- Link.link inf core
-        liftIO $ T.writeFile (toFilePath dstPath -<.> "kor") $ render $ pretty core
+          core <- Link.link inf core
+          liftIO $ T.writeFile (toFilePath dstPath -<.> "kor") $ render $ pretty core
 
-        lint True core
-        pure core
+          lint True core
+          pure core
 
-      when flags.debugMode
-        $ liftIO do
-          hPutStrLn stderr "=== LINKED ==="
-          hPrint stderr $ pretty core
+        when flags.debugMode
+          $ liftIO do
+            hPutStrLn stderr "=== LINKED ==="
+            hPrint stderr $ pretty core
 
-      when flags.debugMode do
-        inf <- loadInterface moduleName
-        hPutStrLn stderr "=== INTERFACE ==="
-        hPutTextLn stderr $ render $ pretty inf
+        when flags.debugMode do
+          inf <- loadInterface moduleName
+          hPutStrLn stderr "=== INTERFACE ==="
+          hPutTextLn stderr $ render $ pretty inf
 
-      coreOpt <-
-        if flags.noOptimize
-          then pure core
-          else runReader moduleName $ optimizeProgram core >>= Flat.normalize
-      when (flags.debugMode && not flags.noOptimize) do
-        hPutStrLn stderr "=== OPTIMIZE ==="
-        hPrint stderr $ pretty coreOpt
-      when flags.testMode do
-        liftIO $ T.writeFile (toFilePath dstPath -<.> "kor.opt") $ render $ pretty coreOpt
-      lint True coreOpt
+        coreOpt <-
+          if flags.noOptimize
+            then pure core
+            else runReader moduleName $ optimizeProgram core >>= Flat.normalize
+        when (flags.debugMode && not flags.noOptimize) do
+          hPutStrLn stderr "=== OPTIMIZE ==="
+          hPrint stderr $ pretty coreOpt
+        when flags.testMode do
+          liftIO $ T.writeFile (toFilePath dstPath -<.> "kor.opt") $ render $ pretty coreOpt
+        lint True coreOpt
 
-      coreLL <- if flags.lambdaLift then runReader moduleName $ lambdalift coreOpt >>= Flat.normalize else pure coreOpt
-      when (flags.debugMode && flags.lambdaLift)
-        $ liftIO do
-          hPutStrLn stderr "=== LAMBDALIFT ==="
-          hPrint stderr $ pretty coreLL
-      when flags.testMode do
-        liftIO $ T.writeFile (toFilePath dstPath -<.> "kor.opt.lift") $ render $ pretty coreLL
-      lint True coreLL
+        coreLL <- if flags.lambdaLift then runReader moduleName $ lambdalift coreOpt >>= Flat.normalize else pure coreOpt
+        when (flags.debugMode && flags.lambdaLift)
+          $ liftIO do
+            hPutStrLn stderr "=== LAMBDALIFT ==="
+            hPrint stderr $ pretty coreLL
+        when flags.testMode do
+          liftIO $ T.writeFile (toFilePath dstPath -<.> "kor.opt.lift") $ render $ pretty coreLL
+        lint True coreLL
 
-      -- Optimization after lambda lifting causes code explosion.
-      -- The effect of lambda lifting is expected to be fully realized by backend's optimization.
-      -- TODO: Can we only optimize the code that has been lambda lifted?
-      -- TODO: Improve the function inliner to reduce the code explosion.
-      -- TODO: Add more information to `call` instruction to improve the function inliner.
-      -- Or simply skip inlining and do other optimizations.
+        -- Optimization after lambda lifting causes code explosion.
+        -- The effect of lambda lifting is expected to be fully realized by backend's optimization.
+        -- TODO: Can we only optimize the code that has been lambda lifted?
+        -- TODO: Improve the function inliner to reduce the code explosion.
+        -- TODO: Add more information to `call` instruction to improve the function inliner.
+        -- Or simply skip inlining and do other optimizations.
 
-      -- On M2 MBA, optimization after lambda lifting causes segmentation fault.
-      -- This is probably caused by lack of memory due to handling extremely large ASTs. I don't know the details.
-      -- coreLLOpt <- if not env.noOptimize && env.lambdaLift then optimizeProgram OptimizeEnv {uniqSupply, moduleName, debugMode = env.debugMode, option = env.optimizeOption} coreLL else pure coreLL
-      -- when (env.debugMode && env.lambdaLift && not env.noOptimize) $
-      --   liftIO do
-      --     hPutStrLn stderr "=== OPTIMIZE AFTER LAMBDALIFT ==="
-      --     hPrint stderr $ pretty coreLLOpt
-      -- when env.testMode do
-      --   liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pretty coreLLOpt
-      -- lint True coreLLOpt
-      Uniq i <- get @Uniq
-      let srcRelPath = toFilePath srcPath.relPath
-      LLVM.codeGen srcRelPath (toFilePath dstPath) moduleName (searchMain $ Map.toList dsEnv._nameEnv) i coreLL
+        -- On M2 MBA, optimization after lambda lifting causes segmentation fault.
+        -- This is probably caused by lack of memory due to handling extremely large ASTs. I don't know the details.
+        -- coreLLOpt <- if not env.noOptimize && env.lambdaLift then optimizeProgram OptimizeEnv {uniqSupply, moduleName, debugMode = env.debugMode, option = env.optimizeOption} coreLL else pure coreLL
+        -- when (env.debugMode && env.lambdaLift && not env.noOptimize) $
+        --   liftIO do
+        --     hPutStrLn stderr "=== OPTIMIZE AFTER LAMBDALIFT ==="
+        --     hPrint stderr $ pretty coreLLOpt
+        -- when env.testMode do
+        --   liftIO $ writeFile (env.dstPath -<.> "kor.opt.lift.opt") $ render $ pretty coreLLOpt
+        -- lint True coreLLOpt
+        Uniq i <- get @Uniq
+        let srcRelPath = toFilePath srcPath.relPath
+        LLVM.codeGen srcRelPath (toFilePath dstPath) moduleName (searchMain $ Map.toList dsEnv._nameEnv) i coreLL
     -- エントリーポイントとなるmain関数を検索する
     searchMain :: [(Id, Meta b)] -> Maybe (Meta b)
     searchMain ((griffId@Id {sort = External}, coreId) : _)

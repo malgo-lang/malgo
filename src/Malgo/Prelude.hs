@@ -252,7 +252,8 @@ data Flag = Flag
   { noOptimize :: Bool,
     lambdaLift :: Bool,
     debugMode :: Bool,
-    testMode :: Bool
+    testMode :: Bool,
+    exitAfterDesugar :: Bool
   }
 
 instance Hashable Megaparsec.Pos

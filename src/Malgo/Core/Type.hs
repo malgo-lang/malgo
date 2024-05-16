@@ -93,7 +93,7 @@ instance Arbitrary Type where
       ]
 
 instance Pretty Type where
-  pretty (a :-> b) = parens $ sep ["->", brackets (sep $ map pretty a), pretty b]
+  pretty (a :-> b) = parens $ sep ["FuncT", brackets (sep $ map pretty a), pretty b]
   pretty Int32T = "Int32#"
   pretty Int64T = "Int64#"
   pretty FloatT = "Float#"
@@ -114,7 +114,7 @@ $( liftA2
  )
 
 class HasType a where
-  typeOf :: a -> Type
+  typeOf :: (HasCallStack) => a -> Type
 
 instance HasType Type where
   typeOf x = x

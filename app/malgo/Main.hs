@@ -19,7 +19,8 @@ data ToLLOpt = ToLLOpt
     noOptimize :: Bool,
     lambdaLift :: Bool,
     optimizeOption :: OptimizeOption,
-    debugMode :: Bool
+    debugMode :: Bool,
+    exitAfterDesugar :: Bool
   }
 
 makeFieldsNoPrefix ''ToLLOpt
@@ -36,7 +37,8 @@ main = do
             { Flag.noOptimize = opt.noOptimize,
               Flag.lambdaLift = opt.lambdaLift,
               Flag.debugMode = opt.debugMode,
-              Flag.testMode = False
+              Flag.testMode = False,
+              Flag.exitAfterDesugar = opt.exitAfterDesugar
             }
           opt.optimizeOption
 
@@ -62,6 +64,7 @@ toLLOpt =
               <*> switch (long "fremove-noop-destruct")
           )
       <*> switch (long "debug-mode")
+      <*> switch (long "only-desugar" <> help "Only generate .kor file and exit. Do not compile to .ll nor link Core files.")
   )
     <**> helper
 

@@ -70,6 +70,7 @@ mod tests {
             if f_name.ends_with(".mlg") {
                 let output = Command::new("malgo")
                     .arg("to-ll")
+                    .arg("--only-desugar")
                     .arg(entry.path())
                     .output()
                     .expect("failed to execute process");

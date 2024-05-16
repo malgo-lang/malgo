@@ -108,7 +108,7 @@ let_ otype obj = do
   tell $ Endo $ \e -> Let [LocalDef x otype obj] e
   pure (Var x)
 
-bind :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Meta Type))) :> es) => Expr (Meta Type) -> Eff es (Atom (Meta Type))
+bind :: (HasCallStack) => (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Expr (Meta Type))) :> es) => Expr (Meta Type) -> Eff es (Atom (Meta Type))
 bind (Atom a) = pure a
 bind v = do
   x <- withMeta (typeOf v) <$> newTemporalId "d"
@@ -253,11 +253,20 @@ instance (HasType a) => HasType (Expr a) where
     ps :-> r | map typeOf xs == ps -> r
     _ -> errorDoc $ "Invalid type:" <+> squotes (pretty $ typeOf f)
   typeOf (CallDirect f xs) = case typeOf f of
-    ps :-> r | map typeOf xs == ps -> r
-    _ -> error "typeOf f must be ps :-> r"
+    ps :-> r
+      | map typeOf xs == ps -> r
+      | otherwise ->
+          errorDoc
+            $ sep
+              [ "Expected type:" <+> squotes (pretty $ map typeOf xs :-> r),
+                "but got" <+> squotes (pretty $ ps :-> r)
+              ]
+    t -> errorDoc $ errorDoc $ "t must be ps :-> r but" <+> squotes (pretty t)
   typeOf (RawCall _ t xs) = case t of
-    ps :-> r | map typeOf xs == ps -> r
-    _ -> error "t must be ps :-> r"
+    ps :-> r
+      | map typeOf xs == ps -> r
+      | otherwise -> errorDoc $ "Expected type:" <+> squotes (pretty $ map typeOf xs :-> r) <+> "but got" <+> squotes (pretty $ ps :-> r)
+    t -> errorDoc $ "t must be ps :-> r but" <+> squotes (pretty t)
   typeOf (Cast ty _) = ty
   typeOf (Let _ e) = typeOf e
   typeOf (Match _ (c : _)) = typeOf c
