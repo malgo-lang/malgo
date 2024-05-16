@@ -100,7 +100,8 @@ compileFromAST srcPath parsedAst = do
           save srcPath ".mlgi" (ViaStore inf)
 
           core <- Link.link inf core
-          liftIO $ T.writeFile (toFilePath dstPath -<.> "kor") $ render $ pretty core
+          when flags.debugMode do
+            liftIO $ T.writeFile (toFilePath dstPath -<.> "kor") $ render $ pretty core
 
           lint True core
           pure core
@@ -122,7 +123,7 @@ compileFromAST srcPath parsedAst = do
         when (flags.debugMode && not flags.noOptimize) do
           hPutStrLn stderr "=== OPTIMIZE ==="
           hPrint stderr $ pretty coreOpt
-        when flags.testMode do
+        when flags.debugMode do
           liftIO $ T.writeFile (toFilePath dstPath -<.> "kor.opt") $ render $ pretty coreOpt
         lint True coreOpt
 
@@ -131,7 +132,7 @@ compileFromAST srcPath parsedAst = do
           $ liftIO do
             hPutStrLn stderr "=== LAMBDALIFT ==="
             hPrint stderr $ pretty coreLL
-        when flags.testMode do
+        when flags.debugMode do
           liftIO $ T.writeFile (toFilePath dstPath -<.> "kor.opt.lift") $ render $ pretty coreLL
         lint True coreLL
 
@@ -191,7 +192,7 @@ compile srcPath = do
       let message =
             convertString
               $ PrettyPrinter.renderStrict
-              $ PrettyPrinter.layoutPretty PrettyPrinter.defaultLayoutOptions
+              $ PrettyPrinter.layoutSmart PrettyPrinter.defaultLayoutOptions
               $ PrettyPrinter.unAnnotate
               $ prettyDiagnostic WithUnicode (TabSize 4) diag'
       BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.

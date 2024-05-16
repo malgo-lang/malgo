@@ -33,7 +33,7 @@ driveParse srcPath = do
         let message =
               convertString
                 $ PP.renderStrict
-                $ PP.layoutPretty PP.defaultLayoutOptions
+                $ PP.layoutSmart PP.defaultLayoutOptions
                 $ PP.unAnnotate
                 $ prettyDiagnostic WithUnicode (TabSize 4) diag'
         error message

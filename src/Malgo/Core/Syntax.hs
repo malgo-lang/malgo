@@ -72,21 +72,18 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
         [ ["; variables"],
           map
             ( \(v, t, e) ->
-                -- parens $ sep ["define" <+> pretty v, pretty t, pretty e]
-                sexpr ["define", pretty v, pretty t, pretty e]
+                sexpr ["define", pretty v, pretty t, hardline, pretty e]
             )
             variables,
           ["; functions"],
           map
             ( \(f, ps, t, e) ->
-                -- parens $ sep [sep ["define" <+> parens (sep $ map pretty $ f : ps), pretty t], pretty e]
-                sexpr ["define", sexpr $ map pretty $ f : ps, pretty t, pretty e]
+                sexpr ["define", sexpr $ map pretty $ f : ps, pretty t, hardline, pretty e]
             )
             functions,
           ["; externals"],
           map
             ( \(f, t) ->
-                -- parens $ sep ["extern", "%" <> pretty f, pretty t]
                 sexpr ["extern", "%" <> pretty f, pretty t]
             )
             externals
@@ -282,24 +279,47 @@ instance (HasType a) => HasType (Expr a) where
 
 instance (Pretty a) => Pretty (Expr a) where
   pretty (Atom x) = pretty x
-  pretty (Call f xs) = parens $ "call" <+> pretty f <+> sep (map pretty xs)
-  pretty (CallDirect f xs) = parens $ "direct" <+> pretty f <+> sep (map pretty xs)
-  pretty (RawCall p t xs) = parens $ "raw" <+> pretty p <+> pretty t <+> sep (map pretty xs)
-  pretty (Cast ty x) = parens $ "cast" <+> pretty ty <+> pretty x
+  pretty (Call f xs) =
+    sexpr $ ["call", pretty f] <> map pretty xs
+  pretty (CallDirect f xs) =
+    sexpr $ ["direct", pretty f] <> map pretty xs
+  pretty (RawCall p t xs) =
+    sexpr $ ["raw", pretty p, pretty t] <> map pretty xs
+  pretty (Cast ty x) =
+    sexpr ["cast", pretty ty, pretty x]
   pretty (Let xs e) =
-    parens $ vsep ["let", parens (vcat (map pretty xs)), pretty e]
-  pretty (Match v cs) = parens $ vsep ["match" <+> pretty v, vcat (toList $ fmap pretty cs)]
-  pretty (Switch v cs e) = parens $ vsep ["switch" <+> pretty v, vcat (toList $ fmap prettyCase cs), parens ("default" <+> pretty e)]
+    sexpr ["let", sexpr (map pretty xs), hardline, pretty e]
+  pretty (Match v cs) =
+    sexpr ["match", pretty v, hardline, vsep $ toList $ fmap pretty cs]
+  pretty (Switch v cs e) =
+    sexpr
+      [ "switch",
+        pretty v,
+        hardline,
+        vsep $ toList (fmap prettyCase cs) <> ["default", pretty e]
+      ]
     where
-      prettyCase (t, e) = parens $ pretty t <+> pretty e
-  pretty (SwitchUnboxed v cs e) = parens $ vsep ["switch-unboxed" <+> pretty v, vcat (toList $ fmap prettyCase cs), parens ("default" <+> pretty e)]
+      prettyCase (t, e) = sexpr [pretty t, pretty e]
+  pretty (SwitchUnboxed v cs e) =
+    sexpr
+      [ "switch-unboxed",
+        pretty v,
+        hardline,
+        vsep $ toList $ fmap prettyCase cs <> ["default", pretty e]
+      ]
     where
-      prettyCase (t, e) = parens $ pretty t <+> pretty e
-  pretty (Destruct v con xs e) = parens $ vsep ["destruct" <+> pretty v <+> pretty con <+> parens (sep (map pretty xs)), pretty e]
+      prettyCase (t, e) = sexpr [pretty t, pretty e]
+  pretty (Destruct v con xs e) =
+    sexpr ["destruct", pretty v, pretty con, sexpr $ map pretty xs, pretty e]
   pretty (DestructRecord v kvs e) =
-    parens $ vsep ["destruct-record" <+> pretty v <+> parens (sep (map (\(k, v) -> pretty k <+> pretty v) $ Map.toList kvs)), pretty e]
-  pretty (Assign x v e) = parens $ vsep ["=" <+> pretty x <+> pretty v, pretty e]
-  pretty (Error t) = parens $ "ERROR" <+> pretty t
+    sexpr
+      [ "destruct-record",
+        pretty v,
+        sexpr $ map (\(k, v) -> pretty k <+> pretty v) $ Map.toList kvs,
+        pretty e
+      ]
+  pretty (Assign x v e) = sexpr ["=", pretty x, pretty v, pretty e]
+  pretty (Error t) = sexpr ["ERROR", pretty t]
 
 instance HasFreeVar Expr where
   freevars (Atom x) = freevars x
@@ -469,7 +489,7 @@ instance (FromJSON a) => FromJSON (LocalDef a) where
   parseJSON = withObject "LocalDef" $ \v -> LocalDef <$> v .: "variable" <*> v .: "type" <*> v .: "object"
 
 instance (Pretty a) => Pretty (LocalDef a) where
-  pretty (LocalDef v t o) = parens $ vsep [pretty v <+> pretty t, pretty o]
+  pretty (LocalDef v t o) = sexpr [pretty v <+> pretty t, pretty o]
 
 instance HasAtom LocalDef where
   atom f LocalDef {..} = LocalDef variable typ <$> atom f object
@@ -507,22 +527,19 @@ instance (HasType a) => HasType (Obj a) where
   typeOf (Record kvs) = RecordT (fmap typeOf kvs)
 
 instance (Pretty a) => Pretty (Obj a) where
-  pretty (Fun xs e) = parens $ sep ["fun" <+> parens (sep $ map pretty xs), pretty e]
-  pretty (Pack ty c xs) = parens $ sep (["pack", pretty ty, pretty c] <> map pretty xs)
+  pretty (Fun xs e) = sexpr ["fun", sexpr (map pretty xs), pretty e]
+  pretty (Pack ty c xs) = sexpr ["pack", pretty ty, pretty c, sexpr $ map pretty xs]
   pretty (Record kvs) =
-    parens
-      $ sep
-        [ "record"
-            <+> parens
-              ( sep
-                  $ map
-                    ( \(k, v) ->
-                        pretty k
-                          <+> pretty v
-                    )
-                    (Map.toList kvs)
-              )
-        ]
+    sexpr
+      [ "record",
+        sexpr
+          $ map
+            ( \(k, v) ->
+                pretty k
+                  <+> pretty v
+            )
+            (Map.toList kvs)
+      ]
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -575,11 +592,11 @@ instance (HasType a) => HasType (Case a) where
 
 instance (Pretty a) => Pretty (Case a) where
   pretty (Unpack c xs e) =
-    parens $ sep ["unpack" <+> parens (pretty c <+> sep (map pretty xs)), pretty e]
+    sexpr ["unpack", sexpr [pretty c, sep $ map pretty xs], pretty e]
   pretty (OpenRecord pat e) =
-    parens $ sep ["open", parens $ sep $ map (\(k, v) -> pretty k <+> pretty v) $ Map.toList pat, pretty e]
-  pretty (Exact u e) = parens $ sep ["exact" <+> pretty u, pretty e]
-  pretty (Bind x t e) = parens $ sep ["bind", pretty x, pretty t, pretty e]
+    sexpr ["open", sexpr $ map (\(k, v) -> pretty k <+> pretty v) $ Map.toList pat, pretty e]
+  pretty (Exact u e) = sexpr ["exact", pretty u, pretty e]
+  pretty (Bind x t e) = sexpr ["bind", pretty x, pretty t, pretty e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs
