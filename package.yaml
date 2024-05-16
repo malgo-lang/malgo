@@ -11,6 +11,7 @@ build-type: Simple
 
 dependencies:
   - Glob
+  - QuickCheck >= 2.15
   - aeson
   - aeson-pretty
   - base
@@ -25,7 +26,9 @@ dependencies:
   - exceptions
   - extra
   - filepath
+  - generic-arbitrary
   - generic-data
+  - generic-random
   - hashable
   - knob
   - lens
@@ -37,6 +40,7 @@ dependencies:
   - parser-combinators
   - path
   - prettyprinter
+  - quickcheck-instances
   - raw-strings-qq
   - regex-tdfa
   - store
@@ -48,10 +52,6 @@ dependencies:
   - unliftio
   - unordered-containers
   - witherable
-  - QuickCheck >= 2.15
-  - generic-arbitrary
-  - quickcheck-instances
-  - generic-random
 
 ghc-options:
   - -Wall
