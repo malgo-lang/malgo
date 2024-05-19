@@ -234,98 +234,22 @@
                 "tag": "FuncT"
             },
             {
-                "clauses": [
-                    {
-                        "body": {
-                            "body": {
-                                "tag": "Cast",
-                                "type": {
-                                    "constructors": [
-                                        {
-                                            "parameters": [],
-                                            "tag": {
-                                                "tag": "Tuple"
-                                            }
-                                        }
-                                    ],
-                                    "tag": "SumT"
-                                },
-                                "value": {
-                                    "tag": "Var",
-                                    "variable": {
-                                        "id": {
-                                            "module_name": {
-                                                "path": {
-                                                    "raw_path": "./test/testcases/malgo/TestNestedLetFunc.mlg",
-                                                    "rel_path": "test/testcases/malgo/TestNestedLetFunc.mlg"
-                                                },
-                                                "tag": "Artifact"
-                                            },
-                                            "name": "d$19",
-                                            "sort": "Temporal"
-                                        },
-                                        "meta": {
-                                            "constructors": [
-                                                {
-                                                    "parameters": [],
-                                                    "tag": {
-                                                        "tag": "Tuple"
-                                                    }
-                                                }
-                                            ],
-                                            "tag": "SumT"
-                                        }
+                "body": {
+                    "body": {
+                        "tag": "Cast",
+                        "type": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
                                     }
                                 }
-                            },
-                            "expression": {
-                                "arguments": [
-                                    {
-                                        "literal": {
-                                            "contents": "PASS",
-                                            "tag": "String"
-                                        },
-                                        "tag": "Unboxed"
-                                    }
-                                ],
-                                "callee": {
-                                    "tag": "Var",
-                                    "variable": {
-                                        "id": {
-                                            "module_name": {
-                                                "path": {
-                                                    "raw_path": "./test/testcases/malgo/TestNestedLetFunc.mlg",
-                                                    "rel_path": "test/testcases/malgo/TestNestedLetFunc.mlg"
-                                                },
-                                                "tag": "Artifact"
-                                            },
-                                            "name": "malgo_print_string",
-                                            "sort": "External"
-                                        },
-                                        "meta": {
-                                            "parameters": [
-                                                {
-                                                    "tag": "StringT"
-                                                }
-                                            ],
-                                            "returns": {
-                                                "constructors": [
-                                                    {
-                                                        "parameters": [],
-                                                        "tag": {
-                                                            "tag": "Tuple"
-                                                        }
-                                                    }
-                                                ],
-                                                "tag": "SumT"
-                                            },
-                                            "tag": "FuncT"
-                                        }
-                                    }
-                                },
-                                "tag": "Call"
-                            },
-                            "tag": "Assign",
+                            ],
+                            "tag": "SumT"
+                        },
+                        "value": {
+                            "tag": "Var",
                             "variable": {
                                 "id": {
                                     "module_name": {
@@ -350,50 +274,39 @@
                                     "tag": "SumT"
                                 }
                             }
-                        },
-                        "tag": "Bind",
-                        "type": {
-                            "parameters": [
-                                {
-                                    "constructors": [
+                        }
+                    },
+                    "expression": {
+                        "arguments": [
+                            {
+                                "literal": {
+                                    "contents": "PASS",
+                                    "tag": "String"
+                                },
+                                "tag": "Unboxed"
+                            }
+                        ],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": {
+                                "id": {
+                                    "module_name": {
+                                        "path": {
+                                            "raw_path": "./test/testcases/malgo/TestNestedLetFunc.mlg",
+                                            "rel_path": "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "malgo_print_string",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [
                                         {
-                                            "parameters": [],
-                                            "tag": {
-                                                "tag": "Tuple"
-                                            }
+                                            "tag": "StringT"
                                         }
                                     ],
-                                    "tag": "SumT"
-                                }
-                            ],
-                            "returns": {
-                                "constructors": [
-                                    {
-                                        "parameters": [],
-                                        "tag": {
-                                            "tag": "Tuple"
-                                        }
-                                    }
-                                ],
-                                "tag": "SumT"
-                            },
-                            "tag": "FuncT"
-                        },
-                        "variable": {
-                            "id": {
-                                "module_name": {
-                                    "path": {
-                                        "raw_path": "./test/testcases/malgo/TestNestedLetFunc.mlg",
-                                        "rel_path": "test/testcases/malgo/TestNestedLetFunc.mlg"
-                                    },
-                                    "tag": "Artifact"
-                                },
-                                "name": "let__M6f_x24254test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8Internal$18",
-                                "sort": "Temporal"
-                            },
-                            "meta": {
-                                "parameters": [
-                                    {
+                                    "returns": {
                                         "constructors": [
                                             {
                                                 "parameters": [],
@@ -403,25 +316,40 @@
                                             }
                                         ],
                                         "tag": "SumT"
-                                    }
-                                ],
-                                "returns": {
-                                    "constructors": [
-                                        {
-                                            "parameters": [],
-                                            "tag": {
-                                                "tag": "Tuple"
-                                            }
-                                        }
-                                    ],
-                                    "tag": "SumT"
-                                },
-                                "tag": "FuncT"
+                                    },
+                                    "tag": "FuncT"
+                                }
                             }
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": {
+                        "id": {
+                            "module_name": {
+                                "path": {
+                                    "raw_path": "./test/testcases/malgo/TestNestedLetFunc.mlg",
+                                    "rel_path": "test/testcases/malgo/TestNestedLetFunc.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$19",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
                         }
                     }
-                ],
-                "scrutinee": {
+                },
+                "expression": {
                     "bindings": [
                         {
                             "object": {
@@ -1118,7 +1046,47 @@
                     },
                     "tag": "Let"
                 },
-                "tag": "Match"
+                "tag": "Assign",
+                "variable": {
+                    "id": {
+                        "module_name": {
+                            "path": {
+                                "raw_path": "./test/testcases/malgo/TestNestedLetFunc.mlg",
+                                "rel_path": "test/testcases/malgo/TestNestedLetFunc.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "let__M6f_x24254test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8Internal$18",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "parameters": [
+                            {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        ],
+                        "returns": {
+                            "constructors": [
+                                {
+                                    "parameters": [],
+                                    "tag": {
+                                        "tag": "Tuple"
+                                    }
+                                }
+                            ],
+                            "tag": "SumT"
+                        },
+                        "tag": "FuncT"
+                    }
+                }
             }
         ]
     ],

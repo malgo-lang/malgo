@@ -123,7 +123,7 @@ pub enum Expr {
         body: Box<Expr>,
     },
     Match {
-        scrutinee: Box<Expr>,
+        scrutinee: Atom,
         clauses: Vec<Case>,
     },
     Assign {

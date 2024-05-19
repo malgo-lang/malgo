@@ -741,11 +741,274 @@
                 "tag": "FuncT"
             },
             {
-                "clauses": [
-                    {
-                        "body": {
+                "body": {
+                    "clauses": [
+                        {
                             "body": {
                                 "body": {
+                                    "body": {
+                                        "body": {
+                                            "tag": "Cast",
+                                            "type": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            },
+                                            "value": {
+                                                "tag": "Var",
+                                                "variable": {
+                                                    "id": {
+                                                        "module_name": {
+                                                            "path": {
+                                                                "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                                "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "d$21",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "expression": {
+                                            "arguments": [
+                                                {
+                                                    "tag": "Var",
+                                                    "variable": {
+                                                        "id": {
+                                                            "module_name": {
+                                                                "path": {
+                                                                    "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                                    "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$20",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "tag": "Tuple"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "callee": {
+                                                "tag": "Var",
+                                                "variable": {
+                                                    "id": {
+                                                        "module_name": {
+                                                            "path": {
+                                                                "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                                "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "malgo_newline",
+                                                        "sort": "External"
+                                                    },
+                                                    "meta": {
+                                                        "parameters": [
+                                                            {
+                                                                "constructors": [
+                                                                    {
+                                                                        "parameters": [],
+                                                                        "tag": {
+                                                                            "tag": "Tuple"
+                                                                        }
+                                                                    }
+                                                                ],
+                                                                "tag": "SumT"
+                                                            }
+                                                        ],
+                                                        "returns": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "tag": "Tuple"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        },
+                                                        "tag": "FuncT"
+                                                    }
+                                                }
+                                            },
+                                            "tag": "Call"
+                                        },
+                                        "tag": "Assign",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                        "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$21",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        }
+                                    },
+                                    "expression": {
+                                        "bindings": [
+                                            {
+                                                "object": {
+                                                    "arguments": [],
+                                                    "constructor": {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    },
+                                                    "tag": "Pack",
+                                                    "type": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    }
+                                                },
+                                                "type": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                "variable": {
+                                                    "id": {
+                                                        "module_name": {
+                                                            "path": {
+                                                                "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                                "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "let$1f",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "body": {
+                                            "atom": {
+                                                "tag": "Var",
+                                                "variable": {
+                                                    "id": {
+                                                        "module_name": {
+                                                            "path": {
+                                                                "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                                "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "let$1f",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [],
+                                                                "tag": {
+                                                                    "tag": "Tuple"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
+                                                    }
+                                                }
+                                            },
+                                            "tag": "Atom"
+                                        },
+                                        "tag": "Let"
+                                    },
+                                    "tag": "Assign",
+                                    "variable": {
+                                        "id": {
+                                            "module_name": {
+                                                "path": {
+                                                    "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                    "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$20",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        }
+                                    }
+                                },
+                                "expression": {
                                     "body": {
                                         "tag": "Cast",
                                         "type": {
@@ -770,7 +1033,7 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "d$21",
+                                                    "name": "d$1d",
                                                     "sort": "Temporal"
                                                 },
                                                 "meta": {
@@ -800,19 +1063,11 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "d$20",
+                                                        "name": "p$1c",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
+                                                        "tag": "StringT"
                                                     }
                                                 }
                                             }
@@ -828,21 +1083,13 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "malgo_newline",
+                                                    "name": "malgo_print_string",
                                                     "sort": "External"
                                                 },
                                                 "meta": {
                                                     "parameters": [
                                                         {
-                                                            "constructors": [
-                                                                {
-                                                                    "parameters": [],
-                                                                    "tag": {
-                                                                        "tag": "Tuple"
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "tag": "SumT"
+                                                            "tag": "StringT"
                                                         }
                                                     ],
                                                     "returns": {
@@ -872,7 +1119,7 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "d$21",
+                                            "name": "d$1d",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
@@ -888,99 +1135,6 @@
                                         }
                                     }
                                 },
-                                "expression": {
-                                    "bindings": [
-                                        {
-                                            "object": {
-                                                "arguments": [],
-                                                "constructor": {
-                                                    "parameters": [],
-                                                    "tag": {
-                                                        "tag": "Tuple"
-                                                    }
-                                                },
-                                                "tag": "Pack",
-                                                "type": {
-                                                    "constructors": [
-                                                        {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "tag": "SumT"
-                                                }
-                                            },
-                                            "type": {
-                                                "constructors": [
-                                                    {
-                                                        "parameters": [],
-                                                        "tag": {
-                                                            "tag": "Tuple"
-                                                        }
-                                                    }
-                                                ],
-                                                "tag": "SumT"
-                                            },
-                                            "variable": {
-                                                "id": {
-                                                    "module_name": {
-                                                        "path": {
-                                                            "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
-                                                            "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
-                                                        },
-                                                        "tag": "Artifact"
-                                                    },
-                                                    "name": "let$1f",
-                                                    "sort": "Temporal"
-                                                },
-                                                "meta": {
-                                                    "constructors": [
-                                                        {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "tag": "SumT"
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    "body": {
-                                        "atom": {
-                                            "tag": "Var",
-                                            "variable": {
-                                                "id": {
-                                                    "module_name": {
-                                                        "path": {
-                                                            "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
-                                                            "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
-                                                        },
-                                                        "tag": "Artifact"
-                                                    },
-                                                    "name": "let$1f",
-                                                    "sort": "Temporal"
-                                                },
-                                                "meta": {
-                                                    "constructors": [
-                                                        {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "tag": "SumT"
-                                                }
-                                            }
-                                        },
-                                        "tag": "Atom"
-                                    },
-                                    "tag": "Let"
-                                },
                                 "tag": "Assign",
                                 "variable": {
                                     "id": {
@@ -991,7 +1145,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$20",
+                                        "name": "d$1e",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1007,192 +1161,73 @@
                                     }
                                 }
                             },
-                            "expression": {
-                                "body": {
-                                    "tag": "Cast",
-                                    "type": {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "tag": "Tuple"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    },
-                                    "value": {
-                                        "tag": "Var",
-                                        "variable": {
-                                            "id": {
-                                                "module_name": {
-                                                    "path": {
-                                                        "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
-                                                        "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
-                                                    },
-                                                    "tag": "Artifact"
-                                                },
-                                                "name": "d$1d",
-                                                "sort": "Temporal"
-                                            },
-                                            "meta": {
-                                                "constructors": [
-                                                    {
-                                                        "parameters": [],
-                                                        "tag": {
-                                                            "tag": "Tuple"
-                                                        }
-                                                    }
-                                                ],
-                                                "tag": "SumT"
-                                            }
-                                        }
+                            "constructor": {
+                                "parameters": [
+                                    {
+                                        "tag": "StringT"
                                     }
-                                },
-                                "expression": {
-                                    "arguments": [
-                                        {
-                                            "tag": "Var",
-                                            "variable": {
-                                                "id": {
-                                                    "module_name": {
-                                                        "path": {
-                                                            "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
-                                                            "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
-                                                        },
-                                                        "tag": "Artifact"
-                                                    },
-                                                    "name": "p$1c",
-                                                    "sort": "Temporal"
-                                                },
-                                                "meta": {
-                                                    "tag": "StringT"
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    "callee": {
-                                        "tag": "Var",
-                                        "variable": {
-                                            "id": {
-                                                "module_name": {
-                                                    "path": {
-                                                        "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
-                                                        "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
-                                                    },
-                                                    "tag": "Artifact"
-                                                },
-                                                "name": "malgo_print_string",
-                                                "sort": "External"
-                                            },
-                                            "meta": {
-                                                "parameters": [
-                                                    {
-                                                        "tag": "StringT"
-                                                    }
-                                                ],
-                                                "returns": {
-                                                    "constructors": [
-                                                        {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "tag": "SumT"
-                                                },
-                                                "tag": "FuncT"
-                                            }
-                                        }
-                                    },
-                                    "tag": "Call"
-                                },
-                                "tag": "Assign",
-                                "variable": {
-                                    "id": {
-                                        "module_name": {
-                                            "path": {
-                                                "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
-                                                "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
-                                            },
-                                            "tag": "Artifact"
-                                        },
-                                        "name": "d$1d",
-                                        "sort": "Temporal"
-                                    },
-                                    "meta": {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "tag": "Tuple"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    }
+                                ],
+                                "tag": {
+                                    "name": "String#",
+                                    "tag": "Data"
                                 }
                             },
-                            "tag": "Assign",
-                            "variable": {
-                                "id": {
-                                    "module_name": {
-                                        "path": {
-                                            "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
-                                            "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
-                                        },
-                                        "tag": "Artifact"
-                                    },
-                                    "name": "d$1e",
-                                    "sort": "Temporal"
-                                },
-                                "meta": {
-                                    "constructors": [
-                                        {
-                                            "parameters": [],
-                                            "tag": {
-                                                "tag": "Tuple"
-                                            }
-                                        }
-                                    ],
-                                    "tag": "SumT"
-                                }
-                            }
-                        },
-                        "constructor": {
-                            "parameters": [
+                            "tag": "Unpack",
+                            "variables": [
                                 {
-                                    "tag": "StringT"
-                                }
-                            ],
-                            "tag": {
-                                "name": "String#",
-                                "tag": "Data"
-                            }
-                        },
-                        "tag": "Unpack",
-                        "variables": [
-                            {
-                                "id": {
-                                    "module_name": {
-                                        "path": {
-                                            "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
-                                            "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                    "id": {
+                                        "module_name": {
+                                            "path": {
+                                                "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                                "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                            },
+                                            "tag": "Artifact"
                                         },
-                                        "tag": "Artifact"
+                                        "name": "p$1c",
+                                        "sort": "Temporal"
                                     },
-                                    "name": "p$1c",
-                                    "sort": "Temporal"
-                                },
-                                "meta": {
-                                    "tag": "StringT"
+                                    "meta": {
+                                        "tag": "StringT"
+                                    }
                                 }
+                            ]
+                        }
+                    ],
+                    "scrutinee": {
+                        "tag": "Var",
+                        "variable": {
+                            "id": {
+                                "module_name": {
+                                    "path": {
+                                        "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                        "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "unfolded$22",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [
+                                            {
+                                                "tag": "StringT"
+                                            }
+                                        ],
+                                        "tag": {
+                                            "name": "String#",
+                                            "tag": "Data"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
                             }
-                        ]
-                    }
-                ],
-                "scrutinee": {
+                        }
+                    },
+                    "tag": "Match"
+                },
+                "expression": {
                     "tag": "Cast",
                     "type": {
                         "constructors": [
@@ -1230,7 +1265,36 @@
                         }
                     }
                 },
-                "tag": "Match"
+                "tag": "Assign",
+                "variable": {
+                    "id": {
+                        "module_name": {
+                            "path": {
+                                "raw_path": "./test/testcases/malgo/HelloBoxed.mlg",
+                                "rel_path": "test/testcases/malgo/HelloBoxed.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "unfolded$22",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [
+                                    {
+                                        "tag": "StringT"
+                                    }
+                                ],
+                                "tag": {
+                                    "name": "String#",
+                                    "tag": "Data"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             }
         ],
         [
@@ -1284,7 +1348,7 @@
                             },
                             "tag": "Artifact"
                         },
-                        "name": "$_$14$22",
+                        "name": "$_$14$23",
                         "sort": "Temporal"
                     },
                     "meta": {
@@ -1353,7 +1417,7 @@
                                         },
                                         "tag": "Artifact"
                                     },
-                                    "name": "d$25",
+                                    "name": "d$26",
                                     "sort": "Temporal"
                                 },
                                 "meta": {
@@ -1383,7 +1447,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$24",
+                                        "name": "d$25",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1439,7 +1503,7 @@
                                 },
                                 "tag": "Artifact"
                             },
-                            "name": "d$25",
+                            "name": "d$26",
                             "sort": "Temporal"
                         },
                         "meta": {
@@ -1472,7 +1536,7 @@
                                         },
                                         "tag": "Artifact"
                                     },
-                                    "name": "d$23",
+                                    "name": "d$24",
                                     "sort": "Temporal"
                                 },
                                 "meta": {
@@ -1530,7 +1594,7 @@
                                 },
                                 "tag": "Artifact"
                             },
-                            "name": "d$23",
+                            "name": "d$24",
                             "sort": "Temporal"
                         },
                         "meta": {
@@ -1548,7 +1612,7 @@
                             },
                             "tag": "Artifact"
                         },
-                        "name": "d$24",
+                        "name": "d$25",
                         "sort": "Temporal"
                     },
                     "meta": {

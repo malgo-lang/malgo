@@ -123,7 +123,7 @@ llift (Let [LocalDef n t (Fun as body)] e) = do
       newFun <- def n (toList fvs <> as) body'
       Let [LocalDef n t (Fun as (CallDirect newFun $ map Var $ toList fvs <> as))] <$> llift e
 llift (Let ds e) = Let ds <$> llift e
-llift (Match e cs) = Match <$> llift e <*> traverseOf (traversed . expr) llift cs
+llift (Match a cs) = Match a <$> traverseOf (traversed . expr) llift cs
 llift (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) llift cs <*> llift e
 llift (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) llift cs <*> llift e
 llift (Destruct a c xs e) = Destruct a c xs <$> llift e
@@ -144,7 +144,7 @@ toDirect (CallDirect f xs) = pure $ CallDirect f xs
 toDirect (RawCall f t xs) = pure $ RawCall f t xs
 toDirect (Cast t x) = pure $ Cast t x
 toDirect (Let ds e) = Let <$> traverseOf (traversed . expr) toDirect ds <*> toDirect e
-toDirect (Match e cs) = Match <$> toDirect e <*> traverseOf (traversed . expr) toDirect cs
+toDirect (Match a cs) = Match a <$> traverseOf (traversed . expr) toDirect cs
 toDirect (Switch a cs e) = Switch a <$> traverseOf (traversed . _2) toDirect cs <*> toDirect e
 toDirect (SwitchUnboxed a cs e) = SwitchUnboxed a <$> traverseOf (traversed . _2) toDirect cs <*> toDirect e
 toDirect (Destruct a c xs e) = Destruct a c xs <$> toDirect e

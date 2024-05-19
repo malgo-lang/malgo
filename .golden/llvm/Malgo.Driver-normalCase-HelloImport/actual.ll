@@ -255,15 +255,15 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr %0, ptr %_M16str_x245b_x242cc34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0) {
-  %2 = getelementptr { i8, <8 x i8> }, ptr %_M16str_x245b_x242cc34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i32 0, i32 0
+define internal ptr @_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr %0, ptr %_M16str_x245b_x242cd34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0) {
+  %2 = getelementptr { i8, <8 x i8> }, ptr %_M16str_x245b_x242cd34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i32 0, i32 0
   %3 = load i8, ptr %2, align 1
   switch i8 %3, label %switch_default_0 [
     i8 0, label %"switch_branch_String#_0"
   ]
 
 "switch_branch_String#_0":                        ; preds = %1
-  %4 = getelementptr { i8, { ptr } }, ptr %_M16str_x245b_x242cc34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i32 0, i32 1
+  %4 = getelementptr { i8, { ptr } }, ptr %_M16str_x245b_x242cd34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i32 0, i32 1
   %5 = getelementptr { ptr }, ptr %4, i32 0, i32 0
   %6 = load ptr, ptr %5, align 8
   %7 = call ptr @malgo_print_string(ptr %6)

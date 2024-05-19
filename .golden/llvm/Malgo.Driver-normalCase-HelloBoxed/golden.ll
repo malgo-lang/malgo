@@ -34,7 +34,7 @@ define internal ptr @_M10string_x2347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2
   ret ptr %2
 }
 
-define internal ptr @_M4main47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x2414_x242247test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0) {
+define internal ptr @_M4main47test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8External(ptr %0, ptr %_M20_x24_x5F_x2414_x242347test_x2Ftestcases_x2Fmalgo_x2FHelloBoxed_x2Emlg8Temporal_0) {
   %2 = call ptr @malgo_malloc(i64 ptrtoint (ptr getelementptr inbounds ({ i8, { ptr } }, ptr null, i32 1) to i64))
   %3 = getelementptr { i8, { ptr } }, ptr %2, i32 0, i32 0
   store i8 0, ptr %3, align 1

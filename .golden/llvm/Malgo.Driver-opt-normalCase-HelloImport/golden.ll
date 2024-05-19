@@ -33,9 +33,9 @@ define internal ptr @_M27fun_x241e_x5Fclosure_x24e1848test_x2Ftestcases_x2Fmalgo
   ret ptr %8
 }
 
-define internal ptr @_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %_M16str_x245b_x242cc34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0) {
+define internal ptr @_M8putStrLn34runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 8 %_M16str_x245b_x242cd34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0) {
 "switch_branch_String#_0":
-  %1 = getelementptr { i8, { ptr } }, ptr %_M16str_x245b_x242cc34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i64 0, i32 1
+  %1 = getelementptr { i8, { ptr } }, ptr %_M16str_x245b_x242cd34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i64 0, i32 1
   %2 = load ptr, ptr %1, align 8
   %3 = tail call ptr @malgo_print_string(ptr %2)
   %4 = tail call ptr @malgo_malloc(i64 noundef 1)

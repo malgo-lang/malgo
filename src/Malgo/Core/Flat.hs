@@ -49,10 +49,8 @@ flat (Let ds e) = shiftT \k -> do
   e <- inScope k $ flat e
   pure $ Let ds e
 flat (Match scr cs) = shiftT \k -> do
-  scr <- flat scr
   cs <- traverse (flatCase k) cs
-  scr' <- withMeta (typeOf scr) <$> lift (newTemporalId "scrutinee")
-  pure $ assign scr' scr $ matchToSwitch scr' cs
+  pure $ matchToSwitch scr cs
 flat (Switch v cs e) = shiftT \k -> lift do
   cs <- traverseOf (traversed . _2) ?? cs $ \e ->
     runContT (flat e) k
@@ -96,28 +94,28 @@ flatCase k (Bind n t e) = do
   e <- inScope k $ flat e
   pure $ Bind n t e
 
-matchToSwitch :: Meta Type -> [Case (Meta Type)] -> Expr (Meta Type)
+matchToSwitch :: Atom (Meta Type) -> [Case (Meta Type)] -> Expr (Meta Type)
 matchToSwitch scr cs@(c@Unpack {} : _) =
   let cs' = map (unpackToDestruct scr) $ takeWhile (has _Unpack) cs
       defaultCase = maybe (Error $ typeOf c) (bindToAssign scr) (find (has _Bind) cs)
-   in Switch (Var scr) cs' defaultCase
+   in Switch scr cs' defaultCase
   where
-    unpackToDestruct scr (Unpack con@(Con tag _) xs e) = (tag, Destruct (Var scr) con xs e)
+    unpackToDestruct scr (Unpack con@(Con tag _) xs e) = (tag, Destruct scr con xs e)
     unpackToDestruct _ _ = error "unpackToDestruct: unreachable"
 matchToSwitch scr (OpenRecord kvs e : _) =
-  DestructRecord (Var scr) kvs e
+  DestructRecord scr kvs e
 matchToSwitch scr cs@(c@Exact {} : _) =
   let cs' = map flatExact $ takeWhile (has _Exact) cs
       defaultCase = maybe (Error $ typeOf c) (bindToAssign scr) (find (has _Bind) cs)
-   in SwitchUnboxed (Var scr) cs' defaultCase
+   in SwitchUnboxed scr cs' defaultCase
   where
     flatExact (Exact u e) = (u, e)
     flatExact _ = error "flatExact: unreachable"
-matchToSwitch scr (Bind x _ e : _) = assign x (Atom $ Var scr) e
+matchToSwitch scr (Bind x _ e : _) = assign x (Atom scr) e
 matchToSwitch _ [] = error "matchToSwitch: unreachable"
 
-bindToAssign :: Meta Type -> Case (Meta Type) -> Expr (Meta Type)
-bindToAssign scr (Bind x _ e) = assign x (Atom $ Var scr) e
+bindToAssign :: Atom (Meta Type) -> Case (Meta Type) -> Expr (Meta Type)
+bindToAssign scr (Bind x _ e) = assign x (Atom scr) e
 bindToAssign _ _ = error "bindToAssign: unreachable"
 
 flatLocalDef ::

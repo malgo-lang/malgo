@@ -96,349 +96,54 @@
                 "tag": "FuncT"
             },
             {
-                "clauses": [
-                    {
+                "body": {
+                    "body": {
                         "body": {
-                            "clauses": [
-                                {
-                                    "body": {
-                                        "body": {
-                                            "body": {
-                                                "tag": "Cast",
-                                                "type": {
-                                                    "constructors": [
-                                                        {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "tag": "SumT"
-                                                },
-                                                "value": {
-                                                    "tag": "Var",
-                                                    "variable": {
-                                                        "id": {
-                                                            "module_name": {
-                                                                "path": {
-                                                                    "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                                    "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                                },
-                                                                "tag": "Artifact"
-                                                            },
-                                                            "name": "d$42",
-                                                            "sort": "Temporal"
-                                                        },
-                                                        "meta": {
-                                                            "constructors": [
-                                                                {
-                                                                    "parameters": [],
-                                                                    "tag": {
-                                                                        "tag": "Tuple"
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "tag": "SumT"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "expression": {
-                                                "arguments": [
-                                                    {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                                        "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "d$41",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        }
-                                                    }
-                                                ],
-                                                "callee": {
-                                                    "tag": "Var",
-                                                    "variable": {
-                                                        "id": {
-                                                            "module_name": {
-                                                                "path": {
-                                                                    "raw_path": "./runtime/malgo/Prelude.mlg",
-                                                                    "rel_path": "runtime/malgo/Prelude.mlg"
-                                                                },
-                                                                "tag": "Artifact"
-                                                            },
-                                                            "name": "putStrLn",
-                                                            "sort": "External"
-                                                        },
-                                                        "meta": {
-                                                            "parameters": [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
-                                                            "returns": {
-                                                                "constructors": [
-                                                                    {
-                                                                        "parameters": [],
-                                                                        "tag": {
-                                                                            "tag": "Tuple"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "tag": "SumT"
-                                                            },
-                                                            "tag": "FuncT"
-                                                        }
-                                                    }
-                                                },
-                                                "tag": "Call"
-                                            },
-                                            "tag": "Assign",
-                                            "variable": {
-                                                "id": {
-                                                    "module_name": {
-                                                        "path": {
-                                                            "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                            "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                        },
-                                                        "tag": "Artifact"
-                                                    },
-                                                    "name": "d$42",
-                                                    "sort": "Temporal"
-                                                },
-                                                "meta": {
-                                                    "constructors": [
-                                                        {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "tag": "SumT"
-                                                }
+                            "body": {
+                                "tag": "Cast",
+                                "type": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
                                             }
-                                        },
-                                        "expression": {
-                                            "body": {
-                                                "body": {
-                                                    "tag": "Cast",
-                                                    "type": {
-                                                        "tag": "AnyT"
-                                                    },
-                                                    "value": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                                        "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "d$40",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        }
-                                                    }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                },
+                                "value": {
+                                    "tag": "Var",
+                                    "variable": {
+                                        "id": {
+                                            "module_name": {
+                                                "path": {
+                                                    "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                                    "rel_path": "test/testcases/malgo/TestList.mlg"
                                                 },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
-                                                            "tag": "Var",
-                                                            "variable": {
-                                                                "id": {
-                                                                    "module_name": {
-                                                                        "path": {
-                                                                            "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                                            "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                                        },
-                                                                        "tag": "Artifact"
-                                                                    },
-                                                                    "name": "d$3f",
-                                                                    "sort": "Temporal"
-                                                                },
-                                                                "meta": {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            }
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                                        "rel_path": "runtime/malgo/Builtin.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "toStringInt32",
-                                                                "sort": "External"
-                                                            },
-                                                            "meta": {
-                                                                "parameters": [
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    }
-                                                                ],
-                                                                "returns": {
-                                                                    "tag": "AnyT"
-                                                                },
-                                                                "tag": "FuncT"
-                                                            }
-                                                        }
-                                                    },
-                                                    "tag": "Call"
-                                                },
-                                                "tag": "Assign",
-                                                "variable": {
-                                                    "id": {
-                                                        "module_name": {
-                                                            "path": {
-                                                                "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                                "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                            },
-                                                            "tag": "Artifact"
-                                                        },
-                                                        "name": "d$40",
-                                                        "sort": "Temporal"
-                                                    },
-                                                    "meta": {
-                                                        "tag": "AnyT"
-                                                    }
-                                                }
+                                                "tag": "Artifact"
                                             },
-                                            "expression": {
-                                                "body": {
-                                                    "tag": "Cast",
-                                                    "type": {
-                                                        "tag": "AnyT"
-                                                    },
-                                                    "value": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                                        "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "d$3e",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
-                                                            "tag": "Var",
-                                                            "variable": {
-                                                                "id": {
-                                                                    "module_name": {
-                                                                        "path": {
-                                                                            "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                                            "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                                        },
-                                                                        "tag": "Artifact"
-                                                                    },
-                                                                    "name": "let__M7xs_x24045test_x2Ftestcases_x2Fmalgo_x2FTestList_x2Emlg8Internal$3c",
-                                                                    "sort": "Temporal"
-                                                                },
-                                                                "meta": {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            }
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./runtime/malgo/Prelude.mlg",
-                                                                        "rel_path": "runtime/malgo/Prelude.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "head",
-                                                                "sort": "External"
-                                                            },
-                                                            "meta": {
-                                                                "parameters": [
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    }
-                                                                ],
-                                                                "returns": {
-                                                                    "tag": "AnyT"
-                                                                },
-                                                                "tag": "FuncT"
-                                                            }
-                                                        }
-                                                    },
-                                                    "tag": "Call"
-                                                },
-                                                "tag": "Assign",
-                                                "variable": {
-                                                    "id": {
-                                                        "module_name": {
-                                                            "path": {
-                                                                "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                                "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                            },
-                                                            "tag": "Artifact"
-                                                        },
-                                                        "name": "d$3e",
-                                                        "sort": "Temporal"
-                                                    },
-                                                    "meta": {
-                                                        "tag": "AnyT"
-                                                    }
-                                                }
-                                            },
-                                            "tag": "Assign",
-                                            "variable": {
-                                                "id": {
-                                                    "module_name": {
-                                                        "path": {
-                                                            "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                            "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                        },
-                                                        "tag": "Artifact"
-                                                    },
-                                                    "name": "d$3f",
-                                                    "sort": "Temporal"
-                                                },
-                                                "meta": {
-                                                    "tag": "AnyT"
-                                                }
-                                            }
+                                            "name": "d$42",
+                                            "sort": "Temporal"
                                         },
-                                        "tag": "Assign",
+                                        "meta": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        }
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "arguments": [
+                                    {
+                                        "tag": "Var",
                                         "variable": {
                                             "id": {
                                                 "module_name": {
@@ -455,31 +160,8 @@
                                                 "tag": "AnyT"
                                             }
                                         }
-                                    },
-                                    "tag": "Bind",
-                                    "type": {
-                                        "tag": "AnyT"
-                                    },
-                                    "variable": {
-                                        "id": {
-                                            "module_name": {
-                                                "path": {
-                                                    "raw_path": "./test/testcases/malgo/TestList.mlg",
-                                                    "rel_path": "test/testcases/malgo/TestList.mlg"
-                                                },
-                                                "tag": "Artifact"
-                                            },
-                                            "name": "let__M8nil_x24145test_x2Ftestcases_x2Fmalgo_x2FTestList_x2Emlg8Internal$3d",
-                                            "sort": "Temporal"
-                                        },
-                                        "meta": {
-                                            "tag": "AnyT"
-                                        }
                                     }
-                                }
-                            ],
-                            "scrutinee": {
-                                "arguments": [],
+                                ],
                                 "callee": {
                                     "tag": "Var",
                                     "variable": {
@@ -491,13 +173,25 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "Nil",
+                                            "name": "putStrLn",
                                             "sort": "External"
                                         },
                                         "meta": {
-                                            "parameters": [],
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
                                             "returns": {
-                                                "tag": "AnyT"
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
                                             },
                                             "tag": "FuncT"
                                         }
@@ -505,12 +199,242 @@
                                 },
                                 "tag": "Call"
                             },
-                            "tag": "Match"
+                            "tag": "Assign",
+                            "variable": {
+                                "id": {
+                                    "module_name": {
+                                        "path": {
+                                            "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                            "rel_path": "test/testcases/malgo/TestList.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$42",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "constructors": [
+                                        {
+                                            "parameters": [],
+                                            "tag": {
+                                                "tag": "Tuple"
+                                            }
+                                        }
+                                    ],
+                                    "tag": "SumT"
+                                }
+                            }
                         },
-                        "tag": "Bind",
-                        "type": {
-                            "tag": "AnyT"
+                        "expression": {
+                            "body": {
+                                "body": {
+                                    "tag": "Cast",
+                                    "type": {
+                                        "tag": "AnyT"
+                                    },
+                                    "value": {
+                                        "tag": "Var",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                                        "rel_path": "test/testcases/malgo/TestList.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$40",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
+                                    }
+                                },
+                                "expression": {
+                                    "arguments": [
+                                        {
+                                            "tag": "Var",
+                                            "variable": {
+                                                "id": {
+                                                    "module_name": {
+                                                        "path": {
+                                                            "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                                            "rel_path": "test/testcases/malgo/TestList.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "d$3f",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "callee": {
+                                        "tag": "Var",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                        "rel_path": "runtime/malgo/Builtin.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "toStringInt32",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "AnyT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
+                                    },
+                                    "tag": "Call"
+                                },
+                                "tag": "Assign",
+                                "variable": {
+                                    "id": {
+                                        "module_name": {
+                                            "path": {
+                                                "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                                "rel_path": "test/testcases/malgo/TestList.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$40",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "body": {
+                                    "tag": "Cast",
+                                    "type": {
+                                        "tag": "AnyT"
+                                    },
+                                    "value": {
+                                        "tag": "Var",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                                        "rel_path": "test/testcases/malgo/TestList.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$3e",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
+                                    }
+                                },
+                                "expression": {
+                                    "arguments": [
+                                        {
+                                            "tag": "Var",
+                                            "variable": {
+                                                "id": {
+                                                    "module_name": {
+                                                        "path": {
+                                                            "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                                            "rel_path": "test/testcases/malgo/TestList.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "let__M7xs_x24045test_x2Ftestcases_x2Fmalgo_x2FTestList_x2Emlg8Internal$3c",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "tag": "AnyT"
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "callee": {
+                                        "tag": "Var",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./runtime/malgo/Prelude.mlg",
+                                                        "rel_path": "runtime/malgo/Prelude.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "head",
+                                                "sort": "External"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "AnyT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
+                                    },
+                                    "tag": "Call"
+                                },
+                                "tag": "Assign",
+                                "variable": {
+                                    "id": {
+                                        "module_name": {
+                                            "path": {
+                                                "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                                "rel_path": "test/testcases/malgo/TestList.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$3e",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
+                            },
+                            "tag": "Assign",
+                            "variable": {
+                                "id": {
+                                    "module_name": {
+                                        "path": {
+                                            "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                            "rel_path": "test/testcases/malgo/TestList.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$3f",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "tag": "AnyT"
+                                }
+                            }
                         },
+                        "tag": "Assign",
                         "variable": {
                             "id": {
                                 "module_name": {
@@ -520,16 +444,60 @@
                                     },
                                     "tag": "Artifact"
                                 },
-                                "name": "let__M7xs_x24045test_x2Ftestcases_x2Fmalgo_x2FTestList_x2Emlg8Internal$3c",
+                                "name": "d$41",
                                 "sort": "Temporal"
                             },
                             "meta": {
                                 "tag": "AnyT"
                             }
                         }
+                    },
+                    "expression": {
+                        "arguments": [],
+                        "callee": {
+                            "tag": "Var",
+                            "variable": {
+                                "id": {
+                                    "module_name": {
+                                        "path": {
+                                            "raw_path": "./runtime/malgo/Prelude.mlg",
+                                            "rel_path": "runtime/malgo/Prelude.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "Nil",
+                                    "sort": "External"
+                                },
+                                "meta": {
+                                    "parameters": [],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
+                        },
+                        "tag": "Call"
+                    },
+                    "tag": "Assign",
+                    "variable": {
+                        "id": {
+                            "module_name": {
+                                "path": {
+                                    "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                    "rel_path": "test/testcases/malgo/TestList.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "let__M8nil_x24145test_x2Ftestcases_x2Fmalgo_x2FTestList_x2Emlg8Internal$3d",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "tag": "AnyT"
+                        }
                     }
-                ],
-                "scrutinee": {
+                },
+                "expression": {
                     "body": {
                         "body": {
                             "body": {
@@ -1666,7 +1634,23 @@
                         }
                     }
                 },
-                "tag": "Match"
+                "tag": "Assign",
+                "variable": {
+                    "id": {
+                        "module_name": {
+                            "path": {
+                                "raw_path": "./test/testcases/malgo/TestList.mlg",
+                                "rel_path": "test/testcases/malgo/TestList.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "let__M7xs_x24045test_x2Ftestcases_x2Fmalgo_x2FTestList_x2Emlg8Internal$3c",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "tag": "AnyT"
+                    }
+                }
             }
         ]
     ],

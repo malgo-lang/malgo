@@ -12,15 +12,15 @@ declare ptr @malgo_print_string(ptr) local_unnamed_addr
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
 define internal ptr @_M35let_x242c2_x24ee6_x5Fclosure_x24f0452test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %"d$80_0" = load ptr, ptr %0, align 8
+  %"d$83_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %"d$80_0")
+  %6 = tail call ptr %5(ptr %3, ptr %"d$83_0")
   ret ptr %6
 }
 
-define internal ptr @_M27fun_x2486_x5Fclosure_x24f0552test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %1) {
+define internal ptr @_M27fun_x2489_x5Fclosure_x24f0552test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %1) {
   %3 = getelementptr i8, ptr %1, i64 4
   %.val = load i64, ptr %3, align 4
   %4 = tail call ptr @malgo_int64_t_to_string(i64 %.val)
@@ -106,10 +106,10 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %"let$2c2$ee6_func_0.i" = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
   store ptr @_M35let_x242c2_x24ee6_x5Fclosure_x24f0452test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg8Internal, ptr %"let$2c2$ee6_func_0.i", align 8
   %16 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %"fun$86_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 0)
-  store ptr %"fun$86_capture_0.i", ptr %16, align 8
-  %"fun$86_func_0.i" = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @_M27fun_x2486_x5Fclosure_x24f0552test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg8Internal, ptr %"fun$86_func_0.i", align 8
+  %"fun$89_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 0)
+  store ptr %"fun$89_capture_0.i", ptr %16, align 8
+  %"fun$89_func_0.i" = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
+  store ptr @_M27fun_x2489_x5Fclosure_x24f0552test_x2Ftestcases_x2Fmalgo_x2FTestPatSynRecon_x2Emlg8Internal, ptr %"fun$89_func_0.i", align 8
   %17 = load ptr, ptr %15, align 8
   %18 = load ptr, ptr %"let$2c2$ee6_func_0.i", align 8
   %19 = tail call ptr %18(ptr %17, ptr nonnull %16)

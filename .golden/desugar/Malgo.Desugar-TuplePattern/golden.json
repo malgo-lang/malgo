@@ -683,7 +683,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$2f",
+                                        "name": "d$30",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -713,7 +713,7 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "d$2e",
+                                            "name": "d$2f",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
@@ -831,7 +831,7 @@
                                     },
                                     "tag": "Artifact"
                                 },
-                                "name": "d$2f",
+                                "name": "d$30",
                                 "sort": "Temporal"
                             },
                             "meta": {
@@ -855,25 +855,284 @@
                                         "clauses": [
                                             {
                                                 "body": {
-                                                    "clauses": [
-                                                        {
-                                                            "body": {
+                                                    "body": {
+                                                        "clauses": [
+                                                            {
                                                                 "body": {
                                                                     "body": {
-                                                                        "tag": "Cast",
-                                                                        "type": {
-                                                                            "constructors": [
+                                                                        "body": {
+                                                                            "tag": "Cast",
+                                                                            "type": {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            },
+                                                                            "value": {
+                                                                                "tag": "Var",
+                                                                                "variable": {
+                                                                                    "id": {
+                                                                                        "module_name": {
+                                                                                            "path": {
+                                                                                                "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                                                "rel_path": "test/testcases/malgo/TuplePattern.mlg"
+                                                                                            },
+                                                                                            "tag": "Artifact"
+                                                                                        },
+                                                                                        "name": "d$2a",
+                                                                                        "sort": "Temporal"
+                                                                                    },
+                                                                                    "meta": {
+                                                                                        "constructors": [
+                                                                                            {
+                                                                                                "parameters": [],
+                                                                                                "tag": {
+                                                                                                    "tag": "Tuple"
+                                                                                                }
+                                                                                            }
+                                                                                        ],
+                                                                                        "tag": "SumT"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "expression": {
+                                                                            "arguments": [
                                                                                 {
+                                                                                    "tag": "Var",
+                                                                                    "variable": {
+                                                                                        "id": {
+                                                                                            "module_name": {
+                                                                                                "path": {
+                                                                                                    "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                                                    "rel_path": "test/testcases/malgo/TuplePattern.mlg"
+                                                                                                },
+                                                                                                "tag": "Artifact"
+                                                                                            },
+                                                                                            "name": "d$29",
+                                                                                            "sort": "Temporal"
+                                                                                        },
+                                                                                        "meta": {
+                                                                                            "tag": "AnyT"
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            ],
+                                                                            "callee": {
+                                                                                "tag": "Var",
+                                                                                "variable": {
+                                                                                    "id": {
+                                                                                        "module_name": {
+                                                                                            "path": {
+                                                                                                "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                                                                "rel_path": "runtime/malgo/Builtin.mlg"
+                                                                                            },
+                                                                                            "tag": "Artifact"
+                                                                                        },
+                                                                                        "name": "printString",
+                                                                                        "sort": "External"
+                                                                                    },
+                                                                                    "meta": {
+                                                                                        "parameters": [
+                                                                                            {
+                                                                                                "tag": "AnyT"
+                                                                                            }
+                                                                                        ],
+                                                                                        "returns": {
+                                                                                            "constructors": [
+                                                                                                {
+                                                                                                    "parameters": [],
+                                                                                                    "tag": {
+                                                                                                        "tag": "Tuple"
+                                                                                                    }
+                                                                                                }
+                                                                                            ],
+                                                                                            "tag": "SumT"
+                                                                                        },
+                                                                                        "tag": "FuncT"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "tag": "Call"
+                                                                        },
+                                                                        "tag": "Assign",
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "module_name": {
+                                                                                    "path": {
+                                                                                        "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                                        "rel_path": "test/testcases/malgo/TuplePattern.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "d$2a",
+                                                                                "sort": "Temporal"
+                                                                            },
+                                                                            "meta": {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "expression": {
+                                                                        "body": {
+                                                                            "tag": "Cast",
+                                                                            "type": {
+                                                                                "tag": "AnyT"
+                                                                            },
+                                                                            "value": {
+                                                                                "tag": "Var",
+                                                                                "variable": {
+                                                                                    "id": {
+                                                                                        "module_name": {
+                                                                                            "path": {
+                                                                                                "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                                                "rel_path": "test/testcases/malgo/TuplePattern.mlg"
+                                                                                            },
+                                                                                            "tag": "Artifact"
+                                                                                        },
+                                                                                        "name": "d$28",
+                                                                                        "sort": "Temporal"
+                                                                                    },
+                                                                                    "meta": {
+                                                                                        "tag": "AnyT"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "expression": {
+                                                                            "arguments": [
+                                                                                {
+                                                                                    "literal": {
+                                                                                        "contents": "A",
+                                                                                        "tag": "String"
+                                                                                    },
+                                                                                    "tag": "Unboxed"
+                                                                                }
+                                                                            ],
+                                                                            "callee": {
+                                                                                "tag": "Var",
+                                                                                "variable": {
+                                                                                    "id": {
+                                                                                        "module_name": {
+                                                                                            "path": {
+                                                                                                "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                                                                "rel_path": "runtime/malgo/Builtin.mlg"
+                                                                                            },
+                                                                                            "tag": "Artifact"
+                                                                                        },
+                                                                                        "name": "String#",
+                                                                                        "sort": "External"
+                                                                                    },
+                                                                                    "meta": {
+                                                                                        "parameters": [
+                                                                                            {
+                                                                                                "tag": "StringT"
+                                                                                            }
+                                                                                        ],
+                                                                                        "returns": {
+                                                                                            "tag": "AnyT"
+                                                                                        },
+                                                                                        "tag": "FuncT"
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "tag": "Call"
+                                                                        },
+                                                                        "tag": "Assign",
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "module_name": {
+                                                                                    "path": {
+                                                                                        "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                                        "rel_path": "test/testcases/malgo/TuplePattern.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "d$28",
+                                                                                "sort": "Temporal"
+                                                                            },
+                                                                            "meta": {
+                                                                                "tag": "AnyT"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "tag": "Assign",
+                                                                    "variable": {
+                                                                        "id": {
+                                                                            "module_name": {
+                                                                                "path": {
+                                                                                    "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                                    "rel_path": "test/testcases/malgo/TuplePattern.mlg"
+                                                                                },
+                                                                                "tag": "Artifact"
+                                                                            },
+                                                                            "name": "d$29",
+                                                                            "sort": "Temporal"
+                                                                        },
+                                                                        "meta": {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "constructor": {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "A",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                "tag": "Unpack",
+                                                                "variables": []
+                                                            },
+                                                            {
+                                                                "body": {
+                                                                    "bindings": [
+                                                                        {
+                                                                            "object": {
+                                                                                "arguments": [],
+                                                                                "constructor": {
                                                                                     "parameters": [],
                                                                                     "tag": {
                                                                                         "tag": "Tuple"
                                                                                     }
+                                                                                },
+                                                                                "tag": "Pack",
+                                                                                "type": {
+                                                                                    "constructors": [
+                                                                                        {
+                                                                                            "parameters": [],
+                                                                                            "tag": {
+                                                                                                "tag": "Tuple"
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    "tag": "SumT"
                                                                                 }
-                                                                            ],
-                                                                            "tag": "SumT"
-                                                                        },
-                                                                        "value": {
-                                                                            "tag": "Var",
+                                                                            },
+                                                                            "type": {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            },
                                                                             "variable": {
                                                                                 "id": {
                                                                                     "module_name": {
@@ -883,7 +1142,7 @@
                                                                                         },
                                                                                         "tag": "Artifact"
                                                                                     },
-                                                                                    "name": "d$2a",
+                                                                                    "name": "let$2b",
                                                                                     "sort": "Temporal"
                                                                                 },
                                                                                 "meta": {
@@ -899,99 +1158,9 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                    },
-                                                                    "expression": {
-                                                                        "arguments": [
-                                                                            {
-                                                                                "tag": "Var",
-                                                                                "variable": {
-                                                                                    "id": {
-                                                                                        "module_name": {
-                                                                                            "path": {
-                                                                                                "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                                                "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                                                            },
-                                                                                            "tag": "Artifact"
-                                                                                        },
-                                                                                        "name": "d$29",
-                                                                                        "sort": "Temporal"
-                                                                                    },
-                                                                                    "meta": {
-                                                                                        "tag": "AnyT"
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "callee": {
-                                                                            "tag": "Var",
-                                                                            "variable": {
-                                                                                "id": {
-                                                                                    "module_name": {
-                                                                                        "path": {
-                                                                                            "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                                                            "rel_path": "runtime/malgo/Builtin.mlg"
-                                                                                        },
-                                                                                        "tag": "Artifact"
-                                                                                    },
-                                                                                    "name": "printString",
-                                                                                    "sort": "External"
-                                                                                },
-                                                                                "meta": {
-                                                                                    "parameters": [
-                                                                                        {
-                                                                                            "tag": "AnyT"
-                                                                                        }
-                                                                                    ],
-                                                                                    "returns": {
-                                                                                        "constructors": [
-                                                                                            {
-                                                                                                "parameters": [],
-                                                                                                "tag": {
-                                                                                                    "tag": "Tuple"
-                                                                                                }
-                                                                                            }
-                                                                                        ],
-                                                                                        "tag": "SumT"
-                                                                                    },
-                                                                                    "tag": "FuncT"
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        "tag": "Call"
-                                                                    },
-                                                                    "tag": "Assign",
-                                                                    "variable": {
-                                                                        "id": {
-                                                                            "module_name": {
-                                                                                "path": {
-                                                                                    "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                                    "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                                                },
-                                                                                "tag": "Artifact"
-                                                                            },
-                                                                            "name": "d$2a",
-                                                                            "sort": "Temporal"
-                                                                        },
-                                                                        "meta": {
-                                                                            "constructors": [
-                                                                                {
-                                                                                    "parameters": [],
-                                                                                    "tag": {
-                                                                                        "tag": "Tuple"
-                                                                                    }
-                                                                                }
-                                                                            ],
-                                                                            "tag": "SumT"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "expression": {
+                                                                    ],
                                                                     "body": {
-                                                                        "tag": "Cast",
-                                                                        "type": {
-                                                                            "tag": "AnyT"
-                                                                        },
-                                                                        "value": {
+                                                                        "atom": {
                                                                             "tag": "Var",
                                                                             "variable": {
                                                                                 "id": {
@@ -1002,310 +1171,186 @@
                                                                                         },
                                                                                         "tag": "Artifact"
                                                                                     },
-                                                                                    "name": "d$28",
+                                                                                    "name": "let$2b",
                                                                                     "sort": "Temporal"
                                                                                 },
                                                                                 "meta": {
-                                                                                    "tag": "AnyT"
+                                                                                    "constructors": [
+                                                                                        {
+                                                                                            "parameters": [],
+                                                                                            "tag": {
+                                                                                                "tag": "Tuple"
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    "tag": "SumT"
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "tag": "Atom"
+                                                                    },
+                                                                    "tag": "Let"
+                                                                },
+                                                                "constructor": {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "B",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                "tag": "Unpack",
+                                                                "variables": []
+                                                            },
+                                                            {
+                                                                "body": {
+                                                                    "bindings": [
+                                                                        {
+                                                                            "object": {
+                                                                                "arguments": [],
+                                                                                "constructor": {
+                                                                                    "parameters": [],
+                                                                                    "tag": {
+                                                                                        "tag": "Tuple"
+                                                                                    }
+                                                                                },
+                                                                                "tag": "Pack",
+                                                                                "type": {
+                                                                                    "constructors": [
+                                                                                        {
+                                                                                            "parameters": [],
+                                                                                            "tag": {
+                                                                                                "tag": "Tuple"
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    "tag": "SumT"
+                                                                                }
+                                                                            },
+                                                                            "type": {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            },
+                                                                            "variable": {
+                                                                                "id": {
+                                                                                    "module_name": {
+                                                                                        "path": {
+                                                                                            "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                                            "rel_path": "test/testcases/malgo/TuplePattern.mlg"
+                                                                                        },
+                                                                                        "tag": "Artifact"
+                                                                                    },
+                                                                                    "name": "let$2c",
+                                                                                    "sort": "Temporal"
+                                                                                },
+                                                                                "meta": {
+                                                                                    "constructors": [
+                                                                                        {
+                                                                                            "parameters": [],
+                                                                                            "tag": {
+                                                                                                "tag": "Tuple"
+                                                                                            }
+                                                                                        }
+                                                                                    ],
+                                                                                    "tag": "SumT"
                                                                                 }
                                                                             }
                                                                         }
-                                                                    },
-                                                                    "expression": {
-                                                                        "arguments": [
-                                                                            {
-                                                                                "literal": {
-                                                                                    "contents": "A",
-                                                                                    "tag": "String"
-                                                                                },
-                                                                                "tag": "Unboxed"
-                                                                            }
-                                                                        ],
-                                                                        "callee": {
+                                                                    ],
+                                                                    "body": {
+                                                                        "atom": {
                                                                             "tag": "Var",
                                                                             "variable": {
                                                                                 "id": {
                                                                                     "module_name": {
                                                                                         "path": {
-                                                                                            "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                                                            "rel_path": "runtime/malgo/Builtin.mlg"
+                                                                                            "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                                            "rel_path": "test/testcases/malgo/TuplePattern.mlg"
                                                                                         },
                                                                                         "tag": "Artifact"
                                                                                     },
-                                                                                    "name": "String#",
-                                                                                    "sort": "External"
+                                                                                    "name": "let$2c",
+                                                                                    "sort": "Temporal"
                                                                                 },
                                                                                 "meta": {
-                                                                                    "parameters": [
+                                                                                    "constructors": [
                                                                                         {
-                                                                                            "tag": "StringT"
+                                                                                            "parameters": [],
+                                                                                            "tag": {
+                                                                                                "tag": "Tuple"
+                                                                                            }
                                                                                         }
                                                                                     ],
-                                                                                    "returns": {
-                                                                                        "tag": "AnyT"
-                                                                                    },
-                                                                                    "tag": "FuncT"
+                                                                                    "tag": "SumT"
                                                                                 }
                                                                             }
                                                                         },
-                                                                        "tag": "Call"
+                                                                        "tag": "Atom"
                                                                     },
-                                                                    "tag": "Assign",
-                                                                    "variable": {
-                                                                        "id": {
-                                                                            "module_name": {
-                                                                                "path": {
-                                                                                    "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                                    "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                                                },
-                                                                                "tag": "Artifact"
-                                                                            },
-                                                                            "name": "d$28",
-                                                                            "sort": "Temporal"
-                                                                        },
-                                                                        "meta": {
-                                                                            "tag": "AnyT"
-                                                                        }
+                                                                    "tag": "Let"
+                                                                },
+                                                                "constructor": {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "C",
+                                                                        "tag": "Data"
                                                                     }
                                                                 },
-                                                                "tag": "Assign",
-                                                                "variable": {
-                                                                    "id": {
-                                                                        "module_name": {
-                                                                            "path": {
-                                                                                "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                                "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                                            },
-                                                                            "tag": "Artifact"
+                                                                "tag": "Unpack",
+                                                                "variables": []
+                                                            }
+                                                        ],
+                                                        "scrutinee": {
+                                                            "tag": "Var",
+                                                            "variable": {
+                                                                "id": {
+                                                                    "module_name": {
+                                                                        "path": {
+                                                                            "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                            "rel_path": "test/testcases/malgo/TuplePattern.mlg"
                                                                         },
-                                                                        "name": "d$29",
-                                                                        "sort": "Temporal"
+                                                                        "tag": "Artifact"
                                                                     },
-                                                                    "meta": {
-                                                                        "tag": "AnyT"
-                                                                    }
+                                                                    "name": "unfolded$2d",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "A",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "B",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "C",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
                                                                 }
-                                                            },
-                                                            "constructor": {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "name": "A",
-                                                                    "tag": "Data"
-                                                                }
-                                                            },
-                                                            "tag": "Unpack",
-                                                            "variables": []
+                                                            }
                                                         },
-                                                        {
-                                                            "body": {
-                                                                "bindings": [
-                                                                    {
-                                                                        "object": {
-                                                                            "arguments": [],
-                                                                            "constructor": {
-                                                                                "parameters": [],
-                                                                                "tag": {
-                                                                                    "tag": "Tuple"
-                                                                                }
-                                                                            },
-                                                                            "tag": "Pack",
-                                                                            "type": {
-                                                                                "constructors": [
-                                                                                    {
-                                                                                        "parameters": [],
-                                                                                        "tag": {
-                                                                                            "tag": "Tuple"
-                                                                                        }
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "SumT"
-                                                                            }
-                                                                        },
-                                                                        "type": {
-                                                                            "constructors": [
-                                                                                {
-                                                                                    "parameters": [],
-                                                                                    "tag": {
-                                                                                        "tag": "Tuple"
-                                                                                    }
-                                                                                }
-                                                                            ],
-                                                                            "tag": "SumT"
-                                                                        },
-                                                                        "variable": {
-                                                                            "id": {
-                                                                                "module_name": {
-                                                                                    "path": {
-                                                                                        "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                                        "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                                                    },
-                                                                                    "tag": "Artifact"
-                                                                                },
-                                                                                "name": "let$2b",
-                                                                                "sort": "Temporal"
-                                                                            },
-                                                                            "meta": {
-                                                                                "constructors": [
-                                                                                    {
-                                                                                        "parameters": [],
-                                                                                        "tag": {
-                                                                                            "tag": "Tuple"
-                                                                                        }
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "SumT"
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "body": {
-                                                                    "atom": {
-                                                                        "tag": "Var",
-                                                                        "variable": {
-                                                                            "id": {
-                                                                                "module_name": {
-                                                                                    "path": {
-                                                                                        "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                                        "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                                                    },
-                                                                                    "tag": "Artifact"
-                                                                                },
-                                                                                "name": "let$2b",
-                                                                                "sort": "Temporal"
-                                                                            },
-                                                                            "meta": {
-                                                                                "constructors": [
-                                                                                    {
-                                                                                        "parameters": [],
-                                                                                        "tag": {
-                                                                                            "tag": "Tuple"
-                                                                                        }
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "SumT"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "tag": "Atom"
-                                                                },
-                                                                "tag": "Let"
-                                                            },
-                                                            "constructor": {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "name": "B",
-                                                                    "tag": "Data"
-                                                                }
-                                                            },
-                                                            "tag": "Unpack",
-                                                            "variables": []
-                                                        },
-                                                        {
-                                                            "body": {
-                                                                "bindings": [
-                                                                    {
-                                                                        "object": {
-                                                                            "arguments": [],
-                                                                            "constructor": {
-                                                                                "parameters": [],
-                                                                                "tag": {
-                                                                                    "tag": "Tuple"
-                                                                                }
-                                                                            },
-                                                                            "tag": "Pack",
-                                                                            "type": {
-                                                                                "constructors": [
-                                                                                    {
-                                                                                        "parameters": [],
-                                                                                        "tag": {
-                                                                                            "tag": "Tuple"
-                                                                                        }
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "SumT"
-                                                                            }
-                                                                        },
-                                                                        "type": {
-                                                                            "constructors": [
-                                                                                {
-                                                                                    "parameters": [],
-                                                                                    "tag": {
-                                                                                        "tag": "Tuple"
-                                                                                    }
-                                                                                }
-                                                                            ],
-                                                                            "tag": "SumT"
-                                                                        },
-                                                                        "variable": {
-                                                                            "id": {
-                                                                                "module_name": {
-                                                                                    "path": {
-                                                                                        "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                                        "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                                                    },
-                                                                                    "tag": "Artifact"
-                                                                                },
-                                                                                "name": "let$2c",
-                                                                                "sort": "Temporal"
-                                                                            },
-                                                                            "meta": {
-                                                                                "constructors": [
-                                                                                    {
-                                                                                        "parameters": [],
-                                                                                        "tag": {
-                                                                                            "tag": "Tuple"
-                                                                                        }
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "SumT"
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "body": {
-                                                                    "atom": {
-                                                                        "tag": "Var",
-                                                                        "variable": {
-                                                                            "id": {
-                                                                                "module_name": {
-                                                                                    "path": {
-                                                                                        "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                                        "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                                                    },
-                                                                                    "tag": "Artifact"
-                                                                                },
-                                                                                "name": "let$2c",
-                                                                                "sort": "Temporal"
-                                                                            },
-                                                                            "meta": {
-                                                                                "constructors": [
-                                                                                    {
-                                                                                        "parameters": [],
-                                                                                        "tag": {
-                                                                                            "tag": "Tuple"
-                                                                                        }
-                                                                                    }
-                                                                                ],
-                                                                                "tag": "SumT"
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    "tag": "Atom"
-                                                                },
-                                                                "tag": "Let"
-                                                            },
-                                                            "constructor": {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "name": "C",
-                                                                    "tag": "Data"
-                                                                }
-                                                            },
-                                                            "tag": "Unpack",
-                                                            "variables": []
-                                                        }
-                                                    ],
-                                                    "scrutinee": {
+                                                        "tag": "Match"
+                                                    },
+                                                    "expression": {
                                                         "tag": "Cast",
                                                         "type": {
                                                             "constructors": [
@@ -1353,7 +1398,46 @@
                                                             }
                                                         }
                                                     },
-                                                    "tag": "Match"
+                                                    "tag": "Assign",
+                                                    "variable": {
+                                                        "id": {
+                                                            "module_name": {
+                                                                "path": {
+                                                                    "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                                    "rel_path": "test/testcases/malgo/TuplePattern.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "unfolded$2d",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "A",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "B",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "C",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        }
+                                                    }
                                                 },
                                                 "constructor": {
                                                     "parameters": [
@@ -1406,41 +1490,38 @@
                                             }
                                         ],
                                         "scrutinee": {
-                                            "atom": {
-                                                "tag": "Var",
-                                                "variable": {
-                                                    "id": {
-                                                        "module_name": {
-                                                            "path": {
-                                                                "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
-                                                                "rel_path": "test/testcases/malgo/TuplePattern.mlg"
-                                                            },
-                                                            "tag": "Artifact"
+                                            "tag": "Var",
+                                            "variable": {
+                                                "id": {
+                                                    "module_name": {
+                                                        "path": {
+                                                            "raw_path": "./test/testcases/malgo/TuplePattern.mlg",
+                                                            "rel_path": "test/testcases/malgo/TuplePattern.mlg"
                                                         },
-                                                        "name": "tuple$25",
-                                                        "sort": "Temporal"
+                                                        "tag": "Artifact"
                                                     },
-                                                    "meta": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    },
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    }
-                                                                ],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
+                                                    "name": "tuple$25",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [
+                                                                {
+                                                                    "tag": "AnyT"
+                                                                },
+                                                                {
+                                                                    "tag": "AnyT"
                                                                 }
+                                                            ],
+                                                            "tag": {
+                                                                "tag": "Tuple"
                                                             }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
                                                 }
-                                            },
-                                            "tag": "Atom"
+                                            }
                                         },
                                         "tag": "Match"
                                     },
@@ -1522,7 +1603,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "fun$2d",
+                                        "name": "fun$2e",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1574,7 +1655,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "fun$2d",
+                                        "name": "fun$2e",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1627,7 +1708,7 @@
                                 },
                                 "tag": "Artifact"
                             },
-                            "name": "d$2e",
+                            "name": "d$2f",
                             "sort": "Temporal"
                         },
                         "meta": {

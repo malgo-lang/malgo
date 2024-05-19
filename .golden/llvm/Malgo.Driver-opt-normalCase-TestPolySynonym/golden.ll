@@ -1,9 +1,9 @@
 ; ModuleID = '.malgo-work/test/testcases/malgo/TestPolySynonym.ll'
 source_filename = "test/testcases/malgo/TestPolySynonym.mlg"
 
-@str3624 = unnamed_addr constant [5 x i8] c"hoge\00"
-@str3625 = unnamed_addr constant [4 x i8] c"fst\00"
-@str3626 = unnamed_addr constant [4 x i8] c"snd\00"
+@str3622 = unnamed_addr constant [5 x i8] c"hoge\00"
+@str3623 = unnamed_addr constant [4 x i8] c"fst\00"
+@str3624 = unnamed_addr constant [4 x i8] c"snd\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -19,18 +19,18 @@ declare void @malgo_hash_table_insert(ptr, ptr, ptr) local_unnamed_addr
 
 declare ptr @malgo_hash_table_get(ptr, ptr) local_unnamed_addr
 
-define internal ptr @_M35let_x242c2_x24e21_x5Fclosure_x24e2b52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %"p$29$e1f_0" = load ptr, ptr %0, align 8
+define internal ptr @_M35let_x242c2_x24e1f_x5Fclosure_x24e2952test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
+  %"p$29$e1d_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %"p$29$e1f_0")
+  %6 = tail call ptr %5(ptr %3, ptr %"p$29$e1d_0")
   ret ptr %6
 }
 
-define internal ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %_M14i_x245c_x2430534runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0) {
+define internal ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External(ptr nocapture nofree readnone %0, ptr nocapture nofree readonly align 4 %_M14i_x245c_x2430a34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0) {
 "switch_branch_Int32#_0":
-  %1 = getelementptr { i8, { i32 } }, ptr %_M14i_x245c_x2430534runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i64 0, i32 1
+  %1 = getelementptr { i8, { i32 } }, ptr %_M14i_x245c_x2430a34runtime_x2Fmalgo_x2FPrelude_x2Emlg8Temporal_0, i64 0, i32 1
   %2 = load i32, ptr %1, align 4
   %3 = tail call ptr @malgo_int32_t_to_string(i32 %2)
   %4 = tail call ptr @malgo_malloc(i64 noundef 16)
@@ -52,24 +52,24 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %5 = tail call ptr @malgo_malloc(i64 noundef 16)
   store i8 0, ptr %5, align 1
   %6 = getelementptr { i8, { ptr } }, ptr %5, i64 0, i32 1, i32 0
-  store ptr @str3624, ptr %6, align 8
+  store ptr @str3622, ptr %6, align 8
   %7 = tail call ptr @malgo_hash_table_new()
-  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str3625, ptr noundef nonnull %3)
-  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str3626, ptr noundef nonnull %5)
-  %8 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3625)
-  %9 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3626)
+  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str3623, ptr noundef nonnull %3)
+  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str3624, ptr noundef nonnull %5)
+  %8 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3623)
+  %9 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3624)
   %10 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %"let$2c2$e21_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %8, ptr %"let$2c2$e21_capture_0.i", align 8
-  store ptr %"let$2c2$e21_capture_0.i", ptr %10, align 8
-  %"let$2c2$e21_func_0.i" = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
-  store ptr @_M35let_x242c2_x24e21_x5Fclosure_x24e2b52test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg8Internal, ptr %"let$2c2$e21_func_0.i", align 8
+  %"let$2c2$e1f_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %8, ptr %"let$2c2$e1f_capture_0.i", align 8
+  store ptr %"let$2c2$e1f_capture_0.i", ptr %10, align 8
+  %"let$2c2$e1f_func_0.i" = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
+  store ptr @_M35let_x242c2_x24e1f_x5Fclosure_x24e2952test_x2Ftestcases_x2Fmalgo_x2FTestPolySynonym_x2Emlg8Internal, ptr %"let$2c2$e1f_func_0.i", align 8
   %11 = tail call ptr @malgo_malloc(i64 noundef 16)
   store ptr null, ptr %11, align 8
   %printInt32_func_0.i = getelementptr { ptr, ptr }, ptr %11, i64 0, i32 1
   store ptr @_M10printInt3234runtime_x2Fmalgo_x2FPrelude_x2Emlg8External, ptr %printInt32_func_0.i, align 8
-  %"p$29$e1f_0.i.i" = load ptr, ptr %"let$2c2$e21_capture_0.i", align 8
-  %12 = getelementptr { i8, { i32 } }, ptr %"p$29$e1f_0.i.i", i64 0, i32 1
+  %"p$29$e1d_0.i.i" = load ptr, ptr %"let$2c2$e1f_capture_0.i", align 8
+  %12 = getelementptr { i8, { i32 } }, ptr %"p$29$e1d_0.i.i", i64 0, i32 1
   %13 = load i32, ptr %12, align 4
   %14 = tail call ptr @malgo_int32_t_to_string(i32 %13)
   %15 = tail call ptr @malgo_malloc(i64 noundef 16)

@@ -69,7 +69,7 @@ alphaExpr (Let ds e) = do
   -- Avoid capturing variables
   env <- foldMapM (\(LocalDef n _ _) -> Map.singleton n . Var <$> cloneMeta n) ds
   local (env <>) $ Let <$> traverse alphaLocalDef ds <*> alphaExpr e
-alphaExpr (Match e cs) = Match <$> alphaExpr e <*> traverse alphaCase cs
+alphaExpr (Match v cs) = Match <$> alphaAtom v <*> traverse alphaCase cs
 alphaExpr (Switch v cs e) = Switch <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExpr e) cs <*> alphaExpr e
 alphaExpr (SwitchUnboxed v cs e) = SwitchUnboxed <$> alphaAtom v <*> traverse (\(tag, e) -> (tag,) <$> alphaExpr e) cs <*> alphaExpr e
 alphaExpr (Destruct v con xs e) = do
@@ -154,8 +154,8 @@ equivExpr (Let ds e) (Let ds' e') = do
     then pure False
     else do
       local (subst <>) $ equivExpr e e'
-equivExpr (Match e cs) (Match e' cs') = do
-  (&&) <$> equivExpr e e' <*> andM (zipWith equivCase cs cs')
+equivExpr (Match v cs) (Match v' cs') = do
+  (&&) <$> equivAtom v v' <*> andM (zipWith equivCase cs cs')
 equivExpr (Switch x cs e) (Switch y cs' e') = do
   andM [equivAtom x y, andM $ zipWith equivAlt cs cs', equivExpr e e']
   where

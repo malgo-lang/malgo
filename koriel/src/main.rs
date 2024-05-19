@@ -2,11 +2,9 @@ use std::io::{self, Read};
 
 use crate::syntax::HasType;
 
-mod name;
-
-mod syntax;
-
 mod closure;
+mod name;
+mod syntax;
 
 fn main() -> io::Result<()> {
     // Read the stdin until EOF is reached

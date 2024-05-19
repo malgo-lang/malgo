@@ -1,7 +1,7 @@
 ; ModuleID = 'test/testcases/malgo/TestNestedLetFunc.mlg'
 source_filename = "test/testcases/malgo/TestNestedLetFunc.mlg"
 
-@str27 = unnamed_addr constant [5 x i8] c"PASS\00"
+@str26 = unnamed_addr constant [5 x i8] c"PASS\00"
 
 declare void @GC_init()
 
@@ -13,7 +13,7 @@ define internal ptr @_M24malgo_x5Fprint_x5Fstring54test_x2Ftestcases_x2Fmalgo_x2
 }
 
 define internal ptr @_M4main54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8External(ptr %0, ptr %_M18_x24_x5F_x24c_x24e54test_x2Ftestcases_x2Fmalgo_x2FTestNestedLetFunc_x2Emlg8Temporal_0) {
-  %2 = call ptr @malgo_print_string(ptr @str27)
+  %2 = call ptr @malgo_print_string(ptr @str26)
   ret ptr %2
 }
 

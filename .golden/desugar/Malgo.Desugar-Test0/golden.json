@@ -627,7 +627,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$46",
+                                        "name": "d$47",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -657,7 +657,7 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "d$45",
+                                            "name": "d$46",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
@@ -745,7 +745,7 @@
                                     },
                                     "tag": "Artifact"
                                 },
-                                "name": "d$46",
+                                "name": "d$47",
                                 "sort": "Temporal"
                             },
                             "meta": {
@@ -766,54 +766,25 @@
                             {
                                 "object": {
                                     "body": {
-                                        "clauses": [
-                                            {
-                                                "body": {
+                                        "body": {
+                                            "clauses": [
+                                                {
                                                     "body": {
                                                         "body": {
-                                                            "tag": "Cast",
-                                                            "type": {
-                                                                "constructors": [
-                                                                    {
-                                                                        "parameters": [],
-                                                                        "tag": {
-                                                                            "tag": "Tuple"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "tag": "SumT"
-                                                            },
-                                                            "value": {
-                                                                "tag": "Var",
-                                                                "variable": {
-                                                                    "id": {
-                                                                        "module_name": {
-                                                                            "path": {
-                                                                                "raw_path": "./test/testcases/malgo/Test0.mlg",
-                                                                                "rel_path": "test/testcases/malgo/Test0.mlg"
-                                                                            },
-                                                                            "tag": "Artifact"
-                                                                        },
-                                                                        "name": "d$43",
-                                                                        "sort": "Temporal"
-                                                                    },
-                                                                    "meta": {
-                                                                        "constructors": [
-                                                                            {
-                                                                                "parameters": [],
-                                                                                "tag": {
-                                                                                    "tag": "Tuple"
-                                                                                }
+                                                            "body": {
+                                                                "tag": "Cast",
+                                                                "type": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "tag": "Tuple"
                                                                             }
-                                                                        ],
-                                                                        "tag": "SumT"
-                                                                    }
-                                                                }
-                                                            }
-                                                        },
-                                                        "expression": {
-                                                            "arguments": [
-                                                                {
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
+                                                                },
+                                                                "value": {
                                                                     "tag": "Var",
                                                                     "variable": {
                                                                         "id": {
@@ -824,36 +795,10 @@
                                                                                 },
                                                                                 "tag": "Artifact"
                                                                             },
-                                                                            "name": "d$42",
+                                                                            "name": "d$43",
                                                                             "sort": "Temporal"
                                                                         },
                                                                         "meta": {
-                                                                            "tag": "StringT"
-                                                                        }
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "callee": {
-                                                                "tag": "Var",
-                                                                "variable": {
-                                                                    "id": {
-                                                                        "module_name": {
-                                                                            "path": {
-                                                                                "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                                                "rel_path": "runtime/malgo/Builtin.mlg"
-                                                                            },
-                                                                            "tag": "Artifact"
-                                                                        },
-                                                                        "name": "printString#",
-                                                                        "sort": "External"
-                                                                    },
-                                                                    "meta": {
-                                                                        "parameters": [
-                                                                            {
-                                                                                "tag": "StringT"
-                                                                            }
-                                                                        ],
-                                                                        "returns": {
                                                                             "constructors": [
                                                                                 {
                                                                                     "parameters": [],
@@ -863,68 +808,102 @@
                                                                                 }
                                                                             ],
                                                                             "tag": "SumT"
-                                                                        },
-                                                                        "tag": "FuncT"
+                                                                        }
                                                                     }
                                                                 }
                                                             },
-                                                            "tag": "Call"
-                                                        },
-                                                        "tag": "Assign",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/Test0.mlg",
-                                                                        "rel_path": "test/testcases/malgo/Test0.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "d$43",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "constructors": [
+                                                            "expression": {
+                                                                "arguments": [
                                                                     {
-                                                                        "parameters": [],
-                                                                        "tag": {
-                                                                            "tag": "Tuple"
+                                                                        "tag": "Var",
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "module_name": {
+                                                                                    "path": {
+                                                                                        "raw_path": "./test/testcases/malgo/Test0.mlg",
+                                                                                        "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "d$42",
+                                                                                "sort": "Temporal"
+                                                                            },
+                                                                            "meta": {
+                                                                                "tag": "StringT"
+                                                                            }
                                                                         }
                                                                     }
                                                                 ],
-                                                                "tag": "SumT"
-                                                            }
-                                                        }
-                                                    },
-                                                    "expression": {
-                                                        "body": {
-                                                            "tag": "Cast",
-                                                            "type": {
-                                                                "tag": "StringT"
-                                                            },
-                                                            "value": {
-                                                                "tag": "Var",
-                                                                "variable": {
-                                                                    "id": {
-                                                                        "module_name": {
-                                                                            "path": {
-                                                                                "raw_path": "./test/testcases/malgo/Test0.mlg",
-                                                                                "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                                "callee": {
+                                                                    "tag": "Var",
+                                                                    "variable": {
+                                                                        "id": {
+                                                                            "module_name": {
+                                                                                "path": {
+                                                                                    "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                                                    "rel_path": "runtime/malgo/Builtin.mlg"
+                                                                                },
+                                                                                "tag": "Artifact"
                                                                             },
-                                                                            "tag": "Artifact"
+                                                                            "name": "printString#",
+                                                                            "sort": "External"
                                                                         },
-                                                                        "name": "d$41",
-                                                                        "sort": "Temporal"
-                                                                    },
-                                                                    "meta": {
-                                                                        "tag": "StringT"
+                                                                        "meta": {
+                                                                            "parameters": [
+                                                                                {
+                                                                                    "tag": "StringT"
+                                                                                }
+                                                                            ],
+                                                                            "returns": {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            },
+                                                                            "tag": "FuncT"
+                                                                        }
                                                                     }
+                                                                },
+                                                                "tag": "Call"
+                                                            },
+                                                            "tag": "Assign",
+                                                            "variable": {
+                                                                "id": {
+                                                                    "module_name": {
+                                                                        "path": {
+                                                                            "raw_path": "./test/testcases/malgo/Test0.mlg",
+                                                                            "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$43",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "tag": "Tuple"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
                                                                 }
                                                             }
                                                         },
                                                         "expression": {
-                                                            "arguments": [
-                                                                {
+                                                            "body": {
+                                                                "tag": "Cast",
+                                                                "type": {
+                                                                    "tag": "StringT"
+                                                                },
+                                                                "value": {
                                                                     "tag": "Var",
                                                                     "variable": {
                                                                         "id": {
@@ -935,43 +914,83 @@
                                                                                 },
                                                                                 "tag": "Artifact"
                                                                             },
-                                                                            "name": "p$40",
+                                                                            "name": "d$41",
                                                                             "sort": "Temporal"
                                                                         },
                                                                         "meta": {
-                                                                            "tag": "Int64T"
+                                                                            "tag": "StringT"
                                                                         }
                                                                     }
                                                                 }
-                                                            ],
-                                                            "callee": {
-                                                                "tag": "Var",
-                                                                "variable": {
-                                                                    "id": {
-                                                                        "module_name": {
-                                                                            "path": {
-                                                                                "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                                                "rel_path": "runtime/malgo/Builtin.mlg"
+                                                            },
+                                                            "expression": {
+                                                                "arguments": [
+                                                                    {
+                                                                        "tag": "Var",
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "module_name": {
+                                                                                    "path": {
+                                                                                        "raw_path": "./test/testcases/malgo/Test0.mlg",
+                                                                                        "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "p$40",
+                                                                                "sort": "Temporal"
                                                                             },
-                                                                            "tag": "Artifact"
-                                                                        },
-                                                                        "name": "toStringInt64#",
-                                                                        "sort": "External"
-                                                                    },
-                                                                    "meta": {
-                                                                        "parameters": [
-                                                                            {
+                                                                            "meta": {
                                                                                 "tag": "Int64T"
                                                                             }
-                                                                        ],
-                                                                        "returns": {
-                                                                            "tag": "StringT"
-                                                                        },
-                                                                        "tag": "FuncT"
+                                                                        }
                                                                     }
-                                                                }
+                                                                ],
+                                                                "callee": {
+                                                                    "tag": "Var",
+                                                                    "variable": {
+                                                                        "id": {
+                                                                            "module_name": {
+                                                                                "path": {
+                                                                                    "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                                                    "rel_path": "runtime/malgo/Builtin.mlg"
+                                                                                },
+                                                                                "tag": "Artifact"
+                                                                            },
+                                                                            "name": "toStringInt64#",
+                                                                            "sort": "External"
+                                                                        },
+                                                                        "meta": {
+                                                                            "parameters": [
+                                                                                {
+                                                                                    "tag": "Int64T"
+                                                                                }
+                                                                            ],
+                                                                            "returns": {
+                                                                                "tag": "StringT"
+                                                                            },
+                                                                            "tag": "FuncT"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "tag": "Call"
                                                             },
-                                                            "tag": "Call"
+                                                            "tag": "Assign",
+                                                            "variable": {
+                                                                "id": {
+                                                                    "module_name": {
+                                                                        "path": {
+                                                                            "raw_path": "./test/testcases/malgo/Test0.mlg",
+                                                                            "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "d$41",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "tag": "StringT"
+                                                                }
+                                                            }
                                                         },
                                                         "tag": "Assign",
                                                         "variable": {
@@ -983,7 +1002,7 @@
                                                                     },
                                                                     "tag": "Artifact"
                                                                 },
-                                                                "name": "d$41",
+                                                                "name": "d$42",
                                                                 "sort": "Temporal"
                                                             },
                                                             "meta": {
@@ -991,57 +1010,73 @@
                                                             }
                                                         }
                                                     },
-                                                    "tag": "Assign",
-                                                    "variable": {
-                                                        "id": {
-                                                            "module_name": {
-                                                                "path": {
-                                                                    "raw_path": "./test/testcases/malgo/Test0.mlg",
-                                                                    "rel_path": "test/testcases/malgo/Test0.mlg"
-                                                                },
-                                                                "tag": "Artifact"
-                                                            },
-                                                            "name": "d$42",
-                                                            "sort": "Temporal"
-                                                        },
-                                                        "meta": {
-                                                            "tag": "StringT"
+                                                    "constructor": {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "Int64T"
+                                                            }
+                                                        ],
+                                                        "tag": {
+                                                            "name": "Int64#",
+                                                            "tag": "Data"
                                                         }
-                                                    }
-                                                },
-                                                "constructor": {
-                                                    "parameters": [
+                                                    },
+                                                    "tag": "Unpack",
+                                                    "variables": [
                                                         {
-                                                            "tag": "Int64T"
-                                                        }
-                                                    ],
-                                                    "tag": {
-                                                        "name": "Int64#",
-                                                        "tag": "Data"
-                                                    }
-                                                },
-                                                "tag": "Unpack",
-                                                "variables": [
-                                                    {
-                                                        "id": {
-                                                            "module_name": {
-                                                                "path": {
-                                                                    "raw_path": "./test/testcases/malgo/Test0.mlg",
-                                                                    "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                            "id": {
+                                                                "module_name": {
+                                                                    "path": {
+                                                                        "raw_path": "./test/testcases/malgo/Test0.mlg",
+                                                                        "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
                                                                 },
-                                                                "tag": "Artifact"
+                                                                "name": "p$40",
+                                                                "sort": "Temporal"
                                                             },
-                                                            "name": "p$40",
-                                                            "sort": "Temporal"
-                                                        },
-                                                        "meta": {
-                                                            "tag": "Int64T"
+                                                            "meta": {
+                                                                "tag": "Int64T"
+                                                            }
                                                         }
+                                                    ]
+                                                }
+                                            ],
+                                            "scrutinee": {
+                                                "tag": "Var",
+                                                "variable": {
+                                                    "id": {
+                                                        "module_name": {
+                                                            "path": {
+                                                                "raw_path": "./test/testcases/malgo/Test0.mlg",
+                                                                "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "unfolded$44",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "constructors": [
+                                                            {
+                                                                "parameters": [
+                                                                    {
+                                                                        "tag": "Int64T"
+                                                                    }
+                                                                ],
+                                                                "tag": {
+                                                                    "name": "Int64#",
+                                                                    "tag": "Data"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "tag": "SumT"
                                                     }
-                                                ]
-                                            }
-                                        ],
-                                        "scrutinee": {
+                                                }
+                                            },
+                                            "tag": "Match"
+                                        },
+                                        "expression": {
                                             "tag": "Cast",
                                             "type": {
                                                 "constructors": [
@@ -1079,7 +1114,36 @@
                                                 }
                                             }
                                         },
-                                        "tag": "Match"
+                                        "tag": "Assign",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./test/testcases/malgo/Test0.mlg",
+                                                        "rel_path": "test/testcases/malgo/Test0.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "unfolded$44",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "Int64T"
+                                                            }
+                                                        ],
+                                                        "tag": {
+                                                            "name": "Int64#",
+                                                            "tag": "Data"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            }
+                                        }
                                     },
                                     "parameters": [
                                         {
@@ -1129,7 +1193,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "fun$44",
+                                        "name": "fun$45",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1166,7 +1230,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "fun$44",
+                                        "name": "fun$45",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1204,7 +1268,7 @@
                                 },
                                 "tag": "Artifact"
                             },
-                            "name": "d$45",
+                            "name": "d$46",
                             "sort": "Temporal"
                         },
                         "meta": {
@@ -1599,7 +1663,7 @@
                             },
                             "tag": "Artifact"
                         },
-                        "name": "x$4$47",
+                        "name": "x$4$48",
                         "sort": "Temporal"
                     },
                     "meta": {
@@ -1652,7 +1716,7 @@
                                                                         },
                                                                         "tag": "Artifact"
                                                                     },
-                                                                    "name": "d$4b$51",
+                                                                    "name": "d$4c$52",
                                                                     "sort": "Temporal"
                                                                 },
                                                                 "meta": {
@@ -1674,7 +1738,7 @@
                                                                             },
                                                                             "tag": "Artifact"
                                                                         },
-                                                                        "name": "y$5$48$4e",
+                                                                        "name": "y$5$49$4f",
                                                                         "sort": "Temporal"
                                                                     },
                                                                     "meta": {
@@ -1694,7 +1758,7 @@
                                                                         },
                                                                         "tag": "Artifact"
                                                                     },
-                                                                    "name": "d$4a$50",
+                                                                    "name": "d$4b$51",
                                                                     "sort": "Temporal"
                                                                 },
                                                                 "meta": {
@@ -1722,7 +1786,7 @@
                                                                 },
                                                                 "tag": "Artifact"
                                                             },
-                                                            "name": "d$4b$51",
+                                                            "name": "d$4c$52",
                                                             "sort": "Temporal"
                                                         },
                                                         "meta": {
@@ -1755,7 +1819,7 @@
                                                                         },
                                                                         "tag": "Artifact"
                                                                     },
-                                                                    "name": "d$49$4f",
+                                                                    "name": "d$4a$50",
                                                                     "sort": "Temporal"
                                                                 },
                                                                 "meta": {
@@ -1785,7 +1849,7 @@
                                                                             },
                                                                             "tag": "Artifact"
                                                                         },
-                                                                        "name": "x$4$47$4d",
+                                                                        "name": "x$4$48$4e",
                                                                         "sort": "Temporal"
                                                                     },
                                                                     "meta": {
@@ -1841,7 +1905,7 @@
                                                                 },
                                                                 "tag": "Artifact"
                                                             },
-                                                            "name": "d$49$4f",
+                                                            "name": "d$4a$50",
                                                             "sort": "Temporal"
                                                         },
                                                         "meta": {
@@ -1867,7 +1931,7 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "d$4a$50",
+                                                        "name": "d$4b$51",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
@@ -1893,7 +1957,7 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "x$4$47$4d",
+                                                        "name": "x$4$48$4e",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
@@ -1909,7 +1973,7 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "y$5$48$4e",
+                                                        "name": "y$5$49$4f",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
@@ -1942,7 +2006,7 @@
                                                     },
                                                     "tag": "Artifact"
                                                 },
-                                                "name": "+#_curry$4c",
+                                                "name": "+#_curry$4d",
                                                 "sort": "Temporal"
                                             },
                                             "meta": {
@@ -1975,7 +2039,7 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "x$4$47",
+                                                    "name": "x$4$48",
                                                     "sort": "Temporal"
                                                 },
                                                 "meta": {
@@ -1994,7 +2058,7 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "y$5$48",
+                                                    "name": "y$5$49",
                                                     "sort": "Temporal"
                                                 },
                                                 "meta": {
@@ -2014,7 +2078,7 @@
                                                     },
                                                     "tag": "Artifact"
                                                 },
-                                                "name": "+#_curry$4c",
+                                                "name": "+#_curry$4d",
                                                 "sort": "Temporal"
                                             },
                                             "meta": {
@@ -2047,7 +2111,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "y$5$48",
+                                        "name": "y$5$49",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -2077,7 +2141,7 @@
                                     },
                                     "tag": "Artifact"
                                 },
-                                "name": "let$52",
+                                "name": "let$53",
                                 "sort": "Temporal"
                             },
                             "meta": {
@@ -2106,7 +2170,7 @@
                                     },
                                     "tag": "Artifact"
                                 },
-                                "name": "let$52",
+                                "name": "let$53",
                                 "sort": "Temporal"
                             },
                             "meta": {

@@ -1379,86 +1379,14 @@
                                     {
                                         "object": {
                                             "body": {
-                                                "clauses": [
-                                                    {
-                                                        "body": {
-                                                            "body": {
-                                                                "tag": "Cast",
-                                                                "type": {
-                                                                    "tag": "AnyT"
-                                                                },
-                                                                "value": {
-                                                                    "tag": "Var",
-                                                                    "variable": {
-                                                                        "id": {
-                                                                            "module_name": {
-                                                                                "path": {
-                                                                                    "raw_path": "./test/testcases/malgo/With.mlg",
-                                                                                    "rel_path": "test/testcases/malgo/With.mlg"
-                                                                                },
-                                                                                "tag": "Artifact"
-                                                                            },
-                                                                            "name": "d$69$71",
-                                                                            "sort": "Temporal"
-                                                                        },
-                                                                        "meta": {
-                                                                            "tag": "AnyT"
-                                                                        }
-                                                                    }
-                                                                }
-                                                            },
-                                                            "expression": {
-                                                                "arguments": [
-                                                                    {
-                                                                        "tag": "Var",
-                                                                        "variable": {
-                                                                            "id": {
-                                                                                "module_name": {
-                                                                                    "path": {
-                                                                                        "raw_path": "./test/testcases/malgo/With.mlg",
-                                                                                        "rel_path": "test/testcases/malgo/With.mlg"
-                                                                                    },
-                                                                                    "tag": "Artifact"
-                                                                                },
-                                                                                "name": "let__M6x_x24441test_x2Ftestcases_x2Fmalgo_x2FWith_x2Emlg8Internal$68$70",
-                                                                                "sort": "Temporal"
-                                                                            },
-                                                                            "meta": {
-                                                                                "tag": "AnyT"
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "callee": {
-                                                                    "tag": "Var",
-                                                                    "variable": {
-                                                                        "id": {
-                                                                            "module_name": {
-                                                                                "path": {
-                                                                                    "raw_path": "./test/testcases/malgo/With.mlg",
-                                                                                    "rel_path": "test/testcases/malgo/With.mlg"
-                                                                                },
-                                                                                "tag": "Artifact"
-                                                                            },
-                                                                            "name": "finalizer$2$63$6b",
-                                                                            "sort": "Temporal"
-                                                                        },
-                                                                        "meta": {
-                                                                            "parameters": [
-                                                                                {
-                                                                                    "tag": "AnyT"
-                                                                                }
-                                                                            ],
-                                                                            "returns": {
-                                                                                "tag": "AnyT"
-                                                                            },
-                                                                            "tag": "FuncT"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "tag": "Call"
-                                                            },
-                                                            "tag": "Assign",
+                                                "body": {
+                                                    "body": {
+                                                        "tag": "Cast",
+                                                        "type": {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        "value": {
+                                                            "tag": "Var",
                                                             "variable": {
                                                                 "id": {
                                                                     "module_name": {
@@ -1475,30 +1403,78 @@
                                                                     "tag": "AnyT"
                                                                 }
                                                             }
-                                                        },
-                                                        "tag": "Bind",
-                                                        "type": {
-                                                            "tag": "AnyT"
-                                                        },
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/With.mlg",
-                                                                        "rel_path": "test/testcases/malgo/With.mlg"
+                                                        }
+                                                    },
+                                                    "expression": {
+                                                        "arguments": [
+                                                            {
+                                                                "tag": "Var",
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "module_name": {
+                                                                            "path": {
+                                                                                "raw_path": "./test/testcases/malgo/With.mlg",
+                                                                                "rel_path": "test/testcases/malgo/With.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "let__M6x_x24441test_x2Ftestcases_x2Fmalgo_x2FWith_x2Emlg8Internal$68$70",
+                                                                        "sort": "Temporal"
                                                                     },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "let__M6x_x24441test_x2Ftestcases_x2Fmalgo_x2FWith_x2Emlg8Internal$68$70",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "tag": "AnyT"
+                                                                    "meta": {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                }
                                                             }
+                                                        ],
+                                                        "callee": {
+                                                            "tag": "Var",
+                                                            "variable": {
+                                                                "id": {
+                                                                    "module_name": {
+                                                                        "path": {
+                                                                            "raw_path": "./test/testcases/malgo/With.mlg",
+                                                                            "rel_path": "test/testcases/malgo/With.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "finalizer$2$63$6b",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "parameters": [
+                                                                        {
+                                                                            "tag": "AnyT"
+                                                                        }
+                                                                    ],
+                                                                    "returns": {
+                                                                        "tag": "AnyT"
+                                                                    },
+                                                                    "tag": "FuncT"
+                                                                }
+                                                            }
+                                                        },
+                                                        "tag": "Call"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": {
+                                                        "id": {
+                                                            "module_name": {
+                                                                "path": {
+                                                                    "raw_path": "./test/testcases/malgo/With.mlg",
+                                                                    "rel_path": "test/testcases/malgo/With.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$69$71",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "tag": "AnyT"
                                                         }
                                                     }
-                                                ],
-                                                "scrutinee": {
+                                                },
+                                                "expression": {
                                                     "body": {
                                                         "body": {
                                                             "tag": "Cast",
@@ -1729,7 +1705,23 @@
                                                         }
                                                     }
                                                 },
-                                                "tag": "Match"
+                                                "tag": "Assign",
+                                                "variable": {
+                                                    "id": {
+                                                        "module_name": {
+                                                            "path": {
+                                                                "raw_path": "./test/testcases/malgo/With.mlg",
+                                                                "rel_path": "test/testcases/malgo/With.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "let__M6x_x24441test_x2Ftestcases_x2Fmalgo_x2FWith_x2Emlg8Internal$68$70",
+                                                        "sort": "Temporal"
+                                                    },
+                                                    "meta": {
+                                                        "tag": "AnyT"
+                                                    }
+                                                }
                                             },
                                             "parameters": [
                                                 {
@@ -4369,34 +4361,31 @@
                                             }
                                         ],
                                         "scrutinee": {
-                                            "atom": {
-                                                "tag": "Var",
-                                                "variable": {
-                                                    "id": {
-                                                        "module_name": {
-                                                            "path": {
-                                                                "raw_path": "./test/testcases/malgo/With.mlg",
-                                                                "rel_path": "test/testcases/malgo/With.mlg"
-                                                            },
-                                                            "tag": "Artifact"
+                                            "tag": "Var",
+                                            "variable": {
+                                                "id": {
+                                                    "module_name": {
+                                                        "path": {
+                                                            "raw_path": "./test/testcases/malgo/With.mlg",
+                                                            "rel_path": "test/testcases/malgo/With.mlg"
                                                         },
-                                                        "name": "tuple$74",
-                                                        "sort": "Temporal"
+                                                        "tag": "Artifact"
                                                     },
-                                                    "meta": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
+                                                    "name": "tuple$74",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
                                                             }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
                                                 }
-                                            },
-                                            "tag": "Atom"
+                                            }
                                         },
                                         "tag": "Match"
                                     },

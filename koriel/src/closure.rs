@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
 type SName = name::Name<syntax::Type>;
-type Name = name::Name<Type>;
+pub type Name = name::Name<Type>;
 
 /// Context for closure conversion.
 struct ClosureContext {
@@ -87,10 +87,9 @@ fn cc_name(context: &mut ClosureContext, name: SName) -> Result<Name> {
 
 fn cc_variable_def(context: &mut ClosureContext, variable_def: syntax::VariableDef) -> Result<()> {
     let name = cc_name(context, variable_def.name)?;
-    let typ = cc_type(context, variable_def.typ)?;
     let value = cc_expr(context, variable_def.value)?;
 
-    context.add_variable(VariableDef { name, typ, value });
+    context.add_variable(VariableDef { name, value });
 
     Ok(())
 }
@@ -109,7 +108,7 @@ fn cc_function_def(context: &mut ClosureContext, function_def: syntax::FunctionD
         parameters.push(parameter);
     }
 
-    let typ = match function_def.typ {
+    let lifted_type = match function_def.typ {
         syntax::Type::FuncT {
             parameters,
             returns,
@@ -129,7 +128,7 @@ fn cc_function_def(context: &mut ClosureContext, function_def: syntax::FunctionD
 
     let lifted_name: SName = to_lifted_name(&function_def.name);
     let lifted_name = Name {
-        meta: typ.clone(),
+        meta: lifted_type.clone(),
         id: lifted_name.id,
     };
 
@@ -156,7 +155,6 @@ fn cc_function_def(context: &mut ClosureContext, function_def: syntax::FunctionD
     context.add_function(FunctionDef {
         name: lifted_name.clone(),
         parameters,
-        typ,
         body,
     });
 
@@ -316,7 +314,7 @@ fn cc_expr(context: &mut ClosureContext, expr: syntax::Expr) -> Result<Expr> {
             Ok(Expr::Let { bindings, body })
         }
         syntax::Expr::Match { scrutinee, clauses } => {
-            let scrutinee = Box::new(cc_expr(context, *scrutinee)?);
+            let scrutinee = cc_atom(context, scrutinee)?;
             let clauses = clauses
                 .into_iter()
                 .map(|clause| cc_case(context, clause))
@@ -422,7 +420,7 @@ fn cc_obj(context: &mut ClosureContext, name: &Name, typ: &Type, obj: syntax::Ob
                 cc_parameters.push(parameter);
             }
 
-            let typ = match typ {
+            let lifted_type = match typ {
                 Type::FuncT {
                     parameters,
                     returns,
@@ -444,7 +442,7 @@ fn cc_obj(context: &mut ClosureContext, name: &Name, typ: &Type, obj: syntax::Ob
 
             let lifted_name = to_lifted_name(name);
             let lifted_name = Name {
-                meta: typ.clone(),
+                meta: lifted_type.clone(),
                 id: lifted_name.id,
             };
             // Note: free_variables includes `name` and other bindings as free variables.
@@ -468,7 +466,6 @@ fn cc_obj(context: &mut ClosureContext, name: &Name, typ: &Type, obj: syntax::Ob
             context.add_function(FunctionDef {
                 name: lifted_name.clone(),
                 parameters: cc_parameters,
-                typ,
                 body,
             });
 
@@ -549,8 +546,6 @@ pub struct Program {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct VariableDef {
     pub name: Name,
-    #[serde(rename = "type")]
-    pub typ: Type,
     pub value: Expr,
 }
 
@@ -558,8 +553,6 @@ pub struct VariableDef {
 pub struct FunctionDef {
     pub name: Name,
     pub parameters: Vec<Name>,
-    #[serde(rename = "type")]
-    pub typ: Type,
     pub body: Expr,
 }
 
@@ -647,7 +640,7 @@ pub enum Expr {
         body: Box<Expr>,
     },
     Match {
-        scrutinee: Box<Expr>,
+        scrutinee: Atom,
         clauses: Vec<Case>,
     },
     Assign {

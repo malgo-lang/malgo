@@ -177,7 +177,7 @@ data Expr a
   | -- | definition of local variables
     Let [LocalDef a] (Expr a)
   | -- | pattern matching
-    Match (Expr a) [Case a]
+    Match (Atom a) [Case a]
   | -- | switch expression
     Switch
       (Atom a)
@@ -371,7 +371,7 @@ instance HasAtom Expr where
     RawCall p t xs -> RawCall p t <$> traverse f xs
     Cast ty x -> Cast ty <$> f x
     Let xs e -> Let <$> traverseOf (traversed . atom) f xs <*> traverseOf atom f e
-    Match e cs -> Match <$> traverseOf atom f e <*> traverseOf (traversed . atom) f cs
+    Match e cs -> Match <$> f e <*> traverseOf (traversed . atom) f cs
     Switch v cs e -> Switch <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
     SwitchUnboxed v cs e -> SwitchUnboxed <$> f v <*> traverseOf (traversed . _2 . atom) f cs <*> traverseOf atom f e
     Destruct v con xs e -> Destruct <$> f v <*> pure con <*> pure xs <*> traverseOf atom f e
@@ -387,7 +387,7 @@ instance Plated (Expr a) where
   plate _ e@RawCall {} = pure e
   plate _ e@Cast {} = pure e
   plate f (Let xs e) = Let <$> traverseOf (traversed . expr) f xs <*> f e
-  plate f (Match e cs) = Match <$> f e <*> traverseOf (traversed . expr) f cs
+  plate f (Match v cs) = Match v <$> traverseOf (traversed . expr) f cs
   plate f (Switch v cs e) = Switch v <$> traverseOf (traversed . _2) f cs <*> f e
   plate f (SwitchUnboxed v cs e) = SwitchUnboxed v <$> traverseOf (traversed . _2) f cs <*> f e
   plate f (Destruct v con xs e) = Destruct v con xs <$> f e

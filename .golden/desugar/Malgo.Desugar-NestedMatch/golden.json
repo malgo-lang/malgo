@@ -1367,7 +1367,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$39",
+                                        "name": "d$3c",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1397,7 +1397,7 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "d$38",
+                                            "name": "d$3b",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
@@ -1417,7 +1417,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$2d",
+                                        "name": "d$2e",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1453,7 +1453,7 @@
                                     },
                                     "tag": "Artifact"
                                 },
-                                "name": "d$39",
+                                "name": "d$3c",
                                 "sort": "Temporal"
                             },
                             "meta": {
@@ -1488,7 +1488,7 @@
                                                     },
                                                     "tag": "Artifact"
                                                 },
-                                                "name": "d$37",
+                                                "name": "d$3a",
                                                 "sort": "Temporal"
                                             },
                                             "meta": {
@@ -1510,7 +1510,7 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "d$36",
+                                                    "name": "d$39",
                                                     "sort": "Temporal"
                                                 },
                                                 "meta": {
@@ -1530,7 +1530,7 @@
                                                     },
                                                     "tag": "Artifact"
                                                 },
-                                                "name": "d$30",
+                                                "name": "d$32",
                                                 "sort": "Temporal"
                                             },
                                             "meta": {
@@ -1558,7 +1558,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$37",
+                                        "name": "d$3a",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1585,7 +1585,7 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "d$35",
+                                                        "name": "d$38",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
@@ -1607,7 +1607,7 @@
                                                                 },
                                                                 "tag": "Artifact"
                                                             },
-                                                            "name": "d$34",
+                                                            "name": "d$37",
                                                             "sort": "Temporal"
                                                         },
                                                         "meta": {
@@ -1627,7 +1627,7 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "d$33",
+                                                        "name": "d$36",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
@@ -1655,7 +1655,7 @@
                                                     },
                                                     "tag": "Artifact"
                                                 },
-                                                "name": "d$35",
+                                                "name": "d$38",
                                                 "sort": "Temporal"
                                             },
                                             "meta": {
@@ -1700,7 +1700,7 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "d$34",
+                                            "name": "d$37",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
@@ -1713,85 +1713,123 @@
                                         {
                                             "object": {
                                                 "body": {
-                                                    "clauses": [
-                                                        {
-                                                            "body": {
-                                                                "arguments": [],
-                                                                "callee": {
-                                                                    "tag": "Var",
-                                                                    "variable": {
-                                                                        "id": {
-                                                                            "module_name": {
-                                                                                "path": {
-                                                                                    "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                                    "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                    "body": {
+                                                        "clauses": [
+                                                            {
+                                                                "body": {
+                                                                    "arguments": [],
+                                                                    "callee": {
+                                                                        "tag": "Var",
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "module_name": {
+                                                                                    "path": {
+                                                                                        "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                        "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
                                                                                 },
-                                                                                "tag": "Artifact"
+                                                                                "name": "True1",
+                                                                                "sort": "External"
                                                                             },
-                                                                            "name": "True1",
-                                                                            "sort": "External"
-                                                                        },
-                                                                        "meta": {
-                                                                            "parameters": [],
-                                                                            "returns": {
-                                                                                "tag": "AnyT"
-                                                                            },
-                                                                            "tag": "FuncT"
+                                                                            "meta": {
+                                                                                "parameters": [],
+                                                                                "returns": {
+                                                                                    "tag": "AnyT"
+                                                                                },
+                                                                                "tag": "FuncT"
+                                                                            }
                                                                         }
+                                                                    },
+                                                                    "tag": "Call"
+                                                                },
+                                                                "constructor": {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "False2",
+                                                                        "tag": "Data"
                                                                     }
                                                                 },
-                                                                "tag": "Call"
+                                                                "tag": "Unpack",
+                                                                "variables": []
                                                             },
-                                                            "constructor": {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "name": "False2",
-                                                                    "tag": "Data"
+                                                            {
+                                                                "body": {
+                                                                    "arguments": [],
+                                                                    "callee": {
+                                                                        "tag": "Var",
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "module_name": {
+                                                                                    "path": {
+                                                                                        "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                        "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                                    },
+                                                                                    "tag": "Artifact"
+                                                                                },
+                                                                                "name": "False1",
+                                                                                "sort": "External"
+                                                                            },
+                                                                            "meta": {
+                                                                                "parameters": [],
+                                                                                "returns": {
+                                                                                    "tag": "AnyT"
+                                                                                },
+                                                                                "tag": "FuncT"
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "tag": "Call"
+                                                                },
+                                                                "constructor": {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "True2",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                "tag": "Unpack",
+                                                                "variables": []
+                                                            }
+                                                        ],
+                                                        "scrutinee": {
+                                                            "tag": "Var",
+                                                            "variable": {
+                                                                "id": {
+                                                                    "module_name": {
+                                                                        "path": {
+                                                                            "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                            "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                        },
+                                                                        "tag": "Artifact"
+                                                                    },
+                                                                    "name": "unfolded$34",
+                                                                    "sort": "Temporal"
+                                                                },
+                                                                "meta": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "False2",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "name": "True2",
+                                                                                "tag": "Data"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
                                                                 }
-                                                            },
-                                                            "tag": "Unpack",
-                                                            "variables": []
+                                                            }
                                                         },
-                                                        {
-                                                            "body": {
-                                                                "arguments": [],
-                                                                "callee": {
-                                                                    "tag": "Var",
-                                                                    "variable": {
-                                                                        "id": {
-                                                                            "module_name": {
-                                                                                "path": {
-                                                                                    "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                                    "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                                                },
-                                                                                "tag": "Artifact"
-                                                                            },
-                                                                            "name": "False1",
-                                                                            "sort": "External"
-                                                                        },
-                                                                        "meta": {
-                                                                            "parameters": [],
-                                                                            "returns": {
-                                                                                "tag": "AnyT"
-                                                                            },
-                                                                            "tag": "FuncT"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "tag": "Call"
-                                                            },
-                                                            "constructor": {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "name": "True2",
-                                                                    "tag": "Data"
-                                                                }
-                                                            },
-                                                            "tag": "Unpack",
-                                                            "variables": []
-                                                        }
-                                                    ],
-                                                    "scrutinee": {
+                                                        "tag": "Match"
+                                                    },
+                                                    "expression": {
                                                         "tag": "Cast",
                                                         "type": {
                                                             "constructors": [
@@ -1823,7 +1861,7 @@
                                                                         },
                                                                         "tag": "Artifact"
                                                                     },
-                                                                    "name": "true2$31",
+                                                                    "name": "true2$33",
                                                                     "sort": "Temporal"
                                                                 },
                                                                 "meta": {
@@ -1832,7 +1870,39 @@
                                                             }
                                                         }
                                                     },
-                                                    "tag": "Match"
+                                                    "tag": "Assign",
+                                                    "variable": {
+                                                        "id": {
+                                                            "module_name": {
+                                                                "path": {
+                                                                    "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                    "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "unfolded$34",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "False2",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "True2",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        }
+                                                    }
                                                 },
                                                 "parameters": [
                                                     {
@@ -1844,7 +1914,7 @@
                                                                 },
                                                                 "tag": "Artifact"
                                                             },
-                                                            "name": "true2$31",
+                                                            "name": "true2$33",
                                                             "sort": "Temporal"
                                                         },
                                                         "meta": {
@@ -1874,7 +1944,7 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "fun$32",
+                                                    "name": "fun$35",
                                                     "sort": "Temporal"
                                                 },
                                                 "meta": {
@@ -1903,7 +1973,7 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "fun$32",
+                                                    "name": "fun$35",
                                                     "sort": "Temporal"
                                                 },
                                                 "meta": {
@@ -1933,7 +2003,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$33",
+                                        "name": "d$36",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -1959,7 +2029,7 @@
                                         },
                                         "tag": "Artifact"
                                     },
-                                    "name": "d$36",
+                                    "name": "d$39",
                                     "sort": "Temporal"
                                 },
                                 "meta": {
@@ -1972,85 +2042,123 @@
                                 {
                                     "object": {
                                         "body": {
-                                            "clauses": [
-                                                {
-                                                    "body": {
-                                                        "arguments": [],
-                                                        "callee": {
-                                                            "tag": "Var",
-                                                            "variable": {
-                                                                "id": {
-                                                                    "module_name": {
-                                                                        "path": {
-                                                                            "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                            "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                            "body": {
+                                                "clauses": [
+                                                    {
+                                                        "body": {
+                                                            "arguments": [],
+                                                            "callee": {
+                                                                "tag": "Var",
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "module_name": {
+                                                                            "path": {
+                                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
                                                                         },
-                                                                        "tag": "Artifact"
+                                                                        "name": "True",
+                                                                        "sort": "External"
                                                                     },
-                                                                    "name": "True",
-                                                                    "sort": "External"
-                                                                },
-                                                                "meta": {
-                                                                    "parameters": [],
-                                                                    "returns": {
-                                                                        "tag": "AnyT"
-                                                                    },
-                                                                    "tag": "FuncT"
+                                                                    "meta": {
+                                                                        "parameters": [],
+                                                                        "returns": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "tag": "FuncT"
+                                                                    }
                                                                 }
+                                                            },
+                                                            "tag": "Call"
+                                                        },
+                                                        "constructor": {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "name": "False1",
+                                                                "tag": "Data"
                                                             }
                                                         },
-                                                        "tag": "Call"
+                                                        "tag": "Unpack",
+                                                        "variables": []
                                                     },
-                                                    "constructor": {
-                                                        "parameters": [],
-                                                        "tag": {
-                                                            "name": "False1",
-                                                            "tag": "Data"
+                                                    {
+                                                        "body": {
+                                                            "arguments": [],
+                                                            "callee": {
+                                                                "tag": "Var",
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "module_name": {
+                                                                            "path": {
+                                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "False",
+                                                                        "sort": "External"
+                                                                    },
+                                                                    "meta": {
+                                                                        "parameters": [],
+                                                                        "returns": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "tag": "FuncT"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "tag": "Call"
+                                                        },
+                                                        "constructor": {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "name": "True1",
+                                                                "tag": "Data"
+                                                            }
+                                                        },
+                                                        "tag": "Unpack",
+                                                        "variables": []
+                                                    }
+                                                ],
+                                                "scrutinee": {
+                                                    "tag": "Var",
+                                                    "variable": {
+                                                        "id": {
+                                                            "module_name": {
+                                                                "path": {
+                                                                    "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                    "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "unfolded$30",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "False1",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "name": "True1",
+                                                                        "tag": "Data"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
                                                         }
-                                                    },
-                                                    "tag": "Unpack",
-                                                    "variables": []
+                                                    }
                                                 },
-                                                {
-                                                    "body": {
-                                                        "arguments": [],
-                                                        "callee": {
-                                                            "tag": "Var",
-                                                            "variable": {
-                                                                "id": {
-                                                                    "module_name": {
-                                                                        "path": {
-                                                                            "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                            "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                                        },
-                                                                        "tag": "Artifact"
-                                                                    },
-                                                                    "name": "False",
-                                                                    "sort": "External"
-                                                                },
-                                                                "meta": {
-                                                                    "parameters": [],
-                                                                    "returns": {
-                                                                        "tag": "AnyT"
-                                                                    },
-                                                                    "tag": "FuncT"
-                                                                }
-                                                            }
-                                                        },
-                                                        "tag": "Call"
-                                                    },
-                                                    "constructor": {
-                                                        "parameters": [],
-                                                        "tag": {
-                                                            "name": "True1",
-                                                            "tag": "Data"
-                                                        }
-                                                    },
-                                                    "tag": "Unpack",
-                                                    "variables": []
-                                                }
-                                            ],
-                                            "scrutinee": {
+                                                "tag": "Match"
+                                            },
+                                            "expression": {
                                                 "tag": "Cast",
                                                 "type": {
                                                     "constructors": [
@@ -2082,7 +2190,7 @@
                                                                 },
                                                                 "tag": "Artifact"
                                                             },
-                                                            "name": "true1$2e",
+                                                            "name": "true1$2f",
                                                             "sort": "Temporal"
                                                         },
                                                         "meta": {
@@ -2091,7 +2199,39 @@
                                                     }
                                                 }
                                             },
-                                            "tag": "Match"
+                                            "tag": "Assign",
+                                            "variable": {
+                                                "id": {
+                                                    "module_name": {
+                                                        "path": {
+                                                            "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                            "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "unfolded$30",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "name": "False1",
+                                                                "tag": "Data"
+                                                            }
+                                                        },
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "name": "True1",
+                                                                "tag": "Data"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                }
+                                            }
                                         },
                                         "parameters": [
                                             {
@@ -2103,7 +2243,7 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "true1$2e",
+                                                    "name": "true1$2f",
                                                     "sort": "Temporal"
                                                 },
                                                 "meta": {
@@ -2133,7 +2273,7 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "fun$2f",
+                                            "name": "fun$31",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
@@ -2162,7 +2302,7 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "fun$2f",
+                                            "name": "fun$31",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
@@ -2192,7 +2332,7 @@
                                     },
                                     "tag": "Artifact"
                                 },
-                                "name": "d$30",
+                                "name": "d$32",
                                 "sort": "Temporal"
                             },
                             "meta": {
@@ -2218,7 +2358,7 @@
                                 },
                                 "tag": "Artifact"
                             },
-                            "name": "d$38",
+                            "name": "d$3b",
                             "sort": "Temporal"
                         },
                         "meta": {
@@ -2231,9 +2371,259 @@
                         {
                             "object": {
                                 "body": {
-                                    "clauses": [
-                                        {
-                                            "body": {
+                                    "body": {
+                                        "clauses": [
+                                            {
+                                                "body": {
+                                                    "body": {
+                                                        "body": {
+                                                            "tag": "Cast",
+                                                            "type": {
+                                                                "constructors": [
+                                                                    {
+                                                                        "parameters": [],
+                                                                        "tag": {
+                                                                            "tag": "Tuple"
+                                                                        }
+                                                                    }
+                                                                ],
+                                                                "tag": "SumT"
+                                                            },
+                                                            "value": {
+                                                                "tag": "Var",
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "module_name": {
+                                                                            "path": {
+                                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "d$2a",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "tag": "AnyT"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "expression": {
+                                                            "arguments": [
+                                                                {
+                                                                    "tag": "Var",
+                                                                    "variable": {
+                                                                        "id": {
+                                                                            "module_name": {
+                                                                                "path": {
+                                                                                    "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                    "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                                },
+                                                                                "tag": "Artifact"
+                                                                            },
+                                                                            "name": "d$29",
+                                                                            "sort": "Temporal"
+                                                                        },
+                                                                        "meta": {
+                                                                            "constructors": [
+                                                                                {
+                                                                                    "parameters": [],
+                                                                                    "tag": {
+                                                                                        "tag": "Tuple"
+                                                                                    }
+                                                                                }
+                                                                            ],
+                                                                            "tag": "SumT"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "callee": {
+                                                                "tag": "Var",
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "module_name": {
+                                                                            "path": {
+                                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "malgo_exit_failure",
+                                                                        "sort": "External"
+                                                                    },
+                                                                    "meta": {
+                                                                        "parameters": [
+                                                                            {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
+                                                                                        }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
+                                                                            }
+                                                                        ],
+                                                                        "returns": {
+                                                                            "tag": "AnyT"
+                                                                        },
+                                                                        "tag": "FuncT"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "tag": "Call"
+                                                        },
+                                                        "tag": "Assign",
+                                                        "variable": {
+                                                            "id": {
+                                                                "module_name": {
+                                                                    "path": {
+                                                                        "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                        "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                    },
+                                                                    "tag": "Artifact"
+                                                                },
+                                                                "name": "d$2a",
+                                                                "sort": "Temporal"
+                                                            },
+                                                            "meta": {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        }
+                                                    },
+                                                    "expression": {
+                                                        "bindings": [
+                                                            {
+                                                                "object": {
+                                                                    "arguments": [],
+                                                                    "constructor": {
+                                                                        "parameters": [],
+                                                                        "tag": {
+                                                                            "tag": "Tuple"
+                                                                        }
+                                                                    },
+                                                                    "tag": "Pack",
+                                                                    "type": {
+                                                                        "constructors": [
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "tag": "Tuple"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "tag": "SumT"
+                                                                    }
+                                                                },
+                                                                "type": {
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "tag": "Tuple"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
+                                                                },
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "module_name": {
+                                                                            "path": {
+                                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "let$28",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "constructors": [
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "tag": "Tuple"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "tag": "SumT"
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "body": {
+                                                            "atom": {
+                                                                "tag": "Var",
+                                                                "variable": {
+                                                                    "id": {
+                                                                        "module_name": {
+                                                                            "path": {
+                                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                            },
+                                                                            "tag": "Artifact"
+                                                                        },
+                                                                        "name": "let$28",
+                                                                        "sort": "Temporal"
+                                                                    },
+                                                                    "meta": {
+                                                                        "constructors": [
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "tag": "Tuple"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "tag": "SumT"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "tag": "Atom"
+                                                        },
+                                                        "tag": "Let"
+                                                    },
+                                                    "tag": "Assign",
+                                                    "variable": {
+                                                        "id": {
+                                                            "module_name": {
+                                                                "path": {
+                                                                    "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                                    "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                                },
+                                                                "tag": "Artifact"
+                                                            },
+                                                            "name": "d$29",
+                                                            "sort": "Temporal"
+                                                        },
+                                                        "meta": {
+                                                            "constructors": [
+                                                                {
+                                                                    "parameters": [],
+                                                                    "tag": {
+                                                                        "tag": "Tuple"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "tag": "SumT"
+                                                        }
+                                                    }
+                                                },
+                                                "constructor": {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "name": "False",
+                                                        "tag": "Data"
+                                                    }
+                                                },
+                                                "tag": "Unpack",
+                                                "variables": []
+                                            },
+                                            {
                                                 "body": {
                                                     "body": {
                                                         "tag": "Cast",
@@ -2259,11 +2649,19 @@
                                                                         },
                                                                         "tag": "Artifact"
                                                                     },
-                                                                    "name": "d$2a",
+                                                                    "name": "d$2b",
                                                                     "sort": "Temporal"
                                                                 },
                                                                 "meta": {
-                                                                    "tag": "AnyT"
+                                                                    "constructors": [
+                                                                        {
+                                                                            "parameters": [],
+                                                                            "tag": {
+                                                                                "tag": "Tuple"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "tag": "SumT"
                                                                 }
                                                             }
                                                         }
@@ -2271,31 +2669,11 @@
                                                     "expression": {
                                                         "arguments": [
                                                             {
-                                                                "tag": "Var",
-                                                                "variable": {
-                                                                    "id": {
-                                                                        "module_name": {
-                                                                            "path": {
-                                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                                            },
-                                                                            "tag": "Artifact"
-                                                                        },
-                                                                        "name": "d$29",
-                                                                        "sort": "Temporal"
-                                                                    },
-                                                                    "meta": {
-                                                                        "constructors": [
-                                                                            {
-                                                                                "parameters": [],
-                                                                                "tag": {
-                                                                                    "tag": "Tuple"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "tag": "SumT"
-                                                                    }
-                                                                }
+                                                                "literal": {
+                                                                    "contents": "OK",
+                                                                    "tag": "String"
+                                                                },
+                                                                "tag": "Unboxed"
                                                             }
                                                         ],
                                                         "callee": {
@@ -2309,25 +2687,25 @@
                                                                         },
                                                                         "tag": "Artifact"
                                                                     },
-                                                                    "name": "malgo_exit_failure",
+                                                                    "name": "malgo_print_string",
                                                                     "sort": "External"
                                                                 },
                                                                 "meta": {
                                                                     "parameters": [
                                                                         {
-                                                                            "constructors": [
-                                                                                {
-                                                                                    "parameters": [],
-                                                                                    "tag": {
-                                                                                        "tag": "Tuple"
-                                                                                    }
-                                                                                }
-                                                                            ],
-                                                                            "tag": "SumT"
+                                                                            "tag": "StringT"
                                                                         }
                                                                     ],
                                                                     "returns": {
-                                                                        "tag": "AnyT"
+                                                                        "constructors": [
+                                                                            {
+                                                                                "parameters": [],
+                                                                                "tag": {
+                                                                                    "tag": "Tuple"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "tag": "SumT"
                                                                     },
                                                                     "tag": "FuncT"
                                                                 }
@@ -2345,271 +2723,71 @@
                                                                 },
                                                                 "tag": "Artifact"
                                                             },
-                                                            "name": "d$2a",
+                                                            "name": "d$2b",
                                                             "sort": "Temporal"
                                                         },
                                                         "meta": {
-                                                            "tag": "AnyT"
-                                                        }
-                                                    }
-                                                },
-                                                "expression": {
-                                                    "bindings": [
-                                                        {
-                                                            "object": {
-                                                                "arguments": [],
-                                                                "constructor": {
+                                                            "constructors": [
+                                                                {
                                                                     "parameters": [],
                                                                     "tag": {
                                                                         "tag": "Tuple"
                                                                     }
-                                                                },
-                                                                "tag": "Pack",
-                                                                "type": {
-                                                                    "constructors": [
-                                                                        {
-                                                                            "parameters": [],
-                                                                            "tag": {
-                                                                                "tag": "Tuple"
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "tag": "SumT"
                                                                 }
-                                                            },
-                                                            "type": {
-                                                                "constructors": [
-                                                                    {
-                                                                        "parameters": [],
-                                                                        "tag": {
-                                                                            "tag": "Tuple"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "tag": "SumT"
-                                                            },
-                                                            "variable": {
-                                                                "id": {
-                                                                    "module_name": {
-                                                                        "path": {
-                                                                            "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                            "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                                        },
-                                                                        "tag": "Artifact"
-                                                                    },
-                                                                    "name": "let$28",
-                                                                    "sort": "Temporal"
-                                                                },
-                                                                "meta": {
-                                                                    "constructors": [
-                                                                        {
-                                                                            "parameters": [],
-                                                                            "tag": {
-                                                                                "tag": "Tuple"
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "tag": "SumT"
-                                                                }
-                                                            }
-                                                        }
-                                                    ],
-                                                    "body": {
-                                                        "atom": {
-                                                            "tag": "Var",
-                                                            "variable": {
-                                                                "id": {
-                                                                    "module_name": {
-                                                                        "path": {
-                                                                            "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                            "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                                        },
-                                                                        "tag": "Artifact"
-                                                                    },
-                                                                    "name": "let$28",
-                                                                    "sort": "Temporal"
-                                                                },
-                                                                "meta": {
-                                                                    "constructors": [
-                                                                        {
-                                                                            "parameters": [],
-                                                                            "tag": {
-                                                                                "tag": "Tuple"
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "tag": "SumT"
-                                                                }
-                                                            }
-                                                        },
-                                                        "tag": "Atom"
-                                                    },
-                                                    "tag": "Let"
-                                                },
-                                                "tag": "Assign",
-                                                "variable": {
-                                                    "id": {
-                                                        "module_name": {
-                                                            "path": {
-                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                            },
-                                                            "tag": "Artifact"
-                                                        },
-                                                        "name": "d$29",
-                                                        "sort": "Temporal"
-                                                    },
-                                                    "meta": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    }
-                                                }
-                                            },
-                                            "constructor": {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "False",
-                                                    "tag": "Data"
-                                                }
-                                            },
-                                            "tag": "Unpack",
-                                            "variables": []
-                                        },
-                                        {
-                                            "body": {
-                                                "body": {
-                                                    "tag": "Cast",
-                                                    "type": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    },
-                                                    "value": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                        "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "d$2b",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "constructors": [
-                                                                    {
-                                                                        "parameters": [],
-                                                                        "tag": {
-                                                                            "tag": "Tuple"
-                                                                        }
-                                                                    }
-                                                                ],
-                                                                "tag": "SumT"
-                                                            }
+                                                            ],
+                                                            "tag": "SumT"
                                                         }
                                                     }
                                                 },
-                                                "expression": {
-                                                    "arguments": [
+                                                "constructor": {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "name": "True",
+                                                        "tag": "Data"
+                                                    }
+                                                },
+                                                "tag": "Unpack",
+                                                "variables": []
+                                            }
+                                        ],
+                                        "scrutinee": {
+                                            "tag": "Var",
+                                            "variable": {
+                                                "id": {
+                                                    "module_name": {
+                                                        "path": {
+                                                            "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                            "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "unfolded$2c",
+                                                    "sort": "Temporal"
+                                                },
+                                                "meta": {
+                                                    "constructors": [
                                                         {
-                                                            "literal": {
-                                                                "contents": "OK",
-                                                                "tag": "String"
-                                                            },
-                                                            "tag": "Unboxed"
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "name": "False",
+                                                                "tag": "Data"
+                                                            }
+                                                        },
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "name": "True",
+                                                                "tag": "Data"
+                                                            }
                                                         }
                                                     ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                        "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "malgo_print_string",
-                                                                "sort": "External"
-                                                            },
-                                                            "meta": {
-                                                                "parameters": [
-                                                                    {
-                                                                        "tag": "StringT"
-                                                                    }
-                                                                ],
-                                                                "returns": {
-                                                                    "constructors": [
-                                                                        {
-                                                                            "parameters": [],
-                                                                            "tag": {
-                                                                                "tag": "Tuple"
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "tag": "SumT"
-                                                                },
-                                                                "tag": "FuncT"
-                                                            }
-                                                        }
-                                                    },
-                                                    "tag": "Call"
-                                                },
-                                                "tag": "Assign",
-                                                "variable": {
-                                                    "id": {
-                                                        "module_name": {
-                                                            "path": {
-                                                                "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
-                                                                "rel_path": "test/testcases/malgo/NestedMatch.mlg"
-                                                            },
-                                                            "tag": "Artifact"
-                                                        },
-                                                        "name": "d$2b",
-                                                        "sort": "Temporal"
-                                                    },
-                                                    "meta": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    }
+                                                    "tag": "SumT"
                                                 }
-                                            },
-                                            "constructor": {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "name": "True",
-                                                    "tag": "Data"
-                                                }
-                                            },
-                                            "tag": "Unpack",
-                                            "variables": []
-                                        }
-                                    ],
-                                    "scrutinee": {
+                                            }
+                                        },
+                                        "tag": "Match"
+                                    },
+                                    "expression": {
                                         "tag": "Cast",
                                         "type": {
                                             "constructors": [
@@ -2650,7 +2828,39 @@
                                             }
                                         }
                                     },
-                                    "tag": "Match"
+                                    "tag": "Assign",
+                                    "variable": {
+                                        "id": {
+                                            "module_name": {
+                                                "path": {
+                                                    "raw_path": "./test/testcases/malgo/NestedMatch.mlg",
+                                                    "rel_path": "test/testcases/malgo/NestedMatch.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "unfolded$2c",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "name": "False",
+                                                        "tag": "Data"
+                                                    }
+                                                },
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "name": "True",
+                                                        "tag": "Data"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        }
+                                    }
                                 },
                                 "parameters": [
                                     {
@@ -2700,7 +2910,7 @@
                                         },
                                         "tag": "Artifact"
                                     },
-                                    "name": "fun$2c",
+                                    "name": "fun$2d",
                                     "sort": "Temporal"
                                 },
                                 "meta": {
@@ -2737,7 +2947,7 @@
                                         },
                                         "tag": "Artifact"
                                     },
-                                    "name": "fun$2c",
+                                    "name": "fun$2d",
                                     "sort": "Temporal"
                                 },
                                 "meta": {
@@ -2775,7 +2985,7 @@
                             },
                             "tag": "Artifact"
                         },
-                        "name": "d$2d",
+                        "name": "d$2e",
                         "sort": "Temporal"
                     },
                     "meta": {

@@ -189,7 +189,7 @@ switch_default_0:                                 ; preds = %1
   unreachable
 }
 
-define internal ptr @_M27let_x2438_x5Fclosure_x24d5944test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg8Internal(ptr %0, ptr %1) {
+define internal ptr @_M27let_x2438_x5Fclosure_x24d5644test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg8Internal(ptr %0, ptr %1) {
   %"x$2$31_addr_0" = getelementptr { ptr }, ptr %0, i32 0, i32 0
   %"x$2$31_0" = load ptr, ptr %"x$2$31_addr_0", align 8
   %3 = getelementptr { ptr, ptr }, ptr %1, i32 0, i32 0
@@ -208,7 +208,7 @@ define internal ptr @_M8_x7C_x3E44test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg8E
   %"let$38_capture_1" = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 0
   store ptr %"let$38_capture_0", ptr %"let$38_capture_1", align 8
   %"let$38_func_0" = getelementptr { ptr, ptr }, ptr %2, i32 0, i32 1
-  store ptr @_M27let_x2438_x5Fclosure_x24d5944test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg8Internal, ptr %"let$38_func_0", align 8
+  store ptr @_M27let_x2438_x5Fclosure_x24d5644test_x2Ftestcases_x2Fmalgo_x2FTestLet_x2Emlg8Internal, ptr %"let$38_func_0", align 8
   ret ptr %2
 }
 

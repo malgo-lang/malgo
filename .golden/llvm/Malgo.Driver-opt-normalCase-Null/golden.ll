@@ -12,30 +12,30 @@ declare ptr @malgo_exit_failure(ptr) local_unnamed_addr
 declare ptr @malgo_malloc(i64) local_unnamed_addr
 
 define internal ptr @_M33let_x248e_x24da_x5Fclosure_x2410341test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(16) %1) {
-  %"d$98$d9_0" = load ptr, ptr %0, align 8
+  %"d$9a$d9_0" = load ptr, ptr %0, align 8
   %3 = load ptr, ptr %1, align 8
   %4 = getelementptr { ptr, ptr }, ptr %1, i64 0, i32 1
   %5 = load ptr, ptr %4, align 8
-  %6 = tail call ptr %5(ptr %3, ptr %"d$98$d9_0")
+  %6 = tail call ptr %5(ptr %3, ptr %"d$9a$d9_0")
   ret ptr %6
 }
 
-define internal ptr @_M27fun_x24ae_x5Fclosure_x2410441test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
+define internal ptr @_M27fun_x24b1_x5Fclosure_x2410441test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Internal(ptr nocapture nofree readnone %0, ptr nocapture nofree noundef nonnull readonly dereferenceable(1) %1) {
   %.val = load i8, ptr %1, align 1
   %switch.i = icmp eq i8 %.val, 0
   br i1 %switch.i, label %switch_branch_False_0.i, label %switch_branch_True_0.i
 
 switch_branch_False_0.i:                          ; preds = %2
   %3 = tail call ptr @malgo_print_string(ptr noundef nonnull @str263)
-  br label %_M22raw_x5Ffun_x24ae_x24f841test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Temporal.exit
+  br label %_M22raw_x5Ffun_x24b1_x24f841test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Temporal.exit
 
 switch_branch_True_0.i:                           ; preds = %2
   %4 = tail call ptr @malgo_malloc(i64 noundef 1)
   store i8 0, ptr %4, align 1
   %5 = tail call ptr @malgo_exit_failure(ptr noundef nonnull %4)
-  br label %_M22raw_x5Ffun_x24ae_x24f841test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Temporal.exit
+  br label %_M22raw_x5Ffun_x24b1_x24f841test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Temporal.exit
 
-_M22raw_x5Ffun_x24ae_x24f841test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Temporal.exit: ; preds = %switch_branch_False_0.i, %switch_branch_True_0.i
+_M22raw_x5Ffun_x24b1_x24f841test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Temporal.exit: ; preds = %switch_branch_False_0.i, %switch_branch_True_0.i
   %common.ret.op.i = phi ptr [ %3, %switch_branch_False_0.i ], [ %5, %switch_branch_True_0.i ]
   ret ptr %common.ret.op.i
 }
@@ -75,10 +75,10 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %"let$8e$da_func_3.i" = getelementptr { ptr, ptr }, ptr %15, i64 0, i32 1
   store ptr @_M33let_x248e_x24da_x5Fclosure_x2410341test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Internal, ptr %"let$8e$da_func_3.i", align 8
   %16 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %"fun$ae_capture_6.i" = tail call ptr @malgo_malloc(i64 noundef 0)
-  store ptr %"fun$ae_capture_6.i", ptr %16, align 8
-  %"fun$ae_func_3.i" = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
-  store ptr @_M27fun_x24ae_x5Fclosure_x2410441test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Internal, ptr %"fun$ae_func_3.i", align 8
+  %"fun$b1_capture_6.i" = tail call ptr @malgo_malloc(i64 noundef 0)
+  store ptr %"fun$b1_capture_6.i", ptr %16, align 8
+  %"fun$b1_func_3.i" = getelementptr { ptr, ptr }, ptr %16, i64 0, i32 1
+  store ptr @_M27fun_x24b1_x5Fclosure_x2410441test_x2Ftestcases_x2Fmalgo_x2FNull_x2Emlg8Internal, ptr %"fun$b1_func_3.i", align 8
   %17 = load ptr, ptr %15, align 8
   %18 = load ptr, ptr %"let$8e$da_func_3.i", align 8
   %19 = tail call ptr %18(ptr %17, ptr nonnull %16)

@@ -2790,143 +2790,23 @@
                 "tag": "FuncT"
             },
             {
-                "clauses": [
-                    {
+                "body": {
+                    "body": {
                         "body": {
-                            "body": {
-                                "body": {
-                                    "tag": "Cast",
-                                    "type": {
-                                        "constructors": [
-                                            {
-                                                "parameters": [],
-                                                "tag": {
-                                                    "tag": "Tuple"
-                                                }
-                                            }
-                                        ],
-                                        "tag": "SumT"
-                                    },
-                                    "value": {
-                                        "tag": "Var",
-                                        "variable": {
-                                            "id": {
-                                                "module_name": {
-                                                    "path": {
-                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                    },
-                                                    "tag": "Artifact"
-                                                },
-                                                "name": "d$103",
-                                                "sort": "Temporal"
-                                            },
-                                            "meta": {
-                                                "constructors": [
-                                                    {
-                                                        "parameters": [],
-                                                        "tag": {
-                                                            "tag": "Tuple"
-                                                        }
-                                                    }
-                                                ],
-                                                "tag": "SumT"
-                                            }
+                            "tag": "Cast",
+                            "type": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
                                         }
                                     }
-                                },
-                                "expression": {
-                                    "arguments": [
-                                        {
-                                            "tag": "Var",
-                                            "variable": {
-                                                "id": {
-                                                    "module_name": {
-                                                        "path": {
-                                                            "raw_path": "./runtime/malgo/Prelude.mlg",
-                                                            "rel_path": "runtime/malgo/Prelude.mlg"
-                                                        },
-                                                        "tag": "Artifact"
-                                                    },
-                                                    "name": "putStrLn",
-                                                    "sort": "External"
-                                                },
-                                                "meta": {
-                                                    "parameters": [
-                                                        {
-                                                            "tag": "AnyT"
-                                                        }
-                                                    ],
-                                                    "returns": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    },
-                                                    "tag": "FuncT"
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    "callee": {
-                                        "tag": "Var",
-                                        "variable": {
-                                            "id": {
-                                                "module_name": {
-                                                    "path": {
-                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                    },
-                                                    "tag": "Artifact"
-                                                },
-                                                "name": "d$102",
-                                                "sort": "Temporal"
-                                            },
-                                            "meta": {
-                                                "parameters": [
-                                                    {
-                                                        "parameters": [
-                                                            {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        ],
-                                                        "returns": {
-                                                            "constructors": [
-                                                                {
-                                                                    "parameters": [],
-                                                                    "tag": {
-                                                                        "tag": "Tuple"
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "tag": "SumT"
-                                                        },
-                                                        "tag": "FuncT"
-                                                    }
-                                                ],
-                                                "returns": {
-                                                    "constructors": [
-                                                        {
-                                                            "parameters": [],
-                                                            "tag": {
-                                                                "tag": "Tuple"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "tag": "SumT"
-                                                },
-                                                "tag": "FuncT"
-                                            }
-                                        }
-                                    },
-                                    "tag": "Call"
-                                },
-                                "tag": "Assign",
+                                ],
+                                "tag": "SumT"
+                            },
+                            "value": {
+                                "tag": "Var",
                                 "variable": {
                                     "id": {
                                         "module_name": {
@@ -2951,31 +2831,28 @@
                                         "tag": "SumT"
                                     }
                                 }
-                            },
-                            "expression": {
-                                "body": {
-                                    "body": {
-                                        "tag": "Cast",
-                                        "type": {
+                            }
+                        },
+                        "expression": {
+                            "arguments": [
+                                {
+                                    "tag": "Var",
+                                    "variable": {
+                                        "id": {
+                                            "module_name": {
+                                                "path": {
+                                                    "raw_path": "./runtime/malgo/Prelude.mlg",
+                                                    "rel_path": "runtime/malgo/Prelude.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "putStrLn",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
                                             "parameters": [
                                                 {
-                                                    "parameters": [
-                                                        {
-                                                            "tag": "AnyT"
-                                                        }
-                                                    ],
-                                                    "returns": {
-                                                        "constructors": [
-                                                            {
-                                                                "parameters": [],
-                                                                "tag": {
-                                                                    "tag": "Tuple"
-                                                                }
-                                                            }
-                                                        ],
-                                                        "tag": "SumT"
-                                                    },
-                                                    "tag": "FuncT"
+                                                    "tag": "AnyT"
                                                 }
                                             ],
                                             "returns": {
@@ -2990,6 +2867,399 @@
                                                 "tag": "SumT"
                                             },
                                             "tag": "FuncT"
+                                        }
+                                    }
+                                }
+                            ],
+                            "callee": {
+                                "tag": "Var",
+                                "variable": {
+                                    "id": {
+                                        "module_name": {
+                                            "path": {
+                                                "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                                "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$102",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "parameters": [
+                                            {
+                                                "parameters": [
+                                                    {
+                                                        "tag": "AnyT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "constructors": [
+                                                        {
+                                                            "parameters": [],
+                                                            "tag": {
+                                                                "tag": "Tuple"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "tag": "SumT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        ],
+                                        "returns": {
+                                            "constructors": [
+                                                {
+                                                    "parameters": [],
+                                                    "tag": {
+                                                        "tag": "Tuple"
+                                                    }
+                                                }
+                                            ],
+                                            "tag": "SumT"
+                                        },
+                                        "tag": "FuncT"
+                                    }
+                                }
+                            },
+                            "tag": "Call"
+                        },
+                        "tag": "Assign",
+                        "variable": {
+                            "id": {
+                                "module_name": {
+                                    "path": {
+                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$103",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
+                            }
+                        }
+                    },
+                    "expression": {
+                        "body": {
+                            "body": {
+                                "tag": "Cast",
+                                "type": {
+                                    "parameters": [
+                                        {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "constructors": [
+                                                    {
+                                                        "parameters": [],
+                                                        "tag": {
+                                                            "tag": "Tuple"
+                                                        }
+                                                    }
+                                                ],
+                                                "tag": "SumT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "constructors": [
+                                            {
+                                                "parameters": [],
+                                                "tag": {
+                                                    "tag": "Tuple"
+                                                }
+                                            }
+                                        ],
+                                        "tag": "SumT"
+                                    },
+                                    "tag": "FuncT"
+                                },
+                                "value": {
+                                    "tag": "Var",
+                                    "variable": {
+                                        "id": {
+                                            "module_name": {
+                                                "path": {
+                                                    "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                                    "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "d$101",
+                                            "sort": "Temporal"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "arguments": [
+                                    {
+                                        "tag": "Var",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$100",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "callee": {
+                                    "tag": "Var",
+                                    "variable": {
+                                        "id": {
+                                            "module_name": {
+                                                "path": {
+                                                    "raw_path": "./runtime/malgo/Prelude.mlg",
+                                                    "rel_path": "runtime/malgo/Prelude.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "|>",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "parameters": [
+                                                    {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        "tag": "FuncT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "tag": "FuncT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
+                                },
+                                "tag": "Call"
+                            },
+                            "tag": "Assign",
+                            "variable": {
+                                "id": {
+                                    "module_name": {
+                                        "path": {
+                                            "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                            "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                        },
+                                        "tag": "Artifact"
+                                    },
+                                    "name": "d$101",
+                                    "sort": "Temporal"
+                                },
+                                "meta": {
+                                    "parameters": [
+                                        {
+                                            "parameters": [
+                                                {
+                                                    "tag": "AnyT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
+                        },
+                        "expression": {
+                            "body": {
+                                "body": {
+                                    "tag": "Cast",
+                                    "type": {
+                                        "tag": "AnyT"
+                                    },
+                                    "value": {
+                                        "tag": "Var",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$ff",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "tag": "AnyT"
+                                            }
+                                        }
+                                    }
+                                },
+                                "expression": {
+                                    "arguments": [
+                                        {
+                                            "tag": "Var",
+                                            "variable": {
+                                                "id": {
+                                                    "module_name": {
+                                                        "path": {
+                                                            "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                            "rel_path": "runtime/malgo/Builtin.mlg"
+                                                        },
+                                                        "tag": "Artifact"
+                                                    },
+                                                    "name": "toStringInt32",
+                                                    "sort": "External"
+                                                },
+                                                "meta": {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "callee": {
+                                        "tag": "Var",
+                                        "variable": {
+                                            "id": {
+                                                "module_name": {
+                                                    "path": {
+                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                                    },
+                                                    "tag": "Artifact"
+                                                },
+                                                "name": "d$fe",
+                                                "sort": "Temporal"
+                                            },
+                                            "meta": {
+                                                "parameters": [
+                                                    {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "AnyT"
+                                                            }
+                                                        ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        "tag": "FuncT"
+                                                    }
+                                                ],
+                                                "returns": {
+                                                    "tag": "AnyT"
+                                                },
+                                                "tag": "FuncT"
+                                            }
+                                        }
+                                    },
+                                    "tag": "Call"
+                                },
+                                "tag": "Assign",
+                                "variable": {
+                                    "id": {
+                                        "module_name": {
+                                            "path": {
+                                                "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                                "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                            },
+                                            "tag": "Artifact"
+                                        },
+                                        "name": "d$ff",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "body": {
+                                    "body": {
+                                        "tag": "Cast",
+                                        "type": {
+                                            "parameters": [
+                                                {
+                                                    "parameters": [
+                                                        {
+                                                            "tag": "AnyT"
+                                                        }
+                                                    ],
+                                                    "returns": {
+                                                        "tag": "AnyT"
+                                                    },
+                                                    "tag": "FuncT"
+                                                }
+                                            ],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
                                         },
                                         "value": {
                                             "tag": "Var",
@@ -3002,7 +3272,7 @@
                                                         },
                                                         "tag": "Artifact"
                                                     },
-                                                    "name": "d$101",
+                                                    "name": "d$fd",
                                                     "sort": "Temporal"
                                                 },
                                                 "meta": {
@@ -3040,7 +3310,7 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "d$100",
+                                                        "name": "d$fc",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
@@ -3104,7 +3374,7 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "d$101",
+                                            "name": "d$fd",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
@@ -3146,7 +3416,7 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "d$ff",
+                                                        "name": "d$fb",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
@@ -3163,24 +3433,16 @@
                                                         "id": {
                                                             "module_name": {
                                                                 "path": {
-                                                                    "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                                    "rel_path": "runtime/malgo/Builtin.mlg"
+                                                                    "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                                                    "rel_path": "test/testcases/malgo/InlineFunction.mlg"
                                                                 },
                                                                 "tag": "Artifact"
                                                             },
-                                                            "name": "toStringInt32",
-                                                            "sort": "External"
+                                                            "name": "d$fa",
+                                                            "sort": "Temporal"
                                                         },
                                                         "meta": {
-                                                            "parameters": [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
-                                                            "returns": {
-                                                                "tag": "AnyT"
-                                                            },
-                                                            "tag": "FuncT"
+                                                            "tag": "AnyT"
                                                         }
                                                     }
                                                 }
@@ -3196,21 +3458,13 @@
                                                             },
                                                             "tag": "Artifact"
                                                         },
-                                                        "name": "d$fe",
+                                                        "name": "let__M8fib_x24a51test_x2Ftestcases_x2Fmalgo_x2FInlineFunction_x2Emlg8Internal$f8",
                                                         "sort": "Temporal"
                                                     },
                                                     "meta": {
                                                         "parameters": [
                                                             {
-                                                                "parameters": [
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    }
-                                                                ],
-                                                                "returns": {
-                                                                    "tag": "AnyT"
-                                                                },
-                                                                "tag": "FuncT"
+                                                                "tag": "AnyT"
                                                             }
                                                         ],
                                                         "returns": {
@@ -3232,7 +3486,7 @@
                                                     },
                                                     "tag": "Artifact"
                                                 },
-                                                "name": "d$ff",
+                                                "name": "d$fb",
                                                 "sort": "Temporal"
                                             },
                                             "meta": {
@@ -3242,326 +3496,12 @@
                                     },
                                     "expression": {
                                         "body": {
-                                            "body": {
-                                                "tag": "Cast",
-                                                "type": {
-                                                    "parameters": [
-                                                        {
-                                                            "parameters": [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
-                                                            "returns": {
-                                                                "tag": "AnyT"
-                                                            },
-                                                            "tag": "FuncT"
-                                                        }
-                                                    ],
-                                                    "returns": {
-                                                        "tag": "AnyT"
-                                                    },
-                                                    "tag": "FuncT"
-                                                },
-                                                "value": {
-                                                    "tag": "Var",
-                                                    "variable": {
-                                                        "id": {
-                                                            "module_name": {
-                                                                "path": {
-                                                                    "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                                    "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                                },
-                                                                "tag": "Artifact"
-                                                            },
-                                                            "name": "d$fd",
-                                                            "sort": "Temporal"
-                                                        },
-                                                        "meta": {
-                                                            "parameters": [
-                                                                {
-                                                                    "parameters": [
-                                                                        {
-                                                                            "tag": "AnyT"
-                                                                        }
-                                                                    ],
-                                                                    "returns": {
-                                                                        "tag": "AnyT"
-                                                                    },
-                                                                    "tag": "FuncT"
-                                                                }
-                                                            ],
-                                                            "returns": {
-                                                                "tag": "AnyT"
-                                                            },
-                                                            "tag": "FuncT"
-                                                        }
-                                                    }
-                                                }
+                                            "tag": "Cast",
+                                            "type": {
+                                                "tag": "AnyT"
                                             },
-                                            "expression": {
-                                                "arguments": [
-                                                    {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "d$fc",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        }
-                                                    }
-                                                ],
-                                                "callee": {
-                                                    "tag": "Var",
-                                                    "variable": {
-                                                        "id": {
-                                                            "module_name": {
-                                                                "path": {
-                                                                    "raw_path": "./runtime/malgo/Prelude.mlg",
-                                                                    "rel_path": "runtime/malgo/Prelude.mlg"
-                                                                },
-                                                                "tag": "Artifact"
-                                                            },
-                                                            "name": "|>",
-                                                            "sort": "External"
-                                                        },
-                                                        "meta": {
-                                                            "parameters": [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
-                                                            "returns": {
-                                                                "parameters": [
-                                                                    {
-                                                                        "parameters": [
-                                                                            {
-                                                                                "tag": "AnyT"
-                                                                            }
-                                                                        ],
-                                                                        "returns": {
-                                                                            "tag": "AnyT"
-                                                                        },
-                                                                        "tag": "FuncT"
-                                                                    }
-                                                                ],
-                                                                "returns": {
-                                                                    "tag": "AnyT"
-                                                                },
-                                                                "tag": "FuncT"
-                                                            },
-                                                            "tag": "FuncT"
-                                                        }
-                                                    }
-                                                },
-                                                "tag": "Call"
-                                            },
-                                            "tag": "Assign",
-                                            "variable": {
-                                                "id": {
-                                                    "module_name": {
-                                                        "path": {
-                                                            "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                            "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                        },
-                                                        "tag": "Artifact"
-                                                    },
-                                                    "name": "d$fd",
-                                                    "sort": "Temporal"
-                                                },
-                                                "meta": {
-                                                    "parameters": [
-                                                        {
-                                                            "parameters": [
-                                                                {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            ],
-                                                            "returns": {
-                                                                "tag": "AnyT"
-                                                            },
-                                                            "tag": "FuncT"
-                                                        }
-                                                    ],
-                                                    "returns": {
-                                                        "tag": "AnyT"
-                                                    },
-                                                    "tag": "FuncT"
-                                                }
-                                            }
-                                        },
-                                        "expression": {
-                                            "body": {
-                                                "body": {
-                                                    "tag": "Cast",
-                                                    "type": {
-                                                        "tag": "AnyT"
-                                                    },
-                                                    "value": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "d$fb",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
-                                                            "tag": "Var",
-                                                            "variable": {
-                                                                "id": {
-                                                                    "module_name": {
-                                                                        "path": {
-                                                                            "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                                            "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                                        },
-                                                                        "tag": "Artifact"
-                                                                    },
-                                                                    "name": "d$fa",
-                                                                    "sort": "Temporal"
-                                                                },
-                                                                "meta": {
-                                                                    "tag": "AnyT"
-                                                                }
-                                                            }
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "let__M8fib_x24a51test_x2Ftestcases_x2Fmalgo_x2FInlineFunction_x2Emlg8Internal$f8",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "parameters": [
-                                                                    {
-                                                                        "tag": "AnyT"
-                                                                    }
-                                                                ],
-                                                                "returns": {
-                                                                    "tag": "AnyT"
-                                                                },
-                                                                "tag": "FuncT"
-                                                            }
-                                                        }
-                                                    },
-                                                    "tag": "Call"
-                                                },
-                                                "tag": "Assign",
-                                                "variable": {
-                                                    "id": {
-                                                        "module_name": {
-                                                            "path": {
-                                                                "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                                "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                            },
-                                                            "tag": "Artifact"
-                                                        },
-                                                        "name": "d$fb",
-                                                        "sort": "Temporal"
-                                                    },
-                                                    "meta": {
-                                                        "tag": "AnyT"
-                                                    }
-                                                }
-                                            },
-                                            "expression": {
-                                                "body": {
-                                                    "tag": "Cast",
-                                                    "type": {
-                                                        "tag": "AnyT"
-                                                    },
-                                                    "value": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "d$f9",
-                                                                "sort": "Temporal"
-                                                            },
-                                                            "meta": {
-                                                                "tag": "AnyT"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "expression": {
-                                                    "arguments": [
-                                                        {
-                                                            "literal": {
-                                                                "contents": 5,
-                                                                "tag": "Int32"
-                                                            },
-                                                            "tag": "Unboxed"
-                                                        }
-                                                    ],
-                                                    "callee": {
-                                                        "tag": "Var",
-                                                        "variable": {
-                                                            "id": {
-                                                                "module_name": {
-                                                                    "path": {
-                                                                        "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                                        "rel_path": "runtime/malgo/Builtin.mlg"
-                                                                    },
-                                                                    "tag": "Artifact"
-                                                                },
-                                                                "name": "Int32#",
-                                                                "sort": "External"
-                                                            },
-                                                            "meta": {
-                                                                "parameters": [
-                                                                    {
-                                                                        "tag": "Int32T"
-                                                                    }
-                                                                ],
-                                                                "returns": {
-                                                                    "tag": "AnyT"
-                                                                },
-                                                                "tag": "FuncT"
-                                                            }
-                                                        }
-                                                    },
-                                                    "tag": "Call"
-                                                },
-                                                "tag": "Assign",
+                                            "value": {
+                                                "tag": "Var",
                                                 "variable": {
                                                     "id": {
                                                         "module_name": {
@@ -3578,24 +3518,46 @@
                                                         "tag": "AnyT"
                                                     }
                                                 }
-                                            },
-                                            "tag": "Assign",
-                                            "variable": {
-                                                "id": {
-                                                    "module_name": {
-                                                        "path": {
-                                                            "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                                            "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                                        },
-                                                        "tag": "Artifact"
-                                                    },
-                                                    "name": "d$fa",
-                                                    "sort": "Temporal"
-                                                },
-                                                "meta": {
-                                                    "tag": "AnyT"
-                                                }
                                             }
+                                        },
+                                        "expression": {
+                                            "arguments": [
+                                                {
+                                                    "literal": {
+                                                        "contents": 5,
+                                                        "tag": "Int32"
+                                                    },
+                                                    "tag": "Unboxed"
+                                                }
+                                            ],
+                                            "callee": {
+                                                "tag": "Var",
+                                                "variable": {
+                                                    "id": {
+                                                        "module_name": {
+                                                            "path": {
+                                                                "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                                "rel_path": "runtime/malgo/Builtin.mlg"
+                                                            },
+                                                            "tag": "Artifact"
+                                                        },
+                                                        "name": "Int32#",
+                                                        "sort": "External"
+                                                    },
+                                                    "meta": {
+                                                        "parameters": [
+                                                            {
+                                                                "tag": "Int32T"
+                                                            }
+                                                        ],
+                                                        "returns": {
+                                                            "tag": "AnyT"
+                                                        },
+                                                        "tag": "FuncT"
+                                                    }
+                                                }
+                                            },
+                                            "tag": "Call"
                                         },
                                         "tag": "Assign",
                                         "variable": {
@@ -3607,7 +3569,7 @@
                                                     },
                                                     "tag": "Artifact"
                                                 },
-                                                "name": "d$fc",
+                                                "name": "d$f9",
                                                 "sort": "Temporal"
                                             },
                                             "meta": {
@@ -3625,27 +3587,11 @@
                                                 },
                                                 "tag": "Artifact"
                                             },
-                                            "name": "d$fe",
+                                            "name": "d$fa",
                                             "sort": "Temporal"
                                         },
                                         "meta": {
-                                            "parameters": [
-                                                {
-                                                    "parameters": [
-                                                        {
-                                                            "tag": "AnyT"
-                                                        }
-                                                    ],
-                                                    "returns": {
-                                                        "tag": "AnyT"
-                                                    },
-                                                    "tag": "FuncT"
-                                                }
-                                            ],
-                                            "returns": {
-                                                "tag": "AnyT"
-                                            },
-                                            "tag": "FuncT"
+                                            "tag": "AnyT"
                                         }
                                     }
                                 },
@@ -3659,7 +3605,7 @@
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "d$100",
+                                        "name": "d$fc",
                                         "sort": "Temporal"
                                     },
                                     "meta": {
@@ -3677,7 +3623,7 @@
                                         },
                                         "tag": "Artifact"
                                     },
-                                    "name": "d$102",
+                                    "name": "d$fe",
                                     "sort": "Temporal"
                                 },
                                 "meta": {
@@ -3689,17 +3635,55 @@
                                                 }
                                             ],
                                             "returns": {
-                                                "constructors": [
-                                                    {
-                                                        "parameters": [],
-                                                        "tag": {
-                                                            "tag": "Tuple"
-                                                        }
-                                                    }
-                                                ],
-                                                "tag": "SumT"
+                                                "tag": "AnyT"
                                             },
                                             "tag": "FuncT"
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            }
+                        },
+                        "tag": "Assign",
+                        "variable": {
+                            "id": {
+                                "module_name": {
+                                    "path": {
+                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "d$100",
+                                "sort": "Temporal"
+                            },
+                            "meta": {
+                                "tag": "AnyT"
+                            }
+                        }
+                    },
+                    "tag": "Assign",
+                    "variable": {
+                        "id": {
+                            "module_name": {
+                                "path": {
+                                    "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                    "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                                },
+                                "tag": "Artifact"
+                            },
+                            "name": "d$102",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "parameters": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "tag": "AnyT"
                                         }
                                     ],
                                     "returns": {
@@ -3715,47 +3699,23 @@
                                     },
                                     "tag": "FuncT"
                                 }
-                            }
-                        },
-                        "tag": "Bind",
-                        "type": {
-                            "parameters": [
-                                {
-                                    "tag": "AnyT"
-                                }
                             ],
                             "returns": {
-                                "tag": "AnyT"
-                            },
-                            "tag": "FuncT"
-                        },
-                        "variable": {
-                            "id": {
-                                "module_name": {
-                                    "path": {
-                                        "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
-                                        "rel_path": "test/testcases/malgo/InlineFunction.mlg"
-                                    },
-                                    "tag": "Artifact"
-                                },
-                                "name": "let__M8fib_x24a51test_x2Ftestcases_x2Fmalgo_x2FInlineFunction_x2Emlg8Internal$f8",
-                                "sort": "Temporal"
-                            },
-                            "meta": {
-                                "parameters": [
+                                "constructors": [
                                     {
-                                        "tag": "AnyT"
+                                        "parameters": [],
+                                        "tag": {
+                                            "tag": "Tuple"
+                                        }
                                     }
                                 ],
-                                "returns": {
-                                    "tag": "AnyT"
-                                },
-                                "tag": "FuncT"
-                            }
+                                "tag": "SumT"
+                            },
+                            "tag": "FuncT"
                         }
                     }
-                ],
-                "scrutinee": {
+                },
+                "expression": {
                     "body": {
                         "body": {
                             "tag": "Cast",
@@ -7150,7 +7110,31 @@
                         }
                     }
                 },
-                "tag": "Match"
+                "tag": "Assign",
+                "variable": {
+                    "id": {
+                        "module_name": {
+                            "path": {
+                                "raw_path": "./test/testcases/malgo/InlineFunction.mlg",
+                                "rel_path": "test/testcases/malgo/InlineFunction.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "let__M8fib_x24a51test_x2Ftestcases_x2Fmalgo_x2FInlineFunction_x2Emlg8Internal$f8",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "parameters": [
+                            {
+                                "tag": "AnyT"
+                            }
+                        ],
+                        "returns": {
+                            "tag": "AnyT"
+                        },
+                        "tag": "FuncT"
+                    }
+                }
             }
         ]
     ],

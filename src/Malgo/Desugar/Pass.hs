@@ -259,7 +259,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
   v' <- withMeta (C.typeOf e') <$> newTemporalId ("let_" <> idToText v)
   modify $ \s@DsState {..} -> s {_nameEnv = Map.insert v v' _nameEnv}
   ss' <- dsStmts (s :| ss)
-  pure $ Match e' [Bind v' (C.typeOf v') ss']
+  pure $ Assign v' e' ss'
 
 -- Desugar Monad
 

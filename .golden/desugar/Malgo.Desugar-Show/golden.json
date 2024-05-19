@@ -173,39 +173,36 @@
                     }
                 ],
                 "scrutinee": {
-                    "atom": {
-                        "tag": "Var",
-                        "variable": {
-                            "id": {
-                                "module_name": {
-                                    "path": {
-                                        "raw_path": "./test/testcases/malgo/Show.mlg",
-                                        "rel_path": "test/testcases/malgo/Show.mlg"
-                                    },
-                                    "tag": "Artifact"
+                    "tag": "Var",
+                    "variable": {
+                        "id": {
+                            "module_name": {
+                                "path": {
+                                    "raw_path": "./test/testcases/malgo/Show.mlg",
+                                    "rel_path": "test/testcases/malgo/Show.mlg"
                                 },
-                                "name": "record$77",
-                                "sort": "Temporal"
+                                "tag": "Artifact"
                             },
-                            "meta": {
-                                "map": {
-                                    "show": {
-                                        "parameters": [
-                                            {
-                                                "tag": "AnyT"
-                                            }
-                                        ],
-                                        "returns": {
+                            "name": "record$77",
+                            "sort": "Temporal"
+                        },
+                        "meta": {
+                            "map": {
+                                "show": {
+                                    "parameters": [
+                                        {
                                             "tag": "AnyT"
-                                        },
-                                        "tag": "FuncT"
-                                    }
-                                },
-                                "tag": "RecordT"
-                            }
+                                        }
+                                    ],
+                                    "returns": {
+                                        "tag": "AnyT"
+                                    },
+                                    "tag": "FuncT"
+                                }
+                            },
+                            "tag": "RecordT"
                         }
-                    },
-                    "tag": "Atom"
+                    }
                 },
                 "tag": "Match"
             }
@@ -4076,41 +4073,38 @@
                                                                         }
                                                                     ],
                                                                     "scrutinee": {
-                                                                        "atom": {
-                                                                            "tag": "Var",
-                                                                            "variable": {
-                                                                                "id": {
-                                                                                    "module_name": {
-                                                                                        "path": {
-                                                                                            "raw_path": "./test/testcases/malgo/Show.mlg",
-                                                                                            "rel_path": "test/testcases/malgo/Show.mlg"
-                                                                                        },
-                                                                                        "tag": "Artifact"
+                                                                        "tag": "Var",
+                                                                        "variable": {
+                                                                            "id": {
+                                                                                "module_name": {
+                                                                                    "path": {
+                                                                                        "raw_path": "./test/testcases/malgo/Show.mlg",
+                                                                                        "rel_path": "test/testcases/malgo/Show.mlg"
                                                                                     },
-                                                                                    "name": "tuple$97$be",
-                                                                                    "sort": "Temporal"
+                                                                                    "tag": "Artifact"
                                                                                 },
-                                                                                "meta": {
-                                                                                    "constructors": [
-                                                                                        {
-                                                                                            "parameters": [
-                                                                                                {
-                                                                                                    "tag": "AnyT"
-                                                                                                },
-                                                                                                {
-                                                                                                    "tag": "AnyT"
-                                                                                                }
-                                                                                            ],
-                                                                                            "tag": {
-                                                                                                "tag": "Tuple"
+                                                                                "name": "tuple$97$be",
+                                                                                "sort": "Temporal"
+                                                                            },
+                                                                            "meta": {
+                                                                                "constructors": [
+                                                                                    {
+                                                                                        "parameters": [
+                                                                                            {
+                                                                                                "tag": "AnyT"
+                                                                                            },
+                                                                                            {
+                                                                                                "tag": "AnyT"
                                                                                             }
+                                                                                        ],
+                                                                                        "tag": {
+                                                                                            "tag": "Tuple"
                                                                                         }
-                                                                                    ],
-                                                                                    "tag": "SumT"
-                                                                                }
+                                                                                    }
+                                                                                ],
+                                                                                "tag": "SumT"
                                                                             }
-                                                                        },
-                                                                        "tag": "Atom"
+                                                                        }
                                                                     },
                                                                     "tag": "Match"
                                                                 },

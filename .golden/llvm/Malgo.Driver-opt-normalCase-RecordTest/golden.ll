@@ -1,8 +1,8 @@
 ; ModuleID = '.malgo-work/test/testcases/malgo/RecordTest.ll'
 source_filename = "test/testcases/malgo/RecordTest.mlg"
 
-@str3662 = unnamed_addr constant [2 x i8] c"a\00"
-@str3663 = unnamed_addr constant [2 x i8] c"b\00"
+@str3658 = unnamed_addr constant [2 x i8] c"a\00"
+@str3659 = unnamed_addr constant [2 x i8] c"b\00"
 
 declare void @GC_init() local_unnamed_addr
 
@@ -20,19 +20,19 @@ declare void @malgo_hash_table_insert(ptr, ptr, ptr) local_unnamed_addr
 
 declare ptr @malgo_hash_table_get(ptr, ptr) local_unnamed_addr
 
-define internal noundef ptr @_M28let_x24fda_x5Fclosure_x24e5047test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
-  %"int32#$fc7_0" = load ptr, ptr %0, align 8
-  %3 = getelementptr i8, ptr %"int32#$fc7_0", i64 4
-  %"int32#$fc7_0.val" = load i32, ptr %3, align 4
+define internal noundef ptr @_M29let_x2410c5_x5Fclosure_x24e4c47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 8 dereferenceable(8) %0, ptr nocapture nofree readonly align 4 %1) {
+  %"int32#$10ae_0" = load ptr, ptr %0, align 8
+  %3 = getelementptr i8, ptr %"int32#$10ae_0", i64 4
+  %"int32#$10ae_0.val" = load i32, ptr %3, align 4
   %4 = getelementptr i8, ptr %1, i64 4
   %.val = load i32, ptr %4, align 4
   %5 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %"let$715$cac_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 4)
-  store i32 %"int32#$fc7_0.val", ptr %"let$715$cac_capture_0.i", align 4
-  store ptr %"let$715$cac_capture_0.i", ptr %5, align 8
-  %"let$715$cac_func_0.i" = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
-  store ptr @_M35let_x24715_x24cac_x5Fclosure_x24e5147test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal, ptr %"let$715$cac_func_0.i", align 8
-  %6 = tail call i32 @malgo_add_int32_t(i32 %"int32#$fc7_0.val", i32 %.val)
+  %"let$715$ca8_capture_0.i" = tail call ptr @malgo_malloc(i64 noundef 4)
+  store i32 %"int32#$10ae_0.val", ptr %"let$715$ca8_capture_0.i", align 4
+  store ptr %"let$715$ca8_capture_0.i", ptr %5, align 8
+  %"let$715$ca8_func_0.i" = getelementptr { ptr, ptr }, ptr %5, i64 0, i32 1
+  store ptr @_M35let_x24715_x24ca8_x5Fclosure_x24e4d47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal, ptr %"let$715$ca8_func_0.i", align 8
+  %6 = tail call i32 @malgo_add_int32_t(i32 %"int32#$10ae_0.val", i32 %.val)
   %7 = tail call noundef ptr @malgo_malloc(i64 noundef 8)
   store i8 0, ptr %7, align 1
   %8 = getelementptr { i8, { i32 } }, ptr %7, i64 0, i32 1, i32 0
@@ -40,9 +40,9 @@ define internal noundef ptr @_M28let_x24fda_x5Fclosure_x24e5047test_x2Ftestcases
   ret ptr %7
 }
 
-define internal i32 @_M35let_x24715_x24cac_x5Fclosure_x24e5147test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
-  %"p$fc9$fd3$c8f_0" = load i32, ptr %0, align 4
-  %3 = tail call i32 @malgo_add_int32_t(i32 %"p$fc9$fd3$c8f_0", i32 %1)
+define internal i32 @_M35let_x24715_x24ca8_x5Fclosure_x24e4d47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal(ptr nocapture nofree noundef nonnull readonly align 4 dereferenceable(4) %0, i32 %1) {
+  %"p$10b0$10bd$c8b_0" = load i32, ptr %0, align 4
+  %3 = tail call i32 @malgo_add_int32_t(i32 %"p$10b0$10bd$c8b_0", i32 %1)
   ret i32 %3
 }
 
@@ -59,20 +59,20 @@ define noundef i32 @main(ptr nocapture nofree readnone %0) local_unnamed_addr {
   %6 = getelementptr { i8, { i32 } }, ptr %5, i64 0, i32 1, i32 0
   store i32 10, ptr %6, align 4
   %7 = tail call ptr @malgo_hash_table_new()
-  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str3662, ptr noundef nonnull %3)
-  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str3663, ptr noundef nonnull %5)
-  %8 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3662)
-  %9 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3663)
+  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str3658, ptr noundef nonnull %3)
+  tail call void @malgo_hash_table_insert(ptr %7, ptr noundef nonnull @str3659, ptr noundef nonnull %5)
+  %8 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3658)
+  %9 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3659)
   %10 = tail call ptr @malgo_malloc(i64 noundef 16)
-  %"let$fda_capture_0.i.i" = tail call ptr @malgo_malloc(i64 noundef 8)
-  store ptr %8, ptr %"let$fda_capture_0.i.i", align 8
-  store ptr %"let$fda_capture_0.i.i", ptr %10, align 8
-  %"let$fda_func_0.i.i" = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
-  store ptr @_M28let_x24fda_x5Fclosure_x24e5047test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal, ptr %"let$fda_func_0.i.i", align 8
-  %11 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3662)
-  %12 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3663)
+  %"let$10c5_capture_0.i.i" = tail call ptr @malgo_malloc(i64 noundef 8)
+  store ptr %8, ptr %"let$10c5_capture_0.i.i", align 8
+  store ptr %"let$10c5_capture_0.i.i", ptr %10, align 8
+  %"let$10c5_func_0.i.i" = getelementptr { ptr, ptr }, ptr %10, i64 0, i32 1
+  store ptr @_M29let_x2410c5_x5Fclosure_x24e4c47test_x2Ftestcases_x2Fmalgo_x2FRecordTest_x2Emlg8Internal, ptr %"let$10c5_func_0.i.i", align 8
+  %11 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3658)
+  %12 = tail call ptr @malgo_hash_table_get(ptr %7, ptr noundef nonnull @str3659)
   %13 = load ptr, ptr %10, align 8
-  %14 = load ptr, ptr %"let$fda_func_0.i.i", align 8
+  %14 = load ptr, ptr %"let$10c5_func_0.i.i", align 8
   %15 = tail call ptr %14(ptr %13, ptr %12)
   %16 = getelementptr { i8, { i32 } }, ptr %15, i64 0, i32 1
   %17 = load i32, ptr %16, align 4

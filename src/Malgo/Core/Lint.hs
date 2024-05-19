@@ -66,7 +66,7 @@ isMatch x y
   | typeOf x == typeOf y = True
   | otherwise = False
 
-match :: HasCallStack => (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> f ()
+match :: (HasCallStack) => (HasType a, HasType b, Pretty a, Pretty b, Applicative f) => a -> b -> f ()
 match x y
   | isMatch x y = pass
   | otherwise =
@@ -103,11 +103,11 @@ lintExpr (Let ds e) = local (\e -> e {isIncludeAssign = True})
     traverse_ (lintObj . (.object)) ds
     for_ ds $ \LocalDef {variable, object} -> match variable object
     asStatement $ lintExpr e
-lintExpr (Match e cs) = do
+lintExpr (Match v cs) = do
   LintEnv {normalized} <- ask
   when normalized $ errorDoc "match is not allowed"
-  lintExpr e
-  local (\e -> e {isIncludeAssign = True}) $ traverse_ (lintCase e) cs
+  lintAtom v
+  local (\e -> e {isIncludeAssign = True}) $ traverse_ (lintCase v) cs
   -- check if all cases have same type of pattern
   if all (\c -> has _Unpack c || has _Bind c) cs
     || all (\c -> has _OpenRecord c || has _Bind c) cs

@@ -380,125 +380,170 @@
                 "tag": "FuncT"
             },
             {
-                "clauses": [
-                    {
-                        "body": {
-                            "arguments": [],
-                            "callee": {
-                                "tag": "Var",
-                                "variable": {
+                "body": {
+                    "clauses": [
+                        {
+                            "body": {
+                                "arguments": [],
+                                "callee": {
+                                    "tag": "Var",
+                                    "variable": {
+                                        "id": {
+                                            "module_name": {
+                                                "path": {
+                                                    "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                    "rel_path": "runtime/malgo/Builtin.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "True",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
+                                },
+                                "tag": "Call"
+                            },
+                            "constructor": {
+                                "parameters": [],
+                                "tag": {
+                                    "name": "Nil",
+                                    "tag": "Data"
+                                }
+                            },
+                            "tag": "Unpack",
+                            "variables": []
+                        },
+                        {
+                            "body": {
+                                "arguments": [],
+                                "callee": {
+                                    "tag": "Var",
+                                    "variable": {
+                                        "id": {
+                                            "module_name": {
+                                                "path": {
+                                                    "raw_path": "./runtime/malgo/Builtin.mlg",
+                                                    "rel_path": "runtime/malgo/Builtin.mlg"
+                                                },
+                                                "tag": "Artifact"
+                                            },
+                                            "name": "False",
+                                            "sort": "External"
+                                        },
+                                        "meta": {
+                                            "parameters": [],
+                                            "returns": {
+                                                "tag": "AnyT"
+                                            },
+                                            "tag": "FuncT"
+                                        }
+                                    }
+                                },
+                                "tag": "Call"
+                            },
+                            "constructor": {
+                                "parameters": [
+                                    {
+                                        "tag": "AnyT"
+                                    },
+                                    {
+                                        "tag": "AnyT"
+                                    }
+                                ],
+                                "tag": {
+                                    "name": "Cons",
+                                    "tag": "Data"
+                                }
+                            },
+                            "tag": "Unpack",
+                            "variables": [
+                                {
                                     "id": {
                                         "module_name": {
                                             "path": {
-                                                "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                "rel_path": "runtime/malgo/Builtin.mlg"
+                                                "raw_path": "./test/testcases/malgo/Pattern.mlg",
+                                                "rel_path": "test/testcases/malgo/Pattern.mlg"
                                             },
                                             "tag": "Artifact"
                                         },
-                                        "name": "True",
-                                        "sort": "External"
+                                        "name": "p$15",
+                                        "sort": "Temporal"
                                     },
                                     "meta": {
-                                        "parameters": [],
-                                        "returns": {
-                                            "tag": "AnyT"
+                                        "tag": "AnyT"
+                                    }
+                                },
+                                {
+                                    "id": {
+                                        "module_name": {
+                                            "path": {
+                                                "raw_path": "./test/testcases/malgo/Pattern.mlg",
+                                                "rel_path": "test/testcases/malgo/Pattern.mlg"
+                                            },
+                                            "tag": "Artifact"
                                         },
-                                        "tag": "FuncT"
+                                        "name": "p$16",
+                                        "sort": "Temporal"
+                                    },
+                                    "meta": {
+                                        "tag": "AnyT"
                                     }
                                 }
+                            ]
+                        }
+                    ],
+                    "scrutinee": {
+                        "tag": "Var",
+                        "variable": {
+                            "id": {
+                                "module_name": {
+                                    "path": {
+                                        "raw_path": "./test/testcases/malgo/Pattern.mlg",
+                                        "rel_path": "test/testcases/malgo/Pattern.mlg"
+                                    },
+                                    "tag": "Artifact"
+                                },
+                                "name": "unfolded$17",
+                                "sort": "Temporal"
                             },
-                            "tag": "Call"
-                        },
-                        "constructor": {
-                            "parameters": [],
-                            "tag": {
-                                "name": "Nil",
-                                "tag": "Data"
+                            "meta": {
+                                "constructors": [
+                                    {
+                                        "parameters": [],
+                                        "tag": {
+                                            "name": "Nil",
+                                            "tag": "Data"
+                                        }
+                                    },
+                                    {
+                                        "parameters": [
+                                            {
+                                                "tag": "AnyT"
+                                            },
+                                            {
+                                                "tag": "AnyT"
+                                            }
+                                        ],
+                                        "tag": {
+                                            "name": "Cons",
+                                            "tag": "Data"
+                                        }
+                                    }
+                                ],
+                                "tag": "SumT"
                             }
-                        },
-                        "tag": "Unpack",
-                        "variables": []
+                        }
                     },
-                    {
-                        "body": {
-                            "arguments": [],
-                            "callee": {
-                                "tag": "Var",
-                                "variable": {
-                                    "id": {
-                                        "module_name": {
-                                            "path": {
-                                                "raw_path": "./runtime/malgo/Builtin.mlg",
-                                                "rel_path": "runtime/malgo/Builtin.mlg"
-                                            },
-                                            "tag": "Artifact"
-                                        },
-                                        "name": "False",
-                                        "sort": "External"
-                                    },
-                                    "meta": {
-                                        "parameters": [],
-                                        "returns": {
-                                            "tag": "AnyT"
-                                        },
-                                        "tag": "FuncT"
-                                    }
-                                }
-                            },
-                            "tag": "Call"
-                        },
-                        "constructor": {
-                            "parameters": [
-                                {
-                                    "tag": "AnyT"
-                                },
-                                {
-                                    "tag": "AnyT"
-                                }
-                            ],
-                            "tag": {
-                                "name": "Cons",
-                                "tag": "Data"
-                            }
-                        },
-                        "tag": "Unpack",
-                        "variables": [
-                            {
-                                "id": {
-                                    "module_name": {
-                                        "path": {
-                                            "raw_path": "./test/testcases/malgo/Pattern.mlg",
-                                            "rel_path": "test/testcases/malgo/Pattern.mlg"
-                                        },
-                                        "tag": "Artifact"
-                                    },
-                                    "name": "p$15",
-                                    "sort": "Temporal"
-                                },
-                                "meta": {
-                                    "tag": "AnyT"
-                                }
-                            },
-                            {
-                                "id": {
-                                    "module_name": {
-                                        "path": {
-                                            "raw_path": "./test/testcases/malgo/Pattern.mlg",
-                                            "rel_path": "test/testcases/malgo/Pattern.mlg"
-                                        },
-                                        "tag": "Artifact"
-                                    },
-                                    "name": "p$16",
-                                    "sort": "Temporal"
-                                },
-                                "meta": {
-                                    "tag": "AnyT"
-                                }
-                            }
-                        ]
-                    }
-                ],
-                "scrutinee": {
+                    "tag": "Match"
+                },
+                "expression": {
                     "tag": "Cast",
                     "type": {
                         "constructors": [
@@ -546,7 +591,46 @@
                         }
                     }
                 },
-                "tag": "Match"
+                "tag": "Assign",
+                "variable": {
+                    "id": {
+                        "module_name": {
+                            "path": {
+                                "raw_path": "./test/testcases/malgo/Pattern.mlg",
+                                "rel_path": "test/testcases/malgo/Pattern.mlg"
+                            },
+                            "tag": "Artifact"
+                        },
+                        "name": "unfolded$17",
+                        "sort": "Temporal"
+                    },
+                    "meta": {
+                        "constructors": [
+                            {
+                                "parameters": [],
+                                "tag": {
+                                    "name": "Nil",
+                                    "tag": "Data"
+                                }
+                            },
+                            {
+                                "parameters": [
+                                    {
+                                        "tag": "AnyT"
+                                    },
+                                    {
+                                        "tag": "AnyT"
+                                    }
+                                ],
+                                "tag": {
+                                    "name": "Cons",
+                                    "tag": "Data"
+                                }
+                            }
+                        ],
+                        "tag": "SumT"
+                    }
+                }
             }
         ]
     ],

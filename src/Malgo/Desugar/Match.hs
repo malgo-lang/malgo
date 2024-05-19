@@ -104,7 +104,8 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
         let (pat', es') = group conName pat es
         Unpack coreCon params <$> match (params <> restScrutinee) pat' es' err
       unfoldedType <- unfoldType patType
-      pure $ Match (Cast unfoldedType $ Core.Var scrutinee) cases
+      unfoldedId <- withMeta unfoldedType <$> newTemporalId "unfolded"
+      pure $ Assign unfoldedId (Cast unfoldedType $ Core.Var scrutinee) $ Match (Core.Var unfoldedId) cases
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
       let patType = Malgo.typeOf $ List.head heads
@@ -114,7 +115,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
           clause <- do
             (pat', es') <- groupRecord pat es
             OpenRecord params <$> match (Map.elems params <> restScrutinee) pat' es' err
-          pure $ Match (Atom $ Core.Var scrutinee) [clause]
+          pure $ Match (Core.Var scrutinee) [clause]
         _ -> error "patType must be RecordT"
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
@@ -125,7 +126,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
           clause <- do
             let (pat', es') = groupTuple pat es
             Unpack con params <$> match (params <> restScrutinee) pat' es' err
-          pure $ Match (Atom $ Core.Var scrutinee) [clause]
+          pure $ Match (Core.Var scrutinee) [clause]
         _ -> error "patType must be SumT [Tuple]"
   -- パターンの先頭がすべてunboxedな値のとき
   | all (has _UnboxedP) heads = do
@@ -140,7 +141,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       -- パターンの網羅性を保証するため、
       -- `_ -> err` を追加する
       hole <- withMeta (Core.typeOf scrutinee) <$> newTemporalId "_"
-      pure $ Match (Atom $ Core.Var scrutinee) $ cases <> [Core.Bind hole (Core.typeOf hole) err]
+      pure $ Match (Core.Var scrutinee) $ cases <> [Core.Bind hole (Core.typeOf hole) err]
   -- The Mixture Rule
   -- 複数種類のパターンが混ざっているとき
   | otherwise =

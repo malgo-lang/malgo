@@ -119,7 +119,7 @@ optimizeExpr state expr = do
 foldVariable :: (Eq a, Monad f) => Expr a -> f (Expr a)
 foldVariable = transformM
   \case
-    Match (Atom a) [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
+    Match a [Bind x _ e] -> pure $ replaceOf atom (Var x) a e
     -- (= x a e) -> e[x := a] is a valid transformation in 'foldVariable'.
     -- But this transformation is not necessary, because 'Malgo.Core.Flat' and 'Malgo.Core.Lint' guarantee that '=' never binds an atom.
     -- Assign x (Atom a) e -> pure $ replaceOf atom (Var x) a e
@@ -133,7 +133,7 @@ inlineConstructor =
   transformM \case
     Let ds e -> do
       local (mconcat (map toPackInlineMap ds) <>) $ pure $ Let ds e
-    Match (Atom (Var v)) [Unpack con xs body] -> do
+    Match (Var v) [Unpack con xs body] -> do
       asks (Map.lookup v) >>= \case
         Just (con', as) | con == con' -> pure $ build xs as body
         _ -> pure $ Destruct (Var v) con xs body
