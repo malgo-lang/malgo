@@ -6,6 +6,8 @@ use std::{
 
 use crate::closure::*;
 
+use anyhow::{anyhow, Result};
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum ValueKind {
     Int32(i32),
@@ -50,9 +52,9 @@ impl Env {
     fn initialize(&mut self, name: &Name, value_kind: ValueKind) -> Result<()> {
         self.variables
             .get(name)
-            .ok_or(format!("Variable {} not found", name.id))?
+            .ok_or(anyhow!("Variable {} not found", name.id))?
             .set(value_kind)
-            .map_err(|e| format!("Already initialized: {:?}", e))
+            .map_err(|e| anyhow!("Already initialized: {:?}", e))
     }
 
     /// Allocate a new variable in the environment and initialize it with a value.
@@ -64,7 +66,7 @@ impl Env {
     fn get(&self, name: &Name) -> Result<Value> {
         self.variables
             .get(name)
-            .ok_or(format!("Variable {} not found", name.id))
+            .ok_or(anyhow!("Variable {} not found", name.id))
             .map(|cell| cell.to_owned())
     }
 
@@ -72,7 +74,7 @@ impl Env {
     fn get_function(&self, name: &Name) -> Result<(Vec<Name>, Rc<Expr>)> {
         self.functions
             .get(name)
-            .ok_or(format!("Function {} not found", name.id))
+            .ok_or(anyhow!("Function {} not found", name.id))
             .map(|function| function.to_owned())
     }
 }
@@ -91,14 +93,20 @@ pub struct Closure {
     pub body: Rc<Expr>,
 }
 
-pub type Result<T> = std::result::Result<T, String>;
-
 pub fn eval_program(program: Program) -> Result<Value> {
     let mut functions = BTreeMap::new();
     // Setup the function definitions
     for function in program.functions.into_iter() {
         let name = function.name;
         let parameters = function.parameters;
+        if parameters.iter().any(|x| x.id.name == "p$46") {
+            dbg!(
+                &name.id.name,
+                &parameters.iter().map(|x| &x.id.name).collect::<Vec<_>>()
+            );
+            dbg!(&function.body);
+        }
+
         let body = Rc::new(function.body);
         functions.insert(name, (parameters, body));
     }
@@ -124,7 +132,7 @@ pub fn eval_program(program: Program) -> Result<Value> {
             &name,
             ValueKind::Closure(Closure {
                 env: env.clone(),
-                parameters: function.0.clone(),
+                parameters: function.0.iter().skip(1).cloned().collect(), // Skip the first parameter, which is the environment
                 body: function.1.clone(),
             }),
         )?;
@@ -133,7 +141,7 @@ pub fn eval_program(program: Program) -> Result<Value> {
     for variable in program.variables.into_iter() {
         let value_kind = eval_expr(&env, &variable.value)?
             .get()
-            .ok_or("Uninitialized value")?
+            .ok_or(anyhow!("Uninitialized value"))?
             .clone();
         env.initialize(&variable.name, value_kind)?;
     }
@@ -144,20 +152,19 @@ pub fn eval_program(program: Program) -> Result<Value> {
             match value.get() {
                 Some(ValueKind::Closure(closure)) => {
                     let mut new_env = closure.env.clone();
-                    assert_eq!(closure.parameters.len(), 2);
-                    // Skip the first parameter, which is the environment
+                    assert_eq!(closure.parameters.len(), 1);
                     new_env.set(
-                        closure.parameters[1].clone(),
+                        closure.parameters[0].clone(),
                         wrap_value(ValueKind::Variant(Tag::Tuple, vec![])),
                     );
                     return eval_expr(&new_env, &closure.body);
                 }
-                _ => return Err("Not a closure".to_string()),
+                _ => return Err(anyhow!("Not a closure")),
             }
         }
     }
 
-    Err("Main function not found".to_string())
+    Err(anyhow!("Main function not found"))
 }
 
 fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
@@ -169,16 +176,15 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
                 .iter()
                 .map(|arg| eval_atom(env, arg))
                 .collect::<Result<Vec<_>>>()?;
-            match closure.get().ok_or("Uninitialized value")? {
+            match closure.get().ok_or(anyhow!("Uninitialized value"))? {
                 ValueKind::Closure(closure) => {
                     let mut new_env = closure.env.clone();
-                    // Skip the first parameter, which is the environment
-                    for (name, value) in closure.parameters.iter().skip(1).zip(arguments) {
+                    for (name, value) in closure.parameters.iter().zip(arguments) {
                         new_env.set(name.clone(), value);
                     }
                     eval_expr(&new_env, &closure.body)
                 }
-                _ => Err("Not a closure".to_string()),
+                _ => Err(anyhow!("Not a closure")),
             }
         }
         Expr::RawCall {
@@ -220,20 +226,20 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
             new_env.set(variable.clone(), value);
             eval_expr(&new_env, body)
         }
-        Expr::SelectEnv { body, .. } => eval_expr(env, body),
-        Expr::Error { typ } => Err(format!("Error: {:?}", typ)),
+        Expr::SelectEnv { body, .. } => eval_expr(env, body), // Evaluator can control and pass the environment directly, so SelectEnv is a no-op.
+        Expr::Error { typ } => Err(anyhow!("Error: {:?}", typ)),
     }
 }
 
 fn eval_clauses(env: &Env, scrutinee: Value, clauses: &Vec<Case>) -> Result<Value> {
     for clause in clauses {
-        let scrutinee = scrutinee.get().ok_or("Uninitialized value")?;
+        let scrutinee = scrutinee.get().ok_or(anyhow!("Uninitialized value"))?;
         let result = eval_clause(env, scrutinee, clause);
         if result.is_ok() {
             return result;
         }
     }
-    Err("No matching clause".to_string())
+    Err(anyhow!("No matching clause"))
 }
 
 fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value> {
@@ -247,7 +253,7 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value>
             match scrutinee {
                 ValueKind::Variant(actual_tag, values) => {
                     if actual_tag != expected_tag {
-                        return Err("Tag mismatch".to_string());
+                        return Err(anyhow!("Tag mismatch"));
                     }
                     let mut new_env = env.clone();
                     for (variable, value) in variables.iter().zip(values.iter()) {
@@ -255,18 +261,18 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value>
                     }
                     eval_expr(&new_env, body)
                 }
-                _ => Err("Not a variant".to_string()),
+                _ => Err(anyhow!("Not a variant")),
             }
         }
         Case::OpenRecord { fields, body } => {
             let actual_fields = match scrutinee {
                 ValueKind::Record(fields) => fields,
-                _ => return Err("Not a record".to_string()),
+                _ => return Err(anyhow!("Not a record")),
             };
             let expected_keys: BTreeSet<&String> = fields.keys().collect();
             let actual_keys: BTreeSet<&String> = actual_fields.keys().collect();
             if !expected_keys.is_subset(&actual_keys) {
-                return Err("Missing fields".to_string());
+                return Err(anyhow!("Missing fields"));
             }
             let mut new_env = env.clone();
             for (key, variable) in fields {
@@ -278,7 +284,7 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value>
         Case::Exact { literal, body } => {
             let expected_literal = eval_literal(literal);
             if scrutinee != &expected_literal {
-                return Err("Literal mismatch".to_string());
+                return Err(anyhow!("Literal mismatch"));
             }
             eval_expr(env, body)
         }
@@ -339,21 +345,21 @@ fn eval_obj(new_env: &Env, object: &Obj) -> Result<ValueKind> {
 fn eval_primitive(name: &str, _typ: &Type, arguments: Vec<Value>) -> Result<Value> {
     match name {
         "malgo_print_string" => {
-            let value = arguments.first().ok_or("No argument")?;
-            let value = value.get().ok_or("Uninitialized value")?;
+            let value = arguments.first().ok_or(anyhow!("No argument"))?;
+            let value = value.get().ok_or(anyhow!("Uninitialized value"))?;
             match value {
                 ValueKind::String(s) => {
                     println!("{}", s);
                     Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
                 }
-                _ => Err("Not a string".to_string()),
+                _ => Err(anyhow!("Not a string")),
             }
         }
         "malgo_newline" => {
             println!();
             Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
         }
-        _ => Err(format!("Unknown primitive {}", name)),
+        _ => Err(anyhow!("Unknown primitive {}", name)),
     }
 }
 

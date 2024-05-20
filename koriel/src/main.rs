@@ -146,14 +146,59 @@ mod tests {
                 let program: Result<super::syntax::Program, serde_json::Error> =
                     serde_json::from_str(&input);
 
-                if let Ok(program) = program {
-                    let closure = super::closure::closure_conversion(program);
+                if let Err(e) = program {
+                    panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
+                }
 
-                    if let Err(e) = closure {
+                let program = program.unwrap();
+
+                let closure = super::closure::closure_conversion(program);
+
+                if let Err(e) = closure {
+                    panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn eval_malgo_golden() {
+        let json_dir = "../.golden/desugar";
+
+        // check if json_dir exists
+        if !std::path::Path::new(json_dir).exists() {
+            panic!("{} does not exist", json_dir);
+        }
+
+        for entry in WalkDir::new(json_dir).into_iter().filter_map(|e| e.ok()) {
+            let f_name = entry.file_name().to_string_lossy();
+
+            if f_name == "golden.json" {
+                let input = std::fs::read_to_string(entry.path()).unwrap();
+                let program: Result<super::syntax::Program, serde_json::Error> =
+                    serde_json::from_str(&input);
+
+                if let Err(e) = program {
+                    panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
+                }
+
+                let program = program.unwrap();
+
+                let closure = super::closure::closure_conversion(program);
+
+                if let Err(e) = closure {
+                    panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
+                }
+
+                let closure = closure.unwrap();
+
+                let result = super::eval::eval_program(closure);
+
+                match result {
+                    Ok(_) => {}
+                    Err(e) => {
                         panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
                     }
-                } else if let Err(e) = program {
-                    panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
                 }
             }
         }
