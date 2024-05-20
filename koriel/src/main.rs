@@ -5,6 +5,7 @@ use crate::syntax::HasType;
 mod closure;
 mod name;
 mod syntax;
+mod eval;
 
 fn main() -> io::Result<()> {
     // Read the stdin until EOF is reached
