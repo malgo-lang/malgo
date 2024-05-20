@@ -26,14 +26,14 @@ pub type Value = Rc<OnceCell<ValueKind>>;
 #[derive(Debug, Clone, PartialEq)]
 pub struct Env {
     variables: BTreeMap<Name, Value>,
-    functions: BTreeMap<Name, (Vec<Name>, Rc<Expr>)>,
+    functions: Rc<BTreeMap<Name, (Vec<Name>, Rc<Expr>)>>,
 }
 
 impl Env {
-    fn new() -> Self {
+    fn new(functions: Rc<BTreeMap<Name, (Vec<Name>, Rc<Expr>)>>) -> Self {
         Self {
             variables: BTreeMap::new(),
-            functions: BTreeMap::new(),
+            functions,
         }
     }
 }
@@ -54,15 +54,16 @@ pub struct Closure {
 pub type Result<T> = std::result::Result<T, String>;
 
 pub fn eval_program(program: Program) -> Result<Value> {
-    let mut env: Env = Env::new();
-
+    let mut functions = BTreeMap::new();
     // Setup the function definitions
     for function in program.functions.into_iter() {
         let name = function.name;
         let parameters = function.parameters;
         let body = Rc::new(function.body);
-        env.functions.insert(name, (parameters, body));
+        functions.insert(name, (parameters, body));
     }
+
+    let mut env: Env = Env::new(Rc::new(functions));
 
     // Setup the global variables
     for variable in program.variables.iter() {
@@ -274,8 +275,9 @@ fn eval_obj(new_env: &Env, object: &Obj) -> Result<ValueKind> {
                 .functions
                 .get(function)
                 .ok_or("Function not found")?;
-            let mut env = Env::new();
-            env.functions = new_env.functions.clone();
+
+            let mut env = Env::new(new_env.functions.clone());
+
             // Keep only the variables that are used in the closure (in environment)
             for variable in environment {
                 let value = new_env
