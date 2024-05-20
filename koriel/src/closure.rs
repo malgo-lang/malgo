@@ -612,7 +612,7 @@ pub enum Tag {
     Tuple,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(tag = "tag")]
 pub enum Expr {
     Atom {
@@ -722,7 +722,7 @@ impl ClosureTerm for Expr {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(tag = "tag")]
 pub enum Atom {
     Var { variable: Name },
@@ -742,7 +742,7 @@ impl ClosureTerm for Atom {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(tag = "tag", content = "contents")]
 pub enum Unboxed {
     Int32(i32),
@@ -754,7 +754,7 @@ pub enum Unboxed {
     Bool(bool),
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct LocalDef {
     pub variable: Name,
     #[serde(rename = "type")]
@@ -770,7 +770,7 @@ impl ClosureTerm for LocalDef {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(tag = "tag")]
 pub enum Case {
     Unpack {
@@ -829,7 +829,7 @@ impl ClosureTerm for Case {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(tag = "tag")]
 pub enum Obj {
     /// A closure object.

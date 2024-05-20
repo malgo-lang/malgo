@@ -3,9 +3,9 @@ use std::io::{self, Read};
 use crate::syntax::HasType;
 
 mod closure;
+mod eval;
 mod name;
 mod syntax;
-mod eval;
 
 fn main() -> io::Result<()> {
     // Read the stdin until EOF is reached
@@ -19,27 +19,24 @@ fn main() -> io::Result<()> {
     for var_def in &program.variables {
         let declared = var_def.get_type();
         let actual = var_def.value.get_type();
-        dbg!(&var_def.name);
-        dbg!(&declared);
         assert_eq!(declared, actual);
     }
     for fun_def in &program.functions {
         let declared = fun_def.get_type();
-        dbg!(&fun_def.name);
-        dbg!(&declared);
         assert!(matches!(declared, syntax::Type::FuncT { .. }));
     }
 
     let closure = closure::closure_conversion(program);
 
-    match closure {
-        Ok(closure) => {
-            println!("{:#?}", closure);
-        }
-        Err(e) => {
-            eprintln!("{}", e);
-        }
+    if let Err(e) = &closure {
+        eprintln!("{}", e);
     }
+
+    // Evaluate the program
+    let result = eval::eval_program(closure.unwrap());
+
+    // Print the result
+    println!("{:?}", result);
 
     Ok(())
 }
@@ -55,7 +52,7 @@ mod tests {
     use walkdir::WalkDir;
 
     #[test]
-    fn parse_examples() {
+    fn eval_examples() {
         let examples = "./examples";
 
         // check if examples exists
@@ -88,7 +85,15 @@ mod tests {
                 let closure = super::closure::closure_conversion(program.unwrap());
 
                 match closure {
-                    Ok(_) => {}
+                    Ok(program) => {
+                        let result = super::eval::eval_program(program);
+                        match result {
+                            Ok(_) => {}
+                            Err(e) => {
+                                panic!("Error on {}: {}", json_path.to_string_lossy(), e);
+                            }
+                        }
+                    }
                     Err(e) => {
                         panic!("Error on {}: {}", json_path.to_string_lossy(), e);
                     }
