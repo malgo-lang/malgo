@@ -36,6 +36,29 @@ impl Env {
             functions,
         }
     }
+
+    fn alloc(&mut self, name: Name) {
+        self.variables.insert(name, Rc::new(OnceCell::new()));
+    }
+
+    fn initialize(&mut self, name: &Name, value_kind: ValueKind) -> Result<()> {
+        self.variables
+            .get(name)
+            .ok_or(format!("Variable {} not found", name.id))?
+            .set(value_kind)
+            .map_err(|e| format!("Already initialized: {:?}", e))
+    }
+
+    fn set(&mut self, name: Name, value: Value) {
+        self.variables.insert(name, value);
+    }
+
+    fn get(&self, name: &Name) -> Result<Value> {
+        self.variables
+            .get(name)
+            .ok_or(format!("Variable {} not found", name.id))
+            .map(|cell| cell.to_owned())
+    }
 }
 
 pub fn wrap_value(value: ValueKind) -> Value {
@@ -68,13 +91,13 @@ pub fn eval_program(program: Program) -> Result<Value> {
     // Setup the global variables
     for variable in program.variables.iter() {
         let name = variable.name.clone();
-        env.variables.insert(name, Rc::new(OnceCell::new()));
+        env.alloc(name);
     }
 
     // Setup the closures
     for closure in program.closures.iter() {
         let name = closure.name.clone();
-        env.variables.insert(name, Rc::new(OnceCell::new()));
+        env.alloc(name);
     }
 
     for closure in program.closures.into_iter() {
@@ -83,26 +106,21 @@ pub fn eval_program(program: Program) -> Result<Value> {
             .functions
             .get(&closure.function)
             .ok_or("Function not found")?;
-        env.variables
-            .get(&name)
-            .ok_or(format!("Variable {} not found", name.id))?
-            .set(ValueKind::Closure(Closure {
+        env.initialize(
+            &name,
+            ValueKind::Closure(Closure {
                 env: env.clone(),
                 parameters: function.0.clone(),
                 body: function.1.clone(),
-            }))
-            .map_err(|e| format!("Already initialized: {:?}", e))?;
+            }),
+        )?;
     }
 
     for variable in program.variables.into_iter() {
         let name = variable.name;
         let value = eval_expr(&env, &variable.value)?;
         let value_kind = value.get().ok_or("Uninitialized value")?.clone();
-        env.variables
-            .get(&name)
-            .ok_or(format!("Variable {} not found", name.id))?
-            .set(value_kind)
-            .map_err(|e| format!("Already initialized: {:?}", e))?;
+        env.initialize(&name, value_kind)?;
     }
 
     // Search and evaluate the main function
@@ -113,7 +131,7 @@ pub fn eval_program(program: Program) -> Result<Value> {
                     let mut new_env = closure.env.clone();
                     assert_eq!(closure.parameters.len(), 2);
                     // Skip the first parameter, which is the environment
-                    new_env.variables.insert(
+                    new_env.set(
                         closure.parameters[1].clone(),
                         wrap_value(ValueKind::Variant(Tag::Tuple, vec![])),
                     );
@@ -141,7 +159,7 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
                     let mut new_env = closure.env.clone();
                     // Skip the first parameter, which is the environment
                     for (name, value) in closure.parameters.iter().skip(1).zip(arguments) {
-                        new_env.variables.insert(name.clone(), value);
+                        new_env.set(name.clone(), value);
                     }
                     eval_expr(&new_env, &closure.body)
                 }
@@ -164,18 +182,12 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
             let mut new_env: Env = env.clone();
             for binding in bindings {
                 let name = binding.variable.clone();
-                let cell: Value = Rc::new(OnceCell::new());
-                new_env.variables.insert(name, cell);
+                new_env.alloc(name);
             }
             for binding in bindings {
                 let name = &binding.variable;
-                let value = eval_obj(&new_env, &binding.object)?;
-                let cell = new_env
-                    .variables
-                    .get(name)
-                    .ok_or(format!("Variable {} not found", name.id))?;
-                cell.set(value)
-                    .map_err(|e| format!("Already initialized: {:?}", e))?;
+                let value_kind = eval_obj(&new_env, &binding.object)?;
+                new_env.initialize(name, value_kind)?;
             }
             eval_expr(&new_env, body)
         }
@@ -190,7 +202,7 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
         } => {
             let value = eval_expr(env, expression)?;
             let mut new_env = env.clone();
-            new_env.variables.insert(variable.clone(), value);
+            new_env.set(variable.clone(), value);
             eval_expr(&new_env, body)
         }
         Expr::SelectEnv { body, .. } => eval_expr(env, body),
@@ -224,7 +236,7 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value>
                     }
                     let mut new_env = env.clone();
                     for (variable, value) in variables.iter().zip(values.iter()) {
-                        new_env.variables.insert(variable.clone(), value.to_owned());
+                        new_env.set(variable.clone(), value.to_owned());
                     }
                     eval_expr(&new_env, body)
                 }
@@ -244,7 +256,7 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value>
             let mut new_env = env.clone();
             for (key, variable) in fields {
                 let value = actual_fields.get(key).unwrap();
-                new_env.variables.insert(variable.clone(), value.to_owned());
+                new_env.set(variable.clone(), value.to_owned());
             }
             eval_expr(&new_env, body)
         }
@@ -257,9 +269,7 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value>
         }
         Case::Bind { variable, body, .. } => {
             let mut new_env = env.clone();
-            new_env
-                .variables
-                .insert(variable.clone(), wrap_value(scrutinee.clone()));
+            new_env.set(variable.clone(), wrap_value(scrutinee.clone()));
             eval_expr(&new_env, body)
         }
     }
@@ -280,11 +290,8 @@ fn eval_obj(new_env: &Env, object: &Obj) -> Result<ValueKind> {
 
             // Keep only the variables that are used in the closure (in environment)
             for variable in environment {
-                let value = new_env
-                    .variables
-                    .get(variable)
-                    .ok_or(format!("Variable {} not found", variable.id))?;
-                env.variables.insert(variable.clone(), value.to_owned());
+                let value = new_env.get(variable)?;
+                env.set(variable.clone(), value);
             }
             Ok(ValueKind::Closure(Closure {
                 env,
@@ -339,11 +346,7 @@ fn eval_primitive(name: &str, _typ: &Type, arguments: Vec<Value>) -> Result<Valu
 
 fn eval_atom(env: &Env, atom: &Atom) -> Result<Value> {
     match atom {
-        Atom::Var { variable } => env
-            .variables
-            .get(variable)
-            .ok_or_else(|| format!("Variable {} not found", variable.id))
-            .map(|cell| cell.to_owned()),
+        Atom::Var { variable } => env.get(variable),
         Atom::Unboxed { literal } => {
             let value_kind = eval_literal(literal);
             Ok(wrap_value(value_kind))
