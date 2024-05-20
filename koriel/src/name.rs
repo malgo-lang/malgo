@@ -16,13 +16,13 @@ pub enum Sort {
     Native,
 }
 
-impl ToString for Sort {
-    fn to_string(&self) -> String {
+impl Display for Sort {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Sort::External => "External".to_string(),
-            Sort::Internal => "Internal".to_string(),
-            Sort::Temporal => "Temporal".to_string(),
-            Sort::Native => "Native".to_string(),
+            Sort::External => write!(f, "External"),
+            Sort::Internal => write!(f, "Internal"),
+            Sort::Temporal => write!(f, "Temporal"),
+            Sort::Native => write!(f, "Native"),
         }
     }
 }

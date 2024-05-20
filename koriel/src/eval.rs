@@ -22,25 +22,31 @@ pub enum ValueKind {
 
 pub type Value = Rc<OnceCell<ValueKind>>;
 
+pub type FunctionMap = BTreeMap<Name, (Vec<Name>, Rc<Expr>)>;
+
 // To support recursive closures, we need to use OnceCell<Value> instead of Value.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Env {
     variables: BTreeMap<Name, Value>,
-    functions: Rc<BTreeMap<Name, (Vec<Name>, Rc<Expr>)>>,
+    functions: Rc<FunctionMap>,
 }
 
 impl Env {
-    fn new(functions: Rc<BTreeMap<Name, (Vec<Name>, Rc<Expr>)>>) -> Self {
+    fn new(functions: Rc<FunctionMap>) -> Self {
         Self {
             variables: BTreeMap::new(),
             functions,
         }
     }
 
+    /// Allocate a new variable in the environment.
+    /// The variable is uninitialized.
     fn alloc(&mut self, name: Name) {
         self.variables.insert(name, Rc::new(OnceCell::new()));
     }
 
+    /// Initialize a variable with a value.
+    /// The variable must be uninitialized.
     fn initialize(&mut self, name: &Name, value_kind: ValueKind) -> Result<()> {
         self.variables
             .get(name)
@@ -49,18 +55,29 @@ impl Env {
             .map_err(|e| format!("Already initialized: {:?}", e))
     }
 
+    /// Allocate a new variable in the environment and initialize it with a value.
     fn set(&mut self, name: Name, value: Value) {
         self.variables.insert(name, value);
     }
 
+    /// Get the value of a variable.
     fn get(&self, name: &Name) -> Result<Value> {
         self.variables
             .get(name)
             .ok_or(format!("Variable {} not found", name.id))
             .map(|cell| cell.to_owned())
     }
+
+    /// Get the function.
+    fn get_function(&self, name: &Name) -> Result<(Vec<Name>, Rc<Expr>)> {
+        self.functions
+            .get(name)
+            .ok_or(format!("Function {} not found", name.id))
+            .map(|function| function.to_owned())
+    }
 }
 
+/// Create a new value from a value kind.
 pub fn wrap_value(value: ValueKind) -> Value {
     let cell = OnceCell::new();
     cell.set(value).unwrap();
@@ -102,10 +119,7 @@ pub fn eval_program(program: Program) -> Result<Value> {
 
     for closure in program.closures.into_iter() {
         let name = closure.name;
-        let function = env
-            .functions
-            .get(&closure.function)
-            .ok_or("Function not found")?;
+        let function = env.get_function(&closure.function)?;
         env.initialize(
             &name,
             ValueKind::Closure(Closure {
@@ -117,10 +131,11 @@ pub fn eval_program(program: Program) -> Result<Value> {
     }
 
     for variable in program.variables.into_iter() {
-        let name = variable.name;
-        let value = eval_expr(&env, &variable.value)?;
-        let value_kind = value.get().ok_or("Uninitialized value")?.clone();
-        env.initialize(&name, value_kind)?;
+        let value_kind = eval_expr(&env, &variable.value)?
+            .get()
+            .ok_or("Uninitialized value")?
+            .clone();
+        env.initialize(&variable.name, value_kind)?;
     }
 
     // Search and evaluate the main function
@@ -281,10 +296,7 @@ fn eval_obj(new_env: &Env, object: &Obj) -> Result<ValueKind> {
             function,
             environment,
         } => {
-            let function = new_env
-                .functions
-                .get(function)
-                .ok_or("Function not found")?;
+            let function = new_env.get_function(function)?;
 
             let mut env = Env::new(new_env.functions.clone());
 
@@ -293,6 +305,7 @@ fn eval_obj(new_env: &Env, object: &Obj) -> Result<ValueKind> {
                 let value = new_env.get(variable)?;
                 env.set(variable.clone(), value);
             }
+
             Ok(ValueKind::Closure(Closure {
                 env,
                 parameters: function.0.clone(),
@@ -326,7 +339,7 @@ fn eval_obj(new_env: &Env, object: &Obj) -> Result<ValueKind> {
 fn eval_primitive(name: &str, _typ: &Type, arguments: Vec<Value>) -> Result<Value> {
     match name {
         "malgo_print_string" => {
-            let value = arguments.get(0).ok_or("No argument")?;
+            let value = arguments.first().ok_or("No argument")?;
             let value = value.get().ok_or("Uninitialized value")?;
             match value {
                 ValueKind::String(s) => {

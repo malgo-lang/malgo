@@ -177,7 +177,7 @@ impl HasType for Expr {
             Expr::Cast { typ, .. } => typ.clone(),
             Expr::Let { body, .. } => body.get_type(),
             Expr::Match { clauses, .. } => {
-                assert!(clauses.len() > 0);
+                assert!(!clauses.is_empty());
                 clauses[0].get_type()
             }
             Expr::Assign { body, .. } => body.get_type(),
