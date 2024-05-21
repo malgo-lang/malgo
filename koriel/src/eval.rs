@@ -226,15 +226,15 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
 fn eval_clauses(env: &Env, scrutinee: Value, clauses: &Vec<Case>) -> Result<Value> {
     for clause in clauses {
         let scrutinee = scrutinee.get().ok_or(anyhow!("Uninitialized value"))?;
-        let result = eval_clause(env, scrutinee, clause);
-        if result.is_ok() {
+        let (is_matched, result) = eval_clause(env, scrutinee, clause);
+        if is_matched {
             return result;
         }
     }
     Err(anyhow!("No matching clause"))
 }
 
-fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value> {
+fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> (bool, Result<Value>) {
     match clause {
         Case::Unpack {
             constructor,
@@ -245,45 +245,45 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> Result<Value>
             match scrutinee {
                 ValueKind::Variant(actual_tag, values) => {
                     if actual_tag != expected_tag {
-                        return Err(anyhow!("Tag mismatch"));
+                        return (false, Err(anyhow!("Tag mismatch")));
                     }
                     let mut new_env = env.clone();
                     for (variable, value) in variables.iter().zip(values.iter()) {
                         new_env.set(variable.clone(), value.to_owned());
                     }
-                    eval_expr(&new_env, body)
+                    (true, eval_expr(&new_env, body))
                 }
-                _ => Err(anyhow!("Not a variant")),
+                _ => (false, Err(anyhow!("Not a variant"))),
             }
         }
         Case::OpenRecord { fields, body } => {
             let actual_fields = match scrutinee {
                 ValueKind::Record(fields) => fields,
-                _ => return Err(anyhow!("Not a record")),
+                _ => return (false, Err(anyhow!("Not a record"))),
             };
             let expected_keys: BTreeSet<&String> = fields.keys().collect();
             let actual_keys: BTreeSet<&String> = actual_fields.keys().collect();
             if !expected_keys.is_subset(&actual_keys) {
-                return Err(anyhow!("Missing fields"));
+                return (false, Err(anyhow!("Missing fields")));
             }
             let mut new_env = env.clone();
             for (key, variable) in fields {
                 let value = actual_fields.get(key).unwrap();
                 new_env.set(variable.clone(), value.to_owned());
             }
-            eval_expr(&new_env, body)
+            (true, eval_expr(&new_env, body))
         }
         Case::Exact { literal, body } => {
             let expected_literal = eval_literal(literal);
             if scrutinee != &expected_literal {
-                return Err(anyhow!("Literal mismatch"));
+                return (false, Err(anyhow!("Literal mismatch")));
             }
-            eval_expr(env, body)
+            (true, eval_expr(env, body))
         }
         Case::Bind { variable, body, .. } => {
             let mut new_env = env.clone();
             new_env.set(variable.clone(), wrap_value(scrutinee.clone()));
-            eval_expr(&new_env, body)
+            (true, eval_expr(&new_env, body))
         }
     }
 }
@@ -334,27 +334,6 @@ fn eval_obj(new_env: &Env, object: &Obj) -> Result<ValueKind> {
     }
 }
 
-fn eval_primitive(name: &str, _typ: &Type, arguments: Vec<Value>) -> Result<Value> {
-    match name {
-        "malgo_print_string" => {
-            let value = arguments.first().ok_or(anyhow!("No argument"))?;
-            let value = value.get().ok_or(anyhow!("Uninitialized value"))?;
-            match value {
-                ValueKind::String(s) => {
-                    println!("{}", s);
-                    Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
-                }
-                _ => Err(anyhow!("Not a string")),
-            }
-        }
-        "malgo_newline" => {
-            println!();
-            Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
-        }
-        _ => Err(anyhow!("Unknown primitive {}", name)),
-    }
-}
-
 fn eval_atom(env: &Env, atom: &Atom) -> Result<Value> {
     match atom {
         Atom::Var { variable } => env.get(variable),
@@ -374,5 +353,26 @@ fn eval_literal(literal: &Unboxed) -> ValueKind {
         Unboxed::Char(x) => ValueKind::Char(*x),
         Unboxed::String(x) => ValueKind::String(x.clone()),
         Unboxed::Bool(x) => ValueKind::Bool(*x),
+    }
+}
+
+fn eval_primitive(name: &str, _typ: &Type, arguments: Vec<Value>) -> Result<Value> {
+    match name {
+        "malgo_print_string" => {
+            let value = arguments.first().ok_or(anyhow!("No argument"))?;
+            let value = value.get().ok_or(anyhow!("Uninitialized value"))?;
+            match value {
+                ValueKind::String(s) => {
+                    println!("{}", s);
+                    Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
+                }
+                _ => Err(anyhow!("Not a string")),
+            }
+        }
+        "malgo_newline" => {
+            println!();
+            Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
+        }
+        _ => Err(anyhow!("Unknown primitive {}", name)),
     }
 }
