@@ -5,12 +5,16 @@ import Data.ByteString qualified as BS
 import Data.ByteString.Lazy qualified as BL
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
+import Malgo.Interface (buildInterface)
+import Malgo.Link qualified as Link
+import Malgo.Module (Resource (..), ViaStore (..), parseArtifactPath, pwdPath)
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Syntax
 import Malgo.TestUtils
 import System.Directory
 import System.FilePath
@@ -31,8 +35,18 @@ driveDesugar srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, rnState) <- rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
-    (_, core) <- desugar tcEnv refined
+    (dsEnv, core) <- desugar tcEnv refined
+
+    pwd <- pwdPath
+    srcPath <- parseArtifactPath pwd srcPath
+    save srcPath ".mo" (ViaStore core)
+
+    let inf = buildInterface refined.moduleName rnState tcEnv dsEnv
+    save srcPath ".mlgi" (ViaStore inf)
+
+    core <- Link.link inf core
+
     pure $ Aeson.encodePretty core

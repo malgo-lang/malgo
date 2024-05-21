@@ -88,21 +88,21 @@ compileFromAST srcPath parsedAst = do
 
       (dsEnv, core) <- desugar tcEnv refinedAst
 
+      _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
+      save srcPath ".mo" (ViaStore core)
+
+      let inf = buildInterface moduleName rnState tcEnv dsEnv
+      save srcPath ".mlgi" (ViaStore inf)
+
+      core <- Link.link inf core
+      when flags.debugMode do
+        liftIO $ T.writeFile (toFilePath dstPath -<.> "kor") $ render $ pretty core
+
       save srcPath ".json" (ViaJSON core)
 
       unless flags.exitAfterDesugar do
         core <- do
           core <- runReader moduleName $ Flat.normalize core
-          _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
-          save srcPath ".mo" (ViaStore core)
-
-          let inf = buildInterface moduleName rnState tcEnv dsEnv
-          save srcPath ".mlgi" (ViaStore inf)
-
-          core <- Link.link inf core
-          when flags.debugMode do
-            liftIO $ T.writeFile (toFilePath dstPath -<.> "kor") $ render $ pretty core
-
           lint True core
           pure core
 
