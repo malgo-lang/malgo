@@ -99,14 +99,6 @@ pub fn eval_program(program: Program) -> Result<Value> {
     for function in program.functions.into_iter() {
         let name = function.name;
         let parameters = function.parameters;
-        if parameters.iter().any(|x| x.id.name == "p$46") {
-            dbg!(
-                &name.id.name,
-                &parameters.iter().map(|x| &x.id.name).collect::<Vec<_>>()
-            );
-            dbg!(&function.body);
-        }
-
         let body = Rc::new(function.body);
         functions.insert(name, (parameters, body));
     }
@@ -314,7 +306,7 @@ fn eval_obj(new_env: &Env, object: &Obj) -> Result<ValueKind> {
 
             Ok(ValueKind::Closure(Closure {
                 env,
-                parameters: function.0.clone(),
+                parameters: function.0.iter().skip(1).cloned().collect(),
                 body: function.1.clone(),
             }))
         }
