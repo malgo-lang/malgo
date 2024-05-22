@@ -33,6 +33,7 @@ fn main() -> io::Result<()> {
     }
 
     let mut ctx = eval::Context::new(io::stdin(), io::stdout(), io::stderr());
+    eval::register_regular_primitives(&mut ctx);
 
     // Evaluate the program
     let result = eval::eval_program(&mut ctx, closure.unwrap());
@@ -96,11 +97,14 @@ mod tests {
                 let mut input = "".as_bytes();
                 let mut output: Vec<u8> = Vec::new();
                 let mut error: Vec<u8> = Vec::new();
-                let mut ctx = super::eval::Context::new(&mut input, &mut output, &mut error);
+                {
+                    let mut ctx = super::eval::Context::new(&mut input, &mut output, &mut error);
+                    super::eval::register_regular_primitives(&mut ctx);
 
-                let _ = super::eval::eval_program(&mut ctx, closure).unwrap_or_else(|e| {
-                    panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
-                });
+                    let _ = super::eval::eval_program(&mut ctx, closure).unwrap_or_else(|e| {
+                        panic!("Error on {}: {}", entry.path().to_string_lossy(), e);
+                    });
+                }
 
                 let content = String::from_utf8(output).unwrap();
 

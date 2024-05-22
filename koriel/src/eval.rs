@@ -95,6 +95,8 @@ pub struct Closure {
     pub body: Rc<Expr>,
 }
 
+type Primitive<I, O, E> = Rc<dyn Fn(&mut Context<I, O, E>, Vec<Value>) -> Result<Value>>;
+
 pub struct Context<I, O, E>
 where
     I: Read,
@@ -106,6 +108,7 @@ where
     stdout: O,
     #[allow(dead_code)]
     stderr: E,
+    primitives: BTreeMap<String, Primitive<I, O, E>>,
 }
 
 impl<I, O, E> Context<I, O, E>
@@ -119,7 +122,15 @@ where
             stdin,
             stdout,
             stderr,
+            primitives: BTreeMap::new(),
         }
+    }
+
+    pub fn register_primitive<F>(&mut self, name: &str, f: F)
+    where
+        F: Fn(&mut Context<I, O, E>, Vec<Value>) -> Result<Value> + 'static,
+    {
+        self.primitives.insert(name.to_string(), Rc::new(f));
     }
 }
 
@@ -427,22 +438,52 @@ where
     O: Write,
     E: Write,
 {
-    match name {
-        "malgo_print_string" => {
-            let value = arguments.first().ok_or(anyhow!("No argument"))?;
-            let value = value.get().ok_or(anyhow!("Uninitialized value"))?;
-            match value {
-                ValueKind::String(s) => {
-                    ctx.stdout.write_all(s.as_bytes()).unwrap();
-                    Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
-                }
-                _ => Err(anyhow!("Not a string")),
+    let f = ctx
+        .primitives
+        .get(name)
+        .ok_or(anyhow!("Unknown primitive {}", name))?
+        .clone();
+    f(ctx, arguments)
+    // match name {
+    //     "malgo_print_string" => {
+    //         let value = arguments.first().ok_or(anyhow!("No argument"))?;
+    //         let value = value.get().ok_or(anyhow!("Uninitialized value"))?;
+    //         match value {
+    //             ValueKind::String(s) => {
+    //                 ctx.stdout.write_all(s.as_bytes()).unwrap();
+    //                 Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
+    //             }
+    //             _ => Err(anyhow!("Not a string")),
+    //         }
+    //     }
+    //     "malgo_newline" => {
+    //         ctx.stdout.write_all(b"\n").unwrap();
+    //         Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
+    //     }
+    //     _ => Err(anyhow!("Unknown primitive {}", name)),
+    // }
+}
+
+pub fn register_regular_primitives<I, O, E>(ctx: &mut Context<I, O, E>)
+where
+    I: Read,
+    O: Write,
+    E: Write,
+{
+    ctx.register_primitive("malgo_print_string", |ctx, arguments| {
+        let value = arguments.first().ok_or(anyhow!("No argument"))?;
+        let value = value.get().ok_or(anyhow!("Uninitialized value"))?;
+        match value {
+            ValueKind::String(s) => {
+                ctx.stdout.write_all(s.as_bytes()).unwrap();
+                Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
             }
+            _ => Err(anyhow!("Not a string")),
         }
-        "malgo_newline" => {
-            ctx.stdout.write_all(b"\n").unwrap();
-            Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
-        }
-        _ => Err(anyhow!("Unknown primitive {}", name)),
-    }
+    });
+
+    ctx.register_primitive("malgo_newline", |ctx, _| {
+        ctx.stdout.write_all(b"\n").unwrap();
+        Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
+    });
 }
