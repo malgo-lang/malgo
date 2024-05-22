@@ -1,6 +1,8 @@
 use std::{
     cell::OnceCell,
     collections::{BTreeMap, BTreeSet},
+    io::Read,
+    io::Write,
     rc::Rc,
 };
 
@@ -93,7 +95,40 @@ pub struct Closure {
     pub body: Rc<Expr>,
 }
 
-pub fn eval_program(program: Program) -> Result<Value> {
+pub struct Context<I, O, E>
+where
+    I: Read,
+    O: Write,
+    E: Write,
+{
+    #[allow(dead_code)]
+    stdin: I,
+    stdout: O,
+    #[allow(dead_code)]
+    stderr: E,
+}
+
+impl<I, O, E> Context<I, O, E>
+where
+    I: Read,
+    O: Write,
+    E: Write,
+{
+    pub fn new(stdin: I, stdout: O, stderr: E) -> Self {
+        Self {
+            stdin,
+            stdout,
+            stderr,
+        }
+    }
+}
+
+pub fn eval_program<I, O, E>(ctx: &mut Context<I, O, E>, program: Program) -> Result<Value>
+where
+    I: Read,
+    O: Write,
+    E: Write,
+{
     let mut functions = BTreeMap::new();
     // Setup the function definitions
     for function in program.functions.into_iter() {
@@ -131,7 +166,7 @@ pub fn eval_program(program: Program) -> Result<Value> {
     }
 
     for variable in program.variables.into_iter() {
-        let value_kind = eval_expr(&env, &variable.value)?
+        let value_kind = eval_expr(ctx, &env, &variable.value)?
             .get()
             .ok_or(anyhow!("Uninitialized value"))?
             .clone();
@@ -149,7 +184,7 @@ pub fn eval_program(program: Program) -> Result<Value> {
                         closure.parameters[0].clone(),
                         wrap_value(ValueKind::Variant(Tag::Tuple, vec![])),
                     );
-                    return eval_expr(&new_env, &closure.body);
+                    return eval_expr(ctx, &new_env, &closure.body);
                 }
                 _ => return Err(anyhow!("Not a closure")),
             }
@@ -159,7 +194,12 @@ pub fn eval_program(program: Program) -> Result<Value> {
     Err(anyhow!("Main function not found"))
 }
 
-fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
+fn eval_expr<I, O, E>(ctx: &mut Context<I, O, E>, env: &Env, expr: &Expr) -> Result<Value>
+where
+    I: Read,
+    O: Write,
+    E: Write,
+{
     match expr {
         Expr::Atom { atom } => eval_atom(env, atom),
         Expr::CallClosure { callee, arguments } => {
@@ -174,7 +214,7 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
                     for (name, value) in closure.parameters.iter().zip(arguments) {
                         new_env.set(name.clone(), value);
                     }
-                    eval_expr(&new_env, &closure.body)
+                    eval_expr(ctx, &new_env, &closure.body)
                 }
                 _ => Err(anyhow!("Not a closure")),
             }
@@ -188,7 +228,7 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
                 .iter()
                 .map(|arg| eval_atom(env, arg))
                 .collect::<Result<Vec<_>>>()?;
-            eval_primitive(name, typ, arguments)
+            eval_primitive(ctx, name, typ, arguments)
         }
         Expr::Cast { value, .. } => eval_atom(env, value),
         Expr::Let { bindings, body } => {
@@ -202,31 +242,41 @@ fn eval_expr(env: &Env, expr: &Expr) -> Result<Value> {
                 let value_kind = eval_obj(&new_env, &binding.object)?;
                 new_env.initialize(name, value_kind)?;
             }
-            eval_expr(&new_env, body)
+            eval_expr(ctx, &new_env, body)
         }
         Expr::Match { scrutinee, clauses } => {
             let scrutinee = eval_atom(env, scrutinee)?;
-            eval_clauses(env, scrutinee, clauses)
+            eval_clauses(ctx, env, scrutinee, clauses)
         }
         Expr::Assign {
             variable,
             expression,
             body,
         } => {
-            let value = eval_expr(env, expression)?;
+            let value = eval_expr(ctx, env, expression)?;
             let mut new_env = env.clone();
             new_env.set(variable.clone(), value);
-            eval_expr(&new_env, body)
+            eval_expr(ctx, &new_env, body)
         }
-        Expr::SelectEnv { body, .. } => eval_expr(env, body), // Evaluator can control and pass the environment directly, so SelectEnv is a no-op.
+        Expr::SelectEnv { body, .. } => eval_expr(ctx, env, body), // Evaluator can control and pass the environment directly, so SelectEnv is a no-op.
         Expr::Error { typ } => Err(anyhow!("Error: {:?}", typ)),
     }
 }
 
-fn eval_clauses(env: &Env, scrutinee: Value, clauses: &Vec<Case>) -> Result<Value> {
+fn eval_clauses<I, O, E>(
+    ctx: &mut Context<I, O, E>,
+    env: &Env,
+    scrutinee: Value,
+    clauses: &Vec<Case>,
+) -> Result<Value>
+where
+    I: Read,
+    O: Write,
+    E: Write,
+{
     for clause in clauses {
         let scrutinee = scrutinee.get().ok_or(anyhow!("Uninitialized value"))?;
-        let (is_matched, result) = eval_clause(env, scrutinee, clause);
+        let (is_matched, result) = eval_clause(ctx, env, scrutinee, clause);
         if is_matched {
             return result;
         }
@@ -234,7 +284,17 @@ fn eval_clauses(env: &Env, scrutinee: Value, clauses: &Vec<Case>) -> Result<Valu
     Err(anyhow!("No matching clause"))
 }
 
-fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> (bool, Result<Value>) {
+fn eval_clause<I, O, E>(
+    ctx: &mut Context<I, O, E>,
+    env: &Env,
+    scrutinee: &ValueKind,
+    clause: &Case,
+) -> (bool, Result<Value>)
+where
+    I: Read,
+    O: Write,
+    E: Write,
+{
     match clause {
         Case::Unpack {
             constructor,
@@ -251,7 +311,7 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> (bool, Result
                     for (variable, value) in variables.iter().zip(values.iter()) {
                         new_env.set(variable.clone(), value.to_owned());
                     }
-                    (true, eval_expr(&new_env, body))
+                    (true, eval_expr(ctx, &new_env, body))
                 }
                 _ => (false, Err(anyhow!("Not a variant"))),
             }
@@ -271,19 +331,19 @@ fn eval_clause(env: &Env, scrutinee: &ValueKind, clause: &Case) -> (bool, Result
                 let value = actual_fields.get(key).unwrap();
                 new_env.set(variable.clone(), value.to_owned());
             }
-            (true, eval_expr(&new_env, body))
+            (true, eval_expr(ctx, &new_env, body))
         }
         Case::Exact { literal, body } => {
             let expected_literal = eval_literal(literal);
             if scrutinee != &expected_literal {
                 return (false, Err(anyhow!("Literal mismatch")));
             }
-            (true, eval_expr(env, body))
+            (true, eval_expr(ctx, env, body))
         }
         Case::Bind { variable, body, .. } => {
             let mut new_env = env.clone();
             new_env.set(variable.clone(), wrap_value(scrutinee.clone()));
-            (true, eval_expr(&new_env, body))
+            (true, eval_expr(ctx, &new_env, body))
         }
     }
 }
@@ -356,21 +416,31 @@ fn eval_literal(literal: &Unboxed) -> ValueKind {
     }
 }
 
-fn eval_primitive(name: &str, _typ: &Type, arguments: Vec<Value>) -> Result<Value> {
+fn eval_primitive<I, O, E>(
+    ctx: &mut Context<I, O, E>,
+    name: &str,
+    _typ: &Type,
+    arguments: Vec<Value>,
+) -> Result<Value>
+where
+    I: Read,
+    O: Write,
+    E: Write,
+{
     match name {
         "malgo_print_string" => {
             let value = arguments.first().ok_or(anyhow!("No argument"))?;
             let value = value.get().ok_or(anyhow!("Uninitialized value"))?;
             match value {
                 ValueKind::String(s) => {
-                    println!("{}", s);
+                    ctx.stdout.write_all(s.as_bytes()).unwrap();
                     Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
                 }
                 _ => Err(anyhow!("Not a string")),
             }
         }
         "malgo_newline" => {
-            println!();
+            ctx.stdout.write_all(b"\n").unwrap();
             Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
         }
         _ => Err(anyhow!("Unknown primitive {}", name)),
