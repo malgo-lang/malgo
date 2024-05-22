@@ -444,24 +444,6 @@ where
         .ok_or(anyhow!("Unknown primitive {}", name))?
         .clone();
     f(ctx, arguments)
-    // match name {
-    //     "malgo_print_string" => {
-    //         let value = arguments.first().ok_or(anyhow!("No argument"))?;
-    //         let value = value.get().ok_or(anyhow!("Uninitialized value"))?;
-    //         match value {
-    //             ValueKind::String(s) => {
-    //                 ctx.stdout.write_all(s.as_bytes()).unwrap();
-    //                 Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
-    //             }
-    //             _ => Err(anyhow!("Not a string")),
-    //         }
-    //     }
-    //     "malgo_newline" => {
-    //         ctx.stdout.write_all(b"\n").unwrap();
-    //         Ok(wrap_value(ValueKind::Variant(Tag::Tuple, vec![])))
-    //     }
-    //     _ => Err(anyhow!("Unknown primitive {}", name)),
-    // }
 }
 
 pub fn register_regular_primitives<I, O, E>(ctx: &mut Context<I, O, E>)
