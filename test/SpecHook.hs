@@ -7,7 +7,7 @@ import System.FilePath ((</>))
 import Test.Hspec
 
 hook :: SpecWith () -> SpecWith ()
-hook = parallel . beforeAll setup
+hook = beforeAll setup
   where
     setup = do
       pwd <- getCurrentDirectory
