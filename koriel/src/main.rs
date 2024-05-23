@@ -1,47 +1,61 @@
-use std::io::{self, Read};
-
-use crate::syntax::HasType;
+use clap::{Parser, Subcommand};
+use std::{
+    io::{self, Write},
+    path::PathBuf,
+    process::Command,
+};
 
 mod closure;
 mod eval;
 mod name;
 mod syntax;
 
-fn main() -> io::Result<()> {
-    // Read the stdin until EOF is reached
-    let mut input = String::new();
-    std::io::stdin().read_to_string(&mut input).unwrap();
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Cli {
+    name: Option<String>,
+    #[command(subcommand)]
+    command: Commands,
+}
 
-    // Parse the input as JSON using serde_json
-    let program: syntax::Program = serde_json::from_str(&input)?;
+#[derive(Subcommand)]
+enum Commands {
+    Eval { file: String },
+}
 
-    // Check if the program is well-typed
-    for var_def in &program.variables {
-        let declared = var_def.get_type();
-        let actual = var_def.value.get_type();
-        assert_eq!(declared, actual);
-    }
-    for fun_def in &program.functions {
-        let declared = fun_def.get_type();
-        assert!(matches!(declared, syntax::Type::FuncT { .. }));
-    }
+fn eval_file(file: &str) -> io::Result<()> {
+    let output = Command::new("malgo")
+        .arg("to-ll")
+        .arg("--only-desugar")
+        .arg(file)
+        .output()
+        .expect("failed to execute process");
 
-    let closure = closure::closure_conversion(program);
+    io::stdout().write_all(&output.stdout).unwrap();
+    io::stderr().write_all(&output.stderr).unwrap();
+    assert!(output.status.success());
 
-    if let Err(e) = &closure {
-        eprintln!("{}", e);
-    }
+    let mut json_path = PathBuf::from(".malgo-work");
+    json_path.push(file);
+    json_path.set_extension("json");
 
+    let source = std::fs::read_to_string(&json_path).unwrap();
+    let program = serde_json::from_str(&source)?;
+    let closure = closure::closure_conversion(program)
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
     let mut ctx = eval::Context::new(io::stdin(), io::stdout(), io::stderr());
     eval::register_regular_primitives(&mut ctx);
-
-    // Evaluate the program
-    let result = eval::eval_program(&mut ctx, closure.unwrap());
-
-    // Print the result
-    println!("{:?}", result);
+    eval::eval_program(&mut ctx, closure).map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
 
     Ok(())
+}
+
+fn main() -> io::Result<()> {
+    let cli = Cli::parse();
+
+    match &cli.command {
+        Commands::Eval { file } => eval_file(file),
+    }
 }
 
 #[cfg(test)]
