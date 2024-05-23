@@ -17,12 +17,14 @@ module Malgo.Module
     getTargetPath,
     parseArtifactPath,
     Resource (..),
+    exists,
     ViaStore (..),
     ViaJSON (..),
     moduleNameToString,
   )
 where
 
+import Control.Exception (IOException)
 import Control.Lens (at, (?~), (^.))
 import Control.Monad.Catch
 import Data.Aeson hiding (encode)
@@ -213,9 +215,15 @@ parseArtifactPath from path = do
 
   pure $ ArtifactPath {rawPath = path, relPath}
 
+exists :: (IOE :> es, Workspace :> es) => ArtifactPath -> String -> Eff es Bool
+exists path ext = do
+  targetPath <- replaceExtension ext =<< getTargetPath path
+  liftIO $ doesFileExist $ toFilePath targetPath
+
 class Resource a where
   toByteString :: a -> ByteString
   fromByteString :: ByteString -> a
+
   load :: (IOE :> es, Workspace :> es) => ArtifactPath -> String -> Eff es a
   load path ext = do
     originPath <- getOriginPath path
@@ -226,18 +234,24 @@ class Resource a where
         originModified <- liftIO $ getModificationTime $ toFilePath originPath
         targetModified <- liftIO $ getModificationTime $ toFilePath targetPath
         if originModified > targetModified
-          then readAndCopy originPath targetPath
+          then
+            readAndCopy originPath targetPath
           else do
             content <- liftIO $ BS.readFile $ toFilePath targetPath
             pure $ fromByteString content
       else readAndCopy originPath targetPath
     where
-      readAndCopy originPath targetPath = do
+      readAndCopy originPath targetPath = withHint originPath do
         originPath <- replaceExtension ext originPath
         content <- liftIO $ BS.readFile $ toFilePath originPath
         liftIO $ createDirectoryIfMissing True $ toFilePath $ parent targetPath
         liftIO $ BS.writeFile (toFilePath targetPath) content
         pure $ fromByteString content
+      withHint originPath act =
+        act `catch` \(e :: IOException) -> do
+          -- If origin file is not found, report the error with a hint.
+          let hint = "Hint: Check if the file exists in the correct path '" <> toFilePath originPath <> "'."
+          liftIO $ ioError $ userError $ show e <> "\n" <> hint
 
   save :: (IOE :> es, Workspace :> es) => ArtifactPath -> String -> a -> Eff es ()
   save path ext content = do

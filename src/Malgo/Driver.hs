@@ -1,6 +1,7 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
+import Control.Monad.Extra (unlessM)
 import Data.ByteString qualified as BS
 import Data.Map.Strict qualified as Map
 import Data.String.Conversions.Monomorphic (toString)
@@ -179,9 +180,22 @@ compile ::
   FilePath ->
   Eff es ()
 compile srcPath = do
-  flags <- ask @Flag
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
+  compileArtifact srcModulePath
+
+compileArtifact ::
+  ( Reader Flag :> es,
+    Reader OptimizeOption :> es,
+    State (Map ModuleName Interface) :> es,
+    State Uniq :> es,
+    IOE :> es,
+    Workspace :> es
+  ) =>
+  ArtifactPath ->
+  Eff es ()
+compileArtifact srcModulePath = do
+  let srcPath = srcModulePath.rawPath
   src <- load srcModulePath ".mlg"
   parseResult <- parseMalgo srcPath (convertString @BS.ByteString src)
   parsedAst <- case parseResult of
@@ -198,6 +212,14 @@ compile srcPath = do
       BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
       hFlush stderr
       exitFailure
+
+  -- Compile dependencies
+  dependencies <- Syntax.getDependencies parsedAst
+  for_ dependencies \dep -> do
+    unlessM (exists dep ".mlgi") do
+      compileArtifact dep
+
+  flags <- ask @Flag
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst

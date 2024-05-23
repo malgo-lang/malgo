@@ -52,17 +52,17 @@ pModule = do
       }
 
 -- module name
-pModuleName :: (Workspace :> es, IOE :> es) => Parser es ModuleName
-pModuleName = label "module path" $ asIdent <|> asPath
-  where
-    asIdent = ModuleName <$> lexeme (convertString <$> some identLetter)
-    asPath = do
-      path <- lexeme pString
-      sourcePath <- (.sourceName) <$> getSourcePos
-      pwd <- lift pwdPath
-      sourcePath' <- lift $ parseArtifactPath pwd sourcePath
-      path' <- lift $ parseArtifactPath sourcePath' path
-      pure $ Artifact path'
+asPath :: (IOE :> es, Workspace :> es) => Parser es ModuleName
+asPath = do
+  path <- lexeme pString
+  sourcePath <- (.sourceName) <$> getSourcePos
+  pwd <- lift pwdPath
+  sourcePath' <- lift $ parseArtifactPath pwd sourcePath
+  path' <- lift $ parseArtifactPath sourcePath' path
+  pure $ Artifact path'
+
+asIdent :: Parser es ModuleName
+asIdent = ModuleName <$> lexeme (convertString <$> some identLetter)
 
 -- toplevel declaration
 pDecl :: (Workspace :> es, IOE :> es) => Parser es (Decl (Malgo 'Parse))
@@ -140,10 +140,10 @@ pImport = label "import" do
     try (between (symbol "{") (symbol "}") importAll)
       <|> between (symbol "{") (symbol "}") importSelected
       <|> As
-      <$> pModuleName
+      <$> (asIdent <|> asPath)
   void $ pOperator "="
   void $ pKeyword "import"
-  modName <- pModuleName
+  modName <- asPath
   end <- getSourcePos
   pure $ Import (Range start end) modName importList
   where
@@ -220,7 +220,7 @@ pString = label "string literal" do
   void $ char '"'
   manyTill L.charLiteral (char '"')
 
-pVariable :: (Workspace :> es, IOE :> es) => Parser es (Expr (Malgo 'Parse))
+pVariable :: Parser es (Expr (Malgo 'Parse))
 pVariable =
   -- try full path identifier like `Foo.bar`
   -- before simple identifier like `bar`
@@ -228,7 +228,7 @@ pVariable =
   where
     pExplicitVariable = label "explicit variable" $ do
       start <- getSourcePos
-      qualifier <- Explicit <$> pModuleName
+      qualifier <- Explicit <$> asIdent
       _ <- char '.'
       name <- lowerIdent <|> upperIdent
       end <- getSourcePos

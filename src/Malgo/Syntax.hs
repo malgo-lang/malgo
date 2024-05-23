@@ -34,12 +34,14 @@ module Malgo.Syntax
     toUnboxed,
     getTyVars,
     makeBindGroup,
+    HasDependency (..),
   )
 where
 
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.Set qualified as Set
+import Effectful (Eff)
 import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 import Malgo.Module
 import Malgo.Prelude hiding (All)
@@ -459,3 +461,25 @@ makeSCC ds = map flattenSCC $ stronglyConnComp adjacents'
   where
     vertices = map (view _2 . adjacents) ds
     adjacents' = map ((\(l, v, vs) -> (l, v, filter (`elem` vertices) vs)) . adjacents) ds
+
+-- * Dependency
+
+class HasDependency a where
+  getDependencies :: a -> Eff es [ArtifactPath]
+
+instance (HasDependency (XModule x)) => HasDependency (Module x) where
+  getDependencies (Module _ defs) = getDependencies defs
+
+instance HasDependency ParsedDefinitions where
+  getDependencies (ParsedDefinitions ds) = concat <$> traverse getDependencies ds
+
+instance HasDependency (Decl x) where
+  getDependencies (Import _ (Artifact p) _) = pure [p]
+  getDependencies (Import _ (ModuleName m) _) = error $ "getDependencies: " <> show m
+  getDependencies _ = pure []
+
+instance HasDependency (BindGroup x) where
+  getDependencies BindGroup {..} = pure $ map (takeArtifact . view _2) _imports
+    where
+      takeArtifact (ModuleName _) = error "takeArtifact: ModuleName"
+      takeArtifact (Artifact p) = p

@@ -5,7 +5,6 @@
 module Malgo.Interface
   ( Interface (..),
     buildInterface,
-    toInterfacePath,
     loadInterface,
     externalFromInterface,
     exportedIdentList,
@@ -31,7 +30,6 @@ import Malgo.Prelude
 import Malgo.Rename.RnState (RnState)
 import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
-import System.FilePath (replaceExtension)
 
 data Interface = Interface
   { moduleName :: ModuleName,
@@ -115,9 +113,6 @@ exportedTypeIdentList ::
   inf ->
   [name]
 exportedTypeIdentList inf = Map.keys inf.typeDefMap <> map (\id -> id.name) (Map.keys inf.typeSynonymMap)
-
-toInterfacePath :: String -> FilePath
-toInterfacePath x = replaceExtension x "mlgi"
 
 loadInterface ::
   (HasCallStack) =>
