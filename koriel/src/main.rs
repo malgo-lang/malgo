@@ -5,7 +5,6 @@ use crate::syntax::HasType;
 mod closure;
 mod eval;
 mod name;
-mod surface;
 mod syntax;
 
 fn main() -> io::Result<()> {
