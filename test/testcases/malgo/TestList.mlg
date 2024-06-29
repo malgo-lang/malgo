@@ -1,8 +1,0 @@
-module {..} = import "../../../runtime/malgo/Builtin.mlg"
-module {..} = import "../../../runtime/malgo/Prelude.mlg"
-
-def main = {
-  let xs = [1, 2, 3];
-  let nil = [];
-  putStrLn (toStringInt32 (head xs))
-}
