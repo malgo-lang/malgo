@@ -1,0 +1,4 @@
+(def + (codata (clause (call # (var x) (var y)) (seq (prim add (var x) (var y))))))
+(def zipWith (codata (clause (access (call # (var f) (var xs) (var ys)) head) (seq (call (var f) (access (var xs) head) (access (var ys) head)))) (clause (access (call # (var f) (var xs) (var ys)) tail) (seq (call (var zipWith) (var f) (access (var xs) tail) (access (var ys) tail))))))
+(def fib (codata (clause (access # head) (seq (literal 1))) (clause (access (access # tail) head) (seq (literal 1))) (clause (access (access # tail) tail) (seq (call (var zipWith) (codata (clause (call # (var x) (var y)) (seq (binary (var x) + (var y))))) (var fib) (access (var fib) tail))))))
+(def main (codata (clause (call #) (seq (prim print (access (access (access (access (var fib) tail) tail) tail) head))))))

@@ -1,0 +1,4 @@
+(type (call (var Option) (var a)) (call (var None)) (call (var Some) (var a)))
+(type (call (var List) (var a)) (call (var Nil)) (call (var Cons) (var a) (call (var List) (var a))))
+(def vendor (codata (clause (access (call # (var items)) get) (seq (call (var None)))) (clause (access (access (call # (call (var Nil))) put) get) (seq (prim print (literal "Nil case")) (prim print (call (var Nil))) (call (var None)))) (clause (access (access (call # (call (var Cons) (var x) (var xs))) put) get) (seq (prim print (literal "Cons case")) (prim print (call (var Cons) (var x) (var xs))) (call (var Some) (var x)))) (clause (access (access (call # (var items)) put) put) (seq (access (call (var vendor) (var items)) put)))))
+(def main (codata (clause (call #) (seq (prim print (access (access (call (var vendor) (call (var Cons) (literal 0) (call (var Nil)))) put) get))))))

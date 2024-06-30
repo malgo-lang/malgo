@@ -1,0 +1,4 @@
+(type (call (var Option.0) (var a.8)) (call (var None.1)) (call (var Some.2) (var a.8)))
+(type (call (var List.3) (var a.9)) (call (var Nil.4)) (call (var Cons.5) (var a.9) (call (var List.3) (var a.9))))
+(def vendor.6 (lambda (:p1.10) (object (field get (case ((var :p1.10)) (clause (var items.11) (seq (call (var None.1)))))) (field put (object (field get (case ((var :p1.10)) (clause (call (var Nil.4)) (seq (prim print (literal "Nil case")) (prim print (call (var Nil.4))) (call (var None.1)))) (clause (call (var Cons.5) (var x.12) (var xs.13)) (seq (prim print (literal "Cons case")) (prim print (call (var Cons.5) (var x.12) (var xs.13))) (call (var Some.2) (var x.12)))))) (field put (case ((var :p1.10)) (clause (var items.14) (seq (access (call (var vendor.6) (var items.14)) put))))))))))
+(def main.7 (lambda () (seq (prim print (access (access (call (var vendor.6) (call (var Cons.5) (literal 0) (call (var Nil.4)))) put) get)))))

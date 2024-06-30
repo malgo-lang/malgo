@@ -1,0 +1,4 @@
+(def read_all_cps (lambda () (lambda (:p1) (case ((var :p1)) (clause (var cont) (seq (prim read_all_cps (var cont))))))))
+(def print_cps (lambda (:p1) (lambda (:p2) (case ((var :p1) (var :p2)) (clause ((var s) (var cont)) (seq (prim print_cps (var s) (var cont))))))))
+(def exit (lambda () (seq (prim exit))))
+(def main (lambda () (seq (call (call (var read_all_cps)) (lambda (:p1) (case ((var :p1)) (clause (var s) (seq (call (call (var print_cps) (var s)) (lambda () (seq (call (var exit)))))))))))))

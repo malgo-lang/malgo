@@ -1,0 +1,9 @@
+def main = {
+    let exit = {
+        prim(exit)
+    };
+    let print = { s ->
+        prim(print_cps, s, exit)
+    };
+    prim(read_all_cps, print)
+}

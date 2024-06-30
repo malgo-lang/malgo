@@ -1,0 +1,1 @@
+(def main (codata (clause (call #) (seq (with (var x) (var y) (call (codata (clause (call (call #) (var cont)) (seq (call (var cont) (literal 1) (literal 2))))))) (prim print (tuple (var x) (var y)))))))

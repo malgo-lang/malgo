@@ -1,0 +1,2 @@
+(def f (codata (clause (access (call # (literal 0)) h) (seq (literal 1))) (clause (access (access (call # (var x)) h) h) (seq (var x)))))
+(def main (codata (clause (call #) (seq (prim print (access (call (var f) (literal 0)) h)) (prim print (access (access (call (var f) (literal 1)) h) h))))))

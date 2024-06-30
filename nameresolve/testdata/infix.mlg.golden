@@ -1,0 +1,5 @@
+(infix infixl 6 +.0)
+(infix infixl 8 *.1)
+(def +.0 (lambda (:p1.3 :p2.4) (case ((var :p1.3) (var :p2.4)) (clause ((var x.5) (var y.6)) (seq (prim add (var x.5) (var y.6)))))))
+(def *.1 (lambda (:p1.7 :p2.8) (case ((var :p1.7) (var :p2.8)) (clause ((var x.9) (var y.10)) (seq (prim mul (var x.9) (var y.10)))))))
+(def main.2 (lambda () (seq (binary (literal 1) +.0 (binary (literal 2) *.1 (literal 3))))))

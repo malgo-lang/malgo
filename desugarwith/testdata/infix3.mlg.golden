@@ -1,0 +1,5 @@
+(infix infixl 6 +)
+(infix infixl 8 *)
+(def + (codata (clause (call # (var x) (var y)) (seq (prim add (var x) (var y))))))
+(def * (codata (clause (call # (var x) (var y)) (seq (prim mul (var x) (var y))))))
+(def main (codata (clause (call #) (seq (binary (literal 1) * (paren (binary (literal 2) + (literal 3))))))))

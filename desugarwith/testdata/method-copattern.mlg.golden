@@ -1,0 +1,2 @@
+(def printer (codata (clause (call (access # print) (var x)) (seq (prim print (var x))))))
+(def main (codata (clause (call #) (seq (call (access (var printer) print) (literal 1))))))
