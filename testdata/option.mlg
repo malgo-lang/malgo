@@ -11,5 +11,6 @@ def map = {
 def addone = { x -> prim(add, x, 1) }
 
 def main = {
-  prim(print, map(addone, option.some(41)))
+  let x = map(addone, option.some(41));
+  prim(print_trace, x)
 }

@@ -1,4 +1,4 @@
 (def option (codata (clause (access # none) (seq (literal "none"))) (clause (call (access # some) (var x)) (seq (var x)))))
 (def map (codata (clause (call # (var f) (access (var o) none)) (seq (access (var o) none))) (clause (call # (var f) (call (access (var o) some) (var x))) (seq (call (access (var o) some) (call (var f) (var x)))))))
 (def addone (codata (clause (call # (var x)) (seq (prim add (var x) (literal 1))))))
-(def main (codata (clause (call #) (seq (prim print (call (var map) (var addone) (call (access (var option) some) (literal 41))))))))
+(def main (codata (clause (call #) (seq (let (var x) (call (var map) (var addone) (call (access (var option) some) (literal 41)))) (prim print_trace (var x))))))

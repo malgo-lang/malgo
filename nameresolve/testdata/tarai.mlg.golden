@@ -1,0 +1,5 @@
+(def if.0 (lambda (:p1.5) (object (field then (lambda (:p2.6) (object (field else (lambda (:p3.7) (case ((var :p1.5) (var :p2.6) (var :p3.7)) (clause ((literal 0) (var t.8) (var e.9)) (seq (call (var e.9)))) (clause ((var _.10) (var t.11) (var e.12)) (seq (call (var t.11)))))))))))))
+(def le.1 (lambda (:p1.13 :p2.14) (case ((var :p1.13) (var :p2.14)) (clause ((var x.15) (var y.16)) (seq (prim less_equal (var x.15) (var y.16)))))))
+(def dec.2 (lambda (:p1.17) (case ((var :p1.17)) (clause (var x.18) (seq (prim sub (var x.18) (literal 1)))))))
+(def tarai.3 (lambda (:p1.19 :p2.20 :p3.21) (case ((var :p1.19) (var :p2.20) (var :p3.21)) (clause ((var x.22) (var y.23) (var z.24)) (seq (call (access (call (access (call (var if.0) (call (var le.1) (var x.22) (var y.23))) then) (lambda () (seq (var y.23)))) else) (lambda () (seq (call (var tarai.3) (call (var tarai.3) (call (var dec.2) (var x.22)) (var y.23) (var z.24)) (call (var tarai.3) (call (var dec.2) (var y.23)) (var z.24) (var x.22)) (call (var tarai.3) (call (var dec.2) (var z.24)) (var x.22) (var y.23)))))))))))
+(def main.4 (lambda () (seq (call (var tarai.3) (literal 10) (literal 5) (literal 0)))))

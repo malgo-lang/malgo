@@ -1,0 +1,29 @@
+def if = {
+  #(0).then(t).else(e) -> e(),
+  #(_).then(t).else(e) -> t(),
+}
+
+def le = {
+  #(x, y) -> prim(less_equal, x, y)
+}
+
+def dec = {
+  #(x) -> prim(sub, x, 1)
+}
+
+def tarai = {
+  #(x, y, z) ->
+    if(le(x, y))
+      .then({y})
+      .else({
+        tarai(
+          tarai(dec(x), y, z),
+          tarai(dec(y), z, x),
+          tarai(dec(z), x, y)
+        )
+      })
+}
+
+def main = {
+  tarai(10, 5, 0)
+}

@@ -69,7 +69,7 @@ func (t Tuple) Match(pattern ast.Node) (map[Name]Value, bool) {
 		return matches, true
 	}
 
-	return t.trace.Match(pattern)
+	return t.trace.MatchTrace(pattern)
 }
 
 func (t Tuple) Trace() Trace {
@@ -104,7 +104,7 @@ func (i Int) Match(pattern ast.Node) (map[Name]Value, bool) {
 		}
 	}
 
-	return i.trace.Match(pattern)
+	return i.trace.MatchTrace(pattern)
 }
 
 func (i Int) Trace() Trace {
@@ -136,7 +136,7 @@ func (s String) Match(pattern ast.Node) (map[Name]Value, bool) {
 		}
 	}
 
-	return s.trace.Match(pattern)
+	return s.trace.MatchTrace(pattern)
 }
 
 func (s String) Trace() Trace {
@@ -174,7 +174,7 @@ func (f Function) Match(pattern ast.Node) (map[Name]Value, bool) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): f}, true
 	default:
-		return f.trace.Match(pattern)
+		return f.trace.MatchTrace(pattern)
 	}
 }
 
@@ -279,7 +279,7 @@ func (o Object) Match(pattern ast.Node) (map[Name]Value, bool) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): o}, true
 	default:
-		return o.trace.Match(pattern)
+		return o.trace.MatchTrace(pattern)
 	}
 }
 
@@ -342,7 +342,7 @@ func (d Data) Match(pattern ast.Node) (map[Name]Value, bool) {
 		}
 	}
 
-	return d.trace.Match(pattern)
+	return d.trace.MatchTrace(pattern)
 }
 
 func (d Data) Trace() Trace {
@@ -372,7 +372,7 @@ func (c Constructor) Match(pattern ast.Node) (map[Name]Value, bool) {
 		// Maybe instead of doing this, we should check if it is a constructor pattern or not.
 		return map[Name]Value{tokenToName(pattern.Name): c}, true
 	default:
-		return c.trace.Match(pattern)
+		return c.trace.MatchTrace(pattern)
 	}
 }
 
@@ -399,7 +399,7 @@ var (
 
 type Trace interface {
 	fmt.Stringer
-	Match(pattern ast.Node) (map[Name]Value, bool)
+	MatchTrace(pattern ast.Node) (map[Name]Value, bool)
 }
 
 type Root struct{}
@@ -408,11 +408,22 @@ func (r Root) String() string {
 	return "<root>"
 }
 
-func (r Root) Match(_ ast.Node) (map[Name]Value, bool) {
+func (r Root) MatchTrace(_ ast.Node) (map[Name]Value, bool) {
 	return nil, false
 }
 
 var _ Trace = Root{}
+
+func traceAsString(value Value) fmt.Stringer {
+	if _, ok := value.Trace().(Root); ok {
+		var builder strings.Builder
+		fmt.Fprintf(&builder, "{%v}", value)
+
+		return &builder
+	}
+
+	return value.Trace()
+}
 
 type Call struct {
 	Func Value
@@ -420,16 +431,16 @@ type Call struct {
 }
 
 func (c Call) String() string {
-	fun := c.Func.Trace()
-	args := make([]Trace, len(c.Args))
+	fun := traceAsString(c.Func)
+	args := make([]fmt.Stringer, len(c.Args))
 	for i, arg := range c.Args {
-		args[i] = arg.Trace()
+		args[i] = traceAsString(arg)
 	}
 
 	return utils.Parenthesize("call", fun, utils.Concat(args)).String()
 }
 
-func (c Call) Match(pattern ast.Node) (map[Name]Value, bool) {
+func (c Call) MatchTrace(pattern ast.Node) (map[Name]Value, bool) {
 	if pattern, ok := pattern.(*ast.Call); ok {
 		matches := make(map[Name]Value)
 		m, ok := c.Func.Match(pattern.Func)
@@ -466,10 +477,10 @@ type Access struct {
 }
 
 func (a Access) String() string {
-	return utils.Parenthesize("access", a.Receiver.Trace(), a.Name).String()
+	return utils.Parenthesize("access", traceAsString(a.Receiver), a.Name).String()
 }
 
-func (a Access) Match(pattern ast.Node) (map[Name]Value, bool) {
+func (a Access) MatchTrace(pattern ast.Node) (map[Name]Value, bool) {
 	if pattern, ok := pattern.(*ast.Access); ok && pattern.Name.Lexeme == a.Name.Lexeme {
 		matches := make(map[Name]Value)
 		m, ok := a.Receiver.Match(pattern.Receiver)
@@ -523,11 +534,11 @@ func (b Log) String() string {
 	}
 }
 
-func (b Log) Match(pattern ast.Node) (map[Name]Value, bool) {
-	m, ok := b.new.Match(pattern)
+func (b Log) MatchTrace(pattern ast.Node) (map[Name]Value, bool) {
+	m, ok := b.new.MatchTrace(pattern)
 	if ok {
 		return m, true
 	}
 
-	return b.old.Match(pattern)
+	return b.old.MatchTrace(pattern)
 }

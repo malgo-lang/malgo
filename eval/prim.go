@@ -21,8 +21,11 @@ func (p *primitiveEvaluator) primitive(name string) primitive {
 		"print_cps":    p.printCPS,
 		"read_all_cps": p.readAllCPS,
 		"print":        p.print,
+		"print_trace":  p.printTrace,
 		"mul":          p.mul,
 		"add":          p.add,
+		"sub":          p.sub,
+		"less_equal":   p.lessEqual,
 	}
 
 	return pmap[name]
@@ -94,6 +97,15 @@ func (p *primitiveEvaluator) print(args ...Value) (Value, error) {
 	return Unit(), nil
 }
 
+func (p *primitiveEvaluator) printTrace(args ...Value) (Value, error) {
+	if len(args) != 1 {
+		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentCountError{Expected: 1, Actual: len(args)}}
+	}
+	fmt.Fprintln(p.Stdout, args[0].Trace())
+
+	return Unit(), nil
+}
+
 func (p *primitiveEvaluator) mul(args ...Value) (Value, error) {
 	if len(args) != 2 {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentCountError{Expected: 2, Actual: len(args)}}
@@ -124,4 +136,40 @@ func (p *primitiveEvaluator) add(args ...Value) (Value, error) {
 	}
 
 	return Int{value: left.value + right.value, trace: Root{}}, nil
+}
+
+func (p *primitiveEvaluator) sub(args ...Value) (Value, error) {
+	if len(args) != 2 {
+		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentCountError{Expected: 2, Actual: len(args)}}
+	}
+	left, ok := asInt(args[0])
+	if !ok {
+		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Int", Actual: args[0]}}
+	}
+	right, ok := asInt(args[1])
+	if !ok {
+		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Int", Actual: args[1]}}
+	}
+
+	return Int{value: left.value - right.value, trace: Root{}}, nil
+}
+
+func (p *primitiveEvaluator) lessEqual(args ...Value) (Value, error) {
+	if len(args) != 2 {
+		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentCountError{Expected: 2, Actual: len(args)}}
+	}
+	left, ok := asInt(args[0])
+	if !ok {
+		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Int", Actual: args[0]}}
+	}
+	right, ok := asInt(args[1])
+	if !ok {
+		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Int", Actual: args[1]}}
+	}
+
+	if left.value <= right.value {
+		return Int{value: 1, trace: Root{}}, nil
+	}
+
+	return Int{value: 0, trace: Root{}}, nil
 }
