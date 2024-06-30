@@ -77,7 +77,7 @@ func (t Tuple) Trace() Trace {
 }
 
 func (t Tuple) WithTrace(trace Trace) Value {
-	return Tuple{values: t.values, trace: Log{new: trace, old: t}}
+	return Tuple{values: t.values, trace: NewLog(trace, t)}
 }
 
 var _ Value = Tuple{}
@@ -112,7 +112,7 @@ func (i Int) Trace() Trace {
 }
 
 func (i Int) WithTrace(trace Trace) Value {
-	return Int{value: i.value, trace: Log{new: trace, old: i}}
+	return Int{value: i.value, trace: NewLog(trace, i)}
 }
 
 var _ Value = Int{}
@@ -144,7 +144,7 @@ func (s String) Trace() Trace {
 }
 
 func (s String) WithTrace(trace Trace) Value {
-	return String{value: s.value, trace: Log{new: trace, old: s}}
+	return String{value: s.value, trace: NewLog(trace, s)}
 }
 
 var _ Value = String{}
@@ -208,7 +208,7 @@ func (f Function) Trace() Trace {
 }
 
 func (f Function) WithTrace(trace Trace) Value {
-	return Function{Evaluator: f.Evaluator, Params: f.Params, Body: f.Body, trace: Log{new: trace, old: f}}
+	return Function{Evaluator: f.Evaluator, Params: f.Params, Body: f.Body, trace: NewLog(trace, f)}
 }
 
 var (
@@ -242,7 +242,7 @@ func (t Thunk) Trace() Trace {
 }
 
 func (t Thunk) WithTrace(trace Trace) Value {
-	return Thunk{Evaluator: t.Evaluator, Body: t.Body, trace: Log{new: trace, old: t}}
+	return Thunk{Evaluator: t.Evaluator, Body: t.Body, trace: NewLog(trace, t)}
 }
 
 func runThunk(value Value) (Value, error) {
@@ -288,7 +288,7 @@ func (o Object) Trace() Trace {
 }
 
 func (o Object) WithTrace(trace Trace) Value {
-	return Object{Fields: o.Fields, trace: Log{new: trace, old: o}}
+	return Object{Fields: o.Fields, trace: NewLog(trace, o)}
 }
 
 var _ Value = Object{}
@@ -350,7 +350,7 @@ func (d Data) Trace() Trace {
 }
 
 func (d Data) WithTrace(trace Trace) Value {
-	return Data{Tag: d.Tag, Elems: d.Elems, trace: Log{new: trace, old: d}}
+	return Data{Tag: d.Tag, Elems: d.Elems, trace: NewLog(trace, d)}
 }
 
 var _ Value = Data{}
@@ -389,7 +389,7 @@ func (c Constructor) Trace() Trace {
 }
 
 func (c Constructor) WithTrace(trace Trace) Value {
-	return Constructor{Evaluator: c.Evaluator, Tag: c.Tag, Params: c.Params, trace: Log{new: trace, old: c}}
+	return Constructor{Evaluator: c.Evaluator, Tag: c.Tag, Params: c.Params, trace: NewLog(trace, c)}
 }
 
 var (
@@ -488,11 +488,39 @@ func (a Access) Match(pattern ast.Node) (map[Name]Value, bool) {
 
 type Log struct {
 	new Trace
-	old Value
+	old Trace
+}
+
+func NewLog(trace Trace, value Value) Trace {
+	if _, ok := value.Trace().(Root); ok {
+		return trace
+	}
+
+	return Log{new: trace, old: value.Trace()}
 }
 
 func (b Log) String() string {
-	return utils.Parenthesize("branch", b.new, b.old).String()
+	traces := []Trace{b.new}
+
+	rest := b.old
+
+	for {
+		if log, ok := rest.(Log); ok {
+			traces = append(traces, log.new)
+			rest = log.old
+		} else {
+			traces = append(traces, rest)
+
+			var builder strings.Builder
+			builder.WriteString("[")
+			fmt.Fprintf(&builder, "%d ", len(traces))
+			tracesStr := utils.Concat(traces).String()
+			builder.WriteString(tracesStr)
+			builder.WriteString("]")
+
+			return builder.String()
+		}
+	}
 }
 
 func (b Log) Match(pattern ast.Node) (map[Name]Value, bool) {
