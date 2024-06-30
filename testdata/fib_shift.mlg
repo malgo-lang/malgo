@@ -13,4 +13,11 @@ def fib = {
   #.tail.tail -> zipWith({#(x, y) -> x + y}, fib, fib.tail),
 }
 
-def main = { #() -> prim(print, fib.tail.tail.tail.head) }
+// Function returning the stream of shifted stream.
+// Pattern matching can be used to detect the trace of evaluation.
+def shift = {
+  #(s.head) -> s.tail.head,
+  #(s.tail) -> s.tail.tail,
+}
+
+def main = { #() -> prim(print, shift(shift(shift(fib.head)))) }
