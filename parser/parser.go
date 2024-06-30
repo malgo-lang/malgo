@@ -38,8 +38,11 @@ func (p *Parser) ParseDecl() ([]ast.Node, error) {
 	return nodes, nil
 }
 
-// decl = typeDecl | varDecl | infixDecl ;
+// decl = dataDecl | typeDecl | varDecl | infixDecl ;
 func (p *Parser) decl() (ast.Node, error) {
+	if p.match(token.DATA) {
+		return p.dataDecl()
+	}
 	if p.match(token.TYPE) {
 		return p.typeDecl()
 	}
@@ -50,9 +53,76 @@ func (p *Parser) decl() (ast.Node, error) {
 	return p.infixDecl()
 }
 
-// typeDecl = "type" IDENT (typeparams1)? "=" typebody ;
+// dataDecl = "data" IDENT (typeparams1)? "=" "{" constructor ("," constructor)* ","? "}" ;
 // typeparams1 = "(" IDENT ("," IDENT)* ","? ")" ;
-// typebody = "{" constructor ("," constructor)* ","? "}" | type ;
+func (p *Parser) dataDecl() (*ast.TypeDecl, error) {
+	if _, err := p.consume(token.DATA); err != nil {
+		return nil, err
+	}
+	typename, err := p.consume(token.IDENT)
+	if err != nil {
+		return nil, err
+	}
+
+	var def ast.Node
+	def = &ast.Var{Name: typename}
+	if p.match(token.LEFTPAREN) {
+		if _, err := p.consume(token.LEFTPAREN); err != nil {
+			return nil, err
+		}
+		typeparams := []ast.Node{}
+		if !p.match(token.RIGHTPAREN) {
+			name, err := p.consume(token.IDENT)
+			if err != nil {
+				return nil, err
+			}
+			typeparams = append(typeparams, &ast.Var{Name: name})
+			for p.match(token.COMMA) {
+				p.advance()
+				if p.match(token.RIGHTPAREN) {
+					break
+				}
+				name, err := p.consume(token.IDENT)
+				if err != nil {
+					return nil, err
+				}
+				typeparams = append(typeparams, &ast.Var{Name: name})
+			}
+		}
+		if _, err := p.consume(token.RIGHTPAREN); err != nil {
+			return nil, err
+		}
+		def = &ast.Call{Func: def, Args: typeparams}
+	}
+
+	if _, err := p.consume(token.EQUAL); err != nil {
+		return nil, err
+	}
+
+	if _, err := p.consume(token.LEFTBRACE); err != nil {
+		return nil, err
+	}
+
+	var types []ast.Node
+	for !p.match(token.RIGHTBRACE) {
+		typ, err := p.constructor()
+		if err != nil {
+			return nil, err
+		}
+		types = append(types, typ)
+		if p.match(token.COMMA) {
+			p.advance()
+		}
+	}
+
+	if _, err := p.consume(token.RIGHTBRACE); err != nil {
+		return nil, err
+	}
+
+	return &ast.TypeDecl{Def: def, Types: types}, nil
+}
+
+// typeDecl = "type" IDENT (typeparams1)? "=" type ;
 func (p *Parser) typeDecl() (*ast.TypeDecl, error) {
 	if _, err := p.consume(token.TYPE); err != nil {
 		return nil, err
@@ -96,42 +166,13 @@ func (p *Parser) typeDecl() (*ast.TypeDecl, error) {
 	if _, err := p.consume(token.EQUAL); err != nil {
 		return nil, err
 	}
-	var types []ast.Node
-	if p.match(token.LEFTBRACE) {
-		// if typebody is a record, then call p.typ()
-		if p.matchNth(1, token.IDENT) && p.matchNth(2, token.COLON) {
-			typ, err := p.typ()
-			if err != nil {
-				return nil, err
-			}
-			types = append(types, typ)
-		} else {
-			if _, err := p.consume(token.LEFTBRACE); err != nil {
-				return nil, err
-			}
-			for !p.match(token.RIGHTBRACE) {
-				typ, err := p.constructor()
-				if err != nil {
-					return nil, err
-				}
-				types = append(types, typ)
-				if p.match(token.COMMA) {
-					p.advance()
-				}
-			}
-			if _, err := p.consume(token.RIGHTBRACE); err != nil {
-				return nil, err
-			}
-		}
-	} else {
-		typ, err := p.typ()
-		if err != nil {
-			return nil, err
-		}
-		types = append(types, typ)
+
+	typ, err := p.typ()
+	if err != nil {
+		return nil, err
 	}
 
-	return &ast.TypeDecl{Def: def, Types: types}, nil
+	return &ast.TypeDecl{Def: def, Types: []ast.Node{typ}}, nil
 }
 
 // constructor = IDENT "(" typeparams ")" ;
@@ -946,10 +987,6 @@ func (p Parser) peek() token.Token {
 	return p.tokens[p.current]
 }
 
-func (p Parser) peekNth(n int) token.Token {
-	return p.tokens[p.current+n]
-}
-
 func (p *Parser) advance() token.Token {
 	if !p.IsAtEnd() {
 		p.current++
@@ -972,17 +1009,6 @@ func (p Parser) match(kind token.Kind) bool {
 	}
 
 	return p.peek().Kind == kind
-}
-
-func (p Parser) matchNth(shift int, kind token.Kind) bool {
-	if p.current+shift >= len(p.tokens) {
-		return false
-	}
-	if p.tokens[p.current+shift].Kind == token.EOF {
-		return false
-	}
-
-	return p.peekNth(shift).Kind == kind
 }
 
 func (p *Parser) consume(kind token.Kind) (token.Token, error) {

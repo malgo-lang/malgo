@@ -1,8 +1,8 @@
-type Option(a) = {
+data Option(a) = {
     None(),
     Some(a),
 }
-type List(a) = {
+data List(a) = {
     Nil(),
     Cons(a, List(a)),
 }

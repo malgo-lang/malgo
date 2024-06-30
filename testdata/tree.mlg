@@ -1,5 +1,5 @@
 type Int     = prim(int)
-type List(a) = {
+data List(a) = {
   Nil(),
   Cons(a, List)
 }

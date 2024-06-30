@@ -32,6 +32,7 @@ const (
 	BACKARROW
 	BAR
 	CASE
+	DATA
 	DEF
 	EQUAL
 	FN
