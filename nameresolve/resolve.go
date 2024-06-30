@@ -500,10 +500,13 @@ func (e InvalidPatternError) Error() string {
 }
 
 // Define variables in the node as pattern.
-// If a variable appears as a function, it is ignored.
 func asPattern(resolver *Resolver, pattern ast.Node) ([]string, error) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
+		// If pattern is a constructor, ignore it.
+		if utils.IsUpper(pattern.Name.Lexeme) {
+			return nil, nil
+		}
 		if _, ok := resolver.env.table[pattern.Name.Lexeme]; ok {
 			return nil, utils.PosError{Where: pattern.Base(), Err: AlreadyDefinedError{Name: pattern.Name}}
 		}
@@ -528,7 +531,11 @@ func asPattern(resolver *Resolver, pattern ast.Node) ([]string, error) {
 	case *ast.Access:
 		return resolver.assign(pattern.Receiver, asPattern)
 	case *ast.Call:
-		var defined []string
+		defined, err := resolver.assign(pattern.Func, asPattern)
+		if err != nil {
+			return nil, err
+		}
+
 		for _, arg := range pattern.Args {
 			newDefs, err := resolver.assign(arg, asPattern)
 			if err != nil {

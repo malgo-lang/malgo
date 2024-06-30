@@ -5,9 +5,21 @@ import (
 	"io/fs"
 	"path/filepath"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/takoeight0821/malgo/token"
 )
+
+func IsUpper(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
+	r, _ := utf8.DecodeRuneInString(s)
+
+	return unicode.IsUpper(r)
+}
 
 // PosError represents an error that occurred at a specific position in the code.
 type PosError struct {

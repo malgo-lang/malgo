@@ -2,15 +2,19 @@ package eval
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/takoeight0821/malgo/ast"
 	"github.com/takoeight0821/malgo/token"
+	"github.com/takoeight0821/malgo/utils"
 )
 
 type Value interface {
 	fmt.Stringer
 	Match(pattern ast.Node) (map[Name]Value, bool)
+	Trace() Trace
+	WithTrace(trace Trace) Value
 }
 
 type Callable interface {
@@ -18,11 +22,14 @@ type Callable interface {
 }
 
 func Unit() Tuple {
-	return Tuple{values: make([]Value, 0)}
+	unit := Tuple{values: make([]Value, 0), trace: Root{}}
+
+	return unit
 }
 
 type Tuple struct {
 	values []Value
+	trace  Trace
 }
 
 func (t Tuple) String() string {
@@ -60,19 +67,28 @@ func (t Tuple) Match(pattern ast.Node) (map[Name]Value, bool) {
 		}
 
 		return matches, true
-	default:
-		return nil, false
 	}
+
+	return t.trace.Match(pattern)
+}
+
+func (t Tuple) Trace() Trace {
+	return t.trace
+}
+
+func (t Tuple) WithTrace(trace Trace) Value {
+	return Tuple{values: t.values, trace: Log{new: trace, old: t}}
 }
 
 var _ Value = Tuple{}
 
 type Int struct {
 	value int
+	trace Trace
 }
 
 func (i Int) String() string {
-	return fmt.Sprintf("%d", i.value)
+	return strconv.Itoa(i.value)
 }
 
 func (i Int) Match(pattern ast.Node) (map[Name]Value, bool) {
@@ -83,18 +99,27 @@ func (i Int) Match(pattern ast.Node) (map[Name]Value, bool) {
 		if pattern.Kind != token.INTEGER {
 			return nil, false
 		}
-		if v, ok := pattern.Literal.(int); ok && v == int(i.value) {
+		if v, ok := pattern.Literal.(int); ok && v == i.value {
 			return map[Name]Value{}, true
 		}
 	}
 
-	return nil, false
+	return i.trace.Match(pattern)
+}
+
+func (i Int) Trace() Trace {
+	return i.trace
+}
+
+func (i Int) WithTrace(trace Trace) Value {
+	return Int{value: i.value, trace: Log{new: trace, old: i}}
 }
 
 var _ Value = Int{}
 
 type String struct {
 	value string
+	trace Trace
 }
 
 func (s String) String() string {
@@ -111,7 +136,15 @@ func (s String) Match(pattern ast.Node) (map[Name]Value, bool) {
 		}
 	}
 
-	return nil, false
+	return s.trace.Match(pattern)
+}
+
+func (s String) Trace() Trace {
+	return s.trace
+}
+
+func (s String) WithTrace(trace Trace) Value {
+	return String{value: s.value, trace: Log{new: trace, old: s}}
 }
 
 var _ Value = String{}
@@ -121,6 +154,7 @@ type Function struct {
 	Evaluator
 	Params []Name
 	Body   ast.Node
+	trace  Trace
 }
 
 func (f Function) String() string {
@@ -140,7 +174,7 @@ func (f Function) Match(pattern ast.Node) (map[Name]Value, bool) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): f}, true
 	default:
-		return nil, false
+		return f.trace.Match(pattern)
 	}
 }
 
@@ -148,19 +182,33 @@ func (f Function) Apply(where token.Token, args ...Value) (Value, error) {
 	if len(f.Params) != len(args) {
 		return nil, errorAt(where, InvalidArgumentCountError{Expected: len(f.Params), Actual: len(args)})
 	}
-	f.evEnv = newEvEnv(f.evEnv)
+
+	evaluator := Evaluator{
+		evEnv:  newEvEnv(f.evEnv),
+		Stdin:  f.Stdin,
+		Stdout: f.Stdout,
+	}
+
 	for i, param := range f.Params {
-		f.evEnv.set(param, args[i])
+		evaluator.evEnv.set(param, args[i])
 	}
 
 	var ret Value
-	ret, err := f.Eval(f.Body)
+	ret, err := evaluator.Eval(f.Body)
 	if err != nil {
 		return nil, err
 	}
 	f.evEnv = f.evEnv.parent
 
-	return ret, nil
+	return ret.WithTrace(Call{Func: f, Args: args}), nil
+}
+
+func (f Function) Trace() Trace {
+	return f.trace
+}
+
+func (f Function) WithTrace(trace Trace) Value {
+	return Function{Evaluator: f.Evaluator, Params: f.Params, Body: f.Body, trace: Log{new: trace, old: f}}
 }
 
 var (
@@ -172,7 +220,8 @@ var (
 // It is used to delay the evaluation of object fields.
 type Thunk struct {
 	Evaluator
-	Body ast.Node
+	Body  ast.Node
+	trace Trace
 }
 
 func (t Thunk) String() string {
@@ -186,6 +235,14 @@ func (t Thunk) Match(pattern ast.Node) (map[Name]Value, bool) {
 	default:
 		return nil, false
 	}
+}
+
+func (t Thunk) Trace() Trace {
+	return t.trace
+}
+
+func (t Thunk) WithTrace(trace Trace) Value {
+	return Thunk{Evaluator: t.Evaluator, Body: t.Body, trace: Log{new: trace, old: t}}
 }
 
 func runThunk(value Value) (Value, error) {
@@ -210,6 +267,7 @@ var _ Value = Thunk{}
 // Object represents an object value.
 type Object struct {
 	Fields map[string]Value
+	trace  Trace
 }
 
 func (o Object) String() string {
@@ -221,8 +279,16 @@ func (o Object) Match(pattern ast.Node) (map[Name]Value, bool) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): o}, true
 	default:
-		return nil, false
+		return o.trace.Match(pattern)
 	}
+}
+
+func (o Object) Trace() Trace {
+	return o.trace
+}
+
+func (o Object) WithTrace(trace Trace) Value {
+	return Object{Fields: o.Fields, trace: Log{new: trace, old: o}}
 }
 
 var _ Value = Object{}
@@ -231,6 +297,7 @@ var _ Value = Object{}
 type Data struct {
 	Tag   Name
 	Elems []Value
+	trace Trace
 }
 
 func (d Data) String() string {
@@ -253,8 +320,7 @@ func (d Data) Match(pattern ast.Node) (map[Name]Value, bool) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): d}, true
 	case *ast.Call:
-		switch fn := pattern.Func.(type) {
-		case *ast.Var:
+		if fn, ok := pattern.Func.(*ast.Var); ok && utils.IsUpper(fn.Name.Lexeme) {
 			if tokenToName(fn.Name) != d.Tag {
 				return nil, false
 			}
@@ -273,12 +339,18 @@ func (d Data) Match(pattern ast.Node) (map[Name]Value, bool) {
 			}
 
 			return matches, true
-		default:
-			panic(fmt.Sprintf("unreachable: %s", pattern.Func))
 		}
 	}
 
-	return nil, false
+	return d.trace.Match(pattern)
+}
+
+func (d Data) Trace() Trace {
+	return d.trace
+}
+
+func (d Data) WithTrace(trace Trace) Value {
+	return Data{Tag: d.Tag, Elems: d.Elems, trace: Log{new: trace, old: d}}
 }
 
 var _ Value = Data{}
@@ -287,6 +359,7 @@ type Constructor struct {
 	Evaluator
 	Tag    Name
 	Params int
+	trace  Trace
 }
 
 func (c Constructor) String() string {
@@ -296,9 +369,10 @@ func (c Constructor) String() string {
 func (c Constructor) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
+		// Maybe instead of doing this, we should check if it is a constructor pattern or not.
 		return map[Name]Value{tokenToName(pattern.Name): c}, true
 	default:
-		return nil, false
+		return c.trace.Match(pattern)
 	}
 }
 
@@ -307,10 +381,125 @@ func (c Constructor) Apply(where token.Token, args ...Value) (Value, error) {
 		return nil, errorAt(where, InvalidArgumentCountError{Expected: c.Params, Actual: len(args)})
 	}
 
-	return Data{Tag: c.Tag, Elems: args}, nil
+	return Data{Tag: c.Tag, Elems: args, trace: Call{Func: c, Args: args}}, nil
+}
+
+func (c Constructor) Trace() Trace {
+	return c.trace
+}
+
+func (c Constructor) WithTrace(trace Trace) Value {
+	return Constructor{Evaluator: c.Evaluator, Tag: c.Tag, Params: c.Params, trace: Log{new: trace, old: c}}
 }
 
 var (
 	_ Value    = Constructor{}
 	_ Callable = Constructor{}
 )
+
+type Trace interface {
+	fmt.Stringer
+	Match(pattern ast.Node) (map[Name]Value, bool)
+}
+
+type Root struct{}
+
+func (r Root) String() string {
+	return "<root>"
+}
+
+func (r Root) Match(_ ast.Node) (map[Name]Value, bool) {
+	return nil, false
+}
+
+var _ Trace = Root{}
+
+type Call struct {
+	Func Value
+	Args []Value
+}
+
+func (c Call) String() string {
+	fun := c.Func.Trace()
+	args := make([]Trace, len(c.Args))
+	for i, arg := range c.Args {
+		args[i] = arg.Trace()
+	}
+
+	return utils.Parenthesize("call", fun, utils.Concat(args)).String()
+}
+
+func (c Call) Match(pattern ast.Node) (map[Name]Value, bool) {
+	if pattern, ok := pattern.(*ast.Call); ok {
+		matches := make(map[Name]Value)
+		m, ok := c.Func.Match(pattern.Func)
+		if !ok {
+			return nil, false
+		}
+		for k, v := range m {
+			matches[k] = v
+		}
+
+		if len(pattern.Args) != len(c.Args) {
+			return nil, false
+		}
+
+		for i, arg := range c.Args {
+			m, ok := arg.Match(pattern.Args[i])
+			if !ok {
+				return nil, false
+			}
+			for k, v := range m {
+				matches[k] = v
+			}
+		}
+
+		return matches, true
+	}
+
+	return nil, false
+}
+
+type Access struct {
+	Receiver Value
+	Name     token.Token
+}
+
+func (a Access) String() string {
+	return utils.Parenthesize("access", a.Receiver.Trace(), a.Name).String()
+}
+
+func (a Access) Match(pattern ast.Node) (map[Name]Value, bool) {
+	if pattern, ok := pattern.(*ast.Access); ok && pattern.Name.Lexeme == a.Name.Lexeme {
+		matches := make(map[Name]Value)
+		m, ok := a.Receiver.Match(pattern.Receiver)
+		if !ok {
+			return nil, false
+		}
+		for k, v := range m {
+			matches[k] = v
+		}
+
+		return matches, true
+	}
+
+	return nil, false
+}
+
+type Log struct {
+	new Trace
+	old Value
+}
+
+func (b Log) String() string {
+	return utils.Parenthesize("branch", b.new, b.old).String()
+}
+
+func (b Log) Match(pattern ast.Node) (map[Name]Value, bool) {
+	m, ok := b.new.Match(pattern)
+	if ok {
+		return m, true
+	}
+
+	return b.old.Match(pattern)
+}

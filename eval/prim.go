@@ -107,7 +107,7 @@ func (p *primitiveEvaluator) mul(args ...Value) (Value, error) {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Int", Actual: args[1]}}
 	}
 
-	return Int{value: left.value * right.value}, nil
+	return Int{value: left.value * right.value, trace: Root{}}, nil
 }
 
 func (p *primitiveEvaluator) add(args ...Value) (Value, error) {
@@ -123,5 +123,5 @@ func (p *primitiveEvaluator) add(args ...Value) (Value, error) {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Int", Actual: args[1]}}
 	}
 
-	return Int{value: left.value + right.value}, nil
+	return Int{value: left.value + right.value, trace: Root{}}, nil
 }

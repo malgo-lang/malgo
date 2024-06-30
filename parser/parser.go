@@ -175,13 +175,17 @@ func (p *Parser) typeDecl() (*ast.TypeDecl, error) {
 	return &ast.TypeDecl{Def: def, Types: []ast.Node{typ}}, nil
 }
 
-// constructor = IDENT "(" typeparams ")" ;
+// constructor = UPPER_IDENT "(" typeparams ")" ;
 // typeparams = (type ("," type)*)? ;
 func (p *Parser) constructor() (*ast.Call, error) {
 	name, err := p.consume(token.IDENT)
 	if err != nil {
 		return nil, err
 	}
+	if !utils.IsUpper(name.Lexeme) {
+		return nil, unexpectedToken(name, "identifier started with a upper-case character")
+	}
+
 	if _, err := p.consume(token.LEFTPAREN); err != nil {
 		return nil, err
 	}

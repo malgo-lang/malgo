@@ -86,14 +86,14 @@ func (ev *Evaluator) evalLiteral(node *ast.Literal) (Value, error) {
 			return nil, utils.PosError{Where: node.Base(), Err: InvalidLiteralError{Kind: node.Kind}}
 		}
 
-		return Int{value: v}, nil
+		return Int{value: v, trace: Root{}}, nil
 	case token.STRING:
 		v, ok := node.Literal.(string)
 		if !ok {
 			return nil, utils.PosError{Where: node.Base(), Err: InvalidLiteralError{Kind: node.Kind}}
 		}
 
-		return String{value: v}, nil
+		return String{value: v, trace: Root{}}, nil
 	default:
 		return nil, utils.PosError{Where: node.Base(), Err: InvalidLiteralError{Kind: node.Kind}}
 	}
@@ -113,7 +113,7 @@ func (ev *Evaluator) evalTuple(node *ast.Tuple) (Value, error) {
 		}
 	}
 
-	return Tuple{values}, nil
+	return Tuple{values, Root{}}, nil
 }
 
 func (ev *Evaluator) evalAccess(node *ast.Access) (Value, error) {
@@ -131,7 +131,7 @@ func (ev *Evaluator) evalAccess(node *ast.Access) (Value, error) {
 			}
 			receiver.Fields[node.Name.Lexeme] = value
 
-			return value, nil
+			return value.WithTrace(Access{Receiver: receiver, Name: node.Name}), nil
 		}
 
 		return nil, utils.PosError{Where: node.Base(), Err: UndefinedFieldError{Receiver: receiver, Name: node.Name.Lexeme}}
@@ -188,7 +188,7 @@ func asInt(v Value) (Int, bool) {
 	case Int:
 		return v, true
 	default:
-		return Int{}, false
+		return Int{value: 0, trace: Root{}}, false
 	}
 }
 
@@ -275,6 +275,7 @@ func (ev *Evaluator) evalLambda(node *ast.Lambda) Function {
 		Evaluator: *ev,
 		Params:    params,
 		Body:      node.Expr,
+		trace:     Root{},
 	}
 }
 
@@ -337,10 +338,10 @@ func matchClause(clause *ast.CaseClause, scrs []Value) (map[Name]Value, bool) {
 func (ev *Evaluator) evalObject(node *ast.Object) Object {
 	fields := make(map[string]Value)
 	for _, field := range node.Fields {
-		fields[field.Name] = Thunk{Evaluator: *ev, Body: field.Expr}
+		fields[field.Name] = Thunk{Evaluator: *ev, Body: field.Expr, trace: Root{}}
 	}
 
-	return Object{Fields: fields}
+	return Object{Fields: fields, trace: Root{}}
 }
 
 func (ev *Evaluator) evalTypeDecl(node *ast.TypeDecl) error {
@@ -357,13 +358,14 @@ func (ev *Evaluator) evalTypeDecl(node *ast.TypeDecl) error {
 func (ev *Evaluator) defineConstructor(node ast.Node) error {
 	switch node := node.(type) {
 	case *ast.Var:
-		ev.evEnv.set(tokenToName(node.Name), Data{Tag: tokenToName(node.Name), Elems: nil})
+		ev.evEnv.set(tokenToName(node.Name), Data{Tag: tokenToName(node.Name), Elems: nil, trace: Root{}})
 
 		return nil
 	case *ast.Call:
 		switch fn := node.Func.(type) {
 		case *ast.Var:
-			ev.evEnv.set(tokenToName(fn.Name), Constructor{Evaluator: *ev, Tag: tokenToName(fn.Name), Params: len(node.Args)})
+			ev.evEnv.set(tokenToName(fn.Name),
+				Constructor{Evaluator: *ev, Tag: tokenToName(fn.Name), Params: len(node.Args), trace: Root{}})
 
 			return nil
 		case *ast.Prim:
