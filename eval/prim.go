@@ -46,7 +46,7 @@ func (p *primitiveEvaluator) printCPS(args ...Value) (Value, error) {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "String", Actual: args[0]}}
 	}
 
-	fmt.Fprintf(p.Stdout, "%s", string(arg))
+	fmt.Fprintf(p.Stdout, "%s", arg.value)
 
 	cont, ok := args[1].(Callable)
 	if !ok {
@@ -77,7 +77,7 @@ func (p *primitiveEvaluator) readAllCPS(args ...Value) (Value, error) {
 		return nil, utils.PosError{Where: p.where, Err: err}
 	}
 
-	result, err := cont.Apply(p.where, String(bytes))
+	result, err := cont.Apply(p.where, String{value: string(bytes)})
 	if err != nil {
 		return nil, utils.PosError{Where: p.where, Err: err}
 	}
@@ -107,7 +107,7 @@ func (p *primitiveEvaluator) mul(args ...Value) (Value, error) {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Int", Actual: args[1]}}
 	}
 
-	return left * right, nil
+	return Int{value: left.value * right.value}, nil
 }
 
 func (p *primitiveEvaluator) add(args ...Value) (Value, error) {
@@ -123,5 +123,5 @@ func (p *primitiveEvaluator) add(args ...Value) (Value, error) {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Int", Actual: args[1]}}
 	}
 
-	return left + right, nil
+	return Int{value: left.value + right.value}, nil
 }

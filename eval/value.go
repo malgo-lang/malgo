@@ -10,7 +10,7 @@ import (
 
 type Value interface {
 	fmt.Stringer
-	match(pattern ast.Node) (map[Name]Value, bool)
+	Match(pattern ast.Node) (map[Name]Value, bool)
 }
 
 type Callable interface {
@@ -18,16 +18,18 @@ type Callable interface {
 }
 
 func Unit() Tuple {
-	return Tuple(make([]Value, 0))
+	return Tuple{values: make([]Value, 0)}
 }
 
-type Tuple []Value
+type Tuple struct {
+	values []Value
+}
 
 func (t Tuple) String() string {
 	var builder strings.Builder
 
 	fmt.Fprintf(&builder, "[")
-	for i, val := range t {
+	for i, val := range t.values {
 		if i != 0 {
 			fmt.Fprintf(&builder, ", ")
 		}
@@ -38,17 +40,17 @@ func (t Tuple) String() string {
 	return builder.String()
 }
 
-func (t Tuple) match(pattern ast.Node) (map[Name]Value, bool) {
+func (t Tuple) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): t}, true
 	case *ast.Tuple:
 		matches := make(map[Name]Value)
-		for i, elem := range t {
+		for i, elem := range t.values {
 			if i >= len(pattern.Exprs) {
 				return nil, false
 			}
-			m, ok := elem.match(pattern.Exprs[i])
+			m, ok := elem.Match(pattern.Exprs[i])
 			if !ok {
 				return nil, false
 			}
@@ -65,13 +67,15 @@ func (t Tuple) match(pattern ast.Node) (map[Name]Value, bool) {
 
 var _ Value = Tuple{}
 
-type Int int
-
-func (i Int) String() string {
-	return fmt.Sprintf("%d", i)
+type Int struct {
+	value int
 }
 
-func (i Int) match(pattern ast.Node) (map[Name]Value, bool) {
+func (i Int) String() string {
+	return fmt.Sprintf("%d", i.value)
+}
+
+func (i Int) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): i}, true
@@ -79,7 +83,7 @@ func (i Int) match(pattern ast.Node) (map[Name]Value, bool) {
 		if pattern.Kind != token.INTEGER {
 			return nil, false
 		}
-		if v, ok := pattern.Literal.(int); ok && v == int(i) {
+		if v, ok := pattern.Literal.(int); ok && v == int(i.value) {
 			return map[Name]Value{}, true
 		}
 	}
@@ -87,20 +91,22 @@ func (i Int) match(pattern ast.Node) (map[Name]Value, bool) {
 	return nil, false
 }
 
-var _ Value = Int(0)
+var _ Value = Int{}
 
-type String string
-
-func (s String) String() string {
-	return fmt.Sprintf("%q", string(s))
+type String struct {
+	value string
 }
 
-func (s String) match(pattern ast.Node) (map[Name]Value, bool) {
+func (s String) String() string {
+	return fmt.Sprintf("%q", s.value)
+}
+
+func (s String) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): s}, true
 	case *ast.Literal:
-		if pattern.Kind == token.STRING && pattern.Literal == s {
+		if pattern.Kind == token.STRING && pattern.Literal == s.value {
 			return map[Name]Value{}, true
 		}
 	}
@@ -108,7 +114,7 @@ func (s String) match(pattern ast.Node) (map[Name]Value, bool) {
 	return nil, false
 }
 
-var _ Value = String("")
+var _ Value = String{}
 
 // Function represents a closure value.
 type Function struct {
@@ -129,7 +135,7 @@ func (f Function) String() string {
 	return builder.String()
 }
 
-func (f Function) match(pattern ast.Node) (map[Name]Value, bool) {
+func (f Function) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): f}, true
@@ -173,7 +179,7 @@ func (t Thunk) String() string {
 	return "<thunk>"
 }
 
-func (t Thunk) match(pattern ast.Node) (map[Name]Value, bool) {
+func (t Thunk) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): t}, true
@@ -210,7 +216,7 @@ func (o Object) String() string {
 	return "<object>"
 }
 
-func (o Object) match(pattern ast.Node) (map[Name]Value, bool) {
+func (o Object) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): o}, true
@@ -242,7 +248,7 @@ func (d Data) String() string {
 	return builder.String()
 }
 
-func (d Data) match(pattern ast.Node) (map[Name]Value, bool) {
+func (d Data) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): d}, true
@@ -257,7 +263,7 @@ func (d Data) match(pattern ast.Node) (map[Name]Value, bool) {
 				if i >= len(pattern.Args) {
 					return nil, false
 				}
-				m, ok := elem.match(pattern.Args[i])
+				m, ok := elem.Match(pattern.Args[i])
 				if !ok {
 					return nil, false
 				}
@@ -287,7 +293,7 @@ func (c Constructor) String() string {
 	return fmt.Sprintf("%s/%d", c.Tag, c.Params)
 }
 
-func (c Constructor) match(pattern ast.Node) (map[Name]Value, bool) {
+func (c Constructor) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
 		return map[Name]Value{tokenToName(pattern.Name): c}, true

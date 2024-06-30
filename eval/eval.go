@@ -86,14 +86,14 @@ func (ev *Evaluator) evalLiteral(node *ast.Literal) (Value, error) {
 			return nil, utils.PosError{Where: node.Base(), Err: InvalidLiteralError{Kind: node.Kind}}
 		}
 
-		return Int(v), nil
+		return Int{value: v}, nil
 	case token.STRING:
 		v, ok := node.Literal.(string)
 		if !ok {
 			return nil, utils.PosError{Where: node.Base(), Err: InvalidLiteralError{Kind: node.Kind}}
 		}
 
-		return String(v), nil
+		return String{value: v}, nil
 	default:
 		return nil, utils.PosError{Where: node.Base(), Err: InvalidLiteralError{Kind: node.Kind}}
 	}
@@ -113,7 +113,7 @@ func (ev *Evaluator) evalTuple(node *ast.Tuple) (Value, error) {
 		}
 	}
 
-	return Tuple(values), nil
+	return Tuple{values}, nil
 }
 
 func (ev *Evaluator) evalAccess(node *ast.Access) (Value, error) {
@@ -188,7 +188,7 @@ func asInt(v Value) (Int, bool) {
 	case Int:
 		return v, true
 	default:
-		return 0, false
+		return Int{}, false
 	}
 }
 
@@ -251,7 +251,7 @@ func (ev *Evaluator) evalLet(node *ast.Let) error {
 	if err != nil {
 		return err
 	}
-	if env, ok := body.match(node.Bind); ok {
+	if env, ok := body.Match(node.Bind); ok {
 		for name, v := range env {
 			ev.evEnv.set(name, v)
 		}
@@ -322,7 +322,7 @@ func matchClause(clause *ast.CaseClause, scrs []Value) (map[Name]Value, bool) {
 	}
 	env := make(map[Name]Value)
 	for i, pattern := range clause.Patterns {
-		m, ok := scrs[i].match(pattern)
+		m, ok := scrs[i].Match(pattern)
 		if !ok {
 			return nil, false
 		}
