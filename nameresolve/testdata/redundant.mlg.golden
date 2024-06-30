@@ -1,0 +1,2 @@
+(def f.0 (lambda (:p1.2) (object (field h (case ((var :p1.2)) (clause (literal 0) (seq (literal 1))) (clause (var x.4) (object (field h (case ((var :p1.2)) (clause (var x.4) (seq (var x.4))))))))))))
+(def main.1 (lambda () (seq (prim print (access (call (var f.0) (literal 0)) h)) (prim print (access (access (call (var f.0) (literal 1)) h) h)))))

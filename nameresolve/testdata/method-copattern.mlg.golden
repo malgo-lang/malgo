@@ -1,0 +1,2 @@
+(def printer.0 (object (field print (lambda (:p1.2) (case ((var :p1.2)) (clause (var x.3) (seq (prim print (var x.3)))))))))
+(def main.1 (lambda () (seq (call (access (var printer.0) print) (literal 1)))))

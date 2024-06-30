@@ -1,0 +1,3 @@
+(def add (codata (clause (call (call # (var x)) (var y)) (seq (prim add (var x) (var y))))))
+(def mul (codata (clause (call (call # (var x)) (var y)) (seq (prim mul (var x) (var y))))))
+(def main (codata (clause (call #) (seq (prim print (call (call (var add) (literal 1)) (call (call (var mul) (literal 2)) (literal 3))))))))

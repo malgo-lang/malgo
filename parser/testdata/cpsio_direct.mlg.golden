@@ -1,0 +1,4 @@
+(def read_all_cps (codata (clause (call (call #) (var cont)) (seq (prim read_all_cps (var cont))))))
+(def print_cps (codata (clause (call (call # (var s)) (var cont)) (seq (prim print_cps (var s) (var cont))))))
+(def exit (codata (clause (call #) (seq (prim exit)))))
+(def main (codata (clause (call #) (seq (with (var s) (call (var read_all_cps))) (with  (call (var print_cps) (var s))) (call (var exit))))))

@@ -1,7 +1,0 @@
-data RGB = R | G | B
-
-def rtob = {R -> B, a -> a}
-
-foreign import malgo_print_string : String# -> ()
-
-def main = { {B -> malgo_print_string "OK"#, _ -> malgo_print_string "WRONG"# } (rtob R) }

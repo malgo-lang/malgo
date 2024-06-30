@@ -1,0 +1,9 @@
+def read_all_cps = { #(cont) -> prim(read_all_cps, cont) }
+def print_cps = { #(s)(cont) -> prim(print_cps, s, cont) }
+def exit = { prim(exit) }
+
+def main = {
+    with s <- read_all_cps;
+    with print_cps(s);
+    exit()
+}

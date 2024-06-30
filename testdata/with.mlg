@@ -1,0 +1,4 @@
+def main = {
+    with x, y <- { #()(cont) -> cont(1, 2) }();
+    prim(print, [x, y])
+}

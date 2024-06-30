@@ -1,0 +1,15 @@
+def option = {
+  #.none -> "none",
+  #.some(x) -> x,
+}
+
+def map = {
+  #(f, o.none) -> o.none,
+  #(f, o.some(x)) -> o.some(f(x)),
+}
+
+def addone = { x -> prim(add, x, 1) }
+
+def main = {
+  prim(print, map(addone, option.some(41)))
+}

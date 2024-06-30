@@ -1,46 +1,65 @@
-*~
-.#*
+# If you prefer the allow list template instead of the deny list, see community template:
+# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
+#
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
 
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# env file
+.env
+
+# General
 .DS_Store
-.dir-locals.el
+.AppleDouble
+.LSOverride
 
-.stack-work/
-dist-newstyle/
-.ghc.*
-stack.yaml.lock
-cabal.project.local
+# Icon must end with two \r
+Icon
 
-.vscode/
-.vim/
+# Thumbnails
+._*
 
-a.out
-tmp/
-test/tmp/
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
 
-*.ll
-*.mlgi
-*.idx
-*.kor
-*.mo
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
 
-!.golden/**/*.ll
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-.shake/
-.malgo-work/
+# Local History for Visual Studio Code
+.history/
 
-*.prof
-
-.hie/
-weeder.dhall
-
-*.satysfi-aux
-
-compile_flags.txt
-
-sisku_config.json
-
-target/
-
-result*
-
-node_modules/
+# Built Visual Studio Code Extensions
+*.vsix

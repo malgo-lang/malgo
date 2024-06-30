@@ -1,0 +1,37 @@
+linters:
+  presets:
+    - bugs
+    - comment
+    - error
+    - format
+    - import
+    - metalinter
+    - module
+    - performance
+    - style
+    - test
+    - unused
+    # Disable
+    # - sql
+    # - complexity
+  disable:
+    - ireturn
+    - wsl
+    - gomnd
+    - depguard
+    - mnd
+    - exhaustruct
+  enable:
+    - gosimple
+    - unconvert
+linters-settings:
+  godot:
+    exclude:
+      - ;$
+  forbidigo:
+    forbid:
+      - ^print.*$
+  varnamelen:
+    ignore-decls:
+      - i int
+      - ok bool
