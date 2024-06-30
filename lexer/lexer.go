@@ -97,6 +97,8 @@ func (l *lexer) scanToken() error {
 		l.column = 1
 
 		return nil
+	case '/':
+		return l.skipComment()
 	case '"':
 		return l.string(loc)
 	default:
@@ -119,12 +121,53 @@ func (l *lexer) scanToken() error {
 	return UnexpectedCharacterError{Line: l.line, Char: char}
 }
 
-type UnterminatedStringError struct {
+func (l *lexer) skipComment() error {
+	if l.peek() == '/' {
+		l.advance()
+		return l.skipLineComment()
+	}
+	if l.peek() == '*' {
+		l.advance()
+		return l.skipBlockComment()
+	}
+
+	// If `/` is not followed by `/` or `*`, it is an operator.
+	l.addToken(l.location(), token.OPERATOR, nil)
+	return nil
+}
+
+func (l *lexer) skipLineComment() error {
+	for l.peek() != '\n' && !l.isAtEnd() {
+		l.advance()
+	}
+
+	return nil
+}
+
+func (l *lexer) skipBlockComment() error {
+	for !l.isAtEnd() {
+		c := l.advance()
+
+		if c == '*' && l.peek() == '/' {
+			l.advance()
+
+			return nil
+		}
+		if c == '\n' {
+			l.line++
+			l.column = 1
+		}
+	}
+
+	return UnterminatedBlockCommentError{Line: l.line}
+}
+
+type UnterminatedBlockCommentError struct {
 	Line int
 }
 
-func (e UnterminatedStringError) Error() string {
-	return fmt.Sprintf("unterminated string at line %d", e.Line)
+func (e UnterminatedBlockCommentError) Error() string {
+	return fmt.Sprintf("unterminated block comment at line %d", e.Line)
 }
 
 func (l *lexer) string(loc token.Location) error {
@@ -155,6 +198,14 @@ func (l *lexer) string(loc token.Location) error {
 	l.addToken(loc, token.STRING, value)
 
 	return nil
+}
+
+type UnterminatedStringError struct {
+	Line int
+}
+
+func (e UnterminatedStringError) Error() string {
+	return fmt.Sprintf("unterminated string at line %d", e.Line)
 }
 
 func isDigit(c rune) bool {

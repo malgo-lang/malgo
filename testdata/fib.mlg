@@ -1,11 +1,16 @@
-def + = { #(x, y,) -> prim(add, x, y) }
+// Function returning the stream of zipped with the given function of two streams
 def zipWith = {
   #(f, xs, ys).head -> f(xs.head, ys.head),
   #(f, xs, ys).tail -> zipWith(f, xs.tail, ys.tail),
 }
+
+// Operators can be defined as functions
+def + = { #(x, y,) -> prim(add, x, y) /* add is a primitive function that adds two numbers */ }
+
 def fib = {
   #.head -> 1,
   #.tail.head -> 1,
   #.tail.tail -> zipWith({#(x, y) -> x + y}, fib, fib.tail),
 }
+
 def main = { #() -> prim(print, fib.tail.tail.tail.head) }

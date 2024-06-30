@@ -1,4 +1,4 @@
-(def + (lambda (:p1 :p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (prim add (var x) (var y)))))))
 (def zipWith (lambda (:p1 :p2 :p3) (object (field head (case ((var :p1) (var :p2) (var :p3)) (clause ((var f) (var xs) (var ys)) (seq (call (var f) (access (var xs) head) (access (var ys) head)))))) (field tail (case ((var :p1) (var :p2) (var :p3)) (clause ((var f) (var xs) (var ys)) (seq (call (var zipWith) (var f) (access (var xs) tail) (access (var ys) tail)))))))))
+(def + (lambda (:p1 :p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (prim add (var x) (var y)))))))
 (def fib (object (field head (seq (literal 1))) (field tail (object (field head (seq (literal 1))) (field tail (seq (call (var zipWith) (lambda (:p1 :p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (binary (var x) + (var y)))))) (var fib) (access (var fib) tail))))))))
 (def main (lambda () (seq (prim print (access (access (access (access (var fib) tail) tail) tail) head)))))
