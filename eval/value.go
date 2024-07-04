@@ -425,6 +425,20 @@ func traceAsString(value Value) fmt.Stringer {
 	return value.Trace()
 }
 
+type Var struct {
+	Name token.Token
+}
+
+func (v Var) String() string {
+	return v.Name.String()
+}
+
+func (v Var) MatchTrace(_ ast.Node) (map[Name]Value, bool) {
+	return nil, false
+}
+
+var _ Trace = Var{}
+
 type Call struct {
 	Func Value
 	Args []Value
@@ -441,7 +455,7 @@ func (c Call) String() string {
 }
 
 func (c Call) MatchTrace(pattern ast.Node) (map[Name]Value, bool) {
-	if pattern, ok := pattern.(*ast.Call); ok {
+	if pattern, ok := pattern.(*ast.Call); ok && len(pattern.Args) == len(c.Args) {
 		matches := make(map[Name]Value)
 		m, ok := c.Func.Match(pattern.Func)
 		if !ok {
@@ -449,10 +463,6 @@ func (c Call) MatchTrace(pattern ast.Node) (map[Name]Value, bool) {
 		}
 		for k, v := range m {
 			matches[k] = v
-		}
-
-		if len(pattern.Args) != len(c.Args) {
-			return nil, false
 		}
 
 		for i, arg := range c.Args {
