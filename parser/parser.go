@@ -53,6 +53,37 @@ func (p *Parser) decl() (ast.Node, error) {
 	return p.infixDecl()
 }
 
+func (p *Parser) typeparams() ([]ast.Node, error) {
+	// typeparams = "(" (type ("," type)*)? ")" ;
+	typeparams := []ast.Node{}
+	if _, err := p.consume(token.LEFTPAREN); err != nil {
+		return typeparams, err
+	}
+	if !p.match(token.RIGHTPAREN) {
+		typeparam, err := p.typ()
+		if err != nil {
+			return typeparams, err
+		}
+		typeparams = append(typeparams, typeparam)
+		for p.match(token.COMMA) {
+			p.advance()
+			if p.match(token.RIGHTPAREN) {
+				break
+			}
+			typeparam, err := p.typ()
+			if err != nil {
+				return typeparams, err
+			}
+			typeparams = append(typeparams, typeparam)
+		}
+	}
+	if _, err := p.consume(token.RIGHTPAREN); err != nil {
+		return typeparams, err
+	}
+
+	return typeparams, nil
+}
+
 // dataDecl = "data" IDENT (typeparams1)? "=" "{" constructor ("," constructor)* ","? "}" ;
 // typeparams1 = "(" IDENT ("," IDENT)* ","? ")" ;
 func (p *Parser) dataDecl() (*ast.TypeDecl, error) {
@@ -67,31 +98,14 @@ func (p *Parser) dataDecl() (*ast.TypeDecl, error) {
 	var def ast.Node
 	def = &ast.Var{Name: typename}
 	if p.match(token.LEFTPAREN) {
-		if _, err := p.consume(token.LEFTPAREN); err != nil {
+		typeparams, err := p.typeparams()
+		if err != nil {
 			return nil, err
 		}
-		typeparams := []ast.Node{}
-		if !p.match(token.RIGHTPAREN) {
-			name, err := p.consume(token.IDENT)
-			if err != nil {
-				return nil, err
-			}
-			typeparams = append(typeparams, &ast.Var{Name: name})
-			for p.match(token.COMMA) {
-				p.advance()
-				if p.match(token.RIGHTPAREN) {
-					break
-				}
-				name, err := p.consume(token.IDENT)
-				if err != nil {
-					return nil, err
-				}
-				typeparams = append(typeparams, &ast.Var{Name: name})
-			}
+		if len(typeparams) < 1 {
+			return nil, unexpectedToken(p.previous(), "type parameter")
 		}
-		if _, err := p.consume(token.RIGHTPAREN); err != nil {
-			return nil, err
-		}
+
 		def = &ast.Call{Func: def, Args: typeparams}
 	}
 
@@ -135,30 +149,12 @@ func (p *Parser) typeDecl() (*ast.TypeDecl, error) {
 	var def ast.Node
 	def = &ast.Var{Name: typename}
 	if p.match(token.LEFTPAREN) {
-		if _, err := p.consume(token.LEFTPAREN); err != nil {
+		typeparams, err := p.typeparams()
+		if err != nil {
 			return nil, err
 		}
-		typeparams := []ast.Node{}
-		if !p.match(token.RIGHTPAREN) {
-			name, err := p.consume(token.IDENT)
-			if err != nil {
-				return nil, err
-			}
-			typeparams = append(typeparams, &ast.Var{Name: name})
-			for p.match(token.COMMA) {
-				p.advance()
-				if p.match(token.RIGHTPAREN) {
-					break
-				}
-				name, err := p.consume(token.IDENT)
-				if err != nil {
-					return nil, err
-				}
-				typeparams = append(typeparams, &ast.Var{Name: name})
-			}
-		}
-		if _, err := p.consume(token.RIGHTPAREN); err != nil {
-			return nil, err
+		if len(typeparams) < 1 {
+			return nil, unexpectedToken(p.previous(), "type parameter")
 		}
 		def = &ast.Call{Func: def, Args: typeparams}
 	}
@@ -175,8 +171,8 @@ func (p *Parser) typeDecl() (*ast.TypeDecl, error) {
 	return &ast.TypeDecl{Def: def, Types: []ast.Node{typ}}, nil
 }
 
-// constructor = UPPER_IDENT "(" typeparams ")" ;
-// typeparams = (type ("," type)*)? ;
+// constructor = UPPER_IDENT typeparams ;
+// typeparams = "(" (type ("," type)*)? ")" ;
 func (p *Parser) constructor() (*ast.Call, error) {
 	name, err := p.consume(token.IDENT)
 	if err != nil {
@@ -186,29 +182,8 @@ func (p *Parser) constructor() (*ast.Call, error) {
 		return nil, unexpectedToken(name, "identifier started with a upper-case character")
 	}
 
-	if _, err := p.consume(token.LEFTPAREN); err != nil {
-		return nil, err
-	}
-	typeparams := []ast.Node{}
-	if !p.match(token.RIGHTPAREN) {
-		typeparam, err := p.typ()
-		if err != nil {
-			return nil, err
-		}
-		typeparams = append(typeparams, typeparam)
-		for p.match(token.COMMA) {
-			p.advance()
-			if p.match(token.RIGHTPAREN) {
-				break
-			}
-			typeparam, err := p.typ()
-			if err != nil {
-				return nil, err
-			}
-			typeparams = append(typeparams, typeparam)
-		}
-	}
-	if _, err := p.consume(token.RIGHTPAREN); err != nil {
+	typeparams, err := p.typeparams()
+	if err != nil {
 		return nil, err
 	}
 
