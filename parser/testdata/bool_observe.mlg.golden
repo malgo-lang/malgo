@@ -1,0 +1,3 @@
+(def bool (codata (clause (access # false) (seq (literal 0))) (clause (access # true) (seq (literal 1)))))
+(def flip (codata (clause (call # (access (var b) false)) (seq (access (var b) true))) (clause (call # (access (var b) true)) (seq (access (var b) false)))))
+(def main (codata (clause (call #) (seq (let (var x) (call (var flip) (access (var bool) true))) (prim print (var x)) (prim print_trace (var x))))))
