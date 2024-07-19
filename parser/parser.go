@@ -658,14 +658,22 @@ func (p *Parser) callPatTail(fun ast.Node) (ast.Node, error) {
 // tuplePat = "[" "]" | "[" pattern ("," pattern)* ","? "]" ;
 func (p *Parser) atomPat() (ast.Node, error) {
 	//exhaustive:ignore
-	switch tok := p.advance(); tok.Kind {
+	switch tok := p.peek(); tok.Kind {
 	case token.SHARP:
+		p.advance()
+
 		return &ast.This{Token: tok}, nil
 	case token.IDENT:
+		p.advance()
+
 		return &ast.Var{Name: tok}, nil
 	case token.INTEGER, token.STRING:
+		p.advance()
+
 		return &ast.Literal{Token: tok}, nil
 	case token.LEFTPAREN:
+		p.advance()
+
 		pat, err := p.pattern()
 		if err != nil {
 			return nil, err
@@ -676,32 +684,24 @@ func (p *Parser) atomPat() (ast.Node, error) {
 
 		return &ast.Paren{Expr: pat}, nil
 	case token.LEFTBRACKET:
-		var pats []ast.Node
-		if !p.match(token.RIGHTBRACKET) {
-			pat, err := p.pattern()
-			if err != nil {
-				return nil, err
-			}
-			pats = append(pats, pat)
-			for p.match(token.COMMA) {
-				p.advance()
-				if p.match(token.RIGHTBRACKET) {
-					break
-				}
-				pat, err := p.pattern()
-				if err != nil {
-					return nil, err
-				}
-				pats = append(pats, pat)
-			}
-		}
-		if _, err := p.consume(token.RIGHTBRACKET); err != nil {
+		pats, err := commaSeparated(p, token.LEFTBRACKET, token.RIGHTBRACKET, func(p *Parser) (ast.Node, error) {
+			return p.pattern()
+		})
+		if err != nil {
 			return nil, err
 		}
 
 		return &ast.Tuple{Exprs: pats}, nil
 	default:
-		return nil, unexpectedToken(tok, "identifier", "integer", "string", "`(`")
+		return nil, unexpectedToken(
+			tok,
+			token.SHARP.String(),
+			token.IDENT.String(),
+			token.INTEGER.String(),
+			token.STRING.String(),
+			token.LEFTPAREN.String(),
+			token.LEFTBRACKET.String(),
+		)
 	}
 }
 
@@ -738,30 +738,20 @@ func (p *Parser) callType() (ast.Node, error) {
 	var err error
 	if p.match(token.PRIM) {
 		p.advance()
-		if _, err := p.consume(token.LEFTPAREN); err != nil {
-			return nil, err
-		}
-		name, err := p.consume(token.IDENT)
+		args, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+			return p.typ()
+		})
 		if err != nil {
 			return nil, err
 		}
-		args := []ast.Node{}
-		if !p.match(token.RIGHTPAREN) {
-			for p.match(token.COMMA) {
-				p.advance()
-				if p.match(token.RIGHTPAREN) {
-					break
-				}
-				arg, err := p.typ()
-				if err != nil {
-					return nil, err
-				}
-				args = append(args, arg)
-			}
+
+		if args[0].Base().Kind != token.IDENT {
+			return nil, unexpectedToken(args[0].Base(), token.IDENT.String())
 		}
-		if _, err := p.consume(token.RIGHTPAREN); err != nil {
-			return nil, err
-		}
+
+		name := args[0].Base()
+		args = args[1:]
+
 		typ = &ast.Prim{Name: name, Args: args}
 	} else {
 		typ, err = p.atomType()
@@ -795,52 +785,30 @@ func (p *Parser) callTypeTail(fun ast.Node) (*ast.Call, error) {
 // tupleType = "[" "]" | "[" type ("," type)* ","? "]";
 func (p *Parser) atomType() (ast.Node, error) {
 	//exhaustive:ignore
-	switch tok := p.advance(); tok.Kind {
+	switch tok := p.peek(); tok.Kind {
 	case token.IDENT:
+		p.advance()
+
 		return &ast.Var{Name: tok}, nil
 	case token.LEFTBRACE:
-		field, err := p.fieldType()
+		p.advance()
+		fields, err := commaSeparated(p, token.LEFTBRACE, token.RIGHTBRACE, func(p *Parser) (*ast.Field, error) {
+			return p.fieldType()
+		})
 		if err != nil {
 			return nil, err
 		}
-		fields := []*ast.Field{field}
-		for p.match(token.COMMA) {
-			p.advance()
-			if p.match(token.RIGHTBRACE) {
-				break
-			}
-			field, err := p.fieldType()
-			if err != nil {
-				return nil, err
-			}
-			fields = append(fields, field)
-		}
-		if _, err := p.consume(token.RIGHTBRACE); err != nil {
-			return nil, err
+		if len(fields) < 1 {
+			return nil, unexpectedToken(p.previous(), "field")
 		}
 
 		return &ast.Object{Fields: fields}, nil
 	case token.LEFTBRACKET:
-		var types []ast.Node
-		if !p.match(token.RIGHTBRACKET) {
-			typ, err := p.typ()
-			if err != nil {
-				return nil, err
-			}
-			types = append(types, typ)
-			for p.match(token.COMMA) {
-				p.advance()
-				if p.match(token.RIGHTBRACKET) {
-					break
-				}
-				typ, err := p.typ()
-				if err != nil {
-					return nil, err
-				}
-				types = append(types, typ)
-			}
-		}
-		if _, err := p.consume(token.RIGHTBRACKET); err != nil {
+		p.advance()
+		types, err := commaSeparated(p, token.LEFTBRACKET, token.RIGHTBRACKET, func(p *Parser) (ast.Node, error) {
+			return p.typ()
+		})
+		if err != nil {
 			return nil, err
 		}
 
