@@ -53,35 +53,40 @@ func (p *Parser) decl() (ast.Node, error) {
 	return p.infixDecl()
 }
 
-func (p *Parser) typeparams() ([]ast.Node, error) {
-	// typeparams = "(" (type ("," type)*)? ")" ;
-	typeparams := []ast.Node{}
-	if _, err := p.consume(token.LEFTPAREN); err != nil {
-		return typeparams, err
-	}
-	if !p.match(token.RIGHTPAREN) {
-		typeparam, err := p.typ()
-		if err != nil {
-			return typeparams, err
-		}
-		typeparams = append(typeparams, typeparam)
-		for p.match(token.COMMA) {
-			p.advance()
-			if p.match(token.RIGHTPAREN) {
-				break
-			}
-			typeparam, err := p.typ()
-			if err != nil {
-				return typeparams, err
-			}
-			typeparams = append(typeparams, typeparam)
-		}
-	}
-	if _, err := p.consume(token.RIGHTPAREN); err != nil {
-		return typeparams, err
+func commaSeparated[T any](
+	parser *Parser,
+	startToken, endToken token.Kind,
+	parseElement func(*Parser) (T, error),
+) ([]T, error) {
+	elements := []T{}
+	if _, err := parser.consume(startToken); err != nil {
+		return elements, err
 	}
 
-	return typeparams, nil
+	if !parser.match(endToken) {
+		element, err := parseElement(parser)
+		if err != nil {
+			return elements, err
+		}
+		elements = append(elements, element)
+		for parser.match(token.COMMA) {
+			parser.advance()
+			if parser.match(endToken) {
+				break
+			}
+			element, err := parseElement(parser)
+			if err != nil {
+				return elements, err
+			}
+			elements = append(elements, element)
+		}
+	}
+
+	if _, err := parser.consume(endToken); err != nil {
+		return elements, err
+	}
+
+	return elements, nil
 }
 
 // dataDecl = "data" IDENT (typeparams1)? "=" "{" constructor ("," constructor)* ","? "}" ;
@@ -98,7 +103,14 @@ func (p *Parser) dataDecl() (*ast.TypeDecl, error) {
 	var def ast.Node
 	def = &ast.Var{Name: typename}
 	if p.match(token.LEFTPAREN) {
-		typeparams, err := p.typeparams()
+		typeparams, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+			name, err := p.consume(token.IDENT)
+			if err != nil {
+				return nil, err
+			}
+
+			return &ast.Var{Name: name}, nil
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -113,23 +125,10 @@ func (p *Parser) dataDecl() (*ast.TypeDecl, error) {
 		return nil, err
 	}
 
-	if _, err := p.consume(token.LEFTBRACE); err != nil {
-		return nil, err
-	}
-
-	var types []ast.Node
-	for !p.match(token.RIGHTBRACE) {
-		typ, err := p.constructor()
-		if err != nil {
-			return nil, err
-		}
-		types = append(types, typ)
-		if p.match(token.COMMA) {
-			p.advance()
-		}
-	}
-
-	if _, err := p.consume(token.RIGHTBRACE); err != nil {
+	types, err := commaSeparated(p, token.LEFTBRACE, token.RIGHTBRACE, func(p *Parser) (ast.Node, error) {
+		return p.constructor()
+	})
+	if err != nil {
 		return nil, err
 	}
 
@@ -149,7 +148,14 @@ func (p *Parser) typeDecl() (*ast.TypeDecl, error) {
 	var def ast.Node
 	def = &ast.Var{Name: typename}
 	if p.match(token.LEFTPAREN) {
-		typeparams, err := p.typeparams()
+		typeparams, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+			name, err := p.consume(token.IDENT)
+			if err != nil {
+				return nil, err
+			}
+
+			return &ast.Var{Name: name}, nil
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -182,7 +188,9 @@ func (p *Parser) constructor() (*ast.Call, error) {
 		return nil, unexpectedToken(name, "identifier started with a upper-case character")
 	}
 
-	typeparams, err := p.typeparams()
+	typeparams, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+		return p.typ()
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -487,32 +495,11 @@ func (p *Parser) accessTail(receiver ast.Node) (ast.Node, error) {
 }
 
 // callTail = "(" ")" | "(" expr ("," expr)* ","? ")" ;
-//
-//nolint:dupl
 func (p *Parser) callTail(fun ast.Node) (ast.Node, error) {
-	if _, err := p.consume(token.LEFTPAREN); err != nil {
-		return nil, err
-	}
-	args := []ast.Node{}
-	if !p.match(token.RIGHTPAREN) {
-		arg, err := p.expr()
-		if err != nil {
-			return nil, err
-		}
-		args = append(args, arg)
-		for p.match(token.COMMA) {
-			p.advance()
-			if p.match(token.RIGHTPAREN) {
-				break
-			}
-			arg, err := p.expr()
-			if err != nil {
-				return nil, err
-			}
-			args = append(args, arg)
-		}
-	}
-	if _, err := p.consume(token.RIGHTPAREN); err != nil {
+	args, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+		return p.expr()
+	})
+	if err != nil {
 		return nil, err
 	}
 
@@ -592,33 +579,13 @@ func (p *Parser) clauseHead() (ast.Node, error) {
 	//nolint:exhaustive
 	switch p.peek().Kind {
 	case token.SHARP:
-
 		return p.pattern()
 	case token.LEFTPAREN:
-		tok, err := p.consume(token.LEFTPAREN)
+		tok := p.peek()
+		params, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+			return p.pattern()
+		})
 		if err != nil {
-			return nil, err
-		}
-		params := []ast.Node{}
-		if !p.match(token.RIGHTPAREN) {
-			param, err := p.pattern()
-			if err != nil {
-				return nil, err
-			}
-			params = append(params, param)
-			for p.match(token.COMMA) {
-				p.advance()
-				if p.match(token.RIGHTPAREN) {
-					break
-				}
-				param, err := p.pattern()
-				if err != nil {
-					return nil, err
-				}
-				params = append(params, param)
-			}
-		}
-		if _, err := p.consume(token.RIGHTPAREN); err != nil {
 			return nil, err
 		}
 
@@ -686,32 +653,11 @@ func (p *Parser) accessPatTail(receiver ast.Node) (ast.Node, error) {
 }
 
 // callPatTail = "(" ")" | "(" pattern ("," pattern)* ","? ")" ;
-//
-//nolint:dupl
 func (p *Parser) callPatTail(fun ast.Node) (ast.Node, error) {
-	if _, err := p.consume(token.LEFTPAREN); err != nil {
-		return nil, err
-	}
-	args := []ast.Node{}
-	if !p.match(token.RIGHTPAREN) {
-		arg, err := p.pattern()
-		if err != nil {
-			return nil, err
-		}
-		args = append(args, arg)
-		for p.match(token.COMMA) {
-			p.advance()
-			if p.match(token.RIGHTPAREN) {
-				break
-			}
-			arg, err := p.pattern()
-			if err != nil {
-				return nil, err
-			}
-			args = append(args, arg)
-		}
-	}
-	if _, err := p.consume(token.RIGHTPAREN); err != nil {
+	args, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+		return p.pattern()
+	})
+	if err != nil {
 		return nil, err
 	}
 
@@ -845,29 +791,10 @@ func (p *Parser) callType() (ast.Node, error) {
 }
 
 func (p *Parser) callTypeTail(fun ast.Node) (*ast.Call, error) {
-	if _, err := p.consume(token.LEFTPAREN); err != nil {
-		return nil, err
-	}
-	args := []ast.Node{}
-	if !p.match(token.RIGHTPAREN) {
-		arg, err := p.typ()
-		if err != nil {
-			return nil, err
-		}
-		args = append(args, arg)
-		for p.match(token.COMMA) {
-			p.advance()
-			if p.match(token.RIGHTPAREN) {
-				break
-			}
-			arg, err := p.typ()
-			if err != nil {
-				return nil, err
-			}
-			args = append(args, arg)
-		}
-	}
-	if _, err := p.consume(token.RIGHTPAREN); err != nil {
+	args, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+		return p.typ()
+	})
+	if err != nil {
 		return nil, err
 	}
 
