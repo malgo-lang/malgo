@@ -342,12 +342,18 @@ func (p *Parser) with() (*ast.With, error) {
 // codata = "{" clause ("," clause)* ","? "}" ;
 func (p *Parser) atom() (ast.Node, error) {
 	//exhaustive:ignore
-	switch tok := p.advance(); tok.Kind {
+	switch tok := p.peek(); tok.Kind {
 	case token.IDENT:
+		p.advance()
+
 		return &ast.Var{Name: tok}, nil
 	case token.INTEGER, token.STRING:
+		p.advance()
+
 		return &ast.Literal{Token: tok}, nil
 	case token.LEFTPAREN:
+		p.advance()
+
 		expr, err := p.expr()
 		if err != nil {
 			return nil, err
@@ -358,26 +364,10 @@ func (p *Parser) atom() (ast.Node, error) {
 
 		return &ast.Paren{Expr: expr}, nil
 	case token.LEFTBRACKET:
-		var exprs []ast.Node
-		if !p.match(token.RIGHTBRACKET) {
-			expr, err := p.expr()
-			if err != nil {
-				return nil, err
-			}
-			exprs = append(exprs, expr)
-			for p.match(token.COMMA) {
-				p.advance()
-				if p.match(token.RIGHTBRACKET) {
-					break
-				}
-				expr, err := p.expr()
-				if err != nil {
-					return nil, err
-				}
-				exprs = append(exprs, expr)
-			}
-		}
-		if _, err := p.consume(token.RIGHTBRACKET); err != nil {
+		exprs, err := commaSeparated(p, token.LEFTBRACKET, token.RIGHTBRACKET, func(p *Parser) (ast.Node, error) {
+			return p.expr()
+		})
+		if err != nil {
 			return nil, err
 		}
 
@@ -385,34 +375,32 @@ func (p *Parser) atom() (ast.Node, error) {
 	case token.LEFTBRACE:
 		return p.codata()
 	case token.PRIM:
-		if _, err := p.consume(token.LEFTPAREN); err != nil {
-			return nil, err
-		}
-		name, err := p.consume(token.IDENT)
+		p.advance()
+		args, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
+			return p.expr()
+		})
 		if err != nil {
 			return nil, err
 		}
-		args := []ast.Node{}
-		if !p.match(token.RIGHTPAREN) {
-			for p.match(token.COMMA) {
-				p.advance()
-				if p.match(token.RIGHTPAREN) {
-					break
-				}
-				arg, err := p.expr()
-				if err != nil {
-					return nil, err
-				}
-				args = append(args, arg)
-			}
+
+		if args[0].Base().Kind != token.IDENT {
+			return nil, unexpectedToken(args[0].Base(), token.IDENT.String())
 		}
-		if _, err := p.consume(token.RIGHTPAREN); err != nil {
-			return nil, err
-		}
+		name := args[0].Base()
+		args = args[1:]
 
 		return &ast.Prim{Name: name, Args: args}, nil
 	default:
-		return nil, unexpectedToken(tok, "identifier", "integer", "string", "`(`", "`{`")
+		return nil, unexpectedToken(
+			tok,
+			token.IDENT.String(),
+			token.INTEGER.String(),
+			token.STRING.String(),
+			token.LEFTPAREN.String(),
+			token.LEFTBRACKET.String(),
+			token.LEFTBRACE.String(),
+			token.PRIM.String(),
+		)
 	}
 }
 
@@ -508,6 +496,8 @@ func (p *Parser) callTail(fun ast.Node) (ast.Node, error) {
 
 // codata = "{" clause ("," clause)* ","? "}" ;
 func (p *Parser) codata() (*ast.Codata, error) {
+	p.advance()
+
 	clause, err := p.clause()
 	if err != nil {
 		return nil, err
@@ -889,10 +879,13 @@ func (p *Parser) fieldType() (*ast.Field, error) {
 	return &ast.Field{Name: name.Lexeme, Expr: typ}, nil
 }
 
+// peek returns the current token in the token stream without consuming it.
 func (p Parser) peek() token.Token {
 	return p.tokens[p.current]
 }
 
+// advance moves the parser to the next token in the token stream.
+// It returns the current token before advancing.
 func (p *Parser) advance() token.Token {
 	if !p.IsAtEnd() {
 		p.current++
@@ -901,14 +894,18 @@ func (p *Parser) advance() token.Token {
 	return p.previous()
 }
 
+// previous returns the previous token in the token stream.
 func (p Parser) previous() token.Token {
 	return p.tokens[p.current-1]
 }
 
+// IsAtEnd checks if the parser has reached the end of the input.
 func (p Parser) IsAtEnd() bool {
 	return p.peek().Kind == token.EOF
 }
 
+// match checks if the current token in the input stream has the specified kind.
+// It returns true if the current token matches the specified kind, false otherwise.
 func (p Parser) match(kind token.Kind) bool {
 	if p.IsAtEnd() {
 		return false
