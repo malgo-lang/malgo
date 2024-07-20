@@ -115,7 +115,7 @@ func (p *Parser) dataDecl() (*ast.TypeDecl, error) {
 			return nil, err
 		}
 		if len(typeparams) < 1 {
-			return nil, unexpectedToken(p.previous(), "type parameter")
+			return nil, notEnough(p.previous(), len(typeparams), 1, "type parameter")
 		}
 
 		def = &ast.Call{Func: def, Args: typeparams}
@@ -160,7 +160,7 @@ func (p *Parser) typeDecl() (*ast.TypeDecl, error) {
 			return nil, err
 		}
 		if len(typeparams) < 1 {
-			return nil, unexpectedToken(p.previous(), "type parameter")
+			return nil, notEnough(p.previous(), len(typeparams), 1, "type parameter")
 		}
 		def = &ast.Call{Func: def, Args: typeparams}
 	}
@@ -185,7 +185,7 @@ func (p *Parser) constructor() (*ast.Call, error) {
 		return nil, err
 	}
 	if !utils.IsUpper(name.Lexeme) {
-		return nil, unexpectedToken(name, "identifier started with a upper-case character")
+		return nil, notUpper(name)
 	}
 
 	typeparams, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
@@ -210,7 +210,7 @@ func (p *Parser) varDecl() (*ast.VarDecl, error) {
 	case p.match(token.OPERATOR):
 		name = p.advance()
 	default:
-		return nil, unexpectedToken(p.peek(), "identifier", "operator")
+		return nil, unexpectedToken(p.peek(), token.IDENT, token.OPERATOR)
 	}
 	var typ ast.Node
 	var expr ast.Node
@@ -237,7 +237,7 @@ func (p *Parser) varDecl() (*ast.VarDecl, error) {
 func (p *Parser) infixDecl() (*ast.InfixDecl, error) {
 	kind := p.advance()
 	if kind.Kind != token.INFIX && kind.Kind != token.INFIXL && kind.Kind != token.INFIXR {
-		return nil, unexpectedToken(p.peek(), "`infix`", "`infixl`", "`infixr`")
+		return nil, unexpectedToken(kind, token.INFIX, token.INFIXL, token.INFIXR)
 	}
 	precedence, err := p.consume(token.INTEGER)
 	if err != nil {
@@ -254,7 +254,7 @@ func (p *Parser) infixDecl() (*ast.InfixDecl, error) {
 // expr = let | with | assert ;
 func (p *Parser) expr() (ast.Node, error) {
 	if p.IsAtEnd() {
-		return nil, unexpectedToken(p.peek(), "expression")
+		return nil, unexpectedEOF()
 	}
 	if p.match(token.LET) {
 		return p.let()
@@ -384,7 +384,7 @@ func (p *Parser) atom() (ast.Node, error) {
 		}
 
 		if args[0].Base().Kind != token.IDENT {
-			return nil, unexpectedToken(args[0].Base(), token.IDENT.String())
+			return nil, unexpectedToken(args[0].Base(), token.IDENT)
 		}
 		name := args[0].Base()
 		args = args[1:]
@@ -393,13 +393,13 @@ func (p *Parser) atom() (ast.Node, error) {
 	default:
 		return nil, unexpectedToken(
 			tok,
-			token.IDENT.String(),
-			token.INTEGER.String(),
-			token.STRING.String(),
-			token.LEFTPAREN.String(),
-			token.LEFTBRACKET.String(),
-			token.LEFTBRACE.String(),
-			token.PRIM.String(),
+			token.IDENT,
+			token.INTEGER,
+			token.STRING,
+			token.LEFTPAREN,
+			token.LEFTBRACKET,
+			token.LEFTBRACE,
+			token.PRIM,
 		)
 	}
 }
@@ -594,7 +594,7 @@ func (p *Parser) clauseHead() (ast.Node, error) {
 // pattern = methodPat ;
 func (p *Parser) pattern() (ast.Node, error) {
 	if p.IsAtEnd() {
-		return nil, unexpectedToken(p.peek(), "pattern")
+		return nil, unexpectedEOF()
 	}
 
 	return p.methodPat()
@@ -695,12 +695,12 @@ func (p *Parser) atomPat() (ast.Node, error) {
 	default:
 		return nil, unexpectedToken(
 			tok,
-			token.SHARP.String(),
-			token.IDENT.String(),
-			token.INTEGER.String(),
-			token.STRING.String(),
-			token.LEFTPAREN.String(),
-			token.LEFTBRACKET.String(),
+			token.SHARP,
+			token.IDENT,
+			token.INTEGER,
+			token.STRING,
+			token.LEFTPAREN,
+			token.LEFTBRACKET,
 		)
 	}
 }
@@ -708,7 +708,7 @@ func (p *Parser) atomPat() (ast.Node, error) {
 // type = binopType ;
 func (p *Parser) typ() (ast.Node, error) {
 	if p.IsAtEnd() {
-		return nil, unexpectedToken(p.peek(), "type")
+		return nil, unexpectedEOF()
 	}
 
 	return p.binopType()
@@ -746,7 +746,7 @@ func (p *Parser) callType() (ast.Node, error) {
 		}
 
 		if args[0].Base().Kind != token.IDENT {
-			return nil, unexpectedToken(args[0].Base(), token.IDENT.String())
+			return nil, unexpectedToken(args[0].Base(), token.IDENT)
 		}
 
 		name := args[0].Base()
@@ -799,7 +799,7 @@ func (p *Parser) atomType() (ast.Node, error) {
 			return nil, err
 		}
 		if len(fields) < 1 {
-			return nil, unexpectedToken(p.previous(), "field")
+			return nil, notEnough(p.previous(), len(fields), 1, "field")
 		}
 
 		return &ast.Object{Fields: fields}, nil
@@ -824,7 +824,7 @@ func (p *Parser) atomType() (ast.Node, error) {
 
 		return &ast.Paren{Expr: typ}, nil
 	default:
-		return nil, unexpectedToken(tok, "identifier", "`{`", "`(`")
+		return nil, unexpectedToken(tok, token.IDENT, token.LEFTBRACE, token.LEFTBRACKET, token.LEFTPAREN)
 	}
 }
 
@@ -887,28 +887,61 @@ func (p *Parser) consume(kind token.Kind) (token.Token, error) {
 		return p.advance(), nil
 	}
 
-	return p.peek(), unexpectedToken(p.peek(), kind.String())
+	return p.peek(), unexpectedToken(p.peek(), kind)
 }
 
 type UnexpectedTokenError struct {
-	Expected []string
+	Expected []token.Kind
 }
 
 func (e UnexpectedTokenError) Error() string {
 	var msg string
 	if len(e.Expected) >= 1 {
-		msg = e.Expected[0]
+		msg = e.Expected[0].String()
 	}
 
 	for _, ex := range e.Expected[1:] {
-		msg = msg + ", " + ex
+		msg = msg + ", " + ex.String()
 	}
 
 	return "unexpected token: expected " + msg
 }
 
-func unexpectedToken(t token.Token, expected ...string) error {
+func unexpectedToken(t token.Token, expected ...token.Kind) error {
 	return utils.PosError{Where: t, Err: UnexpectedTokenError{Expected: expected}}
+}
+
+type NotEnoughError struct {
+	Expected, Actual int
+	Item             string
+}
+
+func (e NotEnoughError) Error() string {
+	return fmt.Sprintf("not enough %s: expected %d, got %d", e.Item, e.Expected, e.Actual)
+}
+
+func notEnough(token token.Token, actual, expected int, item string) error {
+	return utils.PosError{Where: token, Err: NotEnoughError{Expected: expected, Actual: actual, Item: item}}
+}
+
+type NotUpperError struct{}
+
+func (e NotUpperError) Error() string {
+	return "expected an uppercase identifier"
+}
+
+func notUpper(token token.Token) error {
+	return utils.PosError{Where: token, Err: NotUpperError{}}
+}
+
+type UnexpectedEOFError struct{}
+
+func (e UnexpectedEOFError) Error() string {
+	return "unexpected EOF"
+}
+
+func unexpectedEOF() error {
+	return UnexpectedEOFError{}
 }
 
 func try[T any](p *Parser, action func() (T, error), handler func() (T, error)) (T, error) {
