@@ -1,12 +1,3 @@
-data Option(a) = {
-    None(),
-    Some(a),
-}
-data List(a) = {
-    Nil(),
-    Cons(a, List(a)),
-}
-
 def vendor = {
     #(items).get -> :None,
     #(:Nil).put.get ->

@@ -2,33 +2,24 @@
 
 decl = dataDecl | typeDecl | varDecl | infixDecl ; (* func decl *)
 
-dataDecl = "data" IDENT (typeparams1)? "=" "{" constructor ("," constructor)* ","? "}" ;
-typeparams1 = "(" IDENT ("," IDENT)* ","? ")" ; (* func dataDecl *)
-
-typeDecl = "type" IDENT (typeparams1)? "=" type ; (* func typeDecl *)
-
-constructor = UPPER_IDENT typeparams ;
-typeparams = "(" (type ("," type)*)? ")" ; (* func constructor *)
-
 varDecl = "def" IDENT "=" expr | "def" IDENT ":" type | "def" IDENT ":" type "=" expr ; (* func varDecl *)
 
 infixDecl = ("infix" | "infixl" | "infixr") INTEGER OPERATOR ; (* func infixDecl *)
 
-expr = let | with | assert ; (* func expr *)
+expr = let | with | binary ; (* func expr *)
 
-let = "let" pattern "=" assert ; (* func let *)
+let = "let" pattern "=" binary ; (* func let *)
 
-with = "with" withBind "<-" assert | "with" assert ;
+with = "with" withBind "<-" binary | "with" binary ;
 withBind = pattern ("," pattern)* "," ; (* func with *)
 
 atom = var | literal | paren | tuple | codata | PRIM "(" IDENT ("," expr)* ","? ")" ;
 var = IDENT ;
 literal = INTEGER | STRING ;
+symbol = SYMBOL ;
 paren = "(" ")" | "(" expr ")" ;
 tuple = "[" "]" | "[" expr ("," expr)* ","? "]" ;
 codata = "{" clause ("," clause)* ","? "}" ; (* func atom *)
-
-assert = binary (":" type)* ; (* func assert *)
 
 binary = method (operator method)* ; (* func binary *)
 

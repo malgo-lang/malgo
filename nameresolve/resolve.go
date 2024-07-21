@@ -95,17 +95,6 @@ func (e *env) lookup(name token.Token) (token.Token, error) {
 // Define all top-level variables in the node.
 func (r *Resolver) registerTopLevel(node ast.Node) error {
 	switch node := node.(type) {
-	case *ast.TypeDecl:
-		_, err := r.assign(node.Def, asTypeConstructor)
-		if err != nil {
-			return err
-		}
-		for _, typ := range node.Types {
-			_, err := r.assign(typ, asConstructor)
-			if err != nil {
-				return err
-			}
-		}
 	case *ast.VarDecl:
 		if _, ok := r.env.table[node.Name.Lexeme]; ok {
 			return utils.PosError{Where: node.Base(), Err: AlreadyDefinedError{Name: node.Name}}
@@ -203,18 +192,6 @@ func (r *Resolver) solve(node ast.Node) (ast.Node, error) {
 			return node, err
 		}
 		node.Right, err = r.solve(node.Right)
-		if err != nil {
-			return node, err
-		}
-
-		return node, nil
-	case *ast.Assert:
-		var err error
-		node.Expr, err = r.solve(node.Expr)
-		if err != nil {
-			return node, err
-		}
-		node.Type, err = r.solve(node.Type)
 		if err != nil {
 			return node, err
 		}
@@ -351,39 +328,11 @@ func (r *Resolver) solve(node ast.Node) (ast.Node, error) {
 		}
 
 		return node, nil
-	case *ast.TypeDecl:
-		r.env = newEnv(r.env)
-		defer func() { r.env = r.env.parent }()
-
-		// Define type parameters.
-		_, err := r.assign(node.Def, ifNotDefined)
-		if err != nil {
-			return node, err
-		}
-
-		node.Def, err = r.solve(node.Def)
-		if err != nil {
-			return node, err
-		}
-		for i, typ := range node.Types {
-			node.Types[i], err = r.solve(typ)
-			if err != nil {
-				return node, err
-			}
-		}
-
-		return node, nil
 	case *ast.VarDecl:
 		var err error
 		node.Name, err = r.env.lookup(node.Name)
 		if err != nil {
 			return node, err
-		}
-		if node.Type != nil {
-			node.Type, err = r.solve(node.Type)
-			if err != nil {
-				return node, err
-			}
 		}
 		if node.Expr != nil {
 			node.Expr, err = r.solve(node.Expr)

@@ -206,28 +206,6 @@ func (b *Binary) Plate(err error, f func(Node, error) (Node, error)) (Node, erro
 
 var _ Node = &Binary{}
 
-type Assert struct {
-	Expr Node
-	Type Node
-}
-
-func (a Assert) String() string {
-	return utils.Parenthesize("assert", a.Expr, a.Type).String()
-}
-
-func (a *Assert) Base() token.Token {
-	return a.Expr.Base()
-}
-
-func (a *Assert) Plate(err error, f func(Node, error) (Node, error)) (Node, error) {
-	a.Expr, err = f(a.Expr, err)
-	a.Type, err = f(a.Type, err)
-
-	return a, err
-}
-
-var _ Node = &Assert{}
-
 type Let struct {
 	Bind Node
 	Body Node
@@ -508,45 +486,13 @@ func (f *Field) Plate(err error, g func(Node, error) (Node, error)) (Node, error
 
 var _ Node = &Field{}
 
-type TypeDecl struct {
-	Def   Node
-	Types []Node
-}
-
-func (t TypeDecl) String() string {
-	return utils.Parenthesize("type", t.Def, utils.Concat(t.Types)).String()
-}
-
-func (t *TypeDecl) Base() token.Token {
-	return t.Def.Base()
-}
-
-func (t *TypeDecl) Plate(err error, f func(Node, error) (Node, error)) (Node, error) {
-	t.Def, err = f(t.Def, err)
-	for i, typ := range t.Types {
-		t.Types[i], err = f(typ, err)
-	}
-
-	return t, err
-}
-
-var _ Node = &TypeDecl{}
-
 type VarDecl struct {
 	Name token.Token
-	Type Node
 	Expr Node
 }
 
 func (v VarDecl) String() string {
-	if v.Type == nil {
-		return utils.Parenthesize("def", v.Name, v.Expr).String()
-	}
-	if v.Expr == nil {
-		return utils.Parenthesize("def", v.Name, v.Type).String()
-	}
-
-	return utils.Parenthesize("def", v.Name, v.Type, v.Expr).String()
+	return utils.Parenthesize("def", v.Name, v.Expr).String()
 }
 
 func (v *VarDecl) Base() token.Token {
@@ -554,9 +500,6 @@ func (v *VarDecl) Base() token.Token {
 }
 
 func (v *VarDecl) Plate(err error, f func(Node, error) (Node, error)) (Node, error) {
-	if v.Type != nil {
-		v.Type, err = f(v.Type, err)
-	}
 	if v.Expr != nil {
 		v.Expr, err = f(v.Expr, err)
 	}

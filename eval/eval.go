@@ -30,8 +30,6 @@ func (ev *Evaluator) Eval(node ast.Node) (Value, error) {
 		return ev.evalPrim(node)
 	case *ast.Binary:
 		return ev.evalBinary(node)
-	case *ast.Assert:
-		return ev.evalAssert(node)
 	case *ast.Let:
 		return Unit(), ev.evalLet(node)
 	case *ast.Seq:
@@ -57,8 +55,6 @@ func (ev *Evaluator) Eval(node ast.Node) (Value, error) {
 		return ev.evalObject(node), nil
 	case *ast.Field:
 		panic("unreachable: field cannot appear outside of object")
-	case *ast.TypeDecl:
-		return Unit(), ev.evalTypeDecl(node)
 	case *ast.VarDecl:
 		return Unit(), ev.evalVarDecl(node)
 	case *ast.InfixDecl:
@@ -245,10 +241,6 @@ func (ev *Evaluator) evalBinary(node *ast.Binary) (Value, error) {
 	return nil, utils.PosError{Where: node.Base(), Err: UndefinedVariableError{Name: node.Op}}
 }
 
-func (ev *Evaluator) evalAssert(node *ast.Assert) (Value, error) {
-	return ev.Eval(node.Expr)
-}
-
 // evalLet evaluates the given let expression.
 // let expression does not create a new scope.
 // It just overrides the existing bindings or creates new bindings if not exists.
@@ -348,17 +340,6 @@ func (ev *Evaluator) evalObject(node *ast.Object) Object {
 	}
 
 	return Object{Fields: fields, trace: Root{}}
-}
-
-func (ev *Evaluator) evalTypeDecl(node *ast.TypeDecl) error {
-	for _, ctor := range node.Types {
-		err := ev.defineConstructor(ctor)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func (ev *Evaluator) defineConstructor(node ast.Node) error {
