@@ -342,33 +342,6 @@ func (ev *Evaluator) evalObject(node *ast.Object) Object {
 	return Object{Fields: fields, trace: Root{}}
 }
 
-func (ev *Evaluator) defineConstructor(node ast.Node) error {
-	switch node := node.(type) {
-	case *ast.Var:
-		ev.evEnv.set(tokenToName(node.Name), Data{Tag: tokenToName(node.Name), Elems: nil, trace: Root{}})
-
-		return nil
-	case *ast.Call:
-		switch fn := node.Func.(type) {
-		case *ast.Var:
-			ev.evEnv.set(tokenToName(fn.Name),
-				Constructor{Evaluator: *ev, Tag: tokenToName(fn.Name), Params: len(node.Args), trace: Root{}})
-
-			return nil
-		case *ast.Prim:
-			// For type checking
-			// Ignore in evaluation
-			return nil
-		}
-	case *ast.Prim:
-		// For type checking
-		// Ignore in evaluation
-		return nil
-	}
-
-	return utils.PosError{Where: node.Base(), Err: NotConstructorError{Node: node}}
-}
-
 func (ev *Evaluator) evalVarDecl(node *ast.VarDecl) error {
 	if node.Expr != nil {
 		v, err := ev.Eval(node.Expr)
