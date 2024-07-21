@@ -1,24 +1,24 @@
 infixl 6 -
 def - = { (x, y) -> prim(sub, x, y) }
 def map = {
-  (f, :Nil) -> :Nil,
-  (f, :Cons(x, xs)) -> :Cons(f(x), map(f, xs)),
+  (f, Nil) -> Nil,
+  (f, Cons(x, xs)) -> Cons(f(x), map(f, xs)),
 }
 def prune = {
   #(x,t).node -> t.node,
-  #(0,t).children -> :Nil,
-  #(x,t).children -> map(prune(x-1), t.children),
+  #(0,t).children -> Nil,
+  #(x,t).children -> map({#(c) -> prune(x-1, c)}, t.children),
 }
 def tree = {
   #.node -> 1,
-  #.children -> :Cons(tree1, :Cons(tree2, :Nil)),
+  #.children -> Cons(tree1, Cons(tree2, Nil)),
 }
 def tree1 = {
   #.node -> 2,
-  #.children -> :Nil,
+  #.children -> Nil,
 }
 def tree2 = {
   #.node -> 3,
-  #.children -> :Cons(tree, :Nil),
+  #.children -> Cons(tree, Nil),
 }
-def main = { prune(2, tree) }
+def main = { prune(2, tree).children }

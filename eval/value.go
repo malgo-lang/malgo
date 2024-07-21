@@ -2,6 +2,7 @@ package eval
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -342,7 +343,23 @@ type Object struct {
 }
 
 func (o Object) String() string {
-	return "<object>"
+	var builder strings.Builder
+	keys := make([]string, 0, len(o.Fields))
+	for key := range o.Fields {
+		keys = append(keys, key)
+	}
+	slices.Sort(keys)
+
+	builder.WriteString("{")
+	for i, key := range keys {
+		if i != 0 {
+			builder.WriteString(", ")
+		}
+		fmt.Fprintf(&builder, "%s: %v", key, o.Fields[key])
+	}
+	builder.WriteString("}")
+
+	return builder.String()
 }
 
 func (o Object) Match(pattern ast.Node) (map[Name]Value, bool) {

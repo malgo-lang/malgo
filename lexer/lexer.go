@@ -8,6 +8,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/takoeight0821/malgo/token"
+	"github.com/takoeight0821/malgo/utils"
 )
 
 func Lex(filePath, source string) ([]token.Token, error) {
@@ -237,6 +238,10 @@ func isAlpha(c rune) bool {
 	return unicode.IsLetter(c) || c == '_'
 }
 
+// identifier parses a keyword, identifier, or symbol.
+// If the identifier is a keyword, it is tokenized as the keyword.
+// If the identifier starts with an uppercase letter, it is tokenized as a symbol.
+// Otherwise, it is tokenized as an identifier.
 func (l *lexer) identifier(loc token.Location) error {
 	for isAlpha(l.peek()) || isDigit(l.peek()) {
 		l.advance()
@@ -246,6 +251,8 @@ func (l *lexer) identifier(loc token.Location) error {
 
 	if k, ok := getKeyword(value); ok {
 		l.addToken(loc, k, nil)
+	} else if utils.IsUpper(value) {
+		l.addToken(loc, token.SYMBOL, nil)
 	} else {
 		l.addToken(loc, token.IDENT, nil)
 	}
