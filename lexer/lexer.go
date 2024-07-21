@@ -102,6 +102,10 @@ func (l *lexer) scanToken() error {
 	case '"':
 		return l.string(loc)
 	default:
+		if char == ':' && isAlpha(l.peek()) {
+			return l.symbol(loc)
+		}
+
 		if k, ok := getReservedSymbol(char); ok {
 			l.addToken(loc, k, nil)
 
@@ -124,15 +128,18 @@ func (l *lexer) scanToken() error {
 func (l *lexer) skipComment() error {
 	if l.peek() == '/' {
 		l.advance()
+
 		return l.skipLineComment()
 	}
 	if l.peek() == '*' {
 		l.advance()
+
 		return l.skipBlockComment()
 	}
 
 	// If `/` is not followed by `/` or `*`, it is an operator.
 	l.addToken(l.location(), token.OPERATOR, nil)
+
 	return nil
 }
 
@@ -146,14 +153,14 @@ func (l *lexer) skipLineComment() error {
 
 func (l *lexer) skipBlockComment() error {
 	for !l.isAtEnd() {
-		c := l.advance()
+		char := l.advance()
 
-		if c == '*' && l.peek() == '/' {
+		if char == '*' && l.peek() == '/' {
 			l.advance()
 
 			return nil
 		}
-		if c == '\n' {
+		if char == '\n' {
 			l.line++
 			l.column = 1
 		}
@@ -242,6 +249,17 @@ func (l *lexer) identifier(loc token.Location) error {
 	} else {
 		l.addToken(loc, token.IDENT, nil)
 	}
+
+	return nil
+}
+
+// symbol parses a identifier as symbol starting with a colon.
+func (l *lexer) symbol(loc token.Location) error {
+	for isAlpha(l.peek()) || isDigit(l.peek()) {
+		l.advance()
+	}
+
+	l.addToken(loc, token.SYMBOL, nil)
 
 	return nil
 }

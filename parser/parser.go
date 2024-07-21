@@ -314,7 +314,7 @@ func (p *Parser) with() (*ast.With, error) {
 		}
 
 		return patterns, nil
-	}, func() ([]ast.Node, error) {
+	}, func(_ error) ([]ast.Node, error) {
 		return []ast.Node{}, nil
 	})
 	if err != nil {
@@ -337,6 +337,7 @@ func (p *Parser) with() (*ast.With, error) {
 // atom = var | literal | paren | tuple | codata | PRIM "(" IDENT ("," expr)* ","? ")" ;
 // var = IDENT ;
 // literal = INTEGER | STRING ;
+// symbol = SYMBOL ;
 // paren = "(" ")" | "(" expr ")" ;
 // tuple = "[" "]" | "[" expr ("," expr)* ","? "]" ;
 // codata = "{" clause ("," clause)* ","? "}" ;
@@ -351,6 +352,10 @@ func (p *Parser) atom() (ast.Node, error) {
 		p.advance()
 
 		return &ast.Literal{Token: tok}, nil
+	case token.SYMBOL:
+		p.advance()
+
+		return &ast.Symbol{Name: tok}, nil
 	case token.LEFTPAREN:
 		p.advance()
 
@@ -526,7 +531,7 @@ func (p *Parser) codata() (*ast.Codata, error) {
 // clauseBody = expr (";" expr)* ";"? ;
 func (p *Parser) clause() (*ast.CodataClause, error) {
 	// try to parse `clauseHead "->"`
-	pattern, err := try(p, func() (ast.Node, error) {
+	pattern, perr := try(p, func() (ast.Node, error) {
 		pattern, err := p.clauseHead()
 		if err != nil {
 			return nil, err
@@ -537,17 +542,14 @@ func (p *Parser) clause() (*ast.CodataClause, error) {
 		}
 
 		return pattern, nil
-	}, func() (ast.Node, error) {
+	}, func(err error) (ast.Node, error) {
 		// if the parsing is failed, insert `#() ->` as pattern and go back to the original position.
-		return &ast.Call{Func: &ast.This{Token: p.peek()}, Args: []ast.Node{}}, nil
+		return &ast.Call{Func: &ast.This{Token: p.peek()}, Args: []ast.Node{}}, err
 	})
-	if err != nil {
-		return nil, err
-	}
 
 	expr, err := p.expr()
 	if err != nil {
-		return nil, err
+		return nil, errors.Join(perr, err)
 	}
 	exprs := []ast.Node{expr}
 	for p.match(token.SEMICOLON) {
@@ -671,6 +673,10 @@ func (p *Parser) atomPat() (ast.Node, error) {
 		p.advance()
 
 		return &ast.Literal{Token: tok}, nil
+	case token.SYMBOL:
+		p.advance()
+
+		return &ast.Symbol{Name: tok}, nil
 	case token.LEFTPAREN:
 		p.advance()
 
@@ -944,16 +950,16 @@ func unexpectedEOF() error {
 	return UnexpectedEOFError{}
 }
 
-func try[T any](p *Parser, action func() (T, error), handler func() (T, error)) (T, error) {
+func try[T any](p *Parser, action func() (T, error), handler func(error) (T, error)) (T, error) {
 	savedCurrent := p.current
 
 	node, err := action()
 	if err != nil {
 		p.current = savedCurrent
 
-		node, rerr := handler()
+		node, rerr := handler(err)
 		if rerr != nil {
-			return node, errors.Join(err, rerr)
+			return node, rerr
 		}
 
 		return node, nil

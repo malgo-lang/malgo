@@ -16,6 +16,8 @@ func (ev *Evaluator) Eval(node ast.Node) (Value, error) {
 		return ev.evalVar(node)
 	case *ast.Literal:
 		return ev.evalLiteral(node)
+	case *ast.Symbol:
+		return ev.evalSymbol(node)
 	case *ast.Paren:
 		return ev.evalParen(node)
 	case *ast.Tuple:
@@ -97,6 +99,10 @@ func (ev *Evaluator) evalLiteral(node *ast.Literal) (Value, error) {
 	default:
 		return nil, utils.PosError{Where: node.Base(), Err: InvalidLiteralError{Kind: node.Kind}}
 	}
+}
+
+func (ev *Evaluator) evalSymbol(node *ast.Symbol) (Value, error) {
+	return Symbol{Name: node.Name.Lexeme, Values: make([]Value, 0), trace: Root{}}, nil
 }
 
 func (ev *Evaluator) evalParen(node *ast.Paren) (Value, error) {

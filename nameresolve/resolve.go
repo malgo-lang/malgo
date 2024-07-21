@@ -146,6 +146,8 @@ func (r *Resolver) solve(node ast.Node) (ast.Node, error) {
 		return node, err
 	case *ast.Literal:
 		return node, nil
+	case *ast.Symbol:
+		return node, nil
 	case *ast.Paren:
 		var err error
 		node.Expr, err = r.solve(node.Expr)
@@ -514,6 +516,8 @@ func asPattern(resolver *Resolver, pattern ast.Node) ([]string, error) {
 
 		return []string{pattern.Name.Lexeme}, nil
 	case *ast.Literal:
+		return nil, nil
+	case *ast.Symbol:
 		return nil, nil
 	case *ast.Paren:
 		return resolver.assign(pattern.Expr, asPattern)

@@ -56,6 +56,24 @@ func (l *Literal) Plate(err error, _ func(Node, error) (Node, error)) (Node, err
 
 var _ Node = &Literal{}
 
+type Symbol struct {
+	Name token.Token
+}
+
+func (s Symbol) String() string {
+	return utils.Parenthesize("symbol", s.Name).String()
+}
+
+func (s *Symbol) Base() token.Token {
+	return s.Name
+}
+
+func (s *Symbol) Plate(err error, _ func(Node, error) (Node, error)) (Node, error) {
+	return s, err
+}
+
+var _ Node = &Symbol{}
+
 type Paren struct {
 	Expr Node
 }

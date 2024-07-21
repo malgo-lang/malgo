@@ -26,6 +26,7 @@ const (
 	OPERATOR
 	INTEGER
 	STRING
+	SYMBOL
 
 	// Keywords.
 	ARROW

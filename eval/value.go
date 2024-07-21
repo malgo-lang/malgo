@@ -149,6 +149,77 @@ func (s String) WithTrace(trace Trace) Value {
 
 var _ Value = String{}
 
+type Symbol struct {
+	Name   string
+	Values []Value
+	trace  Trace
+}
+
+func (s Symbol) String() string {
+	var builder strings.Builder
+	builder.WriteString(s.Name)
+	if len(s.Values) > 0 {
+		builder.WriteString("(")
+		for i, v := range s.Values {
+			if i > 0 {
+				builder.WriteString(", ")
+			}
+			builder.WriteString(v.String())
+		}
+		builder.WriteString(")")
+	}
+
+	return builder.String()
+}
+
+func (s Symbol) Match(pattern ast.Node) (map[Name]Value, bool) {
+	switch pattern := pattern.(type) {
+	case *ast.Var:
+		return map[Name]Value{tokenToName(pattern.Name): s}, true
+	case *ast.Symbol:
+		if pattern.Name.Lexeme == s.Name && len(s.Values) == 0 {
+			return map[Name]Value{}, true
+		}
+	case *ast.Call:
+		if fn, ok := pattern.Func.(*ast.Symbol); ok && fn.Name.Lexeme == s.Name {
+			if len(pattern.Args) != len(s.Values) {
+				return nil, false
+			}
+			matches := make(map[Name]Value)
+			for i, arg := range s.Values {
+				m, ok := arg.Match(pattern.Args[i])
+				if !ok {
+					return nil, false
+				}
+				for k, v := range m {
+					matches[k] = v
+				}
+			}
+
+			return matches, true
+		}
+	}
+
+	return s.Trace().MatchTrace(pattern)
+}
+
+func (s Symbol) Trace() Trace {
+	return s.trace
+}
+
+func (s Symbol) WithTrace(trace Trace) Value {
+	return Symbol{Name: s.Name, Values: s.Values, trace: NewLog(trace, s)}
+}
+
+func (s Symbol) Apply(_ token.Token, args ...Value) (Value, error) {
+	return Symbol{Name: s.Name, Values: append(s.Values, args...), trace: Call{Func: s, Args: args}}, nil
+}
+
+var (
+	_ Value    = Symbol{}
+	_ Callable = Symbol{}
+)
+
 // Function represents a closure value.
 type Function struct {
 	Evaluator

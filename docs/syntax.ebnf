@@ -7,8 +7,8 @@ typeparams1 = "(" IDENT ("," IDENT)* ","? ")" ; (* func dataDecl *)
 
 typeDecl = "type" IDENT (typeparams1)? "=" type ; (* func typeDecl *)
 
-constructor = IDENT "(" typeparams ")" ;
-typeparams = (type ("," type)*)? ; (* func constructor *)
+constructor = UPPER_IDENT typeparams ;
+typeparams = "(" (type ("," type)*)? ")" ; (* func constructor *)
 
 varDecl = "def" IDENT "=" expr | "def" IDENT ":" type | "def" IDENT ":" type "=" expr ; (* func varDecl *)
 
@@ -65,4 +65,16 @@ atomType = IDENT | "{" fieldType ("," fieldType)* ","? "}" | "(" type  ")" | tup
 tupleType = "[" "]" | "[" type ("," type)* ","? "]"; (* func atomType *)
 
 fieldType = IDENT ":" type ; (* func fieldType *)
+
+peek returns the current token in the token stream without consuming it. (* func peek *)
+
+advance moves the parser to the next token in the token stream.
+It returns the current token before advancing. (* func advance *)
+
+previous returns the previous token in the token stream. (* func previous *)
+
+IsAtEnd checks if the parser has reached the end of the input. (* func IsAtEnd *)
+
+match checks if the current token in the input stream has the specified kind.
+It returns true if the current token matches the specified kind, false otherwise. (* func match *)
 
