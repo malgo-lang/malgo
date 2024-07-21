@@ -1,3 +1,2 @@
-(type (var Bool.0) (call (var False.1)) (call (var True.2)))
-(def if.3 (lambda (:p1.5) (object (field if (case ((var :p1.5)) (clause (call (var False.1)) (lambda (:p2.6) (case ((var :p1.5) (var :p2.6)) (clause ((call (var False.1)) (var t.7)) (seq (call (var t.7))))))) (clause (call (var True.2)) (seq (lambda (:p1.8) (case ((var :p1.8)) (clause (var t.9) (seq (call (var t.9)))))))))))))
-(def main.4 (lambda () (seq (call (access (call (var if.3) (call (var True.2))) if) (lambda () (seq (prim print (literal "hello"))))))))
+(def if.0 (lambda (:p1.2) (object (field if (case ((var :p1.2)) (clause (symbol :False) (lambda (:p2.3) (case ((var :p1.2) (var :p2.3)) (clause ((symbol :False) (var t.4)) (seq (call (var t.4))))))) (clause (symbol :True) (seq (lambda (:p1.5) (case ((var :p1.5)) (clause (var t.6) (seq (call (var t.6)))))))))))))
+(def main.1 (lambda () (seq (call (access (call (var if.0) (symbol :True)) if) (lambda () (seq (prim print (literal "hello"))))))))

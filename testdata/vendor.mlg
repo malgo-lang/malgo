@@ -8,19 +8,19 @@ data List(a) = {
 }
 
 def vendor = {
-    #(items).get -> None(),
-    #(Nil()).put.get ->
+    #(items).get -> :None,
+    #(:Nil).put.get ->
         prim(print, "Nil case");
-        prim(print, Nil());
-        None(),
-    #(Cons(x, xs)).put.get ->
+        prim(print, :Nil);
+        :None,
+    #(:Cons(x, xs)).put.get ->
         prim(print, "Cons case");
-        prim(print, Cons(x, xs));
-        Some(x),
+        prim(print, :Cons(x, xs));
+        :Some(x),
     #(items).put.put ->
         vendor(items).put,
 }
 
 def main = {
-    prim(print, vendor(Cons(0, Nil())).put.get)
+    prim(print, vendor(:Cons(0, :Nil)).put.get)
 }
