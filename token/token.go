@@ -72,5 +72,14 @@ type Location struct {
 }
 
 func (l Location) String() string {
-	return fmt.Sprintf("%s:%d:%d", l.FilePath, l.Line, l.Column)
+	// if FilePath starts with "./" or "../", remove them.
+	filePath := l.FilePath
+	if len(filePath) >= 2 && filePath[0] == '.' && filePath[1] == '/' {
+		filePath = filePath[2:]
+	}
+	if len(filePath) >= 3 && filePath[0] == '.' && filePath[1] == '.' && filePath[2] == '/' {
+		filePath = filePath[3:]
+	}
+
+	return fmt.Sprintf("%s:%d:%d", filePath, l.Line, l.Column)
 }
