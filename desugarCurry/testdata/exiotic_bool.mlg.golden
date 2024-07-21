@@ -1,0 +1,2 @@
+(def if (codata (clause (call (access (call # (symbol :False)) if) (var t)) (seq (call (var t)))) (clause (access (call # (symbol :True)) if) (seq (codata (clause (call # (var t)) (seq (call (var t)))))))))
+(def main (codata (clause (call #) (seq (call (access (call (var if) (symbol :True)) if) (codata (clause (call #) (seq (prim print (literal "hello"))))))))))

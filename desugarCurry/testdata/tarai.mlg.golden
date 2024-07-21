@@ -1,0 +1,5 @@
+(def if (codata (clause (call (access (call (access (call # (literal 0)) then) (var t)) else) (var e)) (seq (call (var e)))) (clause (call (access (call (access (call # (var _)) then) (var t)) else) (var e)) (seq (call (var t))))))
+(def le (codata (clause (call (call # (var x)) (var y)) (seq (prim less_equal (var x) (var y))))))
+(def dec (codata (clause (call # (var x)) (seq (prim sub (var x) (literal 1))))))
+(def tarai (codata (clause (call (call (call # (var x)) (var y)) (var z)) (seq (call (access (call (access (call (var if) (call (call (var le) (var x)) (var y))) then) (codata (clause (call #) (seq (var y))))) else) (codata (clause (call #) (seq (call (call (call (var tarai) (call (call (call (var tarai) (call (var dec) (var x))) (var y)) (var z))) (call (call (call (var tarai) (call (var dec) (var y))) (var z)) (var x))) (call (call (call (var tarai) (call (var dec) (var z))) (var x)) (var y)))))))))))
+(def main (codata (clause (call #) (seq (call (call (call (var tarai) (literal 10)) (literal 5)) (literal 0))))))

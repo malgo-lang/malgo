@@ -2,6 +2,7 @@ package eval
 
 import (
 	"fmt"
+	"log"
 	"slices"
 	"strconv"
 	"strings"
@@ -252,6 +253,8 @@ func (f Function) Match(pattern ast.Node) (map[Name]Value, bool) {
 
 func (f Function) Apply(where token.Token, args ...Value) (Value, error) {
 	if len(f.Params) != len(args) {
+		log.Printf("Params: %v", f.Params)
+		log.Printf("Args: %v", args)
 		return nil, errorAt(where, InvalidArgumentCountError{Expected: len(f.Params), Actual: len(args)})
 	}
 

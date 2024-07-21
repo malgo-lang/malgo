@@ -9,6 +9,7 @@ import (
 
 	"github.com/sebdah/goldie/v2"
 	"github.com/takoeight0821/malgo/codata"
+	desugarcurry "github.com/takoeight0821/malgo/desugarCurry"
 	"github.com/takoeight0821/malgo/desugarwith"
 	"github.com/takoeight0821/malgo/driver"
 	"github.com/takoeight0821/malgo/eval"
@@ -38,6 +39,7 @@ func BenchmarkTestdata(b *testing.B) {
 		runner.AddPass(&desugarwith.DesugarWith{})
 		runner.AddPass(&codata.Flat{})
 		runner.AddPass(infix.NewInfixResolver())
+		runner.AddPass(&desugarcurry.DesugarCurry{})
 		runner.AddPass(nameresolve.NewResolver())
 
 		nodes, err := runner.RunSource(testfile, string(source))
@@ -96,6 +98,7 @@ func TestGolden(t *testing.T) {
 		runner.AddPass(&desugarwith.DesugarWith{})
 		runner.AddPass(&codata.Flat{})
 		runner.AddPass(infix.NewInfixResolver())
+		runner.AddPass(&desugarcurry.DesugarCurry{})
 		runner.AddPass(nameresolve.NewResolver())
 
 		nodes, err := runner.RunSource(testfile, string(source))

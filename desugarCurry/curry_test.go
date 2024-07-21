@@ -1,18 +1,13 @@
-package nameresolve_test
+package desugarcurry_test
 
 import (
 	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/sebdah/goldie/v2"
-	"github.com/takoeight0821/malgo/codata"
 	desugarcurry "github.com/takoeight0821/malgo/desugarCurry"
-	"github.com/takoeight0821/malgo/desugarwith"
 	"github.com/takoeight0821/malgo/driver"
-	"github.com/takoeight0821/malgo/infix"
-	"github.com/takoeight0821/malgo/nameresolve"
 	"github.com/takoeight0821/malgo/utils"
 )
 
@@ -35,11 +30,7 @@ func TestGolden(t *testing.T) {
 		}
 
 		runner := driver.NewPassRunner()
-		runner.AddPass(&desugarwith.DesugarWith{})
-		runner.AddPass(&codata.Flat{})
-		runner.AddPass(infix.NewInfixResolver())
 		runner.AddPass(&desugarcurry.DesugarCurry{})
-		runner.AddPass(nameresolve.NewResolver())
 
 		nodes, err := runner.RunSource(testfile, string(source))
 		if err != nil {
@@ -55,6 +46,6 @@ func TestGolden(t *testing.T) {
 		}
 
 		g := goldie.New(t)
-		g.Assert(t, filepath.Base(testfile), []byte(builder.String()))
+		g.Assert(t, testfile, []byte(builder.String()))
 	}
 }

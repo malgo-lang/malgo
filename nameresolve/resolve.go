@@ -369,34 +369,6 @@ func (e AlreadyDefinedError) Error() string {
 	return e.Name.String() + " is already defined"
 }
 
-// allVariables define all variables in the node.
-// If a variable is already defined in current scope, it is an error.
-func allVariables(resolver *Resolver, node ast.Node) ([]string, error) {
-	var defined []string
-	_, err := ast.Traverse(node, func(node ast.Node, err error) (ast.Node, error) {
-		if err != nil {
-			return node, err
-		}
-		switch node := node.(type) {
-		case *ast.Var:
-			if _, ok := resolver.env.table[node.Name.Lexeme]; ok {
-				return node, utils.PosError{Where: node.Base(), Err: AlreadyDefinedError{Name: node.Name}}
-			}
-			resolver.define(node.Name)
-			defined = append(defined, node.Name.Lexeme)
-
-			return node, nil
-		default:
-			return node, nil
-		}
-	})
-	if err != nil {
-		return nil, fmt.Errorf("allVariables: %w", err)
-	}
-
-	return defined, nil
-}
-
 // overwrite defines all variables in the node.
 // If a variable is already defined in current scope, it is overwritten.
 func overwrite(r *Resolver, node ast.Node) ([]string, error) {
@@ -414,29 +386,6 @@ func overwrite(r *Resolver, node ast.Node) ([]string, error) {
 	})
 	if err != nil {
 		return nil, fmt.Errorf("overwrite: %w", err)
-	}
-
-	return defined, nil
-}
-
-// ifNotDefined define variables in the node if they are not defined.
-func ifNotDefined(resolver *Resolver, node ast.Node) ([]string, error) {
-	var defined []string
-	_, err := ast.Traverse(node, func(node ast.Node, _ error) (ast.Node, error) {
-		switch node := node.(type) {
-		case *ast.Var:
-			if _, err := resolver.env.lookup(node.Name); err != nil {
-				resolver.define(node.Name)
-				defined = append(defined, node.Name.Lexeme)
-			}
-
-			return node, nil
-		default:
-			return node, nil
-		}
-	})
-	if err != nil {
-		return nil, fmt.Errorf("ifNotDefined: %w", err)
 	}
 
 	return defined, nil
@@ -500,38 +449,6 @@ func asPattern(resolver *Resolver, pattern ast.Node) ([]string, error) {
 		return defined, nil
 	default:
 		return nil, utils.PosError{Where: pattern.Base(), Err: InvalidPatternError{Pattern: pattern}}
-	}
-}
-
-// Define variables in the node as type constructor.
-// If the given node is a variable, define it.
-// Otherwise, pass the node to asConstructor.
-func asTypeConstructor(resolver *Resolver, typ ast.Node) ([]string, error) {
-	switch typ := typ.(type) {
-	case *ast.Var:
-		return resolver.assign(typ, allVariables)
-	default:
-		return resolver.assign(typ, asConstructor)
-	}
-}
-
-// Define variables in the node as constructor.
-// If a variable appears as a function, define it.
-func asConstructor(resolver *Resolver, typ ast.Node) ([]string, error) {
-	switch typ := typ.(type) {
-	case *ast.Var:
-		return nil, nil
-	case *ast.Paren:
-		return resolver.assign(typ.Expr, asConstructor)
-	case *ast.Call:
-		// typ.Func is a constructor.
-		return resolver.assign(typ.Func, allVariables)
-	case *ast.Prim:
-		return nil, nil
-	case *ast.Object:
-		return nil, nil
-	default:
-		return nil, utils.PosError{Where: typ.Base(), Err: InvalidTypeError{Type: typ}}
 	}
 }
 

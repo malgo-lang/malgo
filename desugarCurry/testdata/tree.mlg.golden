@@ -1,0 +1,8 @@
+(infix infixl 6 -)
+(def - (codata (clause (call (call # (var x)) (var y)) (seq (prim sub (var x) (var y))))))
+(def map (codata (clause (call (call # (var f)) (symbol Nil)) (seq (symbol Nil))) (clause (call (call # (var f)) (call (call (symbol Cons) (var x)) (var xs))) (seq (call (call (symbol Cons) (call (var f) (var x))) (call (call (var map) (var f)) (var xs)))))))
+(def prune (codata (clause (access (call (call # (var x)) (var t)) node) (seq (access (var t) node))) (clause (access (call (call # (literal 0)) (var t)) children) (seq (symbol Nil))) (clause (access (call (call # (var x)) (var t)) children) (seq (call (call (var map) (call (var prune) (call (call (var -) (var x)) (literal 1)))) (access (var t) children))))))
+(def tree (codata (clause (access # node) (seq (literal 1))) (clause (access # children) (seq (call (call (symbol Cons) (var tree1)) (call (call (symbol Cons) (var tree2)) (symbol Nil)))))))
+(def tree1 (codata (clause (access # node) (seq (literal 2))) (clause (access # children) (seq (symbol Nil)))))
+(def tree2 (codata (clause (access # node) (seq (literal 3))) (clause (access # children) (seq (call (call (symbol Cons) (var tree)) (symbol Nil))))))
+(def main (codata (clause (call #) (seq (access (call (call (var prune) (literal 2)) (var tree)) children)))))
