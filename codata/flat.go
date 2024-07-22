@@ -25,7 +25,7 @@ func (f *Flat) genUniq(hint string) string {
 }
 
 func (*Flat) Name() string {
-	return "newcodata.Flat"
+	return "codata.Flat"
 }
 
 func (*Flat) Init([]ast.Node) error {

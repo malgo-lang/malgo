@@ -408,7 +408,7 @@ func TraceAsTree(value Value, trace Trace, tree treeprint.Tree) treeprint.Tree {
 		return tree.AddNode(fmt.Sprintf("%v@%v", trace.Name, value))
 	case Call:
 		fun, args := uncurryCall(trace)
-		call := tree.AddMetaBranch(len(args), "call")
+		call := tree.AddMetaBranch(value, "call")
 		TraceAsTree(fun, fun.Trace(), call)
 		for _, arg := range args {
 			TraceAsTree(arg, arg.Trace(), call)
@@ -416,13 +416,14 @@ func TraceAsTree(value Value, trace Trace, tree treeprint.Tree) treeprint.Tree {
 
 		return tree
 	case Access:
-		access := tree.AddMetaBranch(trace.Name, "access")
+		access := tree.AddMetaBranch(value, "access")
+		access.AddNode(trace.Name)
 		TraceAsTree(trace.Receiver, trace.Receiver.Trace(), access)
 
 		return tree
 	case Log:
 		logSlice := log2slice(trace)
-		logTree := tree.AddMetaBranch(fmt.Sprintf("%d", len(logSlice)), "log")
+		logTree := tree.AddMetaBranch(value, "log")
 		for _, log := range logSlice {
 			TraceAsTree(value, log, logTree)
 		}
@@ -550,7 +551,7 @@ func NewLog(trace Trace, value Value) Trace {
 
 func log2slice(log Trace) []Trace {
 	if log, ok := log.(Log); ok {
-		return append(log2slice(log.old), log.new)
+		return append(log2slice(log.old), log2slice(log.new)...)
 	}
 
 	return []Trace{log}

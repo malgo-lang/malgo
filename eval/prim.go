@@ -102,7 +102,7 @@ func (p *primitiveEvaluator) printTrace(args ...Value) (Value, error) {
 	if len(args) != 1 {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentCountError{Expected: 1, Actual: len(args)}}
 	}
-	tree := treeprint.New()
+	tree := treeprint.NewWithRoot(args[0].String())
 	fmt.Fprintln(p.Stdout, TraceAsTree(args[0], args[0].Trace(), tree))
 
 	return Unit(), nil

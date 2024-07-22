@@ -1,54 +1,54 @@
 :Cons(2, :Cons(3, :Cons(4, :Nil)))
-.
-└── [2]  log
-    ├── [2]  call
+:Cons(2, :Cons(3, :Cons(4, :Nil)))
+└── [:Cons(2, :Cons(3, :Cons(4, :Nil)))]  log
+    ├── [:Cons(2, :Cons(3, :Cons(4, :Nil)))]  call
     │   ├── :Cons
-    │   ├── [1]  call
+    │   ├── [2]  call
     │   │   ├── <fn>
     │   │   └── 1
-    │   └── [2]  log
-    │       ├── [2]  call
+    │   └── [:Cons(3, :Cons(4, :Nil))]  log
+    │       ├── [:Cons(3, :Cons(4, :Nil))]  call
     │       │   ├── :Cons
-    │       │   ├── [1]  call
+    │       │   ├── [3]  call
     │       │   │   ├── <fn>
     │       │   │   └── 2
-    │       │   └── [2]  log
-    │       │       ├── [2]  call
+    │       │   └── [:Cons(4, :Nil)]  log
+    │       │       ├── [:Cons(4, :Nil)]  call
     │       │       │   ├── :Cons
-    │       │       │   ├── [1]  call
+    │       │       │   ├── [4]  call
     │       │       │   │   ├── <fn>
     │       │       │   │   └── 3
-    │       │       │   └── [2]  call
+    │       │       │   └── [:Nil]  call
     │       │       │       ├── map.0@<fn>
     │       │       │       ├── <fn>
     │       │       │       └── :Nil
-    │       │       └── [2]  call
+    │       │       └── [:Cons(4, :Nil)]  call
     │       │           ├── map.0@<fn>
     │       │           ├── <fn>
-    │       │           └── [2]  call
+    │       │           └── [:Cons(3, :Nil)]  call
     │       │               ├── :Cons
     │       │               ├── 3
     │       │               └── :Nil
-    │       └── [2]  call
+    │       └── [:Cons(3, :Cons(4, :Nil))]  call
     │           ├── map.0@<fn>
     │           ├── <fn>
-    │           └── [2]  call
+    │           └── [:Cons(2, :Cons(3, :Nil))]  call
     │               ├── :Cons
     │               ├── 2
-    │               └── [2]  call
+    │               └── [:Cons(3, :Nil)]  call
     │                   ├── :Cons
     │                   ├── 3
     │                   └── :Nil
-    └── [2]  call
+    └── [:Cons(2, :Cons(3, :Cons(4, :Nil)))]  call
         ├── map.0@<fn>
         ├── <fn>
-        └── [2]  call
+        └── [:Cons(1, :Cons(2, :Cons(3, :Nil)))]  call
             ├── :Cons
             ├── 1
-            └── [2]  call
+            └── [:Cons(2, :Cons(3, :Nil))]  call
                 ├── :Cons
                 ├── 2
-                └── [2]  call
+                └── [:Cons(3, :Nil)]  call
                     ├── :Cons
                     ├── 3
                     └── :Nil
