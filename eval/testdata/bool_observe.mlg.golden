@@ -1,3 +1,11 @@
 0
-[3 x.6 (call flip.1 (access bool.0 true)) (access [2 b.5 bool.0] false)]
+.
+└── [2]  log
+    ├── [false]  access
+    │   └── bool.0@{false: 0, true: 1}
+    └── [1]  call
+        ├── flip.1@<fn>
+        └── [true]  access
+            └── bool.0@{false: 0, true: 1}
+
 result => []

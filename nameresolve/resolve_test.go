@@ -8,7 +8,7 @@ import (
 
 	"github.com/sebdah/goldie/v2"
 	"github.com/takoeight0821/malgo/codata"
-	desugarcurry "github.com/takoeight0821/malgo/desugarCurry"
+	"github.com/takoeight0821/malgo/desugarcurry"
 	"github.com/takoeight0821/malgo/desugarwith"
 	"github.com/takoeight0821/malgo/driver"
 	"github.com/takoeight0821/malgo/infix"

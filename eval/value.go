@@ -10,6 +10,7 @@ import (
 	"github.com/takoeight0821/malgo/ast"
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
+	"github.com/xlab/treeprint"
 )
 
 type Value interface {
@@ -231,15 +232,7 @@ type Function struct {
 }
 
 func (f Function) String() string {
-	var builder strings.Builder
-	builder.WriteString("<function")
-	for _, param := range f.Params {
-		builder.WriteString(" ")
-		builder.WriteString(string(param))
-	}
-	builder.WriteString(">")
-
-	return builder.String()
+	return "<fn>"
 }
 
 func (f Function) Match(pattern ast.Node) (map[Name]Value, bool) {
@@ -389,6 +382,57 @@ type Trace interface {
 	MatchTrace(pattern ast.Node) (map[Name]Value, bool)
 }
 
+func traceAsString(value Value) fmt.Stringer {
+	if _, ok := value.Trace().(Root); ok {
+		var builder strings.Builder
+		fmt.Fprintf(&builder, "%v", value)
+
+		return &builder
+	}
+
+	if trace, ok := value.Trace().(Var); ok {
+		var builder strings.Builder
+		fmt.Fprintf(&builder, "%v@%v", trace.Name, value)
+
+		return &builder
+	}
+
+	return value.Trace()
+}
+
+func TraceAsTree(value Value, trace Trace, tree treeprint.Tree) treeprint.Tree {
+	switch trace := trace.(type) {
+	case Root:
+		return tree.AddNode(value.String())
+	case Var:
+		return tree.AddNode(fmt.Sprintf("%v@%v", trace.Name, value))
+	case Call:
+		fun, args := uncurryCall(trace)
+		call := tree.AddMetaBranch(len(args), "call")
+		TraceAsTree(fun, fun.Trace(), call)
+		for _, arg := range args {
+			TraceAsTree(arg, arg.Trace(), call)
+		}
+
+		return tree
+	case Access:
+		access := tree.AddMetaBranch(trace.Name, "access")
+		TraceAsTree(trace.Receiver, trace.Receiver.Trace(), access)
+
+		return tree
+	case Log:
+		logSlice := log2slice(trace)
+		logTree := tree.AddMetaBranch(fmt.Sprintf("%d", len(logSlice)), "log")
+		for _, log := range logSlice {
+			TraceAsTree(value, log, logTree)
+		}
+
+		return tree
+	}
+
+	return tree
+}
+
 type Root struct{}
 
 func (r Root) String() string {
@@ -400,17 +444,6 @@ func (r Root) MatchTrace(_ ast.Node) (map[Name]Value, bool) {
 }
 
 var _ Trace = Root{}
-
-func traceAsString(value Value) fmt.Stringer {
-	if _, ok := value.Trace().(Root); ok {
-		var builder strings.Builder
-		fmt.Fprintf(&builder, "{%v}", value)
-
-		return &builder
-	}
-
-	return value.Trace()
-}
 
 type Var struct {
 	Name token.Token
@@ -429,6 +462,14 @@ var _ Trace = Var{}
 type Call struct {
 	Func Value
 	Args []Value
+}
+
+func uncurryCall(call Call) (Value, []Value) {
+	if fun, ok := call.Func.Trace().(Call); ok {
+		return uncurryCall(Call{Func: fun.Func, Args: append(fun.Args, call.Args...)})
+	}
+
+	return call.Func, call.Args
 }
 
 func (c Call) String() string {
@@ -505,6 +546,14 @@ func NewLog(trace Trace, value Value) Trace {
 	}
 
 	return Log{new: trace, old: value.Trace()}
+}
+
+func log2slice(log Trace) []Trace {
+	if log, ok := log.(Log); ok {
+		return append(log2slice(log.old), log.new)
+	}
+
+	return []Trace{log}
 }
 
 func (b Log) String() string {

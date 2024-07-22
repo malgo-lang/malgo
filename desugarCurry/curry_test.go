@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/sebdah/goldie/v2"
-	desugarcurry "github.com/takoeight0821/malgo/desugarCurry"
+	"github.com/takoeight0821/malgo/desugarcurry"
 	"github.com/takoeight0821/malgo/driver"
 	"github.com/takoeight0821/malgo/utils"
 )

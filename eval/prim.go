@@ -6,6 +6,7 @@ import (
 
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
+	"github.com/xlab/treeprint"
 )
 
 type primitiveEvaluator struct {
@@ -101,7 +102,8 @@ func (p *primitiveEvaluator) printTrace(args ...Value) (Value, error) {
 	if len(args) != 1 {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentCountError{Expected: 1, Actual: len(args)}}
 	}
-	fmt.Fprintln(p.Stdout, args[0].Trace())
+	tree := treeprint.New()
+	fmt.Fprintln(p.Stdout, TraceAsTree(args[0], args[0].Trace(), tree))
 
 	return Unit(), nil
 }

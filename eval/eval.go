@@ -69,7 +69,7 @@ func (ev *Evaluator) Eval(node ast.Node) (Value, error) {
 func (ev *Evaluator) evalVar(node *ast.Var) (Value, error) {
 	name := tokenToName(node.Name)
 	if v := ev.evEnv.get(name); v != nil {
-		return v.WithTrace(Var{Name: node.Name}), nil
+		return v, nil
 	}
 
 	return nil, utils.PosError{Where: node.Base(), Err: UndefinedVariableError{Name: node.Name}}
@@ -345,6 +345,7 @@ func (ev *Evaluator) evalObject(node *ast.Object) Object {
 func (ev *Evaluator) evalVarDecl(node *ast.VarDecl) error {
 	if node.Expr != nil {
 		v, err := ev.Eval(node.Expr)
+		v = v.WithTrace(Var{Name: node.Name})
 		if err != nil {
 			return err
 		}

@@ -1,2 +1,20 @@
-[6 x.15 (call (call map.1 addone.2) [3 (call (access option.0 some) {41}) x.5 :p1.4]) (call (access [2 o.11 option.0] some) (call [3 f.10 :p1.6 addone.2] x.12)) x.5 :p1.4 (call [3 f.10 :p1.6 addone.2] x.12)]
+.
+└── [3]  log
+    ├── [1]  call
+    │   ├── addone.2@<fn>
+    │   └── 41
+    ├── [1]  call
+    │   ├── [some]  access
+    │   │   └── option.0@{none: <thunk>, some: <fn>}
+    │   └── [1]  call
+    │       ├── addone.2@<fn>
+    │       └── 41
+    └── [2]  call
+        ├── map.1@<fn>
+        ├── addone.2@<fn>
+        └── [1]  call
+            ├── [some]  access
+            │   └── option.0@{none: <thunk>, some: <fn>}
+            └── 41
+
 result => []
