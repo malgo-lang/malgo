@@ -2,4 +2,4 @@
 (def le.1 (lambda (:p1.13) (lambda (:p2.14) (case ((var :p1.13) (var :p2.14)) (clause ((var x.15) (var y.16)) (seq (prim less_equal (var x.15) (var y.16))))))))
 (def dec.2 (lambda (:p1.17) (case ((var :p1.17)) (clause (var x.18) (seq (prim sub (var x.18) (literal 1)))))))
 (def tarai.3 (lambda (:p1.19) (lambda (:p2.20) (lambda (:p3.21) (case ((var :p1.19) (var :p2.20) (var :p3.21)) (clause ((var x.22) (var y.23) (var z.24)) (seq (call (access (call (access (call (var if.0) (call (call (var le.1) (var x.22)) (var y.23))) then) (lambda () (seq (var y.23)))) else) (lambda () (seq (call (call (call (var tarai.3) (call (call (call (var tarai.3) (call (var dec.2) (var x.22))) (var y.23)) (var z.24))) (call (call (call (var tarai.3) (call (var dec.2) (var y.23))) (var z.24)) (var x.22))) (call (call (call (var tarai.3) (call (var dec.2) (var z.24))) (var x.22)) (var y.23)))))))))))))
-(def main.4 (lambda () (seq (call (call (call (var tarai.3) (literal 10)) (literal 5)) (literal 0)))))
+(def main.4 (lambda () (seq (prim print_trace (call (call (call (var tarai.3) (literal 2)) (literal 1)) (literal 0))))))
