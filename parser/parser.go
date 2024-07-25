@@ -362,19 +362,30 @@ func (p *Parser) callTail(fun ast.Node) (ast.Node, error) {
 func (p *Parser) codata() (*ast.Codata, error) {
 	p.advance()
 
-	clause, err := p.clause()
+	clause, isOnlyBody, err := p.clause()
 	if err != nil {
 		return nil, err
 	}
+	if isOnlyBody {
+		if _, err := p.consume(token.RIGHTBRACE); err != nil {
+			return nil, fmt.Errorf("%w\nhint: add parentheses around the parameter list", err)
+		}
+
+		return &ast.Codata{Clauses: []*ast.CodataClause{clause}}, nil
+	}
+
 	clauses := []*ast.CodataClause{clause}
 	for p.match(token.COMMA) {
 		p.advance()
 		if p.match(token.RIGHTBRACE) {
 			break
 		}
-		clause, err := p.clause()
+		clause, isOnlyBody, err := p.clause()
 		if err != nil {
 			return nil, err
+		}
+		if isOnlyBody {
+			return nil, unexpectedOnlyBodyClause(clause.Base())
 		}
 		clauses = append(clauses, clause)
 	}
@@ -385,10 +396,21 @@ func (p *Parser) codata() (*ast.Codata, error) {
 	return &ast.Codata{Clauses: clauses}, nil
 }
 
+type UnexpectedOnlyBodyClauseError struct{}
+
+func (e UnexpectedOnlyBodyClauseError) Error() string {
+	return "unexpected only body clause"
+}
+
+func unexpectedOnlyBodyClause(token token.Token) error {
+	return utils.PosError{Where: token, Err: UnexpectedOnlyBodyClauseError{}}
+}
+
 // clause = clauseHead "->" clauseBody | clauseBody ;
 // clauseHead = "(" ")" | "(" pattern ("," pattern)* ","? ")" | pattern ;
 // clauseBody = expr (";" expr)* ";"? ;
-func (p *Parser) clause() (*ast.CodataClause, error) {
+func (p *Parser) clause() (*ast.CodataClause, bool, error) {
+	var isOnlyBody bool
 	// try to parse `clauseHead "->"`
 	pattern, perr := try(p, func() (ast.Node, error) {
 		pattern, err := p.clauseHead()
@@ -400,15 +422,19 @@ func (p *Parser) clause() (*ast.CodataClause, error) {
 			return nil, err
 		}
 
+		isOnlyBody = false
+
 		return pattern, nil
 	}, func(err error) (ast.Node, error) {
 		// if the parsing is failed, insert `#() ->` as pattern and go back to the original position.
+		isOnlyBody = true
+
 		return &ast.Call{Func: &ast.This{Token: p.peek()}, Args: []ast.Node{}}, err
 	})
 
 	expr, err := p.expr()
 	if err != nil {
-		return nil, errors.Join(perr, err)
+		return nil, isOnlyBody, errors.Join(perr, err)
 	}
 	exprs := []ast.Node{expr}
 	for p.match(token.SEMICOLON) {
@@ -418,12 +444,12 @@ func (p *Parser) clause() (*ast.CodataClause, error) {
 		}
 		expr, err := p.expr()
 		if err != nil {
-			return nil, err
+			return nil, isOnlyBody, err
 		}
 		exprs = append(exprs, expr)
 	}
 
-	return &ast.CodataClause{Pattern: pattern, Expr: &ast.Seq{Exprs: exprs}}, nil
+	return &ast.CodataClause{Pattern: pattern, Expr: &ast.Seq{Exprs: exprs}}, isOnlyBody, nil
 }
 
 func (p *Parser) clauseHead() (ast.Node, error) {
