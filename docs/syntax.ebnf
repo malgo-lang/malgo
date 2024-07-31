@@ -2,7 +2,7 @@
 
 decl = dataDecl | typeDecl | varDecl | infixDecl ; (* func decl *)
 
-varDecl = "def" IDENT "=" expr | "def" IDENT ":" type | "def" IDENT ":" type "=" expr ; (* func varDecl *)
+varDecl = "def" IDENT "=" expr ; (* func varDecl *)
 
 infixDecl = ("infix" | "infixl" | "infixr") INTEGER OPERATOR ; (* func infixDecl *)
 
@@ -23,11 +23,13 @@ codata = "{" clause ("," clause)* ","? "}" ; (* func atom *)
 
 binary = method (operator method)* ; (* func binary *)
 
-method = atom (accessTail | callTail)* ; (* func method *)
+method = atom (accessTail | callTail | blockCallTail)* ; (* func method *)
 
 accessTail = "." IDENT callTail? ; (* func accessTail *)
 
 callTail = "(" ")" | "(" expr ("," expr)* ","? ")" ; (* func callTail *)
+
+blockCallTail = codata ; (* func blockCallTail *)
 
 codata = "{" clause ("," clause)* ","? "}" ; (* func codata *)
 
@@ -45,17 +47,6 @@ callPatTail = "(" ")" | "(" pattern ("," pattern)* ","? ")" ; (* func callPatTai
 
 atomPat = IDENT | INTEGER | STRING | "(" pattern ")" | tuplePat ;
 tuplePat = "[" "]" | "[" pattern ("," pattern)* ","? "]" ; (* func atomPat *)
-
-type = binopType ; (* func typ *)
-
-binopType = callType (operator callType)* ; (* func binopType *)
-
-callType = (PRIM "(" IDENT ("," type)* ","? ")" | atomType) ("(" ")" | "(" type ("," type)* ","? ")")* ; (* func callType *)
-
-atomType = IDENT | "{" fieldType ("," fieldType)* ","? "}" | "(" type  ")" | tupleType ;
-tupleType = "[" "]" | "[" type ("," type)* ","? "]"; (* func atomType *)
-
-fieldType = IDENT ":" type ; (* func fieldType *)
 
 peek returns the current token in the token stream without consuming it. (* func peek *)
 

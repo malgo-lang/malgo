@@ -1,0 +1,4 @@
+(def mul (codata (clause (call (call # (var x)) (var y)) (seq (prim mul (var x) (var y))))))
+(def sub (codata (clause (call (call # (var x)) (var y)) (seq (prim sub (var x) (var y))))))
+(def fact (codata (clause (call # (literal 0)) (seq (literal 1))) (clause (call # (var n)) (seq (call (call (var mul) (var n)) (call (var fact) (call (call (var sub) (var n)) (literal 1))))))))
+(def main (codata (clause (call #) (seq (prim print_trace (call (var fact) (literal 5)))))))

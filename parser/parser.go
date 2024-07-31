@@ -304,7 +304,7 @@ func (p *Parser) binary() (ast.Node, error) {
 	return expr, nil
 }
 
-// method = atom (accessTail | callTail)* ;
+// method = atom (accessTail | callTail | blockCallTail)* ;
 func (p *Parser) method() (ast.Node, error) {
 	expr, err := p.atom()
 	if err != nil {
@@ -319,6 +319,11 @@ func (p *Parser) method() (ast.Node, error) {
 			}
 		case p.match(token.LEFTPAREN):
 			expr, err = p.callTail(expr)
+			if err != nil {
+				return nil, err
+			}
+		case p.match(token.LEFTBRACE):
+			expr, err = p.blockCallTail(expr)
 			if err != nil {
 				return nil, err
 			}
@@ -356,6 +361,16 @@ func (p *Parser) callTail(fun ast.Node) (ast.Node, error) {
 	}
 
 	return &ast.Call{Func: fun, Args: args}, nil
+}
+
+// blockCallTail = codata ;
+func (p *Parser) blockCallTail(fun ast.Node) (ast.Node, error) {
+	arg, err := p.codata()
+	if err != nil {
+		return nil, err
+	}
+
+	return &ast.Call{Func: fun, Args: []ast.Node{arg}}, nil
 }
 
 // codata = "{" clause ("," clause)* ","? "}" ;

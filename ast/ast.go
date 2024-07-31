@@ -234,6 +234,10 @@ type With struct {
 }
 
 func (w With) String() string {
+	if len(w.Binds) == 0 {
+		return utils.Parenthesize("with _", w.Body).String()
+	}
+
 	return utils.Parenthesize("with", utils.Concat(w.Binds), w.Body).String()
 }
 

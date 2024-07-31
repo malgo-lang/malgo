@@ -1,0 +1,3 @@
+(def identity (codata (clause (call # (call (access (var m) bind) (var k))) (seq (call (var k) (call (var identity) (var m))))) (clause (call # (call (access (var m) pure) (var x))) (seq (var x)))))
+(def monad (codata (clause (call (access # bind) (var k)) (seq (var monad))) (clause (call (access # pure) (var x)) (seq (var monad)))))
+(def main (codata (clause (call #) (seq (let (var m) (call (access (call (access (var monad) pure) (literal 0)) bind) (codata (clause (call # (var x)) (seq (prim print (var x))))))) (call (var identity) (var m))))))
