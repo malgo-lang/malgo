@@ -1,4 +1,4 @@
 (def option (object (field none (seq (literal "none"))) (field some (lambda (:p1) (case ((var :p1)) (clause (var x) (seq (var x))))))))
-(def map (lambda (:p1 :p2) (case ((var :p1) (var :p2)) (clause ((var f) (access (var o) none)) (seq (access (var o) none))) (clause ((var f) (call (access (var o) some) (var x))) (seq (call (access (var o) some) (call (var f) (var x))))))))
+(def map (lambda (:p1) (lambda (:p2) (case ((var :p1) (var :p2)) (clause ((var f) (access (var o) none)) (seq (access (var o) none))) (clause ((var f) (call (access (var o) some) (var x))) (seq (call (access (var o) some) (call (var f) (var x)))))))))
 (def addone (lambda (:p1) (case ((var :p1)) (clause (var x) (seq (prim add (var x) (literal 1)))))))
-(def main (lambda () (seq (let (var x) (call (var map) (var addone) (call (access (var option) some) (literal 41)))) (prim print_trace (var x)))))
+(def main (lambda () (seq (let (var x) (call (call (var map) (var addone)) (call (access (var option) some) (literal 41)))) (prim print_trace (var x)))))

@@ -8,12 +8,8 @@ import (
 	"testing"
 
 	"github.com/sebdah/goldie/v2"
-	"github.com/takoeight0821/malgo/codata"
-	"github.com/takoeight0821/malgo/desugarcurry"
-	"github.com/takoeight0821/malgo/desugarwith"
 	"github.com/takoeight0821/malgo/driver"
 	"github.com/takoeight0821/malgo/eval"
-	"github.com/takoeight0821/malgo/infix"
 	"github.com/takoeight0821/malgo/nameresolve"
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
@@ -36,11 +32,7 @@ func BenchmarkTestdata(b *testing.B) {
 		}
 
 		runner := driver.NewPassRunner()
-		runner.AddPass(&desugarwith.DesugarWith{})
-		runner.AddPass(&codata.Flat{})
-		runner.AddPass(infix.NewInfixResolver())
-		runner.AddPass(&desugarcurry.DesugarCurry{})
-		runner.AddPass(nameresolve.NewResolver())
+		driver.AddPassesUntil(runner, nameresolve.NewResolver())
 
 		nodes, err := runner.RunSource(testfile, string(source))
 		if err != nil {
@@ -95,11 +87,7 @@ func TestGolden(t *testing.T) {
 		}
 
 		runner := driver.NewPassRunner()
-		runner.AddPass(&desugarwith.DesugarWith{})
-		runner.AddPass(&codata.Flat{})
-		runner.AddPass(infix.NewInfixResolver())
-		runner.AddPass(&desugarcurry.DesugarCurry{})
-		runner.AddPass(nameresolve.NewResolver())
+		driver.AddPassesUntil(runner, nameresolve.NewResolver())
 
 		nodes, err := runner.RunSource(testfile, string(source))
 		if err != nil {

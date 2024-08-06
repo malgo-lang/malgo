@@ -4,7 +4,12 @@ import (
 	"fmt"
 
 	"github.com/takoeight0821/malgo/ast"
+	"github.com/takoeight0821/malgo/codata"
+	"github.com/takoeight0821/malgo/desugarcurry"
+	"github.com/takoeight0821/malgo/desugarwith"
+	"github.com/takoeight0821/malgo/infix"
 	"github.com/takoeight0821/malgo/lexer"
+	"github.com/takoeight0821/malgo/nameresolve"
 	"github.com/takoeight0821/malgo/parser"
 )
 
@@ -23,8 +28,25 @@ func NewPassRunner() *PassRunner {
 }
 
 // AddPass adds a pass to the end of the pass list.
-func (r *PassRunner) AddPass(pass Pass) {
+func (r *PassRunner) addPass(pass Pass) {
 	r.passes = append(r.passes, pass)
+}
+
+func AddPassesUntil(r *PassRunner, until Pass) {
+	passes := []Pass{
+		&desugarwith.DesugarWith{},
+		&desugarcurry.DesugarCurry{},
+		&codata.Flat{},
+		infix.NewInfixResolver(),
+		nameresolve.NewResolver(),
+	}
+
+	for _, pass := range passes {
+		r.addPass(pass)
+		if pass.Name() == until.Name() {
+			break
+		}
+	}
 }
 
 // Run executes passes in order.

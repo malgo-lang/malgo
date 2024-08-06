@@ -9,11 +9,8 @@ import (
 
 	"github.com/adrg/xdg"
 	"github.com/peterh/liner"
-	"github.com/takoeight0821/malgo/codata"
-	"github.com/takoeight0821/malgo/desugarwith"
 	"github.com/takoeight0821/malgo/driver"
 	"github.com/takoeight0821/malgo/eval"
-	"github.com/takoeight0821/malgo/infix"
 	"github.com/takoeight0821/malgo/nameresolve"
 	"github.com/takoeight0821/malgo/token"
 )
@@ -82,10 +79,7 @@ func RunPrompt() error {
 	readHistory(line)
 
 	runner := driver.NewPassRunner()
-	runner.AddPass(&desugarwith.DesugarWith{})
-	runner.AddPass(&codata.Flat{})
-	runner.AddPass(infix.NewInfixResolver())
-	runner.AddPass(nameresolve.NewResolver())
+	driver.AddPassesUntil(runner, nameresolve.NewResolver())
 
 	evaluator := eval.NewEvaluator()
 
@@ -119,10 +113,7 @@ func RunPrompt() error {
 // RunFile runs the specified file.
 func RunFile(path string) error {
 	runner := driver.NewPassRunner()
-	runner.AddPass(&desugarwith.DesugarWith{})
-	runner.AddPass(&codata.Flat{})
-	runner.AddPass(infix.NewInfixResolver())
-	runner.AddPass(nameresolve.NewResolver())
+	driver.AddPassesUntil(runner, nameresolve.NewResolver())
 
 	// Read the source code from the file.
 	bytes, err := os.ReadFile(path)

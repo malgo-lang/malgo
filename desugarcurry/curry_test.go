@@ -30,7 +30,7 @@ func TestGolden(t *testing.T) {
 		}
 
 		runner := driver.NewPassRunner()
-		runner.AddPass(&desugarcurry.DesugarCurry{})
+		driver.AddPassesUntil(runner, &desugarcurry.DesugarCurry{})
 
 		nodes, err := runner.RunSource(testfile, string(source))
 		if err != nil {

@@ -7,7 +7,6 @@ import (
 
 	"github.com/sebdah/goldie/v2"
 	"github.com/takoeight0821/malgo/codata"
-	"github.com/takoeight0821/malgo/desugarwith"
 	"github.com/takoeight0821/malgo/driver"
 	"github.com/takoeight0821/malgo/utils"
 )
@@ -32,8 +31,7 @@ func TestGolden(t *testing.T) {
 		}
 
 		runner := driver.NewPassRunner()
-		runner.AddPass(&desugarwith.DesugarWith{})
-		runner.AddPass(&codata.Flat{})
+		driver.AddPassesUntil(runner, &codata.Flat{})
 
 		nodes, err := runner.RunSource(testfile, string(source))
 		if err != nil {

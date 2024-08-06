@@ -1,4 +1,4 @@
-(def mul (lambda (:p1 :p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (prim mul (var x) (var y)))))))
-(def sub (lambda (:p1 :p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (prim sub (var x) (var y)))))))
-(def fact (lambda (:p1) (case ((var :p1)) (clause (literal 0) (seq (literal 1))) (clause (var n) (seq (call (var mul) (var n) (call (var fact) (call (var sub) (var n) (literal 1)))))))))
+(def mul (lambda (:p1) (lambda (:p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (prim mul (var x) (var y))))))))
+(def sub (lambda (:p1) (lambda (:p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (prim sub (var x) (var y))))))))
+(def fact (lambda (:p1) (case ((var :p1)) (clause (literal 0) (seq (literal 1))) (clause (var n) (seq (call (call (var mul) (var n)) (call (var fact) (call (call (var sub) (var n)) (literal 1)))))))))
 (def main (lambda () (seq (prim print_trace (call (var fact) (literal 5))))))
