@@ -1,6 +1,7 @@
 package driver
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/takoeight0821/malgo/ast"
@@ -68,14 +69,20 @@ func (r *PassRunner) Run(program []ast.Node) ([]ast.Node, error) {
 
 // RunSource parses the source code and executes passes in order.
 func (r *PassRunner) RunSource(filePath, source string) ([]ast.Node, error) {
-	tokens, err := lexer.Lex(filePath, source)
-	if err != nil {
-		return nil, fmt.Errorf("lex: %w", err)
-	}
-
-	decls, err := parser.NewParser(tokens).ParseDecl()
+	lex := lexer.NewLexer(filePath, source)
+	parser, err := parser.NewParser(lex)
 	if err != nil {
 		return nil, fmt.Errorf("parse: %w", err)
+	}
+
+	decls, err := parser.ParseDecl()
+	if err != nil {
+		expr, err2 := parser.ParseExpr()
+		decls = []ast.Node{expr}
+
+		if err2 != nil {
+			return nil, fmt.Errorf("parse: %w", errors.Join(err, err2))
+		}
 	}
 
 	return r.Run(decls)

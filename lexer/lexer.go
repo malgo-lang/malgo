@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"unicode"
@@ -11,10 +10,10 @@ import (
 	"github.com/takoeight0821/malgo/utils"
 )
 
-func Lex(filePath, source string) ([]token.Token, error) {
-	lexer := lexer{
+func NewLexer(filePath, source string) *Lexer {
+	return &Lexer{
 		source:  source,
-		tokens:  []token.Token{},
+		token:   make(chan token.Token, 2),
 		start:   0,
 		current: 0,
 
@@ -22,21 +21,28 @@ func Lex(filePath, source string) ([]token.Token, error) {
 		line:     1,
 		column:   1,
 	}
-
-	var err error
-
-	for !lexer.isAtEnd() {
-		err = errors.Join(err, lexer.scanToken())
-	}
-
-	lexer.tokens = append(lexer.tokens, token.Token{Kind: token.EOF, Lexeme: "", Location: lexer.location(), Literal: nil})
-
-	return lexer.tokens, err
 }
 
-type lexer struct {
+func (l *Lexer) Next() (token.Token, error) {
+	for !l.isAtEnd() {
+		err := l.scanToken()
+
+		select {
+		case tok := <-l.token:
+			return tok, err
+		default:
+			if err != nil {
+				return token.Token{}, err
+			}
+		}
+	}
+
+	return token.Token{Kind: token.EOF, Lexeme: "", Location: l.location(), Literal: nil}, nil
+}
+
+type Lexer struct {
 	source string
-	tokens []token.Token
+	token  chan token.Token
 
 	start   int // start of current lexeme
 	current int // current position in source
@@ -46,15 +52,15 @@ type lexer struct {
 	column   int    // current column number
 }
 
-func (l lexer) location() token.Location {
+func (l Lexer) location() token.Location {
 	return token.Location{FilePath: l.filePath, Line: l.line, Column: l.column}
 }
 
-func (l lexer) isAtEnd() bool {
+func (l Lexer) isAtEnd() bool {
 	return l.current >= len(l.source)
 }
 
-func (l lexer) peek() rune {
+func (l Lexer) peek() rune {
 	if l.isAtEnd() {
 		return '\x00'
 	}
@@ -63,7 +69,7 @@ func (l lexer) peek() rune {
 	return runeValue
 }
 
-func (l *lexer) advance() rune {
+func (l *Lexer) advance() rune {
 	runeValue, width := utf8.DecodeRuneInString(l.source[l.current:])
 	l.current += width
 	l.column++
@@ -71,9 +77,9 @@ func (l *lexer) advance() rune {
 	return runeValue
 }
 
-func (l *lexer) addToken(loc token.Location, kind token.Kind, literal any) {
+func (l *Lexer) addToken(loc token.Location, kind token.Kind, literal any) {
 	text := l.source[l.start:l.current]
-	l.tokens = append(l.tokens, token.Token{Kind: kind, Lexeme: text, Location: loc, Literal: literal})
+	l.token <- token.Token{Kind: kind, Lexeme: text, Location: loc, Literal: literal}
 }
 
 type UnexpectedCharacterError struct {
@@ -85,7 +91,7 @@ func (e UnexpectedCharacterError) Error() string {
 	return fmt.Sprintf("unexpected character: %c at line %d", e.Char, e.Line)
 }
 
-func (l *lexer) scanToken() error {
+func (l *Lexer) scanToken() error {
 	l.start = l.current
 	loc := l.location()
 	char := l.advance()
@@ -126,7 +132,7 @@ func (l *lexer) scanToken() error {
 	return UnexpectedCharacterError{Line: l.line, Char: char}
 }
 
-func (l *lexer) skipComment() error {
+func (l *Lexer) skipComment() error {
 	if l.peek() == '/' {
 		l.advance()
 
@@ -144,7 +150,7 @@ func (l *lexer) skipComment() error {
 	return nil
 }
 
-func (l *lexer) skipLineComment() error {
+func (l *Lexer) skipLineComment() error {
 	for l.peek() != '\n' && !l.isAtEnd() {
 		l.advance()
 	}
@@ -152,7 +158,7 @@ func (l *lexer) skipLineComment() error {
 	return nil
 }
 
-func (l *lexer) skipBlockComment() error {
+func (l *Lexer) skipBlockComment() error {
 	for !l.isAtEnd() {
 		char := l.advance()
 
@@ -178,7 +184,7 @@ func (e UnterminatedBlockCommentError) Error() string {
 	return fmt.Sprintf("unterminated block comment at line %d", e.Line)
 }
 
-func (l *lexer) string(loc token.Location) error {
+func (l *Lexer) string(loc token.Location) error {
 	for l.peek() != '"' && !l.isAtEnd() {
 		if l.peek() == '\n' {
 			l.line++
@@ -220,7 +226,7 @@ func isDigit(c rune) bool {
 	return c >= '0' && c <= '9'
 }
 
-func (l *lexer) integer(loc token.Location) error {
+func (l *Lexer) integer(loc token.Location) error {
 	for isDigit(l.peek()) {
 		l.advance()
 	}
@@ -242,7 +248,7 @@ func isAlpha(c rune) bool {
 // If the identifier is a keyword, it is tokenized as the keyword.
 // If the identifier starts with an uppercase letter, it is tokenized as a symbol.
 // Otherwise, it is tokenized as an identifier.
-func (l *lexer) identifier(loc token.Location) error {
+func (l *Lexer) identifier(loc token.Location) error {
 	for isAlpha(l.peek()) || isDigit(l.peek()) {
 		l.advance()
 	}
@@ -261,7 +267,7 @@ func (l *lexer) identifier(loc token.Location) error {
 }
 
 // symbol parses a identifier as symbol starting with a colon.
-func (l *lexer) symbol(loc token.Location) error {
+func (l *Lexer) symbol(loc token.Location) error {
 	for isAlpha(l.peek()) || isDigit(l.peek()) {
 		l.advance()
 	}
@@ -325,7 +331,7 @@ func getReservedSymbol(char rune) (token.Kind, bool) {
 	return token.OPERATOR, false
 }
 
-func (l *lexer) operator(loc token.Location) error {
+func (l *Lexer) operator(loc token.Location) error {
 	for isSymbol(l.peek()) {
 		l.advance()
 	}

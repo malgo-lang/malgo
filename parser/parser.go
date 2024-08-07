@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/takoeight0821/malgo/ast"
+	"github.com/takoeight0821/malgo/lexer"
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
 )
@@ -13,12 +14,15 @@ import (
 //go:generate go run ../tools/main.go -comment -in parser.go -out ../docs/syntax.ebnf
 
 type Parser struct {
-	tokens  []token.Token
-	current int
+	lex     *lexer.Lexer
+	current token.Token
+	prev    token.Token
 }
 
-func NewParser(tokens []token.Token) *Parser {
-	return &Parser{tokens, 0}
+func NewParser(lex *lexer.Lexer) (*Parser, error) {
+	current, err := lex.Next()
+
+	return &Parser{lex, current, token.Token{}}, err
 }
 
 func (p *Parser) ParseExpr() (ast.Node, error) {
@@ -38,7 +42,7 @@ func (p *Parser) ParseDecl() ([]ast.Node, error) {
 	return nodes, nil
 }
 
-// decl = dataDecl | typeDecl | varDecl | infixDecl ;
+// decl = varDecl | infixDecl | expr ;
 func (p *Parser) decl() (ast.Node, error) {
 	if p.match(token.DEF) {
 		return p.varDecl()
@@ -89,15 +93,22 @@ func (p *Parser) varDecl() (*ast.VarDecl, error) {
 		return nil, err
 	}
 	var name token.Token
+	var err error
 	switch {
 	case p.match(token.IDENT):
-		name = p.advance()
+		name, err = p.advance()
+		if err != nil {
+			return nil, err
+		}
 	case p.match(token.OPERATOR):
-		name = p.advance()
+		name, err = p.advance()
+		if err != nil {
+			return nil, err
+		}
 	default:
 		return nil, unexpectedToken(p.peek(), token.IDENT, token.OPERATOR)
 	}
-	_, err := p.consume(token.EQUAL)
+	_, err = p.consume(token.EQUAL)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +123,10 @@ func (p *Parser) varDecl() (*ast.VarDecl, error) {
 
 // infixDecl = ("infix" | "infixl" | "infixr") INTEGER OPERATOR ;
 func (p *Parser) infixDecl() (*ast.InfixDecl, error) {
-	kind := p.advance()
+	kind, err := p.advance()
+	if err != nil {
+		return nil, err
+	}
 	if kind.Kind != token.INFIX && kind.Kind != token.INFIXL && kind.Kind != token.INFIXR {
 		return nil, unexpectedToken(kind, token.INFIX, token.INFIXL, token.INFIXR)
 	}
@@ -293,7 +307,10 @@ func (p *Parser) binary() (ast.Node, error) {
 		return nil, err
 	}
 	for p.match(token.OPERATOR) {
-		op := p.advance()
+		op, err := p.advance()
+		if err != nil {
+			return nil, err
+		}
 		right, err := p.method()
 		if err != nil {
 			return nil, err
@@ -613,22 +630,25 @@ func (p *Parser) atomPat() (ast.Node, error) {
 
 // peek returns the current token in the token stream without consuming it.
 func (p Parser) peek() token.Token {
-	return p.tokens[p.current]
+	return p.current
 }
 
 // advance moves the parser to the next token in the token stream.
 // It returns the current token before advancing.
-func (p *Parser) advance() token.Token {
+func (p *Parser) advance() (token.Token, error) {
+	var err error = nil
+
 	if !p.IsAtEnd() {
-		p.current++
+		p.prev = p.current
+		p.current, err = p.lex.Next()
 	}
 
-	return p.previous()
+	return p.previous(), err
 }
 
 // previous returns the previous token in the token stream.
 func (p Parser) previous() token.Token {
-	return p.tokens[p.current-1]
+	return p.prev
 }
 
 // IsAtEnd checks if the parser has reached the end of the input.
@@ -648,7 +668,7 @@ func (p Parser) match(kind token.Kind) bool {
 
 func (p *Parser) consume(kind token.Kind) (token.Token, error) {
 	if p.match(kind) {
-		return p.advance(), nil
+		return p.advance()
 	}
 
 	return p.peek(), unexpectedToken(p.peek(), kind)
@@ -656,6 +676,7 @@ func (p *Parser) consume(kind token.Kind) (token.Token, error) {
 
 type UnexpectedTokenError struct {
 	Expected []token.Kind
+	Actual   token.Token
 }
 
 func (e UnexpectedTokenError) Error() string {
@@ -668,11 +689,11 @@ func (e UnexpectedTokenError) Error() string {
 		msg = msg + ", " + ex.String()
 	}
 
-	return "unexpected token: expected " + msg
+	return "unexpected token: expected " + msg + ", got " + e.Actual.String()
 }
 
 func unexpectedToken(t token.Token, expected ...token.Kind) error {
-	return utils.PosError{Where: t, Err: UnexpectedTokenError{Expected: expected}}
+	return utils.PosError{Where: t, Err: UnexpectedTokenError{Expected: expected, Actual: t}}
 }
 
 type UnexpectedEOFError struct{}
@@ -686,11 +707,15 @@ func unexpectedEOF() error {
 }
 
 func try[T any](p *Parser, action func() (T, error), handler func(error) (T, error)) (T, error) {
+	savedLex := *p.lex
 	savedCurrent := p.current
+	savedPrev := p.prev
 
 	node, err := action()
 	if err != nil {
+		p.lex = &savedLex
 		p.current = savedCurrent
+		p.prev = savedPrev
 
 		node, rerr := handler(err)
 		if rerr != nil {

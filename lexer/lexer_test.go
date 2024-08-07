@@ -8,6 +8,7 @@ import (
 
 	"github.com/sebdah/goldie/v2"
 	"github.com/takoeight0821/malgo/lexer"
+	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
 )
 
@@ -29,16 +30,21 @@ func TestGolden(t *testing.T) {
 			return
 		}
 
-		tokens, err := lexer.Lex(testfile, string(source))
-		if err != nil {
-			t.Errorf("%s returned error: %v", testfile, err)
-
-			return
-		}
-
+		lex := lexer.NewLexer(testfile, string(source))
 		var builder strings.Builder
-		for _, token := range tokens {
-			fmt.Fprintf(&builder, "%v %q %v\n", token.Kind, token.Lexeme, token.Location)
+
+		for {
+			tok, err := lex.Next()
+			if err != nil {
+				t.Errorf("%s returned error: %v", testfile, err)
+
+				return
+			}
+
+			fmt.Fprintf(&builder, "%v %q %v\n", tok.Kind, tok.Lexeme, tok.Location)
+			if tok.Kind == token.EOF {
+				break
+			}
 		}
 
 		g := goldie.New(t)
