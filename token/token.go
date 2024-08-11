@@ -6,7 +6,8 @@ import "fmt"
 type Kind int
 
 const (
-	EOF Kind = iota
+	ERROR Kind = iota
+	EOF
 
 	// Single-character tokens.
 	LEFTPAREN

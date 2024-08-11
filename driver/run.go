@@ -9,9 +9,9 @@ import (
 	"github.com/takoeight0821/malgo/desugarcurry"
 	"github.com/takoeight0821/malgo/desugarwith"
 	"github.com/takoeight0821/malgo/infix"
-	"github.com/takoeight0821/malgo/lexer"
 	"github.com/takoeight0821/malgo/nameresolve"
 	"github.com/takoeight0821/malgo/parser"
+	"github.com/takoeight0821/malgo/scanner"
 )
 
 type Pass interface {
@@ -69,7 +69,7 @@ func (r *PassRunner) Run(program []ast.Node) ([]ast.Node, error) {
 
 // RunSource parses the source code and executes passes in order.
 func (r *PassRunner) RunSource(filePath, source string) ([]ast.Node, error) {
-	lex := lexer.NewLexer(filePath, source)
+	lex := scanner.NewScanner(filePath, source)
 	parser, err := parser.NewParser(lex)
 	if err != nil {
 		return nil, fmt.Errorf("parse: %w", err)

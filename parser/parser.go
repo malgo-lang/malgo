@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/takoeight0821/malgo/ast"
-	"github.com/takoeight0821/malgo/lexer"
+	"github.com/takoeight0821/malgo/scanner"
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
 )
@@ -14,12 +14,12 @@ import (
 //go:generate go run ../tools/main.go -comment -in parser.go -out ../docs/syntax.ebnf
 
 type Parser struct {
-	lex     *lexer.Lexer
+	lex     *scanner.Scanner
 	current token.Token
 	prev    token.Token
 }
 
-func NewParser(lex *lexer.Lexer) (*Parser, error) {
+func NewParser(lex *scanner.Scanner) (*Parser, error) {
 	current, err := lex.Next()
 
 	return &Parser{lex, current, token.Token{}}, err

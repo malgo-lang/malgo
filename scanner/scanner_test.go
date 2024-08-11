@@ -1,4 +1,4 @@
-package lexer_test
+package scanner_test
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/sebdah/goldie/v2"
-	"github.com/takoeight0821/malgo/lexer"
+	"github.com/takoeight0821/malgo/scanner"
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
 )
@@ -23,6 +23,7 @@ func TestGolden(t *testing.T) {
 	}
 
 	for _, testfile := range testfiles {
+		t.Logf("testing %s", testfile)
 		source, err := os.ReadFile(testfile)
 		if err != nil {
 			t.Errorf("failed to read %s: %v", testfile, err)
@@ -30,7 +31,7 @@ func TestGolden(t *testing.T) {
 			return
 		}
 
-		lex := lexer.NewLexer(testfile, string(source))
+		lex := scanner.NewScanner(testfile, string(source))
 		var builder strings.Builder
 
 		for {
