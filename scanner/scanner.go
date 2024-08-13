@@ -46,7 +46,12 @@ func (scanner *Scanner) Next() (token.Token, error) {
 		case tok := <-scanner.tokens:
 			// If the token is an error, return it as an error.
 			if tok.Kind == token.ERROR {
-				return tok, tok.Literal.(error)
+				err, ok := tok.Literal.(error)
+				if !ok {
+					panic("invalid error type")
+				}
+
+				return tok, err
 			}
 
 			return tok, nil
@@ -169,6 +174,7 @@ func lexCode(scanner *Scanner) stateFn {
 }
 
 // lexComment scans the comment and ignores it.
+// If it isn't a comment, it emits the operator token.
 func lexComment(scanner *Scanner) stateFn {
 	// keep the location of '/'
 	loc := scanner.location()

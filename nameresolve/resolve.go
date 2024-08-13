@@ -94,8 +94,7 @@ func (e *env) lookup(name token.Token) (token.Token, error) {
 
 // Define all top-level variables in the node.
 func (r *Resolver) registerTopLevel(node ast.Node) error {
-	switch node := node.(type) {
-	case *ast.VarDecl:
+	if node, ok := node.(*ast.VarDecl); ok {
 		if _, ok := r.env.table[node.Name.Lexeme]; ok {
 			return utils.PosError{Where: node.Base(), Err: AlreadyDefinedError{Name: node.Name}}
 		}

@@ -21,8 +21,11 @@ type Parser struct {
 
 func NewParser(lex *scanner.Scanner) (*Parser, error) {
 	current, err := lex.Next()
+	if err != nil {
+		return nil, fmt.Errorf("lexing error: %w", err)
+	}
 
-	return &Parser{lex, current, token.Token{}}, err
+	return &Parser{lex, current, token.Token{}}, nil
 }
 
 func (p *Parser) ParseExpr() (ast.Node, error) {
@@ -68,14 +71,20 @@ func commaSeparated[T any](
 		}
 		elements = append(elements, element)
 		for parser.match(token.COMMA) {
-			parser.advance()
+			_, err := parser.advance()
+			if err != nil {
+				return nil, err
+			}
+
 			if parser.match(endToken) {
 				break
 			}
+
 			element, err := parseElement(parser)
 			if err != nil {
 				return elements, err
 			}
+
 			elements = append(elements, element)
 		}
 	}
@@ -159,7 +168,10 @@ func (p *Parser) expr() (ast.Node, error) {
 
 // let = "let" pattern "=" binary ;
 func (p *Parser) let() (*ast.Let, error) {
-	p.advance()
+	if _, err := p.consume(token.LET); err != nil {
+		return nil, err
+	}
+
 	pattern, err := p.pattern()
 	if err != nil {
 		return nil, err
@@ -178,7 +190,9 @@ func (p *Parser) let() (*ast.Let, error) {
 // with = "with" withBind "<-" binary | "with" binary ;
 // withBind = pattern ("," pattern)* "," ;
 func (p *Parser) with() (*ast.With, error) {
-	p.advance()
+	if _, err := p.consume(token.WITH); err != nil {
+		return nil, err
+	}
 
 	patterns, err := try(p, func() ([]ast.Node, error) {
 		var patterns []ast.Node
@@ -189,7 +203,9 @@ func (p *Parser) with() (*ast.With, error) {
 		patterns = append(patterns, pattern)
 
 		for p.match(token.COMMA) {
-			p.advance()
+			if _, err := p.consume(token.COMMA); err != nil {
+				return nil, err
+			}
 			if p.match(token.BACKARROW) {
 				break
 			}
@@ -236,19 +252,27 @@ func (p *Parser) atom() (ast.Node, error) {
 	//exhaustive:ignore
 	switch tok := p.peek(); tok.Kind {
 	case token.IDENT:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		return &ast.Var{Name: tok}, nil
 	case token.INTEGER, token.STRING:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		return &ast.Literal{Token: tok}, nil
 	case token.SYMBOL:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		return &ast.Symbol{Name: tok}, nil
 	case token.LEFTPAREN:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		expr, err := p.expr()
 		if err != nil {
@@ -271,7 +295,10 @@ func (p *Parser) atom() (ast.Node, error) {
 	case token.LEFTBRACE:
 		return p.codata()
 	case token.PRIM:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
+
 		args, err := commaSeparated(p, token.LEFTPAREN, token.RIGHTPAREN, func(p *Parser) (ast.Node, error) {
 			return p.expr()
 		})
@@ -307,7 +334,7 @@ func (p *Parser) binary() (ast.Node, error) {
 		return nil, err
 	}
 	for p.match(token.OPERATOR) {
-		op, err := p.advance()
+		operator, err := p.advance()
 		if err != nil {
 			return nil, err
 		}
@@ -315,7 +342,7 @@ func (p *Parser) binary() (ast.Node, error) {
 		if err != nil {
 			return nil, err
 		}
-		expr = &ast.Binary{Left: expr, Op: op, Right: right}
+		expr = &ast.Binary{Left: expr, Op: operator, Right: right}
 	}
 
 	return expr, nil
@@ -392,7 +419,9 @@ func (p *Parser) blockCallTail(fun ast.Node) (ast.Node, error) {
 
 // codata = "{" clause ("," clause)* ","? "}" ;
 func (p *Parser) codata() (*ast.Codata, error) {
-	p.advance()
+	if _, err := p.consume(token.LEFTBRACE); err != nil {
+		return nil, err
+	}
 
 	clause, isOnlyBody, err := p.clause()
 	if err != nil {
@@ -408,7 +437,9 @@ func (p *Parser) codata() (*ast.Codata, error) {
 
 	clauses := []*ast.CodataClause{clause}
 	for p.match(token.COMMA) {
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 		if p.match(token.RIGHTBRACE) {
 			break
 		}
@@ -470,7 +501,9 @@ func (p *Parser) clause() (*ast.CodataClause, bool, error) {
 	}
 	exprs := []ast.Node{expr}
 	for p.match(token.SEMICOLON) {
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, isOnlyBody, err
+		}
 		if p.match(token.RIGHTBRACE) {
 			break
 		}
@@ -579,23 +612,33 @@ func (p *Parser) atomPat() (ast.Node, error) {
 	//exhaustive:ignore
 	switch tok := p.peek(); tok.Kind {
 	case token.SHARP:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		return &ast.This{Token: tok}, nil
 	case token.IDENT:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		return &ast.Var{Name: tok}, nil
 	case token.INTEGER, token.STRING:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		return &ast.Literal{Token: tok}, nil
 	case token.SYMBOL:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		return &ast.Symbol{Name: tok}, nil
 	case token.LEFTPAREN:
-		p.advance()
+		if _, err := p.advance(); err != nil {
+			return nil, err
+		}
 
 		pat, err := p.pattern()
 		if err != nil {
@@ -636,7 +679,7 @@ func (p Parser) peek() token.Token {
 // advance moves the parser to the next token in the token stream.
 // It returns the current token before advancing.
 func (p *Parser) advance() (token.Token, error) {
-	var err error = nil
+	var err error
 
 	if !p.IsAtEnd() {
 		p.prev = p.current
@@ -706,16 +749,16 @@ func unexpectedEOF() error {
 	return UnexpectedEOFError{}
 }
 
-func try[T any](p *Parser, action func() (T, error), handler func(error) (T, error)) (T, error) {
-	savedLex := *p.lex
-	savedCurrent := p.current
-	savedPrev := p.prev
+func try[T any](parser *Parser, action func() (T, error), handler func(error) (T, error)) (T, error) {
+	savedLex := *parser.lex
+	savedCurrent := parser.current
+	savedPrev := parser.prev
 
 	node, err := action()
 	if err != nil {
-		p.lex = &savedLex
-		p.current = savedCurrent
-		p.prev = savedPrev
+		parser.lex = &savedLex
+		parser.current = savedCurrent
+		parser.prev = savedPrev
 
 		node, rerr := handler(err)
 		if rerr != nil {

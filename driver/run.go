@@ -33,7 +33,7 @@ func (r *PassRunner) addPass(pass Pass) {
 	r.passes = append(r.passes, pass)
 }
 
-func AddPassesUntil(r *PassRunner, until Pass) {
+func AddPassesUntil(runner *PassRunner, until Pass) {
 	passes := []Pass{
 		&desugarwith.DesugarWith{},
 		&desugarcurry.DesugarCurry{},
@@ -43,7 +43,7 @@ func AddPassesUntil(r *PassRunner, until Pass) {
 	}
 
 	for _, pass := range passes {
-		r.addPass(pass)
+		runner.addPass(pass)
 		if pass.Name() == until.Name() {
 			break
 		}

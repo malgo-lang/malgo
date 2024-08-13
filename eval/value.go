@@ -13,28 +13,37 @@ import (
 	"github.com/xlab/treeprint"
 )
 
+// Value represents a value in the Malgo language.
 type Value interface {
 	fmt.Stringer
+	// Match matches the value against the pattern.
 	Match(pattern ast.Node) (map[Name]Value, bool)
+	// Trace returns the trace of the value.
 	Trace() Trace
+	// WithTrace attaches a trace to the value.
 	WithTrace(trace Trace) Value
 }
 
+// Callable represents a callable value in the Malgo language.
 type Callable interface {
+	// Apply applies the function to the arguments.
 	Apply(where token.Token, args ...Value) (Value, error)
 }
 
+// Unit represents the unit value.
 func Unit() Tuple {
 	unit := Tuple{values: make([]Value, 0), trace: Root{}}
 
 	return unit
 }
 
+// Tuple represents a tuple value.
 type Tuple struct {
 	values []Value
 	trace  Trace
 }
 
+// String returns the string as `"[value1, value2, ...]"`.
 func (t Tuple) String() string {
 	var builder strings.Builder
 
@@ -53,18 +62,25 @@ func (t Tuple) String() string {
 func (t Tuple) Match(pattern ast.Node) (map[Name]Value, bool) {
 	switch pattern := pattern.(type) {
 	case *ast.Var:
+		// If the pattern is a variable, bind the variable to the value.
 		return map[Name]Value{tokenToName(pattern.Name): t}, true
 	case *ast.Tuple:
+		// If the pattern is a tuple, match each element of the tuple.
 		matches := make(map[Name]Value)
 		for i, elem := range t.values {
 			if i >= len(pattern.Exprs) {
+				// If the pattern is longer than the tuple, matching fails.
+				// Note that the tuple pattern does not match the trace of the tuple.
 				return nil, false
 			}
-			m, ok := elem.Match(pattern.Exprs[i])
+
+			elemMatch, ok := elem.Match(pattern.Exprs[i])
 			if !ok {
+				// If the element does not match the corresponding pattern, matching fails.
 				return nil, false
 			}
-			for k, v := range m {
+			// merge the matches.
+			for k, v := range elemMatch {
 				matches[k] = v
 			}
 		}
@@ -100,6 +116,8 @@ func (i Int) Match(pattern ast.Node) (map[Name]Value, bool) {
 		return map[Name]Value{tokenToName(pattern.Name): i}, true
 	case *ast.Literal:
 		if pattern.Kind != token.INTEGER {
+			// If the literal pattern is not an integer literal, matching fails.
+			// Note that the literal pattern does not match the trace of the integer.
 			return nil, false
 		}
 		if v, ok := pattern.Literal.(int); ok && v == i.value {
@@ -185,6 +203,8 @@ func (s Symbol) Match(pattern ast.Node) (map[Name]Value, bool) {
 		}
 	case *ast.Call:
 		if fn, ok := pattern.Func.(*ast.Symbol); ok && fn.Name.Lexeme == s.Name {
+			// Symbol can contain multiple arguments.
+			// In this case, check if the arguments match the parameter patterns.
 			if len(pattern.Args) != len(s.Values) {
 				return nil, false
 			}
@@ -248,9 +268,12 @@ func (f Function) Apply(where token.Token, args ...Value) (Value, error) {
 	if len(f.Params) != len(args) {
 		log.Printf("Params: %v", f.Params)
 		log.Printf("Args: %v", args)
+
 		return nil, errorAt(where, InvalidArgumentCountError{Expected: len(f.Params), Actual: len(args)})
 	}
 
+	// Create a new evaluator with the captured environment.
+	// To avoid modifying the captured environment, wrap it with a new environment.
 	evaluator := Evaluator{
 		evEnv:  newEvEnv(f.evEnv),
 		Stdin:  f.Stdin,
@@ -266,7 +289,6 @@ func (f Function) Apply(where token.Token, args ...Value) (Value, error) {
 	if err != nil {
 		return nil, err
 	}
-	f.evEnv = f.evEnv.parent
 
 	return ret.WithTrace(Call{Func: f, Args: args}), nil
 }
@@ -313,6 +335,7 @@ func (t Thunk) WithTrace(trace Trace) Value {
 	return Thunk{Evaluator: t.Evaluator, Body: t.Body, trace: NewLog(trace, t)}
 }
 
+// runThunk evaluates the thunk and returns the result.
 func runThunk(value Value) (Value, error) {
 	switch value := value.(type) {
 	case Thunk:
@@ -400,6 +423,7 @@ func traceAsString(value Value) fmt.Stringer {
 	return value.Trace()
 }
 
+// TraceAsTree renders the trace as a tree.
 func TraceAsTree(value Value, trace Trace, tree treeprint.Tree) treeprint.Tree {
 	switch trace := trace.(type) {
 	case Root:
@@ -434,6 +458,16 @@ func TraceAsTree(value Value, trace Trace, tree treeprint.Tree) treeprint.Tree {
 	return tree
 }
 
+// uncurryCall uncurries the call trace. This is a helper function for TraceAsTree.
+// e.g. `uncurryCall(Call{Func: Call{Func: f, Args: [x]}, Args[y]}) => (f, [x, y])`.
+func uncurryCall(call Call) (Value, []Value) {
+	if fun, ok := call.Func.Trace().(Call); ok {
+		return uncurryCall(Call{Func: fun.Func, Args: append(fun.Args, call.Args...)})
+	}
+
+	return call.Func, call.Args
+}
+
 type Root struct{}
 
 func (r Root) String() string {
@@ -446,6 +480,8 @@ func (r Root) MatchTrace(_ ast.Node) (map[Name]Value, bool) {
 
 var _ Trace = Root{}
 
+// Var represents a variable reference.
+// It is only used for debugging.
 type Var struct {
 	Name token.Token
 }
@@ -463,14 +499,6 @@ var _ Trace = Var{}
 type Call struct {
 	Func Value
 	Args []Value
-}
-
-func uncurryCall(call Call) (Value, []Value) {
-	if fun, ok := call.Func.Trace().(Call); ok {
-		return uncurryCall(Call{Func: fun.Func, Args: append(fun.Args, call.Args...)})
-	}
-
-	return call.Func, call.Args
 }
 
 func (c Call) String() string {
