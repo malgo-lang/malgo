@@ -31,7 +31,7 @@ func NewScanner(name, input string) *Scanner {
 
 		line:   1,
 		column: 1,
-		tokens: make(chan token.Token, 2),
+		tokens: make(chan token.Token, 1),
 
 		state: lexCode,
 	}
@@ -42,20 +42,25 @@ func NewScanner(name, input string) *Scanner {
 func (scanner *Scanner) Next() (token.Token, error) {
 	for {
 		select {
+		// If there is a token in the channel, return it.
 		case tok := <-scanner.tokens:
+			// If the token is an error, return it as an error.
 			if tok.Kind == token.ERROR {
 				return tok, tok.Literal.(error)
 			}
 
 			return tok, nil
+		// If the channel is empty, call the state function to get the next token.
 		default:
 			scanner.state = scanner.state(scanner)
 		}
 	}
 }
 
+// stateFn represents the state of the scanner as a function.
 type stateFn func(*Scanner) stateFn
 
+// emit creates a new token and sends it to the channel.
 func (scanner *Scanner) emit(loc token.Location, kind token.Kind, literal any) {
 	scanner.tokens <- token.Token{
 		Kind:     kind,
@@ -67,10 +72,12 @@ func (scanner *Scanner) emit(loc token.Location, kind token.Kind, literal any) {
 	scanner.start = scanner.current
 }
 
+// ignore skips the current lexeme.
 func (scanner *Scanner) ignore() {
 	scanner.start = scanner.current
 }
 
+// location returns the current location.
 func (scanner *Scanner) location() token.Location {
 	return token.Location{
 		FilePath: scanner.name,
@@ -107,6 +114,7 @@ func (scanner *Scanner) advance() rune {
 	return runeValue
 }
 
+// lexCode scans the source code.
 func lexCode(scanner *Scanner) stateFn {
 	// When current character is ':', it needs to check if it is a symbol or not by looking at the next character.
 	// So we also need to keep current location for the current character.
@@ -160,6 +168,7 @@ func lexCode(scanner *Scanner) stateFn {
 	return nil
 }
 
+// lexComment scans the comment and ignores it.
 func lexComment(scanner *Scanner) stateFn {
 	// keep the location of '/'
 	loc := scanner.location()
@@ -194,6 +203,7 @@ func lexComment(scanner *Scanner) stateFn {
 	return lexCode
 }
 
+// lexString scans the string literal.
 func lexString(scanner *Scanner) stateFn {
 	loc := scanner.location()
 	scanner.advance()
@@ -228,6 +238,8 @@ func lexString(scanner *Scanner) stateFn {
 	return lexCode
 }
 
+// lexSymbol scans the symbol.
+// The location is given as an argument because the first character of the symbol ':' is already consumed.
 func lexSymbol(loc token.Location) func(scanner *Scanner) stateFn {
 	return func(scanner *Scanner) stateFn {
 		for isAlpha(scanner.peek()) || isDigit(scanner.peek()) {
@@ -240,6 +252,7 @@ func lexSymbol(loc token.Location) func(scanner *Scanner) stateFn {
 	}
 }
 
+// lexNumber scans the number literal.
 func lexNumber(scanner *Scanner) stateFn {
 	loc := scanner.location()
 	for isDigit(scanner.peek()) {
@@ -257,6 +270,10 @@ func lexNumber(scanner *Scanner) stateFn {
 	return lexCode
 }
 
+// lexIdentifier scans the identifier.
+// If the identifier is a keyword, it emits the keyword token.
+// If the identifier is an upper case, it emits the SYMBOL token.
+// Otherwise, it emits the IDENT token.
 func lexIdentifier(scanner *Scanner) stateFn {
 	loc := scanner.location()
 	for isAlpha(scanner.peek()) || isDigit(scanner.peek()) {
@@ -276,6 +293,9 @@ func lexIdentifier(scanner *Scanner) stateFn {
 	return lexCode
 }
 
+// lexOperator scans the operator.
+// If the operator is a keyword, it emits the keyword token.
+// Otherwise, it emits the OPERATOR token.
 func lexOperator(scanner *Scanner) stateFn {
 	loc := scanner.location()
 	for isSymbol(scanner.peek()) {
@@ -292,6 +312,7 @@ func lexOperator(scanner *Scanner) stateFn {
 	return lexCode
 }
 
+// getKeyword returns the keyword token kind.
 func getKeyword(value string) (token.Kind, bool) {
 	switch value {
 	case "->":
@@ -329,6 +350,7 @@ func getKeyword(value string) (token.Kind, bool) {
 	}
 }
 
+// getReservedSymbol returns the reserved symbol token kind.
 func getReservedSymbol(char rune) (token.Kind, bool) {
 	// These characters are reserved symbols.
 	// They are not allowed to be used as operators.
