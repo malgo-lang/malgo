@@ -1,0 +1,6 @@
+def add = { (x, y) -> prim(add, x, y) }
+def main = {
+  let add1 = add(1);
+  prim(print, add1(2));
+  prim(print, add1(3))
+}
