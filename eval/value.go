@@ -3,7 +3,6 @@ package eval
 import (
 	"fmt"
 	"log"
-	"slices"
 	"strconv"
 	"strings"
 
@@ -363,18 +362,16 @@ type Object struct {
 
 func (o Object) String() string {
 	var builder strings.Builder
-	keys := make([]string, 0, len(o.Fields))
-	for key := range o.Fields {
-		keys = append(keys, key)
-	}
-	slices.Sort(keys)
 
 	builder.WriteString("{")
-	for i, key := range keys {
-		if i != 0 {
+	isFirst := true
+
+	for key, field := range utils.Ordered(o.Fields) {
+		if !isFirst {
 			builder.WriteString(", ")
 		}
-		fmt.Fprintf(&builder, "%s: %v", key, o.Fields[key])
+		fmt.Fprintf(&builder, "%s: %v", key, field)
+		isFirst = false
 	}
 	builder.WriteString("}")
 

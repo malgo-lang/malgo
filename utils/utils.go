@@ -1,9 +1,13 @@
 package utils
 
 import (
+	"cmp"
 	"fmt"
 	"io/fs"
+	"iter"
+	"maps"
 	"path/filepath"
+	"slices"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -101,4 +105,18 @@ func Concat[T fmt.Stringer](elems []T) fmt.Stringer {
 	}
 
 	return &builder
+}
+
+// Ordered takes a map and returns a sequence of key-value pairs in the order of the keys.
+// The keys are sorted in ascending order.
+func Ordered[K cmp.Ordered, V any](m map[K]V) iter.Seq2[K, V] {
+	keys := slices.Sorted(maps.Keys(m))
+
+	return func(yield func(K, V) bool) {
+		for _, key := range keys {
+			if !yield(key, m[key]) {
+				break
+			}
+		}
+	}
 }

@@ -2,6 +2,7 @@ package codata
 
 import (
 	"fmt"
+	"maps"
 	"math"
 	"slices"
 	"strings"
@@ -213,35 +214,27 @@ func (f *Flat) buildCase(plists map[int][]ast.Node, bodys map[int]ast.Node) (ast
 		return bodys[topmost], nil
 	}
 
-	plistsKeys := make([]int, 0, len(plists))
-	for k := range plists {
-		plistsKeys = append(plistsKeys, k)
-	}
-	slices.Sort(plistsKeys)
-
 	// restPlists is a map of patterns that are not empty.
 	restPlists := make(map[int][]ast.Node)
-	for _, i := range plistsKeys {
-		if len(plists[i]) != 0 {
-			restPlists[i] = plists[i]
+	for i, ps := range plists {
+		if len(ps) != 0 {
+			restPlists[i] = ps
 		}
 	}
 
-	restKeys := make([]int, 0, len(restPlists))
-	for k := range restPlists {
-		restKeys = append(restKeys, k)
-	}
-	slices.Sort(restKeys)
-
 	// restBodys is a map of bodies corresponding to restPlists.
 	restBodys := make(map[int]ast.Node)
-	for _, i := range restKeys {
+	for i := range restPlists {
 		restBodys[i] = bodys[i]
 	}
 
 	var restBody ast.Node
 	if len(restPlists) != 0 {
-		innerF := &Flat{uniq: f.uniq, scrutinees: f.scrutinees, guards: selectIndicies(restKeys, f.guards)}
+		innerF := &Flat{
+			uniq:       f.uniq,
+			scrutinees: f.scrutinees,
+			guards:     selectIndicies(slices.Collect(maps.Keys(restPlists)), f.guards),
+		}
 		var err error
 		restBody, err = innerF.build(restPlists, restBodys)
 		if err != nil {
@@ -249,21 +242,21 @@ func (f *Flat) buildCase(plists map[int][]ast.Node, bodys map[int]ast.Node) (ast
 		}
 	}
 
-	clauses := make([]*ast.CaseClause, 0, len(plistsKeys)) // Pre-allocate clauses with the correct capacity
-	for _, i := range plistsKeys {
-		if len(plists[i]) == 0 {
+	clauses := make([]*ast.CaseClause, 0, len(plists)) // Pre-allocate clauses with the correct capacity
+	for i, plist := range utils.Ordered(plists) {
+		switch {
+		case len(plist) == 0:
 			clauses = append(clauses, &ast.CaseClause{
 				Patterns: f.guards[i],
 				Expr:     bodys[i],
 			})
-		} else {
-			if restBody == nil {
-				panic("restBody must not be nil")
-			}
+		case restBody != nil:
 			clauses = append(clauses, &ast.CaseClause{
 				Patterns: f.guards[i],
 				Expr:     restBody,
 			})
+		default:
+			panic("restBody must not be nil")
 		}
 	}
 
@@ -295,16 +288,10 @@ func (f *Flat) buildObject(plists map[int][]ast.Node, bodys map[int]ast.Node) (a
 		return nil, err
 	}
 
-	fieldsKeys := make([]string, 0, len(fields))
-	for k := range fields {
-		fieldsKeys = append(fieldsKeys, k)
-	}
-	slices.Sort(fieldsKeys)
-
 	objectFields := make([]*ast.Field, 0)
-	for _, name := range fieldsKeys {
-		innerF := &Flat{uniq: f.uniq, scrutinees: f.scrutinees, guards: selectIndicies(fields[name], f.guards)}
-		expr, err := innerF.build(selectIndicies(fields[name], rest), bodys)
+	for name, fieldIndicies := range utils.Ordered(fields) {
+		innerF := &Flat{uniq: f.uniq, scrutinees: f.scrutinees, guards: selectIndicies(fieldIndicies, f.guards)}
+		expr, err := innerF.build(selectIndicies(fieldIndicies, rest), bodys)
 		if err != nil {
 			return nil, err
 		}
