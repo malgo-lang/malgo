@@ -1,6 +1,6 @@
 module github.com/takoeight0821/malgo
 
-go 1.22.0
+go 1.23.0
 
 require github.com/peterh/liner v1.2.2
 

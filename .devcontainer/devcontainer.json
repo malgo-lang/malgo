@@ -5,13 +5,15 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
 	"features": {
-		"ghcr.io/devcontainers/features/go:1": {},
-		"ghcr.io/devcontainers/features/rust:1": {},
+		"ghcr.io/devcontainers/features/go:1": {
+			"version": "1.23"
+		},
+		// "ghcr.io/devcontainers/features/rust:1": {},
 		"ghcr.io/devcontainers-contrib/features/apt-packages:1": {
 			"packages": "rename graphviz"
 		}
-	},
-	"postCreateCommand": "sh .devcontainer/post-create.sh"
+	}
+	// "postCreateCommand": "sh .devcontainer/post-create.sh"
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
