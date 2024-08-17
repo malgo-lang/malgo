@@ -1,3 +1,3 @@
 (def bool.0 (object (field false (seq (literal 0))) (field true (seq (literal 1)))))
 (def flip.1 (lambda (:p1.3) (case ((var :p1.3)) (clause (access (var b.4) false) (seq (access (var b.4) true))) (clause (access (var b.5) true) (seq (access (var b.5) false))))))
-(def main.2 (lambda () (seq (let (var x.6) (call (var flip.1) (access (var bool.0) true))) (prim print (var x.6)) (prim print_trace (var x.6)))))
+(def main.2 (lambda (:p1.6) (case ((var :p1.6)) (clause (tuple) (seq (let (var x.7) (call (var flip.1) (access (var bool.0) true))) (prim print (var x.7)) (prim print_trace (var x.7)))))))

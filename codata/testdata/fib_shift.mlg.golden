@@ -2,4 +2,4 @@
 (def + (lambda (:p1) (lambda (:p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (prim add (var x) (var y))))))))
 (def fib (object (field head (seq (literal 1))) (field tail (object (field head (seq (literal 1))) (field tail (seq (call (call (call (var zipWith) (lambda (:p1) (lambda (:p2) (case ((var :p1) (var :p2)) (clause ((var x) (var y)) (seq (call (call (var +) (var x)) (var y)))))))) (var fib)) (access (var fib) tail))))))))
 (def shift (lambda (:p1) (case ((var :p1)) (clause (access (var s) head) (seq (access (access (var s) tail) head))) (clause (access (var s) tail) (seq (access (access (var s) tail) tail))))))
-(def main (lambda () (seq (prim print (call (var shift) (call (var shift) (call (var shift) (access (var fib) head))))))))
+(def main (lambda (:p1) (case ((var :p1)) (clause (tuple) (seq (prim print (call (var shift) (call (var shift) (call (var shift) (access (var fib) head))))))))))

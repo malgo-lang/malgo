@@ -2,4 +2,4 @@
 (infix infixl 8 *)
 (def + (codata (clause (call (call # (var x)) (var y)) (seq (prim add (var x) (var y))))))
 (def * (codata (clause (call (call # (var x)) (var y)) (seq (prim mul (var x) (var y))))))
-(def main (codata (clause (call #) (seq (call (call (var *) (literal 1)) (paren (call (call (var +) (literal 2)) (literal 3))))))))
+(def main (codata (clause (call # (tuple)) (seq (call (call (var *) (literal 1)) (paren (call (call (var +) (literal 2)) (literal 3))))))))

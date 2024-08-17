@@ -57,7 +57,7 @@ func (p *primitiveEvaluator) printCPS(args ...Value) (Value, error) {
 		return nil, utils.PosError{Where: p.where, Err: InvalidArgumentTypeError{Expected: "Callable", Actual: args[1]}}
 	}
 
-	result, err := cont.Apply(p.where)
+	result, err := cont.Apply(p.where, Unit())
 	if err != nil {
 		return nil, utils.PosError{Where: p.where, Err: err}
 	}

@@ -5,4 +5,4 @@
 (def tree.3 (object (field children (seq (call (call (symbol Cons) (var tree1.4)) (call (call (symbol Cons) (var tree2.5)) (symbol Nil))))) (field node (seq (literal 1)))))
 (def tree1.4 (object (field children (seq (symbol Nil))) (field node (seq (literal 2)))))
 (def tree2.5 (object (field children (seq (call (call (symbol Cons) (var tree.3)) (symbol Nil)))) (field node (seq (literal 3)))))
-(def main.6 (lambda () (seq (access (call (call (var prune.2) (literal 2)) (var tree.3)) children))))
+(def main.6 (lambda (:p1.24) (case ((var :p1.24)) (clause (tuple) (seq (access (call (call (var prune.2) (literal 2)) (var tree.3)) children))))))

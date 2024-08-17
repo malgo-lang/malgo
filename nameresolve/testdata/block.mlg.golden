@@ -1,2 +1,2 @@
-(def print.0 (lambda (:p1.2) (lambda (:p2.3) (case ((var :p1.2) (var :p2.3)) (clause ((var x.4) (var k.5)) (seq (prim print (var x.4)) (call (var k.5))))))))
-(def main.1 (lambda () (seq (prim print_trace (call (call (var print.0) (literal 0)) (lambda () (seq (call (call (var print.0) (literal 1)) (lambda () (seq (literal 0)))))))))))
+(def print.0 (lambda (:p1.2) (lambda (:p2.3) (case ((var :p1.2) (var :p2.3)) (clause ((var x.4) (var k.5)) (seq (prim print (var x.4)) (call (var k.5) (tuple))))))))
+(def main.1 (lambda (:p1.6) (case ((var :p1.6)) (clause (tuple) (seq (prim print_trace (call (call (var print.0) (literal 0)) (lambda (:p1.7) (case ((var :p1.7)) (clause (tuple) (seq (call (call (var print.0) (literal 1)) (lambda (:p1.8) (case ((var :p1.8)) (clause (tuple) (seq (literal 0)))))))))))))))))

@@ -2,4 +2,4 @@
 (def + (codata (clause (call (call # (var x)) (var y)) (seq (prim add (var x) (var y))))))
 (def fib (codata (clause (access # head) (seq (literal 1))) (clause (access (access # tail) head) (seq (literal 1))) (clause (access (access # tail) tail) (seq (call (call (call (var zipWith) (codata (clause (call (call # (var x)) (var y)) (seq (call (call (var +) (var x)) (var y)))))) (var fib)) (access (var fib) tail))))))
 (def shift (codata (clause (call # (access (var s) head)) (seq (access (access (var s) tail) head))) (clause (call # (access (var s) tail)) (seq (access (access (var s) tail) tail)))))
-(def main (codata (clause (call #) (seq (prim print (call (var shift) (call (var shift) (call (var shift) (access (var fib) head)))))))))
+(def main (codata (clause (call # (tuple)) (seq (prim print (call (var shift) (call (var shift) (call (var shift) (access (var fib) head)))))))))

@@ -1,2 +1,2 @@
-(def print (codata (clause (call (call # (var x)) (var k)) (seq (prim print (var x)) (call (var k))))))
-(def main (codata (clause (call #) (seq (prim print_trace (call (call (var print) (literal 0)) (codata (clause (call #) (seq (call (call (var print) (literal 1)) (codata (clause (call #) (seq (literal 0))))))))))))))
+(def print (codata (clause (call (call # (var x)) (var k)) (seq (prim print (var x)) (call (var k) (tuple))))))
+(def main (codata (clause (call # (tuple)) (seq (prim print_trace (call (call (var print) (literal 0)) (codata (clause (call # (tuple)) (seq (call (call (var print) (literal 1)) (codata (clause (call # (tuple)) (seq (literal 0))))))))))))))

@@ -1,2 +1,2 @@
 (def add.0 (lambda (:p1.2) (lambda (:p2.3) (case ((var :p1.2) (var :p2.3)) (clause ((var x.4) (var y.5)) (seq (prim add (var x.4) (var y.5))))))))
-(def main.1 (lambda () (seq (let (var add1.6) (call (var add.0) (literal 1))) (prim print (call (var add1.6) (literal 2))) (prim print (call (var add1.6) (literal 3))))))
+(def main.1 (lambda (:p1.6) (case ((var :p1.6)) (clause (tuple) (seq (let (var add1.7) (call (var add.0) (literal 1))) (prim print (call (var add1.7) (literal 2))) (prim print (call (var add1.7) (literal 3))))))))

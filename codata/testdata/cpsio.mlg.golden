@@ -1,1 +1,1 @@
-(def main (lambda () (seq (let (var exit) (lambda () (seq (prim exit)))) (let (var print) (lambda (:p1) (case ((var :p1)) (clause (var s) (seq (prim print_cps (var s) (var exit))))))) (prim read_all_cps (var print)))))
+(def main (lambda (:p1) (case ((var :p1)) (clause (tuple) (seq (let (var exit) (lambda (:p1) (case ((var :p1)) (clause (tuple) (seq (prim exit)))))) (let (var print) (lambda (:p1) (case ((var :p1)) (clause (var s) (seq (prim print_cps (var s) (var exit))))))) (prim read_all_cps (var print)))))))

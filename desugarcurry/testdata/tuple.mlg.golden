@@ -1,2 +1,2 @@
 (def f (codata (clause (call # (tuple (var x) (var y))) (seq (prim add (var x) (var y))))))
-(def main (codata (clause (call #) (seq (prim print (tuple (literal 1) (literal "string"))) (prim print (call (var f) (tuple (literal 1) (literal 2))))))))
+(def main (codata (clause (call # (tuple)) (seq (prim print (tuple (literal 1) (literal "string"))) (prim print (call (var f) (tuple (literal 1) (literal 2))))))))

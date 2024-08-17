@@ -5,4 +5,4 @@
 (def tree (codata (clause (access # node) (seq (literal 1))) (clause (access # children) (seq (call (call (symbol Cons) (var tree1)) (call (call (symbol Cons) (var tree2)) (symbol Nil)))))))
 (def tree1 (codata (clause (access # node) (seq (literal 2))) (clause (access # children) (seq (symbol Nil)))))
 (def tree2 (codata (clause (access # node) (seq (literal 3))) (clause (access # children) (seq (call (call (symbol Cons) (var tree)) (symbol Nil))))))
-(def main (codata (clause (call #) (seq (access (call (call (var prune) (literal 2)) (var tree)) children)))))
+(def main (codata (clause (call # (tuple)) (seq (access (call (call (var prune) (literal 2)) (var tree)) children)))))

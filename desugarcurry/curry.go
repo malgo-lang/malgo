@@ -40,6 +40,13 @@ func (d *DesugarCurry) desugar(node ast.Node) (ast.Node, error) {
 	return node, nil
 }
 
+func unit(token token.Token) ast.Node {
+	return &ast.Tuple{
+		Where: token,
+		Exprs: []ast.Node{},
+	}
+}
+
 func (d *DesugarCurry) desugarEach(node ast.Node, err error) (ast.Node, error) {
 	// early return if error occurred
 	if err != nil {
@@ -48,7 +55,14 @@ func (d *DesugarCurry) desugarEach(node ast.Node, err error) (ast.Node, error) {
 
 	switch node := node.(type) {
 	case *ast.Call:
-		if len(node.Args) <= 1 {
+		if len(node.Args) == 0 {
+			return &ast.Call{
+				Func: node.Func,
+				Args: []ast.Node{unit(node.Base())},
+			}, nil
+		}
+
+		if len(node.Args) == 1 {
 			return node, nil
 		}
 
@@ -60,7 +74,18 @@ func (d *DesugarCurry) desugarEach(node ast.Node, err error) (ast.Node, error) {
 
 		return fun, nil
 	case *ast.Lambda:
-		if len(node.Params) <= 1 {
+		if len(node.Params) == 0 {
+			return &ast.Lambda{Params: []token.Token{
+				{
+					Kind:     token.IDENT,
+					Lexeme:   "_",
+					Location: node.Base().Location,
+					Literal:  nil,
+				},
+			}, Expr: node.Expr}, nil
+		}
+
+		if len(node.Params) == 1 {
 			return node, nil
 		}
 

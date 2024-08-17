@@ -234,6 +234,10 @@ func (s Symbol) WithTrace(trace Trace) Value {
 }
 
 func (s Symbol) Apply(_ token.Token, args ...Value) (Value, error) {
+	if len(args) != 1 {
+		log.Printf("warn: invalid argument count: %d", len(args))
+	}
+
 	return Symbol{Name: s.Name, Values: append(s.Values, args...), trace: Call{Func: s, Args: args}}, nil
 }
 
@@ -264,6 +268,10 @@ func (f Function) Match(pattern ast.Node) (map[Name]Value, bool) {
 }
 
 func (f Function) Apply(where token.Token, args ...Value) (Value, error) {
+	if len(args) != 1 {
+		log.Printf("warn: invalid argument count: %d", len(args))
+	}
+
 	if len(f.Params) != len(args) {
 		log.Printf("Params: %v", f.Params)
 		log.Printf("Args: %v", args)

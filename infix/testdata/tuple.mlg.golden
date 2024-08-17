@@ -1,2 +1,2 @@
 (def f (lambda (:p1) (case ((var :p1)) (clause (tuple (var x) (var y)) (seq (prim add (var x) (var y)))))))
-(def main (lambda () (seq (prim print (tuple (literal 1) (literal "string"))) (prim print (call (var f) (tuple (literal 1) (literal 2)))))))
+(def main (lambda (:p1) (case ((var :p1)) (clause (tuple) (seq (prim print (tuple (literal 1) (literal "string"))) (prim print (call (var f) (tuple (literal 1) (literal 2)))))))))

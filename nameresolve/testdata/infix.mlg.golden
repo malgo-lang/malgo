@@ -2,4 +2,4 @@
 (infix infixl 8 *.1)
 (def +.0 (lambda (:p1.3) (lambda (:p2.4) (case ((var :p1.3) (var :p2.4)) (clause ((var x.5) (var y.6)) (seq (prim add (var x.5) (var y.6))))))))
 (def *.1 (lambda (:p1.7) (lambda (:p2.8) (case ((var :p1.7) (var :p2.8)) (clause ((var x.9) (var y.10)) (seq (prim mul (var x.9) (var y.10))))))))
-(def main.2 (lambda () (seq (call (call (var *.1) (call (call (var +.0) (literal 1)) (literal 2))) (literal 3)))))
+(def main.2 (lambda (:p1.11) (case ((var :p1.11)) (clause (tuple) (seq (call (call (var *.1) (call (call (var +.0) (literal 1)) (literal 2))) (literal 3)))))))

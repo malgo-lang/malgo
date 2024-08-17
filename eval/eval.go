@@ -19,7 +19,7 @@ func (ev *Evaluator) Eval(node ast.Node) (Value, error) {
 	case *ast.Symbol:
 		return ev.evalSymbol(node)
 	case *ast.Paren:
-		return ev.evalParen(node)
+		panic("unreachable: paren must be desugared")
 	case *ast.Tuple:
 		return ev.evalTuple(node)
 	case *ast.Access:
@@ -29,7 +29,7 @@ func (ev *Evaluator) Eval(node ast.Node) (Value, error) {
 	case *ast.Prim:
 		return ev.evalPrim(node)
 	case *ast.Binary:
-		return ev.evalBinary(node)
+		panic("unreachable: binary must be desugared")
 	case *ast.Let:
 		return Unit(), ev.evalLet(node)
 	case *ast.Seq:
@@ -99,10 +99,6 @@ func (ev *Evaluator) evalLiteral(node *ast.Literal) (Value, error) {
 
 func (ev *Evaluator) evalSymbol(node *ast.Symbol) (Value, error) {
 	return Symbol{Name: node.Name.Lexeme, Values: make([]Value, 0), trace: Root{}}, nil
-}
-
-func (ev *Evaluator) evalParen(node *ast.Paren) (Value, error) {
-	return ev.Eval(node.Expr)
 }
 
 func (ev *Evaluator) evalTuple(node *ast.Tuple) (Value, error) {
@@ -212,33 +208,6 @@ type ExitError struct {
 
 func (e ExitError) Error() string {
 	return fmt.Sprintf("exit(%d)", e.Code)
-}
-
-func (ev *Evaluator) evalBinary(node *ast.Binary) (Value, error) {
-	name := tokenToName(node.Op)
-	if operator := ev.evEnv.get(name); operator != nil {
-		switch operator := operator.(type) {
-		case Callable:
-			left, err := ev.Eval(node.Left)
-			if err != nil {
-				return nil, err
-			}
-			right, err := ev.Eval(node.Right)
-			if err != nil {
-				return nil, err
-			}
-			v, err := operator.Apply(node.Base(), left, right)
-			if err != nil {
-				return nil, utils.PosError{Where: node.Base(), Err: err}
-			}
-
-			return v, nil
-		default:
-			return nil, utils.PosError{Where: node.Base(), Err: NotCallableError{Func: operator}}
-		}
-	}
-
-	return nil, utils.PosError{Where: node.Base(), Err: UndefinedVariableError{Name: node.Op}}
 }
 
 // evalLet evaluates the given let expression.
