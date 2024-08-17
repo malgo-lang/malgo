@@ -141,7 +141,7 @@ func RunFile(path string) error {
 	}
 	// top is a dummy token.
 	top := token.Token{Kind: token.IDENT, Lexeme: "toplevel", Location: token.Location{}, Literal: -1}
-	_, err = main.Apply(top)
+	_, err = main.Apply(top, eval.Unit())
 	var exitErr eval.ExitError
 	if errors.As(err, &exitErr) {
 		os.Exit(exitErr.Code)
