@@ -1,0 +1,54 @@
+lam :p1.3 {
+	lam :p2.4 {
+		get :p1.3
+		get :p2.4
+		select 2 {
+			case x.5 y.6 {
+				get x.5
+				get y.6
+				prim add
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set add.0
+lam :p1.7 {
+	lam :p2.8 {
+		get :p1.7
+		get :p2.8
+		select 2 {
+			case x.9 y.10 {
+				get x.9
+				get y.10
+				prim mul
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set mul.1
+lam :p1.11 {
+	get :p1.11
+	select 1 {
+		case () {
+			get add.0
+			1
+			apply
+			get mul.1
+			2
+			apply
+			3
+			apply
+			apply
+			prim print
+			join
+		}
+	}
+	ret
+}
+set main.2

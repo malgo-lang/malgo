@@ -82,7 +82,7 @@ var _ Command = Select{}
 type Branch struct {
 	token   token.Token
 	Pattern []Pattern
-	Code    *Stack[Command]
+	Code    Code
 }
 
 func (branch Branch) Where() token.Token {
@@ -92,17 +92,19 @@ func (branch Branch) Where() token.Token {
 func (branch Branch) NestedString(level int) string {
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%vcase", indent(level))
+	fmt.Fprintf(&builder, "%vcase", indent(level+1))
 
 	for _, pat := range branch.Pattern {
 		fmt.Fprintf(&builder, " %v", pat)
 	}
 
-	fmt.Fprintf(&builder, ":")
+	fmt.Fprintf(&builder, " {")
 
 	for cmd := range branch.Code.All() {
-		fmt.Fprintf(&builder, "\n%s", cmd.NestedString(level+1))
+		fmt.Fprintf(&builder, "\n%s", cmd.NestedString(level+2))
 	}
+
+	fmt.Fprintf(&builder, "\n%v}", indent(level+1))
 
 	return builder.String()
 }
@@ -125,9 +127,8 @@ var _ Command = Join{}
 // Lambda creates a new (recursive) closure and pushes it onto the stack.
 type Lambda struct {
 	token token.Token
-	Name  string // If empty, the closure is not recursive.
 	Param string
-	Code  *Stack[Command]
+	Code  Code
 }
 
 func (cmd Lambda) Where() token.Token {
@@ -137,11 +138,7 @@ func (cmd Lambda) Where() token.Token {
 func (cmd Lambda) NestedString(level int) string {
 	var builder strings.Builder
 
-	if cmd.Name == "" {
-		fmt.Fprintf(&builder, "%vlam %v {", indent(level), cmd.Param)
-	} else {
-		fmt.Fprintf(&builder, "%vrec %v %v {", indent(level), cmd.Name, cmd.Param)
-	}
+	fmt.Fprintf(&builder, "%vlam %v {", indent(level), cmd.Param)
 
 	for c := range cmd.Code.All() {
 		fmt.Fprintf(&builder, "\n%s", c.NestedString(level+1))
@@ -153,6 +150,51 @@ func (cmd Lambda) NestedString(level int) string {
 }
 
 var _ Command = Lambda{}
+
+type Return struct {
+	token token.Token
+}
+
+func (cmd Return) Where() token.Token {
+	return cmd.token
+}
+
+func (cmd Return) NestedString(level int) string {
+	return fmt.Sprintf("%vret", indent(level))
+}
+
+var _ Command = Return{}
+
+type Object struct {
+	token  token.Token
+	Fields map[string]Code
+}
+
+func (cmd Object) Where() token.Token {
+	return cmd.token
+}
+
+func (cmd Object) NestedString(level int) string {
+	var builder strings.Builder
+
+	fmt.Fprintf(&builder, "%vobject {", indent(level))
+
+	for field, code := range cmd.Fields {
+		fmt.Fprintf(&builder, "\n%v%v {", indent(level+1), field)
+
+		for c := range code.All() {
+			fmt.Fprintf(&builder, "\n%s", c.NestedString(level+2))
+		}
+
+		fmt.Fprintf(&builder, "\n%v}", indent(level+1))
+	}
+
+	fmt.Fprintf(&builder, "\n%v}", indent(level))
+
+	return builder.String()
+}
+
+var _ Command = Object{}
 
 // Apply applies a closure to the top value of the stack.
 type Apply struct {

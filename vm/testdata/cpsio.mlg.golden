@@ -1,0 +1,36 @@
+lam :p1.1 {
+	get :p1.1
+	select 1 {
+		case () {
+			lam :p1.3 {
+				get :p1.3
+				select 1 {
+					case () {
+						prim exit
+						join
+					}
+				}
+				ret
+			}
+			set exit.2
+			lam :p1.5 {
+				get :p1.5
+				select 1 {
+					case s.6 {
+						get s.6
+						get exit.2
+						prim print_cps
+						join
+					}
+				}
+				ret
+			}
+			set print.4
+			get print.4
+			prim read_all_cps
+			join
+		}
+	}
+	ret
+}
+set main.0

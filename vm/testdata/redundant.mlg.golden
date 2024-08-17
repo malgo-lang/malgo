@@ -1,0 +1,52 @@
+lam :p1.2 {
+	object {
+		h {
+			get :p1.2
+			select 1 {
+				case 0 {
+					1
+					join
+				}
+				case x.4 {
+					object {
+						h {
+							get :p1.2
+							select 1 {
+								case x.4 {
+									get x.4
+									join
+								}
+							}
+							ret
+						}
+					}
+					join
+				}
+			}
+			ret
+		}
+	}
+	ret
+}
+set f.0
+lam :p1.5 {
+	get :p1.5
+	select 1 {
+		case () {
+			get f.0
+			0
+			apply
+			proj h
+			prim print
+			get f.0
+			1
+			apply
+			proj h
+			proj h
+			prim print
+			join
+		}
+	}
+	ret
+}
+set main.1

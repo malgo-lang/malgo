@@ -248,6 +248,7 @@ func lexString(scanner *Scanner) stateFn {
 // The location is given as an argument because the first character of the symbol ':' is already consumed.
 func lexSymbol(loc token.Location) func(scanner *Scanner) stateFn {
 	return func(scanner *Scanner) stateFn {
+		scanner.start = scanner.current
 		for isAlpha(scanner.peek()) || isDigit(scanner.peek()) {
 			scanner.advance()
 		}

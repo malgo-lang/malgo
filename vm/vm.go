@@ -10,8 +10,8 @@ import (
 
 type Machine struct {
 	Stack *Stack[Value]
-	Env   map[string]Value
-	Code  *Stack[Command]
+	Env   Env
+	Code  Code
 	Dump  *Stack[Dump]
 }
 
@@ -30,9 +30,16 @@ func (s *Stack[T]) All() iter.Seq[T] {
 	}
 }
 
+type Env = *EnvChain
+
+type EnvChain struct {
+	variables map[string]Value
+	parent    *EnvChain
+}
+
 type Dump struct {
-	Env  map[string]Value
-	Code *Stack[Command]
+	Env  Env
+	Code Code
 }
 
 type Value interface {
@@ -40,6 +47,8 @@ type Value interface {
 	Trace() Trace
 	WithTrace(trace Trace) Value
 }
+
+type Code = *Stack[Command]
 
 type Command interface {
 	NestedString(level int) string

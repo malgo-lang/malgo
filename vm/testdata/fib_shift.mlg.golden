@@ -1,0 +1,149 @@
+lam :p1.5 {
+	lam :p2.6 {
+		lam :p3.7 {
+			object {
+				head {
+					get :p1.5
+					get :p2.6
+					get :p3.7
+					select 3 {
+						case f.8 xs.9 ys.10 {
+							get f.8
+							get xs.9
+							proj head
+							apply
+							get ys.10
+							proj head
+							apply
+							join
+						}
+					}
+					ret
+				}
+				tail {
+					get :p1.5
+					get :p2.6
+					get :p3.7
+					select 3 {
+						case f.11 xs.12 ys.13 {
+							get zipWith.0
+							get f.11
+							apply
+							get xs.12
+							proj tail
+							apply
+							get ys.13
+							proj tail
+							apply
+							join
+						}
+					}
+					ret
+				}
+			}
+			ret
+		}
+		ret
+	}
+	ret
+}
+set zipWith.0
+lam :p1.14 {
+	lam :p2.15 {
+		get :p1.14
+		get :p2.15
+		select 2 {
+			case x.16 y.17 {
+				get x.16
+				get y.17
+				prim add
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set +.1
+object {
+	head {
+		1
+		ret
+	}
+	tail {
+		object {
+			tail {
+				get zipWith.0
+				lam :p1.18 {
+					lam :p2.19 {
+						get :p1.18
+						get :p2.19
+						select 2 {
+							case x.20 y.21 {
+								get +.1
+								get x.20
+								apply
+								get y.21
+								apply
+								join
+							}
+						}
+						ret
+					}
+					ret
+				}
+				apply
+				get fib.2
+				apply
+				get fib.2
+				proj tail
+				apply
+				ret
+			}
+			head {
+				1
+				ret
+			}
+		}
+		ret
+	}
+}
+set fib.2
+lam :p1.22 {
+	get :p1.22
+	select 1 {
+		case s.23.head {
+			get s.23
+			proj tail
+			proj head
+			join
+		}
+		case s.24.tail {
+			get s.24
+			proj tail
+			proj tail
+			join
+		}
+	}
+	ret
+}
+set shift.3
+lam :p1.25 {
+	get :p1.25
+	select 1 {
+		case () {
+			get shift.3
+			get shift.3
+			get shift.3
+			get fib.2
+			proj head
+			apply
+			apply
+			apply
+			prim print
+			join
+		}
+	}
+	ret
+}
+set main.4

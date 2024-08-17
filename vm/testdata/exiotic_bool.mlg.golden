@@ -1,0 +1,69 @@
+lam :p1.2 {
+	object {
+		if {
+			get :p1.2
+			select 1 {
+				case :False {
+					lam :p2.3 {
+						get :p1.2
+						get :p2.3
+						select 2 {
+							case :False t.4 {
+								get t.4
+								tuple 0
+								apply
+								join
+							}
+						}
+						ret
+					}
+					join
+				}
+				case :True {
+					lam :p1.5 {
+						get :p1.5
+						select 1 {
+							case t.6 {
+								get t.6
+								tuple 0
+								apply
+								join
+							}
+						}
+						ret
+					}
+					join
+				}
+			}
+			ret
+		}
+	}
+	ret
+}
+set if.0
+lam :p1.7 {
+	get :p1.7
+	select 1 {
+		case () {
+			get if.0
+			:True
+			apply
+			proj if
+			lam :p1.8 {
+				get :p1.8
+				select 1 {
+					case () {
+						"hello"
+						prim print
+						join
+					}
+				}
+				ret
+			}
+			apply
+			join
+		}
+	}
+	ret
+}
+set main.1

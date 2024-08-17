@@ -1,0 +1,154 @@
+lam :p1.7 {
+	lam :p2.8 {
+		get :p1.7
+		get :p2.8
+		select 2 {
+			case x.9 y.10 {
+				get x.9
+				get y.10
+				prim sub
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set -.0
+lam :p1.11 {
+	lam :p2.12 {
+		get :p1.11
+		get :p2.12
+		select 2 {
+			case f.13 :Nil {
+				:Nil
+				join
+			}
+			case f.14 :Cons(x.15)(xs.16) {
+				:Cons
+				get f.14
+				get x.15
+				apply
+				apply
+				get map.1
+				get f.14
+				apply
+				get xs.16
+				apply
+				apply
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set map.1
+lam :p1.17 {
+	lam :p2.18 {
+		object {
+			node {
+				get :p1.17
+				get :p2.18
+				select 2 {
+					case x.22 t.23 {
+						get t.23
+						proj node
+						join
+					}
+				}
+				ret
+			}
+			children {
+				get :p1.17
+				get :p2.18
+				select 2 {
+					case 0 t.19 {
+						:Nil
+						join
+					}
+					case x.20 t.21 {
+						get map.1
+						get prune.2
+						get -.0
+						get x.20
+						apply
+						1
+						apply
+						apply
+						apply
+						get t.21
+						proj children
+						apply
+						join
+					}
+				}
+				ret
+			}
+		}
+		ret
+	}
+	ret
+}
+set prune.2
+object {
+	children {
+		:Cons
+		get tree1.4
+		apply
+		:Cons
+		get tree2.5
+		apply
+		:Nil
+		apply
+		apply
+		ret
+	}
+	node {
+		1
+		ret
+	}
+}
+set tree.3
+object {
+	children {
+		:Nil
+		ret
+	}
+	node {
+		2
+		ret
+	}
+}
+set tree1.4
+object {
+	children {
+		:Cons
+		get tree.3
+		apply
+		:Nil
+		apply
+		ret
+	}
+	node {
+		3
+		ret
+	}
+}
+set tree2.5
+lam :p1.24 {
+	get :p1.24
+	select 1 {
+		case () {
+			get prune.2
+			2
+			apply
+			get tree.3
+			apply
+			proj children
+			join
+		}
+	}
+	ret
+}
+set main.6

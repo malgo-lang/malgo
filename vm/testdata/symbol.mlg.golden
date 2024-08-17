@@ -1,0 +1,74 @@
+lam :p1.2 {
+	lam :p2.3 {
+		get :p1.2
+		get :p2.3
+		select 2 {
+			case f.4 :Nil {
+				:Nil
+				join
+			}
+			case f.5 :Cons(x.6)(xs.7) {
+				:Cons
+				get f.5
+				get x.6
+				apply
+				apply
+				get map.0
+				get f.5
+				apply
+				get xs.7
+				apply
+				apply
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set map.0
+lam :p1.8 {
+	get :p1.8
+	select 1 {
+		case () {
+			:Cons
+			1
+			apply
+			:Cons
+			2
+			apply
+			:Cons
+			3
+			apply
+			:Nil
+			apply
+			apply
+			apply
+			set xs.9
+			get map.0
+			lam :p1.11 {
+				get :p1.11
+				select 1 {
+					case x.12 {
+						get x.12
+						1
+						prim add
+						join
+					}
+				}
+				ret
+			}
+			apply
+			get xs.9
+			apply
+			set xs1.10
+			get xs1.10
+			prim print
+			get xs1.10
+			prim print_trace
+			join
+		}
+	}
+	ret
+}
+set main.1

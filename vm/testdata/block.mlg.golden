@@ -1,0 +1,57 @@
+lam :p1.2 {
+	lam :p2.3 {
+		get :p1.2
+		get :p2.3
+		select 2 {
+			case x.4 k.5 {
+				get x.4
+				prim print
+				get k.5
+				tuple 0
+				apply
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set print.0
+lam :p1.6 {
+	get :p1.6
+	select 1 {
+		case () {
+			get print.0
+			0
+			apply
+			lam :p1.7 {
+				get :p1.7
+				select 1 {
+					case () {
+						get print.0
+						1
+						apply
+						lam :p1.8 {
+							get :p1.8
+							select 1 {
+								case () {
+									0
+									join
+								}
+							}
+							ret
+						}
+						apply
+						join
+					}
+				}
+				ret
+			}
+			apply
+			prim print_trace
+			join
+		}
+	}
+	ret
+}
+set main.1

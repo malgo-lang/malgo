@@ -49,7 +49,7 @@ func TestCompile(t *testing.T) {
 			}
 
 			for cmd := range code.All() {
-				fmt.Fprintf(&builder, "%s", cmd.NestedString(0))
+				fmt.Fprintf(&builder, "%s\n", cmd.NestedString(0))
 			}
 		}
 

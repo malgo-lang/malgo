@@ -1,0 +1,33 @@
+lam :p1.2 {
+	get :p1.2
+	select 1 {
+		case (x.3, y.4) {
+			get x.3
+			get y.4
+			prim add
+			join
+		}
+	}
+	ret
+}
+set f.0
+lam :p1.5 {
+	get :p1.5
+	select 1 {
+		case () {
+			1
+			"string"
+			tuple 2
+			prim print
+			get f.0
+			1
+			2
+			tuple 2
+			apply
+			prim print
+			join
+		}
+	}
+	ret
+}
+set main.1

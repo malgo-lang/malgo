@@ -1,0 +1,83 @@
+lam :p1.4 {
+	lam :p2.5 {
+		get :p1.4
+		get :p2.5
+		select 2 {
+			case () cont.6 {
+				get cont.6
+				prim read_all_cps
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set read_all_cps.0
+lam :p1.7 {
+	lam :p2.8 {
+		get :p1.7
+		get :p2.8
+		select 2 {
+			case s.9 cont.10 {
+				get s.9
+				get cont.10
+				prim print_cps
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set print_cps.1
+lam :p1.11 {
+	get :p1.11
+	select 1 {
+		case () {
+			prim exit
+			join
+		}
+	}
+	ret
+}
+set exit.2
+lam :p1.12 {
+	get :p1.12
+	select 1 {
+		case () {
+			get read_all_cps.0
+			tuple 0
+			apply
+			lam :p1.13 {
+				get :p1.13
+				select 1 {
+					case s.14 {
+						get print_cps.1
+						get s.14
+						apply
+						lam :p1.15 {
+							get :p1.15
+							select 1 {
+								case () {
+									get exit.2
+									tuple 0
+									apply
+									join
+								}
+							}
+							ret
+						}
+						apply
+						join
+					}
+				}
+				ret
+			}
+			apply
+			join
+		}
+	}
+	ret
+}
+set main.3

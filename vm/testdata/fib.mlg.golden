@@ -1,0 +1,127 @@
+lam :p1.4 {
+	lam :p2.5 {
+		lam :p3.6 {
+			object {
+				head {
+					get :p1.4
+					get :p2.5
+					get :p3.6
+					select 3 {
+						case f.7 xs.8 ys.9 {
+							get f.7
+							get xs.8
+							proj head
+							apply
+							get ys.9
+							proj head
+							apply
+							join
+						}
+					}
+					ret
+				}
+				tail {
+					get :p1.4
+					get :p2.5
+					get :p3.6
+					select 3 {
+						case f.10 xs.11 ys.12 {
+							get zipWith.0
+							get f.10
+							apply
+							get xs.11
+							proj tail
+							apply
+							get ys.12
+							proj tail
+							apply
+							join
+						}
+					}
+					ret
+				}
+			}
+			ret
+		}
+		ret
+	}
+	ret
+}
+set zipWith.0
+lam :p1.13 {
+	lam :p2.14 {
+		get :p1.13
+		get :p2.14
+		select 2 {
+			case x.15 y.16 {
+				get x.15
+				get y.16
+				prim add
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set +.1
+object {
+	head {
+		1
+		ret
+	}
+	tail {
+		object {
+			head {
+				1
+				ret
+			}
+			tail {
+				get zipWith.0
+				lam :p1.17 {
+					lam :p2.18 {
+						get :p1.17
+						get :p2.18
+						select 2 {
+							case x.19 y.20 {
+								get +.1
+								get x.19
+								apply
+								get y.20
+								apply
+								join
+							}
+						}
+						ret
+					}
+					ret
+				}
+				apply
+				get fib.2
+				apply
+				get fib.2
+				proj tail
+				apply
+				ret
+			}
+		}
+		ret
+	}
+}
+set fib.2
+lam :p1.21 {
+	get :p1.21
+	select 1 {
+		case () {
+			get fib.2
+			proj tail
+			proj tail
+			proj tail
+			proj head
+			prim print
+			join
+		}
+	}
+	ret
+}
+set main.3

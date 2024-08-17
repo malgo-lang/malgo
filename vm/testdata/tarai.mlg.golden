@@ -1,0 +1,164 @@
+lam :p1.5 {
+	object {
+		then {
+			lam :p2.6 {
+				object {
+					else {
+						lam :p3.7 {
+							get :p1.5
+							get :p2.6
+							get :p3.7
+							select 3 {
+								case 0 t.8 e.9 {
+									get e.9
+									tuple 0
+									apply
+									join
+								}
+								case _.10 t.11 e.12 {
+									get t.11
+									tuple 0
+									apply
+									join
+								}
+							}
+							ret
+						}
+						ret
+					}
+				}
+				ret
+			}
+			ret
+		}
+	}
+	ret
+}
+set if.0
+lam :p1.13 {
+	lam :p2.14 {
+		get :p1.13
+		get :p2.14
+		select 2 {
+			case x.15 y.16 {
+				get x.15
+				get y.16
+				prim less_equal
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set le.1
+lam :p1.17 {
+	get :p1.17
+	select 1 {
+		case x.18 {
+			get x.18
+			1
+			prim sub
+			join
+		}
+	}
+	ret
+}
+set dec.2
+lam :p1.19 {
+	lam :p2.20 {
+		lam :p3.21 {
+			get :p1.19
+			get :p2.20
+			get :p3.21
+			select 3 {
+				case x.22 y.23 z.24 {
+					get if.0
+					get le.1
+					get x.22
+					apply
+					get y.23
+					apply
+					apply
+					proj then
+					lam :p1.25 {
+						get :p1.25
+						select 1 {
+							case () {
+								get y.23
+								join
+							}
+						}
+						ret
+					}
+					apply
+					proj else
+					lam :p1.26 {
+						get :p1.26
+						select 1 {
+							case () {
+								get tarai.3
+								get tarai.3
+								get dec.2
+								get x.22
+								apply
+								apply
+								get y.23
+								apply
+								get z.24
+								apply
+								apply
+								get tarai.3
+								get dec.2
+								get y.23
+								apply
+								apply
+								get z.24
+								apply
+								get x.22
+								apply
+								apply
+								get tarai.3
+								get dec.2
+								get z.24
+								apply
+								apply
+								get x.22
+								apply
+								get y.23
+								apply
+								apply
+								join
+							}
+						}
+						ret
+					}
+					apply
+					join
+				}
+			}
+			ret
+		}
+		ret
+	}
+	ret
+}
+set tarai.3
+lam :p1.27 {
+	get :p1.27
+	select 1 {
+		case () {
+			get tarai.3
+			2
+			apply
+			1
+			apply
+			0
+			apply
+			prim print_trace
+			join
+		}
+	}
+	ret
+}
+set main.4

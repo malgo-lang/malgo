@@ -1,0 +1,79 @@
+object {
+	none {
+		"none"
+		ret
+	}
+	some {
+		lam :p1.4 {
+			get :p1.4
+			select 1 {
+				case x.5 {
+					get x.5
+					join
+				}
+			}
+			ret
+		}
+		ret
+	}
+}
+set option.0
+lam :p1.6 {
+	lam :p2.7 {
+		get :p1.6
+		get :p2.7
+		select 2 {
+			case f.8 o.9.none {
+				get o.9
+				proj none
+				join
+			}
+			case f.10 o.11.some(x.12) {
+				get o.11
+				proj some
+				get f.10
+				get x.12
+				apply
+				apply
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set map.1
+lam :p1.13 {
+	get :p1.13
+	select 1 {
+		case x.14 {
+			get x.14
+			1
+			prim add
+			join
+		}
+	}
+	ret
+}
+set addone.2
+lam :p1.15 {
+	get :p1.15
+	select 1 {
+		case () {
+			get map.1
+			get addone.2
+			apply
+			get option.0
+			proj some
+			41
+			apply
+			apply
+			set x.16
+			get x.16
+			prim print_trace
+			join
+		}
+	}
+	ret
+}
+set main.3
