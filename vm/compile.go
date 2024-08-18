@@ -18,7 +18,7 @@ func Compile(node ast.Node, cont Code) (Code, error) {
 	case *ast.Symbol:
 		name := tokenToName(node.Name)
 
-		return cons(Push{token: node.Base(), Value: Symbol{name: name}}, cont), nil
+		return cons(Push{token: node.Base(), Value: Symbol{name: name, trace: Root{}}}, cont), nil
 	case *ast.Tuple:
 		return compileTuple(node, cont)
 	case *ast.Access:
@@ -53,13 +53,13 @@ func compileLiteral(node *ast.Literal, cont Code) Code {
 		if value, ok := node.Literal.(int); !ok {
 			panic(fmt.Sprintf("compileLiteral: %s", node))
 		} else {
-			return cons(Push{token: node.Base(), Value: Int{value: value}}, cont)
+			return cons(Push{token: node.Base(), Value: Int{value: value, trace: Root{}}}, cont)
 		}
 	case token.STRING:
 		if value, ok := node.Literal.(string); !ok {
 			panic(fmt.Sprintf("compileLiteral: %s", node))
 		} else {
-			return cons(Push{token: node.Base(), Value: String{value: value}}, cont)
+			return cons(Push{token: node.Base(), Value: String{value: value, trace: Root{}}}, cont)
 		}
 	}
 
@@ -67,7 +67,7 @@ func compileLiteral(node *ast.Literal, cont Code) Code {
 }
 
 func compileTuple(node *ast.Tuple, cont Code) (Code, error) {
-	cont = cons(MkTuple{token: node.Base(), Count: len(node.Exprs)}, cont)
+	cont = cons(MkTuple{Token: node.Base(), Count: len(node.Exprs)}, cont)
 	for i := len(node.Exprs) - 1; i >= 0; i-- {
 		var err error
 		cont, err = Compile(node.Exprs[i], cont)
@@ -90,7 +90,7 @@ func compileCall(node *ast.Call, cont Code) (Code, error) {
 		panic(fmt.Sprintf("compileCall: %s", node))
 	}
 
-	cont = cons(Apply{token: node.Base()}, cont)
+	cont = cons(Apply{Token: node.Base()}, cont)
 
 	var err error
 	cont, err = Compile(node.Args[0], cont)

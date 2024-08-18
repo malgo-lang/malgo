@@ -1,6 +1,8 @@
 package vm
 
-import "github.com/xlab/treeprint"
+import (
+	"github.com/xlab/treeprint"
+)
 
 type Root struct{}
 

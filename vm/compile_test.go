@@ -3,6 +3,7 @@ package vm_test
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -54,6 +55,7 @@ func TestCompile(t *testing.T) {
 		}
 
 		g := goldie.New(t)
-		g.Assert(t, testfile, []byte(builder.String()))
+		testname := filepath.Base(testfile)
+		g.Assert(t, "compile_"+testname, []byte(builder.String()))
 	}
 }

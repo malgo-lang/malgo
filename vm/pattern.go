@@ -19,6 +19,7 @@ func (v Var) Match(value Value) (map[string]Value, bool) {
 	return map[string]Value{v.name: value}, true
 }
 
+//nolint:exhaustruct
 var _ Pattern = Var{}
 
 type Literal struct {
@@ -44,6 +45,7 @@ func (l Literal) Match(value Value) (map[string]Value, bool) {
 	return nil, false
 }
 
+//nolint:exhaustruct
 var _ Pattern = Literal{}
 
 type PSymbol struct {
@@ -62,6 +64,7 @@ func (p PSymbol) Match(value Value) (map[string]Value, bool) {
 	return nil, false
 }
 
+//nolint:exhaustruct
 var _ Pattern = PSymbol{}
 
 type PTuple struct {
@@ -103,6 +106,7 @@ func (p PTuple) Match(value Value) (map[string]Value, bool) {
 	return nil, false
 }
 
+//nolint:exhaustruct
 var _ Pattern = PTuple{}
 
 type PCall struct {
@@ -123,7 +127,12 @@ func (p PCall) MatchTrace(trace Trace) (map[string]Value, bool) {
 	case Root:
 		return nil, false
 	case Call:
-		if bindings, ok := p.fun.Match(trace.fun); ok {
+		bindings := make(map[string]Value)
+		if b, ok := p.fun.Match(trace.fun); ok {
+			for k, v := range b {
+				bindings[k] = v
+			}
+
 			if b, ok := p.arg.Match(trace.arg); ok {
 				for k, v := range b {
 					bindings[k] = v
@@ -141,6 +150,7 @@ func (p PCall) MatchTrace(trace Trace) (map[string]Value, bool) {
 	panic("unreachable")
 }
 
+//nolint:exhaustruct
 var _ Pattern = PCall{}
 
 type PAccess struct {
