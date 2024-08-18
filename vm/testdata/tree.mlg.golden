@@ -47,18 +47,6 @@ set map.1
 lam :p1.17 {
 	lam :p2.18 {
 		object {
-			node {
-				get :p1.17
-				get :p2.18
-				select 2 {
-					case x.22 t.23 {
-						get t.23
-						proj node
-						join
-					}
-				}
-				ret
-			}
 			children {
 				get :p1.17
 				get :p2.18
@@ -80,6 +68,18 @@ lam :p1.17 {
 						get t.21
 						proj children
 						apply
+						join
+					}
+				}
+				ret
+			}
+			node {
+				get :p1.17
+				get :p2.18
+				select 2 {
+					case x.22 t.23 {
+						get t.23
+						proj node
 						join
 					}
 				}

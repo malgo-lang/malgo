@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/takoeight0821/malgo/token"
+	"github.com/takoeight0821/malgo/utils"
 )
 
 // Push pushes a value onto the stack.
@@ -179,7 +180,7 @@ func (cmd Object) NestedString(level int) string {
 
 	fmt.Fprintf(&builder, "%vobject {", indent(level))
 
-	for field, code := range cmd.Fields {
+	for field, code := range utils.Ordered(cmd.Fields) {
 		fmt.Fprintf(&builder, "\n%v%v {", indent(level+1), field)
 
 		for c := range code.All() {

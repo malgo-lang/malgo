@@ -72,6 +72,10 @@ object {
 	}
 	tail {
 		object {
+			head {
+				1
+				ret
+			}
 			tail {
 				get zipWith.0
 				lam :p1.18 {
@@ -98,10 +102,6 @@ object {
 				get fib.2
 				proj tail
 				apply
-				ret
-			}
-			head {
-				1
 				ret
 			}
 		}
