@@ -124,11 +124,7 @@ func (cmd Select) Execute(machine *Machine) error {
 
 		if isMatch {
 			machine.Dump = machine.Dump.Push(Dump{Env: machine.Env, Code: machine.Code, Trace: nil})
-			machine.Env = Extend(machine.Env)
-
-			for k, v := range bindings {
-				Bind(machine.Env, k, v)
-			}
+			machine.Env = &Stack[map[string]Value]{Head: bindings, Tail: machine.Env}
 			machine.Code = branch.Code
 
 			return nil
