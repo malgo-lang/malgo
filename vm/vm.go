@@ -143,7 +143,7 @@ type Command interface {
 
 type Pattern interface {
 	fmt.Stringer
-	Match(value Value) (map[string]Value, bool)
+	Match(bindings map[string]Value, value Value) bool
 }
 
 type Trace interface {

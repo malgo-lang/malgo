@@ -111,11 +111,7 @@ func (cmd Select) Execute(machine *Machine) error {
 
 		isMatch := true
 		for i, pat := range branch.Pattern {
-			if matches, ok := pat.Match(values[i]); ok {
-				for k, v := range matches {
-					bindings[k] = v
-				}
-			} else {
+			if !pat.Match(bindings, values[i]) {
 				isMatch = false
 
 				break
@@ -474,11 +470,7 @@ func (cmd Assign) Execute(machine *Machine) error {
 	value, stack := machine.Stack.Head, machine.Stack.Tail
 	machine.Stack = stack
 
-	if matches, ok := cmd.Bind.Match(value); ok {
-		for k, v := range matches {
-			Bind(machine.Env, k, v)
-		}
-
+	if cmd.Bind.Match(machine.Env.Head, value) {
 		return nil
 	}
 

@@ -15,8 +15,10 @@ func (v Var) String() string {
 	return v.name
 }
 
-func (v Var) Match(value Value) (map[string]Value, bool) {
-	return map[string]Value{v.name: value}, true
+func (v Var) Match(bindings map[string]Value, value Value) bool {
+	bindings[v.name] = value
+
+	return true
 }
 
 //nolint:exhaustruct
@@ -30,19 +32,19 @@ func (l Literal) String() string {
 	return l.Lexeme
 }
 
-func (l Literal) Match(value Value) (map[string]Value, bool) {
+func (l Literal) Match(_ map[string]Value, value Value) bool {
 	switch value := value.(type) {
 	case Int:
 		if l.Literal == value.value {
-			return nil, true
+			return true
 		}
 	case String:
 		if l.Literal == value.value {
-			return nil, true
+			return true
 		}
 	}
 
-	return nil, false
+	return false
 }
 
 //nolint:exhaustruct
@@ -56,12 +58,12 @@ func (p PSymbol) String() string {
 	return ":" + p.name
 }
 
-func (p PSymbol) Match(value Value) (map[string]Value, bool) {
+func (p PSymbol) Match(_ map[string]Value, value Value) bool {
 	if symbol, ok := value.(Symbol); ok && symbol.name == p.name {
-		return nil, true
+		return true
 	}
 
-	return nil, false
+	return false
 }
 
 //nolint:exhaustruct
@@ -87,23 +89,18 @@ func (p PTuple) String() string {
 	return builder.String()
 }
 
-func (p PTuple) Match(value Value) (map[string]Value, bool) {
+func (p PTuple) Match(bindings map[string]Value, value Value) bool {
 	if tuple, ok := value.(Tuple); ok && len(p.fields) == len(tuple.fields) {
-		bindings := make(map[string]Value)
 		for i, field := range p.fields {
-			if b, ok := field.Match(tuple.fields[i]); ok {
-				for k, v := range b {
-					bindings[k] = v
-				}
-			} else {
-				return nil, false
+			if !field.Match(bindings, tuple.fields[i]) {
+				return false
 			}
 		}
 
-		return bindings, true
+		return true
 	}
 
-	return nil, false
+	return false
 }
 
 //nolint:exhaustruct
@@ -118,33 +115,24 @@ func (p PCall) String() string {
 	return fmt.Sprintf("%v(%v)", p.fun, p.arg)
 }
 
-func (p PCall) Match(value Value) (map[string]Value, bool) {
-	return p.MatchTrace(value.Trace())
+func (p PCall) Match(bindings map[string]Value, value Value) bool {
+	return p.MatchTrace(bindings, value.Trace())
 }
 
-func (p PCall) MatchTrace(trace Trace) (map[string]Value, bool) {
+func (p PCall) MatchTrace(bindings map[string]Value, trace Trace) bool {
 	switch trace := trace.(type) {
 	case Root:
-		return nil, false
+		return false
 	case Call:
-		bindings := make(map[string]Value)
-		if b, ok := p.fun.Match(trace.fun); ok {
-			for k, v := range b {
-				bindings[k] = v
-			}
-
-			if b, ok := p.arg.Match(trace.arg); ok {
-				for k, v := range b {
-					bindings[k] = v
-				}
-
-				return bindings, true
+		if p.fun.Match(bindings, trace.fun) {
+			if p.arg.Match(bindings, trace.arg) {
+				return true
 			}
 		}
 
-		return p.MatchTrace(trace.trace)
+		return p.MatchTrace(bindings, trace.trace)
 	case Access:
-		return p.MatchTrace(trace.trace)
+		return p.MatchTrace(bindings, trace.trace)
 	}
 
 	panic("unreachable")
@@ -162,22 +150,22 @@ func (p PAccess) String() string {
 	return fmt.Sprintf("%v.%v", p.receiver, p.name)
 }
 
-func (p PAccess) Match(value Value) (map[string]Value, bool) {
-	return p.MatchTrace(value.Trace())
+func (p PAccess) Match(bindings map[string]Value, value Value) bool {
+	return p.MatchTrace(bindings, value.Trace())
 }
 
-func (p PAccess) MatchTrace(trace Trace) (map[string]Value, bool) {
+func (p PAccess) MatchTrace(bindings map[string]Value, trace Trace) bool {
 	switch trace := trace.(type) {
 	case Root:
-		return nil, false
+		return false
 	case Call:
-		return p.MatchTrace(trace.trace)
+		return p.MatchTrace(bindings, trace.trace)
 	case Access:
-		if bindings, ok := p.receiver.Match(trace.receiver); ok && p.name == trace.name {
-			return bindings, true
+		if p.name == trace.name && p.receiver.Match(bindings, trace.receiver) {
+			return true
 		}
 
-		return p.MatchTrace(trace.trace)
+		return p.MatchTrace(bindings, trace.trace)
 	}
 
 	panic("unreachable")
