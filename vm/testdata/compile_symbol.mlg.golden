@@ -62,8 +62,21 @@ lam :p1.8 {
 			get xs.9
 			apply
 			set xs1.10
+			get map.0
+			lam :p1.13 {
+				get :p1.13
+				select 1 {
+					case x.14 {
+						get x.14
+						prim print
+						join
+					}
+				}
+				ret
+			}
+			apply
 			get xs1.10
-			prim print
+			apply
 			get xs1.10
 			prim print_trace
 			join

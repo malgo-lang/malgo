@@ -82,7 +82,7 @@ func primPrintTrace(machine *Machine, _ token.Token) error {
 	var arg Value
 	arg, machine.Stack = machine.Stack.Head, machine.Stack.Tail
 
-	tree := treeprint.New()
+	tree := treeprint.NewWithRoot(arg)
 	arg.Trace().AddTo(tree)
 	fmt.Fprintln(machine.Stdout, tree.String())
 

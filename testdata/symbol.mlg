@@ -5,6 +5,6 @@ def map = {
 def main = {
   let xs = :Cons(1, :Cons(2, :Cons(3, :Nil)));
   let xs1 = map({ x -> prim(add, x, 1) }, xs);
-  prim(print, xs1);
+  map({ x -> prim(print, x) }, xs1);
   prim(print_trace, xs1)
 }

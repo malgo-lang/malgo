@@ -1,6 +1,8 @@
 package vm
 
 import (
+	"fmt"
+
 	"github.com/xlab/treeprint"
 )
 
@@ -19,7 +21,7 @@ type Call struct {
 }
 
 func (c Call) AddTo(tree treeprint.Tree) {
-	call := tree.AddBranch("call")
+	call := tree.AddMetaBranch(fmt.Sprintf("%v %v", c.fun, c.arg), "call")
 	c.fun.Trace().AddTo(call)
 	c.arg.Trace().AddTo(call)
 	c.trace.AddTo(tree)
@@ -32,8 +34,7 @@ type Access struct {
 }
 
 func (a Access) AddTo(tree treeprint.Tree) {
-	access := tree.AddBranch("access")
+	access := tree.AddMetaBranch(fmt.Sprintf("%v.%v", a.receiver, a.name), "access")
 	a.receiver.Trace().AddTo(access)
-	access.AddNode(a.name)
 	a.trace.AddTo(tree)
 }

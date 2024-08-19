@@ -17,7 +17,7 @@ import (
 )
 
 func TestExecute(t *testing.T) {
-	// t.Parallel()
+	t.Parallel()
 
 	testfiles, err := utils.FindSourceFiles("../testdata")
 	if err != nil {
