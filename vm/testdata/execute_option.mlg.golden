@@ -1,26 +1,38 @@
-42
-├── [λ.:p2.7 41]  call
-│   ├── [λ.:p1.6 λ.:p1.13]  call
-│   │   ├── root
-│   │   └── root
-│   ├── root
-│   ├── [λ.:p1.4 41]  call
-│   │   ├── [{none, some}.some]  access
-│   │   │   └── root
-│   │   ├── root
-│   │   └── root
-│   └── root
-├── [λ.:p1.4 42]  call
-│   ├── [{none, some}.some]  access
-│   │   └── root
-│   ├── root
-│   ├── [λ.:p1.13 41]  call
-│   │   ├── root
-│   │   └── root
-│   └── root
-├── [λ.:p1.13 41]  call
-│   ├── root
-│   └── root
-└── root
-
+call λ.:p2.7 41
+fun:
+	call λ.:p1.6 λ.:p1.13
+	fun:
+		root
+	arg:
+		root
+	root
+arg:
+	call λ.:p1.4 41
+	fun:
+		access {none, some} some
+		receiver:
+			root
+		root
+	arg:
+		root
+	root
+call λ.:p1.4 42
+fun:
+	access {none, some} some
+	receiver:
+		root
+	root
+arg:
+	call λ.:p1.13 41
+	fun:
+		root
+	arg:
+		root
+	root
+call λ.:p1.13 41
+fun:
+	root
+arg:
+	root
+root
 result => ()

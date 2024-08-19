@@ -1,202 +1,332 @@
-120
-├── [λ.:p1.12 5]  call
-│   ├── root
-│   └── root
-├── [λ.:p2.5 24]  call
-│   ├── [λ.:p1.4 5]  call
-│   │   ├── root
-│   │   └── root
-│   ├── root
-│   ├── [λ.:p1.12 4]  call
-│   │   ├── root
-│   │   ├── [λ.:p2.9 1]  call
-│   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   ├── root
-│   │   │   └── root
-│   │   └── root
-│   ├── [λ.:p2.5 6]  call
-│   │   ├── [λ.:p1.4 4]  call
-│   │   │   ├── root
-│   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   └── root
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   ├── root
-│   │   ├── [λ.:p1.12 3]  call
-│   │   │   ├── root
-│   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   ├── [λ.:p1.8 4]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   ├── root
-│   │   │   │   │   │   └── root
-│   │   │   │   │   └── root
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   ├── [λ.:p2.5 2]  call
-│   │   │   ├── [λ.:p1.4 3]  call
-│   │   │   │   ├── root
-│   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   ├── [λ.:p1.8 4]  call
-│   │   │   │   │   │   ├── root
-│   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   └── root
-│   │   │   │   │   ├── root
-│   │   │   │   │   └── root
-│   │   │   │   └── root
-│   │   │   ├── root
-│   │   │   ├── [λ.:p1.12 2]  call
-│   │   │   │   ├── root
-│   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   ├── [λ.:p1.8 3]  call
-│   │   │   │   │   │   ├── root
-│   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   ├── [λ.:p1.8 4]  call
-│   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   └── root
-│   │   │   │   │   ├── root
-│   │   │   │   │   └── root
-│   │   │   │   └── root
-│   │   │   ├── [λ.:p2.5 1]  call
-│   │   │   │   ├── [λ.:p1.4 2]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   ├── [λ.:p1.8 3]  call
-│   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   ├── [λ.:p1.8 4]  call
-│   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   ├── root
-│   │   │   │   │   │   └── root
-│   │   │   │   │   └── root
-│   │   │   │   ├── root
-│   │   │   │   ├── [λ.:p1.12 1]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   ├── [λ.:p1.8 2]  call
-│   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   ├── [λ.:p1.8 3]  call
-│   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 4]  call
-│   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   ├── root
-│   │   │   │   │   │   └── root
-│   │   │   │   │   └── root
-│   │   │   │   ├── [λ.:p2.5 1]  call
-│   │   │   │   │   ├── [λ.:p1.4 1]  call
-│   │   │   │   │   │   ├── root
-│   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   ├── [λ.:p1.8 2]  call
-│   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 3]  call
-│   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 4]  call
-│   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   └── root
-│   │   │   │   │   ├── root
-│   │   │   │   │   ├── [λ.:p1.12 0]  call
-│   │   │   │   │   │   ├── root
-│   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   ├── [λ.:p1.8 1]  call
-│   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 2]  call
-│   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 3]  call
-│   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 4]  call
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p2.9 1]  call
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── [λ.:p1.8 5]  call
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   │   ├── root
-│   │   │   │   │   │   │   └── root
-│   │   │   │   │   │   └── root
-│   │   │   │   │   └── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   └── root
-│   └── root
-└── root
-
+call λ.:p1.12 5
+fun:
+	root
+arg:
+	root
+call λ.:p2.5 24
+fun:
+	call λ.:p1.4 5
+	fun:
+		root
+	arg:
+		root
+	root
+arg:
+	call λ.:p1.12 4
+	fun:
+		root
+	arg:
+		call λ.:p2.9 1
+		fun:
+			call λ.:p1.8 5
+			fun:
+				root
+			arg:
+				root
+			root
+		arg:
+			root
+		root
+	call λ.:p2.5 6
+	fun:
+		call λ.:p1.4 4
+		fun:
+			root
+		arg:
+			call λ.:p2.9 1
+			fun:
+				call λ.:p1.8 5
+				fun:
+					root
+				arg:
+					root
+				root
+			arg:
+				root
+			root
+		root
+	arg:
+		call λ.:p1.12 3
+		fun:
+			root
+		arg:
+			call λ.:p2.9 1
+			fun:
+				call λ.:p1.8 4
+				fun:
+					root
+				arg:
+					call λ.:p2.9 1
+					fun:
+						call λ.:p1.8 5
+						fun:
+							root
+						arg:
+							root
+						root
+					arg:
+						root
+					root
+				root
+			arg:
+				root
+			root
+		call λ.:p2.5 2
+		fun:
+			call λ.:p1.4 3
+			fun:
+				root
+			arg:
+				call λ.:p2.9 1
+				fun:
+					call λ.:p1.8 4
+					fun:
+						root
+					arg:
+						call λ.:p2.9 1
+						fun:
+							call λ.:p1.8 5
+							fun:
+								root
+							arg:
+								root
+							root
+						arg:
+							root
+						root
+					root
+				arg:
+					root
+				root
+			root
+		arg:
+			call λ.:p1.12 2
+			fun:
+				root
+			arg:
+				call λ.:p2.9 1
+				fun:
+					call λ.:p1.8 3
+					fun:
+						root
+					arg:
+						call λ.:p2.9 1
+						fun:
+							call λ.:p1.8 4
+							fun:
+								root
+							arg:
+								call λ.:p2.9 1
+								fun:
+									call λ.:p1.8 5
+									fun:
+										root
+									arg:
+										root
+									root
+								arg:
+									root
+								root
+							root
+						arg:
+							root
+						root
+					root
+				arg:
+					root
+				root
+			call λ.:p2.5 1
+			fun:
+				call λ.:p1.4 2
+				fun:
+					root
+				arg:
+					call λ.:p2.9 1
+					fun:
+						call λ.:p1.8 3
+						fun:
+							root
+						arg:
+							call λ.:p2.9 1
+							fun:
+								call λ.:p1.8 4
+								fun:
+									root
+								arg:
+									call λ.:p2.9 1
+									fun:
+										call λ.:p1.8 5
+										fun:
+											root
+										arg:
+											root
+										root
+									arg:
+										root
+									root
+								root
+							arg:
+								root
+							root
+						root
+					arg:
+						root
+					root
+				root
+			arg:
+				call λ.:p1.12 1
+				fun:
+					root
+				arg:
+					call λ.:p2.9 1
+					fun:
+						call λ.:p1.8 2
+						fun:
+							root
+						arg:
+							call λ.:p2.9 1
+							fun:
+								call λ.:p1.8 3
+								fun:
+									root
+								arg:
+									call λ.:p2.9 1
+									fun:
+										call λ.:p1.8 4
+										fun:
+											root
+										arg:
+											call λ.:p2.9 1
+											fun:
+												call λ.:p1.8 5
+												fun:
+													root
+												arg:
+													root
+												root
+											arg:
+												root
+											root
+										root
+									arg:
+										root
+									root
+								root
+							arg:
+								root
+							root
+						root
+					arg:
+						root
+					root
+				call λ.:p2.5 1
+				fun:
+					call λ.:p1.4 1
+					fun:
+						root
+					arg:
+						call λ.:p2.9 1
+						fun:
+							call λ.:p1.8 2
+							fun:
+								root
+							arg:
+								call λ.:p2.9 1
+								fun:
+									call λ.:p1.8 3
+									fun:
+										root
+									arg:
+										call λ.:p2.9 1
+										fun:
+											call λ.:p1.8 4
+											fun:
+												root
+											arg:
+												call λ.:p2.9 1
+												fun:
+													call λ.:p1.8 5
+													fun:
+														root
+													arg:
+														root
+													root
+												arg:
+													root
+												root
+											root
+										arg:
+											root
+										root
+									root
+								arg:
+									root
+								root
+							root
+						arg:
+							root
+						root
+					root
+				arg:
+					call λ.:p1.12 0
+					fun:
+						root
+					arg:
+						call λ.:p2.9 1
+						fun:
+							call λ.:p1.8 1
+							fun:
+								root
+							arg:
+								call λ.:p2.9 1
+								fun:
+									call λ.:p1.8 2
+									fun:
+										root
+									arg:
+										call λ.:p2.9 1
+										fun:
+											call λ.:p1.8 3
+											fun:
+												root
+											arg:
+												call λ.:p2.9 1
+												fun:
+													call λ.:p1.8 4
+													fun:
+														root
+													arg:
+														call λ.:p2.9 1
+														fun:
+															call λ.:p1.8 5
+															fun:
+																root
+															arg:
+																root
+															root
+														arg:
+															root
+														root
+													root
+												arg:
+													root
+												root
+											root
+										arg:
+											root
+										root
+									root
+								arg:
+									root
+								root
+							root
+						arg:
+							root
+						root
+					root
+				root
+			root
+		root
+	root
+root
 result => ()

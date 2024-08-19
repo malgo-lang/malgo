@@ -1,12 +1,14 @@
 0
-0
-├── [λ.:p1.3 1]  call
-│   ├── root
-│   ├── [{false, true}.true]  access
-│   │   └── root
-│   └── root
-├── [{false, true}.false]  access
-│   └── root
-└── root
-
+call λ.:p1.3 1
+fun:
+	root
+arg:
+	access {false, true} true
+	receiver:
+		root
+	root
+access {false, true} false
+receiver:
+	root
+root
 result => ()

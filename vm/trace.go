@@ -2,14 +2,13 @@ package vm
 
 import (
 	"fmt"
-
-	"github.com/xlab/treeprint"
+	"io"
 )
 
 type Root struct{}
 
-func (r Root) AddTo(tree treeprint.Tree) {
-	tree.AddNode("root")
+func (r Root) Print(w io.Writer, level int) {
+	fmt.Fprintf(w, "%vroot\n", indent(level))
 }
 
 var _ Trace = Root{}
@@ -20,11 +19,13 @@ type Call struct {
 	trace Trace
 }
 
-func (c Call) AddTo(tree treeprint.Tree) {
-	call := tree.AddMetaBranch(fmt.Sprintf("%v %v", c.fun, c.arg), "call")
-	c.fun.Trace().AddTo(call)
-	c.arg.Trace().AddTo(call)
-	c.trace.AddTo(tree)
+func (c Call) Print(w io.Writer, level int) {
+	fmt.Fprintf(w, "%vcall %v %v\n", indent(level), c.fun, c.arg)
+	fmt.Fprintf(w, "%vfun:\n", indent(level))
+	c.fun.Trace().Print(w, level+1)
+	fmt.Fprintf(w, "%varg:\n", indent(level))
+	c.arg.Trace().Print(w, level+1)
+	c.trace.Print(w, level)
 }
 
 type Access struct {
@@ -33,8 +34,9 @@ type Access struct {
 	trace    Trace
 }
 
-func (a Access) AddTo(tree treeprint.Tree) {
-	access := tree.AddMetaBranch(fmt.Sprintf("%v.%v", a.receiver, a.name), "access")
-	a.receiver.Trace().AddTo(access)
-	a.trace.AddTo(tree)
+func (a Access) Print(w io.Writer, level int) {
+	fmt.Fprintf(w, "%vaccess %v %v\n", indent(level), a.receiver, a.name)
+	fmt.Fprintf(w, "%vreceiver:\n", indent(level))
+	a.receiver.Trace().Print(w, level+1)
+	a.trace.Print(w, level)
 }

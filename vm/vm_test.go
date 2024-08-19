@@ -3,6 +3,7 @@ package vm_test
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -15,6 +16,74 @@ import (
 	"github.com/takoeight0821/malgo/utils"
 	"github.com/takoeight0821/malgo/vm"
 )
+
+func BenchmarkExecute(b *testing.B) {
+	testfiles, err := utils.FindSourceFiles("../testdata")
+	if err != nil {
+		b.Errorf("failed to find test files: %v", err)
+
+		return
+	}
+
+	for range b.N {
+		for _, testfile := range testfiles {
+			b.Logf("testfile: %s", testfile)
+			source, err := os.ReadFile(testfile)
+			if err != nil {
+				b.Errorf("failed to read %s: %v", testfile, err)
+
+				return
+			}
+
+			runner := driver.NewPassRunner()
+			driver.AddPassesUntil(runner, nameresolve.NewResolver())
+
+			nodes, err := runner.RunSource(testfile, string(source))
+			if err != nil {
+				b.Errorf("%s returned error: %v", testfile, err)
+
+				return
+			}
+
+			var code vm.Code
+			for _, node := range nodes {
+				var err error
+				code, err = vm.Compile(node, code)
+				if err != nil {
+					b.Errorf("%s returned error: %v", testfile, err)
+				}
+			}
+
+			machine := vm.NewMachine(code)
+			machine.Stdout = io.Discard
+			machine.Stdin = strings.NewReader("test input\n")
+
+			err = machine.Run()
+			if err != nil {
+				b.Errorf("%s returned error: %v", testfile, err)
+			}
+
+			top := token.Token{
+				Kind:   token.IDENT,
+				Lexeme: "toplevel",
+				//nolint:exhaustruct
+				Location: token.Location{},
+				Literal:  -1,
+			}
+			if main, ok := vm.SearchMain(machine.Env); ok {
+				machine.Code = machine.Code.Push(vm.Apply{Token: top})
+				machine.Code = machine.Code.Push(vm.MkTuple{Token: top, Count: 0})
+				machine.Code = machine.Code.Push(vm.Push{Value: main})
+				err = machine.Run()
+
+				var exitErr vm.ExitError
+				if err != nil && !errors.As(err, &exitErr) {
+					b.Errorf("%s returned error: %v", testfile, err)
+				}
+			}
+		}
+	}
+}
 
 func TestExecute(t *testing.T) {
 	t.Parallel()

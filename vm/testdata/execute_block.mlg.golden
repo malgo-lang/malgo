@@ -1,24 +1,34 @@
 0
 1
-0
-├── [λ.:p2.3 λ.:p1.7]  call
-│   ├── [λ.:p1.2 0]  call
-│   │   ├── root
-│   │   └── root
-│   ├── root
-│   └── root
-├── [λ.:p1.7 ()]  call
-│   ├── root
-│   └── root
-├── [λ.:p2.3 λ.:p1.8]  call
-│   ├── [λ.:p1.2 1]  call
-│   │   ├── root
-│   │   └── root
-│   ├── root
-│   └── root
-├── [λ.:p1.8 ()]  call
-│   ├── root
-│   └── root
-└── root
-
+call λ.:p2.3 λ.:p1.7
+fun:
+	call λ.:p1.2 0
+	fun:
+		root
+	arg:
+		root
+	root
+arg:
+	root
+call λ.:p1.7 ()
+fun:
+	root
+arg:
+	root
+call λ.:p2.3 λ.:p1.8
+fun:
+	call λ.:p1.2 1
+	fun:
+		root
+	arg:
+		root
+	root
+arg:
+	root
+call λ.:p1.8 ()
+fun:
+	root
+arg:
+	root
+root
 result => ()

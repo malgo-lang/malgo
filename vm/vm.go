@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/takoeight0821/malgo/token"
-	"github.com/xlab/treeprint"
 )
 
 type Machine struct {
@@ -148,12 +147,12 @@ type Pattern interface {
 }
 
 type Trace interface {
-	AddTo(tree treeprint.Tree)
+	Print(w io.Writer, level int)
 }
 
 func Render(trace Trace) string {
-	tree := treeprint.New()
-	trace.AddTo(tree)
+	var builder strings.Builder
+	trace.Print(&builder, 0)
 
-	return tree.String()
+	return builder.String()
 }

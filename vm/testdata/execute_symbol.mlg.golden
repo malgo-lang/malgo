@@ -1,130 +1,210 @@
 2
 3
 4
-:Cons
-├── [λ.:p2.3 :Cons]  call
-│   ├── [λ.:p1.2 λ.:p1.11]  call
-│   │   ├── root
-│   │   └── root
-│   ├── root
-│   ├── [:Cons :Cons]  call
-│   │   ├── [:Cons 1]  call
-│   │   │   ├── root
-│   │   │   └── root
-│   │   ├── root
-│   │   ├── [:Cons :Cons]  call
-│   │   │   ├── [:Cons 2]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   ├── root
-│   │   │   ├── [:Cons :Nil]  call
-│   │   │   │   ├── [:Cons 3]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   └── root
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   ├── [:Cons 3]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   ├── [:Cons 2]  call
-│   │   │   ├── root
-│   │   │   └── root
-│   │   └── root
-│   ├── [:Cons 1]  call
-│   │   ├── root
-│   │   └── root
-│   └── root
-├── [:Cons :Cons]  call
-│   ├── [:Cons 2]  call
-│   │   ├── root
-│   │   ├── [λ.:p1.11 1]  call
-│   │   │   ├── root
-│   │   │   └── root
-│   │   └── root
-│   ├── root
-│   ├── [λ.:p2.3 :Cons]  call
-│   │   ├── [λ.:p1.2 λ.:p1.11]  call
-│   │   │   ├── root
-│   │   │   └── root
-│   │   ├── root
-│   │   ├── [:Cons :Cons]  call
-│   │   │   ├── [:Cons 2]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   ├── root
-│   │   │   ├── [:Cons :Nil]  call
-│   │   │   │   ├── [:Cons 3]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   └── root
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   ├── [:Cons 3]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   ├── [:Cons 2]  call
-│   │   │   ├── root
-│   │   │   └── root
-│   │   └── root
-│   ├── [:Cons :Cons]  call
-│   │   ├── [:Cons 3]  call
-│   │   │   ├── root
-│   │   │   ├── [λ.:p1.11 2]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   ├── root
-│   │   ├── [λ.:p2.3 :Cons]  call
-│   │   │   ├── [λ.:p1.2 λ.:p1.11]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   ├── root
-│   │   │   ├── [:Cons :Nil]  call
-│   │   │   │   ├── [:Cons 3]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   └── root
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   ├── [:Cons 3]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   ├── [:Cons :Nil]  call
-│   │   │   ├── [:Cons 4]  call
-│   │   │   │   ├── root
-│   │   │   │   ├── [λ.:p1.11 3]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   └── root
-│   │   │   │   └── root
-│   │   │   ├── root
-│   │   │   ├── [λ.:p2.3 :Nil]  call
-│   │   │   │   ├── [λ.:p1.2 λ.:p1.11]  call
-│   │   │   │   │   ├── root
-│   │   │   │   │   └── root
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   ├── [:Cons 4]  call
-│   │   │   ├── root
-│   │   │   ├── [λ.:p1.11 3]  call
-│   │   │   │   ├── root
-│   │   │   │   └── root
-│   │   │   └── root
-│   │   └── root
-│   ├── [:Cons 3]  call
-│   │   ├── root
-│   │   ├── [λ.:p1.11 2]  call
-│   │   │   ├── root
-│   │   │   └── root
-│   │   └── root
-│   └── root
-├── [:Cons 2]  call
-│   ├── root
-│   ├── [λ.:p1.11 1]  call
-│   │   ├── root
-│   │   └── root
-│   └── root
-└── root
-
+call λ.:p2.3 :Cons
+fun:
+	call λ.:p1.2 λ.:p1.11
+	fun:
+		root
+	arg:
+		root
+	root
+arg:
+	call :Cons :Cons
+	fun:
+		call :Cons 1
+		fun:
+			root
+		arg:
+			root
+		root
+	arg:
+		call :Cons :Cons
+		fun:
+			call :Cons 2
+			fun:
+				root
+			arg:
+				root
+			root
+		arg:
+			call :Cons :Nil
+			fun:
+				call :Cons 3
+				fun:
+					root
+				arg:
+					root
+				root
+			arg:
+				root
+			call :Cons 3
+			fun:
+				root
+			arg:
+				root
+			root
+		call :Cons 2
+		fun:
+			root
+		arg:
+			root
+		root
+	call :Cons 1
+	fun:
+		root
+	arg:
+		root
+	root
+call :Cons :Cons
+fun:
+	call :Cons 2
+	fun:
+		root
+	arg:
+		call λ.:p1.11 1
+		fun:
+			root
+		arg:
+			root
+		root
+	root
+arg:
+	call λ.:p2.3 :Cons
+	fun:
+		call λ.:p1.2 λ.:p1.11
+		fun:
+			root
+		arg:
+			root
+		root
+	arg:
+		call :Cons :Cons
+		fun:
+			call :Cons 2
+			fun:
+				root
+			arg:
+				root
+			root
+		arg:
+			call :Cons :Nil
+			fun:
+				call :Cons 3
+				fun:
+					root
+				arg:
+					root
+				root
+			arg:
+				root
+			call :Cons 3
+			fun:
+				root
+			arg:
+				root
+			root
+		call :Cons 2
+		fun:
+			root
+		arg:
+			root
+		root
+	call :Cons :Cons
+	fun:
+		call :Cons 3
+		fun:
+			root
+		arg:
+			call λ.:p1.11 2
+			fun:
+				root
+			arg:
+				root
+			root
+		root
+	arg:
+		call λ.:p2.3 :Cons
+		fun:
+			call λ.:p1.2 λ.:p1.11
+			fun:
+				root
+			arg:
+				root
+			root
+		arg:
+			call :Cons :Nil
+			fun:
+				call :Cons 3
+				fun:
+					root
+				arg:
+					root
+				root
+			arg:
+				root
+			call :Cons 3
+			fun:
+				root
+			arg:
+				root
+			root
+		call :Cons :Nil
+		fun:
+			call :Cons 4
+			fun:
+				root
+			arg:
+				call λ.:p1.11 3
+				fun:
+					root
+				arg:
+					root
+				root
+			root
+		arg:
+			call λ.:p2.3 :Nil
+			fun:
+				call λ.:p1.2 λ.:p1.11
+				fun:
+					root
+				arg:
+					root
+				root
+			arg:
+				root
+			root
+		call :Cons 4
+		fun:
+			root
+		arg:
+			call λ.:p1.11 3
+			fun:
+				root
+			arg:
+				root
+			root
+		root
+	call :Cons 3
+	fun:
+		root
+	arg:
+		call λ.:p1.11 2
+		fun:
+			root
+		arg:
+			root
+		root
+	root
+call :Cons 2
+fun:
+	root
+arg:
+	call λ.:p1.11 1
+	fun:
+		root
+	arg:
+		root
+	root
+root
 result => ()

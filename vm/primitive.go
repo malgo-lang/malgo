@@ -6,7 +6,6 @@ import (
 
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
-	"github.com/xlab/treeprint"
 )
 
 func executePrimitive(machine *Machine, where token.Token, name string) error {
@@ -82,9 +81,7 @@ func primPrintTrace(machine *Machine, _ token.Token) error {
 	var arg Value
 	arg, machine.Stack = machine.Stack.Head, machine.Stack.Tail
 
-	tree := treeprint.NewWithRoot(arg)
-	arg.Trace().AddTo(tree)
-	fmt.Fprintln(machine.Stdout, tree.String())
+	arg.Trace().Print(machine.Stdout, 0)
 
 	machine.Stack = machine.Stack.Push(Tuple{fields: make([]Value, 0), trace: Root{}})
 
