@@ -2,7 +2,10 @@ package vm
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 	"strings"
+	"unique"
 
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
@@ -34,13 +37,13 @@ var _ Command = Push{}
 // Get gets a value from the environment and pushes it onto the stack.
 type Get struct {
 	token token.Token
-	Name  string
+	Name  Name
 }
 
 func (cmd Get) Execute(machine *Machine) error {
 	value, ok := Lookup(machine.Env, cmd.Name)
 	if !ok {
-		return utils.PosError{Where: cmd.token, Err: UndefinedVariableError{Name: cmd.Name}}
+		return utils.PosError{Where: cmd.token, Err: UndefinedVariableError{Name: cmd.Name.Value()}}
 	}
 
 	machine.Stack = machine.Stack.Push(value)
@@ -61,7 +64,7 @@ func (cmd Get) Where() token.Token {
 }
 
 func (cmd Get) NestedString(level int) string {
-	return fmt.Sprintf("%vget %v", indent(level), cmd.Name)
+	return fmt.Sprintf("%vget %v", indent(level), cmd.Name.Value())
 }
 
 //nolint:exhaustruct
@@ -107,7 +110,7 @@ func (cmd Select) Execute(machine *Machine) error {
 	}
 
 	for _, branch := range cmd.Branches {
-		bindings := make(map[string]Value)
+		bindings := make(map[Name]Value)
 
 		isMatch := true
 		for i, pat := range branch.Pattern {
@@ -120,7 +123,7 @@ func (cmd Select) Execute(machine *Machine) error {
 
 		if isMatch {
 			machine.Dump = machine.Dump.Push(Dump{Env: machine.Env, Code: machine.Code, Trace: nil})
-			machine.Env = &Stack[map[string]Value]{Head: bindings, Tail: machine.Env}
+			machine.Env = &Stack[map[Name]Value]{Head: bindings, Tail: machine.Env}
 			machine.Code = branch.Code
 
 			return nil
@@ -216,7 +219,7 @@ var _ Command = Join{}
 // Lambda creates a new (recursive) closure and pushes it onto the stack.
 type Lambda struct {
 	token token.Token
-	Param string
+	Param Name
 	Code  Code
 }
 
@@ -233,7 +236,7 @@ func (cmd Lambda) Where() token.Token {
 func (cmd Lambda) NestedString(level int) string {
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%vlam %v {", indent(level), cmd.Param)
+	fmt.Fprintf(&builder, "%vlam %v {", indent(level), cmd.Param.Value())
 
 	for c := range cmd.Code.All() {
 		fmt.Fprintf(&builder, "\n%s", c.NestedString(level+1))
@@ -286,7 +289,7 @@ var _ Command = Return{}
 
 type Object struct {
 	token  token.Token
-	Fields map[string]Code
+	Fields map[Name]Code
 }
 
 func (cmd Object) Execute(m *Machine) error {
@@ -304,7 +307,15 @@ func (cmd Object) NestedString(level int) string {
 
 	fmt.Fprintf(&builder, "%vobject {", indent(level))
 
-	for field, code := range utils.Ordered(cmd.Fields) {
+	keys := slices.Collect(maps.Keys(cmd.Fields))
+	strs := make([]string, len(keys))
+	for i, key := range keys {
+		strs[i] = key.Value()
+	}
+	slices.Sort(strs)
+
+	for _, field := range strs {
+		code := cmd.Fields[unique.Make(field)]
 		fmt.Fprintf(&builder, "\n%v%v {", indent(level+1), field)
 
 		for c := range code.All() {
@@ -378,7 +389,7 @@ var _ Command = Apply{}
 
 type Primitive struct {
 	token token.Token
-	Name  string
+	Name  Name
 }
 
 func (cmd Primitive) Execute(m *Machine) error {
@@ -390,7 +401,7 @@ func (cmd Primitive) Where() token.Token {
 }
 
 func (cmd Primitive) NestedString(level int) string {
-	return fmt.Sprintf("%vprim %v", indent(level), cmd.Name)
+	return fmt.Sprintf("%vprim %v", indent(level), cmd.Name.Value())
 }
 
 //nolint:exhaustruct
@@ -399,7 +410,7 @@ var _ Command = Primitive{}
 // Proj projects a field from a record.
 type Proj struct {
 	token token.Token
-	Field string
+	Field Name
 }
 
 func (cmd Proj) Execute(machine *Machine) error {
@@ -442,7 +453,7 @@ func (err NotRecordError) Error() string {
 }
 
 type NoSuchFieldError struct {
-	Field string
+	Field Name
 }
 
 func (err NoSuchFieldError) Error() string {
@@ -454,7 +465,7 @@ func (cmd Proj) Where() token.Token {
 }
 
 func (cmd Proj) NestedString(level int) string {
-	return fmt.Sprintf("%vproj %v", indent(level), cmd.Field)
+	return fmt.Sprintf("%vproj %v", indent(level), cmd.Field.Value())
 }
 
 //nolint:exhaustruct

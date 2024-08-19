@@ -3,24 +3,29 @@ package vm
 import (
 	"fmt"
 	"io"
+	"unique"
 
 	"github.com/takoeight0821/malgo/token"
 	"github.com/takoeight0821/malgo/utils"
 )
 
-func executePrimitive(machine *Machine, where token.Token, name string) error {
-	pmap := map[string]func(*Machine, token.Token) error{
-		"exit":         primExit,
-		"print_cps":    primPrintCPS,
-		"read_all_cps": primReadAllCPS,
-		"print":        primPrint,
-		"print_trace":  primPrintTrace,
-		"mul":          primMul,
-		"add":          primAdd,
-		"sub":          primSub,
-		"less_equal":   primLessEqual,
-	}
+//nolint:gochecknoglobals
+var pmap = make(map[Name]func(*Machine, token.Token) error)
 
+//nolint:gochecknoinits
+func init() {
+	pmap[unique.Make("exit")] = primExit
+	pmap[unique.Make("print_cps")] = primPrintCPS
+	pmap[unique.Make("read_all_cps")] = primReadAllCPS
+	pmap[unique.Make("print")] = primPrint
+	pmap[unique.Make("print_trace")] = primPrintTrace
+	pmap[unique.Make("mul")] = primMul
+	pmap[unique.Make("add")] = primAdd
+	pmap[unique.Make("sub")] = primSub
+	pmap[unique.Make("less_equal")] = primLessEqual
+}
+
+func executePrimitive(machine *Machine, where token.Token, name Name) error {
 	return pmap[name](machine, where)
 }
 

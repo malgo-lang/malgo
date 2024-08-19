@@ -6,6 +6,7 @@ import (
 	"iter"
 	"os"
 	"strings"
+	"unique"
 
 	"github.com/takoeight0821/malgo/token"
 )
@@ -85,13 +86,15 @@ func (s *Stack[T]) All() iter.Seq[T] {
 	}
 }
 
-type Env = *Stack[map[string]Value]
+type Name = unique.Handle[string]
+
+type Env = *Stack[map[Name]Value]
 
 func NewEnv() Env {
-	return &Stack[map[string]Value]{Head: map[string]Value{}, Tail: nil}
+	return &Stack[map[Name]Value]{Head: map[Name]Value{}, Tail: nil}
 }
 
-func Lookup(env Env, name string) (Value, bool) {
+func Lookup(env Env, name Name) (Value, bool) {
 	for e := range env.All() {
 		if value, ok := e[name]; ok {
 			return value, true
@@ -102,17 +105,17 @@ func Lookup(env Env, name string) (Value, bool) {
 }
 
 func Extend(env Env) Env {
-	return env.Push(map[string]Value{})
+	return env.Push(map[Name]Value{})
 }
 
-func Bind(env Env, name string, value Value) {
+func Bind(env Env, name Name, value Value) {
 	env.Head[name] = value
 }
 
 func SearchMain(env Env) (Value, bool) {
 	for e := range env.All() {
 		for name, value := range e {
-			if strings.HasPrefix(name, "main.") {
+			if strings.HasPrefix(name.Value(), "main.") {
 				return value, true
 			}
 		}
@@ -143,7 +146,7 @@ type Command interface {
 
 type Pattern interface {
 	fmt.Stringer
-	Match(bindings map[string]Value, value Value) bool
+	Match(bindings map[Name]Value, value Value) bool
 }
 
 type Trace interface {

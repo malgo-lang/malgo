@@ -2,6 +2,7 @@ package vm
 
 import (
 	"fmt"
+	"unique"
 
 	"github.com/takoeight0821/malgo/ast"
 	"github.com/takoeight0821/malgo/token"
@@ -249,11 +250,14 @@ func compileLambda(node *ast.Lambda, cont Code) (Code, error) {
 }
 
 func compileObject(node *ast.Object, cont Code) (Code, error) {
-	fields := make(map[string]Code)
+	fields := make(map[Name]Code)
 
 	for _, field := range node.Fields {
 		var err error
-		fields[field.Name], err = Compile(field.Expr, &Stack[Command]{Head: Return{token: field.Base()}, Tail: nil})
+		fields[unique.Make(field.Name)], err = Compile(
+			field.Expr,
+			&Stack[Command]{Head: Return{token: field.Base()}, Tail: nil},
+		)
 		if err != nil {
 			return nil, err
 		}
@@ -268,16 +272,16 @@ func compileVarDecl(node *ast.VarDecl, cont Code) (Code, error) {
 	return Compile(node.Expr, cont)
 }
 
-func tokenToName(tok token.Token) string {
+func tokenToName(tok token.Token) Name {
 	if tok.Kind != token.IDENT && tok.Kind != token.OPERATOR && tok.Kind != token.SYMBOL {
 		panic(fmt.Sprintf("tokenToName: %s", tok))
 	}
 
 	if tok.Literal == nil {
-		return tok.Lexeme
+		return unique.Make(tok.Lexeme)
 	}
 
-	return fmt.Sprintf("%s.%#v", tok.Lexeme, tok.Literal)
+	return unique.Make(fmt.Sprintf("%s.%#v", tok.Lexeme, tok.Literal))
 }
 
 func cons(command Command, cont Code) Code {

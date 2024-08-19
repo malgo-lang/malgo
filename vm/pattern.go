@@ -8,14 +8,14 @@ import (
 )
 
 type Var struct {
-	name string
+	name Name
 }
 
 func (v Var) String() string {
-	return v.name
+	return v.name.Value()
 }
 
-func (v Var) Match(bindings map[string]Value, value Value) bool {
+func (v Var) Match(bindings map[Name]Value, value Value) bool {
 	bindings[v.name] = value
 
 	return true
@@ -32,7 +32,7 @@ func (l Literal) String() string {
 	return l.Lexeme
 }
 
-func (l Literal) Match(_ map[string]Value, value Value) bool {
+func (l Literal) Match(_ map[Name]Value, value Value) bool {
 	switch value := value.(type) {
 	case Int:
 		if l.Literal == value.value {
@@ -51,14 +51,14 @@ func (l Literal) Match(_ map[string]Value, value Value) bool {
 var _ Pattern = Literal{}
 
 type PSymbol struct {
-	name string
+	name Name
 }
 
 func (p PSymbol) String() string {
-	return ":" + p.name
+	return ":" + p.name.Value()
 }
 
-func (p PSymbol) Match(_ map[string]Value, value Value) bool {
+func (p PSymbol) Match(_ map[Name]Value, value Value) bool {
 	if symbol, ok := value.(Symbol); ok && symbol.name == p.name {
 		return true
 	}
@@ -89,7 +89,7 @@ func (p PTuple) String() string {
 	return builder.String()
 }
 
-func (p PTuple) Match(bindings map[string]Value, value Value) bool {
+func (p PTuple) Match(bindings map[Name]Value, value Value) bool {
 	if tuple, ok := value.(Tuple); ok && len(p.fields) == len(tuple.fields) {
 		for i, field := range p.fields {
 			if !field.Match(bindings, tuple.fields[i]) {
@@ -115,11 +115,11 @@ func (p PCall) String() string {
 	return fmt.Sprintf("%v(%v)", p.fun, p.arg)
 }
 
-func (p PCall) Match(bindings map[string]Value, value Value) bool {
+func (p PCall) Match(bindings map[Name]Value, value Value) bool {
 	return p.MatchTrace(bindings, value.Trace())
 }
 
-func (p PCall) MatchTrace(bindings map[string]Value, trace Trace) bool {
+func (p PCall) MatchTrace(bindings map[Name]Value, trace Trace) bool {
 	switch trace := trace.(type) {
 	case Root:
 		return false
@@ -143,18 +143,18 @@ var _ Pattern = PCall{}
 
 type PAccess struct {
 	receiver Pattern
-	name     string
+	name     Name
 }
 
 func (p PAccess) String() string {
-	return fmt.Sprintf("%v.%v", p.receiver, p.name)
+	return fmt.Sprintf("%v.%s", p.receiver, p.name.Value())
 }
 
-func (p PAccess) Match(bindings map[string]Value, value Value) bool {
+func (p PAccess) Match(bindings map[Name]Value, value Value) bool {
 	return p.MatchTrace(bindings, value.Trace())
 }
 
-func (p PAccess) MatchTrace(bindings map[string]Value, trace Trace) bool {
+func (p PAccess) MatchTrace(bindings map[Name]Value, trace Trace) bool {
 	switch trace := trace.(type) {
 	case Root:
 		return false

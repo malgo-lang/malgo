@@ -53,12 +53,12 @@ func (s String) WithTrace(trace Trace) Value {
 var _ Value = String{}
 
 type Symbol struct {
-	name  string
+	name  Name
 	trace Trace
 }
 
 func (s Symbol) String() string {
-	return ":" + s.name
+	return ":" + s.name.Value()
 }
 
 func (s Symbol) Trace() Trace {
@@ -110,14 +110,14 @@ func (t Tuple) WithTrace(trace Trace) Value {
 var _ Value = Tuple{}
 
 type Closure struct {
-	Param string
+	Param Name
 	Env   Env
 	Code  Code
 	trace Trace
 }
 
 func (c Closure) String() string {
-	return fmt.Sprintf("λ.%v", c.Param)
+	return "λ." + c.Param.Value()
 }
 
 func (c Closure) Trace() Trace {
@@ -135,7 +135,7 @@ var _ Value = Closure{}
 
 type Record struct {
 	Env    Env
-	Fields map[string]Code
+	Fields map[Name]Code
 	trace  Trace
 }
 
@@ -143,8 +143,15 @@ func (r Record) String() string {
 	var builder strings.Builder
 
 	builder.WriteString("{")
-	keys := slices.Sorted(maps.Keys(r.Fields))
+	keys := slices.Collect(maps.Keys(r.Fields))
+
+	strs := make([]string, len(keys))
 	for i, key := range keys {
+		strs[i] = key.Value()
+	}
+	slices.Sort(strs)
+
+	for i, key := range strs {
 		if i > 0 {
 			builder.WriteString(", ")
 		}

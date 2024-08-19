@@ -30,12 +30,12 @@ func (c Call) Print(w io.Writer, level int) {
 
 type Access struct {
 	receiver Value
-	name     string
+	name     Name
 	trace    Trace
 }
 
 func (a Access) Print(w io.Writer, level int) {
-	fmt.Fprintf(w, "%vaccess %v %v\n", indent(level), a.receiver, a.name)
+	fmt.Fprintf(w, "%vaccess %v %s\n", indent(level), a.receiver, a.name.Value())
 	fmt.Fprintf(w, "%vreceiver:\n", indent(level))
 	a.receiver.Trace().Print(w, level+1)
 	a.trace.Print(w, level)
