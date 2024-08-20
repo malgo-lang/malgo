@@ -27,7 +27,7 @@ func (i Int) WithTrace(trace Trace) Value {
 	return i
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Value = Int{}
 
 type String struct {
@@ -49,7 +49,7 @@ func (s String) WithTrace(trace Trace) Value {
 	return s
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Value = String{}
 
 type Symbol struct {
@@ -71,7 +71,7 @@ func (s Symbol) WithTrace(trace Trace) Value {
 	return s
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Value = Symbol{}
 
 type Tuple struct {
@@ -106,7 +106,7 @@ func (t Tuple) WithTrace(trace Trace) Value {
 	return t
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Value = Tuple{}
 
 type Closure struct {
@@ -130,7 +130,7 @@ func (c Closure) WithTrace(trace Trace) Value {
 	return c
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Value = Closure{}
 
 type Record struct {

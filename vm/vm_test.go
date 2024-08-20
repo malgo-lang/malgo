@@ -25,34 +25,55 @@ func BenchmarkExecute(b *testing.B) {
 		return
 	}
 
-	for range b.N {
-		for _, testfile := range testfiles {
-			b.Logf("testfile: %s", testfile)
-			source, err := os.ReadFile(testfile)
-			if err != nil {
-				b.Errorf("failed to read %s: %v", testfile, err)
+	codes := make([]struct {
+		filename string
+		code     vm.Code
+	}, len(testfiles))
 
-				return
-			}
+	for i, testfile := range testfiles {
+		b.Logf("testfile: %s", testfile)
+		source, err := os.ReadFile(testfile)
+		if err != nil {
+			b.Errorf("failed to read %s: %v", testfile, err)
 
-			runner := driver.NewPassRunner()
-			driver.AddPassesUntil(runner, nameresolve.NewResolver())
+			return
+		}
 
-			nodes, err := runner.RunSource(testfile, string(source))
+		runner := driver.NewPassRunner()
+		driver.AddPassesUntil(runner, nameresolve.NewResolver())
+
+		nodes, err := runner.RunSource(testfile, string(source))
+		if err != nil {
+			b.Errorf("%s returned error: %v", testfile, err)
+
+			return
+		}
+
+		var code vm.Code
+		for _, node := range nodes {
+			var err error
+			code, err = vm.Compile(node, code)
 			if err != nil {
 				b.Errorf("%s returned error: %v", testfile, err)
-
-				return
 			}
+		}
 
-			var code vm.Code
-			for _, node := range nodes {
-				var err error
-				code, err = vm.Compile(node, code)
-				if err != nil {
-					b.Errorf("%s returned error: %v", testfile, err)
-				}
-			}
+		codes[i] = struct {
+			filename string
+			code     vm.Code
+		}{
+			filename: testfile,
+			code:     code,
+		}
+	}
+
+	b.ResetTimer() // reset timer after compiling
+
+	for range b.N {
+		for _, test := range codes {
+			testfile := test.filename
+			code := test.code
+			b.Logf("testfile: %s", testfile)
 
 			machine := vm.NewMachine(code)
 			machine.Stdout = io.Discard
@@ -63,16 +84,9 @@ func BenchmarkExecute(b *testing.B) {
 				b.Errorf("%s returned error: %v", testfile, err)
 			}
 
-			top := token.Token{
-				Kind:   token.IDENT,
-				Lexeme: "toplevel",
-				//nolint:exhaustruct
-				Location: token.Location{},
-				Literal:  -1,
-			}
 			if main, ok := vm.SearchMain(machine.Env); ok {
-				machine.Code = machine.Code.Push(vm.Apply{Token: top})
-				machine.Code = machine.Code.Push(vm.MkTuple{Token: top, Count: 0})
+				machine.Code = machine.Code.Push(vm.Apply{Token: token.Dummy()})
+				machine.Code = machine.Code.Push(vm.MkTuple{Token: token.Dummy(), Count: 0})
 				machine.Code = machine.Code.Push(vm.Push{Value: main})
 				err = machine.Run()
 
@@ -133,16 +147,9 @@ func TestExecute(t *testing.T) {
 			t.Errorf("%s returned error: %v", testfile, err)
 		}
 
-		top := token.Token{
-			Kind:   token.IDENT,
-			Lexeme: "toplevel",
-			//nolint:exhaustruct
-			Location: token.Location{},
-			Literal:  -1,
-		}
 		if main, ok := vm.SearchMain(machine.Env); ok {
-			machine.Code = machine.Code.Push(vm.Apply{Token: top})
-			machine.Code = machine.Code.Push(vm.MkTuple{Token: top, Count: 0})
+			machine.Code = machine.Code.Push(vm.Apply{Token: token.Dummy()})
+			machine.Code = machine.Code.Push(vm.MkTuple{Token: token.Dummy(), Count: 0})
 			machine.Code = machine.Code.Push(vm.Push{Value: main})
 			err = machine.Run()
 

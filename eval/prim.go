@@ -81,7 +81,7 @@ func (p *primitiveEvaluator) readAllCPS(args ...Value) (Value, error) {
 		return nil, utils.PosError{Where: p.where, Err: err}
 	}
 
-	result, err := cont.Apply(p.where, String{value: string(bytes)})
+	result, err := cont.Apply(p.where, String{value: string(bytes), trace: Root{}})
 	if err != nil {
 		return nil, utils.PosError{Where: p.where, Err: err}
 	}

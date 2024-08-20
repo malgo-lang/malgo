@@ -21,7 +21,7 @@ func (v Var) Match(bindings map[Name]Value, value Value) bool {
 	return true
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Pattern = Var{}
 
 type Literal struct {
@@ -47,7 +47,7 @@ func (l Literal) Match(_ map[Name]Value, value Value) bool {
 	return false
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Pattern = Literal{}
 
 type PSymbol struct {
@@ -66,7 +66,7 @@ func (p PSymbol) Match(_ map[Name]Value, value Value) bool {
 	return false
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Pattern = PSymbol{}
 
 type PTuple struct {
@@ -103,7 +103,7 @@ func (p PTuple) Match(bindings map[Name]Value, value Value) bool {
 	return false
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Pattern = PTuple{}
 
 type PCall struct {
@@ -138,7 +138,7 @@ func (p PCall) MatchTrace(bindings map[Name]Value, trace Trace) bool {
 	panic("unreachable")
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Pattern = PCall{}
 
 type PAccess struct {

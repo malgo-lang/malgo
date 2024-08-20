@@ -77,17 +77,19 @@ func (env *evEnv) set(name Name, v Value) {
 
 func (env *evEnv) SearchMain() (Function, bool) {
 	if env == nil {
+		//exhaustruct:ignore
 		return Function{}, false
 	}
 
 	for name, v := range env.values {
 		if strings.HasPrefix(string(name), "main.") {
-			f, ok := v.(Function)
+			mainFunc, ok := v.(Function)
 			if !ok {
+				//exhaustruct:ignore
 				return Function{}, false
 			}
 
-			return f, true
+			return mainFunc, true
 		}
 	}
 

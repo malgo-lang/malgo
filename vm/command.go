@@ -31,7 +31,7 @@ func (cmd Push) NestedString(level int) string {
 	return fmt.Sprintf("%v%v", indent(level), cmd.Value)
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Push{}
 
 // Get gets a value from the environment and pushes it onto the stack.
@@ -67,7 +67,7 @@ func (cmd Get) NestedString(level int) string {
 	return fmt.Sprintf("%vget %v", indent(level), cmd.Name.Value())
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Get{}
 
 type MkTuple struct {
@@ -157,7 +157,7 @@ func (cmd Select) NestedString(level int) string {
 	return builder.String()
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Select{}
 
 type Branch struct {
@@ -213,7 +213,7 @@ func (cmd Join) NestedString(level int) string {
 	return fmt.Sprintf("%vjoin", indent(level))
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Join{}
 
 // Lambda creates a new (recursive) closure and pushes it onto the stack.
@@ -247,7 +247,7 @@ func (cmd Lambda) NestedString(level int) string {
 	return builder.String()
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Lambda{}
 
 type Return struct {
@@ -284,7 +284,7 @@ func (cmd Return) NestedString(level int) string {
 	return fmt.Sprintf("%vret", indent(level))
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Return{}
 
 type Object struct {
@@ -330,7 +330,7 @@ func (cmd Object) NestedString(level int) string {
 	return builder.String()
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Object{}
 
 // Apply applies a closure to the top value of the stack.
@@ -384,7 +384,7 @@ func (cmd Apply) NestedString(level int) string {
 	return fmt.Sprintf("%vapply", indent(level))
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Apply{}
 
 type Primitive struct {
@@ -404,7 +404,7 @@ func (cmd Primitive) NestedString(level int) string {
 	return fmt.Sprintf("%vprim %v", indent(level), cmd.Name.Value())
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Primitive{}
 
 // Proj projects a field from a record.
@@ -468,7 +468,7 @@ func (cmd Proj) NestedString(level int) string {
 	return fmt.Sprintf("%vproj %v", indent(level), cmd.Field.Value())
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Proj{}
 
 // Assign assigns the top value of the stack to a variable in the environment.
@@ -505,7 +505,7 @@ func (cmd Assign) NestedString(level int) string {
 	return fmt.Sprintf("%vset %v", indent(level), cmd.Bind)
 }
 
-//nolint:exhaustruct
+//exhaustruct:ignore
 var _ Command = Assign{}
 
 func indent(level int) string {

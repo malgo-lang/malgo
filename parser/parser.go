@@ -25,7 +25,7 @@ func NewParser(lex *scanner.Scanner) (*Parser, error) {
 		return nil, fmt.Errorf("lexing error: %w", err)
 	}
 
-	return &Parser{lex, current, token.Token{}}, nil
+	return &Parser{lex, current, token.Dummy()}, nil
 }
 
 func (p *Parser) ParseExpr() (ast.Node, error) {
@@ -291,7 +291,7 @@ func (p *Parser) atom() (ast.Node, error) {
 			return nil, err
 		}
 
-		return &ast.Tuple{Exprs: exprs}, nil
+		return &ast.Tuple{Where: tok, Exprs: exprs}, nil
 	case token.LEFTBRACE:
 		return p.codata()
 	case token.PRIM:
@@ -657,7 +657,7 @@ func (p *Parser) atomPat() (ast.Node, error) {
 			return nil, err
 		}
 
-		return &ast.Tuple{Exprs: pats}, nil
+		return &ast.Tuple{Where: tok, Exprs: pats}, nil
 	default:
 		return nil, unexpectedToken(
 			tok,

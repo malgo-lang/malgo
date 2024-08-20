@@ -66,6 +66,21 @@ func (t Token) Base() Token {
 	return t
 }
 
+// Dummy returns a special token for internal use.
+// This token is used to represent the toplevel of the program.
+func Dummy() Token {
+	return Token{
+		Kind:   IDENT,
+		Lexeme: "toplevel",
+		Location: Location{
+			FilePath: "",
+			Line:     0,
+			Column:   0,
+		},
+		Literal: -1,
+	}
+}
+
 type Location struct {
 	FilePath string
 	Line     int

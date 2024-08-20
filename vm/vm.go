@@ -105,7 +105,7 @@ func Lookup(env Env, name Name) (Value, bool) {
 }
 
 func Extend(env Env) Env {
-	return env.Push(map[Name]Value{})
+	return env.Push(make(map[Name]Value))
 }
 
 func Bind(env Env, name Name, value Value) {

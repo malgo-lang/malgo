@@ -58,14 +58,7 @@ func BenchmarkTestdata(b *testing.B) {
 			}
 
 			if main, ok := evaluator.SearchMain(); ok {
-				top := token.Token{
-					Kind:   token.IDENT,
-					Lexeme: "toplevel",
-					//nolint:exhaustruct
-					Location: token.Location{},
-					Literal:  -1,
-				}
-				_, err := main.Apply(top, eval.Unit())
+				_, err := main.Apply(token.Dummy(), eval.Unit())
 
 				var exitErr eval.ExitError
 
@@ -124,8 +117,7 @@ func TestGolden(t *testing.T) {
 		}
 
 		if main, ok := evaluator.SearchMain(); ok {
-			top := token.Token{Kind: token.IDENT, Lexeme: "toplevel", Location: token.Location{}, Literal: -1}
-			ret, err := main.Apply(top, eval.Unit())
+			ret, err := main.Apply(token.Dummy(), eval.Unit())
 			var exitErr eval.ExitError
 			if errors.As(err, &exitErr) {
 				fmt.Fprintf(&builder, "exit => %d\n", exitErr.Code)

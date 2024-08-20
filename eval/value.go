@@ -98,6 +98,7 @@ func (t Tuple) WithTrace(trace Trace) Value {
 	return Tuple{values: t.values, trace: NewLog(trace, t)}
 }
 
+//exhaustruct:ignore
 var _ Value = Tuple{}
 
 type Int struct {
@@ -135,6 +136,7 @@ func (i Int) WithTrace(trace Trace) Value {
 	return Int{value: i.value, trace: NewLog(trace, i)}
 }
 
+//exhaustruct:ignore
 var _ Value = Int{}
 
 type String struct {
@@ -167,6 +169,7 @@ func (s String) WithTrace(trace Trace) Value {
 	return String{value: s.value, trace: NewLog(trace, s)}
 }
 
+//exhaustruct:ignore
 var _ Value = String{}
 
 type Symbol struct {
@@ -241,6 +244,7 @@ func (s Symbol) Apply(_ token.Token, args ...Value) (Value, error) {
 	return Symbol{Name: s.Name, Values: append(s.Values, args...), trace: Call{Func: s, Args: args}}, nil
 }
 
+//exhaustruct:ignore
 var (
 	_ Value    = Symbol{}
 	_ Callable = Symbol{}
@@ -308,6 +312,7 @@ func (f Function) WithTrace(trace Trace) Value {
 	return Function{Evaluator: f.Evaluator, Params: f.Params, Body: f.Body, trace: NewLog(trace, f)}
 }
 
+//exhaustruct:ignore
 var (
 	_ Value    = Function{}
 	_ Callable = Function{}
@@ -360,6 +365,7 @@ func runThunk(value Value) (Value, error) {
 	}
 }
 
+//exhaustruct:ignore
 var _ Value = Thunk{}
 
 // Object represents an object value.
@@ -403,6 +409,7 @@ func (o Object) WithTrace(trace Trace) Value {
 	return Object{Fields: o.Fields, trace: NewLog(trace, o)}
 }
 
+//exhaustruct:ignore
 var _ Value = Object{}
 
 type Trace interface {
@@ -499,6 +506,7 @@ func (v Var) MatchTrace(_ ast.Node) (map[Name]Value, bool) {
 	return nil, false
 }
 
+//exhaustruct:ignore
 var _ Trace = Var{}
 
 type Call struct {
