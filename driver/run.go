@@ -4,14 +4,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/takoeight0821/malgo/ast"
-	"github.com/takoeight0821/malgo/codata"
-	"github.com/takoeight0821/malgo/desugarcurry"
-	"github.com/takoeight0821/malgo/desugarwith"
-	"github.com/takoeight0821/malgo/infix"
-	"github.com/takoeight0821/malgo/nameresolve"
-	"github.com/takoeight0821/malgo/parser"
-	"github.com/takoeight0821/malgo/scanner"
+	"github.com/malgo-lang/malgo/ast"
+	"github.com/malgo-lang/malgo/codata"
+	"github.com/malgo-lang/malgo/desugarcurry"
+	"github.com/malgo-lang/malgo/desugarwith"
+	"github.com/malgo-lang/malgo/infix"
+	"github.com/malgo-lang/malgo/nameresolve"
+	"github.com/malgo-lang/malgo/parser"
+	"github.com/malgo-lang/malgo/scanner"
 )
 
 type Pass interface {

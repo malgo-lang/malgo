@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/malgo-lang/malgo/scanner"
+	"github.com/malgo-lang/malgo/token"
+	"github.com/malgo-lang/malgo/utils"
 	"github.com/sebdah/goldie/v2"
-	"github.com/takoeight0821/malgo/scanner"
-	"github.com/takoeight0821/malgo/token"
-	"github.com/takoeight0821/malgo/utils"
 )
 
 func TestGolden(t *testing.T) {

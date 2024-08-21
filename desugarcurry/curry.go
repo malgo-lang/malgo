@@ -3,8 +3,8 @@ package desugarcurry
 import (
 	"fmt"
 
-	"github.com/takoeight0821/malgo/ast"
-	"github.com/takoeight0821/malgo/token"
+	"github.com/malgo-lang/malgo/ast"
+	"github.com/malgo-lang/malgo/token"
 )
 
 // DesugarCurry is a pass that rewrite all function calls and lambda expressions to curried form.

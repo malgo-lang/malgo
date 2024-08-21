@@ -9,12 +9,12 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/malgo-lang/malgo/driver"
+	"github.com/malgo-lang/malgo/nameresolve"
+	"github.com/malgo-lang/malgo/token"
+	"github.com/malgo-lang/malgo/utils"
+	"github.com/malgo-lang/malgo/vm"
 	"github.com/sebdah/goldie/v2"
-	"github.com/takoeight0821/malgo/driver"
-	"github.com/takoeight0821/malgo/nameresolve"
-	"github.com/takoeight0821/malgo/token"
-	"github.com/takoeight0821/malgo/utils"
-	"github.com/takoeight0821/malgo/vm"
 )
 
 func BenchmarkExecute(b *testing.B) {

@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 
 	"github.com/adrg/xdg"
+	"github.com/malgo-lang/malgo/driver"
+	"github.com/malgo-lang/malgo/eval"
+	"github.com/malgo-lang/malgo/nameresolve"
+	"github.com/malgo-lang/malgo/token"
 	"github.com/peterh/liner"
-	"github.com/takoeight0821/malgo/driver"
-	"github.com/takoeight0821/malgo/eval"
-	"github.com/takoeight0821/malgo/nameresolve"
-	"github.com/takoeight0821/malgo/token"
 )
 
 func main() {

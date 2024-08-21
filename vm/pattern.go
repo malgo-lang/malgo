@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/takoeight0821/malgo/token"
+	"github.com/malgo-lang/malgo/token"
 )
 
 type Var struct {

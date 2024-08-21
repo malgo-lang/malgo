@@ -12,7 +12,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/takoeight0821/malgo/token"
+	"github.com/malgo-lang/malgo/token"
 )
 
 func IsUpper(s string) bool {

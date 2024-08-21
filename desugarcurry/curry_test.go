@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/malgo-lang/malgo/desugarcurry"
+	"github.com/malgo-lang/malgo/driver"
+	"github.com/malgo-lang/malgo/utils"
 	"github.com/sebdah/goldie/v2"
-	"github.com/takoeight0821/malgo/desugarcurry"
-	"github.com/takoeight0821/malgo/driver"
-	"github.com/takoeight0821/malgo/utils"
 )
 
 func TestGolden(t *testing.T) {

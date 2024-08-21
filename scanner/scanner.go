@@ -5,8 +5,8 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/takoeight0821/malgo/token"
-	"github.com/takoeight0821/malgo/utils"
+	"github.com/malgo-lang/malgo/token"
+	"github.com/malgo-lang/malgo/utils"
 )
 
 type Scanner struct {

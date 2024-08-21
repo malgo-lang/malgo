@@ -3,8 +3,8 @@ package eval
 import (
 	"fmt"
 
-	"github.com/takoeight0821/malgo/ast"
-	"github.com/takoeight0821/malgo/token"
+	"github.com/malgo-lang/malgo/ast"
+	"github.com/malgo-lang/malgo/token"
 )
 
 // UndefinedVariableError is an error that is returned when a variable is not defined.

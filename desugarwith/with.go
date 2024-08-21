@@ -3,7 +3,7 @@ package desugarwith
 import (
 	"fmt"
 
-	"github.com/takoeight0821/malgo/ast"
+	"github.com/malgo-lang/malgo/ast"
 )
 
 type DesugarWith struct{}

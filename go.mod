@@ -1,4 +1,4 @@
-module github.com/takoeight0821/malgo
+module github.com/malgo-lang/malgo
 
 go 1.23.0
 
@@ -20,6 +20,4 @@ require (
 	golang.org/x/sys v0.13.0 // indirect
 )
 
-godebug (
-	gotypesalias=1
-)
+godebug gotypesalias=1

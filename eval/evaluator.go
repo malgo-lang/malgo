@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/takoeight0821/malgo/token"
+	"github.com/malgo-lang/malgo/token"
 )
 
 type Evaluator struct {

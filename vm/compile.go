@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"unique"
 
-	"github.com/takoeight0821/malgo/ast"
-	"github.com/takoeight0821/malgo/token"
+	"github.com/malgo-lang/malgo/ast"
+	"github.com/malgo-lang/malgo/token"
 )
 
 func Compile(node ast.Node, cont Code) (Code, error) {
