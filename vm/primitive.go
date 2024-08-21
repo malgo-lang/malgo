@@ -63,7 +63,7 @@ func primReadAllCPS(machine *Machine, where token.Token) error {
 		return utils.PosError{Where: where, Err: err}
 	}
 
-	machine.Stack = machine.Stack.Push(String{value: string(bytes), trace: Root{}})
+	machine.Stack = machine.Stack.Push(NewString(string(bytes)))
 	machine.Code = machine.Code.Push(Apply{Token: where})
 
 	return nil
@@ -76,7 +76,7 @@ func primPrint(machine *Machine, _ token.Token) error {
 
 	fmt.Fprintf(machine.Stdout, "%v\n", arg)
 
-	machine.Stack = machine.Stack.Push(Tuple{fields: make([]Value, 0), trace: Root{}})
+	machine.Stack = machine.Stack.Push(NewTuple(make([]Value, 0)))
 
 	return nil
 }
@@ -88,7 +88,7 @@ func primPrintTrace(machine *Machine, _ token.Token) error {
 
 	arg.Trace().Print(machine.Stdout, 0)
 
-	machine.Stack = machine.Stack.Push(Tuple{fields: make([]Value, 0), trace: Root{}})
+	machine.Stack = machine.Stack.Push(NewTuple(make([]Value, 0)))
 
 	return nil
 }
@@ -101,7 +101,7 @@ func primMul(machine *Machine, where token.Token) error {
 
 	if arg1, ok := arg1.(Int); ok {
 		if arg2, ok := arg2.(Int); ok {
-			machine.Stack = machine.Stack.Push(Int{value: arg1.value * arg2.value, trace: Root{}})
+			machine.Stack = machine.Stack.Push(NewInt(arg1.value * arg2.value))
 
 			return nil
 		}
@@ -118,7 +118,7 @@ func primAdd(machine *Machine, where token.Token) error {
 
 	if arg1, ok := arg1.(Int); ok {
 		if arg2, ok := arg2.(Int); ok {
-			machine.Stack = machine.Stack.Push(Int{value: arg1.value + arg2.value, trace: Root{}})
+			machine.Stack = machine.Stack.Push(NewInt(arg1.value + arg2.value))
 
 			return nil
 		}
@@ -135,7 +135,7 @@ func primSub(machine *Machine, where token.Token) error {
 
 	if arg1, ok := arg1.(Int); ok {
 		if arg2, ok := arg2.(Int); ok {
-			machine.Stack = machine.Stack.Push(Int{value: arg1.value - arg2.value, trace: Root{}})
+			machine.Stack = machine.Stack.Push(NewInt(arg1.value - arg2.value))
 
 			return nil
 		}
@@ -153,9 +153,9 @@ func primLessEqual(machine *Machine, where token.Token) error {
 	if arg1, ok := arg1.(Int); ok {
 		if arg2, ok := arg2.(Int); ok {
 			if arg1.value <= arg2.value {
-				machine.Stack = machine.Stack.Push(Int{value: 1, trace: Root{}})
+				machine.Stack = machine.Stack.Push(NewInt(1))
 			} else {
-				machine.Stack = machine.Stack.Push(Int{value: 0, trace: Root{}})
+				machine.Stack = machine.Stack.Push(NewInt(0))
 			}
 
 			return nil

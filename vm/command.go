@@ -82,7 +82,7 @@ func (cmd MkTuple) Execute(machine *Machine) error {
 		fields[i], machine.Stack = value, stack
 	}
 
-	machine.Stack = machine.Stack.Push(Tuple{fields: fields, trace: Root{}})
+	machine.Stack = machine.Stack.Push(NewTuple(fields))
 
 	return nil
 }
@@ -224,7 +224,7 @@ type Lambda struct {
 }
 
 func (cmd Lambda) Execute(m *Machine) error {
-	m.Stack = m.Stack.Push(Closure{Param: cmd.Param, Env: m.Env, Code: cmd.Code, trace: Root{}})
+	m.Stack = m.Stack.Push(NewClosure(cmd.Param, m.Env, cmd.Code))
 
 	return nil
 }
@@ -293,7 +293,7 @@ type Object struct {
 }
 
 func (cmd Object) Execute(m *Machine) error {
-	m.Stack = m.Stack.Push(Record{Env: m.Env, Fields: cmd.Fields, trace: Root{}})
+	m.Stack = m.Stack.Push(NewRecord(m.Env, cmd.Fields))
 
 	return nil
 }
