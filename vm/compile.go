@@ -19,7 +19,7 @@ func Compile(node ast.Node, cont Code) (Code, error) {
 	case *ast.Symbol:
 		name := tokenToName(node.Name)
 
-		return cons(Push{token: node.Base(), Value: Symbol{name: name, trace: Root{}}}, cont), nil
+		return cons(Push{token: node.Base(), Value: NewSymbol(name)}, cont), nil
 	case *ast.Tuple:
 		return compileTuple(node, cont)
 	case *ast.Access:
@@ -54,13 +54,13 @@ func compileLiteral(node *ast.Literal, cont Code) Code {
 		if value, ok := node.Literal.(int); !ok {
 			panic(fmt.Sprintf("compileLiteral: %s", node))
 		} else {
-			return cons(Push{token: node.Base(), Value: Int{value: value, trace: Root{}}}, cont)
+			return cons(Push{token: node.Base(), Value: NewInt(value)}, cont)
 		}
 	case token.STRING:
 		if value, ok := node.Literal.(string); !ok {
 			panic(fmt.Sprintf("compileLiteral: %s", node))
 		} else {
-			return cons(Push{token: node.Base(), Value: String{value: value, trace: Root{}}}, cont)
+			return cons(Push{token: node.Base(), Value: NewString(value)}, cont)
 		}
 	}
 

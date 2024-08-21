@@ -13,6 +13,10 @@ type Int struct {
 	trace Trace
 }
 
+func NewInt(value int) Int {
+	return Int{value: value, trace: Root{}}
+}
+
 func (i Int) String() string {
 	return strconv.Itoa(i.value)
 }
@@ -33,6 +37,10 @@ var _ Value = Int{}
 type String struct {
 	value string
 	trace Trace
+}
+
+func NewString(value string) String {
+	return String{value: value, trace: Root{}}
 }
 
 func (s String) String() string {
@@ -57,6 +65,10 @@ type Symbol struct {
 	trace Trace
 }
 
+func NewSymbol(name Name) Symbol {
+	return Symbol{name: name, trace: Root{}}
+}
+
 func (s Symbol) String() string {
 	return ":" + s.name.Value()
 }
@@ -77,6 +89,10 @@ var _ Value = Symbol{}
 type Tuple struct {
 	fields []Value
 	trace  Trace
+}
+
+func NewTuple(fields []Value) Tuple {
+	return Tuple{fields: fields, trace: Root{}}
 }
 
 func (t Tuple) String() string {
@@ -116,6 +132,10 @@ type Closure struct {
 	trace Trace
 }
 
+func NewClosure(param Name, env Env, code Code) Closure {
+	return Closure{Param: param, Env: env, Code: code, trace: Root{}}
+}
+
 func (c Closure) String() string {
 	return "λ." + c.Param.Value()
 }
@@ -137,6 +157,10 @@ type Record struct {
 	Env    Env
 	Fields map[Name]Code
 	trace  Trace
+}
+
+func NewRecord(env Env, fields map[Name]Code) Record {
+	return Record{Env: env, Fields: fields, trace: Root{}}
 }
 
 func (r Record) String() string {
@@ -171,3 +195,6 @@ func (r Record) WithTrace(trace Trace) Value {
 
 	return r
 }
+
+//exhaustruct:ignore
+var _ Value = Record{}
