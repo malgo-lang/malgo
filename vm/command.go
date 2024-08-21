@@ -110,11 +110,9 @@ func (cmd Select) Execute(machine *Machine) error {
 	}
 
 	for _, branch := range cmd.Branches {
-		bindings := make(map[Name]Value)
-
 		isMatch := true
 		for i, pat := range branch.Pattern {
-			if !pat.Match(bindings, values[i]) {
+			if !pat.Match(machine.Env.Head, values[i]) {
 				isMatch = false
 
 				break
@@ -123,7 +121,6 @@ func (cmd Select) Execute(machine *Machine) error {
 
 		if isMatch {
 			machine.Dump = machine.Dump.Push(Dump{Env: machine.Env, Code: machine.Code, Trace: nil})
-			machine.Env = &Stack[map[Name]Value]{Head: bindings, Tail: machine.Env}
 			machine.Code = branch.Code
 
 			return nil
