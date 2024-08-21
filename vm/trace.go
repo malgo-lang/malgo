@@ -11,6 +11,10 @@ func (r Root) Print(w io.Writer, level int) {
 	fmt.Fprintf(w, "%vroot\n", indent(level))
 }
 
+func (r Root) Wrap(_ Trace) Trace {
+	panic("Root cannot wrap anything")
+}
+
 var _ Trace = Root{}
 
 type Call struct {
@@ -28,6 +32,14 @@ func (c Call) Print(w io.Writer, level int) {
 	c.trace.Print(w, level)
 }
 
+func (c Call) Wrap(old Trace) Trace {
+	return Call{
+		fun:   c.fun,
+		arg:   c.arg,
+		trace: old,
+	}
+}
+
 type Access struct {
 	receiver Value
 	name     Name
@@ -39,4 +51,12 @@ func (a Access) Print(w io.Writer, level int) {
 	fmt.Fprintf(w, "%vreceiver:\n", indent(level))
 	a.receiver.Trace().Print(w, level+1)
 	a.trace.Print(w, level)
+}
+
+func (a Access) Wrap(old Trace) Trace {
+	return Access{
+		receiver: a.receiver,
+		name:     a.name,
+		trace:    old,
+	}
 }

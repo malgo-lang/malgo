@@ -261,17 +261,7 @@ func (cmd Return) Execute(machine *Machine) error {
 	machine.Env = dump.Env
 	machine.Code = dump.Code
 
-	switch trace := dump.Trace.(type) {
-	case Root:
-	case Call:
-		trace.trace = machine.Stack.Head.Trace()
-		machine.Stack.Head = machine.Stack.Head.WithTrace(trace)
-	case Access:
-		trace.trace = machine.Stack.Head.Trace()
-		machine.Stack.Head = machine.Stack.Head.WithTrace(trace)
-	default:
-		panic(fmt.Sprintf("unknown trace: %T", trace))
-	}
+	machine.Stack.Head = machine.Stack.Head.WithTrace(dump.Trace.Wrap(machine.Stack.Head.Trace()))
 
 	return nil
 }

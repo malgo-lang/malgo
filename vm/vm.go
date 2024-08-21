@@ -151,6 +151,7 @@ type Pattern interface {
 
 type Trace interface {
 	Print(w io.Writer, level int)
+	Wrap(old Trace) Trace
 }
 
 func Render(trace Trace) string {
