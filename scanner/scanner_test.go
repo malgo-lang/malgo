@@ -2,6 +2,7 @@ package scanner_test
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"testing"
@@ -31,11 +32,12 @@ func TestGolden(t *testing.T) {
 			return
 		}
 
-		lex := scanner.NewScanner(testfile, string(source))
+		tokens := scanner.Scan(testfile, string(source))
+
 		var builder strings.Builder
 
-		for {
-			tok, err := lex.Next()
+		for tok, err := range tokens {
+			log.Printf("DEBUG: %v", tok)
 			if err != nil {
 				t.Errorf("%s returned error: %v", testfile, err)
 

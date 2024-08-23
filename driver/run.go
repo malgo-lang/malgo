@@ -69,8 +69,8 @@ func (r *PassRunner) Run(program []ast.Node) ([]ast.Node, error) {
 
 // RunSource parses the source code and executes passes in order.
 func (r *PassRunner) RunSource(filePath, source string) ([]ast.Node, error) {
-	lex := scanner.NewScanner(filePath, source)
-	parser, err := parser.NewParser(lex)
+	tokens := scanner.Scan(filePath, source)
+	parser, err := parser.NewParser(tokens)
 	if err != nil {
 		return nil, fmt.Errorf("parse: %w", err)
 	}

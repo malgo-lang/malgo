@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"iter"
 	"strconv"
 	"unicode"
 	"unicode/utf8"
@@ -9,7 +10,19 @@ import (
 	"github.com/malgo-lang/malgo/utils"
 )
 
-type Scanner struct {
+func Scan(name, input string) iter.Seq2[token.Token, error] {
+	return func(yield func(token.Token, error) bool) {
+		scanner := newScanner(name, input, yield)
+		isContinue := true
+		for lex := lexCode; lex != nil; lex, isContinue = lex(scanner) {
+			if !isContinue {
+				break
+			}
+		}
+	}
+}
+
+type scanner struct {
 	name    string // name of the source file
 	input   string // source code
 	start   int    // start of current lexeme
@@ -17,13 +30,13 @@ type Scanner struct {
 
 	line   int // current line number
 	column int // current column number
-	tokens chan token.Token
+	yield  func(token.Token, error) bool
 
 	state stateFn
 }
 
-func NewScanner(name, input string) *Scanner {
-	scanner := &Scanner{
+func newScanner(name, input string, yield func(token.Token, error) bool) *scanner {
+	scanner := &scanner{
 		name:    name,
 		input:   input,
 		start:   0,
@@ -31,7 +44,7 @@ func NewScanner(name, input string) *Scanner {
 
 		line:   1,
 		column: 1,
-		tokens: make(chan token.Token, 1),
+		yield:  yield,
 
 		state: lexCode,
 	}
@@ -39,51 +52,44 @@ func NewScanner(name, input string) *Scanner {
 	return scanner
 }
 
-func (scanner *Scanner) Next() (token.Token, error) {
-	for {
-		select {
-		// If there is a token in the channel, return it.
-		case tok := <-scanner.tokens:
-			// If the token is an error, return it as an error.
-			if tok.Kind == token.ERROR {
-				err, ok := tok.Literal.(error)
-				if !ok {
-					panic("invalid error type")
-				}
-
-				return tok, err
-			}
-
-			return tok, nil
-		// If the channel is empty, call the state function to get the next token.
-		default:
-			scanner.state = scanner.state(scanner)
-		}
-	}
-}
-
 // stateFn represents the state of the scanner as a function.
-type stateFn func(*Scanner) stateFn
+type stateFn func(*scanner) (stateFn, bool)
 
 // emit creates a new token and sends it to the channel.
-func (scanner *Scanner) emit(loc token.Location, kind token.Kind, literal any) {
-	scanner.tokens <- token.Token{
+// It returns false if scanner.yield returns false (break the loop).
+func (scanner *scanner) emit(loc token.Location, kind token.Kind, literal any) bool {
+	if kind == token.ERROR {
+		if err, ok := literal.(error); ok {
+			return scanner.yield(
+				//exhaustruct:ignore
+				token.Token{},
+				err)
+		}
+
+		panic("literal must be an error")
+	}
+
+	if !scanner.yield(token.Token{
 		Kind:     kind,
 		Lexeme:   scanner.input[scanner.start:scanner.current],
 		Location: loc,
 		Literal:  literal,
+	}, nil) {
+		return false
 	}
 
 	scanner.start = scanner.current
+
+	return true
 }
 
 // ignore skips the current lexeme.
-func (scanner *Scanner) ignore() {
+func (scanner *scanner) ignore() {
 	scanner.start = scanner.current
 }
 
 // location returns the current location.
-func (scanner *Scanner) location() token.Location {
+func (scanner *scanner) location() token.Location {
 	return token.Location{
 		FilePath: scanner.name,
 		Line:     scanner.line,
@@ -91,11 +97,11 @@ func (scanner *Scanner) location() token.Location {
 	}
 }
 
-func (scanner *Scanner) isAtEnd() bool {
+func (scanner *scanner) isAtEnd() bool {
 	return scanner.current >= len(scanner.input)
 }
 
-func (scanner *Scanner) peek() rune {
+func (scanner *scanner) peek() rune {
 	if scanner.isAtEnd() {
 		return '\x00'
 	}
@@ -105,7 +111,7 @@ func (scanner *Scanner) peek() rune {
 	return runeValue
 }
 
-func (scanner *Scanner) advance() rune {
+func (scanner *scanner) advance() rune {
 	runeValue, width := utf8.DecodeRuneInString(scanner.input[scanner.current:])
 
 	scanner.current += width
@@ -120,7 +126,7 @@ func (scanner *Scanner) advance() rune {
 }
 
 // lexCode scans the source code.
-func lexCode(scanner *Scanner) stateFn {
+func lexCode(scanner *scanner) (stateFn, bool) {
 	// When current character is ':', it needs to check if it is a symbol or not by looking at the next character.
 	// So we also need to keep current location for the current character.
 	loc := scanner.location()
@@ -131,51 +137,46 @@ func lexCode(scanner *Scanner) stateFn {
 		scanner.advance()
 		scanner.ignore()
 
-		return lexCode
+		return lexCode, true
 	case '/':
-		return lexComment
+		return lexComment, true
 	case '"':
-		return lexString
+		return lexString, true
 	default:
 		if char == ':' {
 			scanner.advance()
 
 			if isAlpha(scanner.peek()) {
-				return lexSymbol(loc)
+				return lexSymbol(loc), true
 			}
 		}
 		if k, ok := getReservedSymbol(char); ok {
 			scanner.advance()
-			scanner.emit(loc, k, nil)
 
-			return lexCode
+			return lexCode, scanner.emit(loc, k, nil)
 		}
 
 		if isDigit(char) {
-			return lexNumber
+			return lexNumber, true
 		}
 		if isAlpha(char) {
-			return lexIdentifier
+			return lexIdentifier, true
 		}
 		if isSymbol(char) {
-			return lexOperator
+			return lexOperator, true
 		}
 	}
 
 	if !scanner.isAtEnd() {
-		scanner.emit(loc, token.ERROR, UnexpectedCharacterError{Location: loc, Char: char})
-
-		return nil
+		return nil, scanner.emit(loc, token.ERROR, UnexpectedCharacterError{Location: loc, Char: char})
 	}
 
-	scanner.emit(loc, token.EOF, nil)
-
-	return nil
+	return nil, scanner.emit(loc, token.EOF, nil)
 }
 
 // lexComment scans the comment and ignores it.
 // If it isn't a comment, it emits the operator token.
-func lexComment(scanner *Scanner) stateFn {
+func lexComment(scanner *scanner) (stateFn, bool) {
 	// keep the location of '/'
 	loc := scanner.location()
 	scanner.advance()
@@ -186,7 +187,7 @@ func lexComment(scanner *Scanner) stateFn {
 		}
 		scanner.ignore()
 
-		return lexCode
+		return lexCode, true
 	}
 
 	if scanner.peek() == '*' {
@@ -199,18 +200,16 @@ func lexComment(scanner *Scanner) stateFn {
 				scanner.advance()
 				scanner.ignore()
 
-				return lexCode
+				return lexCode, true
 			}
 		}
 	}
 
-	scanner.emit(loc, token.OPERATOR, nil)
-
-	return lexCode
+	return lexCode, scanner.emit(loc, token.OPERATOR, nil)
 }
 
 // lexString scans the string literal.
-func lexString(scanner *Scanner) stateFn {
+func lexString(scanner *scanner) (stateFn, bool) {
 	loc := scanner.location()
 	scanner.advance()
 
@@ -218,49 +217,40 @@ func lexString(scanner *Scanner) stateFn {
 		if scanner.peek() == '\\' {
 			scanner.advance()
 			if scanner.isAtEnd() {
-				scanner.emit(loc, token.ERROR, UnterminatedStringError{Location: loc})
-
-				return nil
+				return nil, scanner.emit(loc, token.ERROR, UnterminatedStringError{Location: loc})
 			}
 		}
 		scanner.advance()
 	}
 
 	if scanner.isAtEnd() {
-		scanner.emit(loc, token.ERROR, UnterminatedStringError{Location: loc})
-
-		return nil
+		return nil, scanner.emit(loc, token.ERROR, UnterminatedStringError{Location: loc})
 	}
 
 	if scanner.advance() != '"' {
-		scanner.emit(loc, token.ERROR, UnterminatedStringError{Location: loc})
-
-		return nil
+		return nil, scanner.emit(loc, token.ERROR, UnterminatedStringError{Location: loc})
 	}
 
 	value := scanner.input[scanner.start+1 : scanner.current-1]
-	scanner.emit(loc, token.STRING, value)
 
-	return lexCode
+	return lexCode, scanner.emit(loc, token.STRING, value)
 }
 
 // lexSymbol scans the symbol.
 // The location is given as an argument because the first character of the symbol ':' is already consumed.
-func lexSymbol(loc token.Location) func(scanner *Scanner) stateFn {
-	return func(scanner *Scanner) stateFn {
+func lexSymbol(loc token.Location) func(scanner *scanner) (stateFn, bool) {
+	return func(scanner *scanner) (stateFn, bool) {
 		scanner.start = scanner.current
 		for isAlpha(scanner.peek()) || isDigit(scanner.peek()) {
 			scanner.advance()
 		}
 
-		scanner.emit(loc, token.SYMBOL, nil)
-
-		return lexCode
+		return lexCode, scanner.emit(loc, token.SYMBOL, nil)
 	}
 }
 
 // lexNumber scans the number literal.
-func lexNumber(scanner *Scanner) stateFn {
+func lexNumber(scanner *scanner) (stateFn, bool) {
 	loc := scanner.location()
 	for isDigit(scanner.peek()) {
 		scanner.advance()
@@ -268,20 +258,17 @@ func lexNumber(scanner *Scanner) stateFn {
 
 	value, err := strconv.Atoi(scanner.input[scanner.start:scanner.current])
 	if err != nil {
-		scanner.emit(loc, token.ERROR, err)
-
-		return nil
+		return nil, scanner.emit(loc, token.ERROR, err)
 	}
-	scanner.emit(loc, token.INTEGER, value)
 
-	return lexCode
+	return lexCode, scanner.emit(loc, token.INTEGER, value)
 }
 
 // lexIdentifier scans the identifier.
 // If the identifier is a keyword, it emits the keyword token.
 // If the identifier is an upper case, it emits the SYMBOL token.
 // Otherwise, it emits the IDENT token.
-func lexIdentifier(scanner *Scanner) stateFn {
+func lexIdentifier(scanner *scanner) (stateFn, bool) {
 	loc := scanner.location()
 	for isAlpha(scanner.peek()) || isDigit(scanner.peek()) {
 		scanner.advance()
@@ -290,20 +277,18 @@ func lexIdentifier(scanner *Scanner) stateFn {
 	value := scanner.input[scanner.start:scanner.current]
 
 	if kind, ok := getKeyword(value); ok {
-		scanner.emit(loc, kind, nil)
+		return lexCode, scanner.emit(loc, kind, nil)
 	} else if utils.IsUpper(value) {
-		scanner.emit(loc, token.SYMBOL, nil)
-	} else {
-		scanner.emit(loc, token.IDENT, nil)
+		return lexCode, scanner.emit(loc, token.SYMBOL, nil)
 	}
 
-	return lexCode
+	return lexCode, scanner.emit(loc, token.IDENT, nil)
 }
 
 // lexOperator scans the operator.
 // If the operator is a keyword, it emits the keyword token.
 // Otherwise, it emits the OPERATOR token.
-func lexOperator(scanner *Scanner) stateFn {
+func lexOperator(scanner *scanner) (stateFn, bool) {
 	loc := scanner.location()
 	for isSymbol(scanner.peek()) {
 		scanner.advance()
@@ -311,12 +296,10 @@ func lexOperator(scanner *Scanner) stateFn {
 
 	value := scanner.input[scanner.start:scanner.current]
 	if kind, ok := getKeyword(value); ok {
-		scanner.emit(loc, kind, nil)
-	} else {
-		scanner.emit(loc, token.OPERATOR, nil)
+		return lexCode, scanner.emit(loc, kind, nil)
 	}
 
-	return lexCode
+	return lexCode, scanner.emit(loc, token.OPERATOR, nil)
 }
 
 // getKeyword returns the keyword token kind.
