@@ -1,17 +1,17 @@
-def if = {
+def if {
   #(0).then(t).else(e) -> e(),
   #(_).then(t).else(e) -> t(),
 }
 
-def le = {
+def le {
   #(x, y) -> prim(less_equal, x, y)
 }
 
-def dec = {
+def dec {
   #(x) -> prim(sub, x, 1)
 }
 
-def tarai = {
+def tarai {
   #(x, y, z) ->
     if(le(x, y))
       .then({y})
@@ -24,6 +24,6 @@ def tarai = {
       })
 }
 
-def main = {
+def main {
   prim(print, tarai(10, 5, 0))
 }

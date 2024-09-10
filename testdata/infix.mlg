@@ -1,5 +1,5 @@
 infixl 6 +
 infixl 8 *
-def + = { (x, y) -> prim(add, x, y) }
-def * = { (x, y) -> prim(mul, x, y) }
-def main = { 1 + 2 * 3 }
+def + { (x, y) -> prim(add, x, y) }
+def * { (x, y) -> prim(mul, x, y) }
+def main { 1 + 2 * 3 }

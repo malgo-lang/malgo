@@ -1,16 +1,16 @@
-def option = {
+def option {
   #.none -> "none",
   #.some(x) -> x,
 }
 
-def map = {
+def map {
   #(f, o.none) -> o.none,
   #(f, o.some(x)) -> o.some(f(x)),
 }
 
-def addone = { x -> prim(add, x, 1) }
+def addone { x -> prim(add, x, 1) }
 
-def main = {
+def main {
   let x = map(addone, option.some(41));
   prim(print_trace, x)
 }

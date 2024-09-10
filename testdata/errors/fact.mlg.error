@@ -1,10 +1,10 @@
-def mul = { (x, y) -> prim(mul, x, y) }
-def sub = { x, y -> prim(sub, x, y) }
-def fact = {
+def mul { (x, y) -> prim(mul, x, y) }
+def sub { x, y -> prim(sub, x, y) }
+def fact {
   #(0) -> 1,
   #(n) -> mul(n, fact(sub(n, 1))),
 }
 
-def main = {
+def main {
   prim(print_trace, fact(5))
 }

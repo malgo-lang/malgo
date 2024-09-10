@@ -1,14 +1,14 @@
-def bool = {
+def bool {
   #.false -> 0,
   #.true -> 1,
 }
 
-def flip = {
+def flip {
   #(b.false) -> b.true,
   #(b.true) -> b.false,
 }
 
-def main = {
+def main {
   let x = flip(bool.true);
   prim(print, x);
   prim(print_trace, x)

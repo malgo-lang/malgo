@@ -1,4 +1,4 @@
-def printer = {
+def printer {
   #.print -> { x -> prim(print, x) },
 }
-def main = { printer.print(1) }
+def main { printer.print(1) }

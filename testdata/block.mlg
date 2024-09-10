@@ -1,8 +1,8 @@
-def print = {
+def print {
   #(x)(k) -> prim(print, x); k()
 }
 
-def main = {
+def main {
   prim(print_trace, print(0) {
     with print(1);
     0

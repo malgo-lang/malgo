@@ -1,4 +1,4 @@
-def vendor = {
+def vendor {
     #(items).get -> :None,
     #(:Nil).put.get ->
         prim(print, "Nil case");
@@ -12,6 +12,6 @@ def vendor = {
         vendor(items).put,
 }
 
-def main = {
+def main {
     prim(print, vendor(:Cons(0, :Nil)).put.get)
 }

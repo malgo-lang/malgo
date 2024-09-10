@@ -1,8 +1,8 @@
-def if = {
+def if {
     #(:False).if(t) -> t(),
     #(:True).if -> { #(t) -> t() },
 }
 
-def main = {
+def main {
     if(:True).if({ prim(print, "hello") })
 }

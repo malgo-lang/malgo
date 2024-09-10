@@ -97,7 +97,7 @@ func commaSeparated[T any](
 	return elements, nil
 }
 
-// varDecl = "def" IDENT "=" expr ;
+// varDecl = "def" IDENT expr ;
 func (p *Parser) varDecl() (*ast.VarDecl, error) {
 	if _, err := p.consume(token.DEF); err != nil {
 		return nil, err
@@ -111,10 +111,6 @@ func (p *Parser) varDecl() (*ast.VarDecl, error) {
 		name = p.advance()
 	default:
 		return nil, unexpectedToken(p.peek(), token.IDENT, token.OPERATOR)
-	}
-	_, err = p.consume(token.EQUAL)
-	if err != nil {
-		return nil, err
 	}
 
 	expr, err := p.expr()

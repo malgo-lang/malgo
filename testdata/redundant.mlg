@@ -1,9 +1,9 @@
-def f = {
+def f {
     #(0).h -> 1,
     #(x).h.h -> x,
 }
 
-def main = {
+def main {
     prim(print, f(0).h);
     prim(print, f(1).h.h);
 }
