@@ -27,7 +27,7 @@ func BenchmarkExecute(b *testing.B) {
 
 	codes := make([]struct {
 		filename string
-		code     vm.Code
+		code     *vm.Stack[vm.Command]
 	}, len(testfiles))
 
 	for i, testfile := range testfiles {
@@ -49,7 +49,7 @@ func BenchmarkExecute(b *testing.B) {
 			return
 		}
 
-		var code vm.Code
+		var code *vm.Stack[vm.Command]
 		for _, node := range nodes {
 			var err error
 			code, err = vm.Compile(node, code)
@@ -60,7 +60,7 @@ func BenchmarkExecute(b *testing.B) {
 
 		codes[i] = struct {
 			filename string
-			code     vm.Code
+			code     *vm.Stack[vm.Command]
 		}{
 			filename: testfile,
 			code:     code,
@@ -128,7 +128,7 @@ func TestExecute(t *testing.T) {
 			return
 		}
 
-		var code vm.Code
+		var code *vm.Stack[vm.Command]
 		for _, node := range nodes {
 			var err error
 			code, err = vm.Compile(node, code)

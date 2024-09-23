@@ -160,7 +160,7 @@ var _ Command = Select{}
 type Branch struct {
 	token   token.Token
 	Pattern []Pattern
-	Code    Code
+	Code    *Stack[Command]
 }
 
 func (branch Branch) Where() token.Token {
@@ -217,7 +217,7 @@ var _ Command = Join{}
 type Lambda struct {
 	token token.Token
 	Param Name
-	Code  Code
+	Code  *Stack[Command]
 }
 
 func (cmd Lambda) Execute(m *Machine) error {
@@ -276,7 +276,7 @@ var _ Command = Return{}
 
 type Object struct {
 	token  token.Token
-	Fields map[Name]Code
+	Fields map[Name]*Stack[Command]
 }
 
 func (cmd Object) Execute(m *Machine) error {

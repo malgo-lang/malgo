@@ -14,13 +14,13 @@ import (
 type Machine struct {
 	Stack  *Stack[Value]
 	Env    Env
-	Code   Code
+	Code   *Stack[Command]
 	Dump   *Stack[Dump]
 	Stdout io.Writer
 	Stdin  io.Reader
 }
 
-func NewMachine(code Code) *Machine {
+func NewMachine(code *Stack[Command]) *Machine {
 	return &Machine{
 		Stack:  nil,
 		Env:    NewEnv(),
@@ -126,7 +126,7 @@ func SearchMain(env Env) (Value, bool) {
 
 type Dump struct {
 	Env   Env
-	Code  Code
+	Code  *Stack[Command]
 	Trace Trace
 }
 
@@ -135,8 +135,6 @@ type Value interface {
 	Trace() Trace
 	WithTrace(trace Trace) Value
 }
-
-type Code = *Stack[Command]
 
 type Command interface {
 	Execute(m *Machine) error

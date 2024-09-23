@@ -128,11 +128,11 @@ var _ Value = Tuple{}
 type Closure struct {
 	Param Name
 	Env   Env
-	Code  Code
+	Code  *Stack[Command]
 	trace Trace
 }
 
-func NewClosure(param Name, env Env, code Code) Closure {
+func NewClosure(param Name, env Env, code *Stack[Command]) Closure {
 	return Closure{Param: param, Env: env, Code: code, trace: Root{}}
 }
 
@@ -155,11 +155,11 @@ var _ Value = Closure{}
 
 type Record struct {
 	Env    Env
-	Fields map[Name]Code
+	Fields map[Name]*Stack[Command]
 	trace  Trace
 }
 
-func NewRecord(env Env, fields map[Name]Code) Record {
+func NewRecord(env Env, fields map[Name]*Stack[Command]) Record {
 	return Record{Env: env, Fields: fields, trace: Root{}}
 }
 

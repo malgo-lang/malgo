@@ -8,7 +8,7 @@ import (
 	"github.com/malgo-lang/malgo/token"
 )
 
-func Compile(node ast.Node, cont Code) (Code, error) {
+func Compile(node ast.Node, cont *Stack[Command]) (*Stack[Command], error) {
 	switch node := node.(type) {
 	case *ast.Var:
 		name := tokenToName(node.Name)
@@ -47,7 +47,7 @@ func Compile(node ast.Node, cont Code) (Code, error) {
 	panic(fmt.Sprintf("Compile: %T", node))
 }
 
-func compileLiteral(node *ast.Literal, cont Code) Code {
+func compileLiteral(node *ast.Literal, cont *Stack[Command]) *Stack[Command] {
 	//exhaustive:ignore
 	switch node.Kind {
 	case token.INTEGER:
@@ -67,7 +67,7 @@ func compileLiteral(node *ast.Literal, cont Code) Code {
 	panic(fmt.Sprintf("compileLiteral: %s", node))
 }
 
-func compileTuple(node *ast.Tuple, cont Code) (Code, error) {
+func compileTuple(node *ast.Tuple, cont *Stack[Command]) (*Stack[Command], error) {
 	cont = cons(MkTuple{Token: node.Base(), Count: len(node.Exprs)}, cont)
 	for i := len(node.Exprs) - 1; i >= 0; i-- {
 		var err error
@@ -80,13 +80,13 @@ func compileTuple(node *ast.Tuple, cont Code) (Code, error) {
 	return cont, nil
 }
 
-func compileAccess(node *ast.Access, cont Code) (Code, error) {
+func compileAccess(node *ast.Access, cont *Stack[Command]) (*Stack[Command], error) {
 	cont = cons(Proj{token: node.Base(), Field: tokenToName(node.Name)}, cont)
 
 	return Compile(node.Receiver, cont)
 }
 
-func compileCall(node *ast.Call, cont Code) (Code, error) {
+func compileCall(node *ast.Call, cont *Stack[Command]) (*Stack[Command], error) {
 	if len(node.Args) != 1 {
 		panic(fmt.Sprintf("compileCall: %s", node))
 	}
@@ -107,7 +107,7 @@ func compileCall(node *ast.Call, cont Code) (Code, error) {
 	return cont, nil
 }
 
-func compilePrim(node *ast.Prim, cont Code) (Code, error) {
+func compilePrim(node *ast.Prim, cont *Stack[Command]) (*Stack[Command], error) {
 	cont = cons(Primitive{token: node.Base(), Name: tokenToName(node.Name)}, cont)
 
 	for i := len(node.Args) - 1; i >= 0; i-- {
@@ -121,7 +121,7 @@ func compilePrim(node *ast.Prim, cont Code) (Code, error) {
 	return cont, nil
 }
 
-func compileLet(node *ast.Let, cont Code) (Code, error) {
+func compileLet(node *ast.Let, cont *Stack[Command]) (*Stack[Command], error) {
 	pattern, err := compilePattern(node.Bind)
 	if err != nil {
 		return nil, err
@@ -181,7 +181,7 @@ func compilePattern(node ast.Node) (Pattern, error) {
 	panic(fmt.Sprintf("compilePattern: %T", node))
 }
 
-func compileSeq(node *ast.Seq, cont Code) (Code, error) {
+func compileSeq(node *ast.Seq, cont *Stack[Command]) (*Stack[Command], error) {
 	for i := len(node.Exprs) - 1; i >= 0; i-- {
 		var err error
 		cont, err = Compile(node.Exprs[i], cont)
@@ -193,7 +193,7 @@ func compileSeq(node *ast.Seq, cont Code) (Code, error) {
 	return cont, nil
 }
 
-func compileCase(node *ast.Case, cont Code) (Code, error) {
+func compileCase(node *ast.Case, cont *Stack[Command]) (*Stack[Command], error) {
 	branches := make([]Branch, len(node.Clauses))
 
 	for i, clause := range node.Clauses {
@@ -236,7 +236,7 @@ func compileCase(node *ast.Case, cont Code) (Code, error) {
 	return cont, nil
 }
 
-func compileLambda(node *ast.Lambda, cont Code) (Code, error) {
+func compileLambda(node *ast.Lambda, cont *Stack[Command]) (*Stack[Command], error) {
 	if len(node.Params) != 1 {
 		panic(fmt.Sprintf("compileLambda: %s", node))
 	}
@@ -249,8 +249,8 @@ func compileLambda(node *ast.Lambda, cont Code) (Code, error) {
 	return cons(Lambda{token: node.Base(), Param: tokenToName(node.Params[0]), Code: body}, cont), nil
 }
 
-func compileObject(node *ast.Object, cont Code) (Code, error) {
-	fields := make(map[Name]Code)
+func compileObject(node *ast.Object, cont *Stack[Command]) (*Stack[Command], error) {
+	fields := make(map[Name]*Stack[Command])
 
 	for _, field := range node.Fields {
 		var err error
@@ -266,7 +266,7 @@ func compileObject(node *ast.Object, cont Code) (Code, error) {
 	return cons(Object{token: node.Base(), Fields: fields}, cont), nil
 }
 
-func compileVarDecl(node *ast.VarDecl, cont Code) (Code, error) {
+func compileVarDecl(node *ast.VarDecl, cont *Stack[Command]) (*Stack[Command], error) {
 	cont = cons(Assign{token: node.Base(), Bind: Var{name: tokenToName(node.Name)}}, cont)
 
 	return Compile(node.Expr, cont)
@@ -284,6 +284,6 @@ func tokenToName(tok token.Token) Name {
 	return unique.Make(fmt.Sprintf("%s.%#v", tok.Lexeme, tok.Literal))
 }
 
-func cons(command Command, cont Code) Code {
+func cons(command Command, cont *Stack[Command]) *Stack[Command] {
 	return &Stack[Command]{command, cont}
 }
