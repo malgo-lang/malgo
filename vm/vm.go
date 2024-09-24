@@ -13,7 +13,7 @@ import (
 
 type Machine struct {
 	Stack  *Stack[Value]
-	Env    Env
+	Env    *Stack[map[Name]Value]
 	Code   *Stack[Command]
 	Dump   *Stack[Dump]
 	Stdout io.Writer
@@ -88,13 +88,17 @@ func (s *Stack[T]) All() iter.Seq[T] {
 
 type Name = unique.Handle[string]
 
-type Env = *Stack[map[Name]Value]
-
-func NewEnv() Env {
+// NewEnv creates a new environment.
+// The environment is a stack of maps where each map represents a scope.
+// It is always non-nil and contains at least one empty scope.
+// nil should be used only to signal the end of the environment.
+func NewEnv() *Stack[map[Name]Value] {
 	return &Stack[map[Name]Value]{Head: map[Name]Value{}, Tail: nil}
 }
 
-func Lookup(env Env, name Name) (Value, bool) {
+// Lookup searches for a name in the environment.
+// It returns the value associated with the name and true if the name is found.
+func Lookup(env *Stack[map[Name]Value], name Name) (Value, bool) {
 	for e := range env.All() {
 		if value, ok := e[name]; ok {
 			return value, true
@@ -104,15 +108,23 @@ func Lookup(env Env, name Name) (Value, bool) {
 	return nil, false
 }
 
-func Extend(env Env) Env {
+// Extend creates a new scope in the environment.
+// The argument is not modified.
+// The return value is a new environment with the new scope.
+// The tail of the new environment is the original environment.
+func Extend(env *Stack[map[Name]Value]) *Stack[map[Name]Value] {
 	return env.Push(make(map[Name]Value))
 }
 
-func Bind(env Env, name Name, value Value) {
+// Bind inserts a name-value pair into the environment.
+// Unlike Extend, Bind modifies the environment.
+func Bind(env *Stack[map[Name]Value], name Name, value Value) {
 	env.Head[name] = value
 }
 
-func SearchMain(env Env) (Value, bool) {
+// SearchMain searches for a value with a name that starts with "main.".
+// The result is the entry point of the program.
+func SearchMain(env *Stack[map[Name]Value]) (Value, bool) {
 	for e := range env.All() {
 		for name, value := range e {
 			if strings.HasPrefix(name.Value(), "main.") {
@@ -125,7 +137,7 @@ func SearchMain(env Env) (Value, bool) {
 }
 
 type Dump struct {
-	Env   Env
+	Env   *Stack[map[Name]Value]
 	Code  *Stack[Command]
 	Trace Trace
 }
