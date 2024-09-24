@@ -1,0 +1,31 @@
+object {
+	print {
+		lam :p1.2 {
+			get :p1.2
+			select 1 {
+				case x.3 {
+					get x.3
+					prim print
+					join
+				}
+			}
+			ret
+		}
+		ret
+	}
+}
+set printer.0
+lam :p1.4 {
+	get :p1.4
+	select 1 {
+		case () {
+			get printer.0
+			proj print
+			1
+			apply
+			join
+		}
+	}
+	ret
+}
+set main.1

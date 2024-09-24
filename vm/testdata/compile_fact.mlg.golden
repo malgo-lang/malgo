@@ -1,0 +1,73 @@
+lam :p1.4 {
+	lam :p2.5 {
+		get :p1.4
+		get :p2.5
+		select 2 {
+			case x.6 y.7 {
+				get x.6
+				get y.7
+				prim mul
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set mul.0
+lam :p1.8 {
+	lam :p2.9 {
+		get :p1.8
+		get :p2.9
+		select 2 {
+			case x.10 y.11 {
+				get x.10
+				get y.11
+				prim sub
+				join
+			}
+		}
+		ret
+	}
+	ret
+}
+set sub.1
+lam :p1.12 {
+	get :p1.12
+	select 1 {
+		case 0 {
+			1
+			join
+		}
+		case n.13 {
+			get mul.0
+			get n.13
+			apply
+			get fact.2
+			get sub.1
+			get n.13
+			apply
+			1
+			apply
+			apply
+			apply
+			join
+		}
+	}
+	ret
+}
+set fact.2
+lam :p1.14 {
+	get :p1.14
+	select 1 {
+		case () {
+			get fact.2
+			5
+			apply
+			prim print_trace
+			join
+		}
+	}
+	ret
+}
+set main.3

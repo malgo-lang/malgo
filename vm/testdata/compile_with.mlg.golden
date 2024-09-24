@@ -1,0 +1,48 @@
+lam :p1.1 {
+	get :p1.1
+	select 1 {
+		case () {
+			lam :p1.2 {
+				lam :p2.3 {
+					get :p1.2
+					get :p2.3
+					select 2 {
+						case () cont.4 {
+							get cont.4
+							1
+							apply
+							2
+							apply
+							join
+						}
+					}
+					ret
+				}
+				ret
+			}
+			tuple 0
+			apply
+			lam :p1.5 {
+				lam :p2.6 {
+					get :p1.5
+					get :p2.6
+					select 2 {
+						case x.7 y.8 {
+							get x.7
+							get y.8
+							tuple 2
+							prim print
+							join
+						}
+					}
+					ret
+				}
+				ret
+			}
+			apply
+			join
+		}
+	}
+	ret
+}
+set main.0

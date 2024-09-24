@@ -1,0 +1,47 @@
+object {
+	false {
+		0
+		ret
+	}
+	true {
+		1
+		ret
+	}
+}
+set bool.0
+lam :p1.3 {
+	get :p1.3
+	select 1 {
+		case b.4.false {
+			get b.4
+			proj true
+			join
+		}
+		case b.5.true {
+			get b.5
+			proj false
+			join
+		}
+	}
+	ret
+}
+set flip.1
+lam :p1.6 {
+	get :p1.6
+	select 1 {
+		case () {
+			get flip.1
+			get bool.0
+			proj true
+			apply
+			set x.7
+			get x.7
+			prim print
+			get x.7
+			prim print_trace
+			join
+		}
+	}
+	ret
+}
+set main.2

@@ -1,0 +1,38 @@
+call λ.:p2.7 41
+fun:
+	call λ.:p1.6 λ.:p1.13
+	fun:
+		root
+	arg:
+		root
+	root
+arg:
+	call λ.:p1.4 41
+	fun:
+		access {none, some} some
+		receiver:
+			root
+		root
+	arg:
+		root
+	root
+call λ.:p1.4 42
+fun:
+	access {none, some} some
+	receiver:
+		root
+	root
+arg:
+	call λ.:p1.13 41
+	fun:
+		root
+	arg:
+		root
+	root
+call λ.:p1.13 41
+fun:
+	root
+arg:
+	root
+root
+result => ()

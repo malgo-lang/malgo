@@ -18,7 +18,7 @@ jobs:
         uses: orhun/git-cliff-action@v3
         with:
           config: cliff.toml
-          args: --verbose a65e09d..HEAD
+          args: --verbose 44ee0c1ce1de699a6b14eb1a10f0fffaf8db6345..HEAD
         env:
           OUTPUT: CHANGELOG.md
       - name: Check if there are any changes

@@ -1,0 +1,82 @@
+lam :p1.2 {
+	object {
+		get {
+			get :p1.2
+			select 1 {
+				case items.3 {
+					:None
+					join
+				}
+			}
+			ret
+		}
+		put {
+			object {
+				get {
+					get :p1.2
+					select 1 {
+						case :Nil {
+							"Nil case"
+							prim print
+							:Nil
+							prim print
+							:None
+							join
+						}
+						case :Cons(x.4)(xs.5) {
+							"Cons case"
+							prim print
+							:Cons
+							get x.4
+							apply
+							get xs.5
+							apply
+							prim print
+							:Some
+							get x.4
+							apply
+							join
+						}
+					}
+					ret
+				}
+				put {
+					get :p1.2
+					select 1 {
+						case items.6 {
+							get vendor.0
+							get items.6
+							apply
+							proj put
+							join
+						}
+					}
+					ret
+				}
+			}
+			ret
+		}
+	}
+	ret
+}
+set vendor.0
+lam :p1.7 {
+	get :p1.7
+	select 1 {
+		case () {
+			get vendor.0
+			:Cons
+			0
+			apply
+			:Nil
+			apply
+			apply
+			proj put
+			proj get
+			prim print
+			join
+		}
+	}
+	ret
+}
+set main.1
