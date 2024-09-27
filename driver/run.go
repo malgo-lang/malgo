@@ -29,7 +29,7 @@ func NewPassRunner() *PassRunner {
 }
 
 // AddPass adds a pass to the end of the pass list.
-func (r *PassRunner) addPass(pass Pass) {
+func (r *PassRunner) AddPass(pass Pass) {
 	r.passes = append(r.passes, pass)
 }
 
@@ -43,7 +43,7 @@ func AddPassesUntil(runner *PassRunner, until Pass) {
 	}
 
 	for _, pass := range passes {
-		runner.addPass(pass)
+		runner.AddPass(pass)
 		if pass.Name() == until.Name() {
 			break
 		}

@@ -209,7 +209,7 @@ type Cut struct {
 }
 
 func (c *Cut) String() string {
-	return fmt.Sprintf("<%v | %v>", c.Producer, c.Consumer)
+	return fmt.Sprintf("{%v; %v}", c.Producer, c.Consumer)
 }
 
 func (c *Cut) Base() token.Token {
@@ -239,19 +239,12 @@ func (c *Case) isConsumer() {}
 var _ Consumer = &Case{}
 
 type Clause struct {
-	Patterns []Pattern
-	Body     Statement
+	Pattern Pattern
+	Body    Statement
 }
 
 func (c *Clause) String() string {
-	var pat fmt.Stringer
-	if len(c.Patterns) > 1 {
-		pat = utils.Parenthesize("", utils.Concat(c.Patterns))
-	} else {
-		pat = c.Patterns[0]
-	}
-
-	return fmt.Sprintf("%v -> %v)", pat, c.Body)
+	return fmt.Sprintf("(%v -> %v)", c.Pattern, c.Body)
 }
 
 func (c *Clause) Base() token.Token {
@@ -286,7 +279,7 @@ type Method struct {
 }
 
 func (m *Method) String() string {
-	return fmt.Sprintf(".%s(%v; %v) -> %v", m.Name, utils.Concat(m.Params), utils.Concat(m.Labels), m.Body)
+	return fmt.Sprintf("(.%s(%v; %v) -> %v)", m.Name, utils.Concat(m.Params), utils.Concat(m.Labels), m.Body)
 }
 
 func (m *Method) Base() token.Token {
@@ -312,3 +305,18 @@ func (d *Def) Base() token.Token {
 
 //exhaustruct:ignore
 var _ Node = &Def{}
+
+type Invoke struct {
+	Name  token.Token
+	Conts []Consumer
+}
+
+func (i *Invoke) String() string {
+	return utils.Parenthesize("invoke", i.Name, utils.Concat(i.Conts)).String()
+}
+
+func (i *Invoke) Base() token.Token {
+	return i.Name
+}
+
+func (i *Invoke) isStatement() {}

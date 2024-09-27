@@ -1,0 +1,2 @@
+(def printer.0 ret.2 {(cocase (.print(; object.3) -> {(cocase (.ap(:p1.5; lambda.4) -> {(μ case.6 {(μ a.7 {(symbol tuple); .ap((var :p1.5); (var a.7))}); (case ((symbol tuple).ap((var x.8)) -> {(μ prim.9 (prim print (var x.8) (var prim.9))); (var case.6)}))}); (var lambda.4)})); (var object.3)})); (var ret.2)})
+(def main.1 ret.10 {(cocase (.ap(; lambda.11) -> {(μ a.14 {(μ proj.12 {(μ ret.13 (invoke printer.0 (var ret.13))); .print(; (var proj.12))}); .ap((literal 1); (var a.14))}); (var lambda.11)})); (var ret.10)})
