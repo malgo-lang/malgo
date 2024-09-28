@@ -22,7 +22,7 @@ type Flat struct {
 func (f *Flat) genUniq(hint string) string {
 	f.uniq++
 
-	return fmt.Sprintf(":%s%d", hint, f.uniq)
+	return fmt.Sprintf("$%s%d", hint, f.uniq)
 }
 
 func (*Flat) Name() string {

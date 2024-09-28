@@ -1,149 +1,150 @@
-def -.0 ret.7
+def -.0($def.7)
   cocase
-    .ap(:p1.9, :p2.10; lambda.8) ->
-      μ case.11:
-        μ a.12:
+    .ap($p1.9, $p2.10; $lambda.8) ->
+      μ $case.11:
+        μ $ap.12:
           :tuple
-          | .ap(:p1.9, :p2.10; a.12)
+          | .ap($p1.9, $p2.10; $ap.12)
         | case
-            :tuple.ap(x.13, y.14) ->
-              μ prim.15:
-                prim sub(x.13, y.14; prim.15)
-              | case.11
-      | lambda.8
-  | ret.7
-def map.1 ret.16
+            :tuple.ap(x.13, y.14; $_.15) ->
+              μ $prim.16:
+                prim sub(x.13, y.14; $prim.16)
+              | $case.11
+      | $lambda.8
+  | $def.7
+def map.1($def.17)
   cocase
-    .ap(:p1.18, :p2.19; lambda.17) ->
-      μ case.20:
-        μ a.21:
+    .ap($p1.19, $p2.20; $lambda.18) ->
+      μ $case.21:
+        μ $ap.22:
           :tuple
-          | .ap(:p1.18, :p2.19; a.21)
+          | .ap($p1.19, $p2.20; $ap.22)
         | case
-            :tuple.ap(f.22, :Nil) ->
+            :tuple.ap(f.23, :Nil; $_.24) ->
               :Nil
-              | case.20
+              | $case.21
             :tuple.ap(
-              f.23,
-              :Cons.ap(x.24, xs.25)) ->
-              μ a.26:
+              f.25,
+              :Cons.ap(x.26, xs.27; $_.28);
+              $_.29) ->
+              μ $ap.30:
                 :Cons
                 | .ap(
-                    μ a.27:
-                      f.23
-                      | .ap(x.24; a.27),
-                    μ a.29:
-                      μ ret.28:
-                        invoke map.1(ret.28)
-                      | .ap(f.23, xs.25; a.29); 
-                    a.26)
-              | case.20
-      | lambda.17
-  | ret.16
-def prune.2 ret.30
+                    μ $ap.31:
+                      f.25
+                      | .ap(x.26; $ap.31),
+                    μ $ap.33:
+                      μ $top.32:
+                        invoke map.1($top.32)
+                      | .ap(f.25, xs.27; $ap.33); 
+                    $ap.30)
+              | $case.21
+      | $lambda.18
+  | $def.17
+def prune.2($def.34)
   cocase
-    .ap(:p1.32, :p2.33; lambda.31) ->
+    .ap($p1.36, $p2.37; $lambda.35) ->
       cocase
-        .children(; object.34) ->
-          μ case.35:
-            μ a.36:
+        .children(; $object.52) ->
+          μ $case.38:
+            μ $ap.39:
               :tuple
-              | .ap(:p1.32, :p2.33; a.36)
+              | .ap($p1.36, $p2.37; $ap.39)
             | case
-                :tuple.ap(0, t.37) ->
+                :tuple.ap(0, t.40; $_.41) ->
                   :Nil
-                  | case.35
-                :tuple.ap(x.38, t.39) ->
-                  μ a.41:
-                    μ ret.40:
-                      invoke map.1(ret.40)
+                  | $case.38
+                :tuple.ap(x.42, t.43; $_.44) ->
+                  μ $ap.46:
+                    μ $top.45:
+                      invoke map.1($top.45)
                     | .ap(
-                        μ a.43:
-                          μ ret.42:
-                            invoke prune.2(ret.42)
+                        μ $ap.48:
+                          μ $top.47:
+                            invoke prune.2($top.47)
                           | .ap(
-                              μ a.45:
-                                μ ret.44:
-                                  invoke -.0(ret.44)
-                                | .ap(x.38, 1; a.45); 
-                              a.43),
-                        μ proj.46:
-                          t.39
-                          | .children(; proj.46); 
-                        a.41)
-                  | case.35
-          | object.34
-        .node(; object.34) ->
-          μ case.47:
-            μ a.48:
+                              μ $ap.50:
+                                μ $top.49:
+                                  invoke -.0($top.49)
+                                | .ap(x.42, 1; $ap.50); 
+                              $ap.48),
+                        μ $proj.51:
+                          t.43
+                          | .children(; $proj.51); 
+                        $ap.46)
+                  | $case.38
+          | $object.52
+        .node(; $object.59) ->
+          μ $case.53:
+            μ $ap.54:
               :tuple
-              | .ap(:p1.32, :p2.33; a.48)
+              | .ap($p1.36, $p2.37; $ap.54)
             | case
-                :tuple.ap(x.49, t.50) ->
-                  μ proj.51:
-                    t.50
-                    | .node(; proj.51)
-                  | case.47
-          | object.34
-      | lambda.31
-  | ret.30
-def tree.3 ret.52
+                :tuple.ap(x.55, t.56; $_.57) ->
+                  μ $proj.58:
+                    t.56
+                    | .node(; $proj.58)
+                  | $case.53
+          | $object.59
+      | $lambda.35
+  | $def.34
+def tree.3($def.60)
   cocase
-    .children(; object.53) ->
-      μ a.54:
+    .children(; $object.65) ->
+      μ $ap.61:
         :Cons
         | .ap(
-            μ ret.55:
-              invoke tree1.4(ret.55),
-            μ a.56:
+            μ $top.62:
+              invoke tree1.4($top.62),
+            μ $ap.63:
               :Cons
               | .ap(
-                  μ ret.57:
-                    invoke tree2.5(ret.57),
+                  μ $top.64:
+                    invoke tree2.5($top.64),
                   :Nil; 
-                  a.56); 
-            a.54)
-      | object.53
-    .node(; object.53) ->
+                  $ap.63); 
+            $ap.61)
+      | $object.65
+    .node(; $object.66) ->
       1
-      | object.53
-  | ret.52
-def tree1.4 ret.58
+      | $object.66
+  | $def.60
+def tree1.4($def.67)
   cocase
-    .children(; object.59) ->
+    .children(; $object.68) ->
       :Nil
-      | object.59
-    .node(; object.59) ->
+      | $object.68
+    .node(; $object.69) ->
       2
-      | object.59
-  | ret.58
-def tree2.5 ret.60
+      | $object.69
+  | $def.67
+def tree2.5($def.70)
   cocase
-    .children(; object.61) ->
-      μ a.62:
+    .children(; $object.73) ->
+      μ $ap.71:
         :Cons
         | .ap(
-            μ ret.63:
-              invoke tree.3(ret.63),
+            μ $top.72:
+              invoke tree.3($top.72),
             :Nil; 
-            a.62)
-      | object.61
-    .node(; object.61) ->
+            $ap.71)
+      | $object.73
+    .node(; $object.74) ->
       3
-      | object.61
-  | ret.60
-def main.6 ret.64
+      | $object.74
+  | $def.70
+def main.6($def.75)
   cocase
-    .ap(; lambda.65) ->
-      μ proj.66:
-        μ a.68:
-          μ ret.67:
-            invoke prune.2(ret.67)
+    .ap(; $lambda.76) ->
+      μ $proj.77:
+        μ $ap.79:
+          μ $top.78:
+            invoke prune.2($top.78)
           | .ap(
               2,
-              μ ret.69:
-                invoke tree.3(ret.69); 
-              a.68)
-        | .children(; proj.66)
-      | lambda.65
-  | ret.64
+              μ $top.80:
+                invoke tree.3($top.80); 
+              $ap.79)
+        | .children(; $proj.77)
+      | $lambda.76
+  | $def.75

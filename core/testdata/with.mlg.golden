@@ -1,42 +1,42 @@
-def main.0 ret.1
+def main.0($def.1)
   cocase
-    .ap(; lambda.2) ->
-      μ a.11:
-        μ a.10:
+    .ap(; $lambda.2) ->
+      μ $ap.12:
+        μ $ap.11:
           cocase
-            .ap(; lambda.3) ->
+            .ap(; $lambda.3) ->
               cocase
-                .ap(:p1.5; lambda.4) ->
-                  μ case.6:
-                    μ a.7:
+                .ap($p1.5; $lambda.4) ->
+                  μ $case.6:
+                    μ $ap.7:
                       :tuple
-                      | .ap(:p1.5; a.7)
+                      | .ap($p1.5; $ap.7)
                     | case
-                        :tuple.ap(cont.8) ->
-                          μ a.9:
+                        :tuple.ap(cont.8; $_.9) ->
+                          μ $ap.10:
                             cont.8
-                            | .ap(1, 2; a.9)
-                          | case.6
-                  | lambda.4
-              | lambda.3
-          | .ap(; a.10)
+                            | .ap(1, 2; $ap.10)
+                          | $case.6
+                  | $lambda.4
+              | $lambda.3
+          | .ap(; $ap.11)
         | .ap(
             cocase
-              .ap(:p1.13, :p2.14; lambda.12) ->
-                μ case.15:
-                  μ a.16:
+              .ap($p1.14, $p2.15; $lambda.13) ->
+                μ $case.16:
+                  μ $ap.17:
                     :tuple
-                    | .ap(:p1.13, :p2.14; a.16)
+                    | .ap($p1.14, $p2.15; $ap.17)
                   | case
-                      :tuple.ap(x.17, y.18) ->
-                        μ prim.19:
+                      :tuple.ap(x.18, y.19; $_.20) ->
+                        μ $prim.21:
                           prim print(
-                            μ a.20:
+                            μ $ap.22:
                               :tuple
-                              | .ap(x.17, y.18; a.20);
-                            prim.19)
-                        | case.15
-                | lambda.12; 
-            a.11)
-      | lambda.2
-  | ret.1
+                              | .ap(x.18, y.19; $ap.22);
+                            $prim.21)
+                        | $case.16
+                | $lambda.13; 
+            $ap.12)
+      | $lambda.2
+  | $def.1

@@ -1,28 +1,28 @@
-def printer.0 ret.2
+def printer.0($def.2)
   cocase
-    .print(; object.3) ->
+    .print(; $object.10) ->
       cocase
-        .ap(:p1.5; lambda.4) ->
-          μ case.6:
-            μ a.7:
+        .ap($p1.4; $lambda.3) ->
+          μ $case.5:
+            μ $ap.6:
               :tuple
-              | .ap(:p1.5; a.7)
+              | .ap($p1.4; $ap.6)
             | case
-                :tuple.ap(x.8) ->
-                  μ prim.9:
-                    prim print(x.8; prim.9)
-                  | case.6
-          | lambda.4
-      | object.3
-  | ret.2
-def main.1 ret.10
+                :tuple.ap(x.7; $_.8) ->
+                  μ $prim.9:
+                    prim print(x.7; $prim.9)
+                  | $case.5
+          | $lambda.3
+      | $object.10
+  | $def.2
+def main.1($def.11)
   cocase
-    .ap(; lambda.11) ->
-      μ a.14:
-        μ proj.12:
-          μ ret.13:
-            invoke printer.0(ret.13)
-          | .print(; proj.12)
-        | .ap(1; a.14)
-      | lambda.11
-  | ret.10
+    .ap(; $lambda.12) ->
+      μ $ap.15:
+        μ $proj.13:
+          μ $top.14:
+            invoke printer.0($top.14)
+          | .print(; $proj.13)
+        | .ap(1; $ap.15)
+      | $lambda.12
+  | $def.11

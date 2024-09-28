@@ -1,148 +1,148 @@
-def if.0 ret.5
+def if.0($def.5)
   cocase
-    .ap(:p1.7; lambda.6) ->
+    .ap($p1.7; $lambda.6) ->
       cocase
-        .then(; object.8) ->
+        .then(; $object.24) ->
           cocase
-            .ap(:p2.10; lambda.9) ->
+            .ap($p2.9; $lambda.8) ->
               cocase
-                .else(; object.11) ->
+                .else(; $object.23) ->
                   cocase
-                    .ap(:p3.13; lambda.12) ->
-                      μ case.14:
-                        μ a.15:
+                    .ap($p3.11; $lambda.10) ->
+                      μ $case.12:
+                        μ $ap.13:
                           :tuple
-                          | .ap(:p1.7, :p2.10, :p3.13; a.15)
+                          | .ap($p1.7, $p2.9, $p3.11; $ap.13)
                         | case
-                            :tuple.ap(0, t.16, e.17) ->
-                              μ a.18:
-                                e.17
-                                | .ap(; a.18)
-                              | case.14
-                            :tuple.ap(_.19, t.20, e.21) ->
-                              μ a.22:
-                                t.20
-                                | .ap(; a.22)
-                              | case.14
-                      | lambda.12
-                  | object.11
-              | lambda.9
-          | object.8
-      | lambda.6
-  | ret.5
-def le.1 ret.23
+                            :tuple.ap(0, t.14, e.15; $_.16) ->
+                              μ $ap.17:
+                                e.15
+                                | .ap(; $ap.17)
+                              | $case.12
+                            :tuple.ap(_.18, t.19, e.20; $_.21) ->
+                              μ $ap.22:
+                                t.19
+                                | .ap(; $ap.22)
+                              | $case.12
+                      | $lambda.10
+                  | $object.23
+              | $lambda.8
+          | $object.24
+      | $lambda.6
+  | $def.5
+def le.1($def.25)
   cocase
-    .ap(:p1.25, :p2.26; lambda.24) ->
-      μ case.27:
-        μ a.28:
+    .ap($p1.27, $p2.28; $lambda.26) ->
+      μ $case.29:
+        μ $ap.30:
           :tuple
-          | .ap(:p1.25, :p2.26; a.28)
+          | .ap($p1.27, $p2.28; $ap.30)
         | case
-            :tuple.ap(x.29, y.30) ->
-              μ prim.31:
-                prim less_equal(x.29, y.30; prim.31)
-              | case.27
-      | lambda.24
-  | ret.23
-def dec.2 ret.32
+            :tuple.ap(x.31, y.32; $_.33) ->
+              μ $prim.34:
+                prim less_equal(x.31, y.32; $prim.34)
+              | $case.29
+      | $lambda.26
+  | $def.25
+def dec.2($def.35)
   cocase
-    .ap(:p1.34; lambda.33) ->
-      μ case.35:
-        μ a.36:
+    .ap($p1.37; $lambda.36) ->
+      μ $case.38:
+        μ $ap.39:
           :tuple
-          | .ap(:p1.34; a.36)
+          | .ap($p1.37; $ap.39)
         | case
-            :tuple.ap(x.37) ->
-              μ prim.38:
-                prim sub(x.37, 1; prim.38)
-              | case.35
-      | lambda.33
-  | ret.32
-def tarai.3 ret.39
+            :tuple.ap(x.40; $_.41) ->
+              μ $prim.42:
+                prim sub(x.40, 1; $prim.42)
+              | $case.38
+      | $lambda.36
+  | $def.35
+def tarai.3($def.43)
   cocase
-    .ap(:p1.41, :p2.42, :p3.43; lambda.40) ->
-      μ case.44:
-        μ a.45:
+    .ap($p1.45, $p2.46, $p3.47; $lambda.44) ->
+      μ $case.48:
+        μ $ap.49:
           :tuple
-          | .ap(:p1.41, :p2.42, :p3.43; a.45)
+          | .ap($p1.45, $p2.46, $p3.47; $ap.49)
         | case
-            :tuple.ap(x.46, y.47, z.48) ->
-              μ a.57:
-                μ proj.49:
-                  μ a.55:
-                    μ proj.50:
-                      μ a.52:
-                        μ ret.51:
-                          invoke if.0(ret.51)
+            :tuple.ap(x.50, y.51, z.52; $_.53) ->
+              μ $ap.62:
+                μ $proj.54:
+                  μ $ap.60:
+                    μ $proj.55:
+                      μ $ap.57:
+                        μ $top.56:
+                          invoke if.0($top.56)
                         | .ap(
-                            μ a.54:
-                              μ ret.53:
-                                invoke le.1(ret.53)
-                              | .ap(x.46, y.47; a.54); 
-                            a.52)
-                      | .then(; proj.50)
+                            μ $ap.59:
+                              μ $top.58:
+                                invoke le.1($top.58)
+                              | .ap(x.50, y.51; $ap.59); 
+                            $ap.57)
+                      | .then(; $proj.55)
                     | .ap(
                         cocase
-                          .ap(; lambda.56) ->
-                            y.47
-                            | lambda.56; 
-                        a.55)
-                  | .else(; proj.49)
+                          .ap(; $lambda.61) ->
+                            y.51
+                            | $lambda.61; 
+                        $ap.60)
+                  | .else(; $proj.54)
                 | .ap(
                     cocase
-                      .ap(; lambda.58) ->
-                        μ a.60:
-                          μ ret.59:
-                            invoke tarai.3(ret.59)
+                      .ap(; $lambda.63) ->
+                        μ $ap.65:
+                          μ $top.64:
+                            invoke tarai.3($top.64)
                           | .ap(
-                              μ a.62:
-                                μ ret.61:
-                                  invoke tarai.3(ret.61)
+                              μ $ap.67:
+                                μ $top.66:
+                                  invoke tarai.3($top.66)
                                 | .ap(
-                                    μ a.64:
-                                      μ ret.63:
-                                        invoke dec.2(ret.63)
-                                      | .ap(x.46; a.64),
-                                    y.47,
-                                    z.48; 
-                                    a.62),
-                              μ a.66:
-                                μ ret.65:
-                                  invoke tarai.3(ret.65)
+                                    μ $ap.69:
+                                      μ $top.68:
+                                        invoke dec.2($top.68)
+                                      | .ap(x.50; $ap.69),
+                                    y.51,
+                                    z.52; 
+                                    $ap.67),
+                              μ $ap.71:
+                                μ $top.70:
+                                  invoke tarai.3($top.70)
                                 | .ap(
-                                    μ a.68:
-                                      μ ret.67:
-                                        invoke dec.2(ret.67)
-                                      | .ap(y.47; a.68),
-                                    z.48,
-                                    x.46; 
-                                    a.66),
-                              μ a.70:
-                                μ ret.69:
-                                  invoke tarai.3(ret.69)
+                                    μ $ap.73:
+                                      μ $top.72:
+                                        invoke dec.2($top.72)
+                                      | .ap(y.51; $ap.73),
+                                    z.52,
+                                    x.50; 
+                                    $ap.71),
+                              μ $ap.75:
+                                μ $top.74:
+                                  invoke tarai.3($top.74)
                                 | .ap(
-                                    μ a.72:
-                                      μ ret.71:
-                                        invoke dec.2(ret.71)
-                                      | .ap(z.48; a.72),
-                                    x.46,
-                                    y.47; 
-                                    a.70); 
-                              a.60)
-                        | lambda.58; 
-                    a.57)
-              | case.44
-      | lambda.40
-  | ret.39
-def main.4 ret.73
+                                    μ $ap.77:
+                                      μ $top.76:
+                                        invoke dec.2($top.76)
+                                      | .ap(z.52; $ap.77),
+                                    x.50,
+                                    y.51; 
+                                    $ap.75); 
+                              $ap.65)
+                        | $lambda.63; 
+                    $ap.62)
+              | $case.48
+      | $lambda.44
+  | $def.43
+def main.4($def.78)
   cocase
-    .ap(; lambda.74) ->
-      μ prim.75:
+    .ap(; $lambda.79) ->
+      μ $prim.80:
         prim print(
-          μ a.77:
-            μ ret.76:
-              invoke tarai.3(ret.76)
-            | .ap(10, 5, 0; a.77);
-          prim.75)
-      | lambda.74
-  | ret.73
+          μ $ap.82:
+            μ $top.81:
+              invoke tarai.3($top.81)
+            | .ap(10, 5, 0; $ap.82);
+          $prim.80)
+      | $lambda.79
+  | $def.78

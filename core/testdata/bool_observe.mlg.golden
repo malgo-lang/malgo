@@ -1,56 +1,58 @@
-def bool.0 ret.3
+def bool.0($def.3)
   cocase
-    .false(; object.4) ->
+    .false(; $object.4) ->
       0
-      | object.4
-    .true(; object.4) ->
+      | $object.4
+    .true(; $object.5) ->
       1
-      | object.4
-  | ret.3
-def flip.1 ret.5
+      | $object.5
+  | $def.3
+def flip.1($def.6)
   cocase
-    .ap(:p1.7; lambda.6) ->
-      μ case.8:
-        μ a.9:
+    .ap($p1.8; $lambda.7) ->
+      μ $case.9:
+        μ $ap.10:
           :tuple
-          | .ap(:p1.7; a.9)
+          | .ap($p1.8; $ap.10)
         | case
             :tuple.ap(
-              b.10.false()) ->
-              μ proj.11:
-                b.10
-                | .true(; proj.11)
-              | case.8
+              b.11.false(; $_.12);
+              $_.13) ->
+              μ $proj.14:
+                b.11
+                | .true(; $proj.14)
+              | $case.9
             :tuple.ap(
-              b.12.true()) ->
-              μ proj.13:
-                b.12
-                | .false(; proj.13)
-              | case.8
-      | lambda.6
-  | ret.5
-def main.2 ret.14
+              b.15.true(; $_.16);
+              $_.17) ->
+              μ $proj.18:
+                b.15
+                | .false(; $proj.18)
+              | $case.9
+      | $lambda.7
+  | $def.6
+def main.2($def.19)
   cocase
-    .ap(; lambda.15) ->
-      μ let.21:
-        μ a.18:
-          μ ret.17:
-            invoke flip.1(ret.17)
+    .ap(; $lambda.20) ->
+      μ $let.26:
+        μ $ap.23:
+          μ $top.22:
+            invoke flip.1($top.22)
           | .ap(
-              μ proj.19:
-                μ ret.20:
-                  invoke bool.0(ret.20)
-                | .true(; proj.19); 
-              a.18)
+              μ $proj.24:
+                μ $top.25:
+                  invoke bool.0($top.25)
+                | .true(; $proj.24); 
+              $ap.23)
         | case
-            x.16 ->
-              μ seq.23:
-                μ prim.22:
-                  prim print(x.16; prim.22)
-                | μ~ hole.25:
-                    μ prim.24:
-                      prim print_trace(x.16; prim.24)
-                    | seq.23
-              | let.21
-      | lambda.15
-  | ret.14
+            x.21 ->
+              μ $seq.28:
+                μ $prim.27:
+                  prim print(x.21; $prim.27)
+                | μ~ $_.30:
+                    μ $prim.29:
+                      prim print_trace(x.21; $prim.29)
+                    | $seq.28
+              | $let.26
+      | $lambda.20
+  | $def.19

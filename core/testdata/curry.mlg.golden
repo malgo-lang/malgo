@@ -1,55 +1,55 @@
-def add.0 ret.3
+def add.0($def.3)
   cocase
-    .ap(:p1.5; lambda.4) ->
+    .ap($p1.5; $lambda.4) ->
       cocase
-        .ap(:p2.7; lambda.6) ->
-          μ case.8:
-            μ a.9:
+        .ap($p2.7; $lambda.6) ->
+          μ $case.8:
+            μ $ap.9:
               :tuple
-              | .ap(:p1.5, :p2.7; a.9)
+              | .ap($p1.5, $p2.7; $ap.9)
             | case
-                :tuple.ap(x.10, y.11) ->
-                  μ prim.12:
-                    prim add(x.10, y.11; prim.12)
-                  | case.8
-          | lambda.6
-      | lambda.4
-  | ret.3
-def mul.1 ret.13
+                :tuple.ap(x.10, y.11; $_.12) ->
+                  μ $prim.13:
+                    prim add(x.10, y.11; $prim.13)
+                  | $case.8
+          | $lambda.6
+      | $lambda.4
+  | $def.3
+def mul.1($def.14)
   cocase
-    .ap(:p1.15; lambda.14) ->
+    .ap($p1.16; $lambda.15) ->
       cocase
-        .ap(:p2.17; lambda.16) ->
-          μ case.18:
-            μ a.19:
+        .ap($p2.18; $lambda.17) ->
+          μ $case.19:
+            μ $ap.20:
               :tuple
-              | .ap(:p1.15, :p2.17; a.19)
+              | .ap($p1.16, $p2.18; $ap.20)
             | case
-                :tuple.ap(x.20, y.21) ->
-                  μ prim.22:
-                    prim mul(x.20, y.21; prim.22)
-                  | case.18
-          | lambda.16
-      | lambda.14
-  | ret.13
-def main.2 ret.23
+                :tuple.ap(x.21, y.22; $_.23) ->
+                  μ $prim.24:
+                    prim mul(x.21, y.22; $prim.24)
+                  | $case.19
+          | $lambda.17
+      | $lambda.15
+  | $def.14
+def main.2($def.25)
   cocase
-    .ap(; lambda.24) ->
-      μ prim.25:
+    .ap(; $lambda.26) ->
+      μ $prim.27:
         prim print(
-          μ a.28:
-            μ a.27:
-              μ ret.26:
-                invoke add.0(ret.26)
-              | .ap(1; a.27)
+          μ $ap.30:
+            μ $ap.29:
+              μ $top.28:
+                invoke add.0($top.28)
+              | .ap(1; $ap.29)
             | .ap(
-                μ a.31:
-                  μ a.30:
-                    μ ret.29:
-                      invoke mul.1(ret.29)
-                    | .ap(2; a.30)
-                  | .ap(3; a.31); 
-                a.28);
-          prim.25)
-      | lambda.24
-  | ret.23
+                μ $ap.33:
+                  μ $ap.32:
+                    μ $top.31:
+                      invoke mul.1($top.31)
+                    | .ap(2; $ap.32)
+                  | .ap(3; $ap.33); 
+                $ap.30);
+          $prim.27)
+      | $lambda.26
+  | $def.25

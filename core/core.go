@@ -9,16 +9,22 @@ import (
 )
 
 type PrettyOpts struct {
-	Header string
+	header string
 }
 
 func DefaultPrettyOpts() *PrettyOpts {
 	return &PrettyOpts{
-		Header: "",
+		header: "",
 	}
 }
 
 type Option func(*PrettyOpts)
+
+func WithHeader(header string) Option {
+	return func(o *PrettyOpts) {
+		o.header = header
+	}
+}
 
 type Pretty interface {
 	Pretty(level int, opts ...Option) string
@@ -30,6 +36,8 @@ func indent(level int) string {
 
 const tabSize int = 2
 
+const multilineThreshold int = 16
+
 func shouldMultiline[T Node](nodes []T) bool {
 	for _, node := range nodes {
 		str := node.Pretty(0)
@@ -38,7 +46,7 @@ func shouldMultiline[T Node](nodes []T) bool {
 			return true
 		}
 
-		if len(str) > 10 {
+		if len(str) > multilineThreshold {
 			return true
 		}
 	}
@@ -47,7 +55,6 @@ func shouldMultiline[T Node](nodes []T) bool {
 }
 
 type Node interface {
-	fmt.Stringer
 	Pretty
 	Base() token.Token
 }
@@ -76,10 +83,6 @@ type Var struct {
 	Name token.Token
 }
 
-func (v *Var) String() string {
-	return utils.Parenthesize("var", v.Name).String()
-}
-
 func (v *Var) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -87,7 +90,7 @@ func (v *Var) Pretty(level int, opts ...Option) string {
 		opt(o)
 	}
 
-	return fmt.Sprintf("%s%s%v", indent(level), o.Header, v.Name)
+	return fmt.Sprintf("%s%s%v", indent(level), o.header, v.Name)
 }
 
 func (v *Var) Base() token.Token {
@@ -113,10 +116,6 @@ type Literal struct {
 	token.Token
 }
 
-func (l *Literal) String() string {
-	return utils.Parenthesize("literal", l.Token).String()
-}
-
 func (l *Literal) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -124,7 +123,7 @@ func (l *Literal) Pretty(level int, opts ...Option) string {
 		opt(o)
 	}
 
-	return fmt.Sprintf("%s%s%v", indent(level), o.Header, l.Token)
+	return fmt.Sprintf("%s%s%v", indent(level), o.header, l.Token)
 }
 
 func (l *Literal) Base() token.Token {
@@ -145,10 +144,6 @@ type Symbol struct {
 	Name token.Token
 }
 
-func (s *Symbol) String() string {
-	return utils.Parenthesize("symbol", s.Name).String()
-}
-
 func (s *Symbol) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -157,10 +152,10 @@ func (s *Symbol) Pretty(level int, opts ...Option) string {
 	}
 
 	if s.Name.Lexeme[0] == ':' {
-		return fmt.Sprintf("%s%s%s", indent(level), o.Header, s.Name.Lexeme)
+		return fmt.Sprintf("%s%s%s", indent(level), o.header, s.Name.Lexeme)
 	}
 
-	return fmt.Sprintf("%s%s:%s", indent(level), o.Header, s.Name.Lexeme)
+	return fmt.Sprintf("%s%s:%s", indent(level), o.header, s.Name.Lexeme)
 }
 
 func (s *Symbol) Base() token.Token {
@@ -183,10 +178,6 @@ type Destruct struct {
 	Conts []Consumer
 }
 
-func (d *Destruct) String() string {
-	return fmt.Sprintf(".%s(%v; %v)", d.Name, utils.Concat(d.Args), utils.Concat(d.Conts))
-}
-
 func (d *Destruct) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -197,14 +188,14 @@ func (d *Destruct) Pretty(level int, opts ...Option) string {
 	var builder strings.Builder
 	isMultiline := false
 
-	fmt.Fprintf(&builder, "%s%s.%s(", indent(level), o.Header, d.Name)
+	fmt.Fprintf(&builder, "%s%s.%s(", indent(level), o.header, d.Name)
 	if shouldMultiline(d.Args) {
 		isMultiline = true
 		for i, arg := range d.Args {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%v", arg.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, "\n%v", arg.Pretty(level+tabSize+len(o.header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%v", arg.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, ",\n%v", arg.Pretty(level+tabSize+len(o.header)))
 			}
 		}
 	} else {
@@ -222,9 +213,9 @@ func (d *Destruct) Pretty(level int, opts ...Option) string {
 	if isMultiline || shouldMultiline(d.Conts) {
 		for i, cont := range d.Conts {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%v", cont.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, "\n%v", cont.Pretty(level+tabSize+len(o.header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%v", cont.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, ",\n%v", cont.Pretty(level+tabSize+len(o.header)))
 			}
 		}
 	} else {
@@ -260,10 +251,7 @@ type Extract struct {
 	Target Pattern
 	Name   string
 	Args   []Pattern
-}
-
-func (e *Extract) String() string {
-	return fmt.Sprintf("%v.%s(%v)", e.Target, e.Name, utils.Concat(e.Args))
+	Conts  []Pattern
 }
 
 func (e *Extract) Pretty(level int, opts ...Option) string {
@@ -274,15 +262,17 @@ func (e *Extract) Pretty(level int, opts ...Option) string {
 	}
 
 	var builder strings.Builder
+	isMultiline := false
 
 	fmt.Fprintf(&builder, "%s.%s(", e.Target.Pretty(level, opts...), e.Name)
 
 	if shouldMultiline(e.Args) {
+		isMultiline = true
 		for i, arg := range e.Args {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.header)))
 			}
 		}
 	} else {
@@ -291,6 +281,26 @@ func (e *Extract) Pretty(level int, opts ...Option) string {
 				fmt.Fprintf(&builder, "%s", arg.Pretty(0))
 			} else {
 				fmt.Fprintf(&builder, ", %s", arg.Pretty(0))
+			}
+		}
+	}
+
+	fmt.Fprintf(&builder, ";")
+
+	if isMultiline || shouldMultiline(e.Conts) {
+		for i, cont := range e.Conts {
+			if i == 0 {
+				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.header)))
+			} else {
+				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.header)))
+			}
+		}
+	} else {
+		for i, cont := range e.Conts {
+			if i == 0 {
+				fmt.Fprintf(&builder, " %s", cont.Pretty(0))
+			} else {
+				fmt.Fprintf(&builder, ", %s", cont.Pretty(0))
 			}
 		}
 	}
@@ -315,10 +325,6 @@ type Prim struct {
 	Cont Consumer
 }
 
-func (p *Prim) String() string {
-	return utils.Parenthesize("prim", p.Name, utils.Concat(p.Args), p.Cont).String()
-}
-
 func (p *Prim) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -329,15 +335,15 @@ func (p *Prim) Pretty(level int, opts ...Option) string {
 	var builder strings.Builder
 	isMultiline := false
 
-	fmt.Fprintf(&builder, "%s%sprim %v(", indent(level), o.Header, p.Name)
+	fmt.Fprintf(&builder, "%s%sprim %v(", indent(level), o.header, p.Name)
 
 	if shouldMultiline(p.Args) {
 		isMultiline = true
 		for i, arg := range p.Args {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.header)))
 			}
 		}
 	} else {
@@ -353,7 +359,7 @@ func (p *Prim) Pretty(level int, opts ...Option) string {
 	fmt.Fprintf(&builder, ";")
 
 	if isMultiline || shouldMultiline([]Consumer{p.Cont}) {
-		fmt.Fprintf(&builder, "\n%s", p.Cont.Pretty(level+tabSize+len(o.Header)))
+		fmt.Fprintf(&builder, "\n%s", p.Cont.Pretty(level+tabSize+len(o.header)))
 	} else {
 		fmt.Fprintf(&builder, " %s", p.Cont.Pretty(0))
 	}
@@ -378,10 +384,6 @@ type Do struct {
 	Body Statement
 }
 
-func (b *Do) String() string {
-	return utils.Parenthesize("μ", b.Name, b.Body).String()
-}
-
 func (b *Do) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -391,8 +393,8 @@ func (b *Do) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%sμ %v:\n", indent(level), o.Header, b.Name)
-	fmt.Fprintf(&builder, "%s", b.Body.Pretty(level+tabSize+len(o.Header)))
+	fmt.Fprintf(&builder, "%s%sμ %v:\n", indent(level), o.header, b.Name)
+	fmt.Fprintf(&builder, "%s", b.Body.Pretty(level+tabSize+len(o.header)))
 
 	return builder.String()
 }
@@ -412,10 +414,6 @@ type Then struct {
 	Body Statement
 }
 
-func (t *Then) String() string {
-	return utils.Parenthesize("μ~", t.Name, t.Body).String()
-}
-
 func (t *Then) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -425,8 +423,8 @@ func (t *Then) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%sμ~ %v:\n", indent(level), o.Header, t.Name)
-	fmt.Fprintf(&builder, "%s", t.Body.Pretty(level+tabSize+len(o.Header)))
+	fmt.Fprintf(&builder, "%s%sμ~ %v:\n", indent(level), o.header, t.Name)
+	fmt.Fprintf(&builder, "%s", t.Body.Pretty(level+tabSize+len(o.header)))
 
 	return builder.String()
 }
@@ -445,10 +443,6 @@ type Cut struct {
 	Consumer Consumer
 }
 
-func (c *Cut) String() string {
-	return fmt.Sprintf("{%v | %v}", c.Producer, c.Consumer)
-}
-
 func (c *Cut) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -456,9 +450,7 @@ func (c *Cut) Pretty(level int, opts ...Option) string {
 		opt(o)
 	}
 
-	return fmt.Sprintf("%s\n%s", c.Producer.Pretty(level), c.Consumer.Pretty(level, func(opt *PrettyOpts) {
-		opt.Header = "| "
-	}))
+	return fmt.Sprintf("%s\n%s", c.Producer.Pretty(level), c.Consumer.Pretty(level, WithHeader("| ")))
 }
 
 func (c *Cut) Base() token.Token {
@@ -474,10 +466,6 @@ type Case struct {
 	Clauses []*Clause
 }
 
-func (c *Case) String() string {
-	return utils.Parenthesize("case", utils.Concat(c.Clauses)).String()
-}
-
 func (c *Case) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -487,10 +475,10 @@ func (c *Case) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%scase", indent(level), o.Header)
+	fmt.Fprintf(&builder, "%s%scase", indent(level), o.header)
 
 	for _, clause := range c.Clauses {
-		fmt.Fprintf(&builder, "\n%s", clause.Pretty(level+tabSize+len(o.Header)))
+		fmt.Fprintf(&builder, "\n%s", clause.Pretty(level+tabSize+len(o.header)))
 	}
 
 	return builder.String()
@@ -510,10 +498,6 @@ type Clause struct {
 	Body    Statement
 }
 
-func (c *Clause) String() string {
-	return fmt.Sprintf("(%v -> %v)", c.Pattern, c.Body)
-}
-
 func (c *Clause) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -523,8 +507,8 @@ func (c *Clause) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s ->\n", c.Pattern.Pretty(level+len(o.Header)))
-	fmt.Fprintf(&builder, "%s", c.Body.Pretty(level+tabSize+len(o.Header)))
+	fmt.Fprintf(&builder, "%s ->\n", c.Pattern.Pretty(level+len(o.header)))
+	fmt.Fprintf(&builder, "%s", c.Body.Pretty(level+tabSize+len(o.header)))
 
 	return builder.String()
 }
@@ -540,10 +524,6 @@ type Cocase struct {
 	Methods []*Method
 }
 
-func (c *Cocase) String() string {
-	return utils.Parenthesize("cocase", utils.Concat(c.Methods)).String()
-}
-
 func (c *Cocase) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -553,10 +533,10 @@ func (c *Cocase) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%scocase", indent(level), o.Header)
+	fmt.Fprintf(&builder, "%s%scocase", indent(level), o.header)
 
 	for _, method := range c.Methods {
-		fmt.Fprintf(&builder, "\n%s", method.Pretty(level+tabSize+len(o.Header)))
+		fmt.Fprintf(&builder, "\n%s", method.Pretty(level+tabSize+len(o.header)))
 	}
 
 	return builder.String()
@@ -578,10 +558,6 @@ type Method struct {
 	Body   Statement
 }
 
-func (m *Method) String() string {
-	return fmt.Sprintf("(.%s(%v; %v) -> %v)", m.Name, utils.Concat(m.Params), utils.Concat(m.Labels), m.Body)
-}
-
 func (m *Method) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -591,7 +567,7 @@ func (m *Method) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%s.%s(", indent(level), o.Header, m.Name)
+	fmt.Fprintf(&builder, "%s%s.%s(", indent(level), o.header, m.Name)
 	for i, param := range m.Params {
 		if i == 0 {
 			fmt.Fprintf(&builder, "%v", param)
@@ -609,7 +585,7 @@ func (m *Method) Pretty(level int, opts ...Option) string {
 	}
 	fmt.Fprintf(&builder, ") ->\n")
 
-	fmt.Fprintf(&builder, "%s", m.Body.Pretty(level+tabSize+len(o.Header)))
+	fmt.Fprintf(&builder, "%s", m.Body.Pretty(level+tabSize+len(o.header)))
 
 	return builder.String()
 }
@@ -627,10 +603,6 @@ type Def struct {
 	Body    Statement
 }
 
-func (d *Def) String() string {
-	return utils.Parenthesize("def", d.Name, utils.Concat(d.Returns), d.Body).String()
-}
-
 func (d *Def) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -639,12 +611,12 @@ func (d *Def) Pretty(level int, opts ...Option) string {
 	}
 
 	return fmt.Sprintf(
-		"%s%sdef %v %v\n%s",
+		"%s%sdef %v(%v)\n%s",
 		indent(level),
-		o.Header,
+		o.header,
 		d.Name,
 		utils.Concat(d.Returns),
-		d.Body.Pretty(level+tabSize+len(o.Header)),
+		d.Body.Pretty(level+tabSize+len(o.header)),
 	)
 }
 
@@ -660,10 +632,6 @@ type Invoke struct {
 	Conts []Consumer
 }
 
-func (i *Invoke) String() string {
-	return utils.Parenthesize("invoke", i.Name, utils.Concat(i.Conts)).String()
-}
-
 func (i *Invoke) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -673,14 +641,14 @@ func (i *Invoke) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%sinvoke %v(", indent(level), o.Header, i.Name)
+	fmt.Fprintf(&builder, "%s%sinvoke %v(", indent(level), o.header, i.Name)
 
 	if shouldMultiline(i.Conts) {
 		for i, cont := range i.Conts {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.Header)))
+				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.header)))
 			}
 		}
 	} else {

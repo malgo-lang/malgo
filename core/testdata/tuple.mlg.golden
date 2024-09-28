@@ -1,40 +1,41 @@
-def f.0 ret.2
+def f.0($def.2)
   cocase
-    .ap(:p1.4; lambda.3) ->
-      μ case.5:
-        μ a.6:
+    .ap($p1.4; $lambda.3) ->
+      μ $case.5:
+        μ $ap.6:
           :tuple
-          | .ap(:p1.4; a.6)
+          | .ap($p1.4; $ap.6)
         | case
             :tuple.ap(
-              :tuple.ap(x.7, y.8)) ->
-              μ prim.9:
-                prim add(x.7, y.8; prim.9)
-              | case.5
-      | lambda.3
-  | ret.2
-def main.1 ret.10
+              :tuple.ap(x.7, y.8; $_.9);
+              $_.10) ->
+              μ $prim.11:
+                prim add(x.7, y.8; $prim.11)
+              | $case.5
+      | $lambda.3
+  | $def.2
+def main.1($def.12)
   cocase
-    .ap(; lambda.11) ->
-      μ seq.14:
-        μ prim.12:
+    .ap(; $lambda.13) ->
+      μ $seq.16:
+        μ $prim.14:
           prim print(
-            μ a.13:
+            μ $ap.15:
               :tuple
-              | .ap(1, "string"; a.13);
-            prim.12)
-        | μ~ hole.19:
-            μ prim.15:
+              | .ap(1, "string"; $ap.15);
+            $prim.14)
+        | μ~ $_.21:
+            μ $prim.17:
               prim print(
-                μ a.17:
-                  μ ret.16:
-                    invoke f.0(ret.16)
+                μ $ap.19:
+                  μ $top.18:
+                    invoke f.0($top.18)
                   | .ap(
-                      μ a.18:
+                      μ $ap.20:
                         :tuple
-                        | .ap(1, 2; a.18); 
-                      a.17);
-                prim.15)
-            | seq.14
-      | lambda.11
-  | ret.10
+                        | .ap(1, 2; $ap.20); 
+                      $ap.19);
+                $prim.17)
+            | $seq.16
+      | $lambda.13
+  | $def.12

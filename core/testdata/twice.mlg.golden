@@ -1,42 +1,42 @@
-def add.0 ret.2
+def add.0($def.2)
   cocase
-    .ap(:p1.4, :p2.5; lambda.3) ->
-      μ case.6:
-        μ a.7:
+    .ap($p1.4, $p2.5; $lambda.3) ->
+      μ $case.6:
+        μ $ap.7:
           :tuple
-          | .ap(:p1.4, :p2.5; a.7)
+          | .ap($p1.4, $p2.5; $ap.7)
         | case
-            :tuple.ap(x.8, y.9) ->
-              μ prim.10:
-                prim add(x.8, y.9; prim.10)
-              | case.6
-      | lambda.3
-  | ret.2
-def main.1 ret.11
+            :tuple.ap(x.8, y.9; $_.10) ->
+              μ $prim.11:
+                prim add(x.8, y.9; $prim.11)
+              | $case.6
+      | $lambda.3
+  | $def.2
+def main.1($def.12)
   cocase
-    .ap(; lambda.12) ->
-      μ let.16:
-        μ a.15:
-          μ ret.14:
-            invoke add.0(ret.14)
-          | .ap(1; a.15)
+    .ap(; $lambda.13) ->
+      μ $let.17:
+        μ $ap.16:
+          μ $top.15:
+            invoke add.0($top.15)
+          | .ap(1; $ap.16)
         | case
-            add1.13 ->
-              μ seq.19:
-                μ prim.17:
+            add1.14 ->
+              μ $seq.20:
+                μ $prim.18:
                   prim print(
-                    μ a.18:
-                      add1.13
-                      | .ap(2; a.18);
-                    prim.17)
-                | μ~ hole.22:
-                    μ prim.20:
+                    μ $ap.19:
+                      add1.14
+                      | .ap(2; $ap.19);
+                    $prim.18)
+                | μ~ $_.23:
+                    μ $prim.21:
                       prim print(
-                        μ a.21:
-                          add1.13
-                          | .ap(3; a.21);
-                        prim.20)
-                    | seq.19
-              | let.16
-      | lambda.12
-  | ret.11
+                        μ $ap.22:
+                          add1.14
+                          | .ap(3; $ap.22);
+                        $prim.21)
+                    | $seq.20
+              | $let.17
+      | $lambda.13
+  | $def.12

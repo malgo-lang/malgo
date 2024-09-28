@@ -1,87 +1,89 @@
-def option.0 ret.4
+def option.0($def.4)
   cocase
-    .none(; object.5) ->
+    .none(; $object.5) ->
       "none"
-      | object.5
-    .some(; object.5) ->
+      | $object.5
+    .some(; $object.12) ->
       cocase
-        .ap(:p1.7; lambda.6) ->
-          μ case.8:
-            μ a.9:
+        .ap($p1.7; $lambda.6) ->
+          μ $case.8:
+            μ $ap.9:
               :tuple
-              | .ap(:p1.7; a.9)
+              | .ap($p1.7; $ap.9)
             | case
-                :tuple.ap(x.10) ->
+                :tuple.ap(x.10; $_.11) ->
                   x.10
-                  | case.8
-          | lambda.6
-      | object.5
-  | ret.4
-def map.1 ret.11
+                  | $case.8
+          | $lambda.6
+      | $object.12
+  | $def.4
+def map.1($def.13)
   cocase
-    .ap(:p1.13, :p2.14; lambda.12) ->
-      μ case.15:
-        μ a.16:
+    .ap($p1.15, $p2.16; $lambda.14) ->
+      μ $case.17:
+        μ $ap.18:
           :tuple
-          | .ap(:p1.13, :p2.14; a.16)
+          | .ap($p1.15, $p2.16; $ap.18)
         | case
             :tuple.ap(
-              f.17,
-              o.18.none()) ->
-              μ proj.19:
-                o.18
-                | .none(; proj.19)
-              | case.15
+              f.19,
+              o.20.none(; $_.21);
+              $_.22) ->
+              μ $proj.23:
+                o.20
+                | .none(; $proj.23)
+              | $case.17
             :tuple.ap(
-              f.20,
-              o.21.some().ap(x.22)) ->
-              μ a.24:
-                μ proj.23:
-                  o.21
-                  | .some(; proj.23)
+              f.24,
+              o.25.some(; $_.26).ap(x.27; $_.28);
+              $_.29) ->
+              μ $ap.31:
+                μ $proj.30:
+                  o.25
+                  | .some(; $proj.30)
                 | .ap(
-                    μ a.25:
-                      f.20
-                      | .ap(x.22; a.25); 
-                    a.24)
-              | case.15
-      | lambda.12
-  | ret.11
-def addone.2 ret.26
+                    μ $ap.32:
+                      f.24
+                      | .ap(x.27; $ap.32); 
+                    $ap.31)
+              | $case.17
+      | $lambda.14
+  | $def.13
+def addone.2($def.33)
   cocase
-    .ap(:p1.28; lambda.27) ->
-      μ case.29:
-        μ a.30:
+    .ap($p1.35; $lambda.34) ->
+      μ $case.36:
+        μ $ap.37:
           :tuple
-          | .ap(:p1.28; a.30)
+          | .ap($p1.35; $ap.37)
         | case
-            :tuple.ap(x.31) ->
-              μ prim.32:
-                prim add(x.31, 1; prim.32)
-              | case.29
-      | lambda.27
-  | ret.26
-def main.3 ret.33
+            :tuple.ap(x.38; $_.39) ->
+              μ $prim.40:
+                prim add(x.38, 1; $prim.40)
+              | $case.36
+      | $lambda.34
+  | $def.33
+def main.3($def.41)
   cocase
-    .ap(; lambda.34) ->
-      μ let.42:
-        μ a.37:
-          μ ret.36:
-            invoke map.1(ret.36)
+    .ap(; $lambda.42) ->
+      μ $let.50:
+        μ $ap.45:
+          μ $top.44:
+            invoke map.1($top.44)
           | .ap(
-              μ ret.38:
-                invoke addone.2(ret.38),
-              μ a.41:
-                μ proj.39:
-                  μ ret.40:
-                    invoke option.0(ret.40)
-                  | .some(; proj.39)
-                | .ap(41; a.41); 
-              a.37)
+              μ $top.46:
+                invoke addone.2($top.46),
+              μ $ap.49:
+                μ $proj.47:
+                  μ $top.48:
+                    invoke option.0($top.48)
+                  | .some(; $proj.47)
+                | .ap(41; $ap.49); 
+              $ap.45)
         | case
-            x.35 ->
-              μ prim.43:
-                prim print_trace(x.35; prim.43)
-              | let.42
-      | lambda.34
-  | ret.33
+            x.43 ->
+              μ $prim.51:
+                prim print_trace(x.43; $prim.51)
+              | $let.50
+      | $lambda.42
+  | $def.41

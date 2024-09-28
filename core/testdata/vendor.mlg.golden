@@ -1,96 +1,95 @@
-def vendor.0 ret.2
+def vendor.0($def.2)
   cocase
-    .ap(:p1.4; lambda.3) ->
+    .ap($p1.4; $lambda.3) ->
       cocase
-        .get(; object.5) ->
-          μ case.6:
-            μ a.7:
+        .get(; $object.9) ->
+          μ $case.5:
+            μ $ap.6:
               :tuple
-              | .ap(:p1.4; a.7)
+              | .ap($p1.4; $ap.6)
             | case
-                :tuple.ap(items.8) ->
+                :tuple.ap(items.7; $_.8) ->
                   :None
-                  | case.6
-          | object.5
-        .put(; object.5) ->
+                  | $case.5
+          | $object.9
+        .put(; $object.40) ->
           cocase
-            .get(; object.9) ->
-              μ case.10:
-                μ a.11:
+            .get(; $object.31) ->
+              μ $case.10:
+                μ $ap.11:
                   :tuple
-                  | .ap(:p1.4; a.11)
+                  | .ap($p1.4; $ap.11)
                 | case
-                    :tuple.ap(:Nil) ->
-                      μ seq.13:
-                        μ prim.12:
-                          prim print("Nil case"; prim.12)
-                        | μ~ hole.17:
-                            μ seq.15:
-                              μ prim.14:
-                                prim print(:Nil; prim.14)
-                              | μ~ hole.16:
+                    :tuple.ap(:Nil; $_.12) ->
+                      μ $seq.14:
+                        μ $prim.13:
+                          prim print("Nil case"; $prim.13)
+                        | μ~ $_.18:
+                            μ $seq.16:
+                              μ $prim.15:
+                                prim print(:Nil; $prim.15)
+                              | μ~ $_.17:
                                   :None
-                                  | seq.15
-                            | seq.13
-                      | case.10
+                                  | $seq.16
+                            | $seq.14
+                      | $case.10
                     :tuple.ap(
-                      :Cons.ap(x.18, xs.19)) ->
-                      μ seq.21:
-                        μ prim.20:
-                          prim print(
-                            "Cons case";
-                            prim.20)
-                        | μ~ hole.27:
-                            μ seq.24:
-                              μ prim.22:
+                      :Cons.ap(x.19, xs.20; $_.21);
+                      $_.22) ->
+                      μ $seq.24:
+                        μ $prim.23:
+                          prim print("Cons case"; $prim.23)
+                        | μ~ $_.30:
+                            μ $seq.27:
+                              μ $prim.25:
                                 prim print(
-                                  μ a.23:
+                                  μ $ap.26:
                                     :Cons
-                                    | .ap(x.18, xs.19; a.23);
-                                  prim.22)
-                              | μ~ hole.26:
-                                  μ a.25:
+                                    | .ap(x.19, xs.20; $ap.26);
+                                  $prim.25)
+                              | μ~ $_.29:
+                                  μ $ap.28:
                                     :Some
-                                    | .ap(x.18; a.25)
-                                  | seq.24
-                            | seq.21
-                      | case.10
-              | object.9
-            .put(; object.9) ->
-              μ case.28:
-                μ a.29:
+                                    | .ap(x.19; $ap.28)
+                                  | $seq.27
+                            | $seq.24
+                      | $case.10
+              | $object.31
+            .put(; $object.39) ->
+              μ $case.32:
+                μ $ap.33:
                   :tuple
-                  | .ap(:p1.4; a.29)
+                  | .ap($p1.4; $ap.33)
                 | case
-                    :tuple.ap(items.30) ->
-                      μ proj.31:
-                        μ a.33:
-                          μ ret.32:
-                            invoke vendor.0(ret.32)
-                          | .ap(items.30; a.33)
-                        | .put(; proj.31)
-                      | case.28
-              | object.9
-          | object.5
-      | lambda.3
-  | ret.2
-def main.1 ret.34
+                    :tuple.ap(items.34; $_.35) ->
+                      μ $proj.36:
+                        μ $ap.38:
+                          μ $top.37:
+                            invoke vendor.0($top.37)
+                          | .ap(items.34; $ap.38)
+                        | .put(; $proj.36)
+                      | $case.32
+              | $object.39
+          | $object.40
+      | $lambda.3
+  | $def.2
+def main.1($def.41)
   cocase
-    .ap(; lambda.35) ->
-      μ prim.36:
+    .ap(; $lambda.42) ->
+      μ $prim.43:
         prim print(
-          μ proj.37:
-            μ proj.38:
-              μ a.40:
-                μ ret.39:
-                  invoke vendor.0(ret.39)
+          μ $proj.44:
+            μ $proj.45:
+              μ $ap.47:
+                μ $top.46:
+                  invoke vendor.0($top.46)
                 | .ap(
-                    μ a.41:
+                    μ $ap.48:
                       :Cons
-                      | .ap(0, :Nil; a.41); 
-                    a.40)
-              | .put(; proj.38)
-            | .get(; proj.37);
-          prim.36)
-      | lambda.35
-  | ret.34
+                      | .ap(0, :Nil; $ap.48); 
+                    $ap.47)
+              | .put(; $proj.45)
+            | .get(; $proj.44);
+          $prim.43)
+      | $lambda.42
+  | $def.41

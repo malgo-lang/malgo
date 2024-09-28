@@ -1,117 +1,117 @@
-def zipWith.0 ret.4
+def zipWith.0($def.4)
   cocase
-    .ap(:p1.6, :p2.7, :p3.8; lambda.5) ->
+    .ap($p1.6, $p2.7, $p3.8; $lambda.5) ->
       cocase
-        .head(; object.9) ->
-          μ case.10:
-            μ a.11:
+        .head(; $object.18) ->
+          μ $case.9:
+            μ $ap.10:
               :tuple
-              | .ap(:p1.6, :p2.7, :p3.8; a.11)
+              | .ap($p1.6, $p2.7, $p3.8; $ap.10)
             | case
-                :tuple.ap(f.12, xs.13, ys.14) ->
-                  μ a.15:
-                    f.12
+                :tuple.ap(f.11, xs.12, ys.13; $_.14) ->
+                  μ $ap.15:
+                    f.11
                     | .ap(
-                        μ proj.16:
-                          xs.13
-                          | .head(; proj.16),
-                        μ proj.17:
-                          ys.14
-                          | .head(; proj.17); 
-                        a.15)
-                  | case.10
-          | object.9
-        .tail(; object.9) ->
-          μ case.18:
-            μ a.19:
+                        μ $proj.16:
+                          xs.12
+                          | .head(; $proj.16),
+                        μ $proj.17:
+                          ys.13
+                          | .head(; $proj.17); 
+                        $ap.15)
+                  | $case.9
+          | $object.18
+        .tail(; $object.29) ->
+          μ $case.19:
+            μ $ap.20:
               :tuple
-              | .ap(:p1.6, :p2.7, :p3.8; a.19)
+              | .ap($p1.6, $p2.7, $p3.8; $ap.20)
             | case
-                :tuple.ap(f.20, xs.21, ys.22) ->
-                  μ a.24:
-                    μ ret.23:
-                      invoke zipWith.0(ret.23)
+                :tuple.ap(f.21, xs.22, ys.23; $_.24) ->
+                  μ $ap.26:
+                    μ $top.25:
+                      invoke zipWith.0($top.25)
                     | .ap(
-                        f.20,
-                        μ proj.25:
-                          xs.21
-                          | .tail(; proj.25),
-                        μ proj.26:
-                          ys.22
-                          | .tail(; proj.26); 
-                        a.24)
-                  | case.18
-          | object.9
-      | lambda.5
-  | ret.4
-def +.1 ret.27
+                        f.21,
+                        μ $proj.27:
+                          xs.22
+                          | .tail(; $proj.27),
+                        μ $proj.28:
+                          ys.23
+                          | .tail(; $proj.28); 
+                        $ap.26)
+                  | $case.19
+          | $object.29
+      | $lambda.5
+  | $def.4
+def +.1($def.30)
   cocase
-    .ap(:p1.29, :p2.30; lambda.28) ->
-      μ case.31:
-        μ a.32:
+    .ap($p1.32, $p2.33; $lambda.31) ->
+      μ $case.34:
+        μ $ap.35:
           :tuple
-          | .ap(:p1.29, :p2.30; a.32)
+          | .ap($p1.32, $p2.33; $ap.35)
         | case
-            :tuple.ap(x.33, y.34) ->
-              μ prim.35:
-                prim add(x.33, y.34; prim.35)
-              | case.31
-      | lambda.28
-  | ret.27
-def fib.2 ret.36
+            :tuple.ap(x.36, y.37; $_.38) ->
+              μ $prim.39:
+                prim add(x.36, y.37; $prim.39)
+              | $case.34
+      | $lambda.31
+  | $def.30
+def fib.2($def.40)
   cocase
-    .head(; object.37) ->
+    .head(; $object.41) ->
       1
-      | object.37
-    .tail(; object.37) ->
+      | $object.41
+    .tail(; $object.59) ->
       cocase
-        .head(; object.38) ->
+        .head(; $object.42) ->
           1
-          | object.38
-        .tail(; object.38) ->
-          μ a.40:
-            μ ret.39:
-              invoke zipWith.0(ret.39)
+          | $object.42
+        .tail(; $object.58) ->
+          μ $ap.44:
+            μ $top.43:
+              invoke zipWith.0($top.43)
             | .ap(
                 cocase
-                  .ap(:p1.42, :p2.43; lambda.41) ->
-                    μ case.44:
-                      μ a.45:
+                  .ap($p1.46, $p2.47; $lambda.45) ->
+                    μ $case.48:
+                      μ $ap.49:
                         :tuple
-                        | .ap(:p1.42, :p2.43; a.45)
+                        | .ap($p1.46, $p2.47; $ap.49)
                       | case
-                          :tuple.ap(x.46, y.47) ->
-                            μ a.49:
-                              μ ret.48:
-                                invoke +.1(ret.48)
-                              | .ap(x.46, y.47; a.49)
-                            | case.44
-                    | lambda.41,
-                μ ret.50:
-                  invoke fib.2(ret.50),
-                μ proj.51:
-                  μ ret.52:
-                    invoke fib.2(ret.52)
-                  | .tail(; proj.51); 
-                a.40)
-          | object.38
-      | object.37
-  | ret.36
-def main.3 ret.53
+                          :tuple.ap(x.50, y.51; $_.52) ->
+                            μ $ap.54:
+                              μ $top.53:
+                                invoke +.1($top.53)
+                              | .ap(x.50, y.51; $ap.54)
+                            | $case.48
+                    | $lambda.45,
+                μ $top.55:
+                  invoke fib.2($top.55),
+                μ $proj.56:
+                  μ $top.57:
+                    invoke fib.2($top.57)
+                  | .tail(; $proj.56); 
+                $ap.44)
+          | $object.58
+      | $object.59
+  | $def.40
+def main.3($def.60)
   cocase
-    .ap(; lambda.54) ->
-      μ prim.55:
+    .ap(; $lambda.61) ->
+      μ $prim.62:
         prim print(
-          μ proj.56:
-            μ proj.57:
-              μ proj.58:
-                μ proj.59:
-                  μ ret.60:
-                    invoke fib.2(ret.60)
-                  | .tail(; proj.59)
-                | .tail(; proj.58)
-              | .tail(; proj.57)
-            | .head(; proj.56);
-          prim.55)
-      | lambda.54
-  | ret.53
+          μ $proj.63:
+            μ $proj.64:
+              μ $proj.65:
+                μ $proj.66:
+                  μ $top.67:
+                    invoke fib.2($top.67)
+                  | .tail(; $proj.66)
+                | .tail(; $proj.65)
+              | .tail(; $proj.64)
+            | .head(; $proj.63);
+          $prim.62)
+      | $lambda.61
+  | $def.60

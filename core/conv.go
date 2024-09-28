@@ -37,7 +37,7 @@ func (c *Converter) fresh() int {
 func (c *Converter) newName(lexeme string, base token.Location) token.Token {
 	return token.Token{
 		Kind:     token.IDENT,
-		Lexeme:   lexeme,
+		Lexeme:   "$" + lexeme,
 		Location: base,
 		Literal:  c.fresh(),
 	}
@@ -74,7 +74,7 @@ func (c *Converter) ConvDef(decl *ast.VarDecl) (*Def, error) {
 	}
 	name := withUnique(decl.Name, uniq)
 
-	ret := c.newName("ret", decl.Base().Location)
+	ret := c.newName("def", decl.Base().Location) // return definition
 	body, err := c.ConvExpr(decl.Expr)
 	if err != nil {
 		return nil, err
@@ -106,7 +106,7 @@ func (c *Converter) ConvExpr(expr ast.Node) (Producer, error) {
 		}
 
 		if uniq, ok := c.toplevels[expr.Name.Lexeme]; ok {
-			ret := c.newName("ret", expr.Base().Location)
+			ret := c.newName("top", expr.Base().Location) // return top-level variable
 
 			return &Do{
 				Name: ret,
@@ -170,7 +170,7 @@ func (c *Converter) convTuple(expr *ast.Tuple) (Producer, error) {
 }
 
 func (c *Converter) convAccess(expr *ast.Access) (Producer, error) {
-	ret := c.newName("proj", expr.Base().Location)
+	ret := c.newName("proj", expr.Base().Location) // result of projection
 	receiver, err := c.ConvExpr(expr.Receiver)
 	if err != nil {
 		return nil, err
@@ -273,7 +273,7 @@ func (c *Converter) convSeq(expr *ast.Seq) (Producer, error) {
 		return nil, err
 	}
 
-	hole := c.newName("hole", head.Base().Location)
+	hole := c.newName("_", head.Base().Location)
 
 	return &Do{
 		Name: ret,
@@ -291,7 +291,7 @@ func (c *Converter) convSeq(expr *ast.Seq) (Producer, error) {
 }
 
 func (c *Converter) convLambda(expr *ast.Lambda) (Producer, error) {
-	cont := c.newName("lambda", expr.Base().Location)
+	cont := c.newName("lambda", expr.Base().Location) // return point of lambda
 
 	c.env = &env{c.env, make(map[string]int)}
 	params := make([]token.Token, len(expr.Params))
@@ -375,8 +375,6 @@ func (c *Converter) convCase(expr *ast.Case) (Producer, error) {
 }
 
 func (c *Converter) convObject(expr *ast.Object) (Producer, error) {
-	ret := c.newName("object", expr.Base().Location)
-
 	methods := make([]*Method, len(expr.Fields))
 	for i, field := range expr.Fields {
 		c.env = &env{c.env, make(map[string]int)}
@@ -387,6 +385,8 @@ func (c *Converter) convObject(expr *ast.Object) (Producer, error) {
 		}
 
 		c.env = c.env.parent
+
+		ret := c.newName("object", expr.Base().Location) // return point of methods
 
 		methods[i] = &Method{
 			Name:   field.Name,
@@ -426,6 +426,8 @@ func (c *Converter) ConvPattern(pattern ast.Node) (Pattern, error) {
 			patterns[i] = p
 		}
 
+		hole := c.newName("_", pattern.Base().Location)
+
 		return &Extract{
 			Target: &Symbol{
 				Name: token.Token{
@@ -435,8 +437,9 @@ func (c *Converter) ConvPattern(pattern ast.Node) (Pattern, error) {
 					Literal:  nil,
 				},
 			},
-			Name: "ap",
-			Args: patterns,
+			Name:  "ap",
+			Args:  patterns,
+			Conts: []Pattern{&Var{Name: hole}},
 		}, nil
 	case *ast.Access:
 		receiver, err := c.ConvPattern(pattern.Receiver)
@@ -444,10 +447,13 @@ func (c *Converter) ConvPattern(pattern ast.Node) (Pattern, error) {
 			return nil, err
 		}
 
+		hole := c.newName("_", pattern.Base().Location)
+
 		return &Extract{
 			Target: receiver,
 			Name:   pattern.Name.Lexeme,
 			Args:   []Pattern{},
+			Conts:  []Pattern{&Var{Name: hole}},
 		}, nil
 	case *ast.Call:
 		fun, err := c.ConvPattern(pattern.Func)
@@ -465,10 +471,13 @@ func (c *Converter) ConvPattern(pattern ast.Node) (Pattern, error) {
 			args[i] = p
 		}
 
+		hole := c.newName("_", pattern.Base().Location)
+
 		return &Extract{
 			Target: fun,
 			Name:   "ap",
 			Args:   args,
+			Conts:  []Pattern{&Var{Name: hole}},
 		}, nil
 	}
 
@@ -476,7 +485,7 @@ func (c *Converter) ConvPattern(pattern ast.Node) (Pattern, error) {
 }
 
 func (c *Converter) apply(where token.Location, function Producer, args []ast.Node) (Producer, error) {
-	ret := c.newName("a", where)
+	ret := c.newName("ap", where)
 
 	producers := make([]Producer, len(args))
 	for i, arg := range args {

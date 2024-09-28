@@ -1,62 +1,62 @@
-def if.0 ret.2
+def if.0($def.2)
   cocase
-    .ap(:p1.4; lambda.3) ->
+    .ap($p1.4; $lambda.3) ->
       cocase
-        .if(; object.5) ->
-          μ case.6:
-            μ a.7:
+        .if(; $object.23) ->
+          μ $case.5:
+            μ $ap.6:
               :tuple
-              | .ap(:p1.4; a.7)
+              | .ap($p1.4; $ap.6)
             | case
-                :tuple.ap(:False) ->
+                :tuple.ap(:False; $_.7) ->
                   cocase
-                    .ap(:p2.9; lambda.8) ->
-                      μ case.10:
-                        μ a.11:
+                    .ap($p2.9; $lambda.8) ->
+                      μ $case.10:
+                        μ $ap.11:
                           :tuple
-                          | .ap(:p1.4, :p2.9; a.11)
+                          | .ap($p1.4, $p2.9; $ap.11)
                         | case
-                            :tuple.ap(:False, t.12) ->
-                              μ a.13:
+                            :tuple.ap(:False, t.12; $_.13) ->
+                              μ $ap.14:
                                 t.12
-                                | .ap(; a.13)
-                              | case.10
-                      | lambda.8
-                  | case.6
-                :tuple.ap(:True) ->
+                                | .ap(; $ap.14)
+                              | $case.10
+                      | $lambda.8
+                  | $case.5
+                :tuple.ap(:True; $_.15) ->
                   cocase
-                    .ap(:p1.15; lambda.14) ->
-                      μ case.16:
-                        μ a.17:
+                    .ap($p1.17; $lambda.16) ->
+                      μ $case.18:
+                        μ $ap.19:
                           :tuple
-                          | .ap(:p1.15; a.17)
+                          | .ap($p1.17; $ap.19)
                         | case
-                            :tuple.ap(t.18) ->
-                              μ a.19:
-                                t.18
-                                | .ap(; a.19)
-                              | case.16
-                      | lambda.14
-                  | case.6
-          | object.5
-      | lambda.3
-  | ret.2
-def main.1 ret.20
+                            :tuple.ap(t.20; $_.21) ->
+                              μ $ap.22:
+                                t.20
+                                | .ap(; $ap.22)
+                              | $case.18
+                      | $lambda.16
+                  | $case.5
+          | $object.23
+      | $lambda.3
+  | $def.2
+def main.1($def.24)
   cocase
-    .ap(; lambda.21) ->
-      μ a.25:
-        μ proj.22:
-          μ a.24:
-            μ ret.23:
-              invoke if.0(ret.23)
-            | .ap(:True; a.24)
-          | .if(; proj.22)
+    .ap(; $lambda.25) ->
+      μ $ap.29:
+        μ $proj.26:
+          μ $ap.28:
+            μ $top.27:
+              invoke if.0($top.27)
+            | .ap(:True; $ap.28)
+          | .if(; $proj.26)
         | .ap(
             cocase
-              .ap(; lambda.26) ->
-                μ prim.27:
-                  prim print("hello"; prim.27)
-                | lambda.26; 
-            a.25)
-      | lambda.21
-  | ret.20
+              .ap(; $lambda.30) ->
+                μ $prim.31:
+                  prim print("hello"; $prim.31)
+                | $lambda.30; 
+            $ap.29)
+      | $lambda.25
+  | $def.24

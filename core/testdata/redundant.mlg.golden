@@ -1,57 +1,57 @@
-def f.0 ret.2
+def f.0($def.2)
   cocase
-    .ap(:p1.4; lambda.3) ->
+    .ap($p1.4; $lambda.3) ->
       cocase
-        .h(; object.5) ->
-          μ case.6:
-            μ a.7:
+        .h(; $object.15) ->
+          μ $case.5:
+            μ $ap.6:
               :tuple
-              | .ap(:p1.4; a.7)
+              | .ap($p1.4; $ap.6)
             | case
-                :tuple.ap(0) ->
+                :tuple.ap(0; $_.7) ->
                   1
-                  | case.6
-                :tuple.ap(x.8) ->
+                  | $case.5
+                :tuple.ap(x.8; $_.9) ->
                   cocase
-                    .h(; object.9) ->
-                      μ case.10:
-                        μ a.11:
+                    .h(; $object.14) ->
+                      μ $case.10:
+                        μ $ap.11:
                           :tuple
-                          | .ap(:p1.4; a.11)
+                          | .ap($p1.4; $ap.11)
                         | case
-                            :tuple.ap(x.12) ->
+                            :tuple.ap(x.12; $_.13) ->
                               x.12
-                              | case.10
-                      | object.9
-                  | case.6
-          | object.5
-      | lambda.3
-  | ret.2
-def main.1 ret.13
+                              | $case.10
+                      | $object.14
+                  | $case.5
+          | $object.15
+      | $lambda.3
+  | $def.2
+def main.1($def.16)
   cocase
-    .ap(; lambda.14) ->
-      μ seq.19:
-        μ prim.15:
+    .ap(; $lambda.17) ->
+      μ $seq.22:
+        μ $prim.18:
           prim print(
-            μ proj.16:
-              μ a.18:
-                μ ret.17:
-                  invoke f.0(ret.17)
-                | .ap(0; a.18)
-              | .h(; proj.16);
-            prim.15)
-        | μ~ hole.25:
-            μ prim.20:
+            μ $proj.19:
+              μ $ap.21:
+                μ $top.20:
+                  invoke f.0($top.20)
+                | .ap(0; $ap.21)
+              | .h(; $proj.19);
+            $prim.18)
+        | μ~ $_.28:
+            μ $prim.23:
               prim print(
-                μ proj.21:
-                  μ proj.22:
-                    μ a.24:
-                      μ ret.23:
-                        invoke f.0(ret.23)
-                      | .ap(1; a.24)
-                    | .h(; proj.22)
-                  | .h(; proj.21);
-                prim.20)
-            | seq.19
-      | lambda.14
-  | ret.13
+                μ $proj.24:
+                  μ $proj.25:
+                    μ $ap.27:
+                      μ $top.26:
+                        invoke f.0($top.26)
+                      | .ap(1; $ap.27)
+                    | .h(; $proj.25)
+                  | .h(; $proj.24);
+                $prim.23)
+            | $seq.22
+      | $lambda.17
+  | $def.16
