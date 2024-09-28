@@ -1,3 +1,43 @@
-(def +.0 ret.3 {(cocase (.ap(:p1.5 :p2.6; lambda.4) -> {(μ case.7 {(μ a.8 {(symbol tuple); .ap((var :p1.5) (var :p2.6); (var a.8))}); (case ((symbol tuple).ap((var x.9) (var y.10)) -> {(μ prim.11 (prim add (var x.9) (var y.10) (var prim.11))); (var case.7)}))}); (var lambda.4)})); (var ret.3)})
-(def *.1 ret.12 {(cocase (.ap(:p1.14 :p2.15; lambda.13) -> {(μ case.16 {(μ a.17 {(symbol tuple); .ap((var :p1.14) (var :p2.15); (var a.17))}); (case ((symbol tuple).ap((var x.18) (var y.19)) -> {(μ prim.20 (prim mul (var x.18) (var y.19) (var prim.20))); (var case.16)}))}); (var lambda.13)})); (var ret.12)})
-(def main.2 ret.21 {(cocase (.ap(; lambda.22) -> {(μ a.24 {(μ ret.23 (invoke *.1 (var ret.23))); .ap((literal 1) (μ a.26 {(μ ret.25 (invoke +.0 (var ret.25))); .ap((literal 2) (literal 3); (var a.26))}); (var a.24))}); (var lambda.22)})); (var ret.21)})
+def +.0 ret.3
+  cocase
+    .ap(:p1.5, :p2.6; lambda.4) ->
+      μ case.7:
+        μ a.8:
+          :tuple
+          | .ap(:p1.5, :p2.6; a.8)
+        | case
+            :tuple.ap(x.9, y.10) ->
+              μ prim.11:
+                prim add(x.9, y.10; prim.11)
+              | case.7
+      | lambda.4
+  | ret.3
+def *.1 ret.12
+  cocase
+    .ap(:p1.14, :p2.15; lambda.13) ->
+      μ case.16:
+        μ a.17:
+          :tuple
+          | .ap(:p1.14, :p2.15; a.17)
+        | case
+            :tuple.ap(x.18, y.19) ->
+              μ prim.20:
+                prim mul(x.18, y.19; prim.20)
+              | case.16
+      | lambda.13
+  | ret.12
+def main.2 ret.21
+  cocase
+    .ap(; lambda.22) ->
+      μ a.24:
+        μ ret.23:
+          invoke *.1(ret.23)
+        | .ap(
+            1,
+            μ a.26:
+              μ ret.25:
+                invoke +.0(ret.25)
+              | .ap(2, 3; a.26); 
+            a.24)
+      | lambda.22
+  | ret.21

@@ -1,2 +1,95 @@
-(def map.0 ret.2 {(cocase (.ap(:p1.4 :p2.5; lambda.3) -> {(μ case.6 {(μ a.7 {(symbol tuple); .ap((var :p1.4) (var :p2.5); (var a.7))}); (case ((symbol tuple).ap((var f.8) (symbol Nil)) -> {(symbol Nil); (var case.6)}) ((symbol tuple).ap((var f.9) (symbol Cons).ap((var x.10) (var xs.11))) -> {(μ a.12 {(symbol Cons); .ap((μ a.13 {(var f.9); .ap((var x.10); (var a.13))}) (μ a.15 {(μ ret.14 (invoke map.0 (var ret.14))); .ap((var f.9) (var xs.11); (var a.15))}); (var a.12))}); (var case.6)}))}); (var lambda.3)})); (var ret.2)})
-(def main.1 ret.16 {(cocase (.ap(; lambda.17) -> {(μ let.22 {(μ a.19 {(symbol Cons); .ap((literal 1) (μ a.20 {(symbol Cons); .ap((literal 2) (μ a.21 {(symbol Cons); .ap((literal 3) (symbol Nil); (var a.21))}); (var a.20))}); (var a.19))}); (case ((var xs.18) -> {(μ let.32 {(μ a.25 {(μ ret.24 (invoke map.0 (var ret.24))); .ap((cocase (.ap(:p1.27; lambda.26) -> {(μ case.28 {(μ a.29 {(symbol tuple); .ap((var :p1.27); (var a.29))}); (case ((symbol tuple).ap((var x.30)) -> {(μ prim.31 (prim add (var x.30) (literal 1) (var prim.31))); (var case.28)}))}); (var lambda.26)})) (var xs.18); (var a.25))}); (case ((var xs1.23) -> {(μ seq.41 {(μ a.34 {(μ ret.33 (invoke map.0 (var ret.33))); .ap((cocase (.ap(:p1.36; lambda.35) -> {(μ case.37 {(μ a.38 {(symbol tuple); .ap((var :p1.36); (var a.38))}); (case ((symbol tuple).ap((var x.39)) -> {(μ prim.40 (prim print (var x.39) (var prim.40))); (var case.37)}))}); (var lambda.35)})) (var xs1.23); (var a.34))}); (μ~ hole.43 {(μ prim.42 (prim print_trace (var xs1.23) (var prim.42))); (var seq.41)})}); (var let.32)}))}); (var let.22)}))}); (var lambda.17)})); (var ret.16)})
+def map.0 ret.2
+  cocase
+    .ap(:p1.4, :p2.5; lambda.3) ->
+      μ case.6:
+        μ a.7:
+          :tuple
+          | .ap(:p1.4, :p2.5; a.7)
+        | case
+            :tuple.ap(f.8, :Nil) ->
+              :Nil
+              | case.6
+            :tuple.ap(
+              f.9,
+              :Cons.ap(x.10, xs.11)) ->
+              μ a.12:
+                :Cons
+                | .ap(
+                    μ a.13:
+                      f.9
+                      | .ap(x.10; a.13),
+                    μ a.15:
+                      μ ret.14:
+                        invoke map.0(ret.14)
+                      | .ap(f.9, xs.11; a.15); 
+                    a.12)
+              | case.6
+      | lambda.3
+  | ret.2
+def main.1 ret.16
+  cocase
+    .ap(; lambda.17) ->
+      μ let.22:
+        μ a.19:
+          :Cons
+          | .ap(
+              1,
+              μ a.20:
+                :Cons
+                | .ap(
+                    2,
+                    μ a.21:
+                      :Cons
+                      | .ap(3, :Nil; a.21); 
+                    a.20); 
+              a.19)
+        | case
+            xs.18 ->
+              μ let.32:
+                μ a.25:
+                  μ ret.24:
+                    invoke map.0(ret.24)
+                  | .ap(
+                      cocase
+                        .ap(:p1.27; lambda.26) ->
+                          μ case.28:
+                            μ a.29:
+                              :tuple
+                              | .ap(:p1.27; a.29)
+                            | case
+                                :tuple.ap(x.30) ->
+                                  μ prim.31:
+                                    prim add(x.30, 1; prim.31)
+                                  | case.28
+                          | lambda.26,
+                      xs.18; 
+                      a.25)
+                | case
+                    xs1.23 ->
+                      μ seq.41:
+                        μ a.34:
+                          μ ret.33:
+                            invoke map.0(ret.33)
+                          | .ap(
+                              cocase
+                                .ap(:p1.36; lambda.35) ->
+                                  μ case.37:
+                                    μ a.38:
+                                      :tuple
+                                      | .ap(:p1.36; a.38)
+                                    | case
+                                        :tuple.ap(x.39) ->
+                                          μ prim.40:
+                                            prim print(x.39; prim.40)
+                                          | case.37
+                                  | lambda.35,
+                              xs1.23; 
+                              a.34)
+                        | μ~ hole.43:
+                            μ prim.42:
+                              prim print_trace(xs1.23; prim.42)
+                            | seq.41
+                      | let.32
+              | let.22
+      | lambda.17
+  | ret.16

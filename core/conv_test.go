@@ -75,7 +75,7 @@ func TestGolden(t *testing.T) {
 		var builder strings.Builder
 
 		for _, def := range defs {
-			builder.WriteString(def.String())
+			builder.WriteString(def.Pretty(0))
 			builder.WriteString("\n")
 		}
 

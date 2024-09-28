@@ -1,2 +1,52 @@
-(def print.0 ret.2 {(cocase (.ap(:p1.4; lambda.3) -> {(cocase (.ap(:p2.6; lambda.5) -> {(μ case.7 {(μ a.8 {(symbol tuple); .ap((var :p1.4) (var :p2.6); (var a.8))}); (case ((symbol tuple).ap((var x.9) (var k.10)) -> {(μ seq.12 {(μ prim.11 (prim print (var x.9) (var prim.11))); (μ~ hole.14 {(μ a.13 {(var k.10); .ap(; (var a.13))}); (var seq.12)})}); (var case.7)}))}); (var lambda.5)})); (var lambda.3)})); (var ret.2)})
-(def main.1 ret.15 {(cocase (.ap(; lambda.16) -> {(μ prim.17 (prim print_trace (μ a.20 {(μ a.19 {(μ ret.18 (invoke print.0 (var ret.18))); .ap((literal 0); (var a.19))}); .ap((cocase (.ap(; lambda.21) -> {(μ a.24 {(μ a.23 {(μ ret.22 (invoke print.0 (var ret.22))); .ap((literal 1); (var a.23))}); .ap((cocase (.ap(; lambda.25) -> {(literal 0); (var lambda.25)})); (var a.24))}); (var lambda.21)})); (var a.20))}) (var prim.17))); (var lambda.16)})); (var ret.15)})
+def print.0 ret.2
+  cocase
+    .ap(:p1.4; lambda.3) ->
+      cocase
+        .ap(:p2.6; lambda.5) ->
+          μ case.7:
+            μ a.8:
+              :tuple
+              | .ap(:p1.4, :p2.6; a.8)
+            | case
+                :tuple.ap(x.9, k.10) ->
+                  μ seq.12:
+                    μ prim.11:
+                      prim print(x.9; prim.11)
+                    | μ~ hole.14:
+                        μ a.13:
+                          k.10
+                          | .ap(; a.13)
+                        | seq.12
+                  | case.7
+          | lambda.5
+      | lambda.3
+  | ret.2
+def main.1 ret.15
+  cocase
+    .ap(; lambda.16) ->
+      μ prim.17:
+        prim print_trace(
+          μ a.20:
+            μ a.19:
+              μ ret.18:
+                invoke print.0(ret.18)
+              | .ap(0; a.19)
+            | .ap(
+                cocase
+                  .ap(; lambda.21) ->
+                    μ a.24:
+                      μ a.23:
+                        μ ret.22:
+                          invoke print.0(ret.22)
+                        | .ap(1; a.23)
+                      | .ap(
+                          cocase
+                            .ap(; lambda.25) ->
+                              0
+                              | lambda.25; 
+                          a.24)
+                    | lambda.21; 
+                a.20);
+          prim.17)
+      | lambda.16
+  | ret.15

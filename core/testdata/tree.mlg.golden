@@ -1,7 +1,149 @@
-(def -.0 ret.7 {(cocase (.ap(:p1.9 :p2.10; lambda.8) -> {(μ case.11 {(μ a.12 {(symbol tuple); .ap((var :p1.9) (var :p2.10); (var a.12))}); (case ((symbol tuple).ap((var x.13) (var y.14)) -> {(μ prim.15 (prim sub (var x.13) (var y.14) (var prim.15))); (var case.11)}))}); (var lambda.8)})); (var ret.7)})
-(def map.1 ret.16 {(cocase (.ap(:p1.18 :p2.19; lambda.17) -> {(μ case.20 {(μ a.21 {(symbol tuple); .ap((var :p1.18) (var :p2.19); (var a.21))}); (case ((symbol tuple).ap((var f.22) (symbol Nil)) -> {(symbol Nil); (var case.20)}) ((symbol tuple).ap((var f.23) (symbol Cons).ap((var x.24) (var xs.25))) -> {(μ a.26 {(symbol Cons); .ap((μ a.27 {(var f.23); .ap((var x.24); (var a.27))}) (μ a.29 {(μ ret.28 (invoke map.1 (var ret.28))); .ap((var f.23) (var xs.25); (var a.29))}); (var a.26))}); (var case.20)}))}); (var lambda.17)})); (var ret.16)})
-(def prune.2 ret.30 {(cocase (.ap(:p1.32 :p2.33; lambda.31) -> {(cocase (.children(; object.34) -> {(μ case.35 {(μ a.36 {(symbol tuple); .ap((var :p1.32) (var :p2.33); (var a.36))}); (case ((symbol tuple).ap((literal 0) (var t.37)) -> {(symbol Nil); (var case.35)}) ((symbol tuple).ap((var x.38) (var t.39)) -> {(μ a.41 {(μ ret.40 (invoke map.1 (var ret.40))); .ap((μ a.43 {(μ ret.42 (invoke prune.2 (var ret.42))); .ap((μ a.45 {(μ ret.44 (invoke -.0 (var ret.44))); .ap((var x.38) (literal 1); (var a.45))}); (var a.43))}) (μ proj.46 {(var t.39); .children(; (var proj.46))}); (var a.41))}); (var case.35)}))}); (var object.34)}) (.node(; object.34) -> {(μ case.47 {(μ a.48 {(symbol tuple); .ap((var :p1.32) (var :p2.33); (var a.48))}); (case ((symbol tuple).ap((var x.49) (var t.50)) -> {(μ proj.51 {(var t.50); .node(; (var proj.51))}); (var case.47)}))}); (var object.34)})); (var lambda.31)})); (var ret.30)})
-(def tree.3 ret.52 {(cocase (.children(; object.53) -> {(μ a.54 {(symbol Cons); .ap((μ ret.55 (invoke tree1.4 (var ret.55))) (μ a.56 {(symbol Cons); .ap((μ ret.57 (invoke tree2.5 (var ret.57))) (symbol Nil); (var a.56))}); (var a.54))}); (var object.53)}) (.node(; object.53) -> {(literal 1); (var object.53)})); (var ret.52)})
-(def tree1.4 ret.58 {(cocase (.children(; object.59) -> {(symbol Nil); (var object.59)}) (.node(; object.59) -> {(literal 2); (var object.59)})); (var ret.58)})
-(def tree2.5 ret.60 {(cocase (.children(; object.61) -> {(μ a.62 {(symbol Cons); .ap((μ ret.63 (invoke tree.3 (var ret.63))) (symbol Nil); (var a.62))}); (var object.61)}) (.node(; object.61) -> {(literal 3); (var object.61)})); (var ret.60)})
-(def main.6 ret.64 {(cocase (.ap(; lambda.65) -> {(μ proj.66 {(μ a.68 {(μ ret.67 (invoke prune.2 (var ret.67))); .ap((literal 2) (μ ret.69 (invoke tree.3 (var ret.69))); (var a.68))}); .children(; (var proj.66))}); (var lambda.65)})); (var ret.64)})
+def -.0 ret.7
+  cocase
+    .ap(:p1.9, :p2.10; lambda.8) ->
+      μ case.11:
+        μ a.12:
+          :tuple
+          | .ap(:p1.9, :p2.10; a.12)
+        | case
+            :tuple.ap(x.13, y.14) ->
+              μ prim.15:
+                prim sub(x.13, y.14; prim.15)
+              | case.11
+      | lambda.8
+  | ret.7
+def map.1 ret.16
+  cocase
+    .ap(:p1.18, :p2.19; lambda.17) ->
+      μ case.20:
+        μ a.21:
+          :tuple
+          | .ap(:p1.18, :p2.19; a.21)
+        | case
+            :tuple.ap(f.22, :Nil) ->
+              :Nil
+              | case.20
+            :tuple.ap(
+              f.23,
+              :Cons.ap(x.24, xs.25)) ->
+              μ a.26:
+                :Cons
+                | .ap(
+                    μ a.27:
+                      f.23
+                      | .ap(x.24; a.27),
+                    μ a.29:
+                      μ ret.28:
+                        invoke map.1(ret.28)
+                      | .ap(f.23, xs.25; a.29); 
+                    a.26)
+              | case.20
+      | lambda.17
+  | ret.16
+def prune.2 ret.30
+  cocase
+    .ap(:p1.32, :p2.33; lambda.31) ->
+      cocase
+        .children(; object.34) ->
+          μ case.35:
+            μ a.36:
+              :tuple
+              | .ap(:p1.32, :p2.33; a.36)
+            | case
+                :tuple.ap(0, t.37) ->
+                  :Nil
+                  | case.35
+                :tuple.ap(x.38, t.39) ->
+                  μ a.41:
+                    μ ret.40:
+                      invoke map.1(ret.40)
+                    | .ap(
+                        μ a.43:
+                          μ ret.42:
+                            invoke prune.2(ret.42)
+                          | .ap(
+                              μ a.45:
+                                μ ret.44:
+                                  invoke -.0(ret.44)
+                                | .ap(x.38, 1; a.45); 
+                              a.43),
+                        μ proj.46:
+                          t.39
+                          | .children(; proj.46); 
+                        a.41)
+                  | case.35
+          | object.34
+        .node(; object.34) ->
+          μ case.47:
+            μ a.48:
+              :tuple
+              | .ap(:p1.32, :p2.33; a.48)
+            | case
+                :tuple.ap(x.49, t.50) ->
+                  μ proj.51:
+                    t.50
+                    | .node(; proj.51)
+                  | case.47
+          | object.34
+      | lambda.31
+  | ret.30
+def tree.3 ret.52
+  cocase
+    .children(; object.53) ->
+      μ a.54:
+        :Cons
+        | .ap(
+            μ ret.55:
+              invoke tree1.4(ret.55),
+            μ a.56:
+              :Cons
+              | .ap(
+                  μ ret.57:
+                    invoke tree2.5(ret.57),
+                  :Nil; 
+                  a.56); 
+            a.54)
+      | object.53
+    .node(; object.53) ->
+      1
+      | object.53
+  | ret.52
+def tree1.4 ret.58
+  cocase
+    .children(; object.59) ->
+      :Nil
+      | object.59
+    .node(; object.59) ->
+      2
+      | object.59
+  | ret.58
+def tree2.5 ret.60
+  cocase
+    .children(; object.61) ->
+      μ a.62:
+        :Cons
+        | .ap(
+            μ ret.63:
+              invoke tree.3(ret.63),
+            :Nil; 
+            a.62)
+      | object.61
+    .node(; object.61) ->
+      3
+      | object.61
+  | ret.60
+def main.6 ret.64
+  cocase
+    .ap(; lambda.65) ->
+      μ proj.66:
+        μ a.68:
+          μ ret.67:
+            invoke prune.2(ret.67)
+          | .ap(
+              2,
+              μ ret.69:
+                invoke tree.3(ret.69); 
+              a.68)
+        | .children(; proj.66)
+      | lambda.65
+  | ret.64

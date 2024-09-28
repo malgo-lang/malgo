@@ -1,1 +1,42 @@
-(def main.0 ret.1 {(cocase (.ap(; lambda.2) -> {(μ a.11 {(μ a.10 {(cocase (.ap(; lambda.3) -> {(cocase (.ap(:p1.5; lambda.4) -> {(μ case.6 {(μ a.7 {(symbol tuple); .ap((var :p1.5); (var a.7))}); (case ((symbol tuple).ap((var cont.8)) -> {(μ a.9 {(var cont.8); .ap((literal 1) (literal 2); (var a.9))}); (var case.6)}))}); (var lambda.4)})); (var lambda.3)})); .ap(; (var a.10))}); .ap((cocase (.ap(:p1.13 :p2.14; lambda.12) -> {(μ case.15 {(μ a.16 {(symbol tuple); .ap((var :p1.13) (var :p2.14); (var a.16))}); (case ((symbol tuple).ap((var x.17) (var y.18)) -> {(μ prim.19 (prim print (μ a.20 {(symbol tuple); .ap((var x.17) (var y.18); (var a.20))}) (var prim.19))); (var case.15)}))}); (var lambda.12)})); (var a.11))}); (var lambda.2)})); (var ret.1)})
+def main.0 ret.1
+  cocase
+    .ap(; lambda.2) ->
+      μ a.11:
+        μ a.10:
+          cocase
+            .ap(; lambda.3) ->
+              cocase
+                .ap(:p1.5; lambda.4) ->
+                  μ case.6:
+                    μ a.7:
+                      :tuple
+                      | .ap(:p1.5; a.7)
+                    | case
+                        :tuple.ap(cont.8) ->
+                          μ a.9:
+                            cont.8
+                            | .ap(1, 2; a.9)
+                          | case.6
+                  | lambda.4
+              | lambda.3
+          | .ap(; a.10)
+        | .ap(
+            cocase
+              .ap(:p1.13, :p2.14; lambda.12) ->
+                μ case.15:
+                  μ a.16:
+                    :tuple
+                    | .ap(:p1.13, :p2.14; a.16)
+                  | case
+                      :tuple.ap(x.17, y.18) ->
+                        μ prim.19:
+                          prim print(
+                            μ a.20:
+                              :tuple
+                              | .ap(x.17, y.18; a.20);
+                            prim.19)
+                        | case.15
+                | lambda.12; 
+            a.11)
+      | lambda.2
+  | ret.1

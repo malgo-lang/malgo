@@ -1,5 +1,152 @@
-(def zipWith.0 ret.5 {(cocase (.ap(:p1.7 :p2.8 :p3.9; lambda.6) -> {(cocase (.head(; object.10) -> {(μ case.11 {(μ a.12 {(symbol tuple); .ap((var :p1.7) (var :p2.8) (var :p3.9); (var a.12))}); (case ((symbol tuple).ap((var f.13) (var xs.14) (var ys.15)) -> {(μ a.16 {(var f.13); .ap((μ proj.17 {(var xs.14); .head(; (var proj.17))}) (μ proj.18 {(var ys.15); .head(; (var proj.18))}); (var a.16))}); (var case.11)}))}); (var object.10)}) (.tail(; object.10) -> {(μ case.19 {(μ a.20 {(symbol tuple); .ap((var :p1.7) (var :p2.8) (var :p3.9); (var a.20))}); (case ((symbol tuple).ap((var f.21) (var xs.22) (var ys.23)) -> {(μ a.25 {(μ ret.24 (invoke zipWith.0 (var ret.24))); .ap((var f.21) (μ proj.26 {(var xs.22); .tail(; (var proj.26))}) (μ proj.27 {(var ys.23); .tail(; (var proj.27))}); (var a.25))}); (var case.19)}))}); (var object.10)})); (var lambda.6)})); (var ret.5)})
-(def +.1 ret.28 {(cocase (.ap(:p1.30 :p2.31; lambda.29) -> {(μ case.32 {(μ a.33 {(symbol tuple); .ap((var :p1.30) (var :p2.31); (var a.33))}); (case ((symbol tuple).ap((var x.34) (var y.35)) -> {(μ prim.36 (prim add (var x.34) (var y.35) (var prim.36))); (var case.32)}))}); (var lambda.29)})); (var ret.28)})
-(def fib.2 ret.37 {(cocase (.head(; object.38) -> {(literal 1); (var object.38)}) (.tail(; object.38) -> {(cocase (.head(; object.39) -> {(literal 1); (var object.39)}) (.tail(; object.39) -> {(μ a.41 {(μ ret.40 (invoke zipWith.0 (var ret.40))); .ap((cocase (.ap(:p1.43 :p2.44; lambda.42) -> {(μ case.45 {(μ a.46 {(symbol tuple); .ap((var :p1.43) (var :p2.44); (var a.46))}); (case ((symbol tuple).ap((var x.47) (var y.48)) -> {(μ a.50 {(μ ret.49 (invoke +.1 (var ret.49))); .ap((var x.47) (var y.48); (var a.50))}); (var case.45)}))}); (var lambda.42)})) (μ ret.51 (invoke fib.2 (var ret.51))) (μ proj.52 {(μ ret.53 (invoke fib.2 (var ret.53))); .tail(; (var proj.52))}); (var a.41))}); (var object.39)})); (var object.38)})); (var ret.37)})
-(def shift.3 ret.54 {(cocase (.ap(:p1.56; lambda.55) -> {(μ case.57 {(μ a.58 {(symbol tuple); .ap((var :p1.56); (var a.58))}); (case ((symbol tuple).ap((var s.59).head()) -> {(μ proj.60 {(μ proj.61 {(var s.59); .tail(; (var proj.61))}); .head(; (var proj.60))}); (var case.57)}) ((symbol tuple).ap((var s.62).tail()) -> {(μ proj.63 {(μ proj.64 {(var s.62); .tail(; (var proj.64))}); .tail(; (var proj.63))}); (var case.57)}))}); (var lambda.55)})); (var ret.54)})
-(def main.4 ret.65 {(cocase (.ap(; lambda.66) -> {(μ prim.67 (prim print (μ a.69 {(μ ret.68 (invoke shift.3 (var ret.68))); .ap((μ a.71 {(μ ret.70 (invoke shift.3 (var ret.70))); .ap((μ a.73 {(μ ret.72 (invoke shift.3 (var ret.72))); .ap((μ proj.74 {(μ ret.75 (invoke fib.2 (var ret.75))); .head(; (var proj.74))}); (var a.73))}); (var a.71))}); (var a.69))}) (var prim.67))); (var lambda.66)})); (var ret.65)})
+def zipWith.0 ret.5
+  cocase
+    .ap(:p1.7, :p2.8, :p3.9; lambda.6) ->
+      cocase
+        .head(; object.10) ->
+          μ case.11:
+            μ a.12:
+              :tuple
+              | .ap(:p1.7, :p2.8, :p3.9; a.12)
+            | case
+                :tuple.ap(f.13, xs.14, ys.15) ->
+                  μ a.16:
+                    f.13
+                    | .ap(
+                        μ proj.17:
+                          xs.14
+                          | .head(; proj.17),
+                        μ proj.18:
+                          ys.15
+                          | .head(; proj.18); 
+                        a.16)
+                  | case.11
+          | object.10
+        .tail(; object.10) ->
+          μ case.19:
+            μ a.20:
+              :tuple
+              | .ap(:p1.7, :p2.8, :p3.9; a.20)
+            | case
+                :tuple.ap(f.21, xs.22, ys.23) ->
+                  μ a.25:
+                    μ ret.24:
+                      invoke zipWith.0(ret.24)
+                    | .ap(
+                        f.21,
+                        μ proj.26:
+                          xs.22
+                          | .tail(; proj.26),
+                        μ proj.27:
+                          ys.23
+                          | .tail(; proj.27); 
+                        a.25)
+                  | case.19
+          | object.10
+      | lambda.6
+  | ret.5
+def +.1 ret.28
+  cocase
+    .ap(:p1.30, :p2.31; lambda.29) ->
+      μ case.32:
+        μ a.33:
+          :tuple
+          | .ap(:p1.30, :p2.31; a.33)
+        | case
+            :tuple.ap(x.34, y.35) ->
+              μ prim.36:
+                prim add(x.34, y.35; prim.36)
+              | case.32
+      | lambda.29
+  | ret.28
+def fib.2 ret.37
+  cocase
+    .head(; object.38) ->
+      1
+      | object.38
+    .tail(; object.38) ->
+      cocase
+        .head(; object.39) ->
+          1
+          | object.39
+        .tail(; object.39) ->
+          μ a.41:
+            μ ret.40:
+              invoke zipWith.0(ret.40)
+            | .ap(
+                cocase
+                  .ap(:p1.43, :p2.44; lambda.42) ->
+                    μ case.45:
+                      μ a.46:
+                        :tuple
+                        | .ap(:p1.43, :p2.44; a.46)
+                      | case
+                          :tuple.ap(x.47, y.48) ->
+                            μ a.50:
+                              μ ret.49:
+                                invoke +.1(ret.49)
+                              | .ap(x.47, y.48; a.50)
+                            | case.45
+                    | lambda.42,
+                μ ret.51:
+                  invoke fib.2(ret.51),
+                μ proj.52:
+                  μ ret.53:
+                    invoke fib.2(ret.53)
+                  | .tail(; proj.52); 
+                a.41)
+          | object.39
+      | object.38
+  | ret.37
+def shift.3 ret.54
+  cocase
+    .ap(:p1.56; lambda.55) ->
+      μ case.57:
+        μ a.58:
+          :tuple
+          | .ap(:p1.56; a.58)
+        | case
+            :tuple.ap(
+              s.59.head()) ->
+              μ proj.60:
+                μ proj.61:
+                  s.59
+                  | .tail(; proj.61)
+                | .head(; proj.60)
+              | case.57
+            :tuple.ap(
+              s.62.tail()) ->
+              μ proj.63:
+                μ proj.64:
+                  s.62
+                  | .tail(; proj.64)
+                | .tail(; proj.63)
+              | case.57
+      | lambda.55
+  | ret.54
+def main.4 ret.65
+  cocase
+    .ap(; lambda.66) ->
+      μ prim.67:
+        prim print(
+          μ a.69:
+            μ ret.68:
+              invoke shift.3(ret.68)
+            | .ap(
+                μ a.71:
+                  μ ret.70:
+                    invoke shift.3(ret.70)
+                  | .ap(
+                      μ a.73:
+                        μ ret.72:
+                          invoke shift.3(ret.72)
+                        | .ap(
+                            μ proj.74:
+                              μ ret.75:
+                                invoke fib.2(ret.75)
+                              | .head(; proj.74); 
+                            a.73); 
+                      a.71); 
+                a.69);
+          prim.67)
+      | lambda.66
+  | ret.65

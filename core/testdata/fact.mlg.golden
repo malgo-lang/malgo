@@ -1,4 +1,70 @@
-(def mul.0 ret.4 {(cocase (.ap(:p1.6 :p2.7; lambda.5) -> {(μ case.8 {(μ a.9 {(symbol tuple); .ap((var :p1.6) (var :p2.7); (var a.9))}); (case ((symbol tuple).ap((var x.10) (var y.11)) -> {(μ prim.12 (prim mul (var x.10) (var y.11) (var prim.12))); (var case.8)}))}); (var lambda.5)})); (var ret.4)})
-(def sub.1 ret.13 {(cocase (.ap(:p1.15 :p2.16; lambda.14) -> {(μ case.17 {(μ a.18 {(symbol tuple); .ap((var :p1.15) (var :p2.16); (var a.18))}); (case ((symbol tuple).ap((var x.19) (var y.20)) -> {(μ prim.21 (prim sub (var x.19) (var y.20) (var prim.21))); (var case.17)}))}); (var lambda.14)})); (var ret.13)})
-(def fact.2 ret.22 {(cocase (.ap(:p1.24; lambda.23) -> {(μ case.25 {(μ a.26 {(symbol tuple); .ap((var :p1.24); (var a.26))}); (case ((symbol tuple).ap((literal 0)) -> {(literal 1); (var case.25)}) ((symbol tuple).ap((var n.27)) -> {(μ a.29 {(μ ret.28 (invoke mul.0 (var ret.28))); .ap((var n.27) (μ a.31 {(μ ret.30 (invoke fact.2 (var ret.30))); .ap((μ a.33 {(μ ret.32 (invoke sub.1 (var ret.32))); .ap((var n.27) (literal 1); (var a.33))}); (var a.31))}); (var a.29))}); (var case.25)}))}); (var lambda.23)})); (var ret.22)})
-(def main.3 ret.34 {(cocase (.ap(; lambda.35) -> {(μ prim.36 (prim print_trace (μ a.38 {(μ ret.37 (invoke fact.2 (var ret.37))); .ap((literal 5); (var a.38))}) (var prim.36))); (var lambda.35)})); (var ret.34)})
+def mul.0 ret.4
+  cocase
+    .ap(:p1.6, :p2.7; lambda.5) ->
+      μ case.8:
+        μ a.9:
+          :tuple
+          | .ap(:p1.6, :p2.7; a.9)
+        | case
+            :tuple.ap(x.10, y.11) ->
+              μ prim.12:
+                prim mul(x.10, y.11; prim.12)
+              | case.8
+      | lambda.5
+  | ret.4
+def sub.1 ret.13
+  cocase
+    .ap(:p1.15, :p2.16; lambda.14) ->
+      μ case.17:
+        μ a.18:
+          :tuple
+          | .ap(:p1.15, :p2.16; a.18)
+        | case
+            :tuple.ap(x.19, y.20) ->
+              μ prim.21:
+                prim sub(x.19, y.20; prim.21)
+              | case.17
+      | lambda.14
+  | ret.13
+def fact.2 ret.22
+  cocase
+    .ap(:p1.24; lambda.23) ->
+      μ case.25:
+        μ a.26:
+          :tuple
+          | .ap(:p1.24; a.26)
+        | case
+            :tuple.ap(0) ->
+              1
+              | case.25
+            :tuple.ap(n.27) ->
+              μ a.29:
+                μ ret.28:
+                  invoke mul.0(ret.28)
+                | .ap(
+                    n.27,
+                    μ a.31:
+                      μ ret.30:
+                        invoke fact.2(ret.30)
+                      | .ap(
+                          μ a.33:
+                            μ ret.32:
+                              invoke sub.1(ret.32)
+                            | .ap(n.27, 1; a.33); 
+                          a.31); 
+                    a.29)
+              | case.25
+      | lambda.23
+  | ret.22
+def main.3 ret.34
+  cocase
+    .ap(; lambda.35) ->
+      μ prim.36:
+        prim print_trace(
+          μ a.38:
+            μ ret.37:
+              invoke fact.2(ret.37)
+            | .ap(5; a.38);
+          prim.36)
+      | lambda.35
+  | ret.34

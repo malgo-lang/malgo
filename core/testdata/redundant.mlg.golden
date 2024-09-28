@@ -1,2 +1,57 @@
-(def f.0 ret.2 {(cocase (.ap(:p1.4; lambda.3) -> {(cocase (.h(; object.5) -> {(μ case.6 {(μ a.7 {(symbol tuple); .ap((var :p1.4); (var a.7))}); (case ((symbol tuple).ap((literal 0)) -> {(literal 1); (var case.6)}) ((symbol tuple).ap((var x.8)) -> {(cocase (.h(; object.9) -> {(μ case.10 {(μ a.11 {(symbol tuple); .ap((var :p1.4); (var a.11))}); (case ((symbol tuple).ap((var x.12)) -> {(var x.12); (var case.10)}))}); (var object.9)})); (var case.6)}))}); (var object.5)})); (var lambda.3)})); (var ret.2)})
-(def main.1 ret.13 {(cocase (.ap(; lambda.14) -> {(μ seq.19 {(μ prim.15 (prim print (μ proj.16 {(μ a.18 {(μ ret.17 (invoke f.0 (var ret.17))); .ap((literal 0); (var a.18))}); .h(; (var proj.16))}) (var prim.15))); (μ~ hole.25 {(μ prim.20 (prim print (μ proj.21 {(μ proj.22 {(μ a.24 {(μ ret.23 (invoke f.0 (var ret.23))); .ap((literal 1); (var a.24))}); .h(; (var proj.22))}); .h(; (var proj.21))}) (var prim.20))); (var seq.19)})}); (var lambda.14)})); (var ret.13)})
+def f.0 ret.2
+  cocase
+    .ap(:p1.4; lambda.3) ->
+      cocase
+        .h(; object.5) ->
+          μ case.6:
+            μ a.7:
+              :tuple
+              | .ap(:p1.4; a.7)
+            | case
+                :tuple.ap(0) ->
+                  1
+                  | case.6
+                :tuple.ap(x.8) ->
+                  cocase
+                    .h(; object.9) ->
+                      μ case.10:
+                        μ a.11:
+                          :tuple
+                          | .ap(:p1.4; a.11)
+                        | case
+                            :tuple.ap(x.12) ->
+                              x.12
+                              | case.10
+                      | object.9
+                  | case.6
+          | object.5
+      | lambda.3
+  | ret.2
+def main.1 ret.13
+  cocase
+    .ap(; lambda.14) ->
+      μ seq.19:
+        μ prim.15:
+          prim print(
+            μ proj.16:
+              μ a.18:
+                μ ret.17:
+                  invoke f.0(ret.17)
+                | .ap(0; a.18)
+              | .h(; proj.16);
+            prim.15)
+        | μ~ hole.25:
+            μ prim.20:
+              prim print(
+                μ proj.21:
+                  μ proj.22:
+                    μ a.24:
+                      μ ret.23:
+                        invoke f.0(ret.23)
+                      | .ap(1; a.24)
+                    | .h(; proj.22)
+                  | .h(; proj.21);
+                prim.20)
+            | seq.19
+      | lambda.14
+  | ret.13

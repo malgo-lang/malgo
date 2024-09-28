@@ -1,5 +1,148 @@
-(def if.0 ret.5 {(cocase (.ap(:p1.7; lambda.6) -> {(cocase (.then(; object.8) -> {(cocase (.ap(:p2.10; lambda.9) -> {(cocase (.else(; object.11) -> {(cocase (.ap(:p3.13; lambda.12) -> {(μ case.14 {(μ a.15 {(symbol tuple); .ap((var :p1.7) (var :p2.10) (var :p3.13); (var a.15))}); (case ((symbol tuple).ap((literal 0) (var t.16) (var e.17)) -> {(μ a.18 {(var e.17); .ap(; (var a.18))}); (var case.14)}) ((symbol tuple).ap((var _.19) (var t.20) (var e.21)) -> {(μ a.22 {(var t.20); .ap(; (var a.22))}); (var case.14)}))}); (var lambda.12)})); (var object.11)})); (var lambda.9)})); (var object.8)})); (var lambda.6)})); (var ret.5)})
-(def le.1 ret.23 {(cocase (.ap(:p1.25 :p2.26; lambda.24) -> {(μ case.27 {(μ a.28 {(symbol tuple); .ap((var :p1.25) (var :p2.26); (var a.28))}); (case ((symbol tuple).ap((var x.29) (var y.30)) -> {(μ prim.31 (prim less_equal (var x.29) (var y.30) (var prim.31))); (var case.27)}))}); (var lambda.24)})); (var ret.23)})
-(def dec.2 ret.32 {(cocase (.ap(:p1.34; lambda.33) -> {(μ case.35 {(μ a.36 {(symbol tuple); .ap((var :p1.34); (var a.36))}); (case ((symbol tuple).ap((var x.37)) -> {(μ prim.38 (prim sub (var x.37) (literal 1) (var prim.38))); (var case.35)}))}); (var lambda.33)})); (var ret.32)})
-(def tarai.3 ret.39 {(cocase (.ap(:p1.41 :p2.42 :p3.43; lambda.40) -> {(μ case.44 {(μ a.45 {(symbol tuple); .ap((var :p1.41) (var :p2.42) (var :p3.43); (var a.45))}); (case ((symbol tuple).ap((var x.46) (var y.47) (var z.48)) -> {(μ a.57 {(μ proj.49 {(μ a.55 {(μ proj.50 {(μ a.52 {(μ ret.51 (invoke if.0 (var ret.51))); .ap((μ a.54 {(μ ret.53 (invoke le.1 (var ret.53))); .ap((var x.46) (var y.47); (var a.54))}); (var a.52))}); .then(; (var proj.50))}); .ap((cocase (.ap(; lambda.56) -> {(var y.47); (var lambda.56)})); (var a.55))}); .else(; (var proj.49))}); .ap((cocase (.ap(; lambda.58) -> {(μ a.60 {(μ ret.59 (invoke tarai.3 (var ret.59))); .ap((μ a.62 {(μ ret.61 (invoke tarai.3 (var ret.61))); .ap((μ a.64 {(μ ret.63 (invoke dec.2 (var ret.63))); .ap((var x.46); (var a.64))}) (var y.47) (var z.48); (var a.62))}) (μ a.66 {(μ ret.65 (invoke tarai.3 (var ret.65))); .ap((μ a.68 {(μ ret.67 (invoke dec.2 (var ret.67))); .ap((var y.47); (var a.68))}) (var z.48) (var x.46); (var a.66))}) (μ a.70 {(μ ret.69 (invoke tarai.3 (var ret.69))); .ap((μ a.72 {(μ ret.71 (invoke dec.2 (var ret.71))); .ap((var z.48); (var a.72))}) (var x.46) (var y.47); (var a.70))}); (var a.60))}); (var lambda.58)})); (var a.57))}); (var case.44)}))}); (var lambda.40)})); (var ret.39)})
-(def main.4 ret.73 {(cocase (.ap(; lambda.74) -> {(μ prim.75 (prim print (μ a.77 {(μ ret.76 (invoke tarai.3 (var ret.76))); .ap((literal 10) (literal 5) (literal 0); (var a.77))}) (var prim.75))); (var lambda.74)})); (var ret.73)})
+def if.0 ret.5
+  cocase
+    .ap(:p1.7; lambda.6) ->
+      cocase
+        .then(; object.8) ->
+          cocase
+            .ap(:p2.10; lambda.9) ->
+              cocase
+                .else(; object.11) ->
+                  cocase
+                    .ap(:p3.13; lambda.12) ->
+                      μ case.14:
+                        μ a.15:
+                          :tuple
+                          | .ap(:p1.7, :p2.10, :p3.13; a.15)
+                        | case
+                            :tuple.ap(0, t.16, e.17) ->
+                              μ a.18:
+                                e.17
+                                | .ap(; a.18)
+                              | case.14
+                            :tuple.ap(_.19, t.20, e.21) ->
+                              μ a.22:
+                                t.20
+                                | .ap(; a.22)
+                              | case.14
+                      | lambda.12
+                  | object.11
+              | lambda.9
+          | object.8
+      | lambda.6
+  | ret.5
+def le.1 ret.23
+  cocase
+    .ap(:p1.25, :p2.26; lambda.24) ->
+      μ case.27:
+        μ a.28:
+          :tuple
+          | .ap(:p1.25, :p2.26; a.28)
+        | case
+            :tuple.ap(x.29, y.30) ->
+              μ prim.31:
+                prim less_equal(x.29, y.30; prim.31)
+              | case.27
+      | lambda.24
+  | ret.23
+def dec.2 ret.32
+  cocase
+    .ap(:p1.34; lambda.33) ->
+      μ case.35:
+        μ a.36:
+          :tuple
+          | .ap(:p1.34; a.36)
+        | case
+            :tuple.ap(x.37) ->
+              μ prim.38:
+                prim sub(x.37, 1; prim.38)
+              | case.35
+      | lambda.33
+  | ret.32
+def tarai.3 ret.39
+  cocase
+    .ap(:p1.41, :p2.42, :p3.43; lambda.40) ->
+      μ case.44:
+        μ a.45:
+          :tuple
+          | .ap(:p1.41, :p2.42, :p3.43; a.45)
+        | case
+            :tuple.ap(x.46, y.47, z.48) ->
+              μ a.57:
+                μ proj.49:
+                  μ a.55:
+                    μ proj.50:
+                      μ a.52:
+                        μ ret.51:
+                          invoke if.0(ret.51)
+                        | .ap(
+                            μ a.54:
+                              μ ret.53:
+                                invoke le.1(ret.53)
+                              | .ap(x.46, y.47; a.54); 
+                            a.52)
+                      | .then(; proj.50)
+                    | .ap(
+                        cocase
+                          .ap(; lambda.56) ->
+                            y.47
+                            | lambda.56; 
+                        a.55)
+                  | .else(; proj.49)
+                | .ap(
+                    cocase
+                      .ap(; lambda.58) ->
+                        μ a.60:
+                          μ ret.59:
+                            invoke tarai.3(ret.59)
+                          | .ap(
+                              μ a.62:
+                                μ ret.61:
+                                  invoke tarai.3(ret.61)
+                                | .ap(
+                                    μ a.64:
+                                      μ ret.63:
+                                        invoke dec.2(ret.63)
+                                      | .ap(x.46; a.64),
+                                    y.47,
+                                    z.48; 
+                                    a.62),
+                              μ a.66:
+                                μ ret.65:
+                                  invoke tarai.3(ret.65)
+                                | .ap(
+                                    μ a.68:
+                                      μ ret.67:
+                                        invoke dec.2(ret.67)
+                                      | .ap(y.47; a.68),
+                                    z.48,
+                                    x.46; 
+                                    a.66),
+                              μ a.70:
+                                μ ret.69:
+                                  invoke tarai.3(ret.69)
+                                | .ap(
+                                    μ a.72:
+                                      μ ret.71:
+                                        invoke dec.2(ret.71)
+                                      | .ap(z.48; a.72),
+                                    x.46,
+                                    y.47; 
+                                    a.70); 
+                              a.60)
+                        | lambda.58; 
+                    a.57)
+              | case.44
+      | lambda.40
+  | ret.39
+def main.4 ret.73
+  cocase
+    .ap(; lambda.74) ->
+      μ prim.75:
+        prim print(
+          μ a.77:
+            μ ret.76:
+              invoke tarai.3(ret.76)
+            | .ap(10, 5, 0; a.77);
+          prim.75)
+      | lambda.74
+  | ret.73
