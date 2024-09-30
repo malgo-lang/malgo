@@ -1,0 +1,177 @@
+def zipWith.0($def.5)
+  cocase
+    .ap($p1.7, $p2.8, $p3.9; $lambda.6) ->
+      cocase
+        .head(; $object.19) ->
+          μ $case.10:
+            μ $ap.11:
+              :tuple
+              | .ap($p1.7, $p2.8, $p3.9; $ap.11)
+            | case
+                :tuple.ap(f.12, xs.13, ys.14; $_.15) ->
+                  μ $ap.16:
+                    f.12
+                    | μ~ $y.87:
+                        μ $proj.17:
+                          xs.13
+                          | .head(; $proj.17)
+                        | μ~ $x.88:
+                            $y.87
+                            | μ~ $y.89:
+                                μ $proj.18:
+                                  ys.14
+                                  | .head(; $proj.18)
+                                | μ~ $x.90:
+                                    $y.89
+                                    | .ap($x.88, $x.90; $ap.16)
+                  | $case.10
+          | $object.19
+        .tail(; $object.30) ->
+          μ $case.20:
+            μ $ap.21:
+              :tuple
+              | .ap($p1.7, $p2.8, $p3.9; $ap.21)
+            | case
+                :tuple.ap(f.22, xs.23, ys.24; $_.25) ->
+                  μ $ap.27:
+                    μ $top.26:
+                      invoke zipWith.0($top.26)
+                    | μ~ $y.91:
+                        μ $proj.28:
+                          xs.23
+                          | .tail(; $proj.28)
+                        | μ~ $x.92:
+                            $y.91
+                            | μ~ $y.93:
+                                μ $proj.29:
+                                  ys.24
+                                  | .tail(; $proj.29)
+                                | μ~ $x.94:
+                                    $y.93
+                                    | .ap(f.22, $x.92, $x.94; $ap.27)
+                  | $case.20
+          | $object.30
+      | $lambda.6
+  | $def.5
+def +.1($def.31)
+  cocase
+    .ap($p1.33, $p2.34; $lambda.32) ->
+      μ $case.35:
+        μ $ap.36:
+          :tuple
+          | .ap($p1.33, $p2.34; $ap.36)
+        | case
+            :tuple.ap(x.37, y.38; $_.39) ->
+              μ $prim.40:
+                prim add(x.37, y.38; $prim.40)
+              | $case.35
+      | $lambda.32
+  | $def.31
+def fib.2($def.41)
+  cocase
+    .head(; $object.42) ->
+      1
+      | $object.42
+    .tail(; $object.60) ->
+      cocase
+        .head(; $object.43) ->
+          1
+          | $object.43
+        .tail(; $object.59) ->
+          μ $ap.45:
+            μ $top.44:
+              invoke zipWith.0($top.44)
+            | μ~ $y.95:
+                μ $top.56:
+                  invoke fib.2($top.56)
+                | μ~ $x.96:
+                    $y.95
+                    | μ~ $y.97:
+                        μ $proj.57:
+                          μ $top.58:
+                            invoke fib.2($top.58)
+                          | .tail(; $proj.57)
+                        | μ~ $x.98:
+                            $y.97
+                            | .ap(
+                                cocase
+                                  .ap($p1.47, $p2.48; $lambda.46) ->
+                                    μ $case.49:
+                                      μ $ap.50:
+                                        :tuple
+                                        | .ap($p1.47, $p2.48; $ap.50)
+                                      | case
+                                          :tuple.ap(x.51, y.52; $_.53) ->
+                                            μ $ap.55:
+                                              μ $top.54:
+                                                invoke +.1($top.54)
+                                              | .ap(x.51, y.52; $ap.55)
+                                            | $case.49
+                                    | $lambda.46,
+                                $x.96,
+                                $x.98; 
+                                $ap.45)
+          | $object.59
+      | $object.60
+  | $def.41
+def shift.3($def.61)
+  cocase
+    .ap($p1.63; $lambda.62) ->
+      μ $case.64:
+        μ $ap.65:
+          :tuple
+          | .ap($p1.63; $ap.65)
+        | case
+            :tuple.ap(
+              s.66.head(; $_.67);
+              $_.68) ->
+              μ $proj.69:
+                μ $proj.70:
+                  s.66
+                  | .tail(; $proj.70)
+                | .head(; $proj.69)
+              | $case.64
+            :tuple.ap(
+              s.71.tail(; $_.72);
+              $_.73) ->
+              μ $proj.74:
+                μ $proj.75:
+                  s.71
+                  | .tail(; $proj.75)
+                | .tail(; $proj.74)
+              | $case.64
+      | $lambda.62
+  | $def.61
+def main.4($def.76)
+  cocase
+    .ap(; $lambda.77) ->
+      μ $prim.78:
+        μ $ap.80:
+          μ $top.79:
+            invoke shift.3($top.79)
+          | μ~ $y.103:
+              μ $ap.82:
+                μ $top.81:
+                  invoke shift.3($top.81)
+                | μ~ $y.101:
+                    μ $ap.84:
+                      μ $top.83:
+                        invoke shift.3($top.83)
+                      | μ~ $y.99:
+                          μ $proj.85:
+                            μ $top.86:
+                              invoke fib.2($top.86)
+                            | .head(; $proj.85)
+                          | μ~ $x.100:
+                              $y.99
+                              | .ap($x.100; $ap.84)
+                    | μ~ $x.102:
+                        $y.101
+                        | .ap($x.102; $ap.82)
+              | μ~ $x.104:
+                  $y.103
+                  | .ap($x.104; $ap.80)
+        | μ~ $x.105:
+            prim print($x.105; $prim.78)
+      | $lambda.77
+  | $def.76

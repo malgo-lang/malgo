@@ -1,0 +1,149 @@
+def if.0($def.5)
+  cocase
+    .ap($p1.7; $lambda.6) ->
+      cocase
+        .then(; $object.24) ->
+          cocase
+            .ap($p2.9; $lambda.8) ->
+              cocase
+                .else(; $object.23) ->
+                  cocase
+                    .ap($p3.11; $lambda.10) ->
+                      μ $case.12:
+                        μ $ap.13:
+                          :tuple
+                          | .ap($p1.7, $p2.9, $p3.11; $ap.13)
+                        | case
+                            :tuple.ap(0, t.14, e.15; $_.16) ->
+                              μ $ap.17:
+                                e.15
+                                | .ap(; $ap.17)
+                              | $case.12
+                            :tuple.ap(_.18, t.19, e.20; $_.21) ->
+                              μ $ap.22:
+                                t.19
+                                | .ap(; $ap.22)
+                              | $case.12
+                      | $lambda.10
+                  | $object.23
+              | $lambda.8
+          | $object.24
+      | $lambda.6
+  | $def.5
+def le.1($def.25)
+  cocase
+    .ap($p1.27, $p2.28; $lambda.26) ->
+      μ $case.29:
+        μ $ap.30:
+          :tuple
+          | .ap($p1.27, $p2.28; $ap.30)
+        | case
+            :tuple.ap(x.31, y.32; $_.33) ->
+              μ $prim.34:
+                prim less_equal(x.31, y.32; $prim.34)
+              | $case.29
+      | $lambda.26
+  | $def.25
+def dec.2($def.35)
+  cocase
+    .ap($p1.37; $lambda.36) ->
+      μ $case.38:
+        μ $ap.39:
+          :tuple
+          | .ap($p1.37; $ap.39)
+        | case
+            :tuple.ap(x.40; $_.41) ->
+              μ $prim.42:
+                prim sub(x.40, 1; $prim.42)
+              | $case.38
+      | $lambda.36
+  | $def.35
+def tarai.3($def.43)
+  cocase
+    .ap($p1.45, $p2.46, $p3.47; $lambda.44) ->
+      μ $case.48:
+        μ $ap.49:
+          :tuple
+          | .ap($p1.45, $p2.46, $p3.47; $ap.49)
+        | case
+            :tuple.ap(x.50, y.51, z.52; $_.53) ->
+              μ $ap.62:
+                μ $proj.54:
+                  μ $ap.60:
+                    μ $proj.55:
+                      μ $ap.57:
+                        μ $top.56:
+                          invoke if.0($top.56)
+                        | μ~ $y.83:
+                            μ $ap.59:
+                              μ $top.58:
+                                invoke le.1($top.58)
+                              | .ap(x.50, y.51; $ap.59)
+                            | μ~ $x.84:
+                                $y.83
+                                | .ap($x.84; $ap.57)
+                      | .then(; $proj.55)
+                    | .ap(
+                        cocase
+                          .ap(; $lambda.61) ->
+                            y.51
+                            | $lambda.61; 
+                        $ap.60)
+                  | .else(; $proj.54)
+                | .ap(
+                    cocase
+                      .ap(; $lambda.63) ->
+                        μ $ap.65:
+                          μ $top.64:
+                            invoke tarai.3($top.64)
+                          | μ~ $y.87:
+                              μ $ap.67:
+                                μ $top.66:
+                                  invoke tarai.3($top.66)
+                                | μ~ $y.85:
+                                    z.52
+                                    | μ~ $x.86:
+                                        $y.85
+                                        | .ap(y.51, z.52, $x.86; $ap.67)
+                              | μ~ $x.88:
+                                  $y.87
+                                  | μ~ $y.91:
+                                      μ $ap.71:
+                                        μ $top.70:
+                                          invoke tarai.3($top.70)
+                                        | μ~ $y.89:
+                                            x.50
+                                            | μ~ $x.90:
+                                                $y.89
+                                                | .ap(z.52, x.50, $x.90; $ap.71)
+                                      | μ~ $x.92:
+                                          $y.91
+                                          | μ~ $y.95:
+                                              μ $ap.75:
+                                                μ $top.74:
+                                                  invoke tarai.3($top.74)
+                                                | μ~ $y.93:
+                                                    y.51
+                                                    | μ~ $x.94:
+                                                        $y.93
+                                                        | .ap(x.50, y.51, $x.94; $ap.75)
+                                              | μ~ $x.96:
+                                                  $y.95
+                                                  | .ap($x.88, $x.92, $x.96; $ap.65)
+                        | $lambda.63; 
+                    $ap.62)
+              | $case.48
+      | $lambda.44
+  | $def.43
+def main.4($def.78)
+  cocase
+    .ap(; $lambda.79) ->
+      μ $prim.80:
+        μ $ap.82:
+          μ $top.81:
+            invoke tarai.3($top.81)
+          | .ap(10, 5, 0; $ap.82)
+        | μ~ $x.97:
+            prim print($x.97; $prim.80)
+      | $lambda.79
+  | $def.78

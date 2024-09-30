@@ -61,12 +61,12 @@ type Node interface {
 
 type Producer interface {
 	Node
-	isProducer()
+	isValue() bool
 }
 
 type Consumer interface {
 	Node
-	isConsumer()
+	isCovalue() bool
 }
 
 type Statement interface {
@@ -97,9 +97,13 @@ func (v *Var) Base() token.Token {
 	return v.Name
 }
 
-func (v *Var) isProducer() {}
+func (v *Var) isValue() bool {
+	return true
+}
 
-func (v *Var) isConsumer() {}
+func (v *Var) isCovalue() bool {
+	return true
+}
 
 func (v *Var) isPattern() {}
 
@@ -130,7 +134,9 @@ func (l *Literal) Base() token.Token {
 	return l.Token
 }
 
-func (l *Literal) isProducer() {}
+func (l *Literal) isValue() bool {
+	return true
+}
 
 func (l *Literal) isPattern() {}
 
@@ -162,7 +168,9 @@ func (s *Symbol) Base() token.Token {
 	return s.Name
 }
 
-func (s *Symbol) isProducer() {}
+func (s *Symbol) isValue() bool {
+	return true
+}
 
 func (s *Symbol) isPattern() {}
 
@@ -241,7 +249,9 @@ func (d *Destruct) Base() token.Token {
 	return d.Conts[0].Base()
 }
 
-func (d *Destruct) isConsumer() {}
+func (d *Destruct) isCovalue() bool {
+	return true
+}
 
 //exhaustruct:ignore
 var _ Consumer = &Destruct{}
@@ -403,7 +413,9 @@ func (b *Do) Base() token.Token {
 	return b.Body.Base()
 }
 
-func (b *Do) isProducer() {}
+func (b *Do) isValue() bool {
+	return false
+}
 
 //exhaustruct:ignore
 var _ Producer = &Do{}
@@ -433,7 +445,9 @@ func (t *Then) Base() token.Token {
 	return t.Body.Base()
 }
 
-func (t *Then) isConsumer() {}
+func (t *Then) isCovalue() bool {
+	return true
+}
 
 //exhaustruct:ignore
 var _ Consumer = &Then{}
@@ -488,7 +502,9 @@ func (c *Case) Base() token.Token {
 	return c.Clauses[0].Base()
 }
 
-func (c *Case) isConsumer() {}
+func (c *Case) isCovalue() bool {
+	return true
+}
 
 //exhaustruct:ignore
 var _ Consumer = &Case{}
@@ -546,7 +562,9 @@ func (c *Cocase) Base() token.Token {
 	return c.Methods[0].Base()
 }
 
-func (c *Cocase) isProducer() {}
+func (c *Cocase) isValue() bool {
+	return true
+}
 
 //exhaustruct:ignore
 var _ Producer = &Cocase{}

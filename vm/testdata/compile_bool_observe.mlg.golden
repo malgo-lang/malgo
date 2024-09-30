@@ -9,8 +9,8 @@ object {
 	}
 }
 set bool.0
-lam :p1.3 {
-	get :p1.3
+lam $p1.3 {
+	get $p1.3
 	select 1 {
 		case b.4.false {
 			get b.4
@@ -26,8 +26,8 @@ lam :p1.3 {
 	ret
 }
 set flip.1
-lam :p1.6 {
-	get :p1.6
+lam $p1.6 {
+	get $p1.6
 	select 1 {
 		case () {
 			get flip.1

@@ -1,0 +1,62 @@
+def if.0($def.2)
+  cocase
+    .ap($p1.4; $lambda.3) ->
+      cocase
+        .if(; $object.23) ->
+          μ $case.5:
+            μ $ap.6:
+              :tuple
+              | .ap($p1.4; $ap.6)
+            | case
+                :tuple.ap(:False; $_.7) ->
+                  cocase
+                    .ap($p2.9; $lambda.8) ->
+                      μ $case.10:
+                        μ $ap.11:
+                          :tuple
+                          | .ap($p1.4, $p2.9; $ap.11)
+                        | case
+                            :tuple.ap(:False, t.12; $_.13) ->
+                              μ $ap.14:
+                                t.12
+                                | .ap(; $ap.14)
+                              | $case.10
+                      | $lambda.8
+                  | $case.5
+                :tuple.ap(:True; $_.15) ->
+                  cocase
+                    .ap($p1.17; $lambda.16) ->
+                      μ $case.18:
+                        μ $ap.19:
+                          :tuple
+                          | .ap($p1.17; $ap.19)
+                        | case
+                            :tuple.ap(t.20; $_.21) ->
+                              μ $ap.22:
+                                t.20
+                                | .ap(; $ap.22)
+                              | $case.18
+                      | $lambda.16
+                  | $case.5
+          | $object.23
+      | $lambda.3
+  | $def.2
+def main.1($def.24)
+  cocase
+    .ap(; $lambda.25) ->
+      μ $ap.29:
+        μ $proj.26:
+          μ $ap.28:
+            μ $top.27:
+              invoke if.0($top.27)
+            | .ap(:True; $ap.28)
+          | .if(; $proj.26)
+        | .ap(
+            cocase
+              .ap(; $lambda.30) ->
+                μ $prim.31:
+                  prim print("hello"; $prim.31)
+                | $lambda.30; 
+            $ap.29)
+      | $lambda.25
+  | $def.24

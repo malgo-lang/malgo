@@ -1,0 +1,52 @@
+def print.0($def.2)
+  cocase
+    .ap($p1.4; $lambda.3) ->
+      cocase
+        .ap($p2.6; $lambda.5) ->
+          μ $case.7:
+            μ $ap.8:
+              :tuple
+              | .ap($p1.4, $p2.6; $ap.8)
+            | case
+                :tuple.ap(x.9, k.10; $_.11) ->
+                  μ $seq.13:
+                    μ $prim.12:
+                      prim print(x.9; $prim.12)
+                    | μ~ $_.15:
+                        μ $ap.14:
+                          k.10
+                          | .ap(; $ap.14)
+                        | $seq.13
+                  | $case.7
+          | $lambda.5
+      | $lambda.3
+  | $def.2
+def main.1($def.16)
+  cocase
+    .ap(; $lambda.17) ->
+      μ $prim.18:
+        μ $ap.21:
+          μ $ap.20:
+            μ $top.19:
+              invoke print.0($top.19)
+            | .ap(0; $ap.20)
+          | .ap(
+              cocase
+                .ap(; $lambda.22) ->
+                  μ $ap.25:
+                    μ $ap.24:
+                      μ $top.23:
+                        invoke print.0($top.23)
+                      | .ap(1; $ap.24)
+                    | .ap(
+                        cocase
+                          .ap(; $lambda.26) ->
+                            0
+                            | $lambda.26; 
+                        $ap.25)
+                  | $lambda.22; 
+              $ap.21)
+        | μ~ $x.27:
+            prim print_trace($x.27; $prim.18)
+      | $lambda.17
+  | $def.16

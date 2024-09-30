@@ -1,11 +1,11 @@
-lam :p1.5 {
-	lam :p2.6 {
-		lam :p3.7 {
+lam $p1.5 {
+	lam $p2.6 {
+		lam $p3.7 {
 			object {
 				head {
-					get :p1.5
-					get :p2.6
-					get :p3.7
+					get $p1.5
+					get $p2.6
+					get $p3.7
 					select 3 {
 						case f.8 xs.9 ys.10 {
 							get f.8
@@ -21,9 +21,9 @@ lam :p1.5 {
 					ret
 				}
 				tail {
-					get :p1.5
-					get :p2.6
-					get :p3.7
+					get $p1.5
+					get $p2.6
+					get $p3.7
 					select 3 {
 						case f.11 xs.12 ys.13 {
 							get zipWith.0
@@ -48,10 +48,10 @@ lam :p1.5 {
 	ret
 }
 set zipWith.0
-lam :p1.14 {
-	lam :p2.15 {
-		get :p1.14
-		get :p2.15
+lam $p1.14 {
+	lam $p2.15 {
+		get $p1.14
+		get $p2.15
 		select 2 {
 			case x.16 y.17 {
 				get x.16
@@ -78,10 +78,10 @@ object {
 			}
 			tail {
 				get zipWith.0
-				lam :p1.18 {
-					lam :p2.19 {
-						get :p1.18
-						get :p2.19
+				lam $p1.18 {
+					lam $p2.19 {
+						get $p1.18
+						get $p2.19
 						select 2 {
 							case x.20 y.21 {
 								get +.1
@@ -109,8 +109,8 @@ object {
 	}
 }
 set fib.2
-lam :p1.22 {
-	get :p1.22
+lam $p1.22 {
+	get $p1.22
 	select 1 {
 		case s.23.head {
 			get s.23
@@ -128,8 +128,8 @@ lam :p1.22 {
 	ret
 }
 set shift.3
-lam :p1.25 {
-	get :p1.25
+lam $p1.25 {
+	get $p1.25
 	select 1 {
 		case () {
 			get shift.3

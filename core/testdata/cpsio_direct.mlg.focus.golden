@@ -1,0 +1,77 @@
+def read_all_cps.0($def.4)
+  cocase
+    .ap(; $lambda.5) ->
+      cocase
+        .ap($p1.7; $lambda.6) ->
+          μ $case.8:
+            μ $ap.9:
+              :tuple
+              | .ap($p1.7; $ap.9)
+            | case
+                :tuple.ap(cont.10; $_.11) ->
+                  μ $prim.12:
+                    prim read_all_cps(cont.10; $prim.12)
+                  | $case.8
+          | $lambda.6
+      | $lambda.5
+  | $def.4
+def print_cps.1($def.13)
+  cocase
+    .ap($p1.15; $lambda.14) ->
+      cocase
+        .ap($p2.17; $lambda.16) ->
+          μ $case.18:
+            μ $ap.19:
+              :tuple
+              | .ap($p1.15, $p2.17; $ap.19)
+            | case
+                :tuple.ap(s.20, cont.21; $_.22) ->
+                  μ $prim.23:
+                    prim print_cps(s.20, cont.21; $prim.23)
+                  | $case.18
+          | $lambda.16
+      | $lambda.14
+  | $def.13
+def exit.2($def.24)
+  cocase
+    .ap(; $lambda.25) ->
+      μ $prim.26:
+        prim exit(; $prim.26)
+      | $lambda.25
+  | $def.24
+def main.3($def.27)
+  cocase
+    .ap(; $lambda.28) ->
+      μ $ap.31:
+        μ $ap.30:
+          μ $top.29:
+            invoke read_all_cps.0($top.29)
+          | .ap(; $ap.30)
+        | .ap(
+            cocase
+              .ap($p1.33; $lambda.32) ->
+                μ $case.34:
+                  μ $ap.35:
+                    :tuple
+                    | .ap($p1.33; $ap.35)
+                  | case
+                      :tuple.ap(s.36; $_.37) ->
+                        μ $ap.40:
+                          μ $ap.39:
+                            μ $top.38:
+                              invoke print_cps.1($top.38)
+                            | .ap(s.36; $ap.39)
+                          | .ap(
+                              cocase
+                                .ap(; $lambda.41) ->
+                                  μ $ap.43:
+                                    μ $top.42:
+                                      invoke exit.2($top.42)
+                                    | .ap(; $ap.43)
+                                  | $lambda.41; 
+                              $ap.40)
+                        | $case.34
+                | $lambda.32; 
+            $ap.31)
+      | $lambda.28
+  | $def.27

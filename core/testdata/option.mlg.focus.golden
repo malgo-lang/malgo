@@ -1,0 +1,96 @@
+def option.0($def.4)
+  cocase
+    .none(; $object.5) ->
+      "none"
+      | $object.5
+    .some(; $object.12) ->
+      cocase
+        .ap($p1.7; $lambda.6) ->
+          μ $case.8:
+            μ $ap.9:
+              :tuple
+              | .ap($p1.7; $ap.9)
+            | case
+                :tuple.ap(x.10; $_.11) ->
+                  x.10
+                  | $case.8
+          | $lambda.6
+      | $object.12
+  | $def.4
+def map.1($def.13)
+  cocase
+    .ap($p1.15, $p2.16; $lambda.14) ->
+      μ $case.17:
+        μ $ap.18:
+          :tuple
+          | .ap($p1.15, $p2.16; $ap.18)
+        | case
+            :tuple.ap(
+              f.19,
+              o.20.none(; $_.21);
+              $_.22) ->
+              μ $proj.23:
+                o.20
+                | .none(; $proj.23)
+              | $case.17
+            :tuple.ap(
+              f.24,
+              o.25.some(; $_.26).ap(x.27; $_.28);
+              $_.29) ->
+              μ $ap.31:
+                μ $proj.30:
+                  o.25
+                  | .some(; $proj.30)
+                | μ~ $y.52:
+                    μ $ap.32:
+                      f.24
+                      | .ap(x.27; $ap.32)
+                    | μ~ $x.53:
+                        $y.52
+                        | .ap($x.53; $ap.31)
+              | $case.17
+      | $lambda.14
+  | $def.13
+def addone.2($def.33)
+  cocase
+    .ap($p1.35; $lambda.34) ->
+      μ $case.36:
+        μ $ap.37:
+          :tuple
+          | .ap($p1.35; $ap.37)
+        | case
+            :tuple.ap(x.38; $_.39) ->
+              μ $prim.40:
+                prim add(x.38, 1; $prim.40)
+              | $case.36
+      | $lambda.34
+  | $def.33
+def main.3($def.41)
+  cocase
+    .ap(; $lambda.42) ->
+      μ $let.50:
+        μ $ap.45:
+          μ $top.44:
+            invoke map.1($top.44)
+          | μ~ $y.54:
+              μ $top.46:
+                invoke addone.2($top.46)
+              | μ~ $x.55:
+                  $y.54
+                  | μ~ $y.56:
+                      μ $ap.49:
+                        μ $proj.47:
+                          μ $top.48:
+                            invoke option.0($top.48)
+                          | .some(; $proj.47)
+                        | .ap(41; $ap.49)
+                      | μ~ $x.57:
+                          $y.56
+                          | .ap($x.55, $x.57; $ap.45)
+        | case
+            x.43 ->
+              μ $prim.51:
+                prim print_trace(x.43; $prim.51)
+              | $let.50
+      | $lambda.42
+  | $def.41

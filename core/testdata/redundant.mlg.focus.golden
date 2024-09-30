@@ -1,0 +1,57 @@
+def f.0($def.2)
+  cocase
+    .ap($p1.4; $lambda.3) ->
+      cocase
+        .h(; $object.15) ->
+          μ $case.5:
+            μ $ap.6:
+              :tuple
+              | .ap($p1.4; $ap.6)
+            | case
+                :tuple.ap(0; $_.7) ->
+                  1
+                  | $case.5
+                :tuple.ap(x.8; $_.9) ->
+                  cocase
+                    .h(; $object.14) ->
+                      μ $case.10:
+                        μ $ap.11:
+                          :tuple
+                          | .ap($p1.4; $ap.11)
+                        | case
+                            :tuple.ap(x.12; $_.13) ->
+                              x.12
+                              | $case.10
+                      | $object.14
+                  | $case.5
+          | $object.15
+      | $lambda.3
+  | $def.2
+def main.1($def.16)
+  cocase
+    .ap(; $lambda.17) ->
+      μ $seq.22:
+        μ $prim.18:
+          μ $proj.19:
+            μ $ap.21:
+              μ $top.20:
+                invoke f.0($top.20)
+              | .ap(0; $ap.21)
+            | .h(; $proj.19)
+          | μ~ $x.29:
+              prim print($x.29; $prim.18)
+        | μ~ $_.28:
+            μ $prim.23:
+              μ $proj.24:
+                μ $proj.25:
+                  μ $ap.27:
+                    μ $top.26:
+                      invoke f.0($top.26)
+                    | .ap(1; $ap.27)
+                  | .h(; $proj.25)
+                | .h(; $proj.24)
+              | μ~ $x.30:
+                  prim print($x.30; $prim.23)
+            | $seq.22
+      | $lambda.17
+  | $def.16

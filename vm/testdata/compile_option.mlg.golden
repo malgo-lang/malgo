@@ -4,8 +4,8 @@ object {
 		ret
 	}
 	some {
-		lam :p1.4 {
-			get :p1.4
+		lam $p1.4 {
+			get $p1.4
 			select 1 {
 				case x.5 {
 					get x.5
@@ -18,10 +18,10 @@ object {
 	}
 }
 set option.0
-lam :p1.6 {
-	lam :p2.7 {
-		get :p1.6
-		get :p2.7
+lam $p1.6 {
+	lam $p2.7 {
+		get $p1.6
+		get $p2.7
 		select 2 {
 			case f.8 o.9.none {
 				get o.9
@@ -43,8 +43,8 @@ lam :p1.6 {
 	ret
 }
 set map.1
-lam :p1.13 {
-	get :p1.13
+lam $p1.13 {
+	get $p1.13
 	select 1 {
 		case x.14 {
 			get x.14
@@ -56,8 +56,8 @@ lam :p1.13 {
 	ret
 }
 set addone.2
-lam :p1.15 {
-	get :p1.15
+lam $p1.15 {
+	get $p1.15
 	select 1 {
 		case () {
 			get map.1

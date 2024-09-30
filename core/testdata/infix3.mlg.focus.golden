@@ -1,0 +1,44 @@
+def +.0($def.3)
+  cocase
+    .ap($p1.5, $p2.6; $lambda.4) ->
+      μ $case.7:
+        μ $ap.8:
+          :tuple
+          | .ap($p1.5, $p2.6; $ap.8)
+        | case
+            :tuple.ap(x.9, y.10; $_.11) ->
+              μ $prim.12:
+                prim add(x.9, y.10; $prim.12)
+              | $case.7
+      | $lambda.4
+  | $def.3
+def *.1($def.13)
+  cocase
+    .ap($p1.15, $p2.16; $lambda.14) ->
+      μ $case.17:
+        μ $ap.18:
+          :tuple
+          | .ap($p1.15, $p2.16; $ap.18)
+        | case
+            :tuple.ap(x.19, y.20; $_.21) ->
+              μ $prim.22:
+                prim mul(x.19, y.20; $prim.22)
+              | $case.17
+      | $lambda.14
+  | $def.13
+def main.2($def.23)
+  cocase
+    .ap(; $lambda.24) ->
+      μ $ap.26:
+        μ $top.25:
+          invoke *.1($top.25)
+        | μ~ $y.29:
+            μ $ap.28:
+              μ $top.27:
+                invoke +.0($top.27)
+              | .ap(2, 3; $ap.28)
+            | μ~ $x.30:
+                $y.29
+                | .ap(1, $x.30; $ap.26)
+      | $lambda.24
+  | $def.23

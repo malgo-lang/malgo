@@ -1,7 +1,7 @@
-lam :p1.4 {
-	lam :p2.5 {
-		get :p1.4
-		get :p2.5
+lam $p1.4 {
+	lam $p2.5 {
+		get $p1.4
+		get $p2.5
 		select 2 {
 			case x.6 y.7 {
 				get x.6
@@ -15,10 +15,10 @@ lam :p1.4 {
 	ret
 }
 set mul.0
-lam :p1.8 {
-	lam :p2.9 {
-		get :p1.8
-		get :p2.9
+lam $p1.8 {
+	lam $p2.9 {
+		get $p1.8
+		get $p2.9
 		select 2 {
 			case x.10 y.11 {
 				get x.10
@@ -32,8 +32,8 @@ lam :p1.8 {
 	ret
 }
 set sub.1
-lam :p1.12 {
-	get :p1.12
+lam $p1.12 {
+	get $p1.12
 	select 1 {
 		case 0 {
 			1
@@ -57,8 +57,8 @@ lam :p1.12 {
 	ret
 }
 set fact.2
-lam :p1.14 {
-	get :p1.14
+lam $p1.14 {
+	get $p1.14
 	select 1 {
 		case () {
 			get fact.2

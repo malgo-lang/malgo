@@ -1,8 +1,8 @@
 0
 1
-call λ.:p2.3 λ.:p1.7
+call λ.$p2.3 λ.$p1.7
 fun:
-	call λ.:p1.2 0
+	call λ.$p1.2 0
 	fun:
 		root
 	arg:
@@ -10,14 +10,14 @@ fun:
 	root
 arg:
 	root
-call λ.:p1.7 ()
+call λ.$p1.7 ()
 fun:
 	root
 arg:
 	root
-call λ.:p2.3 λ.:p1.8
+call λ.$p2.3 λ.$p1.8
 fun:
-	call λ.:p1.2 1
+	call λ.$p1.2 1
 	fun:
 		root
 	arg:
@@ -25,7 +25,7 @@ fun:
 	root
 arg:
 	root
-call λ.:p1.8 ()
+call λ.$p1.8 ()
 fun:
 	root
 arg:

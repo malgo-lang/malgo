@@ -1,9 +1,9 @@
-lam :p1.1 {
-	get :p1.1
+lam $p1.1 {
+	get $p1.1
 	select 1 {
 		case () {
-			lam :p1.3 {
-				get :p1.3
+			lam $p1.3 {
+				get $p1.3
 				select 1 {
 					case () {
 						prim exit
@@ -13,8 +13,8 @@ lam :p1.1 {
 				ret
 			}
 			set exit.2
-			lam :p1.5 {
-				get :p1.5
+			lam $p1.5 {
+				get $p1.5
 				select 1 {
 					case s.6 {
 						get s.6

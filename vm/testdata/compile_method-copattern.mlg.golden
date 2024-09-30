@@ -1,7 +1,7 @@
 object {
 	print {
-		lam :p1.2 {
-			get :p1.2
+		lam $p1.2 {
+			get $p1.2
 			select 1 {
 				case x.3 {
 					get x.3
@@ -15,8 +15,8 @@ object {
 	}
 }
 set printer.0
-lam :p1.4 {
-	get :p1.4
+lam $p1.4 {
+	get $p1.4
 	select 1 {
 		case () {
 			get printer.0

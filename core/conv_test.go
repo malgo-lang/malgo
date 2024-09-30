@@ -15,7 +15,7 @@ import (
 	"github.com/sebdah/goldie/v2"
 )
 
-func TestGolden(t *testing.T) {
+func TestConv(t *testing.T) {
 	t.Parallel()
 
 	testfiles, err := utils.FindSourceFiles("../testdata")

@@ -1,0 +1,73 @@
+def mul.0($def.4)
+  cocase
+    .ap($p1.6, $p2.7; $lambda.5) ->
+      μ $case.8:
+        μ $ap.9:
+          :tuple
+          | .ap($p1.6, $p2.7; $ap.9)
+        | case
+            :tuple.ap(x.10, y.11; $_.12) ->
+              μ $prim.13:
+                prim mul(x.10, y.11; $prim.13)
+              | $case.8
+      | $lambda.5
+  | $def.4
+def sub.1($def.14)
+  cocase
+    .ap($p1.16, $p2.17; $lambda.15) ->
+      μ $case.18:
+        μ $ap.19:
+          :tuple
+          | .ap($p1.16, $p2.17; $ap.19)
+        | case
+            :tuple.ap(x.20, y.21; $_.22) ->
+              μ $prim.23:
+                prim sub(x.20, y.21; $prim.23)
+              | $case.18
+      | $lambda.15
+  | $def.14
+def fact.2($def.24)
+  cocase
+    .ap($p1.26; $lambda.25) ->
+      μ $case.27:
+        μ $ap.28:
+          :tuple
+          | .ap($p1.26; $ap.28)
+        | case
+            :tuple.ap(0; $_.29) ->
+              1
+              | $case.27
+            :tuple.ap(n.30; $_.31) ->
+              μ $ap.33:
+                μ $top.32:
+                  invoke mul.0($top.32)
+                | μ~ $y.45:
+                    μ $ap.35:
+                      μ $top.34:
+                        invoke fact.2($top.34)
+                      | μ~ $y.43:
+                          μ $ap.37:
+                            μ $top.36:
+                              invoke sub.1($top.36)
+                            | .ap(n.30, 1; $ap.37)
+                          | μ~ $x.44:
+                              $y.43
+                              | .ap($x.44; $ap.35)
+                    | μ~ $x.46:
+                        $y.45
+                        | .ap(n.30, $x.46; $ap.33)
+              | $case.27
+      | $lambda.25
+  | $def.24
+def main.3($def.38)
+  cocase
+    .ap(; $lambda.39) ->
+      μ $prim.40:
+        μ $ap.42:
+          μ $top.41:
+            invoke fact.2($top.41)
+          | .ap(5; $ap.42)
+        | μ~ $x.47:
+            prim print_trace($x.47; $prim.40)
+      | $lambda.39
+  | $def.38

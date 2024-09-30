@@ -1,7 +1,7 @@
-lam :p1.2 {
+lam $p1.2 {
 	object {
 		h {
-			get :p1.2
+			get $p1.2
 			select 1 {
 				case 0 {
 					1
@@ -10,7 +10,7 @@ lam :p1.2 {
 				case x.4 {
 					object {
 						h {
-							get :p1.2
+							get $p1.2
 							select 1 {
 								case x.4 {
 									get x.4
@@ -29,8 +29,8 @@ lam :p1.2 {
 	ret
 }
 set f.0
-lam :p1.5 {
-	get :p1.5
+lam $p1.5 {
+	get $p1.5
 	select 1 {
 		case () {
 			get f.0

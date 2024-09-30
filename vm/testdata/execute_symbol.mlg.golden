@@ -1,9 +1,9 @@
 2
 3
 4
-call λ.:p2.3 :Cons
+call λ.$p2.3 :Cons
 fun:
-	call λ.:p1.2 λ.:p1.11
+	call λ.$p1.2 λ.$p1.11
 	fun:
 		root
 	arg:
@@ -62,7 +62,7 @@ fun:
 	fun:
 		root
 	arg:
-		call λ.:p1.11 1
+		call λ.$p1.11 1
 		fun:
 			root
 		arg:
@@ -70,9 +70,9 @@ fun:
 		root
 	root
 arg:
-	call λ.:p2.3 :Cons
+	call λ.$p2.3 :Cons
 	fun:
-		call λ.:p1.2 λ.:p1.11
+		call λ.$p1.2 λ.$p1.11
 		fun:
 			root
 		arg:
@@ -116,7 +116,7 @@ arg:
 		fun:
 			root
 		arg:
-			call λ.:p1.11 2
+			call λ.$p1.11 2
 			fun:
 				root
 			arg:
@@ -124,9 +124,9 @@ arg:
 			root
 		root
 	arg:
-		call λ.:p2.3 :Cons
+		call λ.$p2.3 :Cons
 		fun:
-			call λ.:p1.2 λ.:p1.11
+			call λ.$p1.2 λ.$p1.11
 			fun:
 				root
 			arg:
@@ -155,7 +155,7 @@ arg:
 			fun:
 				root
 			arg:
-				call λ.:p1.11 3
+				call λ.$p1.11 3
 				fun:
 					root
 				arg:
@@ -163,9 +163,9 @@ arg:
 				root
 			root
 		arg:
-			call λ.:p2.3 :Nil
+			call λ.$p2.3 :Nil
 			fun:
-				call λ.:p1.2 λ.:p1.11
+				call λ.$p1.2 λ.$p1.11
 				fun:
 					root
 				arg:
@@ -178,7 +178,7 @@ arg:
 		fun:
 			root
 		arg:
-			call λ.:p1.11 3
+			call λ.$p1.11 3
 			fun:
 				root
 			arg:
@@ -189,7 +189,7 @@ arg:
 	fun:
 		root
 	arg:
-		call λ.:p1.11 2
+		call λ.$p1.11 2
 		fun:
 			root
 		arg:
@@ -200,7 +200,7 @@ call :Cons 2
 fun:
 	root
 arg:
-	call λ.:p1.11 1
+	call λ.$p1.11 1
 	fun:
 		root
 	arg:

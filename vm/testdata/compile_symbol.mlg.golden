@@ -1,7 +1,7 @@
-lam :p1.2 {
-	lam :p2.3 {
-		get :p1.2
-		get :p2.3
+lam $p1.2 {
+	lam $p2.3 {
+		get $p1.2
+		get $p2.3
 		select 2 {
 			case f.4 :Nil {
 				:Nil
@@ -27,8 +27,8 @@ lam :p1.2 {
 	ret
 }
 set map.0
-lam :p1.8 {
-	get :p1.8
+lam $p1.8 {
+	get $p1.8
 	select 1 {
 		case () {
 			:Cons
@@ -46,8 +46,8 @@ lam :p1.8 {
 			apply
 			set xs.9
 			get map.0
-			lam :p1.11 {
-				get :p1.11
+			lam $p1.11 {
+				get $p1.11
 				select 1 {
 					case x.12 {
 						get x.12
@@ -63,8 +63,8 @@ lam :p1.8 {
 			apply
 			set xs1.10
 			get map.0
-			lam :p1.13 {
-				get :p1.13
+			lam $p1.13 {
+				get $p1.13
 				select 1 {
 					case x.14 {
 						get x.14

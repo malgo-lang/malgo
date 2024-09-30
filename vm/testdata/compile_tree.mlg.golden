@@ -1,7 +1,7 @@
-lam :p1.7 {
-	lam :p2.8 {
-		get :p1.7
-		get :p2.8
+lam $p1.7 {
+	lam $p2.8 {
+		get $p1.7
+		get $p2.8
 		select 2 {
 			case x.9 y.10 {
 				get x.9
@@ -15,10 +15,10 @@ lam :p1.7 {
 	ret
 }
 set -.0
-lam :p1.11 {
-	lam :p2.12 {
-		get :p1.11
-		get :p2.12
+lam $p1.11 {
+	lam $p2.12 {
+		get $p1.11
+		get $p2.12
 		select 2 {
 			case f.13 :Nil {
 				:Nil
@@ -44,12 +44,12 @@ lam :p1.11 {
 	ret
 }
 set map.1
-lam :p1.17 {
-	lam :p2.18 {
+lam $p1.17 {
+	lam $p2.18 {
 		object {
 			children {
-				get :p1.17
-				get :p2.18
+				get $p1.17
+				get $p2.18
 				select 2 {
 					case 0 t.19 {
 						:Nil
@@ -74,8 +74,8 @@ lam :p1.17 {
 				ret
 			}
 			node {
-				get :p1.17
-				get :p2.18
+				get $p1.17
+				get $p2.18
 				select 2 {
 					case x.22 t.23 {
 						get t.23
@@ -136,8 +136,8 @@ object {
 	}
 }
 set tree2.5
-lam :p1.24 {
-	get :p1.24
+lam $p1.24 {
+	get $p1.24
 	select 1 {
 		case () {
 			get prune.2

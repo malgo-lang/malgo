@@ -1,0 +1,32 @@
+def main.0($def.1)
+  cocase
+    .ap(; $lambda.2) ->
+      μ $let.6:
+        cocase
+          .ap(; $lambda.4) ->
+            μ $prim.5:
+              prim exit(; $prim.5)
+            | $lambda.4
+        | case
+            exit.3 ->
+              μ $let.15:
+                cocase
+                  .ap($p1.9; $lambda.8) ->
+                    μ $case.10:
+                      μ $ap.11:
+                        :tuple
+                        | .ap($p1.9; $ap.11)
+                      | case
+                          :tuple.ap(s.12; $_.13) ->
+                            μ $prim.14:
+                              prim print_cps(s.12, exit.3; $prim.14)
+                            | $case.10
+                    | $lambda.8
+                | case
+                    print.7 ->
+                      μ $prim.16:
+                        prim read_all_cps(print.7; $prim.16)
+                      | $let.15
+              | $let.6
+      | $lambda.2
+  | $def.1

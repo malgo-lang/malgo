@@ -1,7 +1,7 @@
-lam :p1.2 {
+lam $p1.2 {
 	object {
 		get {
-			get :p1.2
+			get $p1.2
 			select 1 {
 				case items.3 {
 					:None
@@ -13,7 +13,7 @@ lam :p1.2 {
 		put {
 			object {
 				get {
-					get :p1.2
+					get $p1.2
 					select 1 {
 						case :Nil {
 							"Nil case"
@@ -41,7 +41,7 @@ lam :p1.2 {
 					ret
 				}
 				put {
-					get :p1.2
+					get $p1.2
 					select 1 {
 						case items.6 {
 							get vendor.0
@@ -60,8 +60,8 @@ lam :p1.2 {
 	ret
 }
 set vendor.0
-lam :p1.7 {
-	get :p1.7
+lam $p1.7 {
+	get $p1.7
 	select 1 {
 		case () {
 			get vendor.0

@@ -1,13 +1,13 @@
-lam :p1.5 {
+lam $p1.5 {
 	object {
 		then {
-			lam :p2.6 {
+			lam $p2.6 {
 				object {
 					else {
-						lam :p3.7 {
-							get :p1.5
-							get :p2.6
-							get :p3.7
+						lam $p3.7 {
+							get $p1.5
+							get $p2.6
+							get $p3.7
 							select 3 {
 								case 0 t.8 e.9 {
 									get e.9
@@ -35,10 +35,10 @@ lam :p1.5 {
 	ret
 }
 set if.0
-lam :p1.13 {
-	lam :p2.14 {
-		get :p1.13
-		get :p2.14
+lam $p1.13 {
+	lam $p2.14 {
+		get $p1.13
+		get $p2.14
 		select 2 {
 			case x.15 y.16 {
 				get x.15
@@ -52,8 +52,8 @@ lam :p1.13 {
 	ret
 }
 set le.1
-lam :p1.17 {
-	get :p1.17
+lam $p1.17 {
+	get $p1.17
 	select 1 {
 		case x.18 {
 			get x.18
@@ -65,12 +65,12 @@ lam :p1.17 {
 	ret
 }
 set dec.2
-lam :p1.19 {
-	lam :p2.20 {
-		lam :p3.21 {
-			get :p1.19
-			get :p2.20
-			get :p3.21
+lam $p1.19 {
+	lam $p2.20 {
+		lam $p3.21 {
+			get $p1.19
+			get $p2.20
+			get $p3.21
 			select 3 {
 				case x.22 y.23 z.24 {
 					get if.0
@@ -81,8 +81,8 @@ lam :p1.19 {
 					apply
 					apply
 					proj then
-					lam :p1.25 {
-						get :p1.25
+					lam $p1.25 {
+						get $p1.25
 						select 1 {
 							case () {
 								get y.23
@@ -93,8 +93,8 @@ lam :p1.19 {
 					}
 					apply
 					proj else
-					lam :p1.26 {
-						get :p1.26
+					lam $p1.26 {
+						get $p1.26
 						select 1 {
 							case () {
 								get tarai.3
@@ -144,8 +144,8 @@ lam :p1.19 {
 	ret
 }
 set tarai.3
-lam :p1.27 {
-	get :p1.27
+lam $p1.27 {
+	get $p1.27
 	select 1 {
 		case () {
 			get tarai.3

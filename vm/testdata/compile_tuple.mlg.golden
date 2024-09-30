@@ -1,5 +1,5 @@
-lam :p1.2 {
-	get :p1.2
+lam $p1.2 {
+	get $p1.2
 	select 1 {
 		case (x.3, y.4) {
 			get x.3
@@ -11,8 +11,8 @@ lam :p1.2 {
 	ret
 }
 set f.0
-lam :p1.5 {
-	get :p1.5
+lam $p1.5 {
+	get $p1.5
 	select 1 {
 		case () {
 			1
