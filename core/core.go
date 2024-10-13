@@ -60,9 +60,48 @@ type Node interface {
 	Base() token.Token
 }
 
+type Trace interface {
+	Pretty
+	Wrap(old Trace) Trace
+}
+
+type Root struct{}
+
+func (r *Root) String() string {
+	return r.Pretty(0)
+}
+
+func (r *Root) Pretty(level int, opts ...Option) string {
+	o := DefaultPrettyOpts()
+
+	for _, opt := range opts {
+		opt(o)
+	}
+
+	return fmt.Sprintf("%vroot", indent(level))
+}
+
+func (r *Root) Wrap(_ Trace) Trace {
+	panic("Root cannot wrap anything")
+}
+
+//exhaustruct:ignore
+var _ Trace = &Root{}
+
 type Producer interface {
 	Node
-	isValue() bool
+	Trace() Trace // Trace returns the trace of the producer. If the producer isn't a value, it panics.
+	// WithTrace sets the trace of the producer. It returns a new producer. If the producer isn't a value, it panics.
+	WithTrace(trace Trace) Producer
+	isValue() bool // If isValue returns true, the producer is a atomic node.
+}
+
+type NotValueError struct {
+	Producer Producer
+}
+
+func (e NotValueError) Error() string {
+	return fmt.Sprintf("not a value: %v", e.Producer)
 }
 
 type Consumer interface {
@@ -102,6 +141,14 @@ func (v *Var) Base() token.Token {
 	return v.Name
 }
 
+func (v *Var) Trace() Trace {
+	panic(NotValueError{Producer: v})
+}
+
+func (v *Var) WithTrace(_ Trace) Producer {
+	panic(NotValueError{Producer: v})
+}
+
 func (v *Var) isValue() bool {
 	return true
 }
@@ -123,6 +170,7 @@ var _ Pattern = &Var{}
 
 type Literal struct {
 	token.Token
+	trace Trace
 }
 
 func (l *Literal) Pretty(level int, opts ...Option) string {
@@ -139,6 +187,17 @@ func (l *Literal) Base() token.Token {
 	return l.Token
 }
 
+func (l *Literal) Trace() Trace {
+	return l.trace
+}
+
+func (l *Literal) WithTrace(trace Trace) Producer {
+	return &Literal{
+		Token: l.Token,
+		trace: trace.Wrap(l.trace),
+	}
+}
+
 func (l *Literal) isValue() bool {
 	return true
 }
@@ -152,7 +211,8 @@ var _ Producer = &Literal{}
 var _ Pattern = &Literal{}
 
 type Symbol struct {
-	Name token.Token
+	Name  token.Token
+	trace Trace
 }
 
 func (s *Symbol) String() string {
@@ -175,6 +235,17 @@ func (s *Symbol) Pretty(level int, opts ...Option) string {
 
 func (s *Symbol) Base() token.Token {
 	return s.Name
+}
+
+func (s *Symbol) Trace() Trace {
+	return s.trace
+}
+
+func (s *Symbol) WithTrace(trace Trace) Producer {
+	return &Symbol{
+		Name:  s.Name,
+		trace: trace.Wrap(s.trace),
+	}
 }
 
 func (s *Symbol) isValue() bool {
@@ -434,11 +505,19 @@ func (d *Do) Pretty(level int, opts ...Option) string {
 	return builder.String()
 }
 
-func (b *Do) Base() token.Token {
-	return b.Body.Base()
+func (d *Do) Base() token.Token {
+	return d.Body.Base()
 }
 
-func (b *Do) isValue() bool {
+func (d *Do) Trace() Trace {
+	panic(NotValueError{Producer: d})
+}
+
+func (d *Do) WithTrace(_ Trace) Producer {
+	panic(NotValueError{Producer: d})
+}
+
+func (d *Do) isValue() bool {
 	return false
 }
 
@@ -579,6 +658,7 @@ var _ Node = &Clause{}
 
 type Cocase struct {
 	Methods []*Method
+	trace   Trace
 }
 
 func (c *Cocase) String() string {
@@ -605,6 +685,17 @@ func (c *Cocase) Pretty(level int, opts ...Option) string {
 
 func (c *Cocase) Base() token.Token {
 	return c.Methods[0].Base()
+}
+
+func (c *Cocase) Trace() Trace {
+	return c.trace
+}
+
+func (c *Cocase) WithTrace(trace Trace) Producer {
+	return &Cocase{
+		Methods: c.Methods,
+		trace:   trace.Wrap(c.trace),
+	}
 }
 
 func (c *Cocase) isValue() bool {

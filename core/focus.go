@@ -81,6 +81,7 @@ func (f *Focus) focusCocase(node *Cocase) Node {
 
 	return &Cocase{
 		Methods: methods,
+		trace:   node.trace,
 	}
 }
 

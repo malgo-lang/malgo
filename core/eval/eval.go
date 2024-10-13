@@ -55,7 +55,7 @@ func (e *env) set(name string, v Value) {
 	e.values[name] = v
 }
 
-type Value fmt.Stringer
+type Value any
 
 func (e *Evaluator) InvokeMain() error {
 	for name, def := range e.Toplevel {
