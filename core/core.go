@@ -27,6 +27,7 @@ func WithHeader(header string) Option {
 }
 
 type Pretty interface {
+	fmt.Stringer
 	Pretty(level int, opts ...Option) string
 }
 
@@ -81,6 +82,10 @@ type Pattern interface {
 
 type Var struct {
 	Name token.Token
+}
+
+func (v *Var) String() string {
+	return v.Pretty(0)
 }
 
 func (v *Var) Pretty(level int, opts ...Option) string {
@@ -150,6 +155,10 @@ type Symbol struct {
 	Name token.Token
 }
 
+func (s *Symbol) String() string {
+	return s.Pretty(0)
+}
+
 func (s *Symbol) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -184,6 +193,10 @@ type Destruct struct {
 	Name  string
 	Args  []Producer
 	Conts []Consumer
+}
+
+func (d *Destruct) String() string {
+	return d.Pretty(0)
 }
 
 func (d *Destruct) Pretty(level int, opts ...Option) string {
@@ -264,6 +277,10 @@ type Extract struct {
 	Conts  []Pattern
 }
 
+func (e *Extract) String() string {
+	return e.Pretty(0)
+}
+
 func (e *Extract) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -335,6 +352,10 @@ type Prim struct {
 	Cont Consumer
 }
 
+func (p *Prim) String() string {
+	return p.Pretty(0)
+}
+
 func (p *Prim) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -394,7 +415,11 @@ type Do struct {
 	Body Statement
 }
 
-func (b *Do) Pretty(level int, opts ...Option) string {
+func (d *Do) String() string {
+	return d.Pretty(0)
+}
+
+func (d *Do) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
 	for _, opt := range opts {
@@ -403,8 +428,8 @@ func (b *Do) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%sμ %v:\n", indent(level), o.header, b.Name)
-	fmt.Fprintf(&builder, "%s", b.Body.Pretty(level+tabSize+len(o.header)))
+	fmt.Fprintf(&builder, "%s%sμ %v:\n", indent(level), o.header, d.Name)
+	fmt.Fprintf(&builder, "%s", d.Body.Pretty(level+tabSize+len(o.header)))
 
 	return builder.String()
 }
@@ -424,6 +449,10 @@ var _ Producer = &Do{}
 type Then struct {
 	Name token.Token
 	Body Statement
+}
+
+func (t *Then) String() string {
+	return t.Pretty(0)
 }
 
 func (t *Then) Pretty(level int, opts ...Option) string {
@@ -457,6 +486,10 @@ type Cut struct {
 	Consumer Consumer
 }
 
+func (c *Cut) String() string {
+	return c.Pretty(0)
+}
+
 func (c *Cut) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -478,6 +511,10 @@ var _ Statement = &Cut{}
 
 type Case struct {
 	Clauses []*Clause
+}
+
+func (c *Case) String() string {
+	return c.Pretty(0)
 }
 
 func (c *Case) Pretty(level int, opts ...Option) string {
@@ -514,6 +551,10 @@ type Clause struct {
 	Body    Statement
 }
 
+func (c *Clause) String() string {
+	return c.Pretty(0)
+}
+
 func (c *Clause) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -538,6 +579,10 @@ var _ Node = &Clause{}
 
 type Cocase struct {
 	Methods []*Method
+}
+
+func (c *Cocase) String() string {
+	return c.Pretty(0)
 }
 
 func (c *Cocase) Pretty(level int, opts ...Option) string {
@@ -574,6 +619,10 @@ type Method struct {
 	Params []token.Token
 	Labels []token.Token
 	Body   Statement
+}
+
+func (m *Method) String() string {
+	return m.Pretty(0)
 }
 
 func (m *Method) Pretty(level int, opts ...Option) string {
@@ -621,6 +670,10 @@ type Def struct {
 	Body    Statement
 }
 
+func (d *Def) String() string {
+	return d.Pretty(0)
+}
+
 func (d *Def) Pretty(level int, opts ...Option) string {
 	o := DefaultPrettyOpts()
 
@@ -648,6 +701,10 @@ var _ Node = &Def{}
 type Invoke struct {
 	Name  token.Token
 	Conts []Consumer
+}
+
+func (i *Invoke) String() string {
+	return i.Pretty(0)
 }
 
 func (i *Invoke) Pretty(level int, opts ...Option) string {
@@ -692,3 +749,30 @@ func (i *Invoke) isStatement() {}
 
 //exhaustruct:ignore
 var _ Statement = &Invoke{}
+
+type Toplevel struct{}
+
+func (t *Toplevel) String() string {
+	return t.Pretty(0)
+}
+
+func (t *Toplevel) Pretty(level int, opts ...Option) string {
+	o := DefaultPrettyOpts()
+
+	for _, opt := range opts {
+		opt(o)
+	}
+
+	return fmt.Sprintf("%s%s", indent(level), o.header)
+}
+
+func (t *Toplevel) Base() token.Token {
+	return token.Dummy()
+}
+
+func (t *Toplevel) isCovalue() bool {
+	return true
+}
+
+//exhaustruct:ignore
+var _ Consumer = &Toplevel{}
