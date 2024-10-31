@@ -1,0 +1,9 @@
+cocase
+  .ap(; $lambda.12) ->
+    μ $ap.15:
+      μ $proj.13:
+        μ $top.14:
+          invoke printer.0($top.14)
+        | .print(; $proj.13)
+      | .ap(1; $ap.15)
+    | $lambda.12

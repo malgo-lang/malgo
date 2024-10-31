@@ -1,0 +1,17 @@
+cocase
+  .ap(; $lambda.25) ->
+    μ $ap.29:
+      μ $proj.26:
+        μ $ap.28:
+          μ $top.27:
+            invoke if.0($top.27)
+          | .ap(:True; $ap.28)
+        | .if(; $proj.26)
+      | .ap(
+          cocase
+            .ap(; $lambda.30) ->
+              μ $prim.31:
+                prim print("hello"; $prim.31)
+              | $lambda.30; 
+          $ap.29)
+    | $lambda.25

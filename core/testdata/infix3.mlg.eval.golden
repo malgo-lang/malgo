@@ -1,0 +1,14 @@
+cocase
+  .ap(; $lambda.24) ->
+    μ $ap.26:
+      μ $top.25:
+        invoke *.1($top.25)
+      | μ~ $y.29:
+          μ $ap.28:
+            μ $top.27:
+              invoke +.0($top.27)
+            | .ap(2, 3; $ap.28)
+          | μ~ $x.30:
+              $y.29
+              | .ap(1, $x.30; $ap.26)
+    | $lambda.24

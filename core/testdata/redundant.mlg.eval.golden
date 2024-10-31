@@ -1,0 +1,26 @@
+cocase
+  .ap(; $lambda.17) ->
+    μ $seq.22:
+      μ $prim.18:
+        μ $proj.19:
+          μ $ap.21:
+            μ $top.20:
+              invoke f.0($top.20)
+            | .ap(0; $ap.21)
+          | .h(; $proj.19)
+        | μ~ $x.29:
+            prim print($x.29; $prim.18)
+      | μ~ $_.28:
+          μ $prim.23:
+            μ $proj.24:
+              μ $proj.25:
+                μ $ap.27:
+                  μ $top.26:
+                    invoke f.0($top.26)
+                  | .ap(1; $ap.27)
+                | .h(; $proj.25)
+              | .h(; $proj.24)
+            | μ~ $x.30:
+                prim print($x.30; $prim.23)
+          | $seq.22
+    | $lambda.17

@@ -1,0 +1,40 @@
+cocase
+  .ap(; $lambda.2) ->
+    μ $ap.12:
+      μ $ap.11:
+        cocase
+          .ap(; $lambda.3) ->
+            cocase
+              .ap($p1.5; $lambda.4) ->
+                μ $case.6:
+                  μ $ap.7:
+                    :tuple
+                    | .ap($p1.5; $ap.7)
+                  | case
+                      :tuple.ap(cont.8; $_.9) ->
+                        μ $ap.10:
+                          cont.8
+                          | .ap(1, 2; $ap.10)
+                        | $case.6
+                | $lambda.4
+            | $lambda.3
+        | .ap(; $ap.11)
+      | .ap(
+          cocase
+            .ap($p1.14, $p2.15; $lambda.13) ->
+              μ $case.16:
+                μ $ap.17:
+                  :tuple
+                  | .ap($p1.14, $p2.15; $ap.17)
+                | case
+                    :tuple.ap(x.18, y.19; $_.20) ->
+                      μ $prim.21:
+                        μ $ap.22:
+                          :tuple
+                          | .ap(x.18, y.19; $ap.22)
+                        | μ~ $x.23:
+                            prim print($x.23; $prim.21)
+                      | $case.16
+              | $lambda.13; 
+          $ap.12)
+    | $lambda.2

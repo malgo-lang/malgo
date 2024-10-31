@@ -1,0 +1,26 @@
+cocase
+  .ap(; $lambda.13) ->
+    μ $let.17:
+      μ $ap.16:
+        μ $top.15:
+          invoke add.0($top.15)
+        | .ap(1; $ap.16)
+      | case
+          add1.14 ->
+            μ $seq.20:
+              μ $prim.18:
+                μ $ap.19:
+                  add1.14
+                  | .ap(2; $ap.19)
+                | μ~ $x.24:
+                    prim print($x.24; $prim.18)
+              | μ~ $_.23:
+                  μ $prim.21:
+                    μ $ap.22:
+                      add1.14
+                      | .ap(3; $ap.22)
+                    | μ~ $x.25:
+                        prim print($x.25; $prim.21)
+                  | $seq.20
+            | $let.17
+    | $lambda.13

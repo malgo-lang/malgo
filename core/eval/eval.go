@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/malgo-lang/malgo/core"
 	"github.com/malgo-lang/malgo/token"
@@ -71,7 +72,7 @@ type Value any
 func (e *Evaluator) InvokeMain() error {
 	for name, def := range e.Toplevel {
 		// If name starts with "main.", it is a main function.
-		if name[:5] == "main." {
+		if strings.HasPrefix(name, "main.") {
 			return e.invoke(def, []core.Consumer{&core.Toplevel{}})
 		}
 	}
@@ -177,6 +178,13 @@ func (e *Evaluator) cut(stmt *core.Cut) error {
 		e.set(bind, producer)
 
 		return e.statement(consumer.Body)
+	}
+
+	// <_ | *> => finish the evaluation
+	if _, ok := consumer.(*core.Toplevel); ok {
+		fmt.Fprintf(e.Stdout, "%v\n", producer)
+
+		return nil
 	}
 
 	panic(fmt.Sprintf("not implemented: %T, %T", producer, consumer))

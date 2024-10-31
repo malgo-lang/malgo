@@ -1,0 +1,25 @@
+cocase
+  .ap(; $lambda.13) ->
+    μ $seq.16:
+      μ $prim.14:
+        μ $ap.15:
+          :tuple
+          | .ap(1, "string"; $ap.15)
+        | μ~ $x.22:
+            prim print($x.22; $prim.14)
+      | μ~ $_.21:
+          μ $prim.17:
+            μ $ap.19:
+              μ $top.18:
+                invoke f.0($top.18)
+              | μ~ $y.23:
+                  μ $ap.20:
+                    :tuple
+                    | .ap(1, 2; $ap.20)
+                  | μ~ $x.24:
+                      $y.23
+                      | .ap($x.24; $ap.19)
+            | μ~ $x.25:
+                prim print($x.25; $prim.17)
+          | $seq.16
+    | $lambda.13

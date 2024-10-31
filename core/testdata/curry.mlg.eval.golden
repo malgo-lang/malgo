@@ -1,0 +1,21 @@
+cocase
+  .ap(; $lambda.26) ->
+    μ $prim.27:
+      μ $ap.30:
+        μ $ap.29:
+          μ $top.28:
+            invoke add.0($top.28)
+          | .ap(1; $ap.29)
+        | μ~ $y.34:
+            μ $ap.33:
+              μ $ap.32:
+                μ $top.31:
+                  invoke mul.1($top.31)
+                | .ap(2; $ap.32)
+              | .ap(3; $ap.33)
+            | μ~ $x.35:
+                $y.34
+                | .ap($x.35; $ap.30)
+      | μ~ $x.36:
+          prim print($x.36; $prim.27)
+    | $lambda.26

@@ -1,0 +1,67 @@
+cocase
+  .ap(; $lambda.20) ->
+    μ $let.25:
+      μ $ap.22:
+        :Cons
+        | μ~ $y.55:
+            μ $ap.23:
+              :Cons
+              | μ~ $y.53:
+                  μ $ap.24:
+                    :Cons
+                    | .ap(3, :Nil; $ap.24)
+                  | μ~ $x.54:
+                      $y.53
+                      | .ap(2, $x.54; $ap.23)
+            | μ~ $x.56:
+                $y.55
+                | .ap(1, $x.56; $ap.22)
+      | case
+          xs.21 ->
+            μ $let.36:
+              μ $ap.28:
+                μ $top.27:
+                  invoke map.0($top.27)
+                | .ap(
+                    cocase
+                      .ap($p1.30; $lambda.29) ->
+                        μ $case.31:
+                          μ $ap.32:
+                            :tuple
+                            | .ap($p1.30; $ap.32)
+                          | case
+                              :tuple.ap(x.33; $_.34) ->
+                                μ $prim.35:
+                                  prim add(x.33, 1; $prim.35)
+                                | $case.31
+                        | $lambda.29,
+                    xs.21; 
+                    $ap.28)
+              | case
+                  xs1.26 ->
+                    μ $seq.46:
+                      μ $ap.38:
+                        μ $top.37:
+                          invoke map.0($top.37)
+                        | .ap(
+                            cocase
+                              .ap($p1.40; $lambda.39) ->
+                                μ $case.41:
+                                  μ $ap.42:
+                                    :tuple
+                                    | .ap($p1.40; $ap.42)
+                                  | case
+                                      :tuple.ap(x.43; $_.44) ->
+                                        μ $prim.45:
+                                          prim print(x.43; $prim.45)
+                                        | $case.41
+                                | $lambda.39,
+                            xs1.26; 
+                            $ap.38)
+                      | μ~ $_.48:
+                          μ $prim.47:
+                            prim print_trace(xs1.26; $prim.47)
+                          | $seq.46
+                    | $let.36
+            | $let.25
+    | $lambda.20

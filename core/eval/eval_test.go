@@ -90,7 +90,7 @@ func TestEval(t *testing.T) {
 			}
 		}
 
-		if evaluator.InvokeMain() != nil {
+		if err := evaluator.InvokeMain(); err != nil {
 			t.Errorf("%s returned error: %v", testfile, err)
 
 			return
