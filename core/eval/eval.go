@@ -39,16 +39,27 @@ func newEnv(parent *env) *env {
 	return &env{parent: parent, values: make(map[string]Value)}
 }
 
-func (e *env) get(name string) Value {
-	if v, ok := e.values[name]; ok {
-		return v
+func (e *env) get(name token.Token) (Value, error) {
+	if v, ok := e.values[name.String()]; ok {
+		return v, nil
 	}
 
 	if e.parent != nil {
 		return e.parent.get(name)
 	}
 
-	panic(fmt.Sprintf("unreachable: %s", name))
+	return nil, utils.PosError{
+		Where: name,
+		Err:   NotFoundError{Name: name.String()},
+	}
+}
+
+type NotFoundError struct {
+	Name string
+}
+
+func (e NotFoundError) Error() string {
+	return fmt.Sprintf("not found: %s", e.Name)
 }
 
 func (e *env) set(name string, v Value) {
@@ -101,13 +112,43 @@ func (e *Evaluator) statement(stmt core.Statement) error {
 }
 
 // producer normalizes a producer.
+// TODO: This function may only be used to replace the variable with its value.
+// If so, it should be renamed to `expandVar(n core.Node) (core.Node, error)`.
 func (e *Evaluator) producer(p core.Producer) (Value, error) {
-	panic("not implemented")
+	//nolint:varnamelen
+	switch p := p.(type) {
+	case *core.Var:
+		return e.get(p.Name)
+	case *core.Literal:
+		return p, nil
+	case *core.Symbol:
+		return p, nil
+	case *core.Do:
+		return p, nil
+	case *core.Cocase:
+		return p, nil
+	default:
+		panic(fmt.Sprintf("unexpected core.Producer: %#v", p))
+	}
 }
 
 // consumer normalizes a consumer.
 func (e *Evaluator) consumer(c core.Consumer) (Value, error) {
-	panic("not implemented")
+	//nolint:varnamelen
+	switch c := c.(type) {
+	case *core.Var:
+		return e.get(c.Name)
+	case *core.Case:
+		return c, nil
+	case *core.Destruct:
+		return c, nil
+	case *core.Then:
+		return c, nil
+	case *core.Toplevel:
+		return c, nil
+	default:
+		panic(fmt.Sprintf("unexpected core.Consumer: %#v", c))
+	}
 }
 
 // cut evaluates a cut statement.
@@ -122,12 +163,16 @@ func (e *Evaluator) cut(stmt *core.Cut) error {
 		return err
 	}
 
+	// <μx. s | c> => s[x := c]
 	if producer, ok := producer.(*core.Do); ok {
 		bind := producer.Name.String()
 		e.set(bind, consumer)
 
 		return e.statement(producer.Body)
-	} else if consumer, ok := consumer.(*core.Then); ok {
+	}
+
+	// <p | μ~x. s> => s[x := p]
+	if consumer, ok := consumer.(*core.Then); ok {
 		bind := consumer.Name.String()
 		e.set(bind, producer)
 

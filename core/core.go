@@ -93,7 +93,9 @@ type Producer interface {
 	Trace() Trace // Trace returns the trace of the producer. If the producer isn't a value, it panics.
 	// WithTrace sets the trace of the producer. It returns a new producer. If the producer isn't a value, it panics.
 	WithTrace(trace Trace) Producer
-	isValue() bool // If isValue returns true, the producer is a atomic node.
+	// If isAtomic returns true, the producer is a atomic node.
+	// Atomic nodes can be treated as a value or a variable.
+	isAtomic() bool
 }
 
 type NotValueError struct {
@@ -142,14 +144,20 @@ func (v *Var) Base() token.Token {
 }
 
 func (v *Var) Trace() Trace {
-	panic(NotValueError{Producer: v})
+	panic(utils.PosError{
+		Where: v.Base(),
+		Err:   NotValueError{Producer: v},
+	})
 }
 
 func (v *Var) WithTrace(_ Trace) Producer {
-	panic(NotValueError{Producer: v})
+	panic(utils.PosError{
+		Where: v.Base(),
+		Err:   NotValueError{Producer: v},
+	})
 }
 
-func (v *Var) isValue() bool {
+func (v *Var) isAtomic() bool {
 	return true
 }
 
@@ -198,7 +206,7 @@ func (l *Literal) WithTrace(trace Trace) Producer {
 	}
 }
 
-func (l *Literal) isValue() bool {
+func (l *Literal) isAtomic() bool {
 	return true
 }
 
@@ -248,7 +256,7 @@ func (s *Symbol) WithTrace(trace Trace) Producer {
 	}
 }
 
-func (s *Symbol) isValue() bool {
+func (s *Symbol) isAtomic() bool {
 	return true
 }
 
@@ -510,14 +518,20 @@ func (d *Do) Base() token.Token {
 }
 
 func (d *Do) Trace() Trace {
-	panic(NotValueError{Producer: d})
+	panic(utils.PosError{
+		Where: d.Base(),
+		Err:   NotValueError{Producer: d},
+	})
 }
 
 func (d *Do) WithTrace(_ Trace) Producer {
-	panic(NotValueError{Producer: d})
+	panic(utils.PosError{
+		Where: d.Base(),
+		Err:   NotValueError{Producer: d},
+	})
 }
 
-func (d *Do) isValue() bool {
+func (d *Do) isAtomic() bool {
 	return false
 }
 
@@ -698,7 +712,7 @@ func (c *Cocase) WithTrace(trace Trace) Producer {
 	}
 }
 
-func (c *Cocase) isValue() bool {
+func (c *Cocase) isAtomic() bool {
 	return true
 }
 

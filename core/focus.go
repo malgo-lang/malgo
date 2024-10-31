@@ -114,7 +114,7 @@ func (f *Focus) focusCase(node *Case) Node {
 
 func (f *Focus) focusDestruct(node *Destruct) Consumer {
 	values, rest := splitBy(node.Args, func(p Producer) bool {
-		return p.isValue()
+		return p.isAtomic()
 	})
 
 	if len(rest) == 0 {
@@ -196,7 +196,7 @@ func (f *Focus) focusCut(node *Cut) Node {
 
 func (f *Focus) focusPrim(node *Prim) Statement {
 	values, rest := splitBy(node.Args, func(p Producer) bool {
-		return p.isValue()
+		return p.isAtomic()
 	})
 
 	if len(rest) == 0 {
