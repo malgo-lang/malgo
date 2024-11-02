@@ -122,9 +122,9 @@ func (c *Converter) ConvExpr(expr ast.Node) (Producer, error) {
 			Err:   NotDefinedError{Name: expr.Name},
 		}
 	case *ast.Literal:
-		return &Literal{Token: expr.Token, trace: &Root{}}, nil
+		return &Literal{Token: expr.Token}, nil
 	case *ast.Symbol:
-		return &Symbol{Name: expr.Name, trace: &Root{}}, nil
+		return &Symbol{Name: expr.Name}, nil
 	case *ast.Tuple:
 		return c.convTuple(expr)
 	case *ast.Access:
@@ -167,7 +167,7 @@ func (c *Converter) convTuple(expr *ast.Tuple) (Producer, error) {
 			Lexeme:   "tuple",
 			Location: expr.Base().Location,
 			Literal:  nil,
-		}, trace: &Root{},
+		},
 	}, expr.Exprs)
 }
 
@@ -322,7 +322,6 @@ func (c *Converter) convLambda(expr *ast.Lambda) (Producer, error) {
 				},
 			},
 		},
-		trace: &Root{},
 	}, nil
 }
 
@@ -404,7 +403,6 @@ func (c *Converter) convObject(expr *ast.Object) (Producer, error) {
 
 	return &Cocase{
 		Methods: methods,
-		trace:   &Root{},
 	}, nil
 }
 
@@ -416,9 +414,9 @@ func (c *Converter) ConvPattern(pattern ast.Node) (Pattern, error) {
 
 		return &Var{Name: withUnique(pattern.Name, unique)}, nil
 	case *ast.Literal:
-		return &Literal{Token: pattern.Token, trace: &Root{}}, nil
+		return &Literal{Token: pattern.Token}, nil
 	case *ast.Symbol:
-		return &Symbol{Name: pattern.Name, trace: &Root{}}, nil
+		return &Symbol{Name: pattern.Name}, nil
 	case *ast.Tuple:
 		patterns := make([]Pattern, len(pattern.Exprs))
 		for i, expr := range pattern.Exprs {
@@ -440,7 +438,6 @@ func (c *Converter) ConvPattern(pattern ast.Node) (Pattern, error) {
 					Location: pattern.Base().Location,
 					Literal:  nil,
 				},
-				trace: &Root{},
 			},
 			Name:  "ap",
 			Args:  patterns,

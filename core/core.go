@@ -9,12 +9,12 @@ import (
 )
 
 type PrettyOpts struct {
-	header string
+	Header string
 }
 
 func DefaultPrettyOpts() *PrettyOpts {
 	return &PrettyOpts{
-		header: "",
+		Header: "",
 	}
 }
 
@@ -22,7 +22,7 @@ type Option func(*PrettyOpts)
 
 func WithHeader(header string) Option {
 	return func(o *PrettyOpts) {
-		o.header = header
+		o.Header = header
 	}
 }
 
@@ -31,7 +31,7 @@ type Pretty interface {
 	Pretty(level int, opts ...Option) string
 }
 
-func indent(level int) string {
+func Indent(level int) string {
 	return strings.Repeat(" ", level)
 }
 
@@ -60,55 +60,28 @@ type Node interface {
 	Base() token.Token
 }
 
-type Trace interface {
-	Pretty
-	Wrap(old Trace) Trace
-}
-
-type Root struct{}
-
-func (r *Root) String() string {
-	return r.Pretty(0)
-}
-
-func (r *Root) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	return fmt.Sprintf("%vroot", indent(level))
-}
-
-func (r *Root) Wrap(_ Trace) Trace {
-	panic("Root cannot wrap anything")
-}
-
-//exhaustruct:ignore
-var _ Trace = &Root{}
-
 type Producer interface {
 	Node
-	Trace() Trace // Trace returns the trace of the producer. If the producer isn't a value, it panics.
-	// WithTrace sets the trace of the producer. It returns a new producer. If the producer isn't a value, it panics.
-	WithTrace(trace Trace) Producer
 	// If isAtomic returns true, the producer is a atomic node.
 	// Atomic nodes can be treated as a value or a variable.
 	isAtomic() bool
 }
 
-type NotValueError struct {
-	Producer Producer
-}
-
-func (e NotValueError) Error() string {
-	return fmt.Sprintf("not a value: %v", e.Producer)
+// Repr is a type that represents a representation of a value.
+type Repr interface {
+	Producer
+	isRepr()
 }
 
 type Consumer interface {
 	Node
-	isCovalue() bool
+	isConsumer()
+}
+
+// Corepr is a type that represents a representation of a covalue.
+type Corepr interface {
+	Consumer
+	isCorepr()
 }
 
 type Statement interface {
@@ -136,34 +109,18 @@ func (v *Var) Pretty(level int, opts ...Option) string {
 		opt(o)
 	}
 
-	return fmt.Sprintf("%s%s%v", indent(level), o.header, v.Name)
+	return fmt.Sprintf("%s%s%v", Indent(level), o.Header, v.Name)
 }
 
 func (v *Var) Base() token.Token {
 	return v.Name
 }
 
-func (v *Var) Trace() Trace {
-	panic(utils.PosError{
-		Where: v.Base(),
-		Err:   NotValueError{Producer: v},
-	})
-}
-
-func (v *Var) WithTrace(_ Trace) Producer {
-	panic(utils.PosError{
-		Where: v.Base(),
-		Err:   NotValueError{Producer: v},
-	})
-}
-
 func (v *Var) isAtomic() bool {
 	return true
 }
 
-func (v *Var) isCovalue() bool {
-	return true
-}
+func (v *Var) isConsumer() {}
 
 func (v *Var) isPattern() {}
 
@@ -178,7 +135,6 @@ var _ Pattern = &Var{}
 
 type Literal struct {
 	token.Token
-	trace Trace
 }
 
 func (l *Literal) Pretty(level int, opts ...Option) string {
@@ -188,27 +144,18 @@ func (l *Literal) Pretty(level int, opts ...Option) string {
 		opt(o)
 	}
 
-	return fmt.Sprintf("%s%s%v", indent(level), o.header, l.Token)
+	return fmt.Sprintf("%s%s%v", Indent(level), o.Header, l.Token)
 }
 
 func (l *Literal) Base() token.Token {
 	return l.Token
 }
 
-func (l *Literal) Trace() Trace {
-	return l.trace
-}
-
-func (l *Literal) WithTrace(trace Trace) Producer {
-	return &Literal{
-		Token: l.Token,
-		trace: trace.Wrap(l.trace),
-	}
-}
-
 func (l *Literal) isAtomic() bool {
 	return true
 }
+
+func (l *Literal) isRepr() {}
 
 func (l *Literal) isPattern() {}
 
@@ -216,11 +163,13 @@ func (l *Literal) isPattern() {}
 var _ Producer = &Literal{}
 
 //exhaustruct:ignore
+var _ Repr = &Literal{}
+
+//exhaustruct:ignore
 var _ Pattern = &Literal{}
 
 type Symbol struct {
-	Name  token.Token
-	trace Trace
+	Name token.Token
 }
 
 func (s *Symbol) String() string {
@@ -235,35 +184,29 @@ func (s *Symbol) Pretty(level int, opts ...Option) string {
 	}
 
 	if s.Name.Lexeme[0] == ':' {
-		return fmt.Sprintf("%s%s%s", indent(level), o.header, s.Name.Lexeme)
+		return fmt.Sprintf("%s%s%s", Indent(level), o.Header, s.Name.Lexeme)
 	}
 
-	return fmt.Sprintf("%s%s:%s", indent(level), o.header, s.Name.Lexeme)
+	return fmt.Sprintf("%s%s:%s", Indent(level), o.Header, s.Name.Lexeme)
 }
 
 func (s *Symbol) Base() token.Token {
 	return s.Name
 }
 
-func (s *Symbol) Trace() Trace {
-	return s.trace
-}
-
-func (s *Symbol) WithTrace(trace Trace) Producer {
-	return &Symbol{
-		Name:  s.Name,
-		trace: trace.Wrap(s.trace),
-	}
-}
-
 func (s *Symbol) isAtomic() bool {
 	return true
 }
+
+func (s *Symbol) isRepr() {}
 
 func (s *Symbol) isPattern() {}
 
 //exhaustruct:ignore
 var _ Producer = &Symbol{}
+
+//exhaustruct:ignore
+var _ Repr = &Symbol{}
 
 //exhaustruct:ignore
 var _ Pattern = &Symbol{}
@@ -288,14 +231,14 @@ func (d *Destruct) Pretty(level int, opts ...Option) string {
 	var builder strings.Builder
 	isMultiline := false
 
-	fmt.Fprintf(&builder, "%s%s.%s(", indent(level), o.header, d.Name)
+	fmt.Fprintf(&builder, "%s%s.%s(", Indent(level), o.Header, d.Name)
 	if shouldMultiline(d.Args) {
 		isMultiline = true
 		for i, arg := range d.Args {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%v", arg.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, "\n%v", arg.Pretty(level+tabSize+len(o.Header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%v", arg.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, ",\n%v", arg.Pretty(level+tabSize+len(o.Header)))
 			}
 		}
 	} else {
@@ -313,9 +256,9 @@ func (d *Destruct) Pretty(level int, opts ...Option) string {
 	if isMultiline || shouldMultiline(d.Conts) {
 		for i, cont := range d.Conts {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%v", cont.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, "\n%v", cont.Pretty(level+tabSize+len(o.Header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%v", cont.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, ",\n%v", cont.Pretty(level+tabSize+len(o.Header)))
 			}
 		}
 	} else {
@@ -341,9 +284,7 @@ func (d *Destruct) Base() token.Token {
 	return d.Conts[0].Base()
 }
 
-func (d *Destruct) isCovalue() bool {
-	return true
-}
+func (d *Destruct) isConsumer() {}
 
 //exhaustruct:ignore
 var _ Consumer = &Destruct{}
@@ -376,9 +317,9 @@ func (e *Extract) Pretty(level int, opts ...Option) string {
 		isMultiline = true
 		for i, arg := range e.Args {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.Header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.Header)))
 			}
 		}
 	} else {
@@ -396,9 +337,9 @@ func (e *Extract) Pretty(level int, opts ...Option) string {
 	if isMultiline || shouldMultiline(e.Conts) {
 		for i, cont := range e.Conts {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.Header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.Header)))
 			}
 		}
 	} else {
@@ -445,15 +386,15 @@ func (p *Prim) Pretty(level int, opts ...Option) string {
 	var builder strings.Builder
 	isMultiline := false
 
-	fmt.Fprintf(&builder, "%s%sprim %v(", indent(level), o.header, p.Name)
+	fmt.Fprintf(&builder, "%s%sprim %v(", Indent(level), o.Header, p.Name)
 
 	if shouldMultiline(p.Args) {
 		isMultiline = true
 		for i, arg := range p.Args {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.Header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.Header)))
 			}
 		}
 	} else {
@@ -469,7 +410,7 @@ func (p *Prim) Pretty(level int, opts ...Option) string {
 	fmt.Fprintf(&builder, ";")
 
 	if isMultiline || shouldMultiline([]Consumer{p.Cont}) {
-		fmt.Fprintf(&builder, "\n%s", p.Cont.Pretty(level+tabSize+len(o.header)))
+		fmt.Fprintf(&builder, "\n%s", p.Cont.Pretty(level+tabSize+len(o.Header)))
 	} else {
 		fmt.Fprintf(&builder, " %s", p.Cont.Pretty(0))
 	}
@@ -507,28 +448,14 @@ func (d *Do) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%sμ %v:\n", indent(level), o.header, d.Name)
-	fmt.Fprintf(&builder, "%s", d.Body.Pretty(level+tabSize+len(o.header)))
+	fmt.Fprintf(&builder, "%s%sμ %v:\n", Indent(level), o.Header, d.Name)
+	fmt.Fprintf(&builder, "%s", d.Body.Pretty(level+tabSize+len(o.Header)))
 
 	return builder.String()
 }
 
 func (d *Do) Base() token.Token {
 	return d.Body.Base()
-}
-
-func (d *Do) Trace() Trace {
-	panic(utils.PosError{
-		Where: d.Base(),
-		Err:   NotValueError{Producer: d},
-	})
-}
-
-func (d *Do) WithTrace(_ Trace) Producer {
-	panic(utils.PosError{
-		Where: d.Base(),
-		Err:   NotValueError{Producer: d},
-	})
 }
 
 func (d *Do) isAtomic() bool {
@@ -557,8 +484,8 @@ func (t *Then) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%sμ~ %v:\n", indent(level), o.header, t.Name)
-	fmt.Fprintf(&builder, "%s", t.Body.Pretty(level+tabSize+len(o.header)))
+	fmt.Fprintf(&builder, "%s%sμ~ %v:\n", Indent(level), o.Header, t.Name)
+	fmt.Fprintf(&builder, "%s", t.Body.Pretty(level+tabSize+len(o.Header)))
 
 	return builder.String()
 }
@@ -567,9 +494,7 @@ func (t *Then) Base() token.Token {
 	return t.Body.Base()
 }
 
-func (t *Then) isCovalue() bool {
-	return true
-}
+func (t *Then) isConsumer() {}
 
 //exhaustruct:ignore
 var _ Consumer = &Then{}
@@ -619,10 +544,10 @@ func (c *Case) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%scase", indent(level), o.header)
+	fmt.Fprintf(&builder, "%s%scase", Indent(level), o.Header)
 
 	for _, clause := range c.Clauses {
-		fmt.Fprintf(&builder, "\n%s", clause.Pretty(level+tabSize+len(o.header)))
+		fmt.Fprintf(&builder, "\n%s", clause.Pretty(level+tabSize+len(o.Header)))
 	}
 
 	return builder.String()
@@ -632,9 +557,7 @@ func (c *Case) Base() token.Token {
 	return c.Clauses[0].Base()
 }
 
-func (c *Case) isCovalue() bool {
-	return true
-}
+func (c *Case) isConsumer() {}
 
 //exhaustruct:ignore
 var _ Consumer = &Case{}
@@ -657,8 +580,8 @@ func (c *Clause) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s ->\n", c.Pattern.Pretty(level+len(o.header)))
-	fmt.Fprintf(&builder, "%s", c.Body.Pretty(level+tabSize+len(o.header)))
+	fmt.Fprintf(&builder, "%s ->\n", c.Pattern.Pretty(level+len(o.Header)))
+	fmt.Fprintf(&builder, "%s", c.Body.Pretty(level+tabSize+len(o.Header)))
 
 	return builder.String()
 }
@@ -672,7 +595,6 @@ var _ Node = &Clause{}
 
 type Cocase struct {
 	Methods []*Method
-	trace   Trace
 }
 
 func (c *Cocase) String() string {
@@ -688,10 +610,10 @@ func (c *Cocase) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%scocase", indent(level), o.header)
+	fmt.Fprintf(&builder, "%s%scocase", Indent(level), o.Header)
 
 	for _, method := range c.Methods {
-		fmt.Fprintf(&builder, "\n%s", method.Pretty(level+tabSize+len(o.header)))
+		fmt.Fprintf(&builder, "\n%s", method.Pretty(level+tabSize+len(o.Header)))
 	}
 
 	return builder.String()
@@ -701,23 +623,17 @@ func (c *Cocase) Base() token.Token {
 	return c.Methods[0].Base()
 }
 
-func (c *Cocase) Trace() Trace {
-	return c.trace
-}
-
-func (c *Cocase) WithTrace(trace Trace) Producer {
-	return &Cocase{
-		Methods: c.Methods,
-		trace:   trace.Wrap(c.trace),
-	}
-}
-
 func (c *Cocase) isAtomic() bool {
 	return true
 }
 
+func (c *Cocase) isRepr() {}
+
 //exhaustruct:ignore
 var _ Producer = &Cocase{}
+
+//exhaustruct:ignore
+var _ Repr = &Cocase{}
 
 type Method struct {
 	Name   string
@@ -739,7 +655,7 @@ func (m *Method) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%s.%s(", indent(level), o.header, m.Name)
+	fmt.Fprintf(&builder, "%s%s.%s(", Indent(level), o.Header, m.Name)
 	for i, param := range m.Params {
 		if i == 0 {
 			fmt.Fprintf(&builder, "%v", param)
@@ -757,7 +673,7 @@ func (m *Method) Pretty(level int, opts ...Option) string {
 	}
 	fmt.Fprintf(&builder, ") ->\n")
 
-	fmt.Fprintf(&builder, "%s", m.Body.Pretty(level+tabSize+len(o.header)))
+	fmt.Fprintf(&builder, "%s", m.Body.Pretty(level+tabSize+len(o.Header)))
 
 	return builder.String()
 }
@@ -788,11 +704,11 @@ func (d *Def) Pretty(level int, opts ...Option) string {
 
 	return fmt.Sprintf(
 		"%s%sdef %v(%v)\n%s",
-		indent(level),
-		o.header,
+		Indent(level),
+		o.Header,
 		d.Name,
 		utils.Concat(d.Returns),
-		d.Body.Pretty(level+tabSize+len(o.header)),
+		d.Body.Pretty(level+tabSize+len(o.Header)),
 	)
 }
 
@@ -821,14 +737,14 @@ func (i *Invoke) Pretty(level int, opts ...Option) string {
 
 	var builder strings.Builder
 
-	fmt.Fprintf(&builder, "%s%sinvoke %v(", indent(level), o.header, i.Name)
+	fmt.Fprintf(&builder, "%s%sinvoke %v(", Indent(level), o.Header, i.Name)
 
 	if shouldMultiline(i.Conts) {
 		for i, cont := range i.Conts {
 			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.Header)))
 			} else {
-				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.header)))
+				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.Header)))
 			}
 		}
 	} else {
@@ -868,16 +784,19 @@ func (t *Toplevel) Pretty(level int, opts ...Option) string {
 		opt(o)
 	}
 
-	return fmt.Sprintf("%s%s", indent(level), o.header)
+	return fmt.Sprintf("%s%s", Indent(level), o.Header)
 }
 
 func (t *Toplevel) Base() token.Token {
 	return token.Dummy()
 }
 
-func (t *Toplevel) isCovalue() bool {
-	return true
-}
+func (t *Toplevel) isConsumer() {}
+
+func (t *Toplevel) isCorepr() {}
 
 //exhaustruct:ignore
 var _ Consumer = &Toplevel{}
+
+//exhaustruct:ignore
+var _ Corepr = &Toplevel{}
