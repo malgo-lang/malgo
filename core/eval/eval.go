@@ -9,7 +9,7 @@ import (
 )
 
 type Evaluator struct {
-	*core.Converter
+	*core.UniqueGen
 	*env
 	Toplevel map[string]*core.Def
 	Stdin    io.Reader
@@ -17,9 +17,9 @@ type Evaluator struct {
 	Stderr   io.Writer
 }
 
-func NewEvaluator(c *core.Converter) *Evaluator {
+func NewEvaluator(g *core.UniqueGen) *Evaluator {
 	return &Evaluator{
-		Converter: c,
+		UniqueGen: g,
 		env:       newEnv(nil),
 		Toplevel:  make(map[string]*core.Def),
 		Stdin:     nil,

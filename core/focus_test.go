@@ -72,7 +72,7 @@ func TestFocus(t *testing.T) {
 			}
 		}
 
-		focus := &core.Focus{Converter: converter}
+		focus := &core.Focus{UniqueGen: converter.UniqueGen}
 		for i, def := range defs {
 			defs[i] = focus.FocusDef(def)
 		}

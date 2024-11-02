@@ -1,7 +1,7 @@
 package core
 
 type Focus struct {
-	*Converter
+	*UniqueGen
 }
 
 func (f *Focus) Focus(node Node) Node {
@@ -126,8 +126,8 @@ func (f *Focus) focusDestruct(node *Destruct) Consumer {
 	}
 	rest = rest[1:]
 
-	outer := f.newName("y", node.Base().Location)
-	inner := f.newName("x", node.Base().Location)
+	outer := f.FreshName("y", node.Base().Location)
+	inner := f.FreshName("x", node.Base().Location)
 
 	destruct := f.focusDestruct(&Destruct{
 		Name:  node.Name,
@@ -209,7 +209,7 @@ func (f *Focus) focusPrim(node *Prim) Statement {
 
 	rest = rest[1:]
 
-	bind := f.newName("x", node.Base().Location)
+	bind := f.FreshName("x", node.Base().Location)
 
 	return &Cut{
 		Producer: first,
