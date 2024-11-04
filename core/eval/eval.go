@@ -130,16 +130,19 @@ func (e *Evaluator) cut(producer core.Producer, consumer core.Consumer) error {
 		return err
 	}
 
+	return e.cutValue(value, covalue)
+}
+
+func (e *Evaluator) cutValue(value Value, covalue Covalue) error {
 	value = covalue.Annotation(value)
-	log.Printf("DEBUG: %#v", value)
 
 	switch corepr := covalue.Corepr.(type) {
 	case *core.Case:
-		return e.cutCase(value, corepr.Clauses)
+		return e.cutCase(value, corepr)
 	case *core.Destruct:
-		return e.cutDestruct(corepr.Base(), value, corepr.Name, corepr.Args, corepr.Conts)
+		return e.cutDestruct(value, corepr)
 	case *core.Then:
-		return e.cutThen(value, corepr.Name, corepr.Body)
+		return e.cutThen(value, corepr)
 	case *core.Toplevel:
 		return e.cutToplevel(value)
 	default:
@@ -158,66 +161,39 @@ func (e *Evaluator) cutDo(name token.Token, body core.Statement, c core.Consumer
 	return e.statement(body)
 }
 
-func (e *Evaluator) cutCase(v Value, clauses []*core.Clause) error {
+func (e *Evaluator) cutCase(v Value, corepr *core.Case) error {
 	panic("not implemented")
 }
 
-func (e *Evaluator) cutDestruct(where token.Token, v Value, name string, args []core.Producer, conts []core.Consumer) error {
+func (e *Evaluator) cutDestruct(v Value, destruct *core.Destruct) error {
+	args := destruct.Args
+	conts := destruct.Conts
+
 	if symbol, ok := v.Repr.(*core.Symbol); ok {
-		e.cutDestructSymbol(where, symbol, v.Trace, name, args, conts)
+		return e.cutDestructSymbol(symbol, v.Trace, destruct)
 	}
 
 	cocase, ok := v.Repr.(*core.Cocase)
 	if !ok {
-		return utils.PosError{Where: where, Err: InvalidValueError{
+		return utils.PosError{Where: destruct.Base(), Err: InvalidValueError{
 			Expect: "cocase",
 			Actual: v.Repr.String(),
 		}}
 	}
 
 	for _, method := range cocase.Methods {
-		if method.Name == name {
-			values := make([]Value, len(args))
-			for i, arg := range args {
-				var err error
-				values[i], err = e.producer(arg)
-				if err != nil {
-					return err
-				}
+		if method.Name == destruct.Name {
+			values, err := e.producers(args)
+			if err != nil {
+				return err
 			}
 
-			covalues := make([]Covalue, len(conts))
-			for i, cont := range conts {
-				var err error
-				covalues[i], err = e.consumer(cont)
-				if err != nil {
-					return err
-				}
+			covalues, err := e.consumers(conts)
+			if err != nil {
+				return err
 			}
 
-			for i, covalue := range covalues {
-				old := covalue.Annotation
-				covalue.Annotation = func(value Value) Value {
-					value = old(value)
-					value.Trace = &Construct{
-						Origin: old(value),
-						Name:   name,
-						Args:   values,
-						Conts:  covalues,
-					}
-
-					return value
-				}
-
-				log.Printf("DEBUG: %#v", old)
-				log.Printf("DEBUG: %#v", covalue.Annotation)
-
-				covalues[i] = covalue
-			}
-
-			for _, covalue := range covalues {
-				log.Printf("DEBUG: %#v", covalue)
-			}
+			e.annotateCovalues(covalues, destruct.Name, values)
 
 			e.env = newEnv(e.env)
 			defer func() {
@@ -242,32 +218,12 @@ func (e *Evaluator) cutDestruct(where token.Token, v Value, name string, args []
 	}
 
 	return utils.PosError{Where: cocase.Base(), Err: NoMethodError{
-		Expect: name,
+		Expect: destruct.Name,
 		Given:  methodNames,
 	}}
 }
 
-// cutDestructSymbol evaluates `:x | .f(a, b; c, d)` form.
-// `:x` is treated as `cocase .f(a, b; c, d) -> :x | c`.
-func (e *Evaluator) cutDestructSymbol(where token.Token, symbol *core.Symbol, trace Trace, name string, args []core.Producer, conts []core.Consumer) error {
-	values := make([]Value, len(args))
-	for i, arg := range args {
-		var err error
-		values[i], err = e.producer(arg)
-		if err != nil {
-			return err
-		}
-	}
-
-	covalues := make([]Covalue, len(conts))
-	for i, cont := range conts {
-		var err error
-		covalues[i], err = e.consumer(cont)
-		if err != nil {
-			return err
-		}
-	}
-
+func (*Evaluator) annotateCovalues(covalues []Covalue, name string, values []Value) {
 	for i, covalue := range covalues {
 		old := covalue.Annotation
 		covalue.Annotation = func(value Value) Value {
@@ -284,35 +240,39 @@ func (e *Evaluator) cutDestructSymbol(where token.Token, symbol *core.Symbol, tr
 
 		covalues[i] = covalue
 	}
+}
+
+// cutDestructSymbol evaluates `:x | .f(a, b; c, d)` form.
+// `:x` is treated as `cocase .f(a, b; c, d) -> :x | c`.
+func (e *Evaluator) cutDestructSymbol(symbol *core.Symbol, trace Trace, destruct *core.Destruct) error {
+	name := destruct.Name
+	args := destruct.Args
+	conts := destruct.Conts
+
+	values, err := e.producers(args)
+	if err != nil {
+		return err
+	}
+
+	covalues, err := e.consumers(conts)
+	if err != nil {
+		return err
+	}
+
+	e.annotateCovalues(covalues, name, values)
 
 	e.env = newEnv(e.env)
 	defer func() {
 		e.env = e.env.parent
 	}()
 
-	firstCovalue := covalues[0]
-	symbolValue := firstCovalue.Annotation(
-		Value{
-			Repr:  symbol,
-			Trace: trace,
-		},
-	)
-
-	switch corepr := firstCovalue.Corepr.(type) {
-	case *core.Case:
-		return e.cutCase(symbolValue, corepr.Clauses)
-	case *core.Destruct:
-		return e.cutDestruct(corepr.Base(), symbolValue, corepr.Name, corepr.Args, corepr.Conts)
-	case *core.Then:
-		return e.cutThen(symbolValue, corepr.Name, corepr.Body)
-	case *core.Toplevel:
-		return e.cutToplevel(symbolValue)
-	default:
-		panic(fmt.Sprintf("unexpected core.Corepr: %#v", corepr))
-	}
+	return e.cutValue(Value{
+		Repr:  symbol,
+		Trace: trace,
+	}, covalues[0])
 }
 
-func (e *Evaluator) cutThen(v Value, name token.Token, body core.Statement) error {
+func (e *Evaluator) cutThen(v Value, then *core.Then) error {
 	panic("not implemented")
 }
 
@@ -389,4 +349,30 @@ func (e *Evaluator) consumer(c core.Consumer) (Covalue, error) {
 	default:
 		panic(fmt.Sprintf("unexpected core.Consumer: %#v", corepr))
 	}
+}
+
+func (e *Evaluator) producers(args []core.Producer) ([]Value, error) {
+	values := make([]Value, len(args))
+	for i, arg := range args {
+		var err error
+		values[i], err = e.producer(arg)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return values, nil
+}
+
+func (e *Evaluator) consumers(conts []core.Consumer) ([]Covalue, error) {
+	covalues := make([]Covalue, len(conts))
+	for i, cont := range conts {
+		var err error
+		covalues[i], err = e.consumer(cont)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return covalues, nil
 }
