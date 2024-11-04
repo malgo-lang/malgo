@@ -133,6 +133,7 @@ func (e *Evaluator) cut(producer core.Producer, consumer core.Consumer) error {
 	return e.cutValue(value, covalue)
 }
 
+// cutValue passes the value to the covalue.
 func (e *Evaluator) cutValue(value Value, covalue Covalue) error {
 	value = covalue.Annotation(value)
 
