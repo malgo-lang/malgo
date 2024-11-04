@@ -1,6 +1,9 @@
 package eval
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type AlreadyDefinedError struct {
 	Name string
@@ -34,6 +37,32 @@ type NoMethodError struct {
 
 func (e NoMethodError) Error() string {
 	return "no method: expect " + e.Expect + ", but got " + strings.Join(e.Given, ", ")
+}
+
+type InvalidPatternError struct {
+	Expect string
+	Actual string
+}
+
+func (e InvalidPatternError) Error() string {
+	return "invalid pattern: expect " + e.Expect + ", but got " + e.Actual
+}
+
+type InvalidTraceError struct {
+	Expect string
+	Actual string
+}
+
+func (e InvalidTraceError) Error() string {
+	return "invalid trace: expect " + e.Expect + ", but got " + e.Actual
+}
+
+type NoMatchError struct {
+	Value Value
+}
+
+func (e NoMatchError) Error() string {
+	return fmt.Sprintf("no match: %v{%v}", e.Value.Repr, e.Value.Trace)
 }
 
 type NoMainError struct{}

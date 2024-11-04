@@ -115,6 +115,7 @@ func (e *Evaluator) statement(s core.Statement) error {
 	}
 }
 
+// cut evaluates `producer | consumer` form.
 func (e *Evaluator) cut(producer core.Producer, consumer core.Consumer) error {
 	if p, ok := producer.(*core.Do); ok {
 		return e.cutDo(p.Name, p.Body, consumer)
@@ -135,6 +136,7 @@ func (e *Evaluator) cut(producer core.Producer, consumer core.Consumer) error {
 
 // cutValue passes the value to the covalue.
 func (e *Evaluator) cutValue(value Value, covalue Covalue) error {
+	// Update the trace of the value using the covalue's annotation.
 	value = covalue.Annotation(value)
 
 	switch corepr := covalue.Corepr.(type) {
@@ -163,6 +165,48 @@ func (e *Evaluator) cutDo(name token.Token, body core.Statement, c core.Consumer
 }
 
 func (e *Evaluator) cutCase(v Value, corepr *core.Case) error {
+	switch v.Trace.(type) {
+	case *Construct:
+		for _, branch := range corepr.Clauses {
+			values, covalues, ok := e.match(v, branch.Pattern)
+			if ok {
+				e.env = newEnv(e.env)
+				defer func() {
+					e.env = e.env.parent
+				}()
+
+				for name, value := range values {
+					e.env.Set(name, value)
+				}
+
+				for name, covalue := range covalues {
+					e.env.SetCo(name, covalue)
+				}
+
+				return e.statement(branch.Body)
+			}
+		}
+
+		return utils.PosError{
+			Where: corepr.Base(),
+			Err: NoMatchError{
+				Value: v,
+			},
+		}
+	case *Root:
+		return utils.PosError{
+			Where: corepr.Base(),
+			Err: InvalidTraceError{
+				Expect: "method",
+				Actual: "root",
+			},
+		}
+	}
+
+	panic(fmt.Sprintf("unexpected eval.Trace: %#v", v.Trace))
+}
+
+func (e *Evaluator) match(v Value, pattern core.Pattern) (map[string]Value, map[string]Covalue, bool) {
 	panic("not implemented")
 }
 

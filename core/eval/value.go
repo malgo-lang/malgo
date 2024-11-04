@@ -24,6 +24,7 @@ type Covalue struct {
 // Trace is a type that represents a trace of evaluation.
 type Trace interface {
 	fmt.Stringer
+	isTrace()
 }
 
 type Root struct{}
@@ -34,6 +35,8 @@ var _ Trace = &Root{}
 func (r *Root) String() string {
 	return "#"
 }
+
+func (r *Root) isTrace() {}
 
 type Construct struct {
 	Origin Value
@@ -74,6 +77,8 @@ func (c *Construct) String() string {
 
 	return builder.String()
 }
+
+func (c *Construct) isTrace() {}
 
 type Annotation func(Value) Value
 
