@@ -1,5 +1,9 @@
-print(0{root}; μ~ $_.15:
-  μ $ap.14:
-    k.10
-    | .ap(; $ap.14)
-  | $seq.13)
+print({(literal 0) #}; (then
+ $_.15
+ (cut
+  (do
+   $ap.14
+   (cut
+    (var k.10)
+    (destruct ap () ((var $ap.14)))))
+  (var $seq.13))))

@@ -3,7 +3,6 @@ package eval
 import (
 	"fmt"
 	"io"
-	"log"
 	"strings"
 
 	"github.com/malgo-lang/malgo/core"
@@ -254,8 +253,6 @@ func (e *Evaluator) matchCo(c Covalue, pattern core.Pattern) (map[string]Covalue
 }
 
 func (e *Evaluator) matchExtract(trace Trace, extract *core.Extract) (map[string]Value, map[string]Covalue, bool) {
-	log.Printf("[DEBUG] matchExtract: trace = %v", trace)
-	log.Printf("[DEBUG] matchExtract: extract = %v", extract)
 	switch trace := trace.(type) {
 	case *Construct:
 		if trace.Name != extract.Name {
@@ -304,9 +301,6 @@ func (e *Evaluator) matchExtract(trace Trace, extract *core.Extract) (map[string
 			}
 		}
 
-		log.Printf("[DEBUG] matchExtract: %v", values)
-		log.Printf("[DEBUG] matchExtract: %v", covalues)
-
 		return values, covalues, true
 	case *Root:
 		return nil, nil, false
@@ -327,7 +321,7 @@ func (e *Evaluator) matchLiteral(v Value, literal *core.Literal) (map[string]Val
 
 func (e *Evaluator) matchSymbol(v Value, symbol *core.Symbol) (map[string]Value, map[string]Covalue, bool) {
 	if vSymbol, ok := v.Repr.(*core.Symbol); ok {
-		if vSymbol.Name == symbol.Name {
+		if vSymbol.Name.Lexeme == symbol.Name.Lexeme {
 			return make(map[string]Value), make(map[string]Covalue), true
 		}
 	}
@@ -454,8 +448,6 @@ func (e *Evaluator) cutThen(v Value, then *core.Then) error {
 }
 
 func (e *Evaluator) cutToplevel(v Value) error {
-	log.Printf("cutToplevel:\n%v", v.String())
-
 	return nil
 }
 
