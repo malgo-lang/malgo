@@ -109,7 +109,27 @@ func (e *Evaluator) statement(s core.Statement) error {
 
 		return e.Invoke(def, covalues)
 	case *core.Prim:
-		panic("not implemented")
+		values, err := e.producers(statement.Args)
+		if err != nil {
+			return err
+		}
+
+		covalue, err := e.consumer(statement.Cont)
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(e.Stdout, "%s(", statement.Name)
+		for i, value := range values {
+			if i > 0 {
+				fmt.Fprint(e.Stdout, ", ")
+			}
+
+			fmt.Fprint(e.Stdout, value.String())
+		}
+		fmt.Fprintf(e.Stdout, "; %v)\n", covalue.Corepr)
+
+		return nil
 	default:
 		panic(fmt.Sprintf("unexpected core.Statement: %#v", statement))
 	}
@@ -206,8 +226,117 @@ func (e *Evaluator) cutCase(v Value, corepr *core.Case) error {
 	panic(fmt.Sprintf("unexpected eval.Trace: %#v", v.Trace))
 }
 
+// match matches the given value with the given pattern.
 func (e *Evaluator) match(v Value, pattern core.Pattern) (map[string]Value, map[string]Covalue, bool) {
-	panic("not implemented")
+	switch pattern := pattern.(type) {
+	case *core.Extract:
+		return e.matchExtract(v.Trace, pattern)
+	case *core.Literal:
+		return e.matchLiteral(v, pattern)
+	case *core.Symbol:
+		return e.matchSymbol(v, pattern)
+	case *core.Var:
+		return e.matchVar(v, pattern)
+	}
+
+	panic(fmt.Sprintf("unexpected core.Pattern: %#v", pattern))
+}
+
+// matchCo matches the given covalue with the given pattern.
+// TODO: patterns that can be matched with covalue probably only include Var.
+// So, we should consider removing this function.
+func (e *Evaluator) matchCo(c Covalue, pattern core.Pattern) (map[string]Covalue, bool) {
+	if variable, ok := pattern.(*core.Var); ok {
+		return map[string]Covalue{variable.Name.String(): c}, true
+	}
+
+	panic(fmt.Sprintf("unexpected core.Pattern: %#v", pattern))
+}
+
+func (e *Evaluator) matchExtract(trace Trace, extract *core.Extract) (map[string]Value, map[string]Covalue, bool) {
+	log.Printf("[DEBUG] matchExtract: trace = %v", trace)
+	log.Printf("[DEBUG] matchExtract: extract = %v", extract)
+	switch trace := trace.(type) {
+	case *Construct:
+		if trace.Name != extract.Name {
+			return e.matchExtract(trace.Trace, extract)
+		}
+
+		values := make(map[string]Value)
+		covalues := make(map[string]Covalue)
+
+		originValues, originCovalues, ok := e.match(trace.Origin, extract.Target)
+		if !ok {
+			return e.matchExtract(trace.Trace, extract)
+		}
+
+		for name, value := range originValues {
+			values[name] = value
+		}
+
+		for name, covalue := range originCovalues {
+			covalues[name] = covalue
+		}
+
+		for i, arg := range extract.Args {
+			argValues, argCovalues, ok := e.match(trace.Args[i], arg)
+			if !ok {
+				return e.matchExtract(trace.Trace, extract)
+			}
+
+			for name, value := range argValues {
+				values[name] = value
+			}
+
+			for name, covalue := range argCovalues {
+				covalues[name] = covalue
+			}
+		}
+
+		for i, cont := range extract.Conts {
+			contCovalues, ok := e.matchCo(trace.Conts[i], cont)
+			if !ok {
+				return e.matchExtract(trace.Trace, extract)
+			}
+
+			for name, covalue := range contCovalues {
+				covalues[name] = covalue
+			}
+		}
+
+		log.Printf("[DEBUG] matchExtract: %v", values)
+		log.Printf("[DEBUG] matchExtract: %v", covalues)
+
+		return values, covalues, true
+	case *Root:
+		return nil, nil, false
+	default:
+		panic(fmt.Sprintf("unexpected eval.Trace: %#v", trace))
+	}
+}
+
+func (e *Evaluator) matchLiteral(v Value, literal *core.Literal) (map[string]Value, map[string]Covalue, bool) {
+	if vLiteral, ok := v.Repr.(*core.Literal); ok {
+		if vLiteral.Literal == literal.Literal {
+			return make(map[string]Value), make(map[string]Covalue), true
+		}
+	}
+
+	return nil, nil, false
+}
+
+func (e *Evaluator) matchSymbol(v Value, symbol *core.Symbol) (map[string]Value, map[string]Covalue, bool) {
+	if vSymbol, ok := v.Repr.(*core.Symbol); ok {
+		if vSymbol.Name == symbol.Name {
+			return make(map[string]Value), make(map[string]Covalue), true
+		}
+	}
+
+	return nil, nil, false
+}
+
+func (e *Evaluator) matchVar(v Value, variable *core.Var) (map[string]Value, map[string]Covalue, bool) {
+	return map[string]Value{variable.Name.String(): v}, make(map[string]Covalue), true
 }
 
 func (e *Evaluator) cutDestruct(v Value, destruct *core.Destruct) error {
@@ -274,10 +403,11 @@ func (*Evaluator) annotateCovalues(covalues []Covalue, name string, values []Val
 		covalue.Annotation = func(value Value) Value {
 			value = old(value)
 			value.Trace = &Construct{
-				Origin: old(value),
+				Origin: value,
 				Name:   name,
 				Args:   values,
 				Conts:  covalues,
+				Trace:  value.Trace,
 			}
 
 			return value
@@ -318,7 +448,9 @@ func (e *Evaluator) cutDestructSymbol(symbol *core.Symbol, trace Trace, destruct
 }
 
 func (e *Evaluator) cutThen(v Value, then *core.Then) error {
-	panic("not implemented")
+	e.Set(then.Name.String(), v)
+
+	return e.statement(then.Body)
 }
 
 func (e *Evaluator) cutToplevel(v Value) error {

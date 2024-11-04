@@ -17,7 +17,6 @@ import (
 )
 
 func TestEval(t *testing.T) {
-	t.Skip()
 	t.Parallel()
 
 	testfiles, err := utils.FindSourceFiles("../../testdata")

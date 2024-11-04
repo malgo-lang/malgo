@@ -2,6 +2,7 @@ package eval
 
 import (
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/malgo-lang/malgo/core"
@@ -13,7 +14,10 @@ type Value struct {
 }
 
 func (v Value) String() string {
-	return fmt.Sprintf("{%s}%s", v.Trace, v.Repr)
+	var trace strings.Builder
+	v.Trace.Print(&trace, 0)
+
+	return fmt.Sprintf("%v{%s}", v.Repr, trace.String())
 }
 
 type Covalue struct {
@@ -24,6 +28,7 @@ type Covalue struct {
 // Trace is a type that represents a trace of evaluation.
 type Trace interface {
 	fmt.Stringer
+	Print(w io.Writer, level int)
 	isTrace()
 }
 
@@ -33,7 +38,11 @@ type Root struct{}
 var _ Trace = &Root{}
 
 func (r *Root) String() string {
-	return "#"
+	return "root"
+}
+
+func (r *Root) Print(w io.Writer, level int) {
+	fmt.Fprintf(w, "%vroot", indent(level))
 }
 
 func (r *Root) isTrace() {}
@@ -43,39 +52,32 @@ type Construct struct {
 	Name   string
 	Args   []Value
 	Conts  []Covalue
+	Trace  Trace
 }
 
 //exhaustruct:ignore
 var _ Trace = &Construct{}
 
 func (c *Construct) String() string {
-	var builder strings.Builder
+	var trace strings.Builder
+	c.Print(&trace, 0)
 
-	fmt.Fprintf(&builder, "%s.%s(", c.Origin.Repr.String(), c.Name)
+	return trace.String()
+}
 
-	for i, arg := range c.Args {
-		if i > 0 {
-			builder.WriteString(", ")
-		}
-
-		builder.WriteString(arg.Repr.String())
+func (c *Construct) Print(w io.Writer, level int) {
+	fmt.Fprintf(w, "%vconstruct %v %s\n", indent(level), c.Origin, c.Name)
+	fmt.Fprintf(w, "%vorigin:\n", indent(level))
+	c.Origin.Trace.Print(w, level+1)
+	fmt.Fprintf(w, "%vargs:\n", indent(level))
+	for _, arg := range c.Args {
+		arg.Trace.Print(w, level+1)
 	}
-
-	builder.WriteString(";")
-
-	for i, cont := range c.Conts {
-		if i == 0 {
-			builder.WriteString(" ")
-		} else {
-			builder.WriteString(", ")
-		}
-
-		builder.WriteString(cont.Corepr.String())
+	fmt.Fprintf(w, "%vconts:\n", indent(level))
+	for _, cont := range c.Conts {
+		fmt.Fprintf(w, "%s\n", cont.Corepr.Pretty(level+1))
 	}
-
-	builder.WriteString(")")
-
-	return builder.String()
+	c.Trace.Print(w, level)
 }
 
 func (c *Construct) isTrace() {}
@@ -84,4 +86,8 @@ type Annotation func(Value) Value
 
 func NoAnnotation(v Value) Value {
 	return v
+}
+
+func indent(level int) string {
+	return strings.Repeat("\t", level)
 }
