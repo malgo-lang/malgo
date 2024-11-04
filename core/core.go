@@ -39,7 +39,7 @@ const tabSize int = 2
 
 const multilineThreshold int = 16
 
-func shouldMultiline[T Node](nodes []T) bool {
+func ShouldMultiline[T Pretty](nodes []T) bool {
 	for _, node := range nodes {
 		str := node.Pretty(0)
 
@@ -232,7 +232,7 @@ func (d *Destruct) Pretty(level int, opts ...Option) string {
 	isMultiline := false
 
 	fmt.Fprintf(&builder, "%s%s.%s(", Indent(level), o.Header, d.Name)
-	if shouldMultiline(d.Args) {
+	if ShouldMultiline(d.Args) {
 		isMultiline = true
 		for i, arg := range d.Args {
 			if i == 0 {
@@ -253,7 +253,7 @@ func (d *Destruct) Pretty(level int, opts ...Option) string {
 
 	fmt.Fprintf(&builder, "; ")
 
-	if isMultiline || shouldMultiline(d.Conts) {
+	if isMultiline || ShouldMultiline(d.Conts) {
 		for i, cont := range d.Conts {
 			if i == 0 {
 				fmt.Fprintf(&builder, "\n%v", cont.Pretty(level+tabSize+len(o.Header)))
@@ -286,8 +286,13 @@ func (d *Destruct) Base() token.Token {
 
 func (d *Destruct) isConsumer() {}
 
+func (d *Destruct) isCorepr() {}
+
 //exhaustruct:ignore
 var _ Consumer = &Destruct{}
+
+//exhaustruct:ignore
+var _ Corepr = &Destruct{}
 
 // Extract is a pattern corresponds Destruct.
 type Extract struct {
@@ -313,7 +318,7 @@ func (e *Extract) Pretty(level int, opts ...Option) string {
 
 	fmt.Fprintf(&builder, "%s.%s(", e.Target.Pretty(level, opts...), e.Name)
 
-	if shouldMultiline(e.Args) {
+	if ShouldMultiline(e.Args) {
 		isMultiline = true
 		for i, arg := range e.Args {
 			if i == 0 {
@@ -334,7 +339,7 @@ func (e *Extract) Pretty(level int, opts ...Option) string {
 
 	fmt.Fprintf(&builder, ";")
 
-	if isMultiline || shouldMultiline(e.Conts) {
+	if isMultiline || ShouldMultiline(e.Conts) {
 		for i, cont := range e.Conts {
 			if i == 0 {
 				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.Header)))
@@ -388,7 +393,7 @@ func (p *Prim) Pretty(level int, opts ...Option) string {
 
 	fmt.Fprintf(&builder, "%s%sprim %v(", Indent(level), o.Header, p.Name)
 
-	if shouldMultiline(p.Args) {
+	if ShouldMultiline(p.Args) {
 		isMultiline = true
 		for i, arg := range p.Args {
 			if i == 0 {
@@ -409,7 +414,7 @@ func (p *Prim) Pretty(level int, opts ...Option) string {
 
 	fmt.Fprintf(&builder, ";")
 
-	if isMultiline || shouldMultiline([]Consumer{p.Cont}) {
+	if isMultiline || ShouldMultiline([]Consumer{p.Cont}) {
 		fmt.Fprintf(&builder, "\n%s", p.Cont.Pretty(level+tabSize+len(o.Header)))
 	} else {
 		fmt.Fprintf(&builder, " %s", p.Cont.Pretty(0))
@@ -496,8 +501,13 @@ func (t *Then) Base() token.Token {
 
 func (t *Then) isConsumer() {}
 
+func (t *Then) isCorepr() {}
+
 //exhaustruct:ignore
 var _ Consumer = &Then{}
+
+//exhaustruct:ignore
+var _ Corepr = &Then{}
 
 type Cut struct {
 	Producer Producer
@@ -559,8 +569,13 @@ func (c *Case) Base() token.Token {
 
 func (c *Case) isConsumer() {}
 
+func (c *Case) isCorepr() {}
+
 //exhaustruct:ignore
 var _ Consumer = &Case{}
+
+//exhaustruct:ignore
+var _ Corepr = &Case{}
 
 type Clause struct {
 	Pattern Pattern
@@ -739,7 +754,7 @@ func (i *Invoke) Pretty(level int, opts ...Option) string {
 
 	fmt.Fprintf(&builder, "%s%sinvoke %v(", Indent(level), o.Header, i.Name)
 
-	if shouldMultiline(i.Conts) {
+	if ShouldMultiline(i.Conts) {
 		for i, cont := range i.Conts {
 			if i == 0 {
 				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.Header)))

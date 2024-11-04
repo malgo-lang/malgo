@@ -2,6 +2,7 @@ package eval
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/malgo-lang/malgo/core"
 )
@@ -11,14 +12,18 @@ type Value struct {
 	Trace Trace
 }
 
+func (v Value) String() string {
+	return fmt.Sprintf("{%s}%s", v.Trace, v.Repr)
+}
+
 type Covalue struct {
-	Corepr  core.Corepr
-	Adopter Adopter
+	Corepr     core.Corepr
+	Annotation Annotation
 }
 
 // Trace is a type that represents a trace of evaluation.
 type Trace interface {
-	core.Pretty
+	fmt.Stringer
 }
 
 type Root struct{}
@@ -27,22 +32,51 @@ type Root struct{}
 var _ Trace = &Root{}
 
 func (r *Root) String() string {
-	return r.Pretty(0)
+	return "#"
 }
 
-func (r *Root) Pretty(level int, opts ...core.Option) string {
-	o := core.DefaultPrettyOpts()
+type Construct struct {
+	Origin Value
+	Name   string
+	Args   []Value
+	Conts  []Covalue
+}
 
-	for _, opt := range opts {
-		opt(o)
+//exhaustruct:ignore
+var _ Trace = &Construct{}
+
+func (c *Construct) String() string {
+	var builder strings.Builder
+
+	fmt.Fprintf(&builder, "%s.%s(", c.Origin.Repr.String(), c.Name)
+
+	for i, arg := range c.Args {
+		if i > 0 {
+			builder.WriteString(", ")
+		}
+
+		builder.WriteString(arg.Repr.String())
 	}
 
-	return fmt.Sprintf("%vroot", core.Indent(level))
+	builder.WriteString(";")
+
+	for i, cont := range c.Conts {
+		if i == 0 {
+			builder.WriteString(" ")
+		} else {
+			builder.WriteString(", ")
+		}
+
+		builder.WriteString(cont.Corepr.String())
+	}
+
+	builder.WriteString(")")
+
+	return builder.String()
 }
 
-// Adopter is a type that represents a trace modifier.
-type Adopter func(Trace) Trace
+type Annotation func(Value) Value
 
-func Identity(t Trace) Trace {
-	return t
+func NoAnnotation(v Value) Value {
+	return v
 }

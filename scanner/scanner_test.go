@@ -2,7 +2,6 @@ package scanner_test
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 	"testing"
@@ -37,7 +36,6 @@ func TestGolden(t *testing.T) {
 		var builder strings.Builder
 
 		for tok, err := range tokens {
-			log.Printf("DEBUG: %v", tok)
 			if err != nil {
 				t.Errorf("%s returned error: %v", testfile, err)
 
