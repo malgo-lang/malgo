@@ -26,6 +26,13 @@ linters:
     - gosimple
     - unconvert
 linters-settings:
+  stylecheck:
+    dot-import-whitelist:
+      - "github.com/malgo-lang/malgo/pretty"
+  revive:
+    rules:
+      - name: dot-imports
+        disabled: true
   godot:
     exclude:
       - ;$

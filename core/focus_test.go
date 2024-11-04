@@ -80,7 +80,7 @@ func TestFocus(t *testing.T) {
 		var builder strings.Builder
 
 		for _, def := range defs {
-			builder.WriteString(def.Pretty(0))
+			builder.WriteString(def.Pretty(0).String())
 			builder.WriteString("\n")
 		}
 

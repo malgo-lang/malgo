@@ -2,60 +2,13 @@ package core
 
 import (
 	"fmt"
-	"strings"
 
+	. "github.com/malgo-lang/malgo/pretty"
 	"github.com/malgo-lang/malgo/token"
-	"github.com/malgo-lang/malgo/utils"
 )
 
-type PrettyOpts struct {
-	Header string
-}
-
-func DefaultPrettyOpts() *PrettyOpts {
-	return &PrettyOpts{
-		Header: "",
-	}
-}
-
-type Option func(*PrettyOpts)
-
-func WithHeader(header string) Option {
-	return func(o *PrettyOpts) {
-		o.Header = header
-	}
-}
-
-type Pretty interface {
-	fmt.Stringer
-	Pretty(level int, opts ...Option) string
-}
-
-func Indent(level int) string {
-	return strings.Repeat(" ", level)
-}
-
-const tabSize int = 2
-
-const multilineThreshold int = 16
-
-func ShouldMultiline[T Pretty](nodes []T) bool {
-	for _, node := range nodes {
-		str := node.Pretty(0)
-
-		if strings.Contains(str, "\n") {
-			return true
-		}
-
-		if len(str) > multilineThreshold {
-			return true
-		}
-	}
-
-	return false
-}
-
 type Node interface {
+	fmt.Stringer
 	Pretty
 	Base() token.Token
 }
@@ -99,17 +52,11 @@ type Var struct {
 }
 
 func (v *Var) String() string {
-	return v.Pretty(0)
+	return v.Pretty(0).String()
 }
 
-func (v *Var) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	return fmt.Sprintf("%s%s%v", Indent(level), o.Header, v.Name)
+func (v *Var) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(String("var"), v.Name).Pretty(level, opts...)
 }
 
 func (v *Var) Base() token.Token {
@@ -137,14 +84,8 @@ type Literal struct {
 	token.Token
 }
 
-func (l *Literal) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	return fmt.Sprintf("%s%s%v", Indent(level), o.Header, l.Token)
+func (l *Literal) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(String("literal"), l.Token).Pretty(level, opts...)
 }
 
 func (l *Literal) Base() token.Token {
@@ -173,21 +114,11 @@ type Symbol struct {
 }
 
 func (s *Symbol) String() string {
-	return s.Pretty(0)
+	return s.Pretty(0).String()
 }
 
-func (s *Symbol) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	if s.Name.Lexeme[0] == ':' {
-		return fmt.Sprintf("%s%s%s", Indent(level), o.Header, s.Name.Lexeme)
-	}
-
-	return fmt.Sprintf("%s%s:%s", Indent(level), o.Header, s.Name.Lexeme)
+func (s *Symbol) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(String("symbol"), s.Name).Pretty(level, opts...)
 }
 
 func (s *Symbol) Base() token.Token {
@@ -218,62 +149,16 @@ type Destruct struct {
 }
 
 func (d *Destruct) String() string {
-	return d.Pretty(0)
+	return d.Pretty(0).String()
 }
 
-func (d *Destruct) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-	isMultiline := false
-
-	fmt.Fprintf(&builder, "%s%s.%s(", Indent(level), o.Header, d.Name)
-	if ShouldMultiline(d.Args) {
-		isMultiline = true
-		for i, arg := range d.Args {
-			if i == 0 {
-				fmt.Fprintf(&builder, "\n%v", arg.Pretty(level+tabSize+len(o.Header)))
-			} else {
-				fmt.Fprintf(&builder, ",\n%v", arg.Pretty(level+tabSize+len(o.Header)))
-			}
-		}
-	} else {
-		for i, arg := range d.Args {
-			if i == 0 {
-				fmt.Fprintf(&builder, "%v", arg.Pretty(0))
-			} else {
-				fmt.Fprintf(&builder, ", %v", arg.Pretty(0))
-			}
-		}
-	}
-
-	fmt.Fprintf(&builder, "; ")
-
-	if isMultiline || ShouldMultiline(d.Conts) {
-		for i, cont := range d.Conts {
-			if i == 0 {
-				fmt.Fprintf(&builder, "\n%v", cont.Pretty(level+tabSize+len(o.Header)))
-			} else {
-				fmt.Fprintf(&builder, ",\n%v", cont.Pretty(level+tabSize+len(o.Header)))
-			}
-		}
-	} else {
-		for i, cont := range d.Conts {
-			if i == 0 {
-				fmt.Fprintf(&builder, "%v", cont.Pretty(0))
-			} else {
-				fmt.Fprintf(&builder, ", %v", cont.Pretty(0))
-			}
-		}
-	}
-
-	fmt.Fprintf(&builder, ")")
-
-	return builder.String()
+func (d *Destruct) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("destruct"),
+		String(d.Name),
+		ParensList(d.Args),
+		ParensList(d.Conts),
+	).Pretty(level, opts...)
 }
 
 func (d *Destruct) Base() token.Token {
@@ -303,63 +188,17 @@ type Extract struct {
 }
 
 func (e *Extract) String() string {
-	return e.Pretty(0)
+	return e.Pretty(0).String()
 }
 
-func (e *Extract) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-	isMultiline := false
-
-	fmt.Fprintf(&builder, "%s.%s(", e.Target.Pretty(level, opts...), e.Name)
-
-	if ShouldMultiline(e.Args) {
-		isMultiline = true
-		for i, arg := range e.Args {
-			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.Header)))
-			} else {
-				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.Header)))
-			}
-		}
-	} else {
-		for i, arg := range e.Args {
-			if i == 0 {
-				fmt.Fprintf(&builder, "%s", arg.Pretty(0))
-			} else {
-				fmt.Fprintf(&builder, ", %s", arg.Pretty(0))
-			}
-		}
-	}
-
-	fmt.Fprintf(&builder, ";")
-
-	if isMultiline || ShouldMultiline(e.Conts) {
-		for i, cont := range e.Conts {
-			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.Header)))
-			} else {
-				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.Header)))
-			}
-		}
-	} else {
-		for i, cont := range e.Conts {
-			if i == 0 {
-				fmt.Fprintf(&builder, " %s", cont.Pretty(0))
-			} else {
-				fmt.Fprintf(&builder, ", %s", cont.Pretty(0))
-			}
-		}
-	}
-
-	fmt.Fprintf(&builder, ")")
-
-	return builder.String()
+func (e *Extract) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("extract"),
+		e.Target,
+		String(e.Name),
+		ParensList(e.Args),
+		ParensList(e.Conts),
+	).Pretty(level, opts...)
 }
 
 func (e *Extract) Base() token.Token {
@@ -378,51 +217,16 @@ type Prim struct {
 }
 
 func (p *Prim) String() string {
-	return p.Pretty(0)
+	return p.Pretty(0).String()
 }
 
-func (p *Prim) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-	isMultiline := false
-
-	fmt.Fprintf(&builder, "%s%sprim %v(", Indent(level), o.Header, p.Name)
-
-	if ShouldMultiline(p.Args) {
-		isMultiline = true
-		for i, arg := range p.Args {
-			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", arg.Pretty(level+tabSize+len(o.Header)))
-			} else {
-				fmt.Fprintf(&builder, ",\n%s", arg.Pretty(level+tabSize+len(o.Header)))
-			}
-		}
-	} else {
-		for i, arg := range p.Args {
-			if i == 0 {
-				fmt.Fprintf(&builder, "%s", arg.Pretty(0))
-			} else {
-				fmt.Fprintf(&builder, ", %s", arg.Pretty(0))
-			}
-		}
-	}
-
-	fmt.Fprintf(&builder, ";")
-
-	if isMultiline || ShouldMultiline([]Consumer{p.Cont}) {
-		fmt.Fprintf(&builder, "\n%s", p.Cont.Pretty(level+tabSize+len(o.Header)))
-	} else {
-		fmt.Fprintf(&builder, " %s", p.Cont.Pretty(0))
-	}
-
-	fmt.Fprintf(&builder, ")")
-
-	return builder.String()
+func (p *Prim) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("prim"),
+		p.Name,
+		ParensList(p.Args),
+		p.Cont,
+	).Pretty(level, opts...)
 }
 
 func (p *Prim) Base() token.Token {
@@ -441,22 +245,15 @@ type Do struct {
 }
 
 func (d *Do) String() string {
-	return d.Pretty(0)
+	return d.Pretty(0).String()
 }
 
-func (d *Do) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-
-	fmt.Fprintf(&builder, "%s%sμ %v:\n", Indent(level), o.Header, d.Name)
-	fmt.Fprintf(&builder, "%s", d.Body.Pretty(level+tabSize+len(o.Header)))
-
-	return builder.String()
+func (d *Do) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("do"),
+		d.Name,
+		d.Body,
+	).Pretty(level, opts...)
 }
 
 func (d *Do) Base() token.Token {
@@ -477,22 +274,15 @@ type Then struct {
 }
 
 func (t *Then) String() string {
-	return t.Pretty(0)
+	return t.Pretty(0).String()
 }
 
-func (t *Then) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-
-	fmt.Fprintf(&builder, "%s%sμ~ %v:\n", Indent(level), o.Header, t.Name)
-	fmt.Fprintf(&builder, "%s", t.Body.Pretty(level+tabSize+len(o.Header)))
-
-	return builder.String()
+func (t *Then) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("then"),
+		t.Name,
+		t.Body,
+	).Pretty(level, opts...)
 }
 
 func (t *Then) Base() token.Token {
@@ -515,17 +305,15 @@ type Cut struct {
 }
 
 func (c *Cut) String() string {
-	return c.Pretty(0)
+	return c.Pretty(0).String()
 }
 
-func (c *Cut) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	return fmt.Sprintf("%s\n%s", c.Producer.Pretty(level), c.Consumer.Pretty(level, WithHeader("| ")))
+func (c *Cut) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("cut"),
+		c.Producer,
+		c.Consumer,
+	).Pretty(level, opts...)
 }
 
 func (c *Cut) Base() token.Token {
@@ -542,25 +330,14 @@ type Case struct {
 }
 
 func (c *Case) String() string {
-	return c.Pretty(0)
+	return c.Pretty(0).String()
 }
 
-func (c *Case) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-
-	fmt.Fprintf(&builder, "%s%scase", Indent(level), o.Header)
-
-	for _, clause := range c.Clauses {
-		fmt.Fprintf(&builder, "\n%s", clause.Pretty(level+tabSize+len(o.Header)))
-	}
-
-	return builder.String()
+func (c *Case) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("case"),
+		ParensList(c.Clauses),
+	).Pretty(level, opts...)
 }
 
 func (c *Case) Base() token.Token {
@@ -583,22 +360,15 @@ type Clause struct {
 }
 
 func (c *Clause) String() string {
-	return c.Pretty(0)
+	return c.Pretty(0).String()
 }
 
-func (c *Clause) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-
-	fmt.Fprintf(&builder, "%s ->\n", c.Pattern.Pretty(level+len(o.Header)))
-	fmt.Fprintf(&builder, "%s", c.Body.Pretty(level+tabSize+len(o.Header)))
-
-	return builder.String()
+func (c *Clause) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("clause"),
+		c.Pattern,
+		c.Body,
+	).Pretty(level, opts...)
 }
 
 func (c *Clause) Base() token.Token {
@@ -613,25 +383,14 @@ type Cocase struct {
 }
 
 func (c *Cocase) String() string {
-	return c.Pretty(0)
+	return c.Pretty(0).String()
 }
 
-func (c *Cocase) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-
-	fmt.Fprintf(&builder, "%s%scocase", Indent(level), o.Header)
-
-	for _, method := range c.Methods {
-		fmt.Fprintf(&builder, "\n%s", method.Pretty(level+tabSize+len(o.Header)))
-	}
-
-	return builder.String()
+func (c *Cocase) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("cocase"),
+		ParensList(c.Methods),
+	).Pretty(level, opts...)
 }
 
 func (c *Cocase) Base() token.Token {
@@ -658,39 +417,17 @@ type Method struct {
 }
 
 func (m *Method) String() string {
-	return m.Pretty(0)
+	return m.Pretty(0).String()
 }
 
-func (m *Method) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-
-	fmt.Fprintf(&builder, "%s%s.%s(", Indent(level), o.Header, m.Name)
-	for i, param := range m.Params {
-		if i == 0 {
-			fmt.Fprintf(&builder, "%v", param)
-		} else {
-			fmt.Fprintf(&builder, ", %v", param)
-		}
-	}
-	fmt.Fprintf(&builder, "; ")
-	for i, label := range m.Labels {
-		if i == 0 {
-			fmt.Fprintf(&builder, "%v", label)
-		} else {
-			fmt.Fprintf(&builder, ", %v", label)
-		}
-	}
-	fmt.Fprintf(&builder, ") ->\n")
-
-	fmt.Fprintf(&builder, "%s", m.Body.Pretty(level+tabSize+len(o.Header)))
-
-	return builder.String()
+func (m *Method) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("method"),
+		String(m.Name),
+		ParensList(m.Params),
+		ParensList(m.Labels),
+		m.Body,
+	).Pretty(level, opts...)
 }
 
 func (m *Method) Base() token.Token {
@@ -707,24 +444,16 @@ type Def struct {
 }
 
 func (d *Def) String() string {
-	return d.Pretty(0)
+	return d.Pretty(0).String()
 }
 
-func (d *Def) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	return fmt.Sprintf(
-		"%s%sdef %v(%v)\n%s",
-		Indent(level),
-		o.Header,
+func (d *Def) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("def"),
 		d.Name,
-		utils.Concat(d.Returns),
-		d.Body.Pretty(level+tabSize+len(o.Header)),
-	)
+		ParensList(d.Returns),
+		d.Body,
+	).Pretty(level, opts...)
 }
 
 func (d *Def) Base() token.Token {
@@ -740,41 +469,15 @@ type Invoke struct {
 }
 
 func (i *Invoke) String() string {
-	return i.Pretty(0)
+	return i.Pretty(0).String()
 }
 
-func (i *Invoke) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	var builder strings.Builder
-
-	fmt.Fprintf(&builder, "%s%sinvoke %v(", Indent(level), o.Header, i.Name)
-
-	if ShouldMultiline(i.Conts) {
-		for i, cont := range i.Conts {
-			if i == 0 {
-				fmt.Fprintf(&builder, "\n%s", cont.Pretty(level+tabSize+len(o.Header)))
-			} else {
-				fmt.Fprintf(&builder, ",\n%s", cont.Pretty(level+tabSize+len(o.Header)))
-			}
-		}
-	} else {
-		for i, cont := range i.Conts {
-			if i == 0 {
-				fmt.Fprintf(&builder, "%s", cont.Pretty(0))
-			} else {
-				fmt.Fprintf(&builder, ", %s", cont.Pretty(0))
-			}
-		}
-	}
-
-	fmt.Fprintf(&builder, ")")
-
-	return builder.String()
+func (i *Invoke) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("invoke"),
+		i.Name,
+		ParensList(i.Conts),
+	).Pretty(level, opts...)
 }
 
 func (i *Invoke) Base() token.Token {
@@ -789,17 +492,11 @@ var _ Statement = &Invoke{}
 type Toplevel struct{}
 
 func (t *Toplevel) String() string {
-	return t.Pretty(0)
+	return t.Pretty(0).String()
 }
 
-func (t *Toplevel) Pretty(level int, opts ...Option) string {
-	o := DefaultPrettyOpts()
-
-	for _, opt := range opts {
-		opt(o)
-	}
-
-	return fmt.Sprintf("%s%s", Indent(level), o.Header)
+func (t *Toplevel) Pretty(level int, opts ...Option) fmt.Stringer {
+	return String("toplevel").Pretty(level, opts...)
 }
 
 func (t *Toplevel) Base() token.Token {

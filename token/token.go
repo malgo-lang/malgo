@@ -1,6 +1,11 @@
 package token
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+
+	. "github.com/malgo-lang/malgo/pretty"
+)
 
 //go:generate go run golang.org/x/tools/cmd/stringer@v0.13.0 -type=Kind
 type Kind int
@@ -52,6 +57,14 @@ type Token struct {
 	Lexeme   string
 	Location Location
 	Literal  any
+}
+
+func (t Token) Pretty(level int, _ ...Option) fmt.Stringer {
+	var builder strings.Builder
+
+	fmt.Fprintf(&builder, "%s%v", Indent(level), t)
+
+	return &builder
 }
 
 func (t Token) String() string {

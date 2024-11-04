@@ -2,10 +2,10 @@ package eval
 
 import (
 	"fmt"
-	"io"
 	"strings"
 
 	"github.com/malgo-lang/malgo/core"
+	. "github.com/malgo-lang/malgo/pretty"
 )
 
 type Value struct {
@@ -14,10 +14,11 @@ type Value struct {
 }
 
 func (v Value) String() string {
-	var trace strings.Builder
-	v.Trace.Print(&trace, 0)
+	return v.Pretty(0).String()
+}
 
-	return fmt.Sprintf("%v{%s}", v.Repr, trace.String())
+func (v Value) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Braces(v.Repr, v.Trace).Pretty(level, opts...)
 }
 
 type Covalue struct {
@@ -25,10 +26,17 @@ type Covalue struct {
 	Annotation Annotation
 }
 
+func (c Covalue) String() string {
+	return c.Pretty(0).String()
+}
+
+func (c Covalue) Pretty(level int, opts ...Option) fmt.Stringer {
+	return c.Corepr.Pretty(level, opts...)
+}
+
 // Trace is a type that represents a trace of evaluation.
 type Trace interface {
-	fmt.Stringer
-	Print(w io.Writer, level int)
+	Pretty
 	isTrace()
 }
 
@@ -38,11 +46,11 @@ type Root struct{}
 var _ Trace = &Root{}
 
 func (r *Root) String() string {
-	return "root"
+	return r.Pretty(0).String()
 }
 
-func (r *Root) Print(w io.Writer, level int) {
-	fmt.Fprintf(w, "%vroot", indent(level))
+func (r *Root) Pretty(level int, opts ...Option) fmt.Stringer {
+	return String("#").Pretty(level, opts...)
 }
 
 func (r *Root) isTrace() {}
@@ -59,25 +67,18 @@ type Construct struct {
 var _ Trace = &Construct{}
 
 func (c *Construct) String() string {
-	var trace strings.Builder
-	c.Print(&trace, 0)
-
-	return trace.String()
+	return c.Pretty(0).String()
 }
 
-func (c *Construct) Print(w io.Writer, level int) {
-	fmt.Fprintf(w, "%vconstruct %v %s\n", indent(level), c.Origin, c.Name)
-	fmt.Fprintf(w, "%vorigin:\n", indent(level))
-	c.Origin.Trace.Print(w, level+1)
-	fmt.Fprintf(w, "%vargs:\n", indent(level))
-	for _, arg := range c.Args {
-		arg.Trace.Print(w, level+1)
-	}
-	fmt.Fprintf(w, "%vconts:\n", indent(level))
-	for _, cont := range c.Conts {
-		fmt.Fprintf(w, "%s\n", cont.Corepr.Pretty(level+1))
-	}
-	c.Trace.Print(w, level)
+func (c *Construct) Pretty(level int, opts ...Option) fmt.Stringer {
+	return Parens(
+		String("construct"),
+		c.Origin,
+		String(c.Name),
+		ParensList(c.Args),
+		ParensList(c.Conts),
+		c.Trace,
+	).Pretty(level, opts...)
 }
 
 func (c *Construct) isTrace() {}

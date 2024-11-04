@@ -1,8 +1,9 @@
 package eval
 
 import (
-	"fmt"
 	"strings"
+
+	"github.com/malgo-lang/malgo/pretty"
 )
 
 type AlreadyDefinedError struct {
@@ -62,7 +63,7 @@ type NoMatchError struct {
 }
 
 func (e NoMatchError) Error() string {
-	return fmt.Sprintf("no match: %v{%v}", e.Value.Repr, e.Value.Trace)
+	return pretty.Join(pretty.String("no match:"), e.Value).Pretty(0).String()
 }
 
 type NoMainError struct{}
