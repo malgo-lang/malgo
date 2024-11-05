@@ -36,7 +36,7 @@ func (e PosError) Error() string {
 		return "at end: " + e.Err.Error()
 	}
 
-	return fmt.Sprintf("at %v: `%s`\n\t%s", e.Where.Location, e.Where.Lexeme, e.Err.Error())
+	return fmt.Sprintf("at %v: `%v`\n\t%s", e.Where.Location, e.Where, e.Err.Error())
 }
 
 func (e PosError) Unwrap() error {

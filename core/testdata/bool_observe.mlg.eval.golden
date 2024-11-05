@@ -1,0 +1,126 @@
+print({(literal 0)
+ (construct
+  {(cocase
+    ((method
+      false
+      ()
+      ($object.4)
+      (cut (literal 0) (var $object.4)))
+     (method
+      true
+      ()
+      ($object.5)
+      (cut (literal 1) (var $object.5)))))
+   #}
+  false
+  ()
+  ((case
+    ((clause
+      (var x.21)
+      (cut
+       (do
+        $seq.28
+        (cut
+         (do
+          $prim.27
+          (prim print ((var x.21)) (var $prim.27)))
+         (then
+          $_.30
+          (cut
+           (do
+            $prim.29
+            (prim print_trace ((var x.21)) (var $prim.29)))
+           (var $seq.28)))))
+       (var $let.26))))))
+  (construct
+   {(cocase
+     ((method
+       ap
+       ($p1.8)
+       ($lambda.7)
+       (cut
+        (do
+         $case.9
+         (cut
+          (do
+           $ap.10
+           (cut
+            (symbol tuple)
+            (destruct ap ((var $p1.8)) ((var $ap.10)))))
+          (case
+           ((clause
+             (extract
+              (symbol tuple)
+              ap
+              ((extract (var b.11) false () ((var $_.12))))
+              ((var $_.13)))
+             (cut
+              (do
+               $proj.14
+               (cut
+                (var b.11)
+                (destruct true () ((var $proj.14)))))
+              (var $case.9)))
+            (clause
+             (extract
+              (symbol tuple)
+              ap
+              ((extract (var b.15) true () ((var $_.16))))
+              ((var $_.17)))
+             (cut
+              (do
+               $proj.18
+               (cut
+                (var b.15)
+                (destruct false () ((var $proj.18)))))
+              (var $case.9)))))))
+        (var $lambda.7)))))
+    #}
+   ap
+   ({(literal 1)
+     (construct
+      {(cocase
+        ((method
+          false
+          ()
+          ($object.4)
+          (cut (literal 0) (var $object.4)))
+         (method
+          true
+          ()
+          ($object.5)
+          (cut (literal 1) (var $object.5)))))
+       #}
+      true
+      ()
+      ((then
+        $x.32
+        (cut
+         (var $y.31)
+         (destruct ap ((var $x.32)) ((var $ap.23))))))
+      #)})
+   ((case
+     ((clause
+       (var x.21)
+       (cut
+        (do
+         $seq.28
+         (cut
+          (do
+           $prim.27
+           (prim print ((var x.21)) (var $prim.27)))
+          (then
+           $_.30
+           (cut
+            (do
+             $prim.29
+             (prim print_trace ((var x.21)) (var $prim.29)))
+            (var $seq.28)))))
+        (var $let.26))))))
+   #))}; (then
+ $_.30
+ (cut
+  (do
+   $prim.29
+   (prim print_trace ((var x.21)) (var $prim.29)))
+  (var $seq.28))))

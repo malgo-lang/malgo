@@ -150,11 +150,11 @@ func (e *Evaluator) cut(producer core.Producer, consumer core.Consumer) error {
 		return err
 	}
 
-	return e.cutValue(value, covalue)
+	return e.cutValue(producer.Base(), value, covalue)
 }
 
 // cutValue passes the value to the covalue.
-func (e *Evaluator) cutValue(value Value, covalue Covalue) error {
+func (e *Evaluator) cutValue(where token.Token, value Value, covalue Covalue) error {
 	// Update the trace of the value using the covalue's annotation.
 	value = covalue.Annotation(value)
 
@@ -162,7 +162,7 @@ func (e *Evaluator) cutValue(value Value, covalue Covalue) error {
 	case *core.Case:
 		return e.cutCase(value, corepr)
 	case *core.Destruct:
-		return e.cutDestruct(value, corepr)
+		return e.cutDestruct(where, value, corepr)
 	case *core.Then:
 		return e.cutThen(value, corepr)
 	case *core.Toplevel:
@@ -333,19 +333,19 @@ func (e *Evaluator) matchVar(v Value, variable *core.Var) (map[string]Value, map
 	return map[string]Value{variable.Name.String(): v}, make(map[string]Covalue), true
 }
 
-func (e *Evaluator) cutDestruct(v Value, destruct *core.Destruct) error {
+func (e *Evaluator) cutDestruct(where token.Token, value Value, destruct *core.Destruct) error {
 	args := destruct.Args
 	conts := destruct.Conts
 
-	if symbol, ok := v.Repr.(*core.Symbol); ok {
-		return e.cutDestructSymbol(symbol, v.Trace, destruct)
+	if symbol, ok := value.Repr.(*core.Symbol); ok {
+		return e.cutDestructSymbol(where, symbol, value.Trace, destruct)
 	}
 
-	cocase, ok := v.Repr.(*core.Cocase)
+	cocase, ok := value.Repr.(*core.Cocase)
 	if !ok {
-		return utils.PosError{Where: destruct.Base(), Err: InvalidValueError{
+		return utils.PosError{Where: where, Err: InvalidValueError{
 			Expect: "cocase",
-			Actual: v.Repr.String(),
+			Actual: value.Repr.String(),
 		}}
 	}
 
@@ -361,7 +361,7 @@ func (e *Evaluator) cutDestruct(v Value, destruct *core.Destruct) error {
 				return err
 			}
 
-			e.annotateCovalues(covalues, destruct.Name, values)
+			e.annotateCovalues(value, covalues, destruct.Name, values)
 
 			e.env = newEnv(e.env)
 			defer func() {
@@ -391,13 +391,13 @@ func (e *Evaluator) cutDestruct(v Value, destruct *core.Destruct) error {
 	}}
 }
 
-func (*Evaluator) annotateCovalues(covalues []Covalue, name string, values []Value) {
+func (*Evaluator) annotateCovalues(origin Value, covalues []Covalue, name string, values []Value) {
 	for i, covalue := range covalues {
 		old := covalue.Annotation
 		covalue.Annotation = func(value Value) Value {
 			value = old(value)
 			value.Trace = &Construct{
-				Origin: value,
+				Origin: origin,
 				Name:   name,
 				Args:   values,
 				Conts:  covalues,
@@ -413,7 +413,7 @@ func (*Evaluator) annotateCovalues(covalues []Covalue, name string, values []Val
 
 // cutDestructSymbol evaluates `:x | .f(a, b; c, d)` form.
 // `:x` is treated as `cocase .f(a, b; c, d) -> :x | c`.
-func (e *Evaluator) cutDestructSymbol(symbol *core.Symbol, trace Trace, destruct *core.Destruct) error {
+func (e *Evaluator) cutDestructSymbol(where token.Token, symbol *core.Symbol, trace Trace, destruct *core.Destruct) error {
 	name := destruct.Name
 	args := destruct.Args
 	conts := destruct.Conts
@@ -428,14 +428,17 @@ func (e *Evaluator) cutDestructSymbol(symbol *core.Symbol, trace Trace, destruct
 		return err
 	}
 
-	e.annotateCovalues(covalues, name, values)
+	e.annotateCovalues(Value{
+		Repr:  symbol,
+		Trace: trace,
+	}, covalues, name, values)
 
 	e.env = newEnv(e.env)
 	defer func() {
 		e.env = e.env.parent
 	}()
 
-	return e.cutValue(Value{
+	return e.cutValue(where, Value{
 		Repr:  symbol,
 		Trace: trace,
 	}, covalues[0])
