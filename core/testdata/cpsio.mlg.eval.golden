@@ -1,0 +1,27 @@
+read_all_cps({(cocase
+  ((method
+    ap
+    ($p1.9)
+    ($lambda.8)
+    (cut
+     (do
+      $case.10
+      (cut
+       (do
+        $ap.11
+        (cut
+         (symbol tuple)
+         (destruct ap ((var $p1.9)) ((var $ap.11)))))
+       (case
+        ((clause
+          (extract (symbol tuple) ap ((var s.12)) ((var $_.13)))
+          (cut
+           (do
+            $prim.14
+            (prim
+             print_cps
+             ((var s.12) (var exit.3))
+             (var $prim.14)))
+           (var $case.10)))))))
+     (var $lambda.8)))))
+ #}; toplevel)

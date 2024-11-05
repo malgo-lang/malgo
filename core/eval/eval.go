@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"io"
+	"log"
 	"strings"
 
 	"github.com/malgo-lang/malgo/core"
@@ -28,6 +29,15 @@ func NewEvaluator(g *core.UniqueGen) *Evaluator {
 		Stdout:    nil,
 		Stderr:    nil,
 	}
+}
+
+//nolint:gochecknoglobals
+var primitives = make(map[string]func(*Evaluator, token.Token, []Value, Covalue) error)
+
+//nolint:gochecknoinits
+func init() {
+	primitives["exit"] = primExit
+	primitives["print_cps"] = primPrintCPS
 }
 
 func (e *Evaluator) Def(def *core.Def) error {
@@ -108,30 +118,30 @@ func (e *Evaluator) statement(s core.Statement) error {
 
 		return e.Invoke(def, covalues)
 	case *core.Prim:
-		values, err := e.producers(statement.Args)
-		if err != nil {
-			return err
-		}
-
-		covalue, err := e.consumer(statement.Cont)
-		if err != nil {
-			return err
-		}
-
-		fmt.Fprintf(e.Stdout, "%s(", statement.Name)
-		for i, value := range values {
-			if i > 0 {
-				fmt.Fprint(e.Stdout, ", ")
-			}
-
-			fmt.Fprint(e.Stdout, value.String())
-		}
-		fmt.Fprintf(e.Stdout, "; %v)\n", covalue.Corepr)
-
-		return nil
+		return e.prim(statement)
 	default:
 		panic(fmt.Sprintf("unexpected core.Statement: %#v", statement))
 	}
+}
+
+func (e *Evaluator) prim(statement *core.Prim) error {
+	values, err := e.producers(statement.Args)
+	if err != nil {
+		return err
+	}
+
+	covalue, err := e.consumer(statement.Cont)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("prim: %s", statement.Name)
+	for _, value := range values {
+		log.Printf("\t%s", value.Repr)
+	}
+	log.Printf("\t%s", covalue.Corepr)
+
+	return primitives[statement.Name.Lexeme](e, statement.Base(), values, covalue)
 }
 
 // cut evaluates `producer | consumer` form.
@@ -183,67 +193,52 @@ func (e *Evaluator) cutDo(name token.Token, body core.Statement, c core.Consumer
 	return e.statement(body)
 }
 
-func (e *Evaluator) cutCase(v Value, corepr *core.Case) error {
-	switch v.Trace.(type) {
-	case *Construct:
-		for _, branch := range corepr.Clauses {
-			values, covalues, ok := e.match(v, branch.Pattern)
-			if ok {
-				e.env = newEnv(e.env)
-				defer func() {
-					e.env = e.env.parent
-				}()
+func (e *Evaluator) cutCase(value Value, corepr *core.Case) error {
+	for _, branch := range corepr.Clauses {
+		values, covalues, ok := e.match(value, branch.Pattern)
+		if ok {
+			e.env = newEnv(e.env)
+			defer func() {
+				e.env = e.env.parent
+			}()
 
-				for name, value := range values {
-					e.env.Set(name, value)
-				}
-
-				for name, covalue := range covalues {
-					e.env.SetCo(name, covalue)
-				}
-
-				return e.statement(branch.Body)
+			for name, value := range values {
+				e.env.Set(name, value)
 			}
-		}
 
-		return utils.PosError{
-			Where: corepr.Base(),
-			Err: NoMatchError{
-				Value: v,
-			},
-		}
-	case *Root:
-		return utils.PosError{
-			Where: corepr.Base(),
-			Err: InvalidTraceError{
-				Expect: "method",
-				Actual: "root",
-			},
+			for name, covalue := range covalues {
+				e.env.SetCo(name, covalue)
+			}
+
+			return e.statement(branch.Body)
 		}
 	}
 
-	panic(fmt.Sprintf("unexpected eval.Trace: %#v", v.Trace))
+	return utils.PosError{
+		Where: corepr.Base(),
+		Err: NoMatchError{
+			Value: value,
+		},
+	}
 }
 
 // match matches the given value with the given pattern.
-func (e *Evaluator) match(v Value, pattern core.Pattern) (map[string]Value, map[string]Covalue, bool) {
+func (e *Evaluator) match(value Value, pattern core.Pattern) (map[string]Value, map[string]Covalue, bool) {
 	switch pattern := pattern.(type) {
 	case *core.Extract:
-		return e.matchExtract(v.Trace, pattern)
+		return e.matchExtract(value.Trace, pattern)
 	case *core.Literal:
-		return e.matchLiteral(v, pattern)
+		return e.matchLiteral(value, pattern)
 	case *core.Symbol:
-		return e.matchSymbol(v, pattern)
+		return e.matchSymbol(value, pattern)
 	case *core.Var:
-		return e.matchVar(v, pattern)
+		return e.matchVar(value, pattern)
 	}
 
 	panic(fmt.Sprintf("unexpected core.Pattern: %#v", pattern))
 }
 
 // matchCo matches the given covalue with the given pattern.
-// TODO: patterns that can be matched with covalue probably only include Var.
-// So, we should consider removing this function.
 func (e *Evaluator) matchCo(c Covalue, pattern core.Pattern) (map[string]Covalue, bool) {
 	if variable, ok := pattern.(*core.Var); ok {
 		return map[string]Covalue{variable.Name.String(): c}, true
@@ -413,7 +408,9 @@ func (*Evaluator) annotateCovalues(origin Value, covalues []Covalue, name string
 
 // cutDestructSymbol evaluates `:x | .f(a, b; c, d)` form.
 // `:x` is treated as `cocase .f(a, b; c, d) -> :x | c`.
-func (e *Evaluator) cutDestructSymbol(where token.Token, symbol *core.Symbol, trace Trace, destruct *core.Destruct) error {
+func (e *Evaluator) cutDestructSymbol(
+	where token.Token, symbol *core.Symbol, trace Trace, destruct *core.Destruct,
+) error {
 	name := destruct.Name
 	args := destruct.Args
 	conts := destruct.Conts
@@ -450,7 +447,7 @@ func (e *Evaluator) cutThen(v Value, then *core.Then) error {
 	return e.statement(then.Body)
 }
 
-func (e *Evaluator) cutToplevel(v Value) error {
+func (e *Evaluator) cutToplevel(_ Value) error {
 	return nil
 }
 
@@ -547,4 +544,39 @@ func (e *Evaluator) consumers(conts []core.Consumer) ([]Covalue, error) {
 	}
 
 	return covalues, nil
+}
+
+func primExit(e *Evaluator, where token.Token, _ []Value, _ Covalue) error {
+	return ExitError{Code: 0}
+}
+
+func primPrintCPS(e *Evaluator, where token.Token, args []Value, ret Covalue) error {
+	arg := args[0]
+	cont := args[1]
+
+	fmt.Fprintf(e.Stdout, "%v\n", arg)
+
+	contVar := e.FreshName("cont", where.Location)
+	retVar := e.FreshName("ret", where.Location)
+
+	e.env = newEnv(e.env)
+	defer func() {
+		e.env = e.env.parent
+	}()
+
+	e.env.Set(contVar.String(), cont)
+	e.env.SetCo(retVar.String(), ret)
+
+	return e.statement(
+		&core.Cut{
+			Producer: &core.Var{Name: contVar},
+			Consumer: &core.Destruct{
+				Name: "ap",
+				Args: []core.Producer{},
+				Conts: []core.Consumer{
+					&core.Var{Name: retVar},
+				},
+			},
+		},
+	)
 }

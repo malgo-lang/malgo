@@ -1,10 +1,19 @@
 package eval
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/malgo-lang/malgo/pretty"
 )
+
+type ExitError struct {
+	Code int
+}
+
+func (e ExitError) Error() string {
+	return fmt.Sprintf("exit with code %d", e.Code)
+}
 
 type AlreadyDefinedError struct {
 	Name string

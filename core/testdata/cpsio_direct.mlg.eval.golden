@@ -1,0 +1,48 @@
+read_all_cps({(cocase
+  ((method
+    ap
+    ($p1.33)
+    ($lambda.32)
+    (cut
+     (do
+      $case.34
+      (cut
+       (do
+        $ap.35
+        (cut
+         (symbol tuple)
+         (destruct ap ((var $p1.33)) ((var $ap.35)))))
+       (case
+        ((clause
+          (extract (symbol tuple) ap ((var s.36)) ((var $_.37)))
+          (cut
+           (do
+            $ap.40
+            (cut
+             (do
+              $ap.39
+              (cut
+               (do
+                $top.38
+                (invoke print_cps.1 ((var $top.38))))
+               (destruct ap ((var s.36)) ((var $ap.39)))))
+             (destruct
+              ap
+              ((cocase
+                ((method
+                  ap
+                  ()
+                  ($lambda.41)
+                  (cut
+                   (do
+                    $ap.43
+                    (cut
+                     (do
+                      $top.42
+                      (invoke exit.2 ((var $top.42))))
+                     (destruct ap () ((var $ap.43)))))
+                   (var $lambda.41))))))
+              ((var $ap.40)))))
+           (var $case.34)))))))
+     (var $lambda.32)))))
+ #}; toplevel)
