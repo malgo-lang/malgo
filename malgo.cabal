@@ -5,13 +5,13 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           malgo
-version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/malgo#readme>
-homepage:       https://github.com/githubuser/malgo#readme
-bug-reports:    https://github.com/githubuser/malgo/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2024 Author name here
+version:        3.0.0
+description:    Please see the README on GitHub at <https://github.com/takoeight0821/malgo#readme>
+homepage:       https://github.com/takoeight0821/malgo#readme
+bug-reports:    https://github.com/takoeight0821/malgo/issues
+author:         Yuya KONO
+maintainer:     takohati0821@gmail.com
+copyright:      2024 Yuya KONO
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
@@ -21,21 +21,29 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/malgo
+  location: https://github.com/takoeight0821/malgo
 
 library
   exposed-modules:
-      Lib
+      Malgo.Core
+      Malgo.Prelude
   other-modules:
       Paths_malgo
   autogen-modules:
       Paths_malgo
   hs-source-dirs:
       src
+  default-extensions:
+      NoImplicitPrelude
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
-  default-language: Haskell2010
+    , containers
+    , effectful
+    , effectful-core
+    , string-conversions
+    , text
+  default-language: GHC2024
 
 executable malgo-exe
   main-is: Main.hs
@@ -45,11 +53,18 @@ executable malgo-exe
       Paths_malgo
   hs-source-dirs:
       app
+  default-extensions:
+      NoImplicitPrelude
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
+    , effectful
+    , effectful-core
     , malgo
-  default-language: Haskell2010
+    , string-conversions
+    , text
+  default-language: GHC2024
 
 test-suite malgo-test
   type: exitcode-stdio-1.0
@@ -60,8 +75,15 @@ test-suite malgo-test
       Paths_malgo
   hs-source-dirs:
       test
+  default-extensions:
+      NoImplicitPrelude
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
+    , effectful
+    , effectful-core
     , malgo
-  default-language: Haskell2010
+    , string-conversions
+    , text
+  default-language: GHC2024
