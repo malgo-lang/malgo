@@ -3,3 +3,7 @@ go = "latest"
 [tasks.setup]
 description = "Setup tools"
 run = "go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest"
+[tasks.changelog]
+description = "Generate changelog"
+# TODO: Change the version range to v3.0.0.. when it is released
+run = "git-chglog -o CHANGELOG.md v3.0.0-wip.."
