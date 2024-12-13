@@ -1,50 +1,67 @@
-cabal-version:      3.4
-name:               malgo
-version:            3.0.0
--- synopsis:
--- description:
-license:            BSD-3-Clause
-license-file:       LICENSE
-author:             Yuya Kono
-maintainer:         takohati0821@gmail.com
--- copyright:
-category:           Language
-build-type:         Simple
-extra-doc-files:    CHANGELOG.md
--- extra-source-files:
+cabal-version: 2.2
 
-common warnings
-    ghc-options: -Wall
+-- This file has been generated from package.yaml by hpack version 0.37.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           malgo
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/malgo#readme>
+homepage:       https://github.com/githubuser/malgo#readme
+bug-reports:    https://github.com/githubuser/malgo/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2024 Author name here
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/malgo
 
 library
-    import:           warnings
-    exposed-modules:  MyLib
-    -- other-modules:
-    -- other-extensions:
-    build-depends:    base ^>=4.20.0.0
-    hs-source-dirs:   src
-    default-language: GHC2024
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_malgo
+  autogen-modules:
+      Paths_malgo
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
 
-executable malgo
-    import:           warnings
-    main-is:          Main.hs
-    -- other-modules:
-    -- other-extensions:
-    build-depends:
-        base ^>=4.20.0.0,
-        malgo
-
-    hs-source-dirs:   app
-    default-language: GHC2024
+executable malgo-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_malgo
+  autogen-modules:
+      Paths_malgo
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , malgo
+  default-language: Haskell2010
 
 test-suite malgo-test
-    import:           warnings
-    default-language: GHC2024
-    -- other-modules:
-    -- other-extensions:
-    type:             exitcode-stdio-1.0
-    hs-source-dirs:   test
-    main-is:          Main.hs
-    build-depends:
-        base ^>=4.20.0.0,
-        malgo
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_malgo
+  autogen-modules:
+      Paths_malgo
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , malgo
+  default-language: Haskell2010

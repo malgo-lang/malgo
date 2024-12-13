@@ -1,0 +1,5 @@
+[tools]
+go = "latest"
+[tasks.setup]
+description = "Setup tools"
+run = "go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest"
