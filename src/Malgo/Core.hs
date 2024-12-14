@@ -9,7 +9,7 @@ module Malgo.Core
     Name (..),
     newName,
     Producer (..),
-    Const (..),
+    Literal (..),
     Consumer (..),
     Statement (..),
   )
@@ -96,17 +96,23 @@ instance HasLocation Location where
 -- | @Producer@ represents a term that produces values
 data Producer
   = Var Location Name
-  | Const Location Const
+  | Literal Location Literal
   | Do Location Name Statement
+  | Construct Location Name [Producer] [Consumer]
+  | Cocase Location [(Copattern, Statement)]
   deriving (Show)
 
 instance HasLocation Producer where
   location (Var loc _) = loc
-  location (Const loc _) = loc
+  location (Literal loc _) = loc
   location (Do loc _ _) = loc
+  location (Construct loc _ _ _) = loc
+  location (Cocase loc _) = loc
+
+type Copattern = (Name, [Name], [Name])
 
 -- | @Const@ represents a constant value
-data Const = Int Int
+data Literal = Int Int
   deriving (Show)
 
 -- | @Consumer@ represents a term that consumes values
@@ -114,17 +120,23 @@ data Consumer
   = Finish Location
   | Label Location Name
   | Then Location Name Statement
+  | Destruct Location Name [Producer] [Consumer]
+  | Case Location [(Pattern, Statement)]
   deriving (Show)
 
 instance HasLocation Consumer where
   location (Finish loc) = loc
   location (Label loc _) = loc
   location (Then loc _ _) = loc
+  location (Destruct loc _ _ _) = loc
+  location (Case loc _) = loc
+
+type Pattern = (Name, [Name], [Name])
 
 -- | @Statement@ represents a statement
 data Statement
   = Prim Location Text [Producer] Consumer
-  | Switch Location Producer [(Const, Statement)] Statement
+  | Switch Location Producer [(Literal, Statement)] Statement
   | Cut Location Producer Consumer
   | Invoke Location Name [Producer] [Consumer]
   deriving (Show)
