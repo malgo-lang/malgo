@@ -1,14 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Malgo.Core
-  ( Location (..),
-    fromCallStack,
-    HasLocation (..),
-    UniqueGen,
-    newUnique,
-    Name (..),
-    newName,
-    Producer (..),
+  ( Producer (..),
     Copattern,
     Literal (..),
     Consumer (..),
@@ -17,84 +10,9 @@ module Malgo.Core
   )
 where
 
-import Effectful.State.Static.Shared qualified as Shared
-import GHC.Stack (HasCallStack, SrcLoc (..), callStack, getCallStack)
+import Malgo.Location
+import Malgo.Name
 import Malgo.Prelude
-import Text.Show qualified as Show
-
--- | @Location@ represents a source file location
-data Location = Location
-  { fileName :: FilePath,
-    line :: Int,
-    column :: Int
-  }
-  deriving (Eq, Ord)
-
-instance Show Location where
-  show (Location file l c) = file ++ ":" <> show l <> ":" ++ show c
-
-instance Read Location where
-  readsPrec _ s =
-    case break (== ':') s of
-      (file, _ : rest) ->
-        case break (== ':') rest of
-          (l, _ : c) -> [(Location file (read l) (read c), "")]
-          _ -> []
-      _ -> []
-
--- | @fromCallStack@ converts a @CallStack@ to a @Location@
-fromCallStack :: (HasCallStack) => Location
-fromCallStack =
-  case getCallStack callStack of
-    (_, loc) : _ ->
-      Location
-        { fileName = srcLocFile loc,
-          line = srcLocStartLine loc,
-          column = srcLocStartCol loc
-        }
-    _ -> error "fromCallStack: empty call stack"
-
--- | @UniqueGen@ is an effect for generating unique numbers
-type UniqueGen = Shared.State Int
-
--- | @newUnique@ generates a new unique number
-newUnique :: (UniqueGen :> es) => Eff es Int
-newUnique = do
-  i <- Shared.get
-  Shared.put (i + 1)
-  pure i
-
--- | @Name@ represents an identifier
-data Name = Name
-  { text :: Text,
-    unique :: Int
-  }
-  deriving (Eq, Ord)
-
-instance Show Name where
-  show (Name t u) = convertString t ++ "." ++ show u
-
-instance Read Name where
-  readsPrec _ s =
-    case break (== '.') s of
-      (t, _ : rest) ->
-        case reads rest of
-          [(u, "")] -> [(Name (convertString t) u, "")]
-          _ -> []
-      _ -> []
-
--- | @newName@ creates a new name with a given text
-newName :: (UniqueGen :> es) => Text -> Eff es Name
-newName t = do
-  u <- newUnique
-  pure (Name t u)
-
--- | @HasLocation@ is a type class for types that have a location
-class HasLocation a where
-  location :: a -> Location
-
-instance HasLocation Location where
-  location = id
 
 -- | @Producer@ represents a term that produces values
 data Producer

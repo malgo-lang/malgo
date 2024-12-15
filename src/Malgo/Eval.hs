@@ -10,6 +10,8 @@ import Effectful.Log (Log)
 import Effectful.Reader.Static (ask, local, runReader)
 import Log (logInfo_)
 import Malgo.Core
+import Malgo.Location
+import Malgo.Name
 import Malgo.Prelude
 
 data Env = Env
