@@ -18,7 +18,7 @@ data Name = Name
   deriving (Eq, Ord)
 
 instance Show Name where
-  show (Name t u) = convertString t ++ "." ++ show u
+  show (Name t u) = convertString t ++ "_" ++ show u
 
 instance Read Name where
   readsPrec _ s =

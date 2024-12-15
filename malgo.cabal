@@ -42,15 +42,17 @@ library
       OverloadedStrings
       OverloadedRecordDot
       NoFieldSelectors
+      BlockArguments
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
     , containers
     , effectful
     , effectful-core
+    , lens
     , log-base
     , log-effectful
-    , pretty-show
+    , pretty-simple
     , string-conversions
     , text
   default-language: GHC2024
@@ -68,16 +70,18 @@ executable malgo-exe
       OverloadedStrings
       OverloadedRecordDot
       NoFieldSelectors
+      BlockArguments
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
     , effectful
     , effectful-core
+    , lens
     , log-base
     , log-effectful
     , malgo
-    , pretty-show
+    , pretty-simple
     , string-conversions
     , text
   default-language: GHC2024
@@ -96,16 +100,18 @@ test-suite malgo-test
       OverloadedStrings
       OverloadedRecordDot
       NoFieldSelectors
+      BlockArguments
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
     , effectful
     , effectful-core
+    , lens
     , log-base
     , log-effectful
     , malgo
-    , pretty-show
+    , pretty-simple
     , string-conversions
     , text
   default-language: GHC2024

@@ -3,6 +3,7 @@
 module Malgo.Unique
   ( UniqueGen,
     newUnique,
+    runUniqueGen,
   )
 where
 
@@ -11,6 +12,9 @@ import Malgo.Prelude
 
 -- | @UniqueGen@ is an effect for generating unique numbers
 type UniqueGen = Shared.State Int
+
+runUniqueGen :: Eff (UniqueGen : es) a -> Eff es a
+runUniqueGen = Shared.evalState 0
 
 -- | @newUnique@ generates a new unique number
 newUnique :: (UniqueGen :> es) => Eff es Int

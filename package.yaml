@@ -28,7 +28,8 @@ dependencies:
   - text
   - log-base
   - log-effectful
-  - pretty-show
+  - pretty-simple
+  - lens
 
 ghc-options:
   - -Wall
@@ -46,6 +47,7 @@ default-extensions:
   - OverloadedStrings
   - OverloadedRecordDot
   - NoFieldSelectors
+  - BlockArguments
 
 language: GHC2024
 

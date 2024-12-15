@@ -1,0 +1,10 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "malgo:lib"
+
+    - path: "./app/Main.hs"
+      component: "malgo:exe:malgo-exe"
+
+    - path: "./test"
+      component: "malgo:test:malgo-test"

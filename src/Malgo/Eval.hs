@@ -117,7 +117,7 @@ evalStatement :: (Log :> es, Eval :> es) => Statement -> Eff es ()
 evalStatement (Prim loc name args cont) = do
   args' <- traverse evalProducer args
   cont' <- evalConsumer cont
-  logInfo_ $ ppShow ("Prim" :: Text, loc, name, args', cont')
+  logInfo_ $ pShow ("Prim" :: Text, loc, name, args', cont')
 evalStatement (Switch loc scrutinee branches defaultBranch) = do
   scrutinee' <- evalProducer scrutinee
   go scrutinee' branches
@@ -144,7 +144,7 @@ evalStatement (Invoke loc name args conts) = do
     $ evalStatement def.body
 
 evalCut :: (Log :> es, Eval :> es) => Location -> Value -> Covalue -> Eff es ()
-evalCut _ value CFinish = logInfo_ $ ppShow (CFinish, value)
+evalCut _ value CFinish = logInfo_ $ pShow (CFinish, value)
 evalCut _ value (CThen name body) = do
   withVariables (Map.singleton name value) $ evalStatement body
 evalCut _ _ CDestruct {} = error "Not implemented"
@@ -158,14 +158,14 @@ evalProducer (Construct _ name args conts) = do
   args' <- traverse evalProducer args
   conts' <- traverse evalConsumer conts
   pure $ VConstruct name args' conts'
-evalProducer (Cocase _ branches) = pure $ VCocase branches
+evalProducer (Comatch _ branches) = pure $ VCocase branches
 
 evalConsumer :: (Eval :> es) => Consumer -> Eff es Covalue
 evalConsumer (Finish _) = pure CFinish
 evalConsumer (Label loc name) = colookup loc name
 evalConsumer (Then _ name body) = pure $ CThen name body
 evalConsumer (Destruct _ name args conts) = pure $ CDestruct name args conts
-evalConsumer (Case _ branches) = pure $ CCase branches
+evalConsumer (Match _ branches) = pure $ CCase branches
 
 evalLiteral :: Location -> Literal -> Eff es Value
 evalLiteral _ (Int n) = pure $ VInt n
