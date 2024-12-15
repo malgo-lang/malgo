@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Malgo.Eval (Eval, eval) where
@@ -16,16 +17,17 @@ import Malgo.Prelude
 
 data Env = Env
   { variables :: Map Name Value,
-    covariables :: Map Name Covalue
+    covariables :: Map Name Covalue,
+    toplevel :: Map Name Definition
   }
   deriving (Show)
 
 instance Semigroup Env where
-  Env vars1 covars1 <> Env vars2 covars2 =
-    Env (vars1 <> vars2) (covars1 <> covars2)
+  Env vars1 covars1 defs1 <> Env vars2 covars2 defs2 =
+    Env (vars1 <> vars2) (covars1 <> covars2) (defs1 <> defs2)
 
 instance Monoid Env where
-  mempty = Env mempty mempty
+  mempty = Env mempty mempty mempty
 
 data Value
   = VInt Int
@@ -74,6 +76,13 @@ colookup loc name = do
   env <- getEnv
   case Map.lookup name env.covariables of
     Just covalue -> pure covalue
+    Nothing -> throwError $ UnboundVariable loc name
+
+defLookup :: (HasCallStack, Eval :> es) => Location -> Name -> Eff es Definition
+defLookup loc name = do
+  env <- getEnv
+  case Map.lookup name env.toplevel of
+    Just def -> pure def
     Nothing -> throwError $ UnboundVariable loc name
 
 withVariables :: (HasCallStack, Eval :> es) => Map Name Value -> Eff es a -> Eff es a
@@ -126,10 +135,13 @@ evalStatement (Cut loc producer consumer) = do
   producer' <- evalProducer producer
   consumer' <- evalConsumer consumer
   evalCut loc producer' consumer'
-evalStatement (Invoke _ name args conts) = do
+evalStatement (Invoke loc name args conts) = do
   args' <- traverse evalProducer args
   conts' <- traverse evalConsumer conts
-  logInfo_ $ ppShow ("Invoke" :: Text, name, args', conts')
+  def <- defLookup loc name
+  withVariables (Map.fromList (zip def.params args'))
+    $ withCovariables (Map.fromList (zip def.returns conts'))
+    $ evalStatement def.body
 
 evalCut :: (Log :> es, Eval :> es) => Location -> Value -> Covalue -> Eff es ()
 evalCut _ value CFinish = logInfo_ $ ppShow (CFinish, value)

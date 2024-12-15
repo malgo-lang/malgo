@@ -7,6 +7,7 @@ module Malgo.Core
     Consumer (..),
     Pattern,
     Statement (..),
+    Definition (..),
   )
 where
 
