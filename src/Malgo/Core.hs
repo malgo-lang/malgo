@@ -9,8 +9,10 @@ module Malgo.Core
     Name (..),
     newName,
     Producer (..),
+    Copattern,
     Literal (..),
     Consumer (..),
+    Pattern,
     Statement (..),
   )
 where
@@ -18,6 +20,7 @@ where
 import Effectful.State.Static.Shared qualified as Shared
 import GHC.Stack (HasCallStack, SrcLoc (..), callStack, getCallStack)
 import Malgo.Prelude
+import Text.Show qualified as Show
 
 -- | @Location@ represents a source file location
 data Location = Location
@@ -28,7 +31,7 @@ data Location = Location
   deriving (Eq, Ord)
 
 instance Show Location where
-  show (Location file l c) = file ++ ":" ++ show l ++ ":" ++ show c
+  show (Location file l c) = file ++ ":" <> show l <> ":" ++ show c
 
 instance Read Location where
   readsPrec _ s =
@@ -100,7 +103,7 @@ data Producer
   | Do Location Name Statement
   | Construct Location Name [Producer] [Consumer]
   | Cocase Location [(Copattern, Statement)]
-  deriving (Show)
+  deriving (Show, Eq)
 
 instance HasLocation Producer where
   location (Var loc _) = loc
@@ -113,7 +116,7 @@ type Copattern = (Name, [Name], [Name])
 
 -- | @Const@ represents a constant value
 data Literal = Int Int
-  deriving (Show)
+  deriving (Show, Eq)
 
 -- | @Consumer@ represents a term that consumes values
 data Consumer
@@ -122,7 +125,7 @@ data Consumer
   | Then Location Name Statement
   | Destruct Location Name [Producer] [Consumer]
   | Case Location [(Pattern, Statement)]
-  deriving (Show)
+  deriving (Show, Eq)
 
 instance HasLocation Consumer where
   location (Finish loc) = loc
@@ -139,7 +142,7 @@ data Statement
   | Switch Location Producer [(Literal, Statement)] Statement
   | Cut Location Producer Consumer
   | Invoke Location Name [Producer] [Consumer]
-  deriving (Show)
+  deriving (Show, Eq)
 
 instance HasLocation Statement where
   location (Prim loc _ _ _) = loc

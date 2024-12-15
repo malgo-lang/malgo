@@ -26,6 +26,9 @@ dependencies:
   - effectful
   - effectful-core
   - text
+  - log-base
+  - log-effectful
+  - pretty-show
 
 ghc-options:
   - -Wall
@@ -40,6 +43,9 @@ ghc-options:
 
 default-extensions:
   - NoImplicitPrelude
+  - OverloadedStrings
+  - OverloadedRecordDot
+  - NoFieldSelectors
 
 language: GHC2024
 

@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Malgo.Core
+      Malgo.Eval
       Malgo.Prelude
   other-modules:
       Paths_malgo
@@ -35,12 +36,18 @@ library
       src
   default-extensions:
       NoImplicitPrelude
+      OverloadedStrings
+      OverloadedRecordDot
+      NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
     , containers
     , effectful
     , effectful-core
+    , log-base
+    , log-effectful
+    , pretty-show
     , string-conversions
     , text
   default-language: GHC2024
@@ -55,13 +62,19 @@ executable malgo-exe
       app
   default-extensions:
       NoImplicitPrelude
+      OverloadedStrings
+      OverloadedRecordDot
+      NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
     , effectful
     , effectful-core
+    , log-base
+    , log-effectful
     , malgo
+    , pretty-show
     , string-conversions
     , text
   default-language: GHC2024
@@ -77,13 +90,19 @@ test-suite malgo-test
       test
   default-extensions:
       NoImplicitPrelude
+      OverloadedStrings
+      OverloadedRecordDot
+      NoFieldSelectors
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
     , effectful
     , effectful-core
+    , log-base
+    , log-effectful
     , malgo
+    , pretty-show
     , string-conversions
     , text
   default-language: GHC2024
