@@ -34,14 +34,16 @@ instance Read Location where
 -- | @fromCallStack@ converts a @CallStack@ to a @Location@
 fromCallStack :: (HasCallStack) => Location
 fromCallStack =
-  case getCallStack callStack of
-    (_, loc) : _ ->
+  go (getCallStack callStack)
+  where
+    go [] = error "fromCallStack: empty call stack"
+    go [(_, loc)] =
       Location
         { fileName = srcLocFile loc,
           line = srcLocStartLine loc,
           column = srcLocStartCol loc
         }
-    _ -> error "fromCallStack: empty call stack"
+    go (_ : xs) = go xs
 
 -- | @HasLocation@ is a type class for types that have a location
 class HasLocation a where

@@ -31,14 +31,14 @@ instance Monoid Env where
 
 data Value
   = VInt Int
-  | VConstruct Name [Value] [Covalue]
+  | VConstruct Text [Value] [Covalue]
   | VCocase [(Copattern, Statement)]
   deriving (Show, Eq)
 
 data Covalue
   = CFinish
   | CThen Name Statement
-  | CDestruct Name [Producer] [Consumer]
+  | CDestruct Text [Producer] [Consumer]
   | CCase [(Pattern, Statement)]
   deriving (Show, Eq)
 
