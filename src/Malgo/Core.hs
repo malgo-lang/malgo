@@ -13,12 +13,15 @@ module Malgo.Core
     Definition (..),
     ex1,
     ex2,
+    focus,
+    focusDefinition,
   )
 where
 
 import Control.Lens.Indexed (ifor)
 import Data.Traversable (for)
-import Effectful.Writer.Static.Local (Writer, execWriter, runWriter, tell)
+import Effectful.Log (Log)
+import Effectful.Writer.Static.Local (Writer, runWriter, tell)
 import GHC.Stack (HasCallStack)
 import Malgo.Location
 import Malgo.Name
@@ -271,3 +274,105 @@ ex2 = runWriter @[Definition] do
       ]
       []
   toplevel (invoke main [] [])
+
+focusDefinition :: (UniqueGen :> es, Log :> es) => Definition -> Eff es Definition
+focusDefinition (Definition name params returns body) =
+  Definition name params returns <$> focus body
+
+focus :: (Log :> es, UniqueGen :> es) => Statement -> Eff es Statement
+focus (Cut loc prod cons) = do
+  prod' <- focusProducer prod
+  cons' <- focusConsumer cons
+  pure $ Cut loc prod' cons'
+focus (Switch loc prod branches defBranch)
+  | isAtom prod = do
+      prod' <- focusProducer prod
+      branches' <- for branches \(lit, body) -> do
+        body' <- focus body
+        pure (lit, body')
+      def' <- focus defBranch
+      pure $ Switch loc prod' branches' def'
+  | otherwise = do
+      prod' <- focusProducer prod
+      val <- newName "switch_focus"
+      body <- focus (Switch loc (Var loc val) branches defBranch)
+      pure $ Cut loc prod' (Then loc val body)
+focus (Prim loc name args cons)
+  | all isAtom args =
+      Prim loc name <$> traverse focusProducer args <*> focusConsumer cons
+  | otherwise = do
+      let (values, mid, rest) = partitionAtoms args
+      mid' <- focusProducer mid
+      val <- newName "prim_focus"
+      body <- focus (Prim loc name (values <> [Var loc val] <> rest) cons)
+      pure $ Cut loc mid' (Then loc val body)
+focus (Invoke loc name args cons)
+  | all isAtom args = do
+      Invoke loc name <$> traverse focusProducer args <*> traverse focusConsumer cons
+  | otherwise = do
+      let (values, mid, rest) = partitionAtoms args
+      mid' <- focusProducer mid
+      x <- newName "invoke_focus"
+      body <- focus (Invoke loc name (values <> [Var loc x] <> rest) cons)
+      pure $ Cut loc mid' (Then loc x body)
+
+isAtom :: Producer -> Bool
+isAtom Do {} = False
+isAtom _ = True
+
+partitionAtoms :: [Producer] -> ([Producer], Producer, [Producer])
+partitionAtoms = go []
+  where
+    go _ [] = error "splitAtAtoms: empty list"
+    go acc (x : xs)
+      | isAtom x = go (x : acc) xs
+      | otherwise = (reverse acc, x, xs)
+
+focusProducer :: (UniqueGen :> es, Log :> es) => Producer -> Eff es Producer
+focusProducer (Var loc name) = pure $ Var loc name
+focusProducer (Literal loc lit) = pure $ Literal loc lit
+focusProducer (Do loc name body) = do
+  Do loc name <$> focus body
+focusProducer (Construct loc name args conts)
+  | all isAtom args = do
+      Construct loc name <$> traverse focusProducer args <*> traverse focusConsumer conts
+  | otherwise = do
+      a <- newName "construct_label"
+      let (values, mid, rest) = partitionAtoms args
+      mid' <- focusProducer mid
+      x <- newName "construct_focus"
+      body <- focusProducer (Construct loc name (values <> [Var loc x] <> rest) conts)
+      pure
+        $ Do loc a
+        $ Cut loc mid'
+        $ Then loc x
+        $ Cut loc body (Label loc a)
+focusProducer (Comatch loc branches) = do
+  branches' <- for branches \(copat, body) -> do
+    body' <- focus body
+    pure (copat, body')
+  pure $ Comatch loc branches'
+
+focusConsumer :: (UniqueGen :> es, Log :> es) => Consumer -> Eff es Consumer
+focusConsumer (Finish loc) = pure $ Finish loc
+focusConsumer (Label loc name) = pure $ Label loc name
+focusConsumer (Then loc name body) = Then loc name <$> focus body
+focusConsumer (Destruct loc name args conts)
+  | all isAtom args = do
+      Destruct loc name <$> traverse focusProducer args <*> traverse focusConsumer conts
+  | otherwise = do
+      y <- newName "destruct_bind"
+      let (values, mid, rest) = partitionAtoms args
+      mid' <- focusProducer mid
+      x <- newName "destruct_focus"
+      body <- focusConsumer (Destruct loc name (values <> [Var loc x] <> rest) conts)
+      pure
+        $ Then loc y
+        $ Cut loc mid'
+        $ Then loc x
+        $ Cut loc (Var loc y) body
+focusConsumer (Match loc branches) = do
+  branches' <- for branches \(pat, body) -> do
+    body' <- focus body
+    pure (pat, body')
+  pure $ Match loc branches'
