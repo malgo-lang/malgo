@@ -18,7 +18,7 @@ where
 
 import Control.Lens.Indexed (ifor)
 import Data.Traversable (for)
-import Effectful.Writer.Static.Local (Writer, execWriter, tell)
+import Effectful.Writer.Static.Local (Writer, execWriter, runWriter, tell)
 import GHC.Stack (HasCallStack)
 import Malgo.Location
 import Malgo.Name
@@ -181,7 +181,7 @@ def name params returns body = do
   returns' <- traverse newName returns
   ret <- newName "def_ret"
   body' <- body name' params' returns'
-  tell [Definition name' params' returns' (Cut fromCallStack body' (Label fromCallStack ret))]
+  tell [Definition name' params' (returns' <> [ret]) (Cut fromCallStack body' (Label fromCallStack ret))]
   pure name'
 
 invoke :: (HasCallStack, UniqueGen :> es) => Name -> [Eff es Producer] -> [Eff es Consumer] -> Eff es Producer
@@ -204,8 +204,13 @@ labelOf name body = do
   body' <- body name'
   pure $ Do fromCallStack name' (Cut fromCallStack body' (Label fromCallStack name'))
 
-ex1 :: (UniqueGen :> es) => Eff es [Definition]
-ex1 = execWriter @[Definition] do
+toplevel :: (HasCallStack) => Eff es Producer -> Eff es Statement
+toplevel body = do
+  body' <- body
+  pure $ Cut fromCallStack body' (Finish fromCallStack)
+
+ex1 :: (UniqueGen :> es) => Eff es (Statement, [Definition])
+ex1 = runWriter @[Definition] do
   _ <- def "fac" ["n"] [] \fac [n] [] -> do
     switch
       (var n)
@@ -219,7 +224,7 @@ ex1 = execWriter @[Definition] do
         (prim "sub" [var n, literal $ Int 1])
         [(Int 0, var m)]
       $ prim "add" [var m, invoke prod [prim "sub" [var n, literal $ Int 1], var m] []]
-  _ <- def "monus" ["n", "m"] [] \monus [n, m] [] -> do
+  monus <- def "monus" ["n", "m"] [] \monus [n, m] [] -> do
     switch
       (var m)
       [(Int 0, var n)]
@@ -227,10 +232,10 @@ ex1 = execWriter @[Definition] do
         (var n)
         [(Int 0, literal $ Int 0)]
       $ invoke monus [prim "sub" [var n, literal $ Int 1], prim "sub" [var m, literal $ Int 1]] []
-  pure ()
+  toplevel (invoke monus [literal $ Int 10, literal $ Int 5] [])
 
-ex2 :: (UniqueGen :> es) => Eff es [Definition]
-ex2 = execWriter @[Definition] do
+ex2 :: (UniqueGen :> es) => Eff es (Statement, [Definition])
+ex2 = runWriter @[Definition] do
   mult2 <- def "mult2" ["l"] ["a"] \mult2 [l] [a] -> do
     match
       (var l)
@@ -244,7 +249,7 @@ ex2 = execWriter @[Definition] do
   fmult <- def "fmult" ["l"] [] \_ [l] [] -> do
     labelOf "a" \a -> do
       invoke mult2 [var l] [label a]
-  _ <- def "main" [] [] \_ _ _ -> do
+  main <- def "main" [] [] \_ _ _ -> do
     invoke
       fmult
       [ construct
@@ -265,4 +270,4 @@ ex2 = execWriter @[Definition] do
           []
       ]
       []
-  pure ()
+  toplevel (invoke main [] [])

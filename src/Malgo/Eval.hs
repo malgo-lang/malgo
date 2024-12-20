@@ -1,7 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Malgo.Eval (Eval, eval) where
+module Malgo.Eval (Eval, EvalError, Env, newEnv, eval) where
 
 import Data.Map qualified as Map
 import Effectful.Dispatch.Dynamic
@@ -21,6 +21,9 @@ data Env = Env
     toplevel :: Map Name Definition
   }
   deriving (Show)
+
+newEnv :: [Definition] -> Env
+newEnv defs = Env mempty mempty (Map.fromList [(def.name, def) | def <- defs])
 
 instance Semigroup Env where
   Env vars1 covars1 defs1 <> Env vars2 covars2 defs2 =
@@ -110,8 +113,8 @@ runEval env0 = reinterpret (runReader env0) $ \localEnv operation ->
           (unlift action)
     ThrowError err -> Error.throwError err
 
-eval :: (Log :> es, Error EvalError :> es) => Statement -> Eff es ()
-eval = runEval mempty . evalStatement
+eval :: (Log :> es, Error EvalError :> es) => Env -> Statement -> Eff es ()
+eval env = runEval env . evalStatement
 
 evalStatement :: (Log :> es, Eval :> es) => Statement -> Eff es ()
 evalStatement (Prim loc name args cont) = do
