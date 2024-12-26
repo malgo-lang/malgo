@@ -8,6 +8,7 @@ import Malgo.Core
 import Malgo.Eval (EvalError, eval, newEnv)
 import Malgo.Prelude
 import Malgo.Unique
+import Malgo.Core.Builder
 
 main :: IO ()
 main = do
