@@ -1,6 +1,26 @@
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 
-module Malgo.Core.Builder where
+module Malgo.Core.Builder (
+  var,
+  literal,
+  construct,
+  comatch,
+  finish,
+  label,
+  destruct,
+  match,
+  branch,
+  prim,
+  switch,
+  bind,
+  def,
+  invoke,
+  goto,
+  labelOf,
+  toplevel,
+  ex1,
+  ex2
+) where
 
 import Control.Lens (ifor)
 import Data.Traversable (for)
