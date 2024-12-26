@@ -21,7 +21,7 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "/home/vscode/.local/bin/mise trust && /home/vscode/.local/bin/mise install && /home/vscode/.local/bin/mise run setup"
+	"postCreateCommand": "sh .devcontainer/post-create-command.sh"
 	// Configure tool-specific properties.
 	// "customizations": {},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.

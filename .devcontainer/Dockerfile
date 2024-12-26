@@ -19,3 +19,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 RUN curl https://mise.run | sh
 
 RUN echo 'eval "$(/home/vscode/.local/bin/mise activate bash)"' >> /home/vscode/.bashrc
+
+# WORKDIR /workspace/malgo
+# RUN /home/vscode/.ghcup/bin/cabal update
+# RUN /home/vscode/.ghcup/bin/cabal install hpack
+# RUN eval "$(/home/vscode/.local/bin/mise activate bash)"
+# RUN /home/vscode/.local/bin/mise trust
+# RUN /home/vscode/.local/bin/mise install
+# RUN /home/vscode/.local/bin/mise run setup

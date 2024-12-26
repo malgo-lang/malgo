@@ -1,8 +1,12 @@
 [tools]
 go = "latest"
+watchexec = "latest"
 [tasks.setup]
 description = "Setup tools"
 run = "go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest"
+[tasks.build]
+description = "Build the project"
+run = "hpack && cabal build && cabal test"
 [tasks.changelog]
 description = "Generate changelog"
 # TODO: Change the version range to v3.0.0.. when it is released
