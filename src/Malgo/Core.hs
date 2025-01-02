@@ -3,7 +3,6 @@
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 
 module Malgo.Core
   ( Producer (..),
@@ -144,7 +143,7 @@ focus Switch {..}
   | isAtom producer = do
       Switch location
         <$> focusProducer producer
-        <*> traverse (\(literal, statement) -> (,) literal <$> focus statement) clauses
+        <*> traverse (\(literal, statement) -> (literal,) <$> focus statement) clauses
         <*> focus statement
   | otherwise = do
       bind <- newName "switch_focus"
