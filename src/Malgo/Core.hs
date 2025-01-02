@@ -1,5 +1,7 @@
 {-# LANGUAGE BlockArguments #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE RecursiveDo #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 
@@ -11,12 +13,22 @@ module Malgo.Core
     Pattern,
     Statement (..),
     Definition (..),
-    focus,
     focusDefinition,
+    focus,
+    HasClauses (..),
+    HasConsumer (..),
+    HasConsumers (..),
+    HasLiteral (..),
+    HasParams (..),
+    HasProducer (..),
+    HasProducers (..),
+    HasReturns (..),
+    HasStatement (..),
+    HasTag (..),
   )
 where
 
-import Data.Traversable (for)
+import Control.Lens (makeFieldsId)
 import Effectful.Log (Log)
 import Malgo.Location
 import Malgo.Name
@@ -25,107 +37,162 @@ import Malgo.Unique (UniqueGen)
 
 -- | @Producer@ represents a term that produces values
 data Producer
-  = Var Location Name
-  | Literal Location Literal
-  | Do Location Name Statement
-  | Construct Location Text [Producer] [Consumer]
-  | Comatch Location [(Copattern, Statement)]
+  = Var
+      { location :: Location,
+        name :: Name
+      }
+  | Literal
+      { location :: Location,
+        literal :: Literal
+      }
+  | Do {location :: Location, name :: Name, statement :: Statement}
+  | Construct
+      { location :: Location,
+        tag :: Text,
+        producers :: [Producer],
+        consumers :: [Consumer]
+      }
+  | Comatch
+      { location :: Location,
+        clauses :: [(Copattern, Statement)]
+      }
   deriving (Show, Eq)
-
-instance HasLocation Producer where
-  location (Var loc _) = loc
-  location (Literal loc _) = loc
-  location (Do loc _ _) = loc
-  location (Construct loc _ _ _) = loc
-  location (Comatch loc _) = loc
 
 type Copattern = (Text, [Name], [Name])
 
 -- | @Const@ represents a constant value
-data Literal = Int Int
+data Literal = Int {int :: Int}
   deriving (Show, Eq)
 
 -- | @Consumer@ represents a term that consumes values
 data Consumer
-  = Finish Location
-  | Label Location Name
-  | Then Location Name Statement
-  | Destruct Location Text [Producer] [Consumer]
-  | Match Location [(Pattern, Statement)]
+  = Finish
+      { location :: Location
+      }
+  | Label
+      { location :: Location,
+        name :: Name
+      }
+  | Then
+      { location :: Location,
+        name :: Name,
+        statement :: Statement
+      }
+  | Destruct
+      { location :: Location,
+        tag :: Text,
+        producers :: [Producer],
+        consumers :: [Consumer]
+      }
+  | Match
+      { location :: Location,
+        clauses :: [(Pattern, Statement)]
+      }
   deriving (Show, Eq)
-
-instance HasLocation Consumer where
-  location (Finish loc) = loc
-  location (Label loc _) = loc
-  location (Then loc _ _) = loc
-  location (Destruct loc _ _ _) = loc
-  location (Match loc _) = loc
 
 type Pattern = (Text, [Name], [Name])
 
 -- | @Statement@ represents a statement
 data Statement
-  = Prim Location Text [Producer] [Consumer]
-  | Switch Location Producer [(Literal, Statement)] Statement
-  | Cut Location Producer Consumer
-  | Invoke Location Name [Producer] [Consumer]
+  = Prim
+      { location :: Location,
+        tag :: Text,
+        producers :: [Producer],
+        consumers :: [Consumer]
+      }
+  | Switch
+      { location :: Location,
+        producer :: Producer,
+        clauses :: [(Literal, Statement)],
+        statement :: Statement
+      }
+  | Cut
+      { location :: Location,
+        producer :: Producer,
+        consumer :: Consumer
+      }
+  | Invoke
+      { location :: Location,
+        name :: Name,
+        producers :: [Producer],
+        consumers :: [Consumer]
+      }
   deriving (Show, Eq)
-
-instance HasLocation Statement where
-  location (Prim loc _ _ _) = loc
-  location (Switch loc _ _ _) = loc
-  location (Cut loc _ _) = loc
-  location (Invoke loc _ _ _) = loc
 
 -- | @Definition@ represents a top-level definition
 data Definition = Definition
   { name :: Name,
     params :: [Name],
     returns :: [Name],
-    body :: Statement
+    statement :: Statement
   }
   deriving (Show, Eq)
 
+makeFieldsId ''Producer
+makeFieldsId ''Consumer
+makeFieldsId ''Statement
+makeFieldsId ''Definition
+
 focusDefinition :: (UniqueGen :> es, Log :> es) => Definition -> Eff es Definition
-focusDefinition (Definition name params returns body) =
-  Definition name params returns <$> focus body
+focusDefinition Definition {..} =
+  Definition name params returns <$> focus statement
 
 focus :: (Log :> es, UniqueGen :> es) => Statement -> Eff es Statement
-focus (Cut loc producer consumer) = do
-  producer' <- focusProducer producer
-  consumer' <- focusConsumer consumer
-  pure $ Cut loc producer' consumer'
-focus (Switch loc prod branches defBranch)
-  | isAtom prod = do
-      prod' <- focusProducer prod
-      branches' <- for branches \(lit, body) -> do
-        body' <- focus body
-        pure (lit, body')
-      def' <- focus defBranch
-      pure $ Switch loc prod' branches' def'
+focus Cut {..} = do
+  Cut location <$> focusProducer producer <*> focusConsumer consumer
+focus Switch {..}
+  | isAtom producer = do
+      Switch location
+        <$> focusProducer producer
+        <*> traverse (\(literal, statement) -> (,) literal <$> focus statement) clauses
+        <*> focus statement
   | otherwise = do
-      prod' <- focusProducer prod
-      val <- newName "switch_focus"
-      body <- focus (Switch loc (Var loc val) branches defBranch)
-      pure $ Cut loc prod' (Then loc val body)
-focus (Prim loc name args cons)
-  | all isAtom args =
-      Prim loc name <$> traverse focusProducer args <*> traverse focusConsumer cons
+      bind <- newName "switch_focus"
+      Cut location
+        <$> focusProducer producer
+        <*> ( Then location bind
+                <$> focus
+                  ( Switch
+                      location
+                      (Var location bind)
+                      clauses
+                      statement
+                  )
+            )
+focus Prim {..}
+  | all isAtom producers =
+      Prim location tag <$> traverse focusProducer producers <*> traverse focusConsumer consumers
   | otherwise = do
-      let (values, mid, rest) = partitionAtoms args
-      mid' <- focusProducer mid
-      val <- newName "prim_focus"
-      body <- focus (Prim loc name (values <> [Var loc val] <> rest) cons)
-      pure $ Cut loc mid' (Then loc val body)
-focus (Invoke loc name args cons)
-  | all isAtom args = do
-      Invoke loc name <$> traverse focusProducer args <*> traverse focusConsumer cons
+      let (values, mid, rest) = partitionAtoms producers
+      bind <- newName "prim_focus"
+      Cut location
+        <$> focusProducer mid
+        <*> ( Then location bind
+                <$> focus
+                  ( Prim
+                      location
+                      tag
+                      (values <> [Var location bind] <> rest)
+                      consumers
+                  )
+            )
+focus Invoke {..}
+  | all isAtom producers = do
+      Invoke location name <$> traverse focusProducer producers <*> traverse focusConsumer consumers
   | otherwise = do
-      let (values, mid, rest) = partitionAtoms args
-      mid' <- focusProducer mid
-      x <- newName "invoke_focus"
-      body <- focus (Invoke loc name (values <> [Var loc x] <> rest) cons)
-      pure $ Cut loc mid' (Then loc x body)
+      let (values, mid, rest) = partitionAtoms producers
+      bind <- newName "invoke_focus"
+      Cut location
+        <$> focusProducer mid
+        <*> ( Then location bind
+                <$> focus
+                  ( Invoke
+                      location
+                      name
+                      (values <> [Var location bind] <> rest)
+                      consumers
+                  )
+            )
 
 isAtom :: Producer -> Bool
 isAtom Do {} = False
@@ -140,50 +207,62 @@ partitionAtoms = go []
       | otherwise = (reverse acc, x, xs)
 
 focusProducer :: (UniqueGen :> es, Log :> es) => Producer -> Eff es Producer
-focusProducer (Var loc name) = pure $ Var loc name
-focusProducer (Literal loc lit) = pure $ Literal loc lit
-focusProducer (Do loc name body) = do
-  Do loc name <$> focus body
-focusProducer (Construct loc name args conts)
-  | all isAtom args = do
-      Construct loc name <$> traverse focusProducer args <*> traverse focusConsumer conts
+focusProducer var@Var {} = pure var
+focusProducer literal@Literal {} = pure literal
+focusProducer Do {..} =
+  Do location name <$> focus statement
+focusProducer Construct {..}
+  | all isAtom producers = do
+      Construct location tag <$> traverse focusProducer producers <*> traverse focusConsumer consumers
   | otherwise = do
-      a <- newName "construct_label"
-      let (values, mid, rest) = partitionAtoms args
+      bindConsumer <- newName "construct_label"
+      bindProducer <- newName "construct_focus"
+      let (values, mid, rest) = partitionAtoms producers
       mid' <- focusProducer mid
-      x <- newName "construct_focus"
-      body <- focusProducer (Construct loc name (values <> [Var loc x] <> rest) conts)
+      producer <-
+        focusProducer
+          ( Construct
+              location
+              tag
+              (values <> [Var location bindProducer] <> rest)
+              consumers
+          )
       pure
-        $ Do loc a
-        $ Cut loc mid'
-        $ Then loc x
-        $ Cut loc body (Label loc a)
-focusProducer (Comatch loc branches) = do
-  branches' <- for branches \(copat, body) -> do
-    body' <- focus body
-    pure (copat, body')
-  pure $ Comatch loc branches'
+        $ Do location bindConsumer
+        $ Cut location mid'
+        $ Then location bindProducer
+        $ Cut location producer (Label location bindConsumer)
+focusProducer Comatch {..} = do
+  Comatch location
+    <$> traverse (\(copattern, statement) -> (copattern,) <$> focus statement) clauses
 
 focusConsumer :: (UniqueGen :> es, Log :> es) => Consumer -> Eff es Consumer
-focusConsumer (Finish loc) = pure $ Finish loc
-focusConsumer (Label loc name) = pure $ Label loc name
-focusConsumer (Then loc name body) = Then loc name <$> focus body
-focusConsumer (Destruct loc name args conts)
-  | all isAtom args = do
-      Destruct loc name <$> traverse focusProducer args <*> traverse focusConsumer conts
+focusConsumer Finish {..} = pure $ Finish location
+focusConsumer Label {..} = pure $ Label location name
+focusConsumer Then {..} = Then location name <$> focus statement
+focusConsumer Destruct {..}
+  | all isAtom producers = do
+      Destruct location tag
+        <$> traverse focusProducer producers
+        <*> traverse focusConsumer consumers
   | otherwise = do
-      y <- newName "destruct_bind"
-      let (values, mid, rest) = partitionAtoms args
+      bindOuter <- newName "destruct_bind"
+      bindInner <- newName "destruct_focus"
+      let (values, mid, rest) = partitionAtoms producers
       mid' <- focusProducer mid
-      x <- newName "destruct_focus"
-      body <- focusConsumer (Destruct loc name (values <> [Var loc x] <> rest) conts)
+      statement <-
+        focusConsumer
+          ( Destruct
+              location
+              tag
+              (values <> [Var location bindInner] <> rest)
+              consumers
+          )
       pure
-        $ Then loc y
-        $ Cut loc mid'
-        $ Then loc x
-        $ Cut loc (Var loc y) body
-focusConsumer (Match loc branches) = do
-  branches' <- for branches \(pat, body) -> do
-    body' <- focus body
-    pure (pat, body')
-  pure $ Match loc branches'
+        $ Then location bindOuter
+        $ Cut location mid'
+        $ Then location bindInner
+        $ Cut location (Var location bindOuter) statement
+focusConsumer Match {..} = do
+  Match location
+    <$> traverse (\(pattern, body) -> (pattern,) <$> focus body) clauses

@@ -1,4 +1,4 @@
-module Malgo.Syntax where
+module Malgo.Syntax (Term (..), Literal (..), Pattern (..), Copattern (..)) where
 
 import Malgo.Location (Location)
 import Malgo.Prelude

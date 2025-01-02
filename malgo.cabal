@@ -44,8 +44,10 @@ library
       OverloadedStrings
       OverloadedRecordDot
       NoFieldSelectors
+      DuplicateRecordFields
       BlockArguments
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+      FunctionalDependencies
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wredundant-constraints -Wno-name-shadowing
   build-depends:
       base >=4.7 && <5
     , containers
@@ -72,8 +74,10 @@ executable malgo-exe
       OverloadedStrings
       OverloadedRecordDot
       NoFieldSelectors
+      DuplicateRecordFields
       BlockArguments
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+      FunctionalDependencies
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wredundant-constraints -Wno-name-shadowing -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
@@ -102,8 +106,10 @@ test-suite malgo-test
       OverloadedStrings
       OverloadedRecordDot
       NoFieldSelectors
+      DuplicateRecordFields
       BlockArguments
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+      FunctionalDependencies
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wredundant-constraints -Wno-name-shadowing -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers

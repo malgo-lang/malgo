@@ -3,7 +3,7 @@
 
 module Malgo.Eval (Eval, EvalError, Env, newEnv, eval) where
 
-import Control.Lens (view, _1)
+import Control.Lens (lens, view, (&), (.~), (^.), _1)
 import Data.Map qualified as Map
 import Effectful.Dispatch.Dynamic
 import Effectful.Error.Static (Error)
@@ -55,13 +55,21 @@ data EvalError
   | NotConstruct Location Value
   deriving (Show)
 
-instance HasLocation EvalError where
-  location (UnboundVariable loc _) = loc
-  location (InvalidCut loc _ _) = loc
-  location (InvalidPositionDo p) = location p
-  location (NoExistField loc _ _) = loc
-  location (NotComatch loc _) = loc
-  location (NotConstruct loc _) = loc
+instance HasLocation EvalError Location where
+  location = lens get set
+    where
+      get (UnboundVariable loc _) = loc
+      get (InvalidCut loc _ _) = loc
+      get (InvalidPositionDo p) = p ^. location
+      get (NoExistField loc _ _) = loc
+      get (NotComatch loc _) = loc
+      get (NotConstruct loc _) = loc
+      set (UnboundVariable _ name) loc = UnboundVariable loc name
+      set (InvalidCut _ value covalue) loc = InvalidCut loc value covalue
+      set (InvalidPositionDo p) loc = InvalidPositionDo (p & location .~ loc)
+      set (NoExistField _ fields name) loc = NoExistField loc fields name
+      set (NotComatch _ value) loc = NotComatch loc value
+      set (NotConstruct _ value) loc = NotConstruct loc value
 
 data Eval :: Effect where
   GetEnv :: Eval m Env
@@ -158,7 +166,7 @@ evalStatement (Invoke loc name args conts) = do
   def <- defLookup loc name
   withVariables (Map.fromList (zip def.params args'))
     $ withCovariables (Map.fromList (zip def.returns conts'))
-    $ evalStatement def.body
+    $ evalStatement def.statement
 
 evalCut :: (Log :> es, Eval :> es) => Location -> Value -> Covalue -> Eff es ()
 evalCut _ value CFinish = logInfo_ $ pShow (CFinish, value)

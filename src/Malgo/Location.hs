@@ -1,3 +1,4 @@
+{-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Malgo.Location
@@ -7,6 +8,7 @@ module Malgo.Location
   )
 where
 
+import Control.Lens (Lens')
 import GHC.Stack (HasCallStack, SrcLoc (..), callStack, getCallStack)
 import Malgo.Prelude
 import Text.Show qualified as Show
@@ -46,8 +48,8 @@ fromCallStack =
     go (_ : xs) = go xs
 
 -- | @HasLocation@ is a type class for types that have a location
-class HasLocation a where
-  location :: a -> Location
+class HasLocation s a | s -> a where
+  location :: Lens' s a
 
-instance HasLocation Location where
+instance HasLocation Location Location where
   location = id

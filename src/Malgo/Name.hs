@@ -3,9 +3,11 @@
 module Malgo.Name
   ( Name (..),
     newName,
+    HasName (..),
   )
 where
 
+import Control.Lens (Traversal')
 import Malgo.Prelude
 import Malgo.Unique
 import Text.Show qualified as Show
@@ -34,3 +36,9 @@ newName :: (UniqueGen :> es) => Text -> Eff es Name
 newName t = do
   u <- newUnique
   pure (Name t u)
+
+class HasName s a | s -> a where
+  name :: Traversal' s a
+
+instance HasName Name Name where
+  name = id

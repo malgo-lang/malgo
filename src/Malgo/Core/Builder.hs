@@ -28,7 +28,7 @@ import Data.Traversable (for)
 import Effectful
 import Effectful.Writer.Static.Local (Writer, runWriter, tell)
 import GHC.Stack (HasCallStack)
-import Malgo.Core
+import Malgo.Core hiding (literal)
 import Malgo.Location
 import Malgo.Name
 import Malgo.Prelude

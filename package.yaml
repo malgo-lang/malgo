@@ -39,15 +39,17 @@ ghc-options:
   - -Wincomplete-uni-patterns
   - -Wmissing-export-lists
   - -Wmissing-home-modules
-  - -Wpartial-fields
   - -Wredundant-constraints
+  - -Wno-name-shadowing
 
 default-extensions:
   - NoImplicitPrelude
   - OverloadedStrings
   - OverloadedRecordDot
   - NoFieldSelectors
+  - DuplicateRecordFields
   - BlockArguments
+  - FunctionalDependencies
 
 language: GHC2024
 
