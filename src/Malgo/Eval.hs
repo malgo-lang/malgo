@@ -3,6 +3,7 @@
 
 module Malgo.Eval (Eval, EvalError, Env, newEnv, eval) where
 
+import Control.Lens (view, _1)
 import Data.Map qualified as Map
 import Effectful.Dispatch.Dynamic
 import Effectful.Error.Static (Error)
@@ -20,7 +21,7 @@ data Env = Env
     covariables :: Map Name Covalue,
     toplevel :: Map Name Definition
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 newEnv :: [Definition] -> Env
 newEnv defs = Env mempty mempty (Map.fromList [(def.name, def) | def <- defs])
@@ -35,29 +36,36 @@ instance Monoid Env where
 data Value
   = VInt Int
   | VConstruct Text [Value] [Covalue]
-  | VCocase [(Copattern, Statement)]
+  | VComatch Env [(Copattern, Statement)]
   deriving (Show, Eq)
 
 data Covalue
   = CFinish
-  | CThen Name Statement
-  | CDestruct Text [Producer] [Consumer]
-  | CCase [(Pattern, Statement)]
+  | CThen Env Name Statement
+  | CDestruct Text [Value] [Covalue]
+  | CMatch Env [(Pattern, Statement)]
   deriving (Show, Eq)
 
 data EvalError
   = UnboundVariable Location Name
   | InvalidCut Location Value Covalue
   | InvalidPositionDo Producer
+  | NoExistField Location [Text] Text
+  | NotComatch Location Value
+  | NotConstruct Location Value
   deriving (Show)
 
 instance HasLocation EvalError where
   location (UnboundVariable loc _) = loc
   location (InvalidCut loc _ _) = loc
   location (InvalidPositionDo p) = location p
+  location (NoExistField loc _ _) = loc
+  location (NotComatch loc _) = loc
+  location (NotConstruct loc _) = loc
 
 data Eval :: Effect where
   GetEnv :: Eval m Env
+  WithEnv :: Env -> m a -> Eval m a
   WithVariables :: Map Name Value -> m a -> Eval m a
   WithCovariables :: Map Name Covalue -> m a -> Eval m a
   ThrowError :: EvalError -> Eval m a
@@ -66,6 +74,9 @@ type instance DispatchOf Eval = Dynamic
 
 getEnv :: (HasCallStack, Eval :> es) => Eff es Env
 getEnv = send GetEnv
+
+withEnv :: (HasCallStack, Eval :> es) => Env -> Eff es a -> Eff es a
+withEnv env action = send $ WithEnv env action
 
 lookup :: (HasCallStack, Eval :> es) => Location -> Name -> Eff es Value
 lookup loc name = do
@@ -101,6 +112,9 @@ runEval :: (Error EvalError :> es) => Env -> Eff (Eval : es) a -> Eff es a
 runEval env0 = reinterpret (runReader env0) $ \localEnv operation ->
   case operation of
     GetEnv -> ask @Env
+    WithEnv env action ->
+      localSeqUnlift localEnv $ \unlift ->
+        local (const env) (unlift action)
     WithVariables vars action ->
       localSeqUnlift localEnv $ \unlift ->
         local
@@ -148,10 +162,34 @@ evalStatement (Invoke loc name args conts) = do
 
 evalCut :: (Log :> es, Eval :> es) => Location -> Value -> Covalue -> Eff es ()
 evalCut _ value CFinish = logInfo_ $ pShow (CFinish, value)
-evalCut _ value (CThen name body) = do
-  withVariables (Map.singleton name value) $ evalStatement body
-evalCut _ _ CDestruct {} = error "Not implemented"
-evalCut _ _ CCase {} = error "Not implemented"
+evalCut _ value (CThen env name body) =
+  withEnv env
+    $ withVariables (Map.singleton name value)
+    $ evalStatement body
+evalCut loc (VComatch env clauses) (CDestruct name args conts) = do
+  go clauses
+  where
+    go (((field, params, rets), body) : rest)
+      | field == name =
+          withEnv env
+            $ withVariables (Map.fromList (zip params args))
+            $ withCovariables (Map.fromList (zip rets conts))
+            $ evalStatement body
+      | otherwise = go rest
+    go _ = throwError $ NoExistField loc (map (view $ _1 . _1) clauses) name
+evalCut loc value CDestruct {} = throwError $ NotComatch loc value
+evalCut loc (VConstruct name args conts) (CMatch env clauses) = do
+  go clauses
+  where
+    go (((field, params, rets), body) : rest)
+      | field == name =
+          withEnv env
+            $ withVariables (Map.fromList (zip params args))
+            $ withCovariables (Map.fromList (zip rets conts))
+            $ evalStatement body
+      | otherwise = go rest
+    go _ = throwError $ NoExistField loc (map (view $ _1 . _1) clauses) name
+evalCut loc value CMatch {} = throwError $ NotConstruct loc value
 
 evalProducer :: (Log :> es, Eval :> es) => Producer -> Eff es Value
 evalProducer (Var loc name) = lookup loc name
@@ -161,14 +199,17 @@ evalProducer (Construct _ name args conts) = do
   args' <- traverse evalProducer args
   conts' <- traverse evalConsumer conts
   pure $ VConstruct name args' conts'
-evalProducer (Comatch _ branches) = pure $ VCocase branches
+evalProducer (Comatch _ branches) = VComatch <$> getEnv <*> pure branches
 
-evalConsumer :: (Eval :> es) => Consumer -> Eff es Covalue
+evalConsumer :: (Eval :> es, Log :> es) => Consumer -> Eff es Covalue
 evalConsumer (Finish _) = pure CFinish
 evalConsumer (Label loc name) = colookup loc name
-evalConsumer (Then _ name body) = pure $ CThen name body
-evalConsumer (Destruct _ name args conts) = pure $ CDestruct name args conts
-evalConsumer (Match _ branches) = pure $ CCase branches
+evalConsumer (Then _ name body) = CThen <$> getEnv <*> pure name <*> pure body
+evalConsumer (Destruct _ name args conts) = do
+  args' <- traverse evalProducer args
+  conts' <- traverse evalConsumer conts
+  pure $ CDestruct name args' conts'
+evalConsumer (Match _ branches) = CMatch <$> getEnv <*> pure branches
 
 evalLiteral :: Location -> Literal -> Eff es Value
 evalLiteral _ (Int n) = pure $ VInt n

@@ -84,7 +84,7 @@ data Definition = Definition
     returns :: [Name],
     body :: Statement
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 focusDefinition :: (UniqueGen :> es, Log :> es) => Definition -> Eff es Definition
 focusDefinition (Definition name params returns body) =

@@ -7,6 +7,10 @@ run = "go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest"
 [tasks.build]
 description = "Build the project"
 run = "hpack && cabal build && cabal test"
+[tasks.exec]
+description = "Run the project"
+depends = ["build"]
+run = "cabal exec malgo-exe"
 [tasks.changelog]
 description = "Generate changelog"
 # TODO: Change the version range to v3.0.0.. when it is released
