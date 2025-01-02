@@ -94,7 +94,7 @@ prim :: (HasCallStack, UniqueGen :> es) => Text -> [Eff es Producer] -> Eff es P
 prim name args = do
   args' <- sequence args
   ret <- newName "prim_ret"
-  pure $ Do fromCallStack ret (Prim fromCallStack name args' (Label fromCallStack ret))
+  pure $ Do fromCallStack ret (Prim fromCallStack name args' [Label fromCallStack ret])
 
 switch :: (HasCallStack, UniqueGen :> es) => Eff es Producer -> [(Literal, Eff es Producer)] -> Eff es Producer -> Eff es Producer
 switch scrutinee branches defaultBranch = do

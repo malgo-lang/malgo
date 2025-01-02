@@ -131,10 +131,10 @@ eval :: (Log :> es, Error EvalError :> es) => Env -> Statement -> Eff es ()
 eval env = runEval env . evalStatement
 
 evalStatement :: (Log :> es, Eval :> es) => Statement -> Eff es ()
-evalStatement (Prim loc name args cont) = do
+evalStatement (Prim loc name args conts) = do
   args' <- traverse evalProducer args
-  cont' <- evalConsumer cont
-  logInfo_ $ pShow ("Prim" :: Text, loc, name, args', cont')
+  conts' <- traverse evalConsumer conts
+  logInfo_ $ pShow ("Prim" :: Text, loc, name, args', conts')
 evalStatement (Switch loc scrutinee branches defaultBranch) = do
   scrutinee' <- evalProducer scrutinee
   go scrutinee' branches

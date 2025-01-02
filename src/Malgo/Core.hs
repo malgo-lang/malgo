@@ -65,7 +65,7 @@ type Pattern = (Text, [Name], [Name])
 
 -- | @Statement@ represents a statement
 data Statement
-  = Prim Location Text [Producer] Consumer
+  = Prim Location Text [Producer] [Consumer]
   | Switch Location Producer [(Literal, Statement)] Statement
   | Cut Location Producer Consumer
   | Invoke Location Name [Producer] [Consumer]
@@ -91,10 +91,10 @@ focusDefinition (Definition name params returns body) =
   Definition name params returns <$> focus body
 
 focus :: (Log :> es, UniqueGen :> es) => Statement -> Eff es Statement
-focus (Cut loc prod cons) = do
-  prod' <- focusProducer prod
-  cons' <- focusConsumer cons
-  pure $ Cut loc prod' cons'
+focus (Cut loc producer consumer) = do
+  producer' <- focusProducer producer
+  consumer' <- focusConsumer consumer
+  pure $ Cut loc producer' consumer'
 focus (Switch loc prod branches defBranch)
   | isAtom prod = do
       prod' <- focusProducer prod
@@ -110,7 +110,7 @@ focus (Switch loc prod branches defBranch)
       pure $ Cut loc prod' (Then loc val body)
 focus (Prim loc name args cons)
   | all isAtom args =
-      Prim loc name <$> traverse focusProducer args <*> focusConsumer cons
+      Prim loc name <$> traverse focusProducer args <*> traverse focusConsumer cons
   | otherwise = do
       let (values, mid, rest) = partitionAtoms args
       mid' <- focusProducer mid
