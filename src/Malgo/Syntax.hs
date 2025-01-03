@@ -1,12 +1,21 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Syntax (Term (..), Literal (..), Pattern (..), Clause (..), Copattern (..), Coclause (..)) where
+module Malgo.Syntax (Definition (..), Term (..), Literal (..), Pattern (..), Clause (..), Copattern (..), Coclause (..)) where
 
 import Control.Lens.TH (makeFieldsId)
 import Malgo.Lens
 import Malgo.Location (HasLocation (..), Location)
 import Malgo.Name (HasName (..))
 import Malgo.Prelude
+
+data Definition a = Definition
+  { location :: Location,
+    name :: a,
+    params :: [a],
+    returns :: [a],
+    term :: Term a
+  }
+  deriving (Show)
 
 data Term a
   = Var {location :: Location, name :: a}
@@ -92,6 +101,7 @@ data Coclause a = Coclause
   }
   deriving (Show)
 
+makeFieldsId ''Definition
 makeFieldsId ''Term
 makeFieldsId ''Pattern
 makeFieldsId ''Clause

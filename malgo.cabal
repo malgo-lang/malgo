@@ -31,6 +31,7 @@ library
       Malgo.Lens
       Malgo.Location
       Malgo.Name
+      Malgo.Parser
       Malgo.Prelude
       Malgo.Syntax
       Malgo.Unique
@@ -58,6 +59,8 @@ library
     , lens
     , log-base
     , log-effectful
+    , megaparsec
+    , parser-combinators
     , pretty-simple
     , string-conversions
     , text
@@ -90,6 +93,8 @@ executable malgo-exe
     , log-base
     , log-effectful
     , malgo
+    , megaparsec
+    , parser-combinators
     , pretty-simple
     , string-conversions
     , text
@@ -123,6 +128,8 @@ test-suite malgo-test
     , log-base
     , log-effectful
     , malgo
+    , megaparsec
+    , parser-combinators
     , pretty-simple
     , string-conversions
     , text

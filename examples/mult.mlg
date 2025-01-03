@@ -1,0 +1,9 @@
+def mult(l) = label a @multAux(l; a)
+
+def multAux(l; a) = l match {
+    Nil() -> 1,
+    Cons(x, xs) -> x switch {
+        0 -> 0 goto a,
+        default -> #mul(x, @multAux(xs; a)),
+    },
+}
