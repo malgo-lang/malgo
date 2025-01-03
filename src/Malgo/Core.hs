@@ -6,29 +6,20 @@
 
 module Malgo.Core
   ( Producer (..),
-    Copattern,
+    Copattern (..),
     Literal (..),
     Consumer (..),
-    Pattern,
+    Pattern (..),
     Statement (..),
     Definition (..),
     focusDefinition,
     focus,
-    HasClauses (..),
-    HasConsumer (..),
-    HasConsumers (..),
-    HasLiteral (..),
-    HasParams (..),
-    HasProducer (..),
-    HasProducers (..),
-    HasReturns (..),
-    HasStatement (..),
-    HasTag (..),
   )
 where
 
 import Control.Lens (makeFieldsId)
 import Effectful.Log (Log)
+import Malgo.Lens
 import Malgo.Location
 import Malgo.Name
 import Malgo.Prelude
@@ -57,7 +48,12 @@ data Producer
       }
   deriving (Show, Eq)
 
-type Copattern = (Text, [Name], [Name])
+data Copattern = Copattern
+  { tag :: Text,
+    params :: [Name],
+    returns :: [Name]
+  }
+  deriving (Show, Eq)
 
 -- | @Const@ represents a constant value
 data Literal = Int {int :: Int}
@@ -89,7 +85,12 @@ data Consumer
       }
   deriving (Show, Eq)
 
-type Pattern = (Text, [Name], [Name])
+data Pattern = Pattern
+  { tag :: Text,
+    params :: [Name],
+    returns :: [Name]
+  }
+  deriving (Show, Eq)
 
 -- | @Statement@ represents a statement
 data Statement
@@ -131,6 +132,8 @@ makeFieldsId ''Producer
 makeFieldsId ''Consumer
 makeFieldsId ''Statement
 makeFieldsId ''Definition
+makeFieldsId ''Copattern
+makeFieldsId ''Pattern
 
 focusDefinition :: (UniqueGen :> es, Log :> es) => Definition -> Eff es Definition
 focusDefinition Definition {..} =

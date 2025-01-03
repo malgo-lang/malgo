@@ -23,12 +23,13 @@ module Malgo.Core.Builder
   )
 where
 
-import Control.Lens (ifor)
+import Control.Lens (ifor, (&), (<>~))
 import Data.Traversable (for)
 import Effectful
 import Effectful.Writer.Static.Local (Writer, runWriter, tell)
 import GHC.Stack (HasCallStack)
-import Malgo.Core hiding (literal)
+import Malgo.Core
+import Malgo.Lens (HasReturns (..))
 import Malgo.Location
 import Malgo.Name
 import Malgo.Prelude
@@ -47,12 +48,12 @@ construct name args conts = do
   pure $ Construct fromCallStack name args' conts'
 
 comatch :: (HasCallStack, UniqueGen :> es) => [Eff es (Copattern, Producer)] -> Eff es Producer
-comatch branches = do
-  branches' <- ifor branches \i clause -> do
+comatch clauses = do
+  clauses' <- ifor clauses \i clause -> do
     ret <- newName $ "comatch_ret_" <> show i
-    ((tag, params, rets), body) <- clause
-    pure ((tag, params, rets <> [ret]), Cut fromCallStack body (Label fromCallStack ret))
-  pure $ Comatch fromCallStack branches'
+    (copattern, producer) <- clause
+    pure (copattern & returns <>~ [ret], Cut fromCallStack producer (Label fromCallStack ret))
+  pure $ Comatch fromCallStack clauses'
 
 finish :: (HasCallStack) => Eff es Consumer
 finish = pure $ Finish fromCallStack
@@ -72,23 +73,30 @@ destruct target name args conts = do
     $ Destruct fromCallStack name args' (conts' <> [Label fromCallStack ret])
 
 match :: (HasCallStack, UniqueGen :> es) => Eff es Producer -> [Eff es (Pattern, Producer)] -> Eff es Producer
-match scrutinee branches = do
+match scrutinee clauses = do
   scrutinee' <- scrutinee
   ret <- newName "match_ret"
-  branches' <- for branches \clause -> do
-    ((tag, params, rets), body) <- clause
-    pure ((tag, params, rets), Cut fromCallStack body (Label fromCallStack ret))
+  clauses' <- for clauses \clause -> do
+    (pattern, body) <- clause
+    pure (pattern, Cut fromCallStack body (Label fromCallStack ret))
   pure
     $ Do fromCallStack ret
     $ Cut fromCallStack scrutinee'
-    $ Match fromCallStack branches'
+    $ Match fromCallStack clauses'
 
 branch :: (UniqueGen :> es) => Text -> [Text] -> [Text] -> ([Name] -> [Name] -> Eff es Producer) -> Eff es (Pattern, Producer)
-branch name params rets body = do
+branch tag params returns body = do
   params' <- traverse newName params
-  rets' <- traverse newName rets
+  rets' <- traverse newName returns
   body' <- body params' rets'
-  pure ((name, params', rets'), body')
+  pure
+    ( Pattern
+        { tag = tag,
+          params = params',
+          returns = rets'
+        },
+      body'
+    )
 
 prim :: (HasCallStack, UniqueGen :> es) => Text -> [Eff es Producer] -> Eff es Producer
 prim name args = do

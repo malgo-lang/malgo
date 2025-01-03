@@ -1,23 +1,99 @@
-module Malgo.Syntax (Term (..), Literal (..), Pattern (..), Copattern (..)) where
+{-# LANGUAGE TemplateHaskell #-}
 
-import Malgo.Location (Location)
+module Malgo.Syntax (Term (..), Literal (..), Pattern (..), Clause (..), Copattern (..), Coclause (..)) where
+
+import Control.Lens.TH (makeFieldsId)
+import Malgo.Lens
+import Malgo.Location (HasLocation (..), Location)
+import Malgo.Name (HasName (..))
 import Malgo.Prelude
 
 data Term a
-  = Var Location a
-  | Literal Location Literal
-  | Construct Location Text [Term a] [Term a]
-  | Comatch Location [(Copattern a, Term a)]
-  | Destruct Location (Term a) Text [Term a] [Term a]
-  | Match Location (Term a) [(Pattern a, Term a)]
-  | Prim Location Text [Term a] [Term a]
-  | Switch Location (Term a) [(Literal, Term a)] (Term a)
-  | Invoke Location a [Term a] [Term a]
-  | Label Location a (Term a)
-  | Goto Location (Term a) a
+  = Var {location :: Location, name :: a}
+  | Literal {location :: Location, literal :: Literal}
+  | Construct
+      { location :: Location,
+        tag :: Text,
+        producers :: [Term a],
+        consumers :: [Term a]
+      }
+  | Comatch
+      { location :: Location,
+        coclauses :: [Coclause a]
+      }
+  | Destruct
+      { location :: Location,
+        term :: Term a,
+        tag :: Text,
+        producers :: [Term a],
+        consumers :: [Term a]
+      }
+  | Match
+      { location :: Location,
+        term :: Term a,
+        clauses :: [Clause a]
+      }
+  | Prim
+      { location :: Location,
+        tag :: Text,
+        producers :: [Term a],
+        consumers :: [Term a]
+      }
+  | Switch
+      { location :: Location,
+        term :: Term a,
+        branches :: [(Literal, Term a)],
+        defaultBranch :: Term a
+      }
+  | Invoke
+      { location :: Location,
+        name :: a,
+        producers :: [Term a],
+        consumers :: [Term a]
+      }
+  | Label
+      { location :: Location,
+        name :: a,
+        term :: Term a
+      }
+  | Goto
+      { location :: Location,
+        term :: Term a,
+        name :: a
+      }
+  deriving (Show)
 
 data Literal = Int Int
+  deriving (Show)
 
-type Pattern a = (Text, [a], [a])
+data Pattern a = Pattern
+  { tag :: Text,
+    params :: [a],
+    returns :: [a]
+  }
+  deriving (Show)
 
-type Copattern a = (Text, [a], [a])
+data Clause a = Clause
+  { pattern :: Pattern a,
+    term :: Term a
+  }
+  deriving (Show)
+
+data Copattern a = Copattern
+  { tag :: Text,
+    params :: [a],
+    returns :: [a]
+  }
+  deriving (Show)
+
+data Coclause a = Coclause
+  { copattern :: Copattern a,
+    term :: Term a
+  }
+  deriving (Show)
+
+makeFieldsId ''Term
+makeFieldsId ''Pattern
+makeFieldsId ''Clause
+makeFieldsId ''Copattern
+makeFieldsId ''Coclause

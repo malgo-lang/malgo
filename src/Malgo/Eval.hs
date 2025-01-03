@@ -12,6 +12,7 @@ import Effectful.Log (Log)
 import Effectful.Reader.Static (ask, local, runReader)
 import Log (logInfo_)
 import Malgo.Core
+import Malgo.Lens
 import Malgo.Location
 import Malgo.Name
 import Malgo.Prelude
@@ -174,29 +175,29 @@ evalCut _ value (CThen env name body) =
   withEnv env
     $ withVariables (Map.singleton name value)
     $ evalStatement body
-evalCut loc (VComatch env clauses) (CDestruct name args conts) = do
+evalCut loc (VComatch env clauses) (CDestruct name values covalues) = do
   go clauses
   where
-    go (((field, params, rets), body) : rest)
-      | field == name =
+    go ((Copattern {..}, body) : rest)
+      | tag == name =
           withEnv env
-            $ withVariables (Map.fromList (zip params args))
-            $ withCovariables (Map.fromList (zip rets conts))
+            $ withVariables (Map.fromList (zip params values))
+            $ withCovariables (Map.fromList (zip returns covalues))
             $ evalStatement body
       | otherwise = go rest
-    go _ = throwError $ NoExistField loc (map (view $ _1 . _1) clauses) name
+    go _ = throwError $ NoExistField loc (map (view $ _1 . tag) clauses) name
 evalCut loc value CDestruct {} = throwError $ NotComatch loc value
-evalCut loc (VConstruct name args conts) (CMatch env clauses) = do
+evalCut loc (VConstruct name values covalues) (CMatch env clauses) = do
   go clauses
   where
-    go (((field, params, rets), body) : rest)
-      | field == name =
+    go ((Pattern {..}, body) : rest)
+      | tag == name =
           withEnv env
-            $ withVariables (Map.fromList (zip params args))
-            $ withCovariables (Map.fromList (zip rets conts))
+            $ withVariables (Map.fromList (zip params values))
+            $ withCovariables (Map.fromList (zip returns covalues))
             $ evalStatement body
       | otherwise = go rest
-    go _ = throwError $ NoExistField loc (map (view $ _1 . _1) clauses) name
+    go _ = throwError $ NoExistField loc (map (view $ _1 . tag) clauses) name
 evalCut loc value CMatch {} = throwError $ NotConstruct loc value
 
 evalProducer :: (Log :> es, Eval :> es) => Producer -> Eff es Value
