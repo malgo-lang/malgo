@@ -9,6 +9,7 @@ import Malgo.Core.Builder
 import Malgo.Eval (EvalError, eval, newEnv)
 import Malgo.Parser
 import Malgo.Prelude
+import Malgo.Syntax.ResolveName (ResolveError, resolveName)
 import Malgo.Unique
 import Text.Megaparsec (errorBundlePretty)
 
@@ -37,11 +38,20 @@ runExample example = do
       logAttention_ $ pShow err
     Right _ -> pure ()
 
-readExample :: (MonadIO m, MonadLog m) => FilePath -> m ()
+readExample :: (UniqueGen :> es, IOE :> es, Log :> es) => FilePath -> Eff es ()
 readExample filePath = do
   text <- liftIO $ T.readFile filePath
-  case parse filePath text of
+  defs <- case parse filePath text of
     Left parseErrorBundle -> do
       logAttention_ $ convertString $ errorBundlePretty parseErrorBundle
+      pure []
     Right defs -> do
       logInfo_ $ pShow defs
+      pure defs
+  defs' <- runError @ResolveError $ resolveName defs
+  case defs' of
+    Left err -> do
+      logAttention_ $ pShow err
+    Right defs' -> do
+      logInfo_ $ pShow defs'
+      pure ()
