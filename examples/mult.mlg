@@ -7,3 +7,5 @@ def multAux(l; a) = l match {
         default -> #mul(x, @multAux(xs; a)),
     },
 }
+
+def main() = @mult($Cons(1, $Cons(2, $Cons(3, $Nil()))))

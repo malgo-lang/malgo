@@ -1,7 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Malgo.Eval (Eval, EvalError, Env, newEnv, eval) where
+module Malgo.Eval (Eval, EvalError, Env (..), newEnv, eval) where
 
 import Control.Lens (lens, view, (&), (.~), (^.), _1)
 import Data.Map qualified as Map
@@ -54,6 +54,12 @@ data EvalError
   | NoExistField Location [Text] Text
   | NotComatch Location Value
   | NotConstruct Location Value
+  | InvalidPrim
+      { location :: Location,
+        tag :: Text,
+        producers :: [Value],
+        consumers :: [Covalue]
+      }
   deriving (Show)
 
 instance HasLocation EvalError Location where
@@ -65,12 +71,14 @@ instance HasLocation EvalError Location where
       get (NoExistField loc _ _) = loc
       get (NotComatch loc _) = loc
       get (NotConstruct loc _) = loc
+      get InvalidPrim {..} = location
       set (UnboundVariable _ name) loc = UnboundVariable loc name
       set (InvalidCut _ value covalue) loc = InvalidCut loc value covalue
       set (InvalidPositionDo p) loc = InvalidPositionDo (p & location .~ loc)
       set (NoExistField _ fields name) loc = NoExistField loc fields name
       set (NotComatch _ value) loc = NotComatch loc value
       set (NotConstruct _ value) loc = NotConstruct loc value
+      set InvalidPrim {..} loc = InvalidPrim {location = loc, ..}
 
 data Eval :: Effect where
   GetEnv :: Eval m Env
@@ -140,6 +148,14 @@ eval :: (Log :> es, Error EvalError :> es) => Env -> Statement -> Eff es ()
 eval env = runEval env . evalStatement
 
 evalStatement :: (Log :> es, Eval :> es) => Statement -> Eff es ()
+evalStatement (Prim {..}) | tag == "mul" = do
+  producers' <- traverse evalProducer producers
+  consumers' <- traverse evalConsumer consumers
+  case (producers', consumers') of
+    ([VInt x, VInt y], [consumer]) -> do
+      let result = VInt (x * y)
+      evalCut location result consumer
+    _ -> throwError $ InvalidPrim {location, tag, producers = producers', consumers = consumers'}
 evalStatement (Prim loc name args conts) = do
   args' <- traverse evalProducer args
   conts' <- traverse evalConsumer conts

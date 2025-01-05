@@ -1,15 +1,20 @@
 module Main (main) where
 
+import Data.Map qualified as Map
 import Data.Text.IO qualified as T
 import Effectful.Error.Static (prettyCallStack, runError)
 import Effectful.Log
 import Log.Backend.StandardOutput
 import Malgo.Core
-import Malgo.Core.Builder
+import Malgo.Core qualified as Core
 import Malgo.Eval (EvalError, eval, newEnv)
+import Malgo.Eval qualified as Eval
+import Malgo.Location (Location (..))
+import Malgo.Name
 import Malgo.Parser
 import Malgo.Prelude
 import Malgo.Syntax.ResolveName (ResolveError, resolveName)
+import Malgo.Syntax.ToCore (ToCoreError, toCore)
 import Malgo.Unique
 import Text.Megaparsec (errorBundlePretty)
 
@@ -49,9 +54,60 @@ readExample filePath = do
       logInfo_ $ pShow defs
       pure defs
   defs' <- runError @ResolveError $ resolveName defs
-  case defs' of
+  defs'' <- case defs' of
     Left err -> do
       logAttention_ $ pShow err
+      pure []
     Right defs' -> do
       logInfo_ $ pShow defs'
+      pure defs'
+  core <- runError @ToCoreError $ toCore defs''
+  core' <- case core of
+    Left err -> do
+      logAttention_ $ pShow err
+      pure []
+    Right core -> do
+      logInfo_ $ pShow core
+      pure core
+  core'' <- traverse focusDefinition core'
+  let env = newEnv core''
+  let mainProcedure = searchMain env
+  result <-
+    runError @EvalError
+      $ eval
+        env
+        Core.Invoke
+          { location =
+              Location
+                { fileName = filePath,
+                  line = 0,
+                  column = 0
+                },
+            name = mainProcedure,
+            producers = [],
+            consumers =
+              [ Core.Finish
+                  { location =
+                      Location
+                        { fileName = filePath,
+                          line = 0,
+                          column = 0
+                        }
+                  }
+              ]
+          }
+  case result of
+    Left (callStack, err) -> do
+      logAttention_ $ convertString $ prettyCallStack callStack
+      logAttention_ $ pShow err
+    Right result -> do
+      logInfo_ $ pShow result
       pure ()
+
+searchMain :: Eval.Env -> Name
+searchMain env = go (Map.keys env.toplevel)
+  where
+    go [] = error "main procedure not found"
+    go (name : names)
+      | name.text == "main" = name
+      | otherwise = go names

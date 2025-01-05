@@ -72,7 +72,7 @@ data Term a
       }
   deriving (Show)
 
-data Literal = Int Int
+data Literal = Int {int :: Int}
   deriving (Show)
 
 data Pattern a = Pattern
