@@ -82,7 +82,7 @@ instance Convert (Term Name) Core.Producer where
                     { location,
                       tag,
                       producers = producers',
-                      consumers = consumers' <> [Core.Label location cont]
+                      consumers = consumers' <> [Core.Covar location cont]
                     }
               }
         }
@@ -162,7 +162,7 @@ instance Convert (Term Name) Core.Producer where
         }
 
 instance Convert (Term Name) Core.Consumer where
-  convert Var {..} = pure $ Core.Label {..}
+  convert Var {..} = pure $ Core.Covar {..}
   convert term = throwError $ InvalidConsumer term.location term
 
 instance Convert Literal Core.Literal where
@@ -172,7 +172,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
   convert Prim {..} = do
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers
-    pure \name -> pure Core.Prim {location, tag, producers = producers', consumers = consumers' <> [Core.Label location name]}
+    pure \name -> pure Core.Prim {location, tag, producers = producers', consumers = consumers' <> [Core.Covar location name]}
   convert Switch {..} = pure \name -> do
     producer <- convert term
     clauses <- for branches \(literal, term) -> do
@@ -191,8 +191,8 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
         { location,
           name,
           producers = producers',
-          consumers = consumers' <> [Core.Label location cont]
+          consumers = consumers' <> [Core.Covar location cont]
         }
   convert term = do
     producer <- convert term
-    pure \name -> pure Core.Cut {location = term.location, producer, consumer = Core.Label {location = term.location, name}}
+    pure \name -> pure Core.Cut {location = term.location, producer, consumer = Core.Covar {location = term.location, name}}

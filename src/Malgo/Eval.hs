@@ -231,7 +231,7 @@ evalProducer (Comatch _ branches) = VComatch <$> getEnv <*> pure branches
 
 evalConsumer :: (Eval :> es, Log :> es) => Consumer -> Eff es Covalue
 evalConsumer (Finish _) = pure CFinish
-evalConsumer (Label loc name) = colookup loc name
+evalConsumer (Covar loc name) = colookup loc name
 evalConsumer (Then _ name body) = CThen <$> getEnv <*> pure name <*> pure body
 evalConsumer (Destruct _ name args conts) = do
   args' <- traverse evalProducer args

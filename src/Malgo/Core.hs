@@ -64,7 +64,7 @@ data Consumer
   = Finish
       { location :: Location
       }
-  | Label
+  | Covar
       { location :: Location,
         name :: Name
       }
@@ -233,14 +233,14 @@ focusProducer Construct {..}
         $ Do location bindConsumer
         $ Cut location mid'
         $ Then location bindProducer
-        $ Cut location producer (Label location bindConsumer)
+        $ Cut location producer (Covar location bindConsumer)
 focusProducer Comatch {..} = do
   Comatch location
     <$> traverse (\(copattern, statement) -> (copattern,) <$> focus statement) clauses
 
 focusConsumer :: (UniqueGen :> es, Log :> es) => Consumer -> Eff es Consumer
 focusConsumer Finish {..} = pure $ Finish location
-focusConsumer Label {..} = pure $ Label location name
+focusConsumer Covar {..} = pure $ Covar location name
 focusConsumer Then {..} = Then location name <$> focus statement
 focusConsumer Destruct {..}
   | all isAtom producers = do

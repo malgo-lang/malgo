@@ -52,14 +52,14 @@ comatch clauses = do
   clauses' <- ifor clauses \i clause -> do
     ret <- newName $ "comatch_ret_" <> show i
     (copattern, producer) <- clause
-    pure (copattern & returns <>~ [ret], Cut fromCallStack producer (Label fromCallStack ret))
+    pure (copattern & returns <>~ [ret], Cut fromCallStack producer (Covar fromCallStack ret))
   pure $ Comatch fromCallStack clauses'
 
 finish :: (HasCallStack) => Eff es Consumer
 finish = pure $ Finish fromCallStack
 
 label :: (HasCallStack) => Name -> Eff es Consumer
-label = pure . Label fromCallStack
+label = pure . Covar fromCallStack
 
 destruct :: (HasCallStack, UniqueGen :> es) => Eff es Producer -> Text -> [Eff es Producer] -> [Eff es Consumer] -> Eff es Producer
 destruct target name args conts = do
@@ -70,7 +70,7 @@ destruct target name args conts = do
   pure
     $ Do fromCallStack ret
     $ Cut fromCallStack target'
-    $ Destruct fromCallStack name args' (conts' <> [Label fromCallStack ret])
+    $ Destruct fromCallStack name args' (conts' <> [Covar fromCallStack ret])
 
 match :: (HasCallStack, UniqueGen :> es) => Eff es Producer -> [Eff es (Pattern, Producer)] -> Eff es Producer
 match scrutinee clauses = do
@@ -78,7 +78,7 @@ match scrutinee clauses = do
   ret <- newName "match_ret"
   clauses' <- for clauses \clause -> do
     (pattern, body) <- clause
-    pure (pattern, Cut fromCallStack body (Label fromCallStack ret))
+    pure (pattern, Cut fromCallStack body (Covar fromCallStack ret))
   pure
     $ Do fromCallStack ret
     $ Cut fromCallStack scrutinee'
@@ -102,7 +102,7 @@ prim :: (HasCallStack, UniqueGen :> es) => Text -> [Eff es Producer] -> Eff es P
 prim name args = do
   args' <- sequence args
   ret <- newName "prim_ret"
-  pure $ Do fromCallStack ret (Prim fromCallStack name args' [Label fromCallStack ret])
+  pure $ Do fromCallStack ret (Prim fromCallStack name args' [Covar fromCallStack ret])
 
 switch :: (HasCallStack, UniqueGen :> es) => Eff es Producer -> [(Literal, Eff es Producer)] -> Eff es Producer -> Eff es Producer
 switch scrutinee branches defaultBranch = do
@@ -110,8 +110,8 @@ switch scrutinee branches defaultBranch = do
   branches' <- sequence [(lit,) <$> body | (lit, body) <- branches]
   defaultBranch' <- defaultBranch
   ret <- newName "switch_ret"
-  let branches'' = [(lit, Cut fromCallStack body (Label fromCallStack ret)) | (lit, body) <- branches']
-  let defaultBranch'' = Cut fromCallStack defaultBranch' (Label fromCallStack ret)
+  let branches'' = [(lit, Cut fromCallStack body (Covar fromCallStack ret)) | (lit, body) <- branches']
+  let defaultBranch'' = Cut fromCallStack defaultBranch' (Covar fromCallStack ret)
   pure
     $ Do fromCallStack ret
     $ Switch fromCallStack scrutinee' branches'' defaultBranch''
@@ -126,7 +126,7 @@ bind name producer body = do
     $ Do fromCallStack ret
     $ Cut fromCallStack producer'
     $ Then fromCallStack name'
-    $ Cut fromCallStack body' (Label fromCallStack ret)
+    $ Cut fromCallStack body' (Covar fromCallStack ret)
 
 def :: (HasCallStack, UniqueGen :> es, Writer [Definition] :> es) => Text -> [Text] -> [Text] -> (Name -> [Name] -> [Name] -> Eff es Producer) -> Eff es Name
 def name params returns body = do
@@ -135,7 +135,7 @@ def name params returns body = do
   returns' <- traverse newName returns
   ret <- newName "def_ret"
   body' <- body name' params' returns'
-  tell [Definition name' params' (returns' <> [ret]) (Cut fromCallStack body' (Label fromCallStack ret))]
+  tell [Definition name' params' (returns' <> [ret]) (Cut fromCallStack body' (Covar fromCallStack ret))]
   pure name'
 
 invoke :: (HasCallStack, UniqueGen :> es) => Name -> [Eff es Producer] -> [Eff es Consumer] -> Eff es Producer
@@ -143,7 +143,7 @@ invoke name args conts = do
   args' <- sequence args
   conts' <- sequence conts
   ret <- newName "invoke_ret"
-  pure $ Do fromCallStack ret (Invoke fromCallStack name args' (conts' <> [Label fromCallStack ret]))
+  pure $ Do fromCallStack ret (Invoke fromCallStack name args' (conts' <> [Covar fromCallStack ret]))
 
 goto :: (HasCallStack, UniqueGen :> es) => Eff es Producer -> Eff es Consumer -> Eff es Producer
 goto term cont = do
@@ -156,7 +156,7 @@ labelOf :: (HasCallStack, UniqueGen :> es) => Text -> (Name -> Eff es Producer) 
 labelOf name body = do
   name' <- newName name
   body' <- body name'
-  pure $ Do fromCallStack name' (Cut fromCallStack body' (Label fromCallStack name'))
+  pure $ Do fromCallStack name' (Cut fromCallStack body' (Covar fromCallStack name'))
 
 toplevel :: (HasCallStack) => Eff es Producer -> Eff es Statement
 toplevel body = do
