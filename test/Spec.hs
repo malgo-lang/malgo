@@ -156,7 +156,5 @@ searchMain env = go (Map.keys env.toplevel)
 smallIndentNoColor :: OutputOptions
 smallIndentNoColor =
   defaultOutputOptionsNoColor
-    { outputOptionsIndentAmount = 1,
-      outputOptionsCompactParens = True,
-      outputOptionsCompact = True
+    { outputOptionsCompactParens = True
     }
