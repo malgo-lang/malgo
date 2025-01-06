@@ -1,15 +1,15 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
-module Malgo.Eval (Eval, EvalError, Env (..), newEnv, eval) where
+module Malgo.Eval (EvalError, Env (..), newEnv, eval) where
 
-import Control.Lens (lens, view, (&), (.~), (^.), _1)
+import Control.Lens (makeFieldsId, over, view, _1)
 import Data.Map qualified as Map
-import Effectful.Dispatch.Dynamic
-import Effectful.Error.Static (Error)
-import Effectful.Error.Static qualified as Error
+import Effectful.Error.Static (Error, throwError)
 import Effectful.Log (Log)
-import Effectful.Reader.Static (ask, local, runReader)
+import Effectful.Reader.Static (Reader, ask, local, runReader)
 import Log (logInfo_)
 import Malgo.Core
 import Malgo.Lens
@@ -47,13 +47,15 @@ data Covalue
   | CMatch Env [(Pattern, Statement)]
   deriving (Show, Eq)
 
+makeFieldsId ''Env
+
 data EvalError
-  = UnboundVariable Location Name
-  | InvalidCut Location Value Covalue
-  | InvalidPositionDo Producer
-  | NoExistField Location [Text] Text
-  | NotComatch Location Value
-  | NotConstruct Location Value
+  = UnboundVariable {location :: Location, name :: Name}
+  | InvalidCut {location :: Location, value :: Value, covalue :: Covalue}
+  | InvalidPositionDo {location :: Location, producer :: Producer}
+  | NoExistField {location :: Location, givens :: [Text], want :: Text}
+  | NotComatch {location :: Location, value :: Value}
+  | NotConstruct {location :: Location, value :: Value}
   | InvalidPrim
       { location :: Location,
         tag :: Text,
@@ -62,92 +64,50 @@ data EvalError
       }
   deriving (Show)
 
-instance HasLocation EvalError Location where
-  location = lens get set
-    where
-      get (UnboundVariable loc _) = loc
-      get (InvalidCut loc _ _) = loc
-      get (InvalidPositionDo p) = p ^. location
-      get (NoExistField loc _ _) = loc
-      get (NotComatch loc _) = loc
-      get (NotConstruct loc _) = loc
-      get InvalidPrim {..} = location
-      set (UnboundVariable _ name) loc = UnboundVariable loc name
-      set (InvalidCut _ value covalue) loc = InvalidCut loc value covalue
-      set (InvalidPositionDo p) loc = InvalidPositionDo (p & location .~ loc)
-      set (NoExistField _ fields name) loc = NoExistField loc fields name
-      set (NotComatch _ value) loc = NotComatch loc value
-      set (NotConstruct _ value) loc = NotConstruct loc value
-      set InvalidPrim {..} loc = InvalidPrim {location = loc, ..}
+makeFieldsId ''EvalError
 
-data Eval :: Effect where
-  GetEnv :: Eval m Env
-  WithEnv :: Env -> m a -> Eval m a
-  WithVariables :: Map Name Value -> m a -> Eval m a
-  WithCovariables :: Map Name Covalue -> m a -> Eval m a
-  ThrowError :: EvalError -> Eval m a
+type EvalOf es = (Reader Env :> es, Error EvalError :> es)
 
-type instance DispatchOf Eval = Dynamic
+getEnv :: (Reader Env :> es) => Eff es Env
+getEnv = ask
 
-getEnv :: (HasCallStack, Eval :> es) => Eff es Env
-getEnv = send GetEnv
+withEnv :: (Reader Env :> es) => Env -> Eff es a -> Eff es a
+withEnv env action = local (const env) action
 
-withEnv :: (HasCallStack, Eval :> es) => Env -> Eff es a -> Eff es a
-withEnv env action = send $ WithEnv env action
-
-lookup :: (HasCallStack, Eval :> es) => Location -> Name -> Eff es Value
+lookup :: (Error EvalError :> es, Reader Env :> es) => Location -> Name -> Eff es Value
 lookup loc name = do
   env <- getEnv
   case Map.lookup name env.variables of
     Just value -> pure value
     Nothing -> throwError $ UnboundVariable loc name
 
-colookup :: (HasCallStack, Eval :> es) => Location -> Name -> Eff es Covalue
+colookup :: (Error EvalError :> es, Reader Env :> es) => Location -> Name -> Eff es Covalue
 colookup loc name = do
   env <- getEnv
   case Map.lookup name env.covariables of
     Just covalue -> pure covalue
     Nothing -> throwError $ UnboundVariable loc name
 
-defLookup :: (HasCallStack, Eval :> es) => Location -> Name -> Eff es Definition
+defLookup :: (Error EvalError :> es, Reader Env :> es) => Location -> Name -> Eff es Definition
 defLookup loc name = do
   env <- getEnv
   case Map.lookup name env.toplevel of
     Just def -> pure def
     Nothing -> throwError $ UnboundVariable loc name
 
-withVariables :: (HasCallStack, Eval :> es) => Map Name Value -> Eff es a -> Eff es a
-withVariables vars action = send $ WithVariables vars action
+withVariables :: (Reader Env :> es) => Map Name Value -> Eff es a -> Eff es a
+withVariables vars action = local @Env (over variables (vars <>)) action
 
-withCovariables :: (HasCallStack, Eval :> es) => Map Name Covalue -> Eff es a -> Eff es a
-withCovariables covars action = send $ WithCovariables covars action
+withCovariables :: (Reader Env :> es) => Map Name Covalue -> Eff es a -> Eff es a
+withCovariables covars action = local @Env (over covariables (covars <>)) action
 
-throwError :: (HasCallStack, Eval :> es) => EvalError -> Eff es a
-throwError err = send (ThrowError err)
-
-runEval :: (Error EvalError :> es) => Env -> Eff (Eval : es) a -> Eff es a
-runEval env0 = reinterpret (runReader env0) $ \localEnv operation ->
-  case operation of
-    GetEnv -> ask @Env
-    WithEnv env action ->
-      localSeqUnlift localEnv $ \unlift ->
-        local (const env) (unlift action)
-    WithVariables vars action ->
-      localSeqUnlift localEnv $ \unlift ->
-        local
-          (\env -> env {variables = vars <> env.variables})
-          (unlift action)
-    WithCovariables covars action ->
-      localSeqUnlift localEnv $ \unlift ->
-        local
-          (\env -> env {covariables = covars <> env.covariables})
-          (unlift action)
-    ThrowError err -> Error.throwError err
+runEval :: Env -> Eff (Reader Env : es) a -> Eff es a
+runEval env = runReader env
 
 eval :: (Log :> es, Error EvalError :> es) => Env -> Statement -> Eff es Value
 eval env = runEval env . evalStatement
 
-evalStatement :: (Log :> es, Eval :> es) => Statement -> Eff es Value
+evalStatement :: (Reader Env :> es, Error EvalError :> es, Log :> es) => Statement -> Eff es Value
 evalStatement (Prim {..}) | tag == "mul" = do
   producers' <- traverse evalProducer producers
   consumers' <- traverse evalConsumer consumers
@@ -186,7 +146,7 @@ evalStatement (Invoke loc name args conts) = do
     $ withCovariables (Map.fromList (zip def.returns conts'))
     $ evalStatement def.statement
 
-evalCut :: (Log :> es, Eval :> es) => Location -> Value -> Covalue -> Eff es Value
+evalCut :: (Log :> es, EvalOf es) => Location -> Value -> Covalue -> Eff es Value
 evalCut _ value CFinish = pure value
 evalCut _ value (CThen env name body) =
   withEnv env
@@ -217,17 +177,17 @@ evalCut loc (VConstruct name values covalues) (CMatch env clauses) = do
     go _ = throwError $ NoExistField loc (map (view $ _1 . tag) clauses) name
 evalCut loc value CMatch {} = throwError $ NotConstruct loc value
 
-evalProducer :: (Log :> es, Eval :> es) => Producer -> Eff es Value
+evalProducer :: (Log :> es, EvalOf es) => Producer -> Eff es Value
 evalProducer (Var loc name) = lookup loc name
 evalProducer (Literal loc lit) = evalLiteral loc lit
-evalProducer p@(Do _ _ _) = throwError (InvalidPositionDo p)
+evalProducer p@(Do loc _ _) = throwError (InvalidPositionDo loc p)
 evalProducer (Construct _ name args conts) = do
   args' <- traverse evalProducer args
   conts' <- traverse evalConsumer conts
   pure $ VConstruct name args' conts'
 evalProducer (Comatch _ branches) = VComatch <$> getEnv <*> pure branches
 
-evalConsumer :: (Eval :> es, Log :> es) => Consumer -> Eff es Covalue
+evalConsumer :: (Log :> es, EvalOf es) => Consumer -> Eff es Covalue
 evalConsumer (Finish _) = pure CFinish
 evalConsumer (Covar loc name) = colookup loc name
 evalConsumer (Then _ name body) = CThen <$> getEnv <*> pure name <*> pure body

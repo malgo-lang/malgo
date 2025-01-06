@@ -16,28 +16,27 @@ toCore definitions = do
   traverse convert definitions
 
 class Convert a r where
-  convert :: (UniqueGen :> es, Error ToCoreError :> es) => a -> Eff es r
+  convert :: a -> r
 
 data ToCoreError = InvalidConsumer {location :: Location, term :: Term Name}
   deriving (Show)
 
-instance Convert (Definition Name) Core.Definition where
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Definition Name) (Eff es Core.Definition) where
   convert Definition {..} = do
     result <- newName "result"
-    statementBuilder <- convert term
-    statement <- statementBuilder result
+    statement <- convert term result
     pure
-      $ Core.Definition
+      Core.Definition
         { name,
           params,
           returns = returns <> [result],
           statement
         }
 
-instance Convert (Term Name) Core.Producer where
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Eff es Core.Producer) where
   convert Var {..} = pure $ Core.Var {..}
   convert Literal {..} = do
-    literal' <- convert literal
+    let literal' = convert literal
     pure $ Core.Literal {location, literal = literal'}
   convert Construct {..} = do
     producers' <- traverse convert producers
@@ -53,8 +52,7 @@ instance Convert (Term Name) Core.Producer where
     cont <- newName "contComatch"
     clauses <- for coclauses \Coclause {..} -> do
       let copattern' = convertCopattern cont copattern
-      statementBuilder <- convert term
-      statement <- statementBuilder cont
+      statement <- convert term cont
       pure (copattern', statement)
     pure $ Core.Comatch {location, clauses}
     where
@@ -66,8 +64,7 @@ instance Convert (Term Name) Core.Producer where
           }
   convert term@Destruct {location} = do
     cont <- newName "contDestruct"
-    statementBuilder <- convert term
-    statement <- statementBuilder cont
+    statement <- convert term cont
     pure
       Core.Do
         { location,
@@ -76,8 +73,7 @@ instance Convert (Term Name) Core.Producer where
         }
   convert term@Match {location} = do
     cont <- newName "contMatch"
-    statementBuilder <- convert term
-    statement <- statementBuilder cont
+    statement <- convert term cont
     pure
       Core.Do
         { location,
@@ -86,8 +82,7 @@ instance Convert (Term Name) Core.Producer where
         }
   convert term@Prim {location} = do
     cont <- newName "contPrim"
-    statementBuilder <- convert term
-    statement <- statementBuilder cont
+    statement <- convert term cont
     pure
       Core.Do
         { location,
@@ -96,8 +91,7 @@ instance Convert (Term Name) Core.Producer where
         }
   convert term@Switch {location} = do
     cont <- newName "contSwitch"
-    statementBuilder <- convert term
-    statement <- statementBuilder cont
+    statement <- convert term cont
     pure
       Core.Do
         { location,
@@ -106,8 +100,7 @@ instance Convert (Term Name) Core.Producer where
         }
   convert term@Invoke {location} = do
     cont <- newName "contInvoke"
-    statementBuilder <- convert term
-    statement <- statementBuilder cont
+    statement <- convert term cont
     pure
       Core.Do
         { location,
@@ -115,8 +108,7 @@ instance Convert (Term Name) Core.Producer where
           statement
         }
   convert Label {..} = do
-    statementBuilder <- convert term
-    statement <- statementBuilder name
+    statement <- convert term name
     pure
       Core.Do
         { location,
@@ -124,8 +116,7 @@ instance Convert (Term Name) Core.Producer where
           statement
         }
   convert Goto {..} = do
-    statementBuilder <- convert term
-    statement <- statementBuilder name
+    statement <- convert term name
     hole <- newName "hole"
     pure
       Core.Do
@@ -134,16 +125,16 @@ instance Convert (Term Name) Core.Producer where
           statement
         }
 
-instance Convert (Term Name) Core.Consumer where
+instance (Error ToCoreError :> es) => Convert (Term Name) (Eff es Core.Consumer) where
   convert Var {..} = pure $ Core.Covar {..}
   convert term = throwError $ InvalidConsumer term.location term
 
 instance Convert Literal Core.Literal where
-  convert Int {..} = pure $ Core.Int {..}
+  convert Int {..} = Core.Int {..}
 
 -- This instance's `convert` takes a label as the return point of the statement.
 instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name -> Eff es Core.Statement) where
-  convert Destruct {..} = pure \cont -> do
+  convert Destruct {..} = \cont -> do
     term' <- convert term
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers
@@ -159,12 +150,11 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
                 consumers = consumers' <> [Core.Covar location cont]
               }
         }
-  convert Match {..} = pure \cont -> do
+  convert Match {..} = \cont -> do
     term' <- convert term
     clauses' <- for clauses \Clause {..} -> do
       let pattern' = convertPattern pattern
-      statementBuilder <- convert term
-      statement <- statementBuilder cont
+      statement <- convert term cont
       pure (pattern', statement)
     pure
       Core.Cut
@@ -174,21 +164,19 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
         }
     where
       convertPattern Pattern {..} = Core.Pattern {..}
-  convert Prim {..} = pure \cont -> do
+  convert Prim {..} = \cont -> do
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers
     pure Core.Prim {location, tag, producers = producers', consumers = consumers' <> [Core.Covar location cont]}
-  convert Switch {..} = pure \cont -> do
+  convert Switch {..} = \cont -> do
     producer <- convert term
     clauses <- for branches \(literal, term) -> do
-      literal' <- convert literal
-      statementBuilder <- convert term
-      statement <- statementBuilder cont
+      let literal' = convert literal
+      statement <- convert term cont
       pure (literal', statement)
-    statementBuilder <- convert defaultBranch
-    statement <- statementBuilder cont
+    statement <- convert defaultBranch cont
     pure Core.Switch {location, producer, clauses, statement}
-  convert Invoke {..} = pure \cont -> do
+  convert Invoke {..} = \cont -> do
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers
     pure
@@ -198,9 +186,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
           producers = producers',
           consumers = consumers' <> [Core.Covar location cont]
         }
-  convert Goto {..} = pure \_ -> do
-    statementBuilder <- convert term
-    statementBuilder name
-  convert term = pure \cont -> do
+  convert Goto {..} = \_ -> convert term name
+  convert term = \cont -> do
     producer <- convert term
     pure Core.Cut {location = term.location, producer, consumer = Core.Covar {location = term.location, name = cont}}

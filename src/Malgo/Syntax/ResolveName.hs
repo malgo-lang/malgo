@@ -6,8 +6,8 @@ import Data.Map qualified as Map
 import Data.Traversable (for)
 import Effectful.Error.Static (Error, throwError)
 import Effectful.Reader.Static (Reader, ask, local, runReader)
-import Malgo.Location ( Location )
-import Malgo.Name ( newName, Name )
+import Malgo.Location (Location)
+import Malgo.Name (Name, newName)
 import Malgo.Prelude
 import Malgo.Syntax
 import Malgo.Unique
@@ -44,10 +44,10 @@ data ResolveError
   }
   deriving (Show)
 
-class Resolve f where
-  resolve :: (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => f Text -> Eff es (f Name)
+class Resolve a r where
+  resolve :: a -> r
 
-instance Resolve Definition where
+instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Definition Text) (Eff es (Definition Name)) where
   resolve Definition {..} = do
     name' <- lookup location name
     paramsKvs <- for params \param -> do
@@ -68,7 +68,7 @@ instance Resolve Definition where
               term = term'
             }
 
-instance Resolve Term where
+instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Term Text) (Eff es (Term Name)) where
   resolve Var {..} = do
     name' <- lookup location name
     pure Var {location, name = name'}
@@ -115,7 +115,7 @@ instance Resolve Term where
     term' <- resolve term
     pure Goto {location, name = name', term = term'}
 
-instance Resolve Coclause where
+instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Coclause Text) (Eff es (Coclause Name)) where
   resolve Coclause {..} = do
     (copattern', copatternKvs) <- resolveCopattern copattern
     with copatternKvs do
@@ -135,19 +135,19 @@ resolveCopattern Copattern {..} = do
         zip params params' <> zip returns returns'
       )
 
-instance Resolve Clause where
+instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Clause Text) (Eff es (Clause Name)) where
   resolve Clause {..} = do
-    (pattern', patternKvs) <- resolvePattern pattern
+    (pattern', patternKvs) <- resolve pattern
     with patternKvs do
       term' <- resolve term
       pure Clause {pattern = pattern', term = term'}
 
-resolvePattern :: (UniqueGen :> es) => Pattern Text -> Eff es (Pattern Name, [(Text, Name)])
-resolvePattern Pattern {..} = do
-  params' <- traverse newName params
-  returns' <- traverse newName returns
-  pure
-    $ ( Pattern
+instance (UniqueGen :> es) => Resolve (Pattern Text) (Eff es (Pattern Name, [(Text, Name)])) where
+  resolve Pattern {..} = do
+    params' <- traverse newName params
+    returns' <- traverse newName returns
+    pure
+      ( Pattern
           { tag,
             params = params',
             returns = returns'
