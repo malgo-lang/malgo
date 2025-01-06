@@ -144,10 +144,10 @@ runEval env0 = reinterpret (runReader env0) $ \localEnv operation ->
           (unlift action)
     ThrowError err -> Error.throwError err
 
-eval :: (Log :> es, Error EvalError :> es) => Env -> Statement -> Eff es ()
+eval :: (Log :> es, Error EvalError :> es) => Env -> Statement -> Eff es Value
 eval env = runEval env . evalStatement
 
-evalStatement :: (Log :> es, Eval :> es) => Statement -> Eff es ()
+evalStatement :: (Log :> es, Eval :> es) => Statement -> Eff es Value
 evalStatement (Prim {..}) | tag == "mul" = do
   producers' <- traverse evalProducer producers
   consumers' <- traverse evalConsumer consumers
@@ -160,6 +160,7 @@ evalStatement (Prim loc name args conts) = do
   args' <- traverse evalProducer args
   conts' <- traverse evalConsumer conts
   logInfo_ $ pShow ("Prim" :: Text, loc, name, args', conts')
+  pure $ VInt 0
 evalStatement (Switch loc scrutinee branches defaultBranch) = do
   scrutinee' <- evalProducer scrutinee
   go scrutinee' branches
@@ -185,8 +186,10 @@ evalStatement (Invoke loc name args conts) = do
     $ withCovariables (Map.fromList (zip def.returns conts'))
     $ evalStatement def.statement
 
-evalCut :: (Log :> es, Eval :> es) => Location -> Value -> Covalue -> Eff es ()
-evalCut _ value CFinish = logInfo_ $ pShow (CFinish, value)
+evalCut :: (Log :> es, Eval :> es) => Location -> Value -> Covalue -> Eff es Value
+evalCut _ value CFinish = do
+  logInfo_ $ pShow (CFinish, value)
+  pure value
 evalCut _ value (CThen env name body) =
   withEnv env
     $ withVariables (Map.singleton name value)
