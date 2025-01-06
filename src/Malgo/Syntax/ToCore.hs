@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies #-}
 
-module Malgo.Syntax.ToCore where
+module Malgo.Syntax.ToCore (toCore, ToCoreError) where
 
 import Data.Traversable (for)
 import Effectful.Error.Static (Error, throwError)
@@ -24,15 +24,14 @@ data ToCoreError = InvalidConsumer {location :: Location, term :: Term Name}
 instance Convert (Definition Name) Core.Definition where
   convert Definition {..} = do
     result <- newName "result"
-    term' <- convert term
+    statementBuilder <- convert term
+    statement <- statementBuilder result
     pure
       $ Core.Definition
         { name,
           params,
           returns = returns <> [result],
-          statement =
-            Core.Cut location term'
-              $ Core.Label location result
+          statement
         }
 
 instance Convert (Term Name) Core.Producer where
@@ -168,8 +167,8 @@ instance Convert (Term Name) Core.Producer where
               }
         }
   convert Goto {..} = do
-    term' <- convert term
     hole <- newName "hole"
+    term' <- convert term
     pure
       Core.Do
         { location,
@@ -203,3 +202,32 @@ instance Convert (Term Name) Core.Consumer where
 
 instance Convert Literal Core.Literal where
   convert Int {..} = pure $ Core.Int {..}
+
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name -> Eff es Core.Statement) where
+  convert Prim {..} = do
+    producers' <- traverse convert producers
+    consumers' <- traverse convert consumers
+    pure \name -> pure Core.Prim {location, tag, producers = producers', consumers = consumers' <> [Core.Label location name]}
+  convert Switch {..} = pure \name -> do
+    producer <- convert term
+    clauses <- for branches \(literal, term) -> do
+      literal' <- convert literal
+      statementBuilder <- convert term
+      statement <- statementBuilder name
+      pure (literal', statement)
+    statementBuilder <- convert defaultBranch
+    statement <- statementBuilder name
+    pure Core.Switch {location, producer, clauses, statement}
+  convert Invoke {..} = pure \cont -> do
+    producers' <- traverse convert producers
+    consumers' <- traverse convert consumers
+    pure
+      Core.Invoke
+        { location,
+          name,
+          producers = producers',
+          consumers = consumers' <> [Core.Label location cont]
+        }
+  convert term = do
+    producer <- convert term
+    pure \name -> pure Core.Cut {location = term.location, producer, consumer = Core.Label {location = term.location, name}}
