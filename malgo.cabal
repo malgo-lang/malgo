@@ -58,6 +58,8 @@ library
     , containers
     , effectful
     , effectful-core
+    , hspec
+    , hspec-golden
     , lens
     , log-base
     , log-effectful
@@ -91,6 +93,8 @@ executable malgo-exe
     , containers
     , effectful
     , effectful-core
+    , hspec
+    , hspec-golden
     , lens
     , log-base
     , log-effectful
@@ -126,6 +130,8 @@ test-suite malgo-test
     , containers
     , effectful
     , effectful-core
+    , hspec
+    , hspec-golden
     , lens
     , log-base
     , log-effectful

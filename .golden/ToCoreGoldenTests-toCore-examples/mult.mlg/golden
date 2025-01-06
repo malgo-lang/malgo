@@ -1,0 +1,68 @@
+[ Definition
+ { name = mult_0, params = [ l_3 ], returns = [ result_9 ], statement = Cut
+  { location = examples/mult.mlg:1:15, producer = Do
+   { location = examples/mult.mlg:1:15, name = a_4, statement = Invoke
+    { location = examples/mult.mlg:1:23, name = multAux_1, producers =
+     [ Var { location = examples/mult.mlg:1:32, name = l_3 } ], consumers =
+     [ Label
+      { location = examples/mult.mlg:1:35, name = a_4 }, Label
+      { location = examples/mult.mlg:1:23, name = a_4 } ] } }, consumer = Label
+   { location = examples/mult.mlg:1:15, name = result_9 } } }, Definition
+ { name = multAux_1, params = [ l_5 ], returns =
+  [ a_6, result_10 ], statement = Cut
+  { location = examples/mult.mlg:3:23, producer = Do
+   { location = examples/mult.mlg:3:23, name = contMatch_11, statement = Cut
+    { location = examples/mult.mlg:3:23, producer = Var
+     { location = examples/mult.mlg:3:21, name = l_5 }, consumer = Match
+     { location = examples/mult.mlg:3:23, clauses =
+      [
+       ( Pattern
+        { tag = "Nil", params = [], returns = [] }, Cut
+        { location = examples/mult.mlg:4:14, producer = Literal
+         { location = examples/mult.mlg:4:14, literal = Int
+          { int = 1 } }, consumer = Label
+         { location = examples/mult.mlg:4:14, name = contMatch_11 } } ),
+       ( Pattern
+        { tag = "Cons", params = [ x_7, xs_8 ], returns = [] }, Switch
+        { location = examples/mult.mlg:5:22, producer = Var
+         { location = examples/mult.mlg:5:20, name = x_7 }, clauses =
+         [
+          ( Int
+           { int = 0 }, Cut
+           { location = examples/mult.mlg:6:16, producer = Do
+            { location = examples/mult.mlg:6:16, name = hole_12, statement = Cut
+             { location = examples/mult.mlg:6:14, producer = Literal
+              { location = examples/mult.mlg:6:14, literal = Int
+               { int = 0 } }, consumer = Label
+              { location = examples/mult.mlg:6:14, name = hole_12 } } }, consumer = Label
+            { location = examples/mult.mlg:6:16, name = contMatch_11 } } ) ], statement = Prim
+         { location = examples/mult.mlg:7:20, tag = "mul", producers =
+          [ Var
+           { location = examples/mult.mlg:7:25, name = x_7 }, Do
+           { location = examples/mult.mlg:7:28, name = cont_13, statement = Invoke
+            { location = examples/mult.mlg:7:28, name = multAux_1, producers =
+             [ Var
+              { location = examples/mult.mlg:7:37, name = xs_8 } ], consumers =
+             [ Label
+              { location = examples/mult.mlg:7:41, name = a_6 }, Label
+              { location = examples/mult.mlg:7:28, name = cont_13 } ] } } ], consumers =
+          [ Label
+           { location = examples/mult.mlg:7:20, name = contMatch_11 } ] } } ) ] } } }, consumer = Label
+   { location = examples/mult.mlg:3:23, name = result_10 } } }, Definition
+ { name = main_2, params = [], returns = [ result_14 ], statement = Invoke
+  { location = examples/mult.mlg:11:14, name = mult_0, producers =
+   [ Construct
+    { location = examples/mult.mlg:11:20, tag = "Cons", producers =
+     [ Literal
+      { location = examples/mult.mlg:11:26, literal = Int
+       { int = 1 } }, Construct
+      { location = examples/mult.mlg:11:29, tag = "Cons", producers =
+       [ Literal
+        { location = examples/mult.mlg:11:35, literal = Int
+         { int = 2 } }, Construct
+        { location = examples/mult.mlg:11:38, tag = "Cons", producers =
+         [ Literal
+          { location = examples/mult.mlg:11:44, literal = Int
+           { int = 3 } }, Construct
+          { location = examples/mult.mlg:11:47, tag = "Nil", producers = [], consumers = [] } ], consumers = [] } ], consumers = [] } ], consumers = [] } ], consumers =
+   [ Label { location = examples/mult.mlg:11:14, name = result_14 } ] } } ]
