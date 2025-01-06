@@ -86,31 +86,16 @@ instance Convert (Term Name) Core.Producer where
                     }
               }
         }
-  convert Match {..} = do
+  convert term@Match {location} = do
     cont <- newName "contMatch"
-    term' <- convert term
-    clauses' <- for clauses \Clause {..} -> do
-      let pattern' = convertPattern pattern
-      statementBuilder <- convert term
-      statement <- statementBuilder cont
-      pure (pattern', statement)
+    statementBuilder <- convert term
+    statement <- statementBuilder cont
     pure
       Core.Do
         { location,
           name = cont,
-          statement =
-            Core.Cut
-              { location,
-                producer = term',
-                consumer =
-                  Core.Match
-                    { location,
-                      clauses = clauses'
-                    }
-              }
+          statement
         }
-    where
-      convertPattern Pattern {..} = Core.Pattern {..}
   convert term@Prim {location} = do
     cont <- newName "contPrim"
     statementBuilder <- convert term
@@ -170,6 +155,21 @@ instance Convert Literal Core.Literal where
 
 -- This instance's `convert` takes a label as the return point of the statement.
 instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name -> Eff es Core.Statement) where
+  convert Match {..} = pure \cont -> do
+    term' <- convert term
+    clauses' <- for clauses \Clause {..} -> do
+      let pattern' = convertPattern pattern
+      statementBuilder <- convert term
+      statement <- statementBuilder cont
+      pure (pattern', statement)
+    pure
+      Core.Cut
+        { location,
+          producer = term',
+          consumer = Core.Match {location, clauses = clauses'}
+        }
+    where
+      convertPattern Pattern {..} = Core.Pattern {..}
   convert Prim {..} = pure \cont -> do
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers

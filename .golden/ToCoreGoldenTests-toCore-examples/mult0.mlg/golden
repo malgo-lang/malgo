@@ -32,91 +32,83 @@
         , result_10 ]
     , statement = Cut
         { location = examples/mult0.mlg:3:24
-        , producer = Do
+        , producer = Var
+            { location = examples/mult0.mlg:3:22
+            , name = l_5 }
+        , consumer = Match
             { location = examples/mult0.mlg:3:24
-            , name = contMatch_11
-            , statement = Cut
-                { location = examples/mult0.mlg:3:24
-                , producer = Var
-                    { location = examples/mult0.mlg:3:22
-                    , name = l_5 }
-                , consumer = Match
-                    { location = examples/mult0.mlg:3:24
-                    , clauses =
-                        [
-                            ( Pattern
-                                { tag = "Nil"
-                                , params = []
-                                , returns = [] }
-                            , Cut
-                                { location = examples/mult0.mlg:4:15
-                                , producer = Literal
-                                    { location = examples/mult0.mlg:4:15
-                                    , literal = Int
-                                        { int = 1 } }
-                                , consumer = Covar
-                                    { location = examples/mult0.mlg:4:15
-                                    , name = contMatch_11 } } )
-                        ,
-                            ( Pattern
-                                { tag = "Cons"
-                                , params =
-                                    [ x_7
-                                    , xs_8 ]
-                                , returns = [] }
-                            , Switch
-                                { location = examples/mult0.mlg:5:23
-                                , producer = Var
-                                    { location = examples/mult0.mlg:5:21
+            , clauses =
+                [
+                    ( Pattern
+                        { tag = "Nil"
+                        , params = []
+                        , returns = [] }
+                    , Cut
+                        { location = examples/mult0.mlg:4:15
+                        , producer = Literal
+                            { location = examples/mult0.mlg:4:15
+                            , literal = Int
+                                { int = 1 } }
+                        , consumer = Covar
+                            { location = examples/mult0.mlg:4:15
+                            , name = result_10 } } )
+                ,
+                    ( Pattern
+                        { tag = "Cons"
+                        , params =
+                            [ x_7
+                            , xs_8 ]
+                        , returns = [] }
+                    , Switch
+                        { location = examples/mult0.mlg:5:23
+                        , producer = Var
+                            { location = examples/mult0.mlg:5:21
+                            , name = x_7 }
+                        , clauses =
+                            [
+                                ( Int
+                                    { int = 0 }
+                                , Cut
+                                    { location = examples/mult0.mlg:6:14
+                                    , producer = Literal
+                                        { location = examples/mult0.mlg:6:14
+                                        , literal = Int
+                                            { int = 0 } }
+                                    , consumer = Covar
+                                        { location = examples/mult0.mlg:6:14
+                                        , name = a_6 } } ) ]
+                        , statement = Prim
+                            { location = examples/mult0.mlg:7:20
+                            , tag = "mul"
+                            , producers =
+                                [ Var
+                                    { location = examples/mult0.mlg:7:25
                                     , name = x_7 }
-                                , clauses =
-                                    [
-                                        ( Int
-                                            { int = 0 }
-                                        , Cut
-                                            { location = examples/mult0.mlg:6:14
-                                            , producer = Literal
-                                                { location = examples/mult0.mlg:6:14
-                                                , literal = Int
-                                                    { int = 0 } }
-                                            , consumer = Covar
-                                                { location = examples/mult0.mlg:6:14
-                                                , name = a_6 } } ) ]
-                                , statement = Prim
-                                    { location = examples/mult0.mlg:7:20
-                                    , tag = "mul"
-                                    , producers =
-                                        [ Var
-                                            { location = examples/mult0.mlg:7:25
-                                            , name = x_7 }
-                                        , Do
-                                            { location = examples/mult0.mlg:7:28
-                                            , name = contInvoke_12
-                                            , statement = Invoke
+                                , Do
+                                    { location = examples/mult0.mlg:7:28
+                                    , name = contInvoke_11
+                                    , statement = Invoke
+                                        { location = examples/mult0.mlg:7:28
+                                        , name = multAux_1
+                                        , producers =
+                                            [ Var
+                                                { location = examples/mult0.mlg:7:37
+                                                , name = xs_8 } ]
+                                        , consumers =
+                                            [ Covar
+                                                { location = examples/mult0.mlg:7:41
+                                                , name = a_6 }
+                                            , Covar
                                                 { location = examples/mult0.mlg:7:28
-                                                , name = multAux_1
-                                                , producers =
-                                                    [ Var
-                                                        { location = examples/mult0.mlg:7:37
-                                                        , name = xs_8 } ]
-                                                , consumers =
-                                                    [ Covar
-                                                        { location = examples/mult0.mlg:7:41
-                                                        , name = a_6 }
-                                                    , Covar
-                                                        { location = examples/mult0.mlg:7:28
-                                                        , name = contInvoke_12 } ] } } ]
-                                    , consumers =
-                                        [ Covar
-                                            { location = examples/mult0.mlg:7:20
-                                            , name = contMatch_11 } ] } } ) ] } } }
-        , consumer = Covar
-            { location = examples/mult0.mlg:3:24
-            , name = result_10 } } }
+                                                , name = contInvoke_11 } ] } } ]
+                            , consumers =
+                                [ Covar
+                                    { location = examples/mult0.mlg:7:20
+                                    , name = result_10 } ] } } ) ] } } }
 , Definition
     { name = main_2
     , params = []
-    , returns = [ result_13 ]
+    , returns = [ result_12 ]
     , statement = Invoke
         { location = examples/mult0.mlg:11:15
         , name = mult_0
@@ -156,4 +148,4 @@
         , consumers =
             [ Covar
                 { location = examples/mult0.mlg:11:15
-                , name = result_13 } ] } } ]
+                , name = result_12 } ] } } ]
