@@ -50,11 +50,12 @@ instance Convert (Term Name) Core.Producer where
           consumers = consumers'
         }
   convert Comatch {..} = do
-    cont <- newName "cont"
+    cont <- newName "contComatch"
     clauses <- for coclauses \Coclause {..} -> do
       let copattern' = convertCopattern cont copattern
-      term' <- convert term
-      pure (copattern', Core.Cut location term' (Core.Label location cont))
+      statementBuilder <- convert term
+      statement <- statementBuilder cont
+      pure (copattern', statement)
     pure $ Core.Comatch {location, clauses}
     where
       convertCopattern cont Copattern {..} =
@@ -64,33 +65,49 @@ instance Convert (Term Name) Core.Producer where
             returns = returns <> [cont]
           }
   convert Destruct {..} = do
+    cont <- newName "contDestruct"
     term' <- convert term
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers
-    doCut location term' \cont ->
-      Core.Destruct
+    pure
+      Core.Do
         { location,
-          tag,
-          producers = producers',
-          consumers = consumers' <> [Core.Label location cont]
+          name = cont,
+          statement =
+            Core.Cut
+              { location,
+                producer = term',
+                consumer =
+                  Core.Destruct
+                    { location,
+                      tag,
+                      producers = producers',
+                      consumers = consumers' <> [Core.Label location cont]
+                    }
+              }
         }
   convert Match {..} = do
+    cont <- newName "contMatch"
     term' <- convert term
     clauses' <- for clauses \Clause {..} -> do
       let pattern' = convertPattern pattern
-      term' <- convert term
-      pure (pattern', term')
-    doCut location term' \cont ->
-      Core.Match
+      statementBuilder <- convert term
+      statement <- statementBuilder cont
+      pure (pattern', statement)
+    pure
+      Core.Do
         { location,
-          clauses =
-            map
-              ( \(pattern, producer) ->
-                  ( pattern,
-                    Core.Cut location producer (Core.Label location cont)
-                  )
-              )
-              clauses'
+          name = cont,
+          statement =
+            Core.Cut
+              { location,
+                producer = term',
+                consumer =
+                  Core.Match
+                    { location,
+                      clauses = clauses'
+                    }
+              }
         }
     where
       convertPattern Pattern {..} = Core.Pattern {..}
@@ -111,13 +128,15 @@ instance Convert (Term Name) Core.Producer where
               }
         }
   convert Switch {..} = do
+    cont <- newName "contSwitch"
     term' <- convert term
     branches' <- for branches \(literal, term) -> do
       literal' <- convert literal
-      term' <- convert term
-      pure (literal', term')
-    defaultBranch' <- convert defaultBranch
-    cont <- newName "cont"
+      statementBuilder <- convert term
+      statement <- statementBuilder cont
+      pure (literal', statement)
+    statementBuilder <- convert defaultBranch
+    statement <- statementBuilder cont
     pure
       Core.Do
         { location,
@@ -126,15 +145,8 @@ instance Convert (Term Name) Core.Producer where
             Core.Switch
               { location,
                 producer = term',
-                clauses =
-                  map
-                    ( \(literal, producer) ->
-                        ( literal,
-                          Core.Cut location producer (Core.Label location cont)
-                        )
-                    )
-                    branches',
-                statement = Core.Cut location defaultBranch' (Core.Label location cont)
+                clauses = branches',
+                statement
               }
         }
   convert Invoke {..} = do
@@ -154,47 +166,24 @@ instance Convert (Term Name) Core.Producer where
               }
         }
   convert Label {..} = do
-    term' <- convert term
+    statementBuilder <- convert term
+    statement <- statementBuilder name
     pure
       Core.Do
         { location,
           name,
-          statement =
-            Core.Cut
-              { location,
-                producer = term',
-                consumer = Core.Label location name
-              }
+          statement
         }
   convert Goto {..} = do
     hole <- newName "hole"
-    term' <- convert term
+    statementBuilder <- convert term
+    statement <- statementBuilder hole
     pure
       Core.Do
         { location,
           name = hole,
-          statement =
-            Core.Cut
-              { location,
-                producer = term',
-                consumer = Core.Label location name
-              }
+          statement
         }
-
-doCut :: (UniqueGen :> es) => Location -> Core.Producer -> (Name -> Core.Consumer) -> Eff es Core.Producer
-doCut location producer consumerBuilder = do
-  cont <- newName "cont"
-  pure
-    Core.Do
-      { location,
-        name = cont,
-        statement =
-          Core.Cut
-            { location,
-              producer,
-              consumer = consumerBuilder cont
-            }
-      }
 
 instance Convert (Term Name) Core.Consumer where
   convert Var {..} = pure $ Core.Label {..}
