@@ -67,7 +67,7 @@ readExample filePath = do
       logAttention_ $ pShow err
       pure []
     Right core -> do
-      logInfo_ $ pShow core
+      logInfo_ $ "\n" <> sShow core
       pure core
   core'' <- traverse focusDefinition core'
   let env = newEnv core''

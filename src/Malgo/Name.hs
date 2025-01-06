@@ -11,6 +11,7 @@ import Control.Lens (Traversal')
 import Malgo.Prelude
 import Malgo.Unique
 import Text.Show qualified as Show
+import qualified Data.SCargot.Repr.Basic as S
 
 -- | @Name@ represents an identifier
 data Name = Name
@@ -18,6 +19,9 @@ data Name = Name
     unique :: Int
   }
   deriving (Eq, Ord)
+
+instance ToSExpr Name where
+  toSExpr Name{..} = S.A (Symbol $ text <> "." <> show unique)
 
 instance Show Name where
   show (Name t u) = convertString t ++ "_" ++ show u

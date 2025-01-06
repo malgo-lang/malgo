@@ -187,9 +187,7 @@ evalStatement (Invoke loc name args conts) = do
     $ evalStatement def.statement
 
 evalCut :: (Log :> es, Eval :> es) => Location -> Value -> Covalue -> Eff es Value
-evalCut _ value CFinish = do
-  logInfo_ $ pShow (CFinish, value)
-  pure value
+evalCut _ value CFinish = pure value
 evalCut _ value (CThen env name body) =
   withEnv env
     $ withVariables (Map.singleton name value)

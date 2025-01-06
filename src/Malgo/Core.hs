@@ -18,6 +18,7 @@ module Malgo.Core
 where
 
 import Control.Lens (makeFieldsId)
+import Data.SCargot.Repr.Basic qualified as S
 import Effectful.Log (Log)
 import Malgo.Lens
 import Malgo.Location
@@ -48,6 +49,16 @@ data Producer
       }
   deriving (Show, Eq)
 
+instance ToSExpr Producer where
+  toSExpr Var {..} = toSExpr name
+  toSExpr Literal {..} = toSExpr literal
+  toSExpr Do {..} = S.L [S.A (Symbol "do"), toSExpr name, toSExpr statement]
+  toSExpr Construct {..} = S.L [S.A (Symbol "$"), S.A (Symbol tag), S.L (toSExpr <$> producers), S.L (toSExpr <$> consumers)]
+  toSExpr Comatch {..} =
+    S.L
+      $ [S.A (Symbol "comatch")]
+      <> map (\(copattern, statement) -> S.L [toSExpr copattern, toSExpr statement]) clauses
+
 data Copattern = Copattern
   { tag :: Text,
     params :: [Name],
@@ -55,9 +66,15 @@ data Copattern = Copattern
   }
   deriving (Show, Eq)
 
+instance ToSExpr Copattern where
+  toSExpr Copattern {..} = S.L [S.A (Symbol tag), S.L (toSExpr <$> params), S.L (toSExpr <$> returns)]
+
 -- | @Const@ represents a constant value
 data Literal = Int {int :: Int}
   deriving (Show, Eq)
+
+instance ToSExpr Literal where
+  toSExpr Int {..} = S.A (Number int)
 
 -- | @Consumer@ represents a term that consumes values
 data Consumer
@@ -85,12 +102,25 @@ data Consumer
       }
   deriving (Show, Eq)
 
+instance ToSExpr Consumer where
+  toSExpr Finish {} = S.A (Symbol "finish")
+  toSExpr Covar {..} = toSExpr name
+  toSExpr Then {..} = S.L [S.A (Symbol "then"), toSExpr name, toSExpr statement]
+  toSExpr Destruct {..} = S.L [S.A (Symbol "."), S.A (Symbol tag), S.L (toSExpr <$> producers), S.L (toSExpr <$> consumers)]
+  toSExpr Match {..} =
+    S.L
+      $ [S.A (Symbol "match")]
+      <> map (\(pattern, statement) -> S.L [toSExpr pattern, toSExpr statement]) clauses
+
 data Pattern = Pattern
   { tag :: Text,
     params :: [Name],
     returns :: [Name]
   }
   deriving (Show, Eq)
+
+instance ToSExpr Pattern where
+  toSExpr Pattern {..} = S.L [S.A (Symbol tag), S.L (toSExpr <$> params), S.L (toSExpr <$> returns)]
 
 -- | @Statement@ represents a statement
 data Statement
@@ -119,6 +149,16 @@ data Statement
       }
   deriving (Show, Eq)
 
+instance ToSExpr Statement where
+  toSExpr Prim {..} = S.L [S.A (Symbol "prim"), S.A (Symbol tag), S.L (toSExpr <$> producers), S.L (toSExpr <$> consumers)]
+  toSExpr Switch {..} =
+    S.L
+      $ [S.A (Symbol "switch"), toSExpr producer]
+      <> (map (\(literal, statement) -> S.L [toSExpr literal, toSExpr statement]) clauses)
+      <> [S.L [S.A (Symbol "default"), toSExpr statement]]
+  toSExpr Cut {..} = S.L [S.A (Symbol "cut"), toSExpr producer, toSExpr consumer]
+  toSExpr Invoke {..} = S.L [S.A (Symbol "invoke"), toSExpr name, S.L (toSExpr <$> producers), S.L (toSExpr <$> consumers)]
+
 -- | @Definition@ represents a top-level definition
 data Definition = Definition
   { name :: Name,
@@ -127,6 +167,9 @@ data Definition = Definition
     statement :: Statement
   }
   deriving (Show, Eq)
+
+instance ToSExpr Definition where
+  toSExpr Definition {..} = S.L [S.A (Symbol "def"), toSExpr name, S.L (toSExpr <$> params), S.L (toSExpr <$> returns), toSExpr statement]
 
 makeFieldsId ''Producer
 makeFieldsId ''Consumer
