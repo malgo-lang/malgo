@@ -15,7 +15,7 @@ import Malgo.Prelude
 import Malgo.Syntax
 import Text.Megaparsec hiding (Label, parse)
 import Text.Megaparsec qualified as Megaparsec
-import Text.Megaparsec.Char (alphaNumChar, letterChar, space1, string)
+import Text.Megaparsec.Char (alphaNumChar, char, letterChar, space1, string)
 import Text.Megaparsec.Char.Lexer qualified as L
 
 parse :: FilePath -> Text -> Either (ParseErrorBundle Text Void) [Definition Text]
@@ -62,6 +62,19 @@ textToTokens = Tokens . NE.fromList . convertString
 textToLabel :: Text -> ErrorItem Char
 textToLabel = Megaparsec.Label . NE.fromList . convertString
 
+withSigil :: Sigil -> Parser Text
+withSigil sigil = do
+  _ <- char $ sigilToChar sigil
+  pIdentifier
+
+data Sigil = Toplevel | Constructor | Destructor | Primitive
+
+sigilToChar :: Sigil -> Char
+sigilToChar Toplevel = '@'
+sigilToChar Constructor = '$'
+sigilToChar Primitive = '#'
+sigilToChar Destructor = '.'
+
 pIdentifier :: Parser Text
 pIdentifier = label "identifier" $ lexeme do
   first <- letterChar
@@ -75,7 +88,7 @@ pDefinition :: Parser (Definition Text)
 pDefinition = label "definition" do
   location <- getLocation
   _ <- pKeyword "def"
-  name <- pIdentifier
+  name <- withSigil Toplevel
   (params, returns) <- pArgumentList pIdentifier
   _ <- symbol "="
   term <- pTerm
@@ -159,7 +172,7 @@ pClause = label "pattern clause" do
 
 pPattern :: Parser (Pattern Text)
 pPattern = label "pattern" do
-  tag <- pIdentifier
+  tag <- withSigil Constructor
   (params, returns) <- pArgumentList pIdentifier
   pure Pattern {..}
 
@@ -195,8 +208,7 @@ pLiteral' = label "literal (inner)" $ lexeme $ Int <$> L.decimal
 pConstruct :: Parser (Term Text)
 pConstruct = label "construct" do
   location <- getLocation
-  _ <- string "$"
-  tag <- pIdentifier
+  tag <- withSigil Constructor
   (producers, consumers) <- pArgumentList pTerm
   pure $ Construct {..}
 
@@ -223,7 +235,7 @@ pCoclause = label "comatch clause" do
 -- @ tag(params...;returns...) @
 pCopattern :: Parser (Copattern Text)
 pCopattern = label "copattern" do
-  tag <- pIdentifier
+  tag <- withSigil Destructor
   (params, returns) <- pArgumentList pIdentifier
   pure Copattern {..}
 
@@ -232,15 +244,13 @@ pCopattern = label "copattern" do
 pPrim :: Parser (Term Text)
 pPrim = label "prim" do
   location <- getLocation
-  _ <- string "#"
-  tag <- pIdentifier
+  tag <- withSigil Primitive
   (producers, consumers) <- pArgumentList pTerm
   pure $ Prim {..}
 
 pInvoke :: Parser (Term Text)
 pInvoke = label "invoke" do
   location <- getLocation
-  _ <- string "@"
-  name <- pIdentifier
+  name <- withSigil Toplevel
   (producers, consumers) <- pArgumentList pTerm
   pure $ Invoke {..}
