@@ -111,59 +111,35 @@ instance Convert (Term Name) Core.Producer where
         }
     where
       convertPattern Pattern {..} = Core.Pattern {..}
-  convert Prim {..} = do
-    producers' <- traverse convert producers
-    consumers' <- traverse convert consumers
-    cont <- newName "cont"
-    pure
-      Core.Do
-        { location,
-          name = cont,
-          statement =
-            Core.Prim
-              { location,
-                tag,
-                producers = producers',
-                consumers = consumers' <> [Core.Label location cont]
-              }
-        }
-  convert Switch {..} = do
-    cont <- newName "contSwitch"
-    term' <- convert term
-    branches' <- for branches \(literal, term) -> do
-      literal' <- convert literal
-      statementBuilder <- convert term
-      statement <- statementBuilder cont
-      pure (literal', statement)
-    statementBuilder <- convert defaultBranch
+  convert term@Prim {location} = do
+    cont <- newName "contPrim"
+    statementBuilder <- convert term
     statement <- statementBuilder cont
     pure
       Core.Do
         { location,
           name = cont,
-          statement =
-            Core.Switch
-              { location,
-                producer = term',
-                clauses = branches',
-                statement
-              }
+          statement
         }
-  convert Invoke {..} = do
-    producers' <- traverse convert producers
-    consumers' <- traverse convert consumers
-    cont <- newName "cont"
+  convert term@Switch {location} = do
+    cont <- newName "contSwitch"
+    statementBuilder <- convert term
+    statement <- statementBuilder cont
     pure
       Core.Do
         { location,
           name = cont,
-          statement =
-            Core.Invoke
-              { location,
-                name,
-                producers = producers',
-                consumers = consumers' <> [Core.Label location cont]
-              }
+          statement
+        }
+  convert term@Invoke {location} = do
+    cont <- newName "contInvoke"
+    statementBuilder <- convert term
+    statement <- statementBuilder cont
+    pure
+      Core.Do
+        { location,
+          name = cont,
+          statement
         }
   convert Label {..} = do
     statementBuilder <- convert term
@@ -175,9 +151,9 @@ instance Convert (Term Name) Core.Producer where
           statement
         }
   convert Goto {..} = do
-    hole <- newName "hole"
     statementBuilder <- convert term
-    statement <- statementBuilder hole
+    statement <- statementBuilder name
+    hole <- newName "hole"
     pure
       Core.Do
         { location,

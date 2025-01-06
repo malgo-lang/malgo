@@ -34,18 +34,18 @@
              { location = examples/mult.mlg:6:14, producer = Literal
               { location = examples/mult.mlg:6:14, literal = Int
                { int = 0 } }, consumer = Label
-              { location = examples/mult.mlg:6:14, name = hole_12 } } }, consumer = Label
+              { location = examples/mult.mlg:6:14, name = a_6 } } }, consumer = Label
             { location = examples/mult.mlg:6:16, name = contMatch_11 } } ) ], statement = Prim
          { location = examples/mult.mlg:7:20, tag = "mul", producers =
           [ Var
            { location = examples/mult.mlg:7:25, name = x_7 }, Do
-           { location = examples/mult.mlg:7:28, name = cont_13, statement = Invoke
+           { location = examples/mult.mlg:7:28, name = contInvoke_13, statement = Invoke
             { location = examples/mult.mlg:7:28, name = multAux_1, producers =
              [ Var
               { location = examples/mult.mlg:7:37, name = xs_8 } ], consumers =
              [ Label
               { location = examples/mult.mlg:7:41, name = a_6 }, Label
-              { location = examples/mult.mlg:7:28, name = cont_13 } ] } } ], consumers =
+              { location = examples/mult.mlg:7:28, name = contInvoke_13 } ] } } ], consumers =
           [ Label
            { location = examples/mult.mlg:7:20, name = contMatch_11 } ] } } ) ] } } }, consumer = Label
    { location = examples/mult.mlg:3:23, name = result_10 } } }, Definition
