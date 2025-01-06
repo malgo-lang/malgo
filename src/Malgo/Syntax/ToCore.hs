@@ -168,20 +168,21 @@ instance Convert (Term Name) Core.Consumer where
 instance Convert Literal Core.Literal where
   convert Int {..} = pure $ Core.Int {..}
 
+-- This instance's `convert` takes a label as the return point of the statement.
 instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name -> Eff es Core.Statement) where
-  convert Prim {..} = do
+  convert Prim {..} = pure \cont -> do
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers
-    pure \name -> pure Core.Prim {location, tag, producers = producers', consumers = consumers' <> [Core.Covar location name]}
-  convert Switch {..} = pure \name -> do
+    pure Core.Prim {location, tag, producers = producers', consumers = consumers' <> [Core.Covar location cont]}
+  convert Switch {..} = pure \cont -> do
     producer <- convert term
     clauses <- for branches \(literal, term) -> do
       literal' <- convert literal
       statementBuilder <- convert term
-      statement <- statementBuilder name
+      statement <- statementBuilder cont
       pure (literal', statement)
     statementBuilder <- convert defaultBranch
-    statement <- statementBuilder name
+    statement <- statementBuilder cont
     pure Core.Switch {location, producer, clauses, statement}
   convert Invoke {..} = pure \cont -> do
     producers' <- traverse convert producers
@@ -193,6 +194,9 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
           producers = producers',
           consumers = consumers' <> [Core.Covar location cont]
         }
-  convert term = do
+  convert Goto {..} = pure \_ -> do
+    statementBuilder <- convert term
+    statementBuilder name
+  convert term = pure \cont -> do
     producer <- convert term
-    pure \name -> pure Core.Cut {location = term.location, producer, consumer = Core.Covar {location = term.location, name}}
+    pure Core.Cut {location = term.location, producer, consumer = Core.Covar {location = term.location, name = cont}}
