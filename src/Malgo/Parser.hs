@@ -2,6 +2,7 @@
 
 module Malgo.Parser (parse) where
 
+import Control.Arrow ((>>>))
 import Control.Monad (when)
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Data.Char (isAlphaNum)
@@ -110,23 +111,32 @@ pTerm =
   where
     table = [[destructOperator], [matchOperator, switchOperator], [gotoOperator], [labelOperator]]
 
+-- By default, makeExprParser does not allow chaining of postfix operators.
+-- To allow chaining, we use the following strategy:
+-- 1. Read postfix operators multiple times while they are available.
+-- 2. Fold the list of postfix operators into a single function using foldr1 (>>>).
+-- 3. Pass it to makeExprParser as a single postfix operator.
+makeChainable :: Parser (a -> a) -> Parser (a -> a)
+makeChainable p = foldr1 (>>>) <$> some p
+
 destructOperator :: Operator Parser (Term Text)
-destructOperator = Postfix $ label "destruct" do
-  location <- getLocation
-  _ <- symbol "."
-  tag <- pIdentifier
-  (producers, consumers) <- pArgumentList pTerm
-  pure \term -> Destruct {..}
+destructOperator =
+  Postfix $ label "destruct" $ makeChainable do
+    location <- getLocation
+    _ <- symbol "."
+    tag <- pIdentifier
+    (producers, consumers) <- pArgumentList pTerm
+    pure \term -> Destruct {..}
 
 matchOperator :: Operator Parser (Term Text)
-matchOperator = Postfix $ label "match" do
+matchOperator = Postfix $ label "match" $ makeChainable do
   location <- getLocation
   _ <- symbol "match"
   clauses <- between (symbol "{") (symbol "}") $ pClause `sepEndBy` symbol ","
   pure \term -> Match {..}
 
 switchOperator :: Operator Parser (Term Text)
-switchOperator = Postfix $ label "switch" do
+switchOperator = Postfix $ label "switch" $ makeChainable do
   location <- getLocation
   _ <- symbol "switch"
   (branches, defaultBranch) <- between (symbol "{") (symbol "}") do
