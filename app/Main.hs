@@ -22,12 +22,8 @@ main :: IO ()
 main = do
   _ <- withStdOutLogger \stdOutLogger -> do
     runEff $ runUniqueGen $ runLog "compiler" stdOutLogger LogInfo do
-      -- logInfo_ "Run ex1"
-      -- runExample ex1
-      -- logInfo_ "Run ex2"
-      -- runExample ex2
-      logInfo_ "Read examples/mult.mlg"
-      readExample "examples/mult.mlg"
+      logInfo_ "Read examples/repeat.mlg"
+      readExample "examples/repeat.mlg"
   pure ()
 
 runExample :: (UniqueGen :> es, Log :> es) => Eff es (Statement, [Definition]) -> Eff es ()

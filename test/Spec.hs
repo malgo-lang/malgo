@@ -24,18 +24,23 @@ main = hspec do
   describe "ParserGoldenTests" do
     golden ("parser examples/mult.mlg") $ parseFile "examples/mult.mlg"
     golden ("parser examples/mult0.mlg") $ parseFile "examples/mult0.mlg"
+    golden ("parser examples/repeat.mlg") $ parseFile "examples/repeat.mlg"
   describe "ResolveNameGoldenTests" do
     golden ("resolveName examples/mult.mlg") $ resolveNameFile "examples/mult.mlg"
     golden ("resolveName examples/mult0.mlg") $ resolveNameFile "examples/mult0.mlg"
+    golden ("resolveName examples/repeat.mlg") $ resolveNameFile "examples/repeat.mlg"
   describe "ToCoreGoldenTests" do
     golden ("toCore examples/mult.mlg") $ toCoreFile "examples/mult.mlg"
     golden ("toCore examples/mult0.mlg") $ toCoreFile "examples/mult0.mlg"
+    golden ("toCore examples/repeat.mlg") $ toCoreFile "examples/repeat.mlg"
   describe "FocusGoldenTests" do
     golden ("focus examples/mult.mlg") $ focusFile "examples/mult.mlg"
     golden ("focus examples/mult0.mlg") $ focusFile "examples/mult0.mlg"
+    golden ("focus examples/repeat.mlg") $ focusFile "examples/repeat.mlg"
   describe "EvalGoldenTests" do
     golden ("eval examples/mult.mlg") $ evalFile "examples/mult.mlg"
     golden ("eval examples/mult0.mlg") $ evalFile "examples/mult0.mlg"
+    golden ("eval examples/repeat.mlg") $ evalFile "examples/repeat.mlg"
 
 parseFile :: FilePath -> IO String
 parseFile path = do
