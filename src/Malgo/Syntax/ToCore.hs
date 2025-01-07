@@ -49,19 +49,22 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Eff 
           consumers = consumers'
         }
   convert Comatch {..} = do
-    cont <- newName "contComatch"
     clauses <- for coclauses \Coclause {..} -> do
-      let copattern' = convertCopattern cont copattern
+      (copattern', cont) <- convertCopattern copattern
       statement <- convert term cont
       pure (copattern', statement)
     pure $ Core.Comatch {location, clauses}
     where
-      convertCopattern cont Copattern {..} =
-        Core.Copattern
-          { tag,
-            params,
-            returns = returns <> [cont]
-          }
+      convertCopattern Copattern {..} = do
+        cont <- newName "contCopattern"
+        pure
+          ( Core.Copattern
+              { tag,
+                params,
+                returns = returns <> [cont]
+              },
+            cont
+          )
   convert term@Destruct {location} = do
     cont <- newName "contDestruct"
     statement <- convert term cont
