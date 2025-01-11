@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Parser (parse) where
+module Malgo.Syntax.Parser (parse) where
 
 import Control.Arrow ((>>>))
 import Control.Monad (when)

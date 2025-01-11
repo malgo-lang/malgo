@@ -9,8 +9,8 @@ import Malgo.Eval (EvalError)
 import Malgo.Eval qualified as Eval
 import Malgo.Location (Location (..))
 import Malgo.Name (Name (..))
-import Malgo.Parser
 import Malgo.Prelude
+import Malgo.Syntax.Parser
 import Malgo.Syntax.ResolveName
 import Malgo.Syntax.ToCore
 import Malgo.Unique
