@@ -1,7 +1,9 @@
 module Main (main) where
 
+import Data.Foldable (for_)
 import Data.Map qualified as Map
 import Data.Text.IO qualified as T
+import Effectful.Environment (getArgs, runEnvironment)
 import Effectful.Error.Static (prettyCallStack, runError)
 import Effectful.Log
 import Log.Backend.StandardOutput
@@ -12,35 +14,53 @@ import Malgo.Eval qualified as Eval
 import Malgo.Location (Location (..))
 import Malgo.Name
 import Malgo.Prelude
+import Malgo.Surface.Parser qualified as Surface
 import Malgo.Syntax.Parser
 import Malgo.Syntax.ResolveName (ResolveError, resolveName)
 import Malgo.Syntax.ToCore (ToCoreError, toCore)
 import Malgo.Unique
+import System.FilePath (takeExtension)
 import Text.Megaparsec (errorBundlePretty)
 
 main :: IO ()
 main = do
   _ <- withStdOutLogger \stdOutLogger -> do
-    runEff $ runUniqueGen $ runLog "compiler" stdOutLogger LogInfo do
-      logInfo_ "Read examples/repeat.mlg"
-      readExample "examples/repeat.mlg"
+    runEff $ runEnvironment $ runUniqueGen $ runLog "compiler" stdOutLogger LogInfo do
+      -- Read command-line arguments
+      args <- getArgs
+      -- take the first argument as a file path
+      filePath <- case args of
+        [filePath] -> pure filePath
+        _ -> do
+          logAttention_ "Usage: malgo-exe <file-path>"
+          error "Invalid command-line arguments"
+      -- if the file path's extension is ".ir", call runIR
+      -- if the file path's extension is ".mlg", call runMalgo
+      -- otherwise, print an error message
+      logInfo_ $ "Run " <> convertString filePath
+      case takeExtension filePath of
+        ".ir" -> runIR filePath
+        ".mlg" -> runMalgo filePath
+        _ -> do
+          logAttention_ "Invalid file extension"
+          error "Invalid file extension"
   pure ()
 
-runExample :: (UniqueGen :> es, Log :> es) => Eff es (Statement, [Definition]) -> Eff es ()
-runExample example = do
-  (stmt, defs) <- example
-  stmt' <- focus stmt
-  defs' <- traverse focusDefinition defs
-  let env = newEnv defs'
-  result <- runError @EvalError $ eval env stmt'
-  case result of
-    Left (callStack, err) -> do
-      logAttention_ $ convertString $ prettyCallStack callStack
-      logAttention_ $ pShow err
-    Right _ -> pure ()
+runMalgo :: (IOE :> es, Log :> es) => FilePath -> Eff es ()
+runMalgo filePath = do
+  text <- liftIO $ T.readFile filePath
+  defs <- case Surface.parse filePath text of
+    Left parseErrorBundle -> do
+      logAttention_ $ convertString $ errorBundlePretty parseErrorBundle
+      pure []
+    Right defs -> do
+      logInfo_ $ pShow defs
+      pure defs
+  for_ defs \def ->
+    logInfo_ $ sShow def
 
-readExample :: (UniqueGen :> es, IOE :> es, Log :> es) => FilePath -> Eff es ()
-readExample filePath = do
+runIR :: (UniqueGen :> es, IOE :> es, Log :> es) => FilePath -> Eff es ()
+runIR filePath = do
   text <- liftIO $ T.readFile filePath
   defs <- case parse filePath text of
     Left parseErrorBundle -> do

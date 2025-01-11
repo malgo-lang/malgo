@@ -3,7 +3,7 @@
 module Malgo.Surface.Parser (parse) where
 
 import Control.Arrow ((>>>))
-import Control.Monad (when)
+import Control.Monad (void, when)
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Data.Char (isAlphaNum)
 import Data.List.NonEmpty qualified as NE
@@ -30,8 +30,8 @@ type Parser = Parsec Void Text
 getLocation :: Parser Location
 getLocation = do
   sourcePos <- getSourcePos
-  pure $
-    Location
+  pure
+    $ Location
       { fileName = sourceName sourcePos,
         line = unPos $ sourceLine sourcePos,
         column = unPos $ sourceColumn sourcePos
@@ -68,8 +68,8 @@ pIdentifier = label "identifier" $ lexeme do
   first <- letterChar
   rest <- takeWhileP (Just "alpha num character") isAlphaNum
   let name = T.cons first rest
-  when (name `elem` reservedKeywords) $
-    unexpectedToken ["identifier"] name
+  when (name `elem` reservedKeywords)
+    $ unexpectedToken ["identifier"] name
   pure name
 
 pDefinition :: Parser (Definition Text)
@@ -96,7 +96,7 @@ pTerm :: Parser (Term Text)
 pTerm =
   makeExprParser pAtomicTerm table
   where
-    table = [[applyOperator, destructOperator], [matchOperator, switchOperator], [gotoOperator], [labelOperator]]
+    table = [[postfixOperator], [labelOperator]]
 
 -- By default, makeExprParser does not allow chaining of postfix operators.
 -- To allow chaining, we use the following strategy:
@@ -106,30 +106,42 @@ pTerm =
 makeChainable :: Parser (a -> a) -> Parser (a -> a)
 makeChainable p = foldr1 (>>>) <$> some p
 
-applyOperator :: Operator Parser (Term Text)
-applyOperator = Postfix $ label "apply" $ makeChainable do
+postfixOperator :: Operator Parser (Term Text)
+postfixOperator =
+  Postfix
+    $ makeChainable
+    $ choice
+      [ applyOperator,
+        destructOperator,
+        matchOperator,
+        switchOperator,
+        gotoOperator
+      ]
+
+applyOperator :: Parser (Term Text -> Term Text)
+applyOperator = label "apply" $ makeChainable do
   location <- getLocation
   (producers, consumers) <- pArgumentList pTerm
   pure \term -> Apply {..}
 
-destructOperator :: Operator Parser (Term Text)
+destructOperator :: Parser (Term Text -> Term Text)
 destructOperator =
-  Postfix $ label "destruct" $ makeChainable do
+  label "destruct" $ makeChainable do
     location <- getLocation
     _ <- symbol "."
     tag <- pIdentifier
     (producers, consumers) <- pArgumentList pTerm
     pure \term -> Destruct {..}
 
-matchOperator :: Operator Parser (Term Text)
-matchOperator = Postfix $ label "match" $ makeChainable do
+matchOperator :: Parser (Term Text -> Term Text)
+matchOperator = label "match" $ makeChainable do
   location <- getLocation
   _ <- symbol "match"
   clauses <- between (symbol "{") (symbol "}") $ pClause `sepEndBy` symbol ","
   pure \term -> Match {..}
 
-switchOperator :: Operator Parser (Term Text)
-switchOperator = Postfix $ label "switch" $ makeChainable do
+switchOperator :: Parser (Term Text -> Term Text)
+switchOperator = label "switch" $ makeChainable do
   location <- getLocation
   _ <- symbol "switch"
   (branches, defaultBranch) <- between (symbol "{") (symbol "}") do
@@ -141,8 +153,8 @@ switchOperator = Postfix $ label "switch" $ makeChainable do
     pure (branches, defaultBranch)
   pure \term -> Switch {..}
 
-gotoOperator :: Operator Parser (Term Text)
-gotoOperator = Postfix $ label "goto" do
+gotoOperator :: Parser (Term Text -> Term Text)
+gotoOperator = label "goto" do
   location <- getLocation
   _ <- symbol "goto"
   name <- pIdentifier
@@ -181,8 +193,8 @@ pPattern = label "pattern" do
 
 pAtomicTerm :: Parser (Term Text)
 pAtomicTerm =
-  label "atomic term" $
-    choice
+  label "atomic term"
+    $ choice
       [ pVar,
         pLiteral,
         pComatch
@@ -226,6 +238,7 @@ pCoclause = label "comatch clause" do
 -- @ tag(params...;returns...) @
 pCopattern :: Parser (Copattern Text)
 pCopattern = label "copattern" do
+  void $ symbol "."
   tag <- pIdentifier
   (params, returns) <- pArgumentList pIdentifier
   pure Copattern {..}

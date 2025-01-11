@@ -32,6 +32,12 @@ class ToSExpr a where
   sShow :: (ConvertibleStrings Text s) => a -> s
   sShow = convertString . S.encodeOne (S.unconstrainedPrint atomToText & S.setIndentStrategy indentStrategy) . toSExpr
 
+instance ToSExpr Text where
+  toSExpr = S.A . Symbol
+
+instance (ToSExpr a, ToSExpr b) => ToSExpr (a, b) where
+  toSExpr (a, b) = S.L [toSExpr a, toSExpr b]
+
 data Atom = Symbol Text | String Text | Number Int
   deriving (Show, Eq)
 

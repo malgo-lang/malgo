@@ -10,6 +10,7 @@ import Malgo.Eval qualified as Eval
 import Malgo.Location (Location (..))
 import Malgo.Name (Name (..))
 import Malgo.Prelude
+import Malgo.Surface.Parser qualified as Surface
 import Malgo.Syntax.Parser
 import Malgo.Syntax.ResolveName
 import Malgo.Syntax.ToCore
@@ -22,28 +23,36 @@ import Text.Pretty.Simple (OutputOptions (..), defaultOutputOptionsNoColor, pSho
 main :: IO ()
 main = hspec do
   describe "ParserGoldenTests" do
-    golden ("parser examples/mult.mlg") $ parseFile "examples/mult.mlg"
-    golden ("parser examples/mult0.mlg") $ parseFile "examples/mult0.mlg"
-    golden ("parser examples/repeat.mlg") $ parseFile "examples/repeat.mlg"
+    golden ("parser examples/mult.ir") $ parseSyntaxFile "examples/mult.ir"
+    golden ("parser examples/mult0.ir") $ parseSyntaxFile "examples/mult0.ir"
+    golden ("parser examples/repeat.ir") $ parseSyntaxFile "examples/repeat.ir"
+    golden ("parser examples/repeat.mlg") $ parseSurfaceFile "examples/repeat.mlg"
   describe "ResolveNameGoldenTests" do
-    golden ("resolveName examples/mult.mlg") $ resolveNameFile "examples/mult.mlg"
-    golden ("resolveName examples/mult0.mlg") $ resolveNameFile "examples/mult0.mlg"
-    golden ("resolveName examples/repeat.mlg") $ resolveNameFile "examples/repeat.mlg"
+    golden ("resolveName examples/mult.ir") $ resolveNameFile "examples/mult.ir"
+    golden ("resolveName examples/mult0.ir") $ resolveNameFile "examples/mult0.ir"
+    golden ("resolveName examples/repeat.ir") $ resolveNameFile "examples/repeat.ir"
   describe "ToCoreGoldenTests" do
-    golden ("toCore examples/mult.mlg") $ toCoreFile "examples/mult.mlg"
-    golden ("toCore examples/mult0.mlg") $ toCoreFile "examples/mult0.mlg"
-    golden ("toCore examples/repeat.mlg") $ toCoreFile "examples/repeat.mlg"
+    golden ("toCore examples/mult.ir") $ toCoreFile "examples/mult.ir"
+    golden ("toCore examples/mult0.ir") $ toCoreFile "examples/mult0.ir"
+    golden ("toCore examples/repeat.ir") $ toCoreFile "examples/repeat.ir"
   describe "FocusGoldenTests" do
-    golden ("focus examples/mult.mlg") $ focusFile "examples/mult.mlg"
-    golden ("focus examples/mult0.mlg") $ focusFile "examples/mult0.mlg"
-    golden ("focus examples/repeat.mlg") $ focusFile "examples/repeat.mlg"
+    golden ("focus examples/mult.ir") $ focusFile "examples/mult.ir"
+    golden ("focus examples/mult0.ir") $ focusFile "examples/mult0.ir"
+    golden ("focus examples/repeat.ir") $ focusFile "examples/repeat.ir"
   describe "EvalGoldenTests" do
-    golden ("eval examples/mult.mlg") $ evalFile "examples/mult.mlg"
-    golden ("eval examples/mult0.mlg") $ evalFile "examples/mult0.mlg"
-    golden ("eval examples/repeat.mlg") $ evalFile "examples/repeat.mlg"
+    golden ("eval examples/mult.ir") $ evalFile "examples/mult.ir"
+    golden ("eval examples/mult0.ir") $ evalFile "examples/mult0.ir"
+    golden ("eval examples/repeat.ir") $ evalFile "examples/repeat.ir"
 
-parseFile :: FilePath -> IO String
-parseFile path = do
+parseSurfaceFile :: FilePath -> IO String
+parseSurfaceFile path = do
+  src <- T.readFile path
+  case Surface.parse path src of
+    Left bundle -> error $ errorBundlePretty bundle
+    Right defs -> pure $ convertString $ pShowOpt smallIndentNoColor defs
+
+parseSyntaxFile :: FilePath -> IO String
+parseSyntaxFile path = do
   src <- T.readFile path
   case parse path src of
     Left bundle -> error $ errorBundlePretty bundle

@@ -4,7 +4,7 @@
     , params = [ "x" ]
     , returns = []
     , term = Comatch
-        { location = examples/repeat.mlg:1:18
+        { location = examples/repeat.mlg:1:17
         , coclauses =
             [ Coclause
                 { copattern = Copattern
@@ -19,12 +19,14 @@
                     { tag = "tl"
                     , params = []
                     , returns = [] }
-                , term = Invoke
-                    { location = examples/repeat.mlg:3:14
-                    , name = "repeat"
+                , term = Apply
+                    { location = examples/repeat.mlg:3:20
+                    , term = Var
+                        { location = examples/repeat.mlg:3:14
+                        , name = "repeat" }
                     , producers =
                         [ Var
-                            { location = examples/repeat.mlg:3:22
+                            { location = examples/repeat.mlg:3:21
                             , name = "x" } ]
                     , consumers = [] } } ] } }
 , Definition
@@ -33,17 +35,19 @@
     , params = []
     , returns = []
     , term = Switch
-        { location = examples/repeat.mlg:6:36
+        { location = examples/repeat.mlg:6:34
         , term = Destruct
-            { location = examples/repeat.mlg:6:30
+            { location = examples/repeat.mlg:6:28
             , term = Destruct
-                { location = examples/repeat.mlg:6:25
-                , term = Invoke
-                    { location = examples/repeat.mlg:6:15
-                    , name = "repeat"
+                { location = examples/repeat.mlg:6:23
+                , term = Apply
+                    { location = examples/repeat.mlg:6:20
+                    , term = Var
+                        { location = examples/repeat.mlg:6:14
+                        , name = "repeat" }
                     , producers =
                         [ Literal
-                            { location = examples/repeat.mlg:6:23
+                            { location = examples/repeat.mlg:6:21
                             , literal = Int
                                 { int = 1 } } ]
                     , consumers = [] }

@@ -1,9 +1,9 @@
-def @repeat(x) = {
+def repeat(x) = {
     .hd() -> x,
-    .tl() -> @repeat(x),
+    .tl() -> repeat(x),
 }
 
-def @main() = @repeat(1).tl().hd() switch {
+def main() = repeat(1).tl().hd() switch {
     0 -> 1,
     1 -> 2,
     default -> 3,
