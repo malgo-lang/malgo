@@ -1,174 +1,149 @@
+import Data.List (intercalate, isSuffixOf)
 import Data.Map qualified as Map
 import Data.Text.IO qualified as T
-import Effectful.Error.Static (prettyCallStack, runError)
-import Effectful.Log
-import Log.Backend.StandardOutput
-import Malgo.Core (focusDefinition)
+import Data.Text.Lazy.IO qualified as TL
+import Effectful.Error.Static (runError)
+import Effectful.Log (LogLevel (LogInfo), runLog)
+import Effectful.Writer.Static.Local (execWriter, tell)
+import Log.Backend.StandardOutput (withStdOutLogger)
 import Malgo.Core qualified as Core
-import Malgo.Eval (EvalError)
 import Malgo.Eval qualified as Eval
 import Malgo.Location (Location (..))
-import Malgo.Name (Name (..))
+import Malgo.Name
 import Malgo.Prelude
+import Malgo.Surface.Convert qualified as Surface
 import Malgo.Surface.Parser qualified as Surface
-import Malgo.Syntax.Parser
-import Malgo.Syntax.ResolveName
-import Malgo.Syntax.ToCore
-import Malgo.Unique
-import Test.Hspec (describe, hspec)
-import Test.Hspec.Golden (golden)
+import Malgo.Syntax.Parser qualified as Syntax
+import Malgo.Syntax.ResolveName qualified as Syntax
+import Malgo.Syntax.ToCore qualified as Syntax
+import Malgo.Unique (runUniqueGen)
+import System.Directory (listDirectory)
+import System.FilePath ((</>))
+import Test.Hspec
+import Test.Hspec.Core.Spec (getSpecDescriptionPath)
+import Test.Hspec.Golden (Golden (..))
 import Text.Megaparsec (errorBundlePretty)
-import Text.Pretty.Simple (OutputOptions (..), defaultOutputOptionsNoColor, pShowOpt)
+import Text.Pretty.Simple (pShowNoColor)
 
 main :: IO ()
-main = hspec do
-  describe "ParserGoldenTests" do
-    golden ("parser examples/mult.ir") $ parseSyntaxFile "examples/mult.ir"
-    golden ("parser examples/mult0.ir") $ parseSyntaxFile "examples/mult0.ir"
-    golden ("parser examples/repeat.ir") $ parseSyntaxFile "examples/repeat.ir"
-    golden ("parser examples/repeat.mlg") $ parseSurfaceFile "examples/repeat.mlg"
-  describe "ResolveNameGoldenTests" do
-    golden ("resolveName examples/mult.ir") $ resolveNameFile "examples/mult.ir"
-    golden ("resolveName examples/mult0.ir") $ resolveNameFile "examples/mult0.ir"
-    golden ("resolveName examples/repeat.ir") $ resolveNameFile "examples/repeat.ir"
-  describe "ToCoreGoldenTests" do
-    golden ("toCore examples/mult.ir") $ toCoreFile "examples/mult.ir"
-    golden ("toCore examples/mult0.ir") $ toCoreFile "examples/mult0.ir"
-    golden ("toCore examples/repeat.ir") $ toCoreFile "examples/repeat.ir"
-  describe "FocusGoldenTests" do
-    golden ("focus examples/mult.ir") $ focusFile "examples/mult.ir"
-    golden ("focus examples/mult0.ir") $ focusFile "examples/mult0.ir"
-    golden ("focus examples/repeat.ir") $ focusFile "examples/repeat.ir"
-  describe "EvalGoldenTests" do
-    golden ("eval examples/mult.ir") $ evalFile "examples/mult.ir"
-    golden ("eval examples/mult0.ir") $ evalFile "examples/mult0.ir"
-    golden ("eval examples/repeat.ir") $ evalFile "examples/repeat.ir"
+main = do
+  exampleFilePaths <- listDirectory "examples"
+  let irFilePaths = map ("examples" </>) $ filter (".ir" `isSuffixOf`) exampleFilePaths
+  let mlgFilePaths = map ("examples" </>) $ filter (".mlg" `isSuffixOf`) exampleFilePaths
+  irGoldenTests <- traverse buildIrGoldenTest irFilePaths
+  mlgGoldenTests <- traverse buildMlgGoldenTest mlgFilePaths
+  hspec do
+    describe "IrGoldenTests" do
+      sequence_ irGoldenTests
+    describe "MlgGoldenTests" do
+      sequence_ mlgGoldenTests
 
-parseSurfaceFile :: FilePath -> IO String
-parseSurfaceFile path = do
-  src <- T.readFile path
-  case Surface.parse path src of
-    Left bundle -> error $ errorBundlePretty bundle
-    Right defs -> pure $ convertString $ pShowOpt smallIndentNoColor defs
-
-parseSyntaxFile :: FilePath -> IO String
-parseSyntaxFile path = do
-  src <- T.readFile path
-  case parse path src of
-    Left bundle -> error $ errorBundlePretty bundle
-    Right defs -> pure $ convertString $ pShowOpt smallIndentNoColor defs
-
-resolveNameFile :: FilePath -> IO String
-resolveNameFile path = withStdOutLogger \stdOutLogger ->
-  runEff $ runUniqueGen $ runLog "resolveNameTest" stdOutLogger LogInfo do
+buildIrGoldenTest :: FilePath -> IO Spec
+buildIrGoldenTest path = withStdOutLogger \stdOutLogger -> do
+  specs <- runEff $ execWriter @[Spec] $ runUniqueGen $ runLog "irGoldenTest" stdOutLogger LogInfo do
     src <- liftIO $ T.readFile path
-    defs <- case parse path src of
+    parsed <- case Syntax.parse path src of
       Left bundle -> error $ errorBundlePretty bundle
-      Right defs -> pure defs
-    defs' <- runError @ResolveError $ resolveName defs
-    case defs' of
-      Left err -> error $ pShow err
-      Right defs' -> pure $ convertString $ pShowOpt smallIndentNoColor defs'
-
-toCoreFile :: FilePath -> IO String
-toCoreFile path = withStdOutLogger \stdOutLogger ->
-  runEff $ runUniqueGen $ runLog "resolveNameTest" stdOutLogger LogInfo do
-    src <- liftIO $ T.readFile path
-    defs <- case parse path src of
-      Left bundle -> error $ errorBundlePretty bundle
-      Right defs -> pure defs
-    defs' <-
-      runError @ResolveError (resolveName defs)
+      Right parsed -> pure parsed
+    tell [golden ("Parse " <> path) parsed]
+    resolved <-
+      runError @Syntax.ResolveError (Syntax.resolveName parsed)
         >>= \case
-          Left err -> error $ pShow err
-          Right defs' -> pure defs'
+          Left err -> error $ convertString $ pShowNoColor err
+          Right resolved -> pure resolved
+    tell [golden ("ResolveName " <> path) resolved]
     core <-
-      runError @ToCoreError (toCore defs')
+      runError @Syntax.ToCoreError (Syntax.toCore resolved)
         >>= \case
-          Left err -> error $ pShow err
+          Left err -> error $ convertString $ pShowNoColor err
           Right core -> pure core
-    pure $ convertString $ pShowOpt smallIndentNoColor core
-
-focusFile :: FilePath -> IO String
-focusFile path = withStdOutLogger \stdOutLogger ->
-  runEff $ runUniqueGen $ runLog "resolveNameTest" stdOutLogger LogInfo do
-    src <- liftIO $ T.readFile path
-    defs <- case parse path src of
-      Left bundle -> error $ errorBundlePretty bundle
-      Right defs -> pure defs
-    defs' <-
-      runError @ResolveError (resolveName defs)
-        >>= \case
-          Left err -> error $ pShow err
-          Right defs' -> pure defs'
-    core <-
-      runError @ToCoreError (toCore defs')
-        >>= \case
-          Left err -> error $ pShow err
-          Right core -> pure core
-    core' <- traverse focusDefinition core
-    pure $ convertString $ pShowOpt smallIndentNoColor core'
-
-evalFile :: FilePath -> IO String
-evalFile path = withStdOutLogger \stdOutLogger ->
-  runEff $ runUniqueGen $ runLog "resolveNameTest" stdOutLogger LogInfo do
-    src <- liftIO $ T.readFile path
-    defs <- case parse path src of
-      Left bundle -> error $ errorBundlePretty bundle
-      Right defs -> pure defs
-    defs' <-
-      runError @ResolveError (resolveName defs)
-        >>= \case
-          Left err -> error $ pShow err
-          Right defs' -> pure defs'
-    core <-
-      runError @ToCoreError (toCore defs')
-        >>= \case
-          Left err -> error $ pShow err
-          Right core -> pure core
-    core' <- traverse focusDefinition core
-    let env = Eval.newEnv core'
-    let mainProcedure = searchMain env
+    tell [golden ("ToCore " <> path) core]
+    focused <- traverse Core.focusDefinition core
+    tell [golden ("Focus " <> path) focused]
+    let env = Eval.newEnv focused
+    let mainProcedure = searchMain path env
     result <-
-      runError @EvalError
-        $ Eval.eval
-          env
+      runError @Eval.EvalError (Eval.eval env mainProcedure)
+        >>= \case
+          Left err -> error $ convertString $ pShowNoColor err
+          Right result -> pure result
+    tell [golden ("Eval " <> path) result]
+  pure $ sequence_ specs
+
+searchMain :: FilePath -> Eval.Env -> Core.Statement
+searchMain filePath env = go (Map.keys env.toplevel)
+  where
+    go [] = error "main procedure not found"
+    go (name : names)
+      | name.text == "main" =
           Core.Invoke
             { location =
                 Location
-                  { fileName = path,
+                  { fileName = filePath,
                     line = 0,
                     column = 0
                   },
-              name = mainProcedure,
+              name = name,
               producers = [],
               consumers =
                 [ Core.Finish
                     { location =
                         Location
-                          { fileName = path,
+                          { fileName = filePath,
                             line = 0,
                             column = 0
                           }
                     }
                 ]
             }
-    case result of
-      Left (callStack, err) -> do
-        logAttention_ $ convertString $ prettyCallStack callStack
-        error $ pShow err
-      Right result -> pure $ convertString $ pShowOpt smallIndentNoColor result
-
-searchMain :: Eval.Env -> Name
-searchMain env = go (Map.keys env.toplevel)
-  where
-    go [] = error "main procedure not found"
-    go (name : names)
-      | name.text == "main" = name
       | otherwise = go names
 
-smallIndentNoColor :: OutputOptions
-smallIndentNoColor =
-  defaultOutputOptionsNoColor
-    { outputOptionsCompactParens = True
-    }
+buildMlgGoldenTest :: FilePath -> IO Spec
+buildMlgGoldenTest path = withStdOutLogger \stdOutLogger -> do
+  specs <- runEff $ execWriter @[Spec] $ runUniqueGen $ runLog "mlgGoldenTest" stdOutLogger LogInfo do
+    src <- liftIO $ T.readFile path
+    parsed <- case Surface.parse path src of
+      Left bundle -> error $ errorBundlePretty bundle
+      Right parsed -> pure parsed
+    tell [golden ("Parse " <> path) parsed]
+    let converted = case Surface.toSyntax parsed of
+          Left err -> error $ convertString $ pShowNoColor err
+          Right converted -> converted
+    resolved <-
+      runError @Syntax.ResolveError (Syntax.resolveName converted)
+        >>= \case
+          Left err -> error $ convertString $ pShowNoColor err
+          Right resolved -> pure resolved
+    tell [golden ("ResolveName " <> path) resolved]
+    core <-
+      runError @Syntax.ToCoreError (Syntax.toCore resolved)
+        >>= \case
+          Left err -> error $ convertString $ pShowNoColor err
+          Right core -> pure core
+    tell [golden ("ToCore " <> path) core]
+    focused <- traverse Core.focusDefinition core
+    tell [golden ("Focus " <> path) focused]
+    let env = Eval.newEnv focused
+    let mainProcedure = searchMain path env
+    result <-
+      runError @Eval.EvalError (Eval.eval env mainProcedure)
+        >>= \case
+          Left err -> error $ convertString $ pShowNoColor err
+          Right result -> pure result
+    tell [golden ("Eval " <> path) result]
+  pure $ sequence_ specs
+
+golden :: (Show a) => String -> a -> Spec
+golden description actual = do
+  name <- intercalate "-" . (<> words description) <$> getSpecDescriptionPath
+  it
+    description
+    Golden
+      { output = pShowNoColor actual,
+        encodePretty = convertString,
+        writeToFile = TL.writeFile,
+        readFromFile = TL.readFile,
+        goldenFile = ".golden" </> name </> "golden",
+        actualFile = Just $ ".golden" </> name </> "actual",
+        failFirstTime = False
+      }

@@ -1,15 +1,15 @@
-module Malgo.Surface.Convert (toSyntax, ToSyntaxError) where
+module Malgo.Surface.Convert (toSyntax, ToSyntaxError (..)) where
 
 import Data.Map qualified as Map
-import Effectful.Error.Static (CallStack, Error, runError)
+import Effectful.Error.Static (Error, runErrorNoCallStack)
 import Effectful.Reader.Static (Reader, asks, local, runReader)
 import Malgo.Location (Location)
 import Malgo.Prelude
 import Malgo.Surface
 import Malgo.Syntax qualified as S
 
-toSyntax :: [Definition Text] -> Either (CallStack, ToSyntaxError) [S.Definition Text]
-toSyntax definitions = runPureEff $ runError $ runReader @Env mempty do
+toSyntax :: [Definition Text] -> Either ToSyntaxError [S.Definition Text]
+toSyntax definitions = runPureEff $ runErrorNoCallStack $ runReader @Env mempty do
   let procedures = map (\Definition {name} -> (name, Procedure)) definitions
   local (Map.fromList procedures <>) do
     traverse resolve $ (definitions :: [Definition Text])

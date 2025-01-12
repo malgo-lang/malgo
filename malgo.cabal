@@ -59,10 +59,12 @@ library
   build-depends:
       base >=4.7 && <5
     , containers
+    , directory
     , effectful
     , effectful-core
     , filepath
     , hspec
+    , hspec-core
     , hspec-golden
     , lens
     , log-base
@@ -96,10 +98,12 @@ executable malgo-exe
   build-depends:
       base >=4.7 && <5
     , containers
+    , directory
     , effectful
     , effectful-core
     , filepath
     , hspec
+    , hspec-core
     , hspec-golden
     , lens
     , log-base
@@ -135,10 +139,12 @@ test-suite malgo-test
   build-depends:
       base >=4.7 && <5
     , containers
+    , directory
     , effectful
     , effectful-core
     , filepath
     , hspec
+    , hspec-core
     , hspec-golden
     , lens
     , log-base

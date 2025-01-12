@@ -1,0 +1,99 @@
+[ Definition
+    { location = examples/repeat.ir:1:1
+    , name = "repeat"
+    , params = [ "x" ]
+    , returns = []
+    , term = Comatch
+        { location = examples/repeat.ir:1:18
+        , coclauses =
+            [ Coclause
+                { copattern = Copattern
+                    { tag = "hd"
+                    , params = []
+                    , returns = []
+                    }
+                , term = Var
+                    { location = examples/repeat.ir:2:14
+                    , name = "x"
+                    }
+                }
+            , Coclause
+                { copattern = Copattern
+                    { tag = "tl"
+                    , params = []
+                    , returns = []
+                    }
+                , term = Invoke
+                    { location = examples/repeat.ir:3:14
+                    , name = "repeat"
+                    , producers =
+                        [ Var
+                            { location = examples/repeat.ir:3:22
+                            , name = "x"
+                            }
+                        ]
+                    , consumers = []
+                    }
+                }
+            ]
+        }
+    }
+, Definition
+    { location = examples/repeat.ir:6:1
+    , name = "main"
+    , params = []
+    , returns = []
+    , term = Switch
+        { location = examples/repeat.ir:6:36
+        , term = Destruct
+            { location = examples/repeat.ir:6:30
+            , term = Destruct
+                { location = examples/repeat.ir:6:25
+                , term = Invoke
+                    { location = examples/repeat.ir:6:15
+                    , name = "repeat"
+                    , producers =
+                        [ Literal
+                            { location = examples/repeat.ir:6:23
+                            , literal = Int
+                                { int = 1 }
+                            }
+                        ]
+                    , consumers = []
+                    }
+                , tag = "tl"
+                , producers = []
+                , consumers = []
+                }
+            , tag = "hd"
+            , producers = []
+            , consumers = []
+            }
+        , branches =
+            [
+                ( Int
+                    { int = 0 }
+                , Literal
+                    { location = examples/repeat.ir:7:10
+                    , literal = Int
+                        { int = 1 }
+                    }
+                )
+            ,
+                ( Int
+                    { int = 1 }
+                , Literal
+                    { location = examples/repeat.ir:8:10
+                    , literal = Int
+                        { int = 2 }
+                    }
+                )
+            ]
+        , defaultBranch = Literal
+            { location = examples/repeat.ir:9:16
+            , literal = Int
+                { int = 3 }
+            }
+        }
+    }
+]

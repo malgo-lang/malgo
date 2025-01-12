@@ -1,0 +1,170 @@
+[ Definition
+    { name = repeat_0
+    , params = [ x_2 ]
+    , returns = [ result_3 ]
+    , statement = Cut
+        { location = examples/repeat.mlg:1:17
+        , producer = Comatch
+            { location = examples/repeat.mlg:1:17
+            , clauses =
+                [
+                    ( Copattern
+                        { tag = "hd"
+                        , params = []
+                        , returns = [ contCopattern_4 ]
+                        }
+                    , Cut
+                        { location = examples/repeat.mlg:2:14
+                        , producer = Var
+                            { location = examples/repeat.mlg:2:14
+                            , name = x_2
+                            }
+                        , consumer = Covar
+                            { location = examples/repeat.mlg:2:14
+                            , name = contCopattern_4
+                            }
+                        }
+                    )
+                ,
+                    ( Copattern
+                        { tag = "tl"
+                        , params = []
+                        , returns = [ contCopattern_5 ]
+                        }
+                    , Invoke
+                        { location = examples/repeat.mlg:3:20
+                        , name = repeat_0
+                        , producers =
+                            [ Var
+                                { location = examples/repeat.mlg:3:21
+                                , name = x_2
+                                }
+                            ]
+                        , consumers =
+                            [ Covar
+                                { location = examples/repeat.mlg:3:20
+                                , name = contCopattern_5
+                                }
+                            ]
+                        }
+                    )
+                ]
+            }
+        , consumer = Covar
+            { location = examples/repeat.mlg:1:17
+            , name = result_3
+            }
+        }
+    }
+, Definition
+    { name = main_1
+    , params = []
+    , returns = [ result_6 ]
+    , statement = Switch
+        { location = examples/repeat.mlg:6:34
+        , producer = Do
+            { location = examples/repeat.mlg:6:28
+            , name = contDestruct_7
+            , statement = Cut
+                { location = examples/repeat.mlg:6:28
+                , producer = Do
+                    { location = examples/repeat.mlg:6:23
+                    , name = contDestruct_8
+                    , statement = Cut
+                        { location = examples/repeat.mlg:6:23
+                        , producer = Do
+                            { location = examples/repeat.mlg:6:20
+                            , name = contInvoke_9
+                            , statement = Invoke
+                                { location = examples/repeat.mlg:6:20
+                                , name = repeat_0
+                                , producers =
+                                    [ Literal
+                                        { location = examples/repeat.mlg:6:21
+                                        , literal = Int
+                                            { int = 1 }
+                                        }
+                                    ]
+                                , consumers =
+                                    [ Covar
+                                        { location = examples/repeat.mlg:6:20
+                                        , name = contInvoke_9
+                                        }
+                                    ]
+                                }
+                            }
+                        , consumer = Destruct
+                            { location = examples/repeat.mlg:6:23
+                            , tag = "tl"
+                            , producers = []
+                            , consumers =
+                                [ Covar
+                                    { location = examples/repeat.mlg:6:23
+                                    , name = contDestruct_8
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                , consumer = Destruct
+                    { location = examples/repeat.mlg:6:28
+                    , tag = "hd"
+                    , producers = []
+                    , consumers =
+                        [ Covar
+                            { location = examples/repeat.mlg:6:28
+                            , name = contDestruct_7
+                            }
+                        ]
+                    }
+                }
+            }
+        , clauses =
+            [
+                ( Int
+                    { int = 0 }
+                , Cut
+                    { location = examples/repeat.mlg:7:10
+                    , producer = Literal
+                        { location = examples/repeat.mlg:7:10
+                        , literal = Int
+                            { int = 1 }
+                        }
+                    , consumer = Covar
+                        { location = examples/repeat.mlg:7:10
+                        , name = result_6
+                        }
+                    }
+                )
+            ,
+                ( Int
+                    { int = 1 }
+                , Cut
+                    { location = examples/repeat.mlg:8:10
+                    , producer = Literal
+                        { location = examples/repeat.mlg:8:10
+                        , literal = Int
+                            { int = 2 }
+                        }
+                    , consumer = Covar
+                        { location = examples/repeat.mlg:8:10
+                        , name = result_6
+                        }
+                    }
+                )
+            ]
+        , statement = Cut
+            { location = examples/repeat.mlg:9:16
+            , producer = Literal
+                { location = examples/repeat.mlg:9:16
+                , literal = Int
+                    { int = 3 }
+                }
+            , consumer = Covar
+                { location = examples/repeat.mlg:9:16
+                , name = result_6
+                }
+            }
+        }
+    }
+]
