@@ -108,7 +108,7 @@ pTerm :: Parser (Term Text)
 pTerm =
   makeExprParser pAtomicTerm table
   where
-    table = [[destructOperator], [matchOperator, switchOperator], [gotoOperator], [labelOperator]]
+    table = [[postfixOperator], [labelOperator]]
 
 -- By default, makeExprParser does not allow chaining of postfix operators.
 -- To allow chaining, we use the following strategy:
@@ -118,24 +118,35 @@ pTerm =
 makeChainable :: Parser (a -> a) -> Parser (a -> a)
 makeChainable p = foldr1 (>>>) <$> some p
 
-destructOperator :: Operator Parser (Term Text)
+postfixOperator :: Operator Parser (Term Text)
+postfixOperator =
+  Postfix
+    $ makeChainable
+    $ choice
+      [ destructOperator,
+        matchOperator,
+        switchOperator,
+        gotoOperator
+      ]
+
+destructOperator :: Parser (Term Text -> Term Text)
 destructOperator =
-  Postfix $ label "destruct" $ makeChainable do
+  label "destruct" $ makeChainable do
     location <- getLocation
     _ <- symbol "."
     tag <- pIdentifier
     (producers, consumers) <- pArgumentList pTerm
     pure \term -> Destruct {..}
 
-matchOperator :: Operator Parser (Term Text)
-matchOperator = Postfix $ label "match" $ makeChainable do
+matchOperator :: Parser (Term Text -> Term Text)
+matchOperator = label "match" $ makeChainable do
   location <- getLocation
   _ <- symbol "match"
   clauses <- between (symbol "{") (symbol "}") $ pClause `sepEndBy` symbol ","
   pure \term -> Match {..}
 
-switchOperator :: Operator Parser (Term Text)
-switchOperator = Postfix $ label "switch" $ makeChainable do
+switchOperator :: Parser (Term Text -> Term Text)
+switchOperator = label "switch" $ makeChainable do
   location <- getLocation
   _ <- symbol "switch"
   (branches, defaultBranch) <- between (symbol "{") (symbol "}") do
@@ -145,8 +156,8 @@ switchOperator = Postfix $ label "switch" $ makeChainable do
     pure (branches, defaultBranch)
   pure \term -> Switch {..}
 
-gotoOperator :: Operator Parser (Term Text)
-gotoOperator = Postfix $ label "goto" do
+gotoOperator :: Parser (Term Text -> Term Text)
+gotoOperator = label "goto" do
   location <- getLocation
   _ <- symbol "goto"
   name <- pIdentifier
