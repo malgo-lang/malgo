@@ -9,9 +9,8 @@ import Data.Char (isAlphaNum)
 import Data.List.NonEmpty qualified as NE
 import Data.Set qualified as Set
 import Data.Text qualified as T
-import Data.Void
-import Debug.Trace (traceM)
-import Malgo.Location
+import Data.Void (Void)
+import Malgo.Location (Location (..))
 import Malgo.Prelude
 import Malgo.Surface
 import Text.Megaparsec hiding (Label, parse)
@@ -145,9 +144,7 @@ switchOperator = label "switch" $ makeChainable do
   location <- getLocation
   _ <- symbol "switch"
   (branches, defaultBranch) <- between (symbol "{") (symbol "}") do
-    traceM "pSwitch"
     branches <- pBranch `endBy` symbol ","
-    traceM "pSwitch branches"
     defaultBranch <- pKeyword "default" *> symbol "->" *> pTerm
     _ <- optional $ symbol ","
     pure (branches, defaultBranch)
@@ -169,13 +166,9 @@ labelOperator = Prefix $ label "label" do
 
 pBranch :: Parser (Literal, Term Text)
 pBranch = label "switch branch" do
-  traceM "pBranch"
   literal <- pLiteral'
-  traceM "pBranch literal"
   _ <- symbol "->"
-  traceM "pBranch ->"
   term <- pTerm
-  traceM "pBranch term"
   pure (literal, term)
 
 pClause :: Parser (Clause Text)
