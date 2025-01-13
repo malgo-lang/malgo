@@ -1,9 +1,6 @@
 module Malgo.Surface.Convert (toSyntax, ToSyntaxError (..)) where
 
-import Data.Char (isUpper)
 import Data.Map qualified as Map
-import Data.Maybe (mapMaybe)
-import Data.Text qualified as T
 import Effectful.Error.Static (Error, runErrorNoCallStack)
 import Effectful.Reader.Static (Reader, asks, local, runReader)
 import Malgo.Location (Location)
@@ -14,19 +11,19 @@ import Witherable (wither)
 
 toSyntax :: [Definition Text] -> Either ToSyntaxError [S.Definition Text]
 toSyntax definitions = runPureEff $ runErrorNoCallStack $ runReader @Env mempty do
-  let procedures =
-        mapMaybe
+  let toplevel =
+        concatMap
           ( \case
-              Definition {..} -> Just (name, Procedure)
-              _ -> Nothing
+              Definition {..} -> [(name, Procedure)]
+              Data {..} -> map ((,Constructor) . fst) constructors
           )
           definitions
-  local (Map.fromList procedures <>) do
+  local (Map.fromList toplevel <>) do
     wither resolve definitions
 
 type Env = Map Text Kind
 
-data Kind = Procedure
+data Kind = Procedure | Constructor
   deriving (Eq, Show)
 
 data ToSyntaxError = UndefinedVariable {location :: Location, name :: Text}
@@ -66,22 +63,16 @@ instance Resolve (Term Text) (S.Term Text) where
           kind <- asks (Map.lookup name)
           case kind of
             Just Procedure -> pure S.Invoke {..}
+            Just Constructor -> pure S.Construct {tag = name, ..}
             Nothing ->
-              if isConstructorTag name
-                then pure S.Construct {tag = name, ..}
-                else
-                  pure
-                    S.Destruct
-                      { location = varLocation,
-                        term = S.Var {location = varLocation, name},
-                        tag = "ap",
-                        producers,
-                        consumers
-                      }
-      where
-        isConstructorTag name = case T.uncons name of
-          Just (c, _) -> isUpper c
-          Nothing -> False
+              pure
+                S.Destruct
+                  { location = varLocation,
+                    term = S.Var {location = varLocation, name},
+                    tag = "ap",
+                    producers,
+                    consumers
+                  }
   resolve Apply {..} = do
     term <- resolve term
     producers <- traverse resolve producers
