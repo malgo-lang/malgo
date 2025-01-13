@@ -2,6 +2,7 @@ module Malgo.Surface.Convert (toSyntax, ToSyntaxError (..)) where
 
 import Data.Char (isUpper)
 import Data.Map qualified as Map
+import Data.Maybe (mapMaybe)
 import Data.Text qualified as T
 import Effectful.Error.Static (Error, runErrorNoCallStack)
 import Effectful.Reader.Static (Reader, asks, local, runReader)
@@ -9,12 +10,19 @@ import Malgo.Location (Location)
 import Malgo.Prelude
 import Malgo.Surface
 import Malgo.Syntax qualified as S
+import Witherable (wither)
 
 toSyntax :: [Definition Text] -> Either ToSyntaxError [S.Definition Text]
 toSyntax definitions = runPureEff $ runErrorNoCallStack $ runReader @Env mempty do
-  let procedures = map (\Definition {name} -> (name, Procedure)) definitions
+  let procedures =
+        mapMaybe
+          ( \case
+              Definition {..} -> Just (name, Procedure)
+              _ -> Nothing
+          )
+          definitions
   local (Map.fromList procedures <>) do
-    traverse resolve $ (definitions :: [Definition Text])
+    wither resolve definitions
 
 type Env = Map Text Kind
 
@@ -27,10 +35,11 @@ data ToSyntaxError = UndefinedVariable {location :: Location, name :: Text}
 class Resolve a r where
   resolve :: (Reader Env :> es, Error ToSyntaxError :> es) => a -> Eff es r
 
-instance Resolve (Definition Text) (S.Definition Text) where
+instance Resolve (Definition Text) (Maybe (S.Definition Text)) where
   resolve Definition {..} = do
     term <- resolve term
-    pure S.Definition {..}
+    pure $ Just S.Definition {..}
+  resolve Data {} = pure Nothing
 
 instance Resolve (Term Text) (S.Term Text) where
   resolve Var {..} = pure S.Var {..}

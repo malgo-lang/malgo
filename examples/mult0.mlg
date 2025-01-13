@@ -1,5 +1,7 @@
 def mult(l) = label a multAux(l; a)
 
+data List(t) = Nil() | Cons(t, List(t))
+
 def multAux(l; a) = l match {
     Nil() -> 1,
     Cons(x, xs) -> x switch {

@@ -15,6 +15,8 @@ module Malgo.Lens
     HasStatement (..),
     HasProducer (..),
     HasConsumer (..),
+    HasConstructors (..),
+    HasTypes (..),
   )
 where
 
@@ -67,3 +69,9 @@ class HasProducer s a | s -> a where
 
 class HasConsumer s a | s -> a where
   consumer :: Traversal' s a
+
+class HasConstructors s a | s -> a where
+  constructors :: Traversal' s a
+
+class HasTypes s a | s -> a where
+  types :: Traversal' s a

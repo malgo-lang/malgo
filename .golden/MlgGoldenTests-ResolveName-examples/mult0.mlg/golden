@@ -25,14 +25,14 @@
         }
     }
 , Definition
-    { location = examples/mult0.mlg:3:1
+    { location = examples/mult0.mlg:5:1
     , name = multAux_1
     , params = [ l_5 ]
     , returns = [ a_6 ]
     , term = Match
-        { location = examples/mult0.mlg:3:23
+        { location = examples/mult0.mlg:5:23
         , term = Var
-            { location = examples/mult0.mlg:3:21
+            { location = examples/mult0.mlg:5:21
             , name = l_5
             }
         , clauses =
@@ -43,7 +43,7 @@
                     , returns = []
                     }
                 , term = Literal
-                    { location = examples/mult0.mlg:4:14
+                    { location = examples/mult0.mlg:6:14
                     , literal = Int
                         { int = 1 }
                     }
@@ -58,9 +58,9 @@
                     , returns = []
                     }
                 , term = Switch
-                    { location = examples/mult0.mlg:5:22
+                    { location = examples/mult0.mlg:7:22
                     , term = Var
-                        { location = examples/mult0.mlg:5:20
+                        { location = examples/mult0.mlg:7:20
                         , name = x_7
                         }
                     , branches =
@@ -68,9 +68,9 @@
                             ( Int
                                 { int = 0 }
                             , Goto
-                                { location = examples/mult0.mlg:6:16
+                                { location = examples/mult0.mlg:8:16
                                 , term = Literal
-                                    { location = examples/mult0.mlg:6:14
+                                    { location = examples/mult0.mlg:8:14
                                     , literal = Int
                                         { int = 0 }
                                     }
@@ -79,25 +79,25 @@
                             )
                         ]
                     , defaultBranch = Prim
-                        { location = examples/mult0.mlg:7:24
+                        { location = examples/mult0.mlg:9:24
                         , tag = "mul"
                         , producers =
                             [ Var
-                                { location = examples/mult0.mlg:7:30
+                                { location = examples/mult0.mlg:9:30
                                 , name = x_7
                                 }
                             , Invoke
-                                { location = examples/mult0.mlg:7:40
+                                { location = examples/mult0.mlg:9:40
                                 , name = multAux_1
                                 , producers =
                                     [ Var
-                                        { location = examples/mult0.mlg:7:41
+                                        { location = examples/mult0.mlg:9:41
                                         , name = xs_8
                                         }
                                     ]
                                 , consumers =
                                     [ Var
-                                        { location = examples/mult0.mlg:7:45
+                                        { location = examples/mult0.mlg:9:45
                                         , name = a_6
                                         }
                                     ]
@@ -111,43 +111,43 @@
         }
     }
 , Definition
-    { location = examples/mult0.mlg:11:1
+    { location = examples/mult0.mlg:13:1
     , name = main_2
     , params = []
     , returns = []
     , term = Invoke
-        { location = examples/mult0.mlg:11:18
+        { location = examples/mult0.mlg:13:18
         , name = mult_0
         , producers =
             [ Construct
-                { location = examples/mult0.mlg:11:23
+                { location = examples/mult0.mlg:13:23
                 , tag = "Cons"
                 , producers =
                     [ Literal
-                        { location = examples/mult0.mlg:11:24
+                        { location = examples/mult0.mlg:13:24
                         , literal = Int
                             { int = 1 }
                         }
                     , Construct
-                        { location = examples/mult0.mlg:11:31
+                        { location = examples/mult0.mlg:13:31
                         , tag = "Cons"
                         , producers =
                             [ Literal
-                                { location = examples/mult0.mlg:11:32
+                                { location = examples/mult0.mlg:13:32
                                 , literal = Int
                                     { int = 0 }
                                 }
                             , Construct
-                                { location = examples/mult0.mlg:11:39
+                                { location = examples/mult0.mlg:13:39
                                 , tag = "Cons"
                                 , producers =
                                     [ Literal
-                                        { location = examples/mult0.mlg:11:40
+                                        { location = examples/mult0.mlg:13:40
                                         , literal = Int
                                             { int = 3 }
                                         }
                                     , Construct
-                                        { location = examples/mult0.mlg:11:46
+                                        { location = examples/mult0.mlg:13:46
                                         , tag = "Nil"
                                         , producers = []
                                         , consumers = []

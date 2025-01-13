@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Malgo.Surface (Definition (..), Term (..), Literal (..), Pattern (..), Clause (..), Copattern (..), Coclause (..)) where
+module Malgo.Surface (Definition (..), Type (..), Term (..), Literal (..), Pattern (..), Clause (..), Copattern (..), Coclause (..)) where
 
 import Control.Lens.TH (makeFieldsId)
 import Data.SCargot.Repr.Basic qualified as S
@@ -9,13 +9,20 @@ import Malgo.Location (HasLocation (..), Location)
 import Malgo.Name (HasName (..))
 import Malgo.Prelude
 
-data Definition a = Definition
-  { location :: Location,
-    name :: a,
-    params :: [a],
-    returns :: [a],
-    term :: Term a
-  }
+data Definition a
+  = Definition
+      { location :: Location,
+        name :: a,
+        params :: [a],
+        returns :: [a],
+        term :: Term a
+      }
+  | Data
+      { location :: Location,
+        name :: a,
+        params :: [a],
+        constructors :: [(a, [Type a])]
+      }
   deriving (Show)
 
 instance (ToSExpr a) => ToSExpr (Definition a) where
@@ -27,6 +34,22 @@ instance (ToSExpr a) => ToSExpr (Definition a) where
         S.L (toSExpr <$> returns),
         toSExpr term
       ]
+  toSExpr Data {..} =
+    S.L
+      [ S.A (Symbol "data"),
+        toSExpr name,
+        S.L (toSExpr <$> params),
+        S.L (toSExpr <$> constructors)
+      ]
+
+data Type a
+  = TyVar {location :: Location, name :: a}
+  | TyCon {location :: Location, name :: a, types :: [Type a]}
+  deriving (Show)
+
+instance (ToSExpr a) => ToSExpr (Type a) where
+  toSExpr TyVar {..} = S.L [S.A (Symbol "var"), toSExpr name]
+  toSExpr TyCon {..} = S.L [S.A (Symbol "con"), toSExpr name, S.L (toSExpr <$> types)]
 
 data Term a
   = Var {location :: Location, name :: a}
@@ -127,6 +150,7 @@ instance (ToSExpr a) => ToSExpr (Coclause a) where
   toSExpr Coclause {..} = S.L [toSExpr copattern, toSExpr term]
 
 makeFieldsId ''Definition
+makeFieldsId ''Type
 makeFieldsId ''Term
 makeFieldsId ''Pattern
 makeFieldsId ''Clause

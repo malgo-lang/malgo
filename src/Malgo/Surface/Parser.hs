@@ -20,7 +20,7 @@ import Text.Megaparsec.Char.Lexer qualified as L
 
 parse :: FilePath -> Text -> Either (ParseErrorBundle Text Void) [Definition Text]
 parse = runParser do
-  defs <- many pDefinition
+  defs <- many (pDefinition <|> pData)
   _ <- eof
   pure defs
 
@@ -80,6 +80,31 @@ pDefinition = label "definition" do
   _ <- symbol "="
   term <- pTerm
   pure $ Definition {..}
+
+pData :: Parser (Definition Text)
+pData = label "data" do
+  location <- getLocation
+  _ <- pKeyword "data"
+  name <- pIdentifier
+  params <- between (symbol "(") (symbol ")") $ pIdentifier `sepBy` symbol ","
+  _ <- symbol "="
+  constructors <- pConstructor `sepBy` symbol "|"
+  pure $ Data {..}
+
+pConstructor :: Parser (Text, [Type Text])
+pConstructor = label "constructor" do
+  name <- pIdentifier
+  args <- between (symbol "(") (symbol ")") $ pType `sepBy` symbol ","
+  pure (name, args)
+
+pType :: Parser (Type Text)
+pType = label "type" do
+  location <- getLocation
+  name <- pIdentifier
+  following <- optional $ between (symbol "(") (symbol ")") $ pType `sepBy` symbol ","
+  pure $ case following of
+    Just types -> TyCon {..}
+    Nothing -> TyVar {..}
 
 pArgumentList :: Parser a -> Parser ([a], [a])
 pArgumentList pItem = between (symbol "(") (symbol ")") $ do
