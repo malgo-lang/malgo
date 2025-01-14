@@ -205,9 +205,10 @@ pClause = label "pattern clause" do
 
 pPattern :: Parser (Pattern Text)
 pPattern = label "pattern" do
-  tag <- pIdentifier
-  (params, returns) <- pArgumentList pIdentifier
-  pure Pattern {..}
+  name <- pIdentifier
+  optional (pArgumentList pPattern) >>= \case
+    Just (params, returns) -> pure PConstruct {tag = name, ..}
+    Nothing -> pure PVar {..}
 
 pAtomicTerm :: Parser (Term Text)
 pAtomicTerm =

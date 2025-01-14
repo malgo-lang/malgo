@@ -119,7 +119,11 @@ instance Resolve (Clause Text) (S.Clause Text) where
     pure S.Clause {..}
 
 instance Resolve (Pattern Text) (S.Pattern Text) where
-  resolve Pattern {..} = pure S.Pattern {..}
+  resolve PConstruct{..} = do 
+    params <- traverse resolve params
+    returns <- traverse resolve returns
+    pure S.PConstruct{..}
+  resolve PVar{..} = pure S.PVar{..}
 
 instance Resolve (Coclause Text) (S.Coclause Text) where
   resolve Coclause {..} = do

@@ -111,15 +111,14 @@ data Literal = Int {int :: Int}
 instance ToSExpr Literal where
   toSExpr Int {..} = S.L [S.A (Symbol "int"), S.A (Number int)]
 
-data Pattern a = Pattern
-  { tag :: Text,
-    params :: [a],
-    returns :: [a]
-  }
+data Pattern a
+  = PConstruct {tag :: Text, params :: [Pattern a], returns :: [Pattern a]}
+  | PVar {name :: a}
   deriving (Show)
 
 instance (ToSExpr a) => ToSExpr (Pattern a) where
-  toSExpr Pattern {..} = S.L [S.A (Symbol tag), S.L (toSExpr <$> params), S.L (toSExpr <$> returns)]
+  toSExpr PConstruct {..} = S.L [S.A (Symbol tag), S.L (toSExpr <$> params), S.L (toSExpr <$> returns)]
+  toSExpr PVar {..} = toSExpr name
 
 data Clause a = Clause
   { pattern :: Pattern a,

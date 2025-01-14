@@ -186,9 +186,25 @@ pClause = label "pattern clause" do
 
 pPattern :: Parser (Pattern Text)
 pPattern = label "pattern" do
-  tag <- withSigil Constructor
-  (params, returns) <- pArgumentList pIdentifier
-  pure Pattern {..}
+  -- if the next character is a sigil, parse a construct pattern
+  isConstructor <-
+    optional (char '$') >>= \case
+      Just _ -> pure True
+      Nothing -> pure False
+  if isConstructor
+    then pPConstruct
+    else pPVar
+
+pPConstruct :: Parser (Pattern Text)
+pPConstruct = label "construct pattern" do
+  tag <- pIdentifier
+  (params, returns) <- pArgumentList pPattern
+  pure PConstruct {..}
+
+pPVar :: Parser (Pattern Text)
+pPVar = label "var pattern" do
+  name <- pIdentifier
+  pure PVar {..}
 
 pAtomicTerm :: Parser (Term Text)
 pAtomicTerm =

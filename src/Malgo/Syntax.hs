@@ -75,11 +75,9 @@ data Term a
 data Literal = Int {int :: Int}
   deriving (Show)
 
-data Pattern a = Pattern
-  { tag :: Text,
-    params :: [a],
-    returns :: [a]
-  }
+data Pattern a
+  = PConstruct {tag :: Text, params :: [Pattern a], returns :: [Pattern a]}
+  | PVar {name :: a}
   deriving (Show)
 
 data Clause a = Clause

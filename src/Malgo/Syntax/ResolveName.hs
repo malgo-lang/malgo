@@ -143,14 +143,17 @@ instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolv
       pure Clause {pattern = pattern', term = term'}
 
 instance (UniqueGen :> es) => Resolve (Pattern Text) (Eff es (Pattern Name, [(Text, Name)])) where
-  resolve Pattern {..} = do
-    params' <- traverse newName params
-    returns' <- traverse newName returns
+  resolve PConstruct {..} = do
+    (params', paramsKvs) <- unzip <$> traverse resolve params
+    (returns', returnsKvs) <- unzip <$> traverse resolve returns
     pure
-      ( Pattern
+      ( PConstruct
           { tag,
             params = params',
             returns = returns'
           },
-        zip params params' <> zip returns returns'
+        concat paramsKvs <> concat returnsKvs
       )
+  resolve PVar {..} = do
+    name' <- newName name
+    pure (PVar {name = name'}, [(name, name')])
