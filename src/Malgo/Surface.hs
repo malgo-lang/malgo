@@ -129,15 +129,15 @@ data Clause a = Clause
 instance (ToSExpr a) => ToSExpr (Clause a) where
   toSExpr Clause {..} = S.L [toSExpr pattern, toSExpr term]
 
-data Copattern a = Copattern
-  { tag :: Text,
-    params :: [a],
-    returns :: [a]
-  }
+data Copattern a
+  = CDestruct {origin :: Copattern a, tag :: Text, params :: [Pattern a], returns :: [Pattern a]}
+  | CVar {name :: a}
   deriving (Show)
 
 instance (ToSExpr a) => ToSExpr (Copattern a) where
-  toSExpr Copattern {..} = S.L [S.A (Symbol tag), S.L (toSExpr <$> params), S.L (toSExpr <$> returns)]
+  -- toSExpr Copattern {..} = S.L [S.A (Symbol tag), S.L (toSExpr <$> params), S.L (toSExpr <$> returns)]
+  toSExpr CDestruct {..} = S.L [toSExpr origin, S.A (Symbol tag), S.L (toSExpr <$> params), S.L (toSExpr <$> returns)]
+  toSExpr CVar {..} = toSExpr name
 
 data Coclause a = Coclause
   { copattern :: Copattern a,

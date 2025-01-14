@@ -13,6 +13,7 @@ import Malgo.Name
 import Malgo.Prelude
 import Malgo.Surface.Convert qualified as Surface
 import Malgo.Surface.Parser qualified as Surface
+import Malgo.Syntax.Desugar qualified as Syntax
 import Malgo.Syntax.Parser qualified as Syntax
 import Malgo.Syntax.ResolveName qualified as Syntax
 import Malgo.Syntax.ToCore qualified as Syntax
@@ -52,8 +53,13 @@ buildIrGoldenTest path = withStdOutLogger \stdOutLogger -> do
           Left err -> error $ convertString $ pShowNoColor err
           Right resolved -> pure resolved
     tell [golden ("ResolveName " <> path) resolved]
+    desugared <-
+      runError @Syntax.DesugarError (Syntax.desugar resolved)
+        >>= \case
+          Left err -> error $ convertString $ pShowNoColor err
+          Right desugared -> pure desugared
     core <-
-      runError @Syntax.ToCoreError (Syntax.toCore resolved)
+      runError @Syntax.ToCoreError (Syntax.toCore desugared)
         >>= \case
           Left err -> error $ convertString $ pShowNoColor err
           Right core -> pure core
@@ -115,8 +121,13 @@ buildMlgGoldenTest path = withStdOutLogger \stdOutLogger -> do
           Left err -> error $ convertString $ pShowNoColor err
           Right resolved -> pure resolved
     tell [golden ("ResolveName " <> path) resolved]
+    desugared <-
+      runError @Syntax.DesugarError (Syntax.desugar resolved)
+        >>= \case
+          Left err -> error $ convertString $ pShowNoColor err
+          Right desugared -> pure desugared
     core <-
-      runError @Syntax.ToCoreError (Syntax.toCore resolved)
+      runError @Syntax.ToCoreError (Syntax.toCore desugared)
         >>= \case
           Left err -> error $ convertString $ pShowNoColor err
           Right core -> pure core

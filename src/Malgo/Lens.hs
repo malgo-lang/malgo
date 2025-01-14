@@ -17,6 +17,7 @@ module Malgo.Lens
     HasConsumer (..),
     HasConstructors (..),
     HasTypes (..),
+    HasOrigin (..),
   )
 where
 
@@ -75,3 +76,6 @@ class HasConstructors s a | s -> a where
 
 class HasTypes s a | s -> a where
   types :: Traversal' s a
+
+class HasOrigin s a | s -> a where
+  origin :: Traversal' s a

@@ -12,7 +12,7 @@ import Malgo.Prelude
 import Malgo.Syntax
 import Malgo.Unique
 
-resolveName :: (UniqueGen :> es, Error ResolveError :> es) => [Definition Text] -> Eff es [Definition Name]
+resolveName :: (UniqueGen :> es, Error ResolveError :> es) => [Definition Raw Text] -> Eff es [Definition Raw Name]
 resolveName definitions = runReader @Env mempty do
   -- generate toplevel environment
   toplevel <- for definitions \Definition {name} -> do
@@ -47,7 +47,7 @@ data ResolveError
 class Resolve a r where
   resolve :: a -> r
 
-instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Definition Text) (Eff es (Definition Name)) where
+instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Definition Raw Text) (Eff es (Definition Raw Name)) where
   resolve Definition {..} = do
     name' <- lookup location name
     paramsKvs <- for params \param -> do
@@ -68,7 +68,7 @@ instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolv
               term = term'
             }
 
-instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Term Text) (Eff es (Term Name)) where
+instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Term Raw Text) (Eff es (Term Raw Name)) where
   resolve Var {..} = do
     name' <- lookup location name
     pure Var {location, name = name'}
@@ -115,34 +115,34 @@ instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolv
     term' <- resolve term
     pure Goto {location, name = name', term = term'}
 
-instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Coclause Text) (Eff es (Coclause Name)) where
+instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Coclause Raw Text) (Eff es (Coclause Raw Name)) where
   resolve Coclause {..} = do
     (copattern', copatternKvs) <- resolveCopattern copattern
     with copatternKvs do
       term' <- resolve term
       pure Coclause {copattern = copattern', term = term'}
 
-resolveCopattern :: (UniqueGen :> es) => Copattern Text -> Eff es (Copattern Name, [(Text, Name)])
-resolveCopattern Copattern {..} = do
-  params' <- traverse newName params
-  returns' <- traverse newName returns
+resolveCopattern :: (UniqueGen :> es) => Copattern Raw Text -> Eff es (Copattern Raw Name, [(Text, Name)])
+resolveCopattern CDestruct {..} = do
+  (origin, originKvs) <- resolveCopattern origin
+  (params, producersKvs) <- unzip <$> traverse resolve params
+  (returns, consumersKvs) <- unzip <$> traverse resolve returns
   pure
-    $ ( Copattern
-          { tag,
-            params = params',
-            returns = returns'
-          },
-        zip params params' <> zip returns returns'
-      )
+    ( CDestruct {..},
+      originKvs <> concat producersKvs <> concat consumersKvs
+    )
+resolveCopattern CVar {..} = do
+  name' <- newName name
+  pure (CVar {name = name'}, [(name, name')])
 
-instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Clause Text) (Eff es (Clause Name)) where
+instance (UniqueGen :> es, Reader Env :> es, Error ResolveError :> es) => Resolve (Clause Raw Text) (Eff es (Clause Raw Name)) where
   resolve Clause {..} = do
     (pattern', patternKvs) <- resolve pattern
     with patternKvs do
       term' <- resolve term
       pure Clause {pattern = pattern', term = term'}
 
-instance (UniqueGen :> es) => Resolve (Pattern Text) (Eff es (Pattern Name, [(Text, Name)])) where
+instance (UniqueGen :> es) => Resolve (Pattern Raw Text) (Eff es (Pattern Raw Name, [(Text, Name)])) where
   resolve PConstruct {..} = do
     (params', paramsKvs) <- unzip <$> traverse resolve params
     (returns', returnsKvs) <- unzip <$> traverse resolve returns

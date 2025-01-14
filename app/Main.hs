@@ -15,6 +15,7 @@ import Malgo.Location (Location (..))
 import Malgo.Name
 import Malgo.Prelude
 import Malgo.Surface.Parser qualified as Surface
+import Malgo.Syntax.Desugar
 import Malgo.Syntax.Parser
 import Malgo.Syntax.ResolveName (ResolveError, resolveName)
 import Malgo.Syntax.ToCore (ToCoreError, toCore)
@@ -77,7 +78,15 @@ runIR filePath = do
     Right defs' -> do
       logInfo_ $ pShow defs'
       pure defs'
-  core <- runError @ToCoreError $ toCore defs''
+  desugared <-
+    runError @DesugarError (desugar defs'') >>= \case
+      Left err -> do
+        logAttention_ $ pShow err
+        pure []
+      Right desugared -> do
+        logInfo_ $ pShow desugared
+        pure desugared
+  core <- runError @ToCoreError $ toCore desugared
   core' <- case core of
     Left err -> do
       logAttention_ $ pShow err

@@ -9,7 +9,7 @@ import Malgo.Surface
 import Malgo.Syntax qualified as S
 import Witherable (wither)
 
-toSyntax :: [Definition Text] -> Either ToSyntaxError [S.Definition Text]
+toSyntax :: [Definition Text] -> Either ToSyntaxError [S.Definition S.Raw Text]
 toSyntax definitions = runPureEff $ runErrorNoCallStack $ runReader @Env mempty do
   let toplevel =
         concatMap
@@ -32,13 +32,13 @@ data ToSyntaxError = UndefinedVariable {location :: Location, name :: Text}
 class Resolve a r where
   resolve :: (Reader Env :> es, Error ToSyntaxError :> es) => a -> Eff es r
 
-instance Resolve (Definition Text) (Maybe (S.Definition Text)) where
+instance Resolve (Definition Text) (Maybe (S.Definition S.Raw Text)) where
   resolve Definition {..} = do
     term <- resolve term
     pure $ Just S.Definition {..}
   resolve Data {} = pure Nothing
 
-instance Resolve (Term Text) (S.Term Text) where
+instance Resolve (Term Text) (S.Term S.Raw Text) where
   resolve Var {..} = pure S.Var {..}
   resolve Literal {..} = do
     literal <- resolve literal
@@ -112,24 +112,30 @@ instance Resolve (Term Text) (S.Term Text) where
 instance Resolve Literal S.Literal where
   resolve Int {..} = pure S.Int {..}
 
-instance Resolve (Clause Text) (S.Clause Text) where
+instance Resolve (Clause Text) (S.Clause S.Raw Text) where
   resolve Clause {..} = do
     pattern <- resolve pattern
     term <- resolve term
     pure S.Clause {..}
 
-instance Resolve (Pattern Text) (S.Pattern Text) where
-  resolve PConstruct{..} = do 
+instance Resolve (Pattern Text) (S.Pattern S.Raw Text) where
+  resolve PConstruct {..} = do
     params <- traverse resolve params
     returns <- traverse resolve returns
-    pure S.PConstruct{..}
-  resolve PVar{..} = pure S.PVar{..}
+    pure S.PConstruct {..}
+  resolve PVar {..} = pure S.PVar {..}
 
-instance Resolve (Coclause Text) (S.Coclause Text) where
+instance Resolve (Coclause Text) (S.Coclause S.Raw Text) where
   resolve Coclause {..} = do
     copattern <- resolve copattern
     term <- resolve term
     pure S.Coclause {..}
 
-instance Resolve (Copattern Text) (S.Copattern Text) where
-  resolve Copattern {..} = pure S.Copattern {..}
+instance Resolve (Copattern Text) (S.Copattern S.Raw Text) where
+  -- resolve Copattern {..} = pure S.Copattern {..}
+  resolve CDestruct {..} = do
+    origin <- resolve origin
+    params <- traverse resolve params
+    returns <- traverse resolve returns
+    pure S.CDestruct {..}
+  resolve CVar {..} = pure S.CVar {..}

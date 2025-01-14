@@ -11,7 +11,7 @@ import Malgo.Prelude
 import Malgo.Syntax
 import Malgo.Unique (UniqueGen)
 
-toCore :: (UniqueGen :> es, Error ToCoreError :> es) => [Definition Name] -> Eff es [Core.Definition]
+toCore :: (UniqueGen :> es, Error ToCoreError :> es) => [Definition Desugared Name] -> Eff es [Core.Definition]
 toCore definitions = do
   traverse convert definitions
 
@@ -19,11 +19,11 @@ class Convert a r where
   convert :: a -> r
 
 data ToCoreError
-  = InvalidConsumer {location :: Location, term :: Term Name}
-  | InvalidPattern {location :: Location, pattern :: Pattern Name}
+  = InvalidConsumer {location :: Location, term :: Term Desugared Name}
+  | InvalidPattern {location :: Location, pattern :: Pattern Desugared Name}
   deriving (Show)
 
-instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Definition Name) (Eff es Core.Definition) where
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Definition Desugared Name) (Eff es Core.Definition) where
   convert Definition {..} = do
     result <- newName "result"
     statement <- convert term result
@@ -35,7 +35,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Definition Name)
           statement
         }
 
-instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Eff es Core.Producer) where
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Desugared Name) (Eff es Core.Producer) where
   convert Var {..} = pure $ Core.Var {..}
   convert Literal {..} = do
     let literal' = convert literal
@@ -57,7 +57,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Eff 
       pure (copattern', statement)
     pure $ Core.Comatch {location, clauses}
     where
-      convertCopattern Copattern {..} = do
+      convertCopattern CDestruct {..} = do
         cont <- newName "contCopattern"
         pure
           ( Core.Copattern
@@ -130,7 +130,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Eff 
           statement
         }
 
-instance (Error ToCoreError :> es) => Convert (Term Name) (Eff es Core.Consumer) where
+instance (Error ToCoreError :> es) => Convert (Term Desugared Name) (Eff es Core.Consumer) where
   convert Var {..} = pure $ Core.Covar {..}
   convert term = throwError $ InvalidConsumer term.location term
 
@@ -138,7 +138,7 @@ instance Convert Literal Core.Literal where
   convert Int {..} = Core.Int {..}
 
 -- This instance's `convert` takes a label as the return point of the statement.
-instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name -> Eff es Core.Statement) where
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Desugared Name) (Name -> Eff es Core.Statement) where
   convert Destruct {..} = \cont -> do
     term' <- convert term
     producers' <- traverse convert producers
@@ -158,7 +158,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
   convert Match {..} = \cont -> do
     term' <- convert term
     clauses' <- for clauses \Clause {..} -> do
-      pattern' <- convertPattern pattern
+      let pattern' = convertPattern pattern
       statement <- convert term cont
       pure (pattern', statement)
     pure
@@ -168,14 +168,8 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
           consumer = Core.Match {location, clauses = clauses'}
         }
     where
-      convertPattern PConstruct {..} = do
-        params' <- traverse unwrapPVar params
-        returns' <- traverse unwrapPVar returns
-        pure Core.Pattern {tag, params = params', returns = returns'}
-      convertPattern pattern@PVar {} = throwError $ InvalidPattern {location, pattern}
-      unwrapPVar PVar {..} = pure name
-      unwrapPVar pattern@PConstruct {} = throwError $ InvalidPattern {location, pattern}
-  -- convertPattern Pattern {..} = Core.Pattern {..}
+      convertPattern :: Pattern Desugared Name -> Core.Pattern
+      convertPattern PConstruct {..} = Core.Pattern {..}
   convert Prim {..} = \cont -> do
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers

@@ -3,7 +3,7 @@
 module Malgo.Surface.Parser (parse) where
 
 import Control.Arrow ((>>>))
-import Control.Monad (void, when)
+import Control.Monad (when)
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Data.Char (isAlphaNum)
 import Data.List.NonEmpty qualified as NE
@@ -254,10 +254,20 @@ pCoclause = label "comatch clause" do
   pure Coclause {..}
 
 -- | Parse a copattern.
--- @ tag(params...;returns...) @
+-- @ origin.tag(params...;returns...) @
 pCopattern :: Parser (Copattern Text)
-pCopattern = label "copattern" do
-  void $ symbol "."
+pCopattern = label "copattern" $ makeExprParser pAtomicCopattern table
+  where
+    table = [[postfixCopatternOperator]]
+
+postfixCopatternOperator :: Operator Parser (Copattern Text)
+postfixCopatternOperator = Postfix $ makeChainable do
+  _ <- symbol "."
   tag <- pIdentifier
-  (params, returns) <- pArgumentList pIdentifier
-  pure Copattern {..}
+  (params, returns) <- pArgumentList pPattern
+  pure \origin -> CDestruct {..}
+
+pAtomicCopattern :: Parser (Copattern Text)
+pAtomicCopattern = do
+  name <- pIdentifier
+  pure $ CVar {..}

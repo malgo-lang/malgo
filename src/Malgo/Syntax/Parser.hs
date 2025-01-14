@@ -18,7 +18,7 @@ import Text.Megaparsec qualified as Megaparsec
 import Text.Megaparsec.Char (alphaNumChar, char, letterChar, space1, string)
 import Text.Megaparsec.Char.Lexer qualified as L
 
-parse :: FilePath -> Text -> Either (ParseErrorBundle Text Void) [Definition Text]
+parse :: FilePath -> Text -> Either (ParseErrorBundle Text Void) [Definition Raw Text]
 parse = runParser do
   defs <- many pDefinition
   _ <- eof
@@ -84,7 +84,7 @@ pIdentifier = label "identifier" $ lexeme do
     $ unexpectedToken ["identifier"] name
   pure name
 
-pDefinition :: Parser (Definition Text)
+pDefinition :: Parser (Definition Raw Text)
 pDefinition = label "definition" do
   location <- getLocation
   _ <- pKeyword "def"
@@ -104,7 +104,7 @@ pArgumentList pItem = between (symbol "(") (symbol ")") $ do
       pure (params, returns)
     Nothing -> pure (params, [])
 
-pTerm :: Parser (Term Text)
+pTerm :: Parser (Term Raw Text)
 pTerm =
   makeExprParser pAtomicTerm table
   where
@@ -118,7 +118,7 @@ pTerm =
 makeChainable :: Parser (a -> a) -> Parser (a -> a)
 makeChainable p = foldr1 (>>>) <$> some p
 
-postfixOperator :: Operator Parser (Term Text)
+postfixOperator :: Operator Parser (Term Raw Text)
 postfixOperator =
   Postfix
     $ makeChainable
@@ -129,7 +129,7 @@ postfixOperator =
         gotoOperator
       ]
 
-destructOperator :: Parser (Term Text -> Term Text)
+destructOperator :: Parser (Term Raw Text -> Term Raw Text)
 destructOperator =
   label "destruct" $ makeChainable do
     location <- getLocation
@@ -138,14 +138,14 @@ destructOperator =
     (producers, consumers) <- pArgumentList pTerm
     pure \term -> Destruct {..}
 
-matchOperator :: Parser (Term Text -> Term Text)
+matchOperator :: Parser (Term Raw Text -> Term Raw Text)
 matchOperator = label "match" $ makeChainable do
   location <- getLocation
   _ <- symbol "match"
   clauses <- between (symbol "{") (symbol "}") $ pClause `sepEndBy` symbol ","
   pure \term -> Match {..}
 
-switchOperator :: Parser (Term Text -> Term Text)
+switchOperator :: Parser (Term Raw Text -> Term Raw Text)
 switchOperator = label "switch" $ makeChainable do
   location <- getLocation
   _ <- symbol "switch"
@@ -156,35 +156,35 @@ switchOperator = label "switch" $ makeChainable do
     pure (branches, defaultBranch)
   pure \term -> Switch {..}
 
-gotoOperator :: Parser (Term Text -> Term Text)
+gotoOperator :: Parser (Term Raw Text -> Term Raw Text)
 gotoOperator = label "goto" do
   location <- getLocation
   _ <- symbol "goto"
   name <- pIdentifier
   pure \term -> Goto {..}
 
-labelOperator :: Operator Parser (Term Text)
+labelOperator :: Operator Parser (Term Raw Text)
 labelOperator = Prefix $ label "label" do
   location <- getLocation
   _ <- symbol "label"
   name <- pIdentifier
   pure \term -> Label {..}
 
-pBranch :: Parser (Literal, Term Text)
+pBranch :: Parser (Literal, Term Raw Text)
 pBranch = label "switch branch" do
   literal <- pLiteral'
   _ <- symbol "->"
   term <- pTerm
   pure (literal, term)
 
-pClause :: Parser (Clause Text)
+pClause :: Parser (Clause Raw Text)
 pClause = label "pattern clause" do
   pattern <- pPattern
   _ <- symbol "->"
   term <- pTerm
   pure Clause {..}
 
-pPattern :: Parser (Pattern Text)
+pPattern :: Parser (Pattern Raw Text)
 pPattern = label "pattern" do
   -- if the next character is a sigil, parse a construct pattern
   isConstructor <-
@@ -195,18 +195,18 @@ pPattern = label "pattern" do
     then pPConstruct
     else pPVar
 
-pPConstruct :: Parser (Pattern Text)
+pPConstruct :: Parser (Pattern Raw Text)
 pPConstruct = label "construct pattern" do
   tag <- pIdentifier
   (params, returns) <- pArgumentList pPattern
   pure PConstruct {..}
 
-pPVar :: Parser (Pattern Text)
+pPVar :: Parser (Pattern Raw Text)
 pPVar = label "var pattern" do
   name <- pIdentifier
   pure PVar {..}
 
-pAtomicTerm :: Parser (Term Text)
+pAtomicTerm :: Parser (Term Raw Text)
 pAtomicTerm =
   label "atomic term"
     $ choice
@@ -218,13 +218,13 @@ pAtomicTerm =
         pInvoke
       ]
 
-pVar :: Parser (Term Text)
+pVar :: Parser (Term Raw Text)
 pVar = label "var" do
   location <- getLocation
   name <- pIdentifier
   pure $ Var {..}
 
-pLiteral :: Parser (Term Text)
+pLiteral :: Parser (Term Raw Text)
 pLiteral = label "literal" do
   location <- getLocation
   literal <- pLiteral'
@@ -235,7 +235,7 @@ pLiteral' = label "literal (inner)" $ lexeme $ Int <$> L.decimal
 
 -- | Parse a construct term.
 -- @ $tag(producers...;consumers...) @
-pConstruct :: Parser (Term Text)
+pConstruct :: Parser (Term Raw Text)
 pConstruct = label "construct" do
   location <- getLocation
   tag <- withSigil Constructor
@@ -246,7 +246,7 @@ pConstruct = label "construct" do
 -- @ {coclauses...} @
 --
 -- INFO: If you want to add a new term starting with a brace, you need to modify this function.
-pComatch :: Parser (Term Text)
+pComatch :: Parser (Term Raw Text)
 pComatch = label "comatch" do
   location <- getLocation
   coclauses <- between (symbol "{") (symbol "}") $ pCoclause `sepEndBy` symbol ","
@@ -254,7 +254,7 @@ pComatch = label "comatch" do
 
 -- | Parse a coclause.
 -- @ $tag(params...;returns...) -> term @
-pCoclause :: Parser (Coclause Text)
+pCoclause :: Parser (Coclause Raw Text)
 pCoclause = label "comatch clause" do
   copattern <- pCopattern
   _ <- symbol "->"
@@ -262,23 +262,34 @@ pCoclause = label "comatch clause" do
   pure Coclause {..}
 
 -- | Parse a copattern.
--- @ tag(params...;returns...) @
-pCopattern :: Parser (Copattern Text)
-pCopattern = label "copattern" do
-  tag <- withSigil Destructor
-  (params, returns) <- pArgumentList pIdentifier
-  pure Copattern {..}
+-- @ origin.tag(params...;returns...) @
+pCopattern :: Parser (Copattern Raw Text)
+pCopattern = label "copattern" $ makeExprParser pAtomicCopattern table
+  where
+    table = [[postfixCopatternOperator]]
+
+postfixCopatternOperator :: Operator Parser (Copattern Raw Text)
+postfixCopatternOperator = Postfix $ makeChainable do
+  _ <- symbol "."
+  tag <- pIdentifier
+  (params, returns) <- pArgumentList pPattern
+  pure \origin -> CDestruct {..}
+
+pAtomicCopattern :: Parser (Copattern Raw Text)
+pAtomicCopattern = do
+  name <- pIdentifier
+  pure $ CVar {..}
 
 -- | Parse a primitive procedure call.
 -- @ #tag(producers...;consumers...) @
-pPrim :: Parser (Term Text)
+pPrim :: Parser (Term Raw Text)
 pPrim = label "prim" do
   location <- getLocation
   tag <- withSigil Primitive
   (producers, consumers) <- pArgumentList pTerm
   pure $ Prim {..}
 
-pInvoke :: Parser (Term Text)
+pInvoke :: Parser (Term Raw Text)
 pInvoke = label "invoke" do
   location <- getLocation
   name <- withSigil Toplevel
