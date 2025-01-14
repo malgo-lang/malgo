@@ -18,7 +18,9 @@ toCore definitions = do
 class Convert a r where
   convert :: a -> r
 
-data ToCoreError = InvalidConsumer {location :: Location, term :: Term Name}
+data ToCoreError
+  = InvalidConsumer {location :: Location, term :: Term Name}
+  | InvalidPattern {location :: Location, pattern :: Pattern Name}
   deriving (Show)
 
 instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Definition Name) (Eff es Core.Definition) where
@@ -156,7 +158,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
   convert Match {..} = \cont -> do
     term' <- convert term
     clauses' <- for clauses \Clause {..} -> do
-      let pattern' = convertPattern pattern
+      pattern' <- convertPattern pattern
       statement <- convert term cont
       pure (pattern', statement)
     pure
@@ -166,7 +168,14 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Name) (Name
           consumer = Core.Match {location, clauses = clauses'}
         }
     where
-      convertPattern Pattern {..} = Core.Pattern {..}
+      convertPattern PConstruct {..} = do
+        params' <- traverse unwrapPVar params
+        returns' <- traverse unwrapPVar returns
+        pure Core.Pattern {tag, params = params', returns = returns'}
+      convertPattern pattern@PVar {} = throwError $ InvalidPattern {location, pattern}
+      unwrapPVar PVar {..} = pure name
+      unwrapPVar pattern@PConstruct {} = throwError $ InvalidPattern {location, pattern}
+  -- convertPattern Pattern {..} = Core.Pattern {..}
   convert Prim {..} = \cont -> do
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers

@@ -70,7 +70,7 @@
             }
         , clauses =
             [ Clause
-                { pattern = Pattern
+                { pattern = PConstruct
                     { tag = "Nil"
                     , params = []
                     , returns = []
@@ -82,11 +82,13 @@
                     }
                 }
             , Clause
-                { pattern = Pattern
+                { pattern = PConstruct
                     { tag = "Cons"
                     , params =
-                        [ "x"
-                        , "xs"
+                        [ PVar
+                            { name = "x" }
+                        , PVar
+                            { name = "xs" }
                         ]
                     , returns = []
                     }
