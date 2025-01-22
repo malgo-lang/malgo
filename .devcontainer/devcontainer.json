@@ -1,35 +1,20 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/debian
 {
-	"name": "Debian",
+	"name": "DevContainer",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
-	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/rust:1": {},
-		"ghcr.io/devcontainers-community/features/llvm:3": {
-			"version": "15"
-		},
-		"ghcr.io/devcontainers-contrib/features/haskell:2": {
-			"ghcVersion": "9.6.4",
-			"globalPackages": "hpack hlint ghc-prof-flamegraph"
-		},
-		"ghcr.io/devcontainers-contrib/features/apt-packages": {
-			"packages": "libgmp-dev,pkg-config,libgc-dev"
-		}
+	"build": {
+		"dockerfile": "Dockerfile"
 	},
-	"postCreateCommand": "/bin/bash ./.devcontainer/post-create.sh",
+	"remoteEnv": {
+		"PATH": "${containerEnv:PATH}:/home/vscode/.ghcup/bin:/home/vscode/.cabal/bin:/home/vscode/.go/bin"
+	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"haskell.haskell"
 			]
 		}
-	}
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-	// Configure tool-specific properties.
-	// "customizations": {},
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	},
+	"postCreateCommand": "sh .devcontainer/post-create.sh"
 }
