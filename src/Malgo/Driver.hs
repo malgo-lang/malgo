@@ -2,7 +2,6 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Data.ByteString qualified as BS
-import Data.Map.Strict qualified as Map
 import Data.String.Conversions.Monomorphic (toString)
 import Data.Text.IO qualified as T
 import Effectful
@@ -15,11 +14,10 @@ import Malgo.Core.Flat qualified as Flat
 import Malgo.Core.LambdaLift (lambdalift)
 import Malgo.Core.Lint (lint)
 import Malgo.Core.Optimize (OptimizeOption, optimizeProgram)
-import Malgo.Core.Syntax (Program)
+import Malgo.Core.Syntax (Program, searchMain)
 import Malgo.Core.Type (Type)
-import Malgo.Desugar.DsState (_nameEnv)
 import Malgo.Desugar.Pass (desugar)
-import Malgo.Id (Id (Id, moduleName, name, sort), IdSort (External), Meta (..))
+import Malgo.Id (Meta (..))
 import Malgo.Infer.Pass qualified as Infer
 import Malgo.Interface (Interface, buildInterface, loadInterface)
 import Malgo.Link qualified as Link
@@ -68,7 +66,7 @@ compileToCore ::
   ) =>
   ArtifactPath ->
   Syntax.Module (Malgo 'Parse) ->
-  Eff es (Program (Meta Type), Map Id (Meta Type))
+  Eff es (Program (Meta Type))
 compileToCore srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
   registerModule moduleName srcPath
@@ -129,7 +127,7 @@ compileToCore srcPath parsedAst = do
     liftIO $ T.writeFile (toFilePath srcPath.targetPath -<.> "kor.opt.lift") $ render $ pretty coreLL
   lint True coreLL
 
-  pure (coreLL, dsEnv._nameEnv)
+  pure coreLL
 
 -- | Compile the Core representation to LLVM module.
 compileToLLVM ::
@@ -139,24 +137,12 @@ compileToLLVM ::
   ArtifactPath ->
   ModuleName ->
   Program (Meta Type) ->
-  Map Id (Meta Type) ->
   Eff es ()
-compileToLLVM srcPath moduleName coreLL nameEnv = do
+compileToLLVM srcPath moduleName coreLL = do
   Uniq i <- get @Uniq
   let srcRelPath = toFilePath srcPath.relPath
   let dstPath = toFilePath srcPath.targetPath -<.> "ll"
-  LLVM.codeGen srcRelPath dstPath moduleName (searchMain $ Map.toList nameEnv) i coreLL
-  where
-    -- エントリーポイントとなるmain関数を検索する
-    searchMain :: [(Id, Meta b)] -> Maybe (Meta b)
-    searchMain ((griffId@Id {sort = External}, coreId) : _)
-      | griffId.name
-          == "main"
-          && griffId.moduleName
-          == moduleName =
-          Just coreId
-    searchMain (_ : xs) = searchMain xs
-    searchMain _ = Nothing
+  LLVM.codeGen srcRelPath dstPath moduleName (searchMain coreLL) i coreLL
 
 -- | Compile the parsed AST.
 compileFromAST ::
@@ -172,8 +158,8 @@ compileFromAST ::
   Eff es ()
 compileFromAST srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
-  (coreLL, nameEnv) <- compileToCore srcPath parsedAst
-  compileToLLVM srcPath moduleName coreLL nameEnv
+  coreLL <- compileToCore srcPath parsedAst
+  compileToLLVM srcPath moduleName coreLL
 
 -- | Read the source file and parse it, then compile.
 compile ::

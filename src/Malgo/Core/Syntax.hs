@@ -16,6 +16,7 @@ module Malgo.Core.Syntax
     bind,
     cast,
     callGraph,
+    searchMain,
   )
 where
 
@@ -51,6 +52,14 @@ data Program a = Program
   deriving stock (Eq, Show, Functor, Generic)
   deriving anyclass (ToJSON, FromJSON)
   deriving (Semigroup, Monoid) via Generically (Program a)
+
+searchMain :: Program (Meta a) -> Maybe (Meta a)
+searchMain Program {..} =
+  let mains = map (\(a, _, _, _) -> a) $ filter (\(a, _, _, _) -> a.id.name == "main") topFuns
+   in case mains of
+        [] -> Nothing
+        [m] -> Just m
+        _ -> error "Multiple main functions"
 
 makeStore ''Program
 
