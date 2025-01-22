@@ -4,15 +4,20 @@
 {-# LANGUAGE TypeFamilyDependencies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Syntax (Phase (..), Definition (..), Term (..), Literal (..), Pattern (..), Clause (..), Copattern (..), Coclause (..)) where
+module Malgo.Syntax (Phase (..), NextOf, Definition (..), Term (..), Literal (..), Pattern (..), Clause (..), Copattern (..), Coclause (..)) where
 
 import Control.Lens.TH (makeFieldsId)
+import Data.Void (Void)
 import Malgo.Lens
 import Malgo.Location (HasLocation (..), Location)
 import Malgo.Name (HasName (..))
 import Malgo.Prelude
 
-type data Phase = Raw | Desugared
+type data Phase = Raw | FlattenedCopatterns | FlattenedPatterns
+
+type family NextOf (x :: Phase) :: Phase where
+  NextOf Raw = FlattenedCopatterns
+  NextOf FlattenedCopatterns = FlattenedPatterns
 
 data Definition x a = Definition
   { location :: Location,
@@ -22,7 +27,7 @@ data Definition x a = Definition
     term :: Term x a
   }
 
-deriving instance (Show a, Show (XPatternParam x a), Show (XOrigin x a)) => Show (Definition x a)
+deriving instance (Show a, Show (XPatternParam x a), Show (XCopatternParam x a), Show (XPVar x a), Show (XOrigin x a)) => Show (Definition x a)
 
 data Term x a
   = Var {location :: Location, name :: a}
@@ -48,6 +53,12 @@ data Term x a
       { location :: Location,
         term :: Term x a,
         clauses :: [Clause x a]
+      }
+  | Let
+      { location :: Location,
+        name :: a,
+        producer :: Term x a,
+        term :: Term x a
       }
   | Prim
       { location :: Location,
@@ -78,7 +89,7 @@ data Term x a
         name :: a
       }
 
-deriving instance (Show a, Show (XPatternParam x a), Show (XOrigin x a)) => Show (Term x a)
+deriving instance (Show a, Show (XPatternParam x a), Show (XCopatternParam x a), Show (XPVar x a), Show (XOrigin x a)) => Show (Term x a)
 
 data Literal = Int {int :: Int}
   deriving (Show)
@@ -90,43 +101,58 @@ data Pattern x a where
       returns :: [XPatternParam x a]
     } ->
     Pattern x a
-  PVar :: {name :: a} -> Pattern Raw a
+  PVar ::
+    { name :: XPVar x a
+    } ->
+    Pattern x a
+
+type family XPVar x a where
+  XPVar Raw a = a
+  XPVar FlattenedCopatterns a = a
+  XPVar FlattenedPatterns a = Void -- After flattening, all variables should be introduced as parameters or let-bound variables
 
 type family XPatternParam x a where
   XPatternParam Raw a = Pattern Raw a
-  XPatternParam Desugared a = a
+  XPatternParam FlattenedCopatterns a = Pattern FlattenedCopatterns a
+  XPatternParam FlattenedPatterns a = a
 
-deriving instance (Show a, Show (XPatternParam x a)) => Show (Pattern x a)
+deriving instance (Show a, Show (XPatternParam x a), Show (XPVar x a)) => Show (Pattern x a)
 
 data Clause x a = Clause
   { pattern :: Pattern x a,
     term :: Term x a
   }
 
-deriving instance (Show a, Show (XPatternParam x a), Show (XOrigin x a)) => Show (Clause x a)
+deriving instance (Show a, Show (XPatternParam x a), Show (XCopatternParam x a), Show (XPVar x a), Show (XOrigin x a)) => Show (Clause x a)
 
 data Copattern x a where
   CDestruct ::
     { origin :: XOrigin x a,
       tag :: Text,
-      params :: [XPatternParam x a],
-      returns :: [XPatternParam x a]
+      params :: [XCopatternParam x a],
+      returns :: [XCopatternParam x a]
     } ->
     Copattern x a
   CVar :: {name :: a} -> Copattern Raw a
 
 type family XOrigin x a where
   XOrigin Raw a = Copattern Raw a
-  XOrigin Desugared a = a
+  XOrigin FlattenedCopatterns a = a
+  XOrigin FlattenedPatterns a = a
 
-deriving instance (Show a, Show (XPatternParam x a), Show (XOrigin x a)) => Show (Copattern x a)
+type family XCopatternParam x a where
+  XCopatternParam Raw a = Pattern Raw a
+  XCopatternParam FlattenedCopatterns a = a
+  XCopatternParam FlattenedPatterns a = a
+
+deriving instance (Show a, Show (XPatternParam x a), Show (XCopatternParam x a), Show (XOrigin x a)) => Show (Copattern x a)
 
 data Coclause x a = Coclause
   { copattern :: Copattern x a,
     term :: Term x a
   }
 
-deriving instance (Show a, Show (XPatternParam x a), Show (XOrigin x a)) => Show (Coclause x a)
+deriving instance (Show a, Show (XPatternParam x a), Show (XCopatternParam x a), Show (XPVar x a), Show (XOrigin x a)) => Show (Coclause x a)
 
 makeFieldsId ''Definition
 makeFieldsId ''Term

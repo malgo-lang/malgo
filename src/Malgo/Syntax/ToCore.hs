@@ -3,6 +3,7 @@
 module Malgo.Syntax.ToCore (toCore, ToCoreError) where
 
 import Data.Traversable (for)
+import Data.Void (absurd)
 import Effectful.Error.Static (Error, throwError)
 import Malgo.Core qualified as Core
 import Malgo.Location
@@ -11,7 +12,7 @@ import Malgo.Prelude
 import Malgo.Syntax
 import Malgo.Unique (UniqueGen)
 
-toCore :: (UniqueGen :> es, Error ToCoreError :> es) => [Definition Desugared Name] -> Eff es [Core.Definition]
+toCore :: (UniqueGen :> es, Error ToCoreError :> es) => [Definition FlattenedPatterns Name] -> Eff es [Core.Definition]
 toCore definitions = do
   traverse convert definitions
 
@@ -19,11 +20,11 @@ class Convert a r where
   convert :: a -> r
 
 data ToCoreError
-  = InvalidConsumer {location :: Location, term :: Term Desugared Name}
-  | InvalidPattern {location :: Location, pattern :: Pattern Desugared Name}
+  = InvalidConsumer {location :: Location, term :: Term FlattenedPatterns Name}
+  | InvalidPattern {location :: Location, pattern :: Pattern FlattenedPatterns Name}
   deriving (Show)
 
-instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Definition Desugared Name) (Eff es Core.Definition) where
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Definition FlattenedPatterns Name) (Eff es Core.Definition) where
   convert Definition {..} = do
     result <- newName "result"
     statement <- convert term result
@@ -35,7 +36,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Definition Desug
           statement
         }
 
-instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Desugared Name) (Eff es Core.Producer) where
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term FlattenedPatterns Name) (Eff es Core.Producer) where
   convert Var {..} = pure $ Core.Var {..}
   convert Literal {..} = do
     let literal' = convert literal
@@ -78,6 +79,15 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Desugared N
         }
   convert term@Match {location} = do
     cont <- newName "contMatch"
+    statement <- convert term cont
+    pure
+      Core.Do
+        { location,
+          name = cont,
+          statement
+        }
+  convert term@Let {location} = do
+    cont <- newName "contLet"
     statement <- convert term cont
     pure
       Core.Do
@@ -130,7 +140,7 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Desugared N
           statement
         }
 
-instance (Error ToCoreError :> es) => Convert (Term Desugared Name) (Eff es Core.Consumer) where
+instance (Error ToCoreError :> es) => Convert (Term FlattenedPatterns Name) (Eff es Core.Consumer) where
   convert Var {..} = pure $ Core.Covar {..}
   convert term = throwError $ InvalidConsumer term.location term
 
@@ -138,7 +148,7 @@ instance Convert Literal Core.Literal where
   convert Int {..} = Core.Int {..}
 
 -- This instance's `convert` takes a label as the return point of the statement.
-instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Desugared Name) (Name -> Eff es Core.Statement) where
+instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term FlattenedPatterns Name) (Name -> Eff es Core.Statement) where
   convert Destruct {..} = \cont -> do
     term' <- convert term
     producers' <- traverse convert producers
@@ -168,8 +178,18 @@ instance (UniqueGen :> es, Error ToCoreError :> es) => Convert (Term Desugared N
           consumer = Core.Match {location, clauses = clauses'}
         }
     where
-      convertPattern :: Pattern Desugared Name -> Core.Pattern
+      convertPattern :: Pattern FlattenedPatterns Name -> Core.Pattern
       convertPattern PConstruct {..} = Core.Pattern {..}
+      convertPattern PVar {..} = absurd name
+  convert Let {..} = \cont -> do
+    producer <- convert producer
+    statement <- convert term cont
+    pure
+      Core.Cut
+        { location,
+          producer,
+          consumer = Core.Then {location, name, statement}
+        }
   convert Prim {..} = \cont -> do
     producers' <- traverse convert producers
     consumers' <- traverse convert consumers

@@ -18,6 +18,7 @@ module Malgo.Lens
     HasConstructors (..),
     HasTypes (..),
     HasOrigin (..),
+    HasXPVar (..),
   )
 where
 
@@ -79,3 +80,6 @@ class HasTypes s a | s -> a where
 
 class HasOrigin s a | s -> a where
   origin :: Traversal' s a
+
+class HasXPVar s a | s -> a where
+  xPVar :: Traversal' s a
