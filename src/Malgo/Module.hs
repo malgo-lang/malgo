@@ -15,6 +15,7 @@ module Malgo.Module
     pwdPath,
     parseArtifactPath,
     ViaStore (..),
+    ViaShow (..),
     moduleNameToString,
   )
 where
@@ -37,6 +38,7 @@ import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExi
 import System.Directory.Extra (listDirectories)
 import System.FilePath (makeRelative)
 import System.FilePath qualified as F
+import Text.Pretty.Simple (pShowNoColor)
 
 data ModuleName
   = ModuleName Text
@@ -214,3 +216,10 @@ instance (Store a) => Resource (ViaStore a) where
 instance Resource ByteString where
   toByteString = identity
   fromByteString = identity
+
+newtype ViaShow a = ViaShow a
+  deriving newtype (Pretty)
+
+instance (Show a) => Resource (ViaShow a) where
+  toByteString (ViaShow a) = convertString $ pShowNoColor a
+  fromByteString = error "fromByteString: ViaPretty cannot be deserialized"

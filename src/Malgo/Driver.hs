@@ -3,7 +3,6 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Data.ByteString qualified as BS
 import Data.String.Conversions.Monomorphic (toString)
-import Data.Text.IO qualified as T
 import Effectful
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
@@ -31,7 +30,7 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
-import Path (addExtension, replaceExtension, toFilePath)
+import Path (replaceExtension)
 import Prettyprinter qualified as PrettyPrinter
 import Prettyprinter.Render.Text qualified as PrettyPrinter
 import System.Exit (exitFailure)
@@ -91,8 +90,8 @@ compileToCore srcPath parsedAst = do
     save srcPath ".mlgi" (ViaStore inf)
 
     core <- Link.link inf core
-    corePath <- replaceExtension ".kor" srcPath.targetPath
-    liftIO $ T.writeFile (toFilePath corePath) $ render $ pretty core
+    when flags.testMode do
+      save srcPath ".kor" (ViaShow core)
 
     lint True core
     pure core
@@ -115,8 +114,7 @@ compileToCore srcPath parsedAst = do
     hPutStrLn stderr "=== OPTIMIZE ==="
     hPrint stderr $ pretty coreOpt
   when flags.testMode do
-    corePath <- replaceExtension ".kor" srcPath.targetPath >>= addExtension ".opt"
-    liftIO $ T.writeFile (toFilePath corePath) $ render $ pretty coreOpt
+    save srcPath ".kor-opt" (ViaShow coreOpt)
   lint True coreOpt
 
   coreLL <- if flags.lambdaLift then runReader moduleName $ lambdalift coreOpt >>= Flat.normalize else pure coreOpt
@@ -125,8 +123,7 @@ compileToCore srcPath parsedAst = do
       hPutStrLn stderr "=== LAMBDALIFT ==="
       hPrint stderr $ pretty coreLL
   when flags.testMode do
-    corePath <- replaceExtension ".kor" srcPath.targetPath >>= addExtension ".opt" >>= addExtension ".lift"
-    liftIO $ T.writeFile (toFilePath corePath) $ render $ pretty coreLL
+    save srcPath ".kor-lift" (ViaShow coreLL)
   lint True coreLL
 
   pure coreLL
