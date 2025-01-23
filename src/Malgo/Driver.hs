@@ -31,11 +31,10 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
-import Path (toFilePath)
+import Path (addExtension, replaceExtension, toFilePath)
 import Prettyprinter qualified as PrettyPrinter
 import Prettyprinter.Render.Text qualified as PrettyPrinter
 import System.Exit (exitFailure)
-import System.FilePath ((-<.>))
 import System.IO (hFlush)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
@@ -92,7 +91,8 @@ compileToCore srcPath parsedAst = do
     save srcPath ".mlgi" (ViaStore inf)
 
     core <- Link.link inf core
-    liftIO $ T.writeFile (toFilePath srcPath.targetPath -<.> "kor") $ render $ pretty core
+    corePath <- replaceExtension ".kor" srcPath.targetPath
+    liftIO $ T.writeFile (toFilePath corePath) $ render $ pretty core
 
     lint True core
     pure core
@@ -115,7 +115,8 @@ compileToCore srcPath parsedAst = do
     hPutStrLn stderr "=== OPTIMIZE ==="
     hPrint stderr $ pretty coreOpt
   when flags.testMode do
-    liftIO $ T.writeFile (toFilePath srcPath.targetPath -<.> "kor.opt") $ render $ pretty coreOpt
+    corePath <- replaceExtension ".kor" srcPath.targetPath >>= addExtension ".opt"
+    liftIO $ T.writeFile (toFilePath corePath) $ render $ pretty coreOpt
   lint True coreOpt
 
   coreLL <- if flags.lambdaLift then runReader moduleName $ lambdalift coreOpt >>= Flat.normalize else pure coreOpt
@@ -124,7 +125,8 @@ compileToCore srcPath parsedAst = do
       hPutStrLn stderr "=== LAMBDALIFT ==="
       hPrint stderr $ pretty coreLL
   when flags.testMode do
-    liftIO $ T.writeFile (toFilePath srcPath.targetPath -<.> "kor.opt.lift") $ render $ pretty coreLL
+    corePath <- replaceExtension ".kor" srcPath.targetPath >>= addExtension ".opt" >>= addExtension ".lift"
+    liftIO $ T.writeFile (toFilePath corePath) $ render $ pretty coreLL
   lint True coreLL
 
   pure coreLL
@@ -140,9 +142,8 @@ compileToLLVM ::
   Eff es ()
 compileToLLVM srcPath moduleName coreLL = do
   Uniq i <- get @Uniq
-  let srcRelPath = toFilePath srcPath.relPath
-  let dstPath = toFilePath srcPath.targetPath -<.> "ll"
-  LLVM.codeGen srcRelPath dstPath moduleName (searchMain coreLL) i coreLL
+  dstPath <- replaceExtension ".ll" srcPath.targetPath
+  LLVM.codeGen srcPath.relPath dstPath moduleName (searchMain coreLL) i coreLL
 
 -- | Compile the parsed AST.
 compileFromAST ::

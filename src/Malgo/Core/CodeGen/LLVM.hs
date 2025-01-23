@@ -57,6 +57,7 @@ import Malgo.Id
 import Malgo.Module (ModuleName (..), moduleNameToString)
 import Malgo.MonadUniq
 import Malgo.Prelude
+import Path
 
 data CodeGenState = CodeGenState
   { -- | 'primMap' is a map from primitive function name to its LLVM function.
@@ -112,9 +113,9 @@ runCodeGenT n env m =
 codeGen ::
   (MonadFix m, MonadIO m) =>
   -- | Source file path
-  FilePath ->
+  Path Rel File ->
   -- | Destination file path
-  FilePath ->
+  Path Abs File ->
   -- | Module name of the source program
   ModuleName ->
   -- | Entry point of the source program
@@ -150,11 +151,11 @@ codeGen srcPath dstPath modName mentry n Program {..} = do
     genLoadModule $ runContT (initTopVars topVars) (const retVoid)
   let llvmModule =
         defaultModule
-          { LLVM.AST.moduleName = fromString srcPath,
-            moduleSourceFileName = fromString srcPath,
+          { LLVM.AST.moduleName = fromString $ toFilePath srcPath,
+            moduleSourceFileName = fromString $ toFilePath srcPath,
             moduleDefinitions = llvmir
           }
-  liftIO $ withContext $ \ctx -> BS.writeFile dstPath =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
+  liftIO $ withContext $ \ctx -> BS.writeFile (toFilePath dstPath) =<< withModuleFromAST ctx llvmModule moduleLLVMAssembly
   where
     initTopVars [] = pass
     initTopVars ((name, _, expr) : xs) = do
