@@ -9,7 +9,11 @@ run = [
 ]
 [tasks.build]
 description = "Build the project"
-run = "hpack && cabal build && cabal test"
+run = "hpack && cabal build"
+[tasks.test]
+description = "Run the tests"
+depends = ["build"]
+run = "cabal test"
 [tasks.exec]
 description = "Run the project"
 depends = ["build"]
