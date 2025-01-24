@@ -222,4 +222,4 @@ newtype ViaShow a = ViaShow a
 
 instance (Show a) => Resource (ViaShow a) where
   toByteString (ViaShow a) = convertString $ pShowNoColor a
-  fromByteString = error "fromByteString: ViaPretty cannot be deserialized"
+  fromByteString = error "fromByteString: ViaShow cannot be deserialized"
