@@ -16,7 +16,7 @@ eval program = evalState @Env mempty do
   traverse_ evalTopFun program.topFuns
   traverse_ initTopVar program.topVars
   traverse_ evalTopVar program.topVars
-  _
+  undefined
 
 evalTopFun :: (State Env :> es, IOE :> es) => (Name, [Name], c, Expr Name) -> Eff es ()
 evalTopFun (name, parameters, _, body) = do
