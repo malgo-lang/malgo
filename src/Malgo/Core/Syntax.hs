@@ -4,9 +4,7 @@
 
 -- | AST definitions for Core language
 module Malgo.Core.Syntax
-  ( module Malgo.Core.Syntax.Common,
-    module Malgo.Core.Syntax.Unboxed,
-    module Malgo.Core.Syntax.Atom,
+  ( module Malgo.Core.Syntax.Atom,
     module Malgo.Core.Syntax.Expr,
     module Malgo.Core.Syntax.LocalDef,
     module Malgo.Core.Syntax.Case,
@@ -33,10 +31,8 @@ import Effectful.Writer.Static.Local (Writer, runWriter, tell)
 import Generic.Data
 import Malgo.Core.Syntax.Atom
 import Malgo.Core.Syntax.Case
-import Malgo.Core.Syntax.Common
 import Malgo.Core.Syntax.Expr
 import Malgo.Core.Syntax.LocalDef
-import Malgo.Core.Syntax.Unboxed
 import Malgo.Core.Type
 import Malgo.Id
 import Malgo.Module

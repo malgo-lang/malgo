@@ -17,7 +17,6 @@ import Data.Store.TH
 import Data.String.Conversions
 import Generic.Data
 import Malgo.Core.Syntax.Atom
-import Malgo.Core.Syntax.Common
 import {-# SOURCE #-} Malgo.Core.Syntax.Expr
 import Malgo.Core.Type
 import Malgo.Prelude

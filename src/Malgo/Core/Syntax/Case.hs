@@ -15,10 +15,8 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Map.Strict qualified as Map
 import Data.Store.TH
-import Malgo.Core.Syntax.Atom (HasAtom (..))
-import Malgo.Core.Syntax.Common
+import Malgo.Core.Syntax.Atom
 import {-# SOURCE #-} Malgo.Core.Syntax.Expr
-import Malgo.Core.Syntax.Unboxed
 import Malgo.Core.Type
 import Malgo.Prelude
 

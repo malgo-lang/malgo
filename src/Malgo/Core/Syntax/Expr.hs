@@ -13,9 +13,7 @@ import Data.String.Conversions
 import Generic.Data
 import Malgo.Core.Syntax.Atom
 import Malgo.Core.Syntax.Case
-import Malgo.Core.Syntax.Common
 import Malgo.Core.Syntax.LocalDef
-import Malgo.Core.Syntax.Unboxed
 import Malgo.Core.Type
 import Malgo.Prelude
 

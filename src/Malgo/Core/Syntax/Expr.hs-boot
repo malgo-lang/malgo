@@ -4,8 +4,7 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Kind qualified
 import Data.Store (Store)
-import Malgo.Core.Syntax.Atom (HasAtom)
-import Malgo.Core.Syntax.Common (HasFreeVar)
+import Malgo.Core.Syntax.Atom (HasAtom, HasFreeVar)
 import Malgo.Core.Type (HasType)
 import Malgo.Prelude (Eq, Foldable, Functor, Ord, Pretty, Show)
 
