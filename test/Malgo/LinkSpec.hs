@@ -27,6 +27,8 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
+  golden "link Builtin" (driveLink builtinPath)
+  golden "link Prelude" (driveLink preludePath)
   for_ testcases \testcase -> do
     golden ("link" <> takeBaseName testcase) (driveLink (testcaseDir </> testcase))
 

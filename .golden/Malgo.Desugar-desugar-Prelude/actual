@@ -1,0 +1,4494 @@
+Program
+ { topVars = [], topFuns =
+  [
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT, [ AnyT ] :-> AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), id = Id
+     { name = "._curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1136 } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "f", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1137 } }, Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "g", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1138 } } ],
+    [ [ AnyT ] :-> AnyT, [ AnyT ] :-> AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "fun", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1139 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "x", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1140 } } ]
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1142 } } )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1141 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "g", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1138 } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "x", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1140 } } ) ] )
+        ( Cast AnyT
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1141 } } ) ) ) )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1143 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "f", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1137 } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1142 } } ) ] )
+        ( Cast AnyT
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1143 } } ) ) ) ) ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "fun", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1139 } } ) ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
+     { name = "<|_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1124 } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "f", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1125 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "x", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1126 } } ],
+    [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, Assign
+    ( Meta
+     { meta = AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1127 } } )
+    ( Call
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "f", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1125 } } ) )
+     [ Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "x", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1126 } } ) ] )
+    ( Cast AnyT
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1127 } } ) ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
+     { name = "takeWhileString_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1085 } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "pred", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1086 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "str", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1087 } } ],
+    [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, Assign
+    ( Meta
+     { meta =
+      [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1091 } } )
+    ( Assign
+     ( Meta
+      { meta = AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1089 } } )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1088 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "headString", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "str", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1087 } } ) ] )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1088 } } ) ) ) )
+     ( Assign
+      ( Meta
+       { meta =
+        [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1090 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta = [ AnyT ] :->
+          ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
+          { name = "case", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1089 } } ) ] )
+      ( Cast
+       ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
+       ( Var
+        ( Meta
+         { meta =
+          [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1090 } } ) ) ) ) )
+    ( Assign
+     ( Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1118 } } )
+     ( Let
+      [ LocalDef
+       { _variable = Meta
+        { meta = [ AnyT ] :-> AnyT, id = Id
+         { name = "fun", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1092 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        [ Meta
+         { meta = AnyT, id = Id
+          { name = "nothing", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1093 } } ]
+        ( Match
+         ( Cast
+          ( SumT
+           [ Con
+            ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+            ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ] )
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "nothing", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1093 } } ) ) )
+         [ Unpack
+          ( Con ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [] ) []
+          ( Atom
+           ( Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "str", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1087 } } ) ) ), Unpack
+          ( Con ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] )
+          [ Meta
+           { meta = AnyT, id = Id
+            { name = "p", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1094 } } ]
+          ( Assign
+           ( Meta
+            { meta =
+             [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1112 } } )
+           ( Assign
+            ( Meta
+             { meta =
+              [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+              ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1098 } } )
+            ( Assign
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1096 } } )
+             ( Assign
+              ( Meta
+               { meta = AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1095 } } )
+              ( Call
+               ( Var
+                ( Meta
+                 { meta = [ AnyT ] :-> AnyT, id = Id
+                  { name = "pred", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1086 } } ) )
+               [ Var
+                ( Meta
+                 { meta = AnyT, id = Id
+                  { name = "p", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1094 } } ) ] )
+              ( Cast AnyT
+               ( Var
+                ( Meta
+                 { meta = AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1095 } } ) ) ) )
+             ( Assign
+              ( Meta
+               { meta =
+                [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1097 } } )
+              ( Call
+               ( Var
+                ( Meta
+                 { meta = [ AnyT ] :->
+                  (
+                   [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                   (
+                    [
+                     [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), id = Id
+                  { name = "if", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+               [ Var
+                ( Meta
+                 { meta = AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1096 } } ) ] )
+              ( Cast
+               (
+                [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) )
+               ( Var
+                ( Meta
+                 { meta =
+                  [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                  ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1097 } } ) ) ) ) )
+            ( Assign
+             ( Meta
+              { meta =
+               [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1110 } } )
+             ( Let
+              [ LocalDef
+               { _variable = Meta
+                { meta =
+                 [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                 { name = "fun", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1099 } }, typ =
+                [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+                [ Meta
+                 { meta = SumT
+                  [ Con Tuple [] ], id = Id
+                  { name = "$_", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1100 } } ]
+                ( Assign
+                 ( Meta
+                  { meta = [ AnyT ] :-> AnyT, id = Id
+                   { name = "d", moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1102 } } )
+                 ( Assign
+                  ( Meta
+                   { meta = [ AnyT ] :-> AnyT, id = Id
+                    { name = "d", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1101 } } )
+                  ( Call
+                   ( Var
+                    ( Meta
+                     { meta = [ AnyT ] :->
+                      ( [ AnyT ] :-> AnyT ), id = Id
+                      { name = "consString", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+                   [ Var
+                    ( Meta
+                     { meta = AnyT, id = Id
+                      { name = "p", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1094 } } ) ] )
+                  ( Cast
+                   ( [ AnyT ] :-> AnyT )
+                   ( Var
+                    ( Meta
+                     { meta = [ AnyT ] :-> AnyT, id = Id
+                      { name = "d", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1101 } } ) ) ) )
+                 ( Assign
+                  ( Meta
+                   { meta = AnyT, id = Id
+                    { name = "d", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1108 } } )
+                  ( Assign
+                   ( Meta
+                    { meta = [ AnyT ] :-> AnyT, id = Id
+                     { name = "d", moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1104 } } )
+                   ( Assign
+                    ( Meta
+                     { meta = [ AnyT ] :-> AnyT, id = Id
+                      { name = "d", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1103 } } )
+                    ( Call
+                     ( Var
+                      ( Meta
+                       { meta =
+                        [ [ AnyT ] :-> AnyT ] :->
+                        ( [ AnyT ] :-> AnyT ), id = Id
+                        { name = "takeWhileString", moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+                     [ Var
+                      ( Meta
+                       { meta = [ AnyT ] :-> AnyT, id = Id
+                        { name = "pred", moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1086 } } ) ] )
+                    ( Cast
+                     ( [ AnyT ] :-> AnyT )
+                     ( Var
+                      ( Meta
+                       { meta = [ AnyT ] :-> AnyT, id = Id
+                        { name = "d", moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1103 } } ) ) ) )
+                   ( Assign
+                    ( Meta
+                     { meta = AnyT, id = Id
+                      { name = "d", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1106 } } )
+                    ( Assign
+                     ( Meta
+                      { meta = AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1105 } } )
+                     ( Call
+                      ( Var
+                       ( Meta
+                        { meta = [ AnyT ] :-> AnyT, id = Id
+                         { name = "tailString", moduleName = Artifact
+                          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+                      [ Var
+                       ( Meta
+                        { meta = AnyT, id = Id
+                         { name = "str", moduleName = Artifact
+                          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1087 } } ) ] )
+                     ( Cast AnyT
+                      ( Var
+                       ( Meta
+                        { meta = AnyT, id = Id
+                         { name = "d", moduleName = Artifact
+                          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1105 } } ) ) ) )
+                    ( Assign
+                     ( Meta
+                      { meta = AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1107 } } )
+                     ( Call
+                      ( Var
+                       ( Meta
+                        { meta = [ AnyT ] :-> AnyT, id = Id
+                         { name = "d", moduleName = Artifact
+                          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1104 } } ) )
+                      [ Var
+                       ( Meta
+                        { meta = AnyT, id = Id
+                         { name = "d", moduleName = Artifact
+                          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1106 } } ) ] )
+                     ( Cast AnyT
+                      ( Var
+                       ( Meta
+                        { meta = AnyT, id = Id
+                         { name = "d", moduleName = Artifact
+                          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1107 } } ) ) ) ) ) )
+                  ( Assign
+                   ( Meta
+                    { meta = AnyT, id = Id
+                     { name = "d", moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1109 } } )
+                   ( Call
+                    ( Var
+                     ( Meta
+                      { meta = [ AnyT ] :-> AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1102 } } ) )
+                    [ Var
+                     ( Meta
+                      { meta = AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1108 } } ) ] )
+                   ( Cast AnyT
+                    ( Var
+                     ( Meta
+                      { meta = AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1109 } } ) ) ) ) ) ) } ]
+              ( Atom
+               ( Var
+                ( Meta
+                 { meta =
+                  [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                  { name = "fun", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1099 } } ) ) ) )
+             ( Assign
+              ( Meta
+               { meta =
+                [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1111 } } )
+              ( Call
+               ( Var
+                ( Meta
+                 { meta =
+                  [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                  ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1098 } } ) )
+               [ Var
+                ( Meta
+                 { meta =
+                  [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1110 } } ) ] )
+              ( Cast
+               ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
+               ( Var
+                ( Meta
+                 { meta =
+                  [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1111 } } ) ) ) ) ) )
+           ( Assign
+            ( Meta
+             { meta =
+              [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1116 } } )
+            ( Let
+             [ LocalDef
+              { _variable = Meta
+               { meta =
+                [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                { name = "fun", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1113 } }, typ =
+               [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+               [ Meta
+                { meta = SumT
+                 [ Con Tuple [] ], id = Id
+                 { name = "$_", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1114 } } ]
+               ( Assign
+                ( Meta
+                 { meta = AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1115 } } )
+                ( Call
+                 ( Var
+                  ( Meta
+                   { meta = [ StringT ] :-> AnyT, id = Id
+                    { name = "String#", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+                 [ Unboxed ( String "" ) ] )
+                ( Cast AnyT
+                 ( Var
+                  ( Meta
+                   { meta = AnyT, id = Id
+                    { name = "d", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1115 } } ) ) ) ) } ]
+             ( Atom
+              ( Var
+               ( Meta
+                { meta =
+                 [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                 { name = "fun", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1113 } } ) ) ) )
+            ( Assign
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1117 } } )
+             ( Call
+              ( Var
+               ( Meta
+                { meta =
+                 [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1112 } } ) )
+              [ Var
+               ( Meta
+                { meta =
+                 [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1116 } } ) ] )
+             ( Cast AnyT
+              ( Var
+               ( Meta
+                { meta = AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1117 } } ) ) ) ) ) ) ] ) } ]
+      ( Atom
+       ( Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "fun", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1092 } } ) ) ) )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1119 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta =
+          [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1091 } } ) )
+       [ Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1118 } } ) ] )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1119 } } ) ) ) ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
+     { name = "dropWhileString_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1020 } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "pred", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1021 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "str", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1022 } } ],
+    [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, Assign
+    ( Meta
+     { meta =
+      [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1026 } } )
+    ( Assign
+     ( Meta
+      { meta = AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1024 } } )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1023 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "headString", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "str", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1022 } } ) ] )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1023 } } ) ) ) )
+     ( Assign
+      ( Meta
+       { meta =
+        [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1025 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta = [ AnyT ] :->
+          ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
+          { name = "case", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1024 } } ) ] )
+      ( Cast
+       ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
+       ( Var
+        ( Meta
+         { meta =
+          [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1025 } } ) ) ) ) )
+    ( Assign
+     ( Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1048 } } )
+     ( Let
+      [ LocalDef
+       { _variable = Meta
+        { meta = [ AnyT ] :-> AnyT, id = Id
+         { name = "fun", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1027 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+        [ Meta
+         { meta = AnyT, id = Id
+          { name = "nothing", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1028 } } ]
+        ( Match
+         ( Cast
+          ( SumT
+           [ Con
+            ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+            ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ] )
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "nothing", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1028 } } ) ) )
+         [ Unpack
+          ( Con ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [] ) []
+          ( Atom
+           ( Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "str", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1022 } } ) ) ), Unpack
+          ( Con ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] )
+          [ Meta
+           { meta = AnyT, id = Id
+            { name = "p", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1029 } } ]
+          ( Assign
+           ( Meta
+            { meta =
+             [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1043 } } )
+           ( Assign
+            ( Meta
+             { meta =
+              [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+              ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1033 } } )
+            ( Assign
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1031 } } )
+             ( Assign
+              ( Meta
+               { meta = AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1030 } } )
+              ( Call
+               ( Var
+                ( Meta
+                 { meta = [ AnyT ] :-> AnyT, id = Id
+                  { name = "pred", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1021 } } ) )
+               [ Var
+                ( Meta
+                 { meta = AnyT, id = Id
+                  { name = "p", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1029 } } ) ] )
+              ( Cast AnyT
+               ( Var
+                ( Meta
+                 { meta = AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1030 } } ) ) ) )
+             ( Assign
+              ( Meta
+               { meta =
+                [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1032 } } )
+              ( Call
+               ( Var
+                ( Meta
+                 { meta = [ AnyT ] :->
+                  (
+                   [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                   (
+                    [
+                     [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), id = Id
+                  { name = "if", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+               [ Var
+                ( Meta
+                 { meta = AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1031 } } ) ] )
+              ( Cast
+               (
+                [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) )
+               ( Var
+                ( Meta
+                 { meta =
+                  [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                  ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1032 } } ) ) ) ) )
+            ( Assign
+             ( Meta
+              { meta =
+               [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1041 } } )
+             ( Let
+              [ LocalDef
+               { _variable = Meta
+                { meta =
+                 [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                 { name = "fun", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1034 } }, typ =
+                [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+                [ Meta
+                 { meta = SumT
+                  [ Con Tuple [] ], id = Id
+                  { name = "$_", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1035 } } ]
+                ( Assign
+                 ( Meta
+                  { meta = [ AnyT ] :-> AnyT, id = Id
+                   { name = "d", moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1037 } } )
+                 ( Assign
+                  ( Meta
+                   { meta = [ AnyT ] :-> AnyT, id = Id
+                    { name = "d", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1036 } } )
+                  ( Call
+                   ( Var
+                    ( Meta
+                     { meta =
+                      [ [ AnyT ] :-> AnyT ] :->
+                      ( [ AnyT ] :-> AnyT ), id = Id
+                      { name = "dropWhileString", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+                   [ Var
+                    ( Meta
+                     { meta = [ AnyT ] :-> AnyT, id = Id
+                      { name = "pred", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1021 } } ) ] )
+                  ( Cast
+                   ( [ AnyT ] :-> AnyT )
+                   ( Var
+                    ( Meta
+                     { meta = [ AnyT ] :-> AnyT, id = Id
+                      { name = "d", moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1036 } } ) ) ) )
+                 ( Assign
+                  ( Meta
+                   { meta = AnyT, id = Id
+                    { name = "d", moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1039 } } )
+                  ( Assign
+                   ( Meta
+                    { meta = AnyT, id = Id
+                     { name = "d", moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1038 } } )
+                   ( Call
+                    ( Var
+                     ( Meta
+                      { meta = [ AnyT ] :-> AnyT, id = Id
+                       { name = "tailString", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+                    [ Var
+                     ( Meta
+                      { meta = AnyT, id = Id
+                       { name = "str", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1022 } } ) ] )
+                   ( Cast AnyT
+                    ( Var
+                     ( Meta
+                      { meta = AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1038 } } ) ) ) )
+                  ( Assign
+                   ( Meta
+                    { meta = AnyT, id = Id
+                     { name = "d", moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1040 } } )
+                   ( Call
+                    ( Var
+                     ( Meta
+                      { meta = [ AnyT ] :-> AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1037 } } ) )
+                    [ Var
+                     ( Meta
+                      { meta = AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1039 } } ) ] )
+                   ( Cast AnyT
+                    ( Var
+                     ( Meta
+                      { meta = AnyT, id = Id
+                       { name = "d", moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1040 } } ) ) ) ) ) ) } ]
+              ( Atom
+               ( Var
+                ( Meta
+                 { meta =
+                  [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                  { name = "fun", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1034 } } ) ) ) )
+             ( Assign
+              ( Meta
+               { meta =
+                [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1042 } } )
+              ( Call
+               ( Var
+                ( Meta
+                 { meta =
+                  [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+                  ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1033 } } ) )
+               [ Var
+                ( Meta
+                 { meta =
+                  [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1041 } } ) ] )
+              ( Cast
+               ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
+               ( Var
+                ( Meta
+                 { meta =
+                  [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+                  { name = "d", moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1042 } } ) ) ) ) ) )
+           ( Assign
+            ( Meta
+             { meta =
+              [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1046 } } )
+            ( Let
+             [ LocalDef
+              { _variable = Meta
+               { meta =
+                [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                { name = "fun", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1044 } }, typ =
+               [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+               [ Meta
+                { meta = SumT
+                 [ Con Tuple [] ], id = Id
+                 { name = "$_", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1045 } } ]
+               ( Atom
+                ( Var
+                 ( Meta
+                  { meta = AnyT, id = Id
+                   { name = "str", moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1022 } } ) ) ) } ]
+             ( Atom
+              ( Var
+               ( Meta
+                { meta =
+                 [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                 { name = "fun", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1044 } } ) ) ) )
+            ( Assign
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1047 } } )
+             ( Call
+              ( Var
+               ( Meta
+                { meta =
+                 [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1043 } } ) )
+              [ Var
+               ( Meta
+                { meta =
+                 [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1046 } } ) ] )
+             ( Cast AnyT
+              ( Var
+               ( Meta
+                { meta = AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1047 } } ) ) ) ) ) ) ] ) } ]
+      ( Atom
+       ( Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "fun", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1027 } } ) ) ) )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1049 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta =
+          [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1026 } } ) )
+       [ Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1048 } } ) ] )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1049 } } ) ) ) ) ) ),
+   ( Meta
+    { meta =
+     [ AnyT, [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+     { name = "case_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 986 } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "x", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 987 } }, Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "f", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 988 } } ],
+    [ AnyT, [ AnyT ] :-> AnyT ] :-> AnyT, Assign
+    ( Meta
+     { meta = AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 989 } } )
+    ( Call
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "f", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 988 } } ) )
+     [ Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "x", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 987 } } ) ] )
+    ( Cast AnyT
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 989 } } ) ) ) ),
+   ( Meta
+    { meta =
+     [ AnyT, AnyT ] :-> AnyT, id = Id
+     { name = "const_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 958 } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "a", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 959 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "_", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 960 } } ],
+    [ AnyT, AnyT ] :-> AnyT, Atom
+    ( Var
+     ( Meta
+      { meta = AnyT, id = Id
+       { name = "a", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 959 } } ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> ( [ AnyT ] :-> AnyT ), AnyT, AnyT ] :-> AnyT, id = Id
+     { name = "foldl_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 939 } },
+    [ Meta
+     { meta = [ AnyT ] :->
+      ( [ AnyT ] :-> AnyT ), id = Id
+      { name = "_", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 940 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "z", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 941 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "nil", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 942 } } ],
+    [ [ AnyT ] :-> ( [ AnyT ] :-> AnyT ), AnyT, AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 942 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( Atom
+      ( Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "z", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 941 } } ) ) ), Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 943 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 944 } } ]
+     ( Assign
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 952 } } )
+      ( Assign
+       ( Meta
+        { meta = [ AnyT ] :->
+         ( [ AnyT ] :-> AnyT ), id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 946 } } )
+       ( Assign
+        ( Meta
+         { meta = [ AnyT ] :->
+          ( [ AnyT ] :-> AnyT ), id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 945 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta =
+            [ [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) ] :->
+            ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) ), id = Id
+            { name = "foldl", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+         [ Var
+          ( Meta
+           { meta = [ AnyT ] :->
+            ( [ AnyT ] :-> AnyT ), id = Id
+            { name = "_", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 940 } } ) ] )
+        ( Cast
+         ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) )
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :->
+            ( [ AnyT ] :-> AnyT ), id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 945 } } ) ) ) )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 950 } } )
+        ( Assign
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 948 } } )
+         ( Assign
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 947 } } )
+          ( Call
+           ( Var
+            ( Meta
+             { meta = [ AnyT ] :->
+              ( [ AnyT ] :-> AnyT ), id = Id
+              { name = "_", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 940 } } ) )
+           [ Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "z", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 941 } } ) ] )
+          ( Cast
+           ( [ AnyT ] :-> AnyT )
+           ( Var
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 947 } } ) ) ) )
+         ( Assign
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 949 } } )
+          ( Call
+           ( Var
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 948 } } ) )
+           [ Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "p", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 943 } } ) ] )
+          ( Cast AnyT
+           ( Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 949 } } ) ) ) ) )
+        ( Assign
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 951 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :->
+             ( [ AnyT ] :-> AnyT ), id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 946 } } ) )
+          [ Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 950 } } ) ] )
+         ( Cast
+          ( [ AnyT ] :-> AnyT )
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 951 } } ) ) ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 953 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 952 } } ) )
+        [ Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "p", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 944 } } ) ] )
+       ( Cast AnyT
+        ( Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 953 } } ) ) ) ) ) ] ),
+   ( Meta
+    { meta =
+     [ AnyT, AnyT, [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+     { name = "unless_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 876 } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "c", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 877 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "tValue", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 878 } }, Meta
+     { meta =
+      [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+      { name = "f", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 879 } } ],
+    [ AnyT, AnyT, [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, Assign
+    ( Meta
+     { meta =
+      [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 886 } } )
+    ( Assign
+     ( Meta
+      { meta =
+       [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+       ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 881 } } )
+     ( Assign
+      ( Meta
+       { meta =
+        [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 880 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta = [ AnyT ] :->
+          (
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+           ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), id = Id
+          { name = "if", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "c", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 877 } } ) ] )
+      ( Cast
+       (
+        [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) )
+       ( Var
+        ( Meta
+         { meta =
+          [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+          ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 880 } } ) ) ) )
+     ( Assign
+      ( Meta
+       { meta =
+        [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 884 } } )
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta =
+          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+          { name = "fun", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 882 } }, typ =
+         [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+         [ Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "$_", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 883 } } ]
+         ( Atom
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "tValue", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 878 } } ) ) ) } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "fun", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 882 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta =
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 885 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+           ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 881 } } ) )
+        [ Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 884 } } ) ] )
+       ( Cast
+        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 885 } } ) ) ) ) ) )
+    ( Assign
+     ( Meta
+      { meta = AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 887 } } )
+     ( Call
+      ( Var
+       ( Meta
+        { meta =
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 886 } } ) )
+      [ Var
+       ( Meta
+        { meta =
+         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+         { name = "f", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 879 } } ) ] )
+     ( Cast AnyT
+      ( Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 887 } } ) ) ) ) ),
+   ( Meta
+    { meta =
+     [ AnyT,
+      [ SumT [ Con Tuple [] ] ] :-> AnyT,
+      [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+     { name = "if_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 826 } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "true", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 827 } }, Meta
+     { meta =
+      [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+      { name = "t", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 828 } }, Meta
+     { meta =
+      [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+      { name = "_", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 829 } } ],
+    [ AnyT,
+     [ SumT [ Con Tuple [] ] ] :-> AnyT,
+     [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Builtin.mlg.False" ) [], Con
+       ( Data "runtime/malgo/Builtin.mlg.True" ) [] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "true", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 827 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Builtin.mlg.False" ) [] ) []
+     ( Assign
+      ( Meta
+       { meta = SumT
+        [ Con Tuple [] ], id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 831 } } )
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta = SumT
+          [ Con Tuple [] ], id = Id
+          { name = "let", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 830 } }, typ = SumT
+         [ Con Tuple [] ], _object = Pack
+         ( SumT [ Con Tuple [] ] )
+         ( Con Tuple [] ) [] } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "let", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 830 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 832 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "_", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 829 } } ) )
+        [ Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 831 } } ) ] )
+       ( Cast AnyT
+        ( Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 832 } } ) ) ) ) ), Unpack
+     ( Con ( Data "runtime/malgo/Builtin.mlg.True" ) [] ) []
+     ( Assign
+      ( Meta
+       { meta = SumT
+        [ Con Tuple [] ], id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 834 } } )
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta = SumT
+          [ Con Tuple [] ], id = Id
+          { name = "let", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 833 } }, typ = SumT
+         [ Con Tuple [] ], _object = Pack
+         ( SumT [ Con Tuple [] ] )
+         ( Con Tuple [] ) [] } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "let", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 833 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 835 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "t", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 828 } } ) )
+        [ Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 834 } } ) ] )
+       ( Cast AnyT
+        ( Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 835 } } ) ) ) ) ) ] ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
+     { name = "mapList_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 790 } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "_", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 791 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "nil", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 792 } } ],
+    [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 792 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( CallDirect
+      ( Meta
+       { meta = [] :-> AnyT, id = Id
+        { name = "Nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) [] ), Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 793 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 794 } } ]
+     ( Assign
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 798 } } )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 796 } } )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 795 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "_", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 791 } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "p", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 793 } } ) ] )
+        ( Cast AnyT
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 795 } } ) ) ) )
+       ( Assign
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 797 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :->
+            ( [ AnyT ] :-> AnyT ), id = Id
+            { name = "Cons", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 796 } } ) ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 797 } } ) ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 802 } } )
+       ( Assign
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 800 } } )
+        ( Assign
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 799 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta =
+             [ [ AnyT ] :-> AnyT ] :->
+             ( [ AnyT ] :-> AnyT ), id = Id
+             { name = "mapList", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+          [ Var
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "_", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 791 } } ) ] )
+         ( Cast
+          ( [ AnyT ] :-> AnyT )
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 799 } } ) ) ) )
+        ( Assign
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 801 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 800 } } ) )
+          [ Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "p", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 794 } } ) ] )
+         ( Cast AnyT
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 801 } } ) ) ) ) )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 803 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 798 } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 802 } } ) ] )
+        ( Cast AnyT
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 803 } } ) ) ) ) ) ) ] ),
+   ( Meta
+    { meta =
+     [ AnyT, AnyT ] :-> AnyT, id = Id
+     { name = "punctuate_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 746 } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "_", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 747 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "nil", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 748 } } ],
+    [ AnyT, AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 748 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( CallDirect
+      ( Meta
+       { meta = [] :-> AnyT, id = Id
+        { name = "Nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) [] ), Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 749 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 750 } } ]
+     ( Match
+      ( Cast
+       ( SumT
+        [ Con
+         ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+         ( Data "runtime/malgo/Prelude.mlg.Cons" )
+         [ AnyT, AnyT ] ] )
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "p", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 750 } } ) ) )
+      [ Unpack
+       ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+       ( Assign
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 752 } } )
+        ( Assign
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 751 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :->
+             ( [ AnyT ] :-> AnyT ), id = Id
+             { name = "Cons", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+          [ Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "p", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 749 } } ) ] )
+         ( Cast
+          ( [ AnyT ] :-> AnyT )
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 751 } } ) ) ) )
+        ( Assign
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 753 } } )
+         ( CallDirect
+          ( Meta
+           { meta = [] :-> AnyT, id = Id
+            { name = "Nil", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) [] )
+         ( Assign
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 754 } } )
+          ( Call
+           ( Var
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 752 } } ) )
+           [ Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 753 } } ) ] )
+          ( Cast AnyT
+           ( Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 754 } } ) ) ) ) ) ), Unpack
+       ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+       [ Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 755 } }, Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 756 } } ]
+       ( Assign
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 758 } } )
+        ( Assign
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 757 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :->
+             ( [ AnyT ] :-> AnyT ), id = Id
+             { name = "Cons", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+          [ Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "p", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 749 } } ) ] )
+         ( Cast
+          ( [ AnyT ] :-> AnyT )
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 757 } } ) ) ) )
+        ( Assign
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 766 } } )
+         ( Assign
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 760 } } )
+          ( Assign
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 759 } } )
+           ( Call
+            ( Var
+             ( Meta
+              { meta = [ AnyT ] :->
+               ( [ AnyT ] :-> AnyT ), id = Id
+               { name = "Cons", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+            [ Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "_", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 747 } } ) ] )
+           ( Cast
+            ( [ AnyT ] :-> AnyT )
+            ( Var
+             ( Meta
+              { meta = [ AnyT ] :-> AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 759 } } ) ) ) )
+          ( Assign
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 764 } } )
+           ( Assign
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 762 } } )
+            ( Assign
+             ( Meta
+              { meta = [ AnyT ] :-> AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 761 } } )
+             ( Call
+              ( Var
+               ( Meta
+                { meta = [ AnyT ] :->
+                 ( [ AnyT ] :-> AnyT ), id = Id
+                 { name = "punctuate", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+              [ Var
+               ( Meta
+                { meta = AnyT, id = Id
+                 { name = "_", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 747 } } ) ] )
+             ( Cast
+              ( [ AnyT ] :-> AnyT )
+              ( Var
+               ( Meta
+                { meta = [ AnyT ] :-> AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 761 } } ) ) ) )
+            ( Assign
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 763 } } )
+             ( Call
+              ( Var
+               ( Meta
+                { meta = [ AnyT ] :-> AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 762 } } ) )
+              [ Var
+               ( Meta
+                { meta = AnyT, id = Id
+                 { name = "p", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 750 } } ) ] )
+             ( Cast AnyT
+              ( Var
+               ( Meta
+                { meta = AnyT, id = Id
+                 { name = "d", moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 763 } } ) ) ) ) )
+           ( Assign
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 765 } } )
+            ( Call
+             ( Var
+              ( Meta
+               { meta = [ AnyT ] :-> AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 760 } } ) )
+             [ Var
+              ( Meta
+               { meta = AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 764 } } ) ] )
+            ( Cast AnyT
+             ( Var
+              ( Meta
+               { meta = AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 765 } } ) ) ) ) ) )
+         ( Assign
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 767 } } )
+          ( Call
+           ( Var
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 758 } } ) )
+           [ Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 766 } } ) ] )
+          ( Cast AnyT
+           ( Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 767 } } ) ) ) ) ) ) ] ) ] ),
+   ( Meta
+    { meta =
+     [ AnyT, [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+     { name = "|>_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 702 } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "x", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 703 } }, Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "f", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 704 } } ],
+    [ AnyT, [ AnyT ] :-> AnyT ] :-> AnyT, Assign
+    ( Meta
+     { meta = AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 705 } } )
+    ( Call
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "f", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 704 } } ) )
+     [ Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "x", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 703 } } ) ] )
+    ( Cast AnyT
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 705 } } ) ) ) ),
+   ( Meta
+    { meta =
+     [ AnyT, AnyT ] :-> AnyT, id = Id
+     { name = "Cons_curry", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 694 } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "p", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 695 } }, Meta
+     { meta = AnyT, id = Id
+      { name = "p", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 696 } } ],
+    [ AnyT, AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = SumT
+       [ Con
+        ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+        ( Data "runtime/malgo/Prelude.mlg.Cons" )
+        [ AnyT, AnyT ] ], id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 697 } }, typ = SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+        ( Data "runtime/malgo/Prelude.mlg.Cons" )
+        [ AnyT, AnyT ] ] )
+      ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+      [ Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 695 } } ), Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 696 } } ) ] } ]
+    ( Cast AnyT
+     ( Var
+      ( Meta
+       { meta = SumT
+        [ Con
+         ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+         ( Data "runtime/malgo/Prelude.mlg.Cons" )
+         [ AnyT, AnyT ] ], id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 697 } } ) ) ) ),
+   ( Meta
+    { meta = [] :-> AnyT, id = Id
+     { name = "Nothing", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } }, [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = SumT
+       [ Con
+        ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+        ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ], id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 687 } }, typ = SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+        ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ] )
+      ( Con ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [] ) [] } ]
+    ( Cast AnyT
+     ( Var
+      ( Meta
+       { meta = SumT
+        [ Con
+         ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+         ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ], id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 687 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "Just", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "p", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 688 } } ], [ AnyT ] :-> AnyT, Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = SumT
+       [ Con
+        ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+        ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ], id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 689 } }, typ = SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+        ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ] )
+      ( Con ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] )
+      [ Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 688 } } ) ] } ]
+    ( Cast AnyT
+     ( Var
+      ( Meta
+       { meta = SumT
+        [ Con
+         ( Data "runtime/malgo/Prelude.mlg.Nothing" ) [], Con
+         ( Data "runtime/malgo/Prelude.mlg.Just" ) [ AnyT ] ], id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 689 } } ) ) ) ),
+   ( Meta
+    { meta = [] :-> AnyT, id = Id
+     { name = "Nil", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } }, [], [] :-> AnyT, Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = SumT
+       [ Con
+        ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+        ( Data "runtime/malgo/Prelude.mlg.Cons" )
+        [ AnyT, AnyT ] ], id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 690 } }, typ = SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ], _object = Pack
+      ( SumT
+       [ Con
+        ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+        ( Data "runtime/malgo/Prelude.mlg.Cons" )
+        [ AnyT, AnyT ] ] )
+      ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) [] } ]
+    ( Cast AnyT
+     ( Var
+      ( Meta
+       { meta = SumT
+        [ Con
+         ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+         ( Data "runtime/malgo/Prelude.mlg.Cons" )
+         [ AnyT, AnyT ] ], id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 690 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), id = Id
+     { name = "Cons", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "p", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 691 } } ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 698 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "p", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 692 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ AnyT, AnyT ] :-> AnyT, id = Id
+         { name = "Cons_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 694 } } )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "p", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 691 } } ), Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "p", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 692 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 698 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :->
+     ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
+     { name = "|>", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "x", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 699 } } ], [ AnyT ] :->
+    ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta =
+       [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 706 } }, typ =
+      [ [ AnyT ] :-> AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "f", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 700 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ AnyT, [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+         { name = "|>_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 702 } } )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "x", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 699 } } ), Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "f", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 700 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta =
+        [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 706 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "tail", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "cons", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 707 } } ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "cons", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 707 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( Assign
+      ( Meta
+       { meta = SumT
+        [ Con Tuple [] ], id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 709 } } )
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta = SumT
+          [ Con Tuple [] ], id = Id
+          { name = "let", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 708 } }, typ = SumT
+         [ Con Tuple [] ], _object = Pack
+         ( SumT [ Con Tuple [] ] )
+         ( Con Tuple [] ) [] } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "let", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 708 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 710 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "exitFailure", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+        [ Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 709 } } ) ] )
+       ( Cast AnyT
+        ( Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 710 } } ) ) ) ) ), Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 711 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 712 } } ]
+     ( Atom
+      ( Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 712 } } ) ) ) ] ),
+   ( Meta
+    { meta =
+     [ SumT [ Con Tuple [ AnyT, AnyT ] ] ] :-> AnyT, id = Id
+     { name = "snd", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = SumT
+      [ Con Tuple [ AnyT, AnyT ] ], id = Id
+      { name = "tuple", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 713 } } ],
+    [ SumT [ Con Tuple [ AnyT, AnyT ] ] ] :-> AnyT, Match
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = SumT
+        [ Con Tuple [ AnyT, AnyT ] ], id = Id
+        { name = "tuple", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 713 } } ) ) )
+    [ Unpack
+     ( Con Tuple [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 714 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 715 } } ]
+     ( Atom
+      ( Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 715 } } ) ) ) ] ),
+   ( Meta
+    { meta = [ AnyT ] :-> SumT
+     [ Con Tuple [] ], id = Id
+     { name = "putStrLn", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "str", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 716 } } ], [ AnyT ] :-> SumT
+    [ Con Tuple [] ], Assign
+    ( Meta
+     { meta = SumT
+      [ Con Tuple [] ], id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 718 } } )
+    ( Assign
+     ( Meta
+      { meta = SumT
+       [ Con Tuple [] ], id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 717 } } )
+     ( Call
+      ( Var
+       ( Meta
+        { meta = [ AnyT ] :-> SumT
+         [ Con Tuple [] ], id = Id
+         { name = "printString", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+      [ Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "str", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 716 } } ) ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var
+       ( Meta
+        { meta = SumT
+         [ Con Tuple [] ], id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 717 } } ) ) ) )
+    ( Assign
+     ( Meta
+      { meta = SumT
+       [ Con Tuple [] ], id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 720 } } )
+     ( Let
+      [ LocalDef
+       { _variable = Meta
+        { meta = SumT
+         [ Con Tuple [] ], id = Id
+         { name = "let", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 719 } }, typ = SumT
+        [ Con Tuple [] ], _object = Pack
+        ( SumT [ Con Tuple [] ] )
+        ( Con Tuple [] ) [] } ]
+      ( Atom
+       ( Var
+        ( Meta
+         { meta = SumT
+          [ Con Tuple [] ], id = Id
+          { name = "let", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 719 } } ) ) ) )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "cast", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 721 } } )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = SumT
+          [ Con Tuple [] ], id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 720 } } ) ) )
+      ( Assign
+       ( Meta
+        { meta = SumT
+         [ Con Tuple [] ], id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 722 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :-> SumT
+           [ Con Tuple [] ], id = Id
+           { name = "newline", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+        [ Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "cast", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 721 } } ) ] )
+       ( Cast
+        ( SumT [ Con Tuple [] ] )
+        ( Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 722 } } ) ) ) ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> SumT
+     [ Con Tuple [] ], id = Id
+     { name = "putStr", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "str", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 723 } } ], [ AnyT ] :-> SumT
+    [ Con Tuple [] ], Assign
+    ( Meta
+     { meta = SumT
+      [ Con Tuple [] ], id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 724 } } )
+    ( Call
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> SumT
+        [ Con Tuple [] ], id = Id
+        { name = "printString", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+     [ Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "str", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 723 } } ) ] )
+    ( Cast
+     ( SumT [ Con Tuple [] ] )
+     ( Var
+      ( Meta
+       { meta = SumT
+        [ Con Tuple [] ], id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 724 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), id = Id
+     { name = "punctuate", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "_", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 725 } } ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 768 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 726 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ AnyT, AnyT ] :-> AnyT, id = Id
+         { name = "punctuate_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 746 } } )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "_", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 725 } } ), Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "nil", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 726 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 768 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> SumT
+     [ Con Tuple [] ], id = Id
+     { name = "printInt64", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "i", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 769 } } ], [ AnyT ] :-> SumT
+    [ Con Tuple [] ], Assign
+    ( Meta
+     { meta = AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 771 } } )
+    ( Assign
+     ( Meta
+      { meta = AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 770 } } )
+     ( Call
+      ( Var
+       ( Meta
+        { meta = [ AnyT ] :-> AnyT, id = Id
+         { name = "toStringInt64", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+      [ Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "i", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 769 } } ) ] )
+     ( Cast AnyT
+      ( Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 770 } } ) ) ) )
+    ( Assign
+     ( Meta
+      { meta = SumT
+       [ Con Tuple [] ], id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 772 } } )
+     ( Call
+      ( Var
+       ( Meta
+        { meta = [ AnyT ] :-> SumT
+         [ Con Tuple [] ], id = Id
+         { name = "printString", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+      [ Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 771 } } ) ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var
+       ( Meta
+        { meta = SumT
+         [ Con Tuple [] ], id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 772 } } ) ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> SumT
+     [ Con Tuple [] ], id = Id
+     { name = "printInt32", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "i", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 773 } } ], [ AnyT ] :-> SumT
+    [ Con Tuple [] ], Assign
+    ( Meta
+     { meta = AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 775 } } )
+    ( Assign
+     ( Meta
+      { meta = AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 774 } } )
+     ( Call
+      ( Var
+       ( Meta
+        { meta = [ AnyT ] :-> AnyT, id = Id
+         { name = "toStringInt32", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+      [ Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "i", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 773 } } ) ] )
+     ( Cast AnyT
+      ( Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 774 } } ) ) ) )
+    ( Assign
+     ( Meta
+      { meta = SumT
+       [ Con Tuple [] ], id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 776 } } )
+     ( Call
+      ( Var
+       ( Meta
+        { meta = [ AnyT ] :-> SumT
+         [ Con Tuple [] ], id = Id
+         { name = "printString", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+      [ Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 775 } } ) ] )
+     ( Cast
+      ( SumT [ Con Tuple [] ] )
+      ( Var
+       ( Meta
+        { meta = SumT
+         [ Con Tuple [] ], id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 776 } } ) ) ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), id = Id
+     { name = "mapList", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "_", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 777 } } ],
+    [ [ AnyT ] :-> AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 804 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 778 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
+         { name = "mapList_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 790 } } )
+       [ Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "_", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 777 } } ), Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "nil", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 778 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 804 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "listToString", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "nil", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 805 } } ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 805 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 806 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta = [ StringT ] :-> AnyT, id = Id
+          { name = "String#", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+       [ Unboxed ( String "" ) ] )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 806 } } ) ) ) ), Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 807 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 808 } } ]
+     ( Assign
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 810 } } )
+      ( Assign
+       ( Meta
+        { meta = [ AnyT ] :-> AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 809 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :->
+           ( [ AnyT ] :-> AnyT ), id = Id
+           { name = "consString", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+        [ Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "p", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 807 } } ) ] )
+       ( Cast
+        ( [ AnyT ] :-> AnyT )
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 809 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 812 } } )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 811 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "listToString", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "p", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 808 } } ) ] )
+        ( Cast AnyT
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 811 } } ) ) ) )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 813 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 810 } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 812 } } ) ] )
+        ( Cast AnyT
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 813 } } ) ) ) ) ) ) ] ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "isWhiteSpace", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "char#", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 814 } } ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT [ Con ( Data "runtime/malgo/Builtin.mlg.Char#" ) [ CharT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "char#", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 814 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Builtin.mlg.Char#" ) [ CharT ] )
+     [ Meta
+      { meta = CharT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 815 } } ]
+     ( Match
+      ( Atom
+       ( Var
+        ( Meta
+         { meta = CharT, id = Id
+          { name = "p", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 815 } } ) ) )
+      [ Exact
+       ( Char ' ' )
+       ( CallDirect
+        ( Meta
+         { meta = [] :-> AnyT, id = Id
+          { name = "True", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) [] ), Exact
+       ( Char '\n' )
+       ( CallDirect
+        ( Meta
+         { meta = [] :-> AnyT, id = Id
+          { name = "True", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) [] ), Exact
+       ( Char '\r' )
+       ( CallDirect
+        ( Meta
+         { meta = [] :-> AnyT, id = Id
+          { name = "True", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) [] ), Exact
+       ( Char '\t' )
+       ( CallDirect
+        ( Meta
+         { meta = [] :-> AnyT, id = Id
+          { name = "True", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) [] ), Bind
+       ( Meta
+        { meta = CharT, id = Id
+         { name = "_", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 816 } } ) CharT
+       ( CallDirect
+        ( Meta
+         { meta = [] :-> AnyT, id = Id
+          { name = "False", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) [] ) ] ) ] ),
+   ( Meta
+    { meta = [ AnyT ] :->
+     (
+      [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+      ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), id = Id
+     { name = "if", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "true", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 817 } } ], [ AnyT ] :->
+    (
+     [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+     ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta =
+       [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+       ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 837 } }, typ =
+      [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+      ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), _object = Fun
+      [ Meta
+       { meta =
+        [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+        { name = "t", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 818 } } ]
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta =
+          [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+          { name = "let", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 836 } }, typ =
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, _object = Fun
+         [ Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "_", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 819 } } ]
+         ( CallDirect
+          ( Meta
+           { meta =
+            [ AnyT,
+             [ SumT [ Con Tuple [] ] ] :-> AnyT,
+             [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+            { name = "if_curry", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 826 } } )
+          [ Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "true", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 817 } } ), Var
+           ( Meta
+            { meta =
+             [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+             { name = "t", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 818 } } ), Var
+           ( Meta
+            { meta =
+             [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+             { name = "_", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 819 } } ) ] ) } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+           { name = "let", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 836 } } ) ) ) ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta =
+        [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 837 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "tailString", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "str", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 838 } } ], [ AnyT ] :-> AnyT, Assign
+    ( Meta
+     { meta =
+      [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 851 } } )
+    ( Assign
+     ( Meta
+      { meta =
+       [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+       ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 846 } } )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 844 } } )
+      ( Assign
+       ( Meta
+        { meta = [ AnyT ] :-> AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 840 } } )
+       ( Assign
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 839 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :->
+            ( [ AnyT ] :-> AnyT ), id = Id
+            { name = "eqString", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "str", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 838 } } ) ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 839 } } ) ) ) )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 842 } } )
+        ( Assign
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 841 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta = [ StringT ] :-> AnyT, id = Id
+             { name = "String#", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+          [ Unboxed ( String "" ) ] )
+         ( Cast AnyT
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 841 } } ) ) ) )
+        ( Assign
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 843 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 840 } } ) )
+          [ Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 842 } } ) ] )
+         ( Cast AnyT
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 843 } } ) ) ) ) ) )
+      ( Assign
+       ( Meta
+        { meta =
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+         ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 845 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :->
+           (
+            [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+            ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), id = Id
+           { name = "if", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+        [ Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 844 } } ) ] )
+       ( Cast
+        (
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+         ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) )
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+           ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 845 } } ) ) ) ) )
+     ( Assign
+      ( Meta
+       { meta =
+        [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 849 } } )
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta =
+          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+          { name = "fun", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 848 } }, typ =
+         [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+         [ Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "$_", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 847 } } ]
+         ( Atom
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "str", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 838 } } ) ) ) } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "fun", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 848 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta =
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 850 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+           ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 846 } } ) )
+        [ Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 849 } } ) ] )
+       ( Cast
+        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 850 } } ) ) ) ) ) )
+    ( Assign
+     ( Meta
+      { meta =
+       [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 863 } } )
+     ( Let
+      [ LocalDef
+       { _variable = Meta
+        { meta =
+         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+         { name = "fun", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 862 } }, typ =
+        [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+        [ Meta
+         { meta = SumT
+          [ Con Tuple [] ], id = Id
+          { name = "$_", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 852 } } ]
+        ( Assign
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 858 } } )
+         ( Assign
+          ( Meta
+           { meta = [ AnyT ] :->
+            ( [ AnyT ] :-> AnyT ), id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 854 } } )
+          ( Assign
+           ( Meta
+            { meta = [ AnyT ] :->
+             ( [ AnyT ] :-> AnyT ), id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 853 } } )
+           ( Call
+            ( Var
+             ( Meta
+              { meta = [ AnyT ] :->
+               ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) ), id = Id
+               { name = "substring", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+            [ Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "str", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 838 } } ) ] )
+           ( Cast
+            ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) )
+            ( Var
+             ( Meta
+              { meta = [ AnyT ] :->
+               ( [ AnyT ] :-> AnyT ), id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 853 } } ) ) ) )
+          ( Assign
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 856 } } )
+           ( Assign
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 855 } } )
+            ( Call
+             ( Var
+              ( Meta
+               { meta = [ Int64T ] :-> AnyT, id = Id
+                { name = "Int64#", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+             [ Unboxed ( Int64 1 ) ] )
+            ( Cast AnyT
+             ( Var
+              ( Meta
+               { meta = AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 855 } } ) ) ) )
+           ( Assign
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 857 } } )
+            ( Call
+             ( Var
+              ( Meta
+               { meta = [ AnyT ] :->
+                ( [ AnyT ] :-> AnyT ), id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 854 } } ) )
+             [ Var
+              ( Meta
+               { meta = AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 856 } } ) ] )
+            ( Cast
+             ( [ AnyT ] :-> AnyT )
+             ( Var
+              ( Meta
+               { meta = [ AnyT ] :-> AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 857 } } ) ) ) ) ) )
+         ( Assign
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 860 } } )
+          ( Assign
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 859 } } )
+           ( Call
+            ( Var
+             ( Meta
+              { meta = [ AnyT ] :-> AnyT, id = Id
+               { name = "lengthString", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+            [ Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "str", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 838 } } ) ] )
+           ( Cast AnyT
+            ( Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 859 } } ) ) ) )
+          ( Assign
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 861 } } )
+           ( Call
+            ( Var
+             ( Meta
+              { meta = [ AnyT ] :-> AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 858 } } ) )
+            [ Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 860 } } ) ] )
+           ( Cast AnyT
+            ( Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 861 } } ) ) ) ) ) ) } ]
+      ( Atom
+       ( Var
+        ( Meta
+         { meta =
+          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+          { name = "fun", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 862 } } ) ) ) )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 864 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta =
+          [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 851 } } ) )
+       [ Var
+        ( Meta
+         { meta =
+          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 863 } } ) ] )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 864 } } ) ) ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :->
+     ( [ AnyT ] :->
+      ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), id = Id
+     { name = "unless", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "c", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 865 } } ], [ AnyT ] :->
+    ( [ AnyT ] :-> ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :->
+       ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 889 } }, typ = [ AnyT ] :->
+      ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "tValue", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 866 } } ]
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta =
+          [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+          { name = "let", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 888 } }, typ =
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, _object = Fun
+         [ Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "f", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 867 } } ]
+         ( CallDirect
+          ( Meta
+           { meta =
+            [ AnyT, AnyT,
+             [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+            { name = "unless_curry", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 876 } } )
+          [ Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "c", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 865 } } ), Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "tValue", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 866 } } ), Var
+           ( Meta
+            { meta =
+             [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+             { name = "f", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 867 } } ) ] ) } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+           { name = "let", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 888 } } ) ) ) ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :->
+        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 889 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "identity", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "x", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 890 } } ], [ AnyT ] :-> AnyT, Atom
+    ( Var
+     ( Meta
+      { meta = AnyT, id = Id
+       { name = "x", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 890 } } ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "headString", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "str", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 891 } } ], [ AnyT ] :-> AnyT, Assign
+    ( Meta
+     { meta =
+      [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+      { name = "d", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 904 } } )
+    ( Assign
+     ( Meta
+      { meta =
+       [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+       ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 899 } } )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 897 } } )
+      ( Assign
+       ( Meta
+        { meta = [ AnyT ] :-> AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 893 } } )
+       ( Assign
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 892 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :->
+            ( [ AnyT ] :-> AnyT ), id = Id
+            { name = "eqString", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "str", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 891 } } ) ] )
+        ( Cast
+         ( [ AnyT ] :-> AnyT )
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 892 } } ) ) ) )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 895 } } )
+        ( Assign
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 894 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta = [ StringT ] :-> AnyT, id = Id
+             { name = "String#", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+          [ Unboxed ( String "" ) ] )
+         ( Cast AnyT
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 894 } } ) ) ) )
+        ( Assign
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 896 } } )
+         ( Call
+          ( Var
+           ( Meta
+            { meta = [ AnyT ] :-> AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 893 } } ) )
+          [ Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 895 } } ) ] )
+         ( Cast AnyT
+          ( Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 896 } } ) ) ) ) ) )
+      ( Assign
+       ( Meta
+        { meta =
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+         ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 898 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :->
+           (
+            [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+            ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), id = Id
+           { name = "if", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+        [ Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 897 } } ) ] )
+       ( Cast
+        (
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+         ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) )
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+           ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 898 } } ) ) ) ) )
+     ( Assign
+      ( Meta
+       { meta =
+        [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 902 } } )
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta =
+          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+          { name = "fun", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 901 } }, typ =
+         [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+         [ Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "$_", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 900 } } ]
+         ( CallDirect
+          ( Meta
+           { meta = [] :-> AnyT, id = Id
+            { name = "Nothing", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) [] ) } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "fun", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 901 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta =
+         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 903 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
+           ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 899 } } ) )
+        [ Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 902 } } ) ] )
+       ( Cast
+        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
+        ( Var
+         ( Meta
+          { meta =
+           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 903 } } ) ) ) ) ) )
+    ( Assign
+     ( Meta
+      { meta =
+       [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+       { name = "d", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 914 } } )
+     ( Let
+      [ LocalDef
+       { _variable = Meta
+        { meta =
+         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+         { name = "fun", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 913 } }, typ =
+        [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
+        [ Meta
+         { meta = SumT
+          [ Con Tuple [] ], id = Id
+          { name = "$_", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 905 } } ]
+        ( Assign
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 911 } } )
+         ( Assign
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 909 } } )
+          ( Assign
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 907 } } )
+           ( Assign
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 906 } } )
+            ( Call
+             ( Var
+              ( Meta
+               { meta = [ Int64T ] :-> AnyT, id = Id
+                { name = "Int64#", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+             [ Unboxed ( Int64 0 ) ] )
+            ( Cast AnyT
+             ( Var
+              ( Meta
+               { meta = AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 906 } } ) ) ) )
+           ( Assign
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 908 } } )
+            ( Call
+             ( Var
+              ( Meta
+               { meta = [ AnyT ] :->
+                ( [ AnyT ] :-> AnyT ), id = Id
+                { name = "atString", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+             [ Var
+              ( Meta
+               { meta = AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 907 } } ) ] )
+            ( Cast
+             ( [ AnyT ] :-> AnyT )
+             ( Var
+              ( Meta
+               { meta = [ AnyT ] :-> AnyT, id = Id
+                { name = "d", moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 908 } } ) ) ) ) )
+          ( Assign
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 910 } } )
+           ( Call
+            ( Var
+             ( Meta
+              { meta = [ AnyT ] :-> AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 909 } } ) )
+            [ Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "str", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 891 } } ) ] )
+           ( Cast AnyT
+            ( Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 910 } } ) ) ) ) )
+         ( Assign
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 912 } } )
+          ( Call
+           ( Var
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "Just", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+           [ Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 911 } } ) ] )
+          ( Cast AnyT
+           ( Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 912 } } ) ) ) ) ) } ]
+      ( Atom
+       ( Var
+        ( Meta
+         { meta =
+          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+          { name = "fun", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 913 } } ) ) ) )
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 915 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta =
+          [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 904 } } ) )
+       [ Var
+        ( Meta
+         { meta =
+          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 914 } } ) ] )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 915 } } ) ) ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "head", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "cons", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 916 } } ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "cons", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 916 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( Assign
+      ( Meta
+       { meta = SumT
+        [ Con Tuple [] ], id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 918 } } )
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta = SumT
+          [ Con Tuple [] ], id = Id
+          { name = "let", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 917 } }, typ = SumT
+         [ Con Tuple [] ], _object = Pack
+         ( SumT [ Con Tuple [] ] )
+         ( Con Tuple [] ) [] } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "let", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 917 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 919 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta =
+           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+           { name = "exitFailure", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+        [ Var
+         ( Meta
+          { meta = SumT
+           [ Con Tuple [] ], id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 918 } } ) ] )
+       ( Cast AnyT
+        ( Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 919 } } ) ) ) ) ), Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 920 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 921 } } ]
+     ( Atom
+      ( Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 920 } } ) ) ) ] ),
+   ( Meta
+    { meta =
+     [ SumT [ Con Tuple [ AnyT, AnyT ] ] ] :-> AnyT, id = Id
+     { name = "fst", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = SumT
+      [ Con Tuple [ AnyT, AnyT ] ], id = Id
+      { name = "tuple", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 922 } } ],
+    [ SumT [ Con Tuple [ AnyT, AnyT ] ] ] :-> AnyT, Match
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = SumT
+        [ Con Tuple [ AnyT, AnyT ] ], id = Id
+        { name = "tuple", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 922 } } ) ) )
+    [ Unpack
+     ( Con Tuple [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 923 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 924 } } ]
+     ( Atom
+      ( Var
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 923 } } ) ) ) ] ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) ] :->
+     ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) ), id = Id
+     { name = "foldl", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = [ AnyT ] :->
+      ( [ AnyT ] :-> AnyT ), id = Id
+      { name = "_", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 925 } } ],
+    [ [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) ] :->
+    ( [ AnyT ] :-> ( [ AnyT ] :-> AnyT ) ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :->
+       ( [ AnyT ] :-> AnyT ), id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 955 } }, typ = [ AnyT ] :->
+      ( [ AnyT ] :-> AnyT ), _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "z", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 926 } } ]
+      ( Let
+       [ LocalDef
+        { _variable = Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "let", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 954 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+         [ Meta
+          { meta = AnyT, id = Id
+           { name = "nil", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 927 } } ]
+         ( CallDirect
+          ( Meta
+           { meta =
+            [ [ AnyT ] :->
+             ( [ AnyT ] :-> AnyT ), AnyT, AnyT ] :-> AnyT, id = Id
+            { name = "foldl_curry", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 939 } } )
+          [ Var
+           ( Meta
+            { meta = [ AnyT ] :->
+             ( [ AnyT ] :-> AnyT ), id = Id
+             { name = "_", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 925 } } ), Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "z", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 926 } } ), Var
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "nil", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 927 } } ) ] ) } ]
+       ( Atom
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "let", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 954 } } ) ) ) ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :->
+        ( [ AnyT ] :-> AnyT ), id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 955 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), id = Id
+     { name = "const", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "a", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 956 } } ], [ AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 961 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "_", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 957 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ AnyT, AnyT ] :-> AnyT, id = Id
+         { name = "const_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 958 } } )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "a", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 956 } } ), Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "_", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 957 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 961 } } ) ) ) ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "cond", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "nil", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 962 } } ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ SumT
+        [ Con Tuple [ AnyT, [ SumT [ Con Tuple [] ] ] :-> AnyT ] ], AnyT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 962 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 964 } } )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 963 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta = [ StringT ] :-> AnyT, id = Id
+           { name = "String#", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+        [ Unboxed ( String "no branch" ) ] )
+       ( Cast AnyT
+        ( Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 963 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 965 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "panic", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+        [ Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 964 } } ) ] )
+       ( Cast AnyT
+        ( Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 965 } } ) ) ) ) ), Unpack
+     ( Con
+      ( Data "runtime/malgo/Prelude.mlg.Cons" )
+      [ SumT
+       [ Con Tuple [ AnyT, [ SumT [ Con Tuple [] ] ] :-> AnyT ] ], AnyT ] )
+     [ Meta
+      { meta = SumT
+       [ Con Tuple [ AnyT, [ SumT [ Con Tuple [] ] ] :-> AnyT ] ], id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 966 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 967 } } ]
+     ( Match
+      ( Atom
+       ( Var
+        ( Meta
+         { meta = SumT
+          [ Con Tuple [ AnyT, [ SumT [ Con Tuple [] ] ] :-> AnyT ] ], id = Id
+          { name = "p", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 966 } } ) ) )
+      [ Unpack
+       ( Con Tuple [ AnyT, [ SumT [ Con Tuple [] ] ] :-> AnyT ] )
+       [ Meta
+        { meta = AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 968 } }, Meta
+        { meta =
+         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+         { name = "p", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 969 } } ]
+       ( Match
+        ( Cast
+         ( SumT
+          [ Con
+           ( Data "runtime/malgo/Builtin.mlg.False" ) [], Con
+           ( Data "runtime/malgo/Builtin.mlg.True" ) [] ] )
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "p", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 968 } } ) ) )
+        [ Unpack
+         ( Con ( Data "runtime/malgo/Builtin.mlg.False" ) [] ) []
+         ( Assign
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 970 } } )
+          ( Call
+           ( Var
+            ( Meta
+             { meta = [ AnyT ] :-> AnyT, id = Id
+              { name = "cond", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+           [ Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "p", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 967 } } ) ] )
+          ( Cast AnyT
+           ( Var
+            ( Meta
+             { meta = AnyT, id = Id
+              { name = "d", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 970 } } ) ) ) ), Unpack
+         ( Con ( Data "runtime/malgo/Builtin.mlg.True" ) [] ) []
+         ( Assign
+          ( Meta
+           { meta = SumT
+            [ Con Tuple [] ], id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 972 } } )
+          ( Let
+           [ LocalDef
+            { _variable = Meta
+             { meta = SumT
+              [ Con Tuple [] ], id = Id
+              { name = "let", moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 971 } }, typ = SumT
+             [ Con Tuple [] ], _object = Pack
+             ( SumT [ Con Tuple [] ] )
+             ( Con Tuple [] ) [] } ]
+           ( Atom
+            ( Var
+             ( Meta
+              { meta = SumT
+               [ Con Tuple [] ], id = Id
+               { name = "let", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 971 } } ) ) ) )
+          ( Assign
+           ( Meta
+            { meta = AnyT, id = Id
+             { name = "d", moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 973 } } )
+           ( Call
+            ( Var
+             ( Meta
+              { meta =
+               [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
+               { name = "p", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 969 } } ) )
+            [ Var
+             ( Meta
+              { meta = SumT
+               [ Con Tuple [] ], id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 972 } } ) ] )
+           ( Cast AnyT
+            ( Var
+             ( Meta
+              { meta = AnyT, id = Id
+               { name = "d", moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 973 } } ) ) ) ) ) ] ) ] ) ] ),
+   ( Meta
+    { meta = [ AnyT ] :-> AnyT, id = Id
+     { name = "concatString", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "nil", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 974 } } ], [ AnyT ] :-> AnyT, Match
+    ( Cast
+     ( SumT
+      [ Con
+       ( Data "runtime/malgo/Prelude.mlg.Nil" ) [], Con
+       ( Data "runtime/malgo/Prelude.mlg.Cons" )
+       [ AnyT, AnyT ] ] )
+     ( Var
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "nil", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 974 } } ) ) )
+    [ Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Nil" ) [] ) []
+     ( Assign
+      ( Meta
+       { meta = AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 975 } } )
+      ( Call
+       ( Var
+        ( Meta
+         { meta = [ StringT ] :-> AnyT, id = Id
+          { name = "String#", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+       [ Unboxed ( String "" ) ] )
+      ( Cast AnyT
+       ( Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 975 } } ) ) ) ), Unpack
+     ( Con ( Data "runtime/malgo/Prelude.mlg.Cons" ) [ AnyT, AnyT ] )
+     [ Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 976 } }, Meta
+      { meta = AnyT, id = Id
+       { name = "p", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 977 } } ]
+     ( Assign
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "d", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 979 } } )
+      ( Assign
+       ( Meta
+        { meta = [ AnyT ] :-> AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 978 } } )
+       ( Call
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :->
+           ( [ AnyT ] :-> AnyT ), id = Id
+           { name = "appendString", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
+        [ Var
+         ( Meta
+          { meta = AnyT, id = Id
+           { name = "p", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 976 } } ) ] )
+       ( Cast
+        ( [ AnyT ] :-> AnyT )
+        ( Var
+         ( Meta
+          { meta = [ AnyT ] :-> AnyT, id = Id
+           { name = "d", moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 978 } } ) ) ) )
+      ( Assign
+       ( Meta
+        { meta = AnyT, id = Id
+         { name = "d", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 981 } } )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 980 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "concatString", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "p", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 977 } } ) ] )
+        ( Cast AnyT
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 980 } } ) ) ) )
+       ( Assign
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "d", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 982 } } )
+        ( Call
+         ( Var
+          ( Meta
+           { meta = [ AnyT ] :-> AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 979 } } ) )
+         [ Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 981 } } ) ] )
+        ( Cast AnyT
+         ( Var
+          ( Meta
+           { meta = AnyT, id = Id
+            { name = "d", moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 982 } } ) ) ) ) ) ) ] ),
+   ( Meta
+    { meta = [ AnyT ] :->
+     ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
+     { name = "case", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = AnyT, id = Id
+      { name = "x", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 983 } } ], [ AnyT ] :->
+    ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta =
+       [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 990 } }, typ =
+      [ [ AnyT ] :-> AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "f", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 984 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ AnyT, [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+         { name = "case_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 986 } } )
+       [ Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "x", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 983 } } ), Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "f", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 984 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta =
+        [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 990 } } ) ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), id = Id
+     { name = "dropWhileString", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "pred", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 991 } } ],
+    [ [ AnyT ] :-> AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1050 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "str", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 992 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
+         { name = "dropWhileString_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1020 } } )
+       [ Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "pred", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 991 } } ), Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "str", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 992 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1050 } } ) ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), id = Id
+     { name = "takeWhileString", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "pred", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1051 } } ],
+    [ [ AnyT ] :-> AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1120 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "str", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1052 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
+         { name = "takeWhileString_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1085 } } )
+       [ Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "pred", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1051 } } ), Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "str", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1052 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1120 } } ) ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT ] :->
+     ( [ AnyT ] :-> AnyT ), id = Id
+     { name = "<|", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "f", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1121 } } ],
+    [ [ AnyT ] :-> AnyT ] :->
+    ( [ AnyT ] :-> AnyT ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta = [ AnyT ] :-> AnyT, id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1128 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
+      [ Meta
+       { meta = AnyT, id = Id
+        { name = "x", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1122 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
+         { name = "<|_curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1124 } } )
+       [ Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "f", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1121 } } ), Var
+        ( Meta
+         { meta = AnyT, id = Id
+          { name = "x", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1122 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1128 } } ) ) ) ),
+   ( Meta
+    { meta =
+     [ [ AnyT ] :-> AnyT ] :->
+     ( [ [ AnyT ] :-> AnyT ] :-> ( [ AnyT ] :-> AnyT ) ), id = Id
+     { name = ".", moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } },
+    [ Meta
+     { meta = [ AnyT ] :-> AnyT, id = Id
+      { name = "f", moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1129 } } ],
+    [ [ AnyT ] :-> AnyT ] :->
+    ( [ [ AnyT ] :-> AnyT ] :-> ( [ AnyT ] :-> AnyT ) ), Let
+    [ LocalDef
+     { _variable = Meta
+      { meta =
+       [ [ AnyT ] :-> AnyT ] :->
+       ( [ AnyT ] :-> AnyT ), id = Id
+       { name = "let", moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1144 } }, typ =
+      [ [ AnyT ] :-> AnyT ] :->
+      ( [ AnyT ] :-> AnyT ), _object = Fun
+      [ Meta
+       { meta = [ AnyT ] :-> AnyT, id = Id
+        { name = "g", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1130 } } ]
+      ( CallDirect
+       ( Meta
+        { meta =
+         [ [ AnyT ] :-> AnyT, [ AnyT ] :-> AnyT ] :->
+         ( [ AnyT ] :-> AnyT ), id = Id
+         { name = "._curry", moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1136 } } )
+       [ Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "f", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1129 } } ), Var
+        ( Meta
+         { meta = [ AnyT ] :-> AnyT, id = Id
+          { name = "g", moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1130 } } ) ] ) } ]
+    ( Atom
+     ( Var
+      ( Meta
+       { meta =
+        [ [ AnyT ] :-> AnyT ] :->
+        ( [ AnyT ] :-> AnyT ), id = Id
+        { name = "let", moduleName = Artifact
+         ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = Temporal 1144 } } ) ) ) ) ], extFuns = [] }

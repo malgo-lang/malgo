@@ -20,6 +20,8 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
+  golden "infer Builtin" (driveInfer builtinPath)
+  golden "infer Prelude" (driveInfer preludePath)
   for_ testcases \testcase -> do
     golden ("infer " <> takeBaseName testcase) (driveInfer (testcaseDir </> testcase))
 

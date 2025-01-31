@@ -22,6 +22,8 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
+  golden "desugar Builtin" (driveDesugar builtinPath)
+  golden "desugar Prelude" (driveDesugar preludePath)
   for_ testcases \testcase -> do
     golden ("desugar " <> takeBaseName testcase) (driveDesugar (testcaseDir </> testcase))
 

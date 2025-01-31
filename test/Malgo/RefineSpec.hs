@@ -21,6 +21,8 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
+  golden "refine Builtin" (driveRefine builtinPath)
+  golden "refine Prelude" (driveRefine preludePath)
   for_ testcases \testcase -> do
     golden ("refine " <> takeBaseName testcase) (driveRefine (testcaseDir </> testcase))
 

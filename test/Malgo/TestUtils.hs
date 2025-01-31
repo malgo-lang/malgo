@@ -21,15 +21,21 @@ pShowCompact x = convertString $ pShowOpt smallIndentNoColor x
 testcaseDir :: FilePath
 testcaseDir = "./test/testcases/malgo"
 
+builtinPath :: FilePath
+builtinPath = "./runtime/malgo/Builtin.mlg"
+
 setupBuiltin :: IO ()
 setupBuiltin =
   runMalgoM LLVM flag option do
-    Driver.compile "./runtime/malgo/Builtin.mlg"
+    Driver.compile builtinPath
+
+preludePath :: FilePath
+preludePath = "./runtime/malgo/Prelude.mlg"
 
 setupPrelude :: IO ()
 setupPrelude =
   runMalgoM LLVM flag option do
-    Driver.compile "./runtime/malgo/Prelude.mlg"
+    Driver.compile preludePath
 
 flag :: Flag
 flag = Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode = True}

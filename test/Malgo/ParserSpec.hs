@@ -19,6 +19,8 @@ import Test.Hspec.Golden
 spec :: Spec
 spec = parallel do
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
+  golden "parse Builtin" (driveParse builtinPath)
+  golden "parse Prelude" (driveParse preludePath)
   for_ testcases \testcase -> do
     golden ("parse " <> takeBaseName testcase) (driveParse (testcaseDir </> testcase))
 
